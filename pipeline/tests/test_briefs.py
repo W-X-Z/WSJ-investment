@@ -216,4 +216,47 @@ def test_llm_repairs_bad_json_without_tools():
     )
     assert obj == {"fixed": 1} and len(comps) == 2
     assert "tools" not in fake.calls[1] and fake.calls[1]["messages"][1]["role"] == "assistant"
-    assert fake.calls[0]["thinking"]["budget_tokens"] == 2000 and fake.calls[0]["max_tokens"] == 6000
+    assert fake.calls[0]["thinking"] == {"type": "adaptive"} and fake.calls[0]["max_tokens"] == 500
+
+
+def test_budget_brief_defaults():
+    from wsj.briefs.build import BriefOptions
+    from wsj.runner import build_parser
+
+    opt = BriefOptions()
+    assert (opt.model, opt.research_model, opt.critique_model) == ("haiku", "haiku", "haiku")
+    assert opt.research_searches == 4
+    assert opt.thinking_budget == 0
+    args = build_parser().parse_args(["briefs", "build"])
+    assert (args.model, args.research_model, args.critique_model) == ("haiku", "haiku", "haiku")
+    assert args.searches == 4 and args.effort == "medium"
+
+
+def test_low_cost_thinking_mode_and_pricing():
+    from wsj.briefs.llm import Completion, LLM
+
+    haiku = Completion(text="ok", model="claude-haiku-5-5", input_tokens=10_000, output_tokens=2000)
+    assert abs(haiku.cost_usd - 0.002) < 1e-9
+
+    llm = LLM.__new__(LLM)
+    fake = _FakeMessages([_resp('{"ok": true}'), _resp('{"ok": true}')])
+    llm._client = _Obj(messages=fake)
+    llm.complete("sys", "user", "claude-haiku-5-5", effort="low", minimize_thinking=True)
+    llm.complete("sys", "user", "claude-sonnet-5-5", effort="medium", minimize_thinking=True)
+    assert fake.calls[0]["thinking"] == {"type": "disabled"}
+    assert fake.calls[1]["thinking"] == {"type": "between_tools"}
+    assert fake.calls[1]["output_config"] == {"effort": "medium"}
+
+
+def test_json_failure_preserves_cost():
+    from wsj.briefs.llm import JSONGenerationError, LLM
+
+    llm = LLM.__new__(LLM)
+    fake = _FakeMessages([_resp("not json"), _resp("still not json")])
+    llm._client = _Obj(messages=fake)
+    try:
+        llm.complete_json("sys", "user", "claude-haiku-5-5", "fix: {error}", max_tokens=1000)
+        assert False, "expected JSONGenerationError"
+    except JSONGenerationError as exc:
+        assert len(exc.completions) == 2
+        assert sum(x.output_tokens for x in exc.completions) == 100
