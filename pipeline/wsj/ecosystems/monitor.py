@@ -18,7 +18,7 @@ import os
 import re
 import sys
 import time
-from collections import Counter, defaultdict
+from collections import deque
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
 from typing import Any
@@ -118,6 +118,12 @@ def relevant(text: str, ecosystem: str) -> bool:
     return any(word in normalized for word in words)
 
 
+def extract_metric_mentions(text: str) -> list[str]:
+    """Find quantity/unit mentions for follow-up. Comparison context must be verified."""
+    pattern = r"(?<!\\w)\\d+(?:[.,]\\d+)?\\s?(?:nm|µm|um|mm|Gbps|Tbps|W|kW|MW|dB|ppm|%)(?!\\w)"
+    return list(dict.fromkeys(re.findall(pattern, text, flags=re.I)))[:18]
+
+
 def public_event(*, origin: str, origin_id: str, ecosystem: str, kind: str,
                  published_at: str | None, url: str, title: str, excerpt: str = "",
                  group: str | None = None, details: dict | None = None) -> dict:
@@ -130,7 +136,7 @@ def public_event(*, origin: str, origin_id: str, ecosystem: str, kind: str,
         "kind": kind, "published_at": published_at,
         "url": url, "title": re.sub(r"\s+", " ", title).strip()[:260],
         "excerpt": re.sub(r"\s+", " ", excerpt).strip()[:550],
-        "details": details or {}, "discovery_type": "public_document",
+        "details": {**(details or {}), "numeric_mention_candidates": extract_metric_mentions(title + " " + excerpt)}, "discovery_type": "public_document",
         "interpretation": "candidate evidence; no confirmed supply chain or investment return",
     }
 
