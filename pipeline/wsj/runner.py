@@ -185,7 +185,7 @@ def cmd_briefs(args: argparse.Namespace) -> int:
             from wsj.briefs.build import BriefOptions, build
 
             opt = BriefOptions(
-                model=args.model,
+                model=args.model or settings.wsj_brief_model,
                 research_model=args.research_model,
                 critique_model=args.critique_model,
                 research_searches=args.searches,
@@ -251,7 +251,7 @@ def build_parser() -> argparse.ArgumentParser:
     bb.add_argument("--cik", nargs="*", help="대상 CIK (없으면 candidates new/watch 점수순)")
     bb.add_argument("--top", type=int, help="후보 상위 N 개만")
     bb.add_argument("--as-of", help="기준일 YYYY-MM-DD (기본 오늘)")
-    bb.add_argument("--model", default="haiku", help="종합 모델: haiku(기본) | sonnet | opus | 모델 ID")
+    bb.add_argument("--model", help="종합 모델: haiku(기본) | sonnet | opus | 모델 ID")
     bb.add_argument("--research-model", default="haiku", help="웹 리서치 모델 (기본 haiku)")
     bb.add_argument("--critique-model", default="haiku", help="비평 모델 (기본 haiku)")
     bb.add_argument("--searches", type=int, default=4, help="리서치 단계 웹 검색 상한")
