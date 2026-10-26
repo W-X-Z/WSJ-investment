@@ -186,7 +186,11 @@ def cmd_briefs(args: argparse.Namespace) -> int:
 
             opt = BriefOptions(
                 model=args.model or settings.wsj_brief_model,
+                research_model=args.research_model,
+                critique_model=args.critique_model,
                 research_searches=args.searches,
+                effort=args.effort,
+                thinking_budget=args.thinking,
                 skip_research=args.no_research,
                 skip_critique=args.no_critique,
                 dry_run=args.dry_run,
@@ -247,11 +251,14 @@ def build_parser() -> argparse.ArgumentParser:
     bb.add_argument("--cik", nargs="*", help="대상 CIK (없으면 candidates new/watch 점수순)")
     bb.add_argument("--top", type=int, help="후보 상위 N 개만")
     bb.add_argument("--as-of", help="기준일 YYYY-MM-DD (기본 오늘)")
-    bb.add_argument("--model", help="종합 단계 모델: sonnet | opus | fable | 모델 ID (기본 WSJ_BRIEF_MODEL)")
-    bb.add_argument("--searches", type=int, default=8, help="리서치 단계 웹 검색 상한")
+    bb.add_argument("--model", help="종합 모델: haiku(기본) | sonnet | opus | 모델 ID")
+    bb.add_argument("--research-model", default="haiku", help="웹 리서치 모델 (기본 haiku)")
+    bb.add_argument("--critique-model", default="haiku", help="비평 모델 (기본 haiku)")
+    bb.add_argument("--searches", type=int, default=4, help="리서치 단계 웹 검색 상한")
+    bb.add_argument("--effort", choices=["low", "medium", "high"], default="medium", help="종합 단계 추론 수준")
     bb.add_argument("--no-research", action="store_true", help="리서치 단계 생략")
     bb.add_argument("--no-critique", action="store_true", help="비평 단계 생략")
-    bb.add_argument("--thinking", type=int, default=6000, help="종합·비평 확장 사고 예산 토큰 (0=끔)")
+    bb.add_argument("--thinking", type=int, default=0, help="구형 모델 전용 사고 예산(5.5에서는 --effort 권장)")
     bb.add_argument("--dry-run", action="store_true", help="LLM 없이 데이터팩·프롬프트만 파일로")
     bb.add_argument("--out", help="산출물 디렉터리 (기본 data/briefs, dry-run 시)")
     bb.add_argument("--force", action="store_true", help="같은 기준일 브리프가 있어도 다시 생성")
