@@ -293,19 +293,52 @@ def sec_filings(ecosystem: str, ticker: str, cik: int, start_year: int, end_year
 
 
 def reconcile(records: list[dict]) -> list[dict]:
-    """DOIs from multiple indices are one scholarly record, not independent evidence."""
+    """Merge source snapshots by DOI/canonical identity without losing old work."""
     output: dict[tuple[str,str], dict] = {}
     for item in records:
         key = item["ecosystem"], item["canonical_id"]
         prior = output.get(key)
         if prior is None:
-            output[key] = {**item, "also_indexed_by": [item["source"]]}
+            output[key] = {**item, "also_indexed_by": sorted(set(item.get("also_indexed_by") or [item["source"]]))}
         else:
-            indexed = set(prior["also_indexed_by"]); indexed.add(item["source"])
-            best = item if len(item.get("excerpt","")) > len(prior.get("excerpt","")) and item.get("source")=="openalex" else prior
-            output[key] = {**best, "also_indexed_by": sorted(indexed)}
+            indexed = set(prior.get("also_indexed_by") or [prior["source"]])
+            indexed.update(item.get("also_indexed_by") or [item["source"]])
+            # Prefer informative bibliographic abstract and better publication
+            # precision; never forget when the collector FIRST observed the DOI.
+            priority={"unknown":0,"year":1,"month":2,"day":3}
+            prior_precision=priority.get(prior.get("published_precision","unknown"),0)
+            next_precision=priority.get(item.get("published_precision","unknown"),0)
+            best = item if (next_precision>prior_precision
+                or (next_precision==prior_precision and
+                    len(item.get("excerpt",""))>len(prior.get("excerpt","")))) else prior
+            earliest=min(str(prior.get("first_seen_at") or "9999"),
+                         str(item.get("first_seen_at") or "9999"))
+            output[key]={**best,"first_seen_at":earliest,
+                         "also_indexed_by":sorted(indexed)}
     return sorted(output.values(), key=lambda x: (x["published_at"], x["id"]), reverse=True)
 
+
+def load_previous_sources(out: Path, as_of: str) -> list[dict]:
+    """A successful rerun must not discard previously encountered historical sources.
+
+    Prior source records with future dates are dropped as data-quality failures.
+    They are not retroactively treated as investor-known observations.
+    """
+    previous=[]
+    for eco in ECOSYSTEMS:
+        file=out/(eco+".jsonl")
+        if not file.exists():continue
+        with file.open(encoding="utf-8") as handle:
+            for line_number,line in enumerate(handle,1):
+                if not line.strip():continue
+                try:
+                    row=json.loads(line)
+                    if (row.get("ecosystem")==eco and row.get("historical_backfill")
+                        and row.get("published_at") and row["published_at"]<=as_of):
+                        previous.append(row)
+                except (ValueError,TypeError) as exc:
+                    raise ValueError(f"Previous historical corpus corrupted: {file}:{line_number}") from exc
+    return previous
 
 def create_summary(rows: list[dict], failures: list[dict], start: int, end: int, observed: str) -> dict:
     by_source = Counter(item["source"] for item in rows)
@@ -371,9 +404,14 @@ def run(*, out: Path, since: int, until: int, per_page: int = 35,
                     print(f"Collected SEC/{eco}/{ticker}: {len(got)} filings",flush=True)
                 except Exception as exc:
                     failures.append({"source":"sec","ecosystem":eco,"ticker":ticker,"error":str(exc)[:240]})
-    rows=reconcile(records)
-    if not rows:
-        raise RuntimeError(f"Backfill produced zero records; refusing empty success ({len(failures)} errors)")
+    # Union current index results with previous successful snapshots so unstable
+    # search ordering never erases earlier observed documents.
+    previous=load_previous_sources(out,observed[:10])
+    fresh_keys={(x["ecosystem"],x["canonical_id"]) for x in records}
+    old_keys={(x["ecosystem"],x["canonical_id"]) for x in previous}
+    rows=reconcile(previous+records)
+    if not rows or (failures and not records):
+        raise RuntimeError(f"Backfill cannot safely replace corpus ({len(failures)} failed segments; {len(records)} fresh records)")
     out.mkdir(parents=True,exist_ok=True)
     for eco in ECOSYSTEMS:
         with (out/f"{eco}.jsonl").open("w",encoding="utf-8") as fp:
@@ -394,6 +432,12 @@ def run(*, out: Path, since: int, until: int, per_page: int = 35,
     index.sort(key=lambda x:(x["published_at"],x["ecosystem"]),reverse=True)
     (out/"feed-index.json").write_text(json.dumps(index,ensure_ascii=False,indent=2)+"\n",encoding="utf-8")
     summary=create_summary(rows,failures,since,until,observed)
+    summary["records_from_previous_archive"]=len(old_keys)
+    summary["current_api_snapshot_records"]=len(fresh_keys)
+    summary["newly_discovered_archive_records"]=len(fresh_keys-old_keys)
+    summary["previously_observed_but_not_in_current_snapshot"]=len(old_keys-fresh_keys)
+    summary["storage_mode"]="cumulative_union_preserve_first_seen"
+    summary["limits"].append("API page ordering changes across runs: preserve all earlier valid documents, not only today's top-ranked results.")
     (out/"summary.json").write_text(json.dumps(summary,ensure_ascii=False,indent=2)+"\n",encoding="utf-8")
     return summary
 
