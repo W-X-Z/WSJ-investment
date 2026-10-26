@@ -20,6 +20,24 @@ from wsj.ecosystems.ontology import GRAPH_PATH, edge_confidence, load_graph, loa
 WEB_DATA = Path(__file__).resolve().parents[3] / "apps" / "web" / "src" / "data"
 SEED_OUT = WEB_DATA / "ecosystem-seed.json"
 IMPACT_OUT = WEB_DATA / "impact-index.json"
+DISCOVERY_IN = GRAPH_PATH.parent / "discovery.json"
+DISCOVERY_OUT = WEB_DATA / "discovery.json"
+
+
+def trim_discovery(d: dict[str, Any], graph: dict[str, Any]) -> dict[str, Any]:
+    """웹용: 쿼리 로그·필링 제거, 기업별 매칭 노드와 승격 여부만."""
+    promoted = {int(n["listing"]["cik"]) for n in graph["nodes"] if n["kind"] == "company" and (n.get("listing") or {}).get("cik")}
+    labels = {n["id"]: n["label"] for n in graph["nodes"]}
+    companies = [
+        {
+            "cik": r["cik"], "ticker": r["ticker"], "name": r["name"], "size_band": r["size_band"], "public_float": r["public_float"],
+            "sic": r["sic"], "score": r["score"], "node_count": r["node_count"], "promoted": r["cik"] in promoted,
+            "nodes": [{"id": k, "label": labels.get(k, k), "queries": v} for k, v in r["matched_nodes"].items()],
+            "filing": {"form": r["filings"][0][0], "date": r["filings"][0][1]} if r.get("filings") else None,
+        }
+        for r in d["companies"] if r["size_band"] in ("micro", "small", "mid", "unknown")
+    ]
+    return {"as_of": d["as_of"], "window_start": d["window_start"], "summary": d["summary"], "nodes": {k: {**v, "label": labels.get(k, v.get("label"))} for k, v in d["nodes"].items()}, "companies": companies}
 
 
 def build(graph: dict[str, Any]) -> tuple[dict[str, Any], dict[str, Any]]:
@@ -82,15 +100,19 @@ def main(argv: list[str] | None = None) -> int:
     graph, index = build(load_graph(GRAPH_PATH))
     seed_text = json.dumps(graph, ensure_ascii=False, indent=2) + "\n"
     index_text = json.dumps(index, ensure_ascii=False, indent=1) + "\n"
+    disc_text = json.dumps(trim_discovery(json.loads(DISCOVERY_IN.read_text(encoding="utf-8")), graph), ensure_ascii=False, indent=1) + "\n" if DISCOVERY_IN.exists() else None
     if args.check:
         ok = (
             SEED_OUT.read_text(encoding="utf-8") == seed_text
             and IMPACT_OUT.read_text(encoding="utf-8") == index_text
+            and (disc_text is None or (DISCOVERY_OUT.exists() and DISCOVERY_OUT.read_text(encoding="utf-8") == disc_text))
         )
         print("OK: web data in sync" if ok else "ERROR: run python -m wsj.ecosystems.export_web")
         return 0 if ok else 1
     SEED_OUT.write_text(seed_text, encoding="utf-8")
     IMPACT_OUT.write_text(index_text, encoding="utf-8")
+    if disc_text:
+        DISCOVERY_OUT.write_text(disc_text, encoding="utf-8")
     print(
         f"wrote {SEED_OUT.name} ({len(graph['nodes'])} nodes / {len(graph['edges'])} edges) and {IMPACT_OUT.name} ({index['meta']['nodes_indexed']} nodes)"
     )

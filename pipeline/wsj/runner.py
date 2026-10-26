@@ -219,6 +219,55 @@ def cmd_briefs(args: argparse.Namespace) -> int:
     return 2
 
 
+def cmd_moat(args: argparse.Namespace) -> int:
+    settings = load_settings()
+    _setup_logging(settings.wsj_log_level)
+    if args.store:
+        settings.wsj_store = args.store
+    store = make_store(settings)
+    http = HttpClient(user_agent=settings.sec_user_agent)
+    try:
+        import json as _json
+        from pathlib import Path
+
+        from wsj.briefs.moat import MoatOptions, build, ticker_to_cik
+        from wsj.ecosystems.ontology import load_graph
+
+        ciks = [int(c) for c in (args.cik or [])]
+        if args.ticker:
+            g = load_graph()
+            for t in args.ticker:
+                c = ticker_to_cik(g, t)
+                if c is None:
+                    print(f"{t}: 그래프에 없는 티커 (promote 먼저)", file=sys.stderr)
+                    return 2
+                ciks.append(c)
+        opt = MoatOptions(
+            model=args.model or "sonnet",
+            effort=args.effort,
+            dry_run=args.dry_run,
+            out_dir=Path(args.out)
+            if args.out
+            else (settings.wsj_data_dir / "moat" if args.dry_run else None),
+            force=args.force,
+        )
+        results = build(
+            store,
+            http,
+            settings.anthropic_api_key or None,
+            parse_date(args.as_of) if args.as_of else None,
+            ciks,
+            args.all,
+            opt,
+        )
+        for r in results:
+            print(_json.dumps(r, ensure_ascii=False, default=str))
+        return 1 if any(r.get("status") == "failed" for r in results) else 0
+    finally:
+        http.close()
+        store.close()
+
+
 def build_parser() -> argparse.ArgumentParser:
     p = argparse.ArgumentParser(prog="wsj", description="WSJ-investment 데이터 수집 파이프라인")
     sub = p.add_subparsers(dest="cmd", required=True)
@@ -255,14 +304,32 @@ def build_parser() -> argparse.ArgumentParser:
     bb.add_argument("--research-model", default="haiku", help="웹 리서치 모델 (기본 haiku)")
     bb.add_argument("--critique-model", default="haiku", help="비평 모델 (기본 haiku)")
     bb.add_argument("--searches", type=int, default=4, help="리서치 단계 웹 검색 상한")
-    bb.add_argument("--effort", choices=["low", "medium", "high"], default="medium", help="종합 단계 추론 수준")
+    bb.add_argument(
+        "--effort", choices=["low", "medium", "high"], default="medium", help="종합 단계 추론 수준"
+    )
     bb.add_argument("--no-research", action="store_true", help="리서치 단계 생략")
     bb.add_argument("--no-critique", action="store_true", help="비평 단계 생략")
-    bb.add_argument("--thinking", type=int, default=0, help="구형 모델 전용 사고 예산(5.5에서는 --effort 권장)")
+    bb.add_argument(
+        "--thinking", type=int, default=0, help="구형 모델 전용 사고 예산(5.5에서는 --effort 권장)"
+    )
     bb.add_argument("--dry-run", action="store_true", help="LLM 없이 데이터팩·프롬프트만 파일로")
     bb.add_argument("--out", help="산출물 디렉터리 (기본 data/briefs, dry-run 시)")
     bb.add_argument("--force", action="store_true", help="같은 기준일 브리프가 있어도 다시 생성")
     bb.add_argument("--store", choices=["postgrest", "sqlite"])
+
+    m = sub.add_parser("moat", help="공급망 해자 카드: 온톨로지 기업 → 기술·해자·잠재성 판정 (ADR-0013)")
+    ms = m.add_subparsers(dest="moat_cmd", required=True)
+    mb = ms.add_parser("build")
+    mb.add_argument("--cik", nargs="*")
+    mb.add_argument("--ticker", nargs="*", help="그래프 기업 티커")
+    mb.add_argument("--all", action="store_true", help="그래프 in_universe 기업 전부")
+    mb.add_argument("--as-of")
+    mb.add_argument("--model", help="sonnet(기본) | haiku | opus")
+    mb.add_argument("--effort", default="medium")
+    mb.add_argument("--dry-run", action="store_true")
+    mb.add_argument("--out")
+    mb.add_argument("--force", action="store_true")
+    mb.add_argument("--store", choices=["postgrest", "sqlite"])
     return p
 
 
@@ -278,6 +345,8 @@ def main(argv: list[str] | None = None) -> int:
         return cmd_signals(args)
     if args.cmd == "briefs":
         return cmd_briefs(args)
+    if args.cmd == "moat":
+        return cmd_moat(args)
     return 2
 
 

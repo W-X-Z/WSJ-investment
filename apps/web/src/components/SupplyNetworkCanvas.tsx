@@ -361,10 +361,9 @@ export function SupplyNetworkCanvas({initialEcosystem="all",initialFocus=null,co
       <span className="sc-inspector-kicker">RELATIONSHIP · {RELATIONS[focusedEdge.relation]??focusedEdge.relation}</span>
       <h3>{nodeIndex.get(focusedEdge.from)?.label} → {nodeIndex.get(focusedEdge.to)?.label}</h3>
       <span className={`sc-evidence-class sc-evidence-${epistemic(focusedEdge)}`}>{TIER_NAME[focusedEdge.evidence_tier]??focusedEdge.evidence_tier} · 신뢰도 {Math.round((focusedEdge.confidence??0)*100)}%{focusedEdge.polarity!=="positive"?` · ${focusedEdge.polarity==="negative"?"부정":"조건부"}`:""}</span>
-      <p>{focusedEdge.note||"이 기술 관계의 정량적·상업적 의미는 원문과 시험 조건을 함께 확인해야 합니다."}</p>
+      {focusedEdge.note&&<p>{focusedEdge.note}</p>}
       <h4>출처 및 검증 근거</h4>
       {focusedEdge.evidence.map((src,i)=><a className="sc-source-card" target="_blank" rel="noreferrer" key={i} href={src.url}><Icon name="external" size={15}/><span>{safeHost(src.url)}<small>{src.url}</small></span></a>)}
-      <div className="sc-caution">공급망의 연결은 실제 납품 계약·영업이익 증가를 의미하지 않습니다.</div>
      </div>:node?<div className="sc-inspector-content">
       <span className="sc-inspector-kicker">{KIND_NAME[node.kind]??node.kind} · {owners.get(node.id)?.toUpperCase()??"NETWORK"}</span>
       <h3>{node.label}</h3>
@@ -377,11 +376,10 @@ export function SupplyNetworkCanvas({initialEcosystem="all",initialFocus=null,co
       <NodeEvidencePanel nodeId={node.id}/>
       {historyRows.length>0&&<><h4>관련 키워드로 찾은 과거 자료 · 미검증</h4><div className="sc-history">{historyRows.map(x=><a key={x.id} href={x.url} target="_blank" rel="noreferrer"><small>{fmt(x.published_at)} · {x.source}</small><strong>{x.title}</strong></a>)}</div></>}
       <div className="sc-inspector-actions"><button type="button" onClick={()=>{shiftMode("impact");setInspectorOpen(true)}}><Icon name="network" size={15}/> 이 노드 중심으로 펼치기</button><Link href={`/search?q=${encodeURIComponent(node.label)}`}><Icon name="search" size={15}/> 전체 근거 검색</Link></div>
-      <div className="sc-caution">노드와 공개 문헌의 관련성은 실제 공급 실적이나 사업적 수혜의 확증이 아닙니다.</div>
-     </div>:<div className="sc-inspector-content sc-empty-inspector"><Icon name="network" size={28}/><h3>복잡한 공급망을 탐색하세요</h3><p>캔버스의 노드·연결선을 선택하면 검증된 내용, 추론 관계, 물리적 측정 항목과 원문을 확인할 수 있습니다.</p><div><span>{seed.nodes.length}개 기술·기업 노드</span><span>공식 근거 / 기술 추론 분리</span><span>1–3단계 연결 강조</span></div></div>}
+     </div>:<div className="sc-inspector-content sc-empty-inspector"><Icon name="network" size={28}/><h3>노드를 선택하세요</h3><p>관계·근거·영향 기업을 봅니다.</p><div><span>{seed.nodes.length}개 기술·기업 노드</span><span>공식 근거 / 기술 추론 분리</span><span>1–3단계 연결 강조</span></div></div>}
    </aside>}
    {!inspectorOpen&&compact&&<button type="button" className="sc-reopen-inspector" onClick={()=>setInspectorOpen(true)}><Icon name="panel-right" size={16}/> 근거 패널</button>}
   </div>
-  <div className="sc-footnote"><div><strong>관계가 있다고 매출 수혜가 확정되지는 않습니다.</strong><span>실선: 문서·공식 주장 / 점선: 기술 가설·조건부 관계 / 핑크선: 대체 기술</span></div><span>연구 그래프 {seed.nodes.length}개 노드 · {seed.edges.length}개 관계 · 과거 데이터 {h.summary?.records??0}건</span></div>
+  <div className="sc-footnote"><div><span>실선: 문서·공식 주장 / 점선: 기술 가설·조건부 관계 / 핑크선: 대체 기술</span></div><span>연구 그래프 {seed.nodes.length}개 노드 · {seed.edges.length}개 관계 · 과거 데이터 {h.summary?.records??0}건</span></div>
  </section>;
 }

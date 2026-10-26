@@ -21,6 +21,5 @@ export default function Ecosystems() {
         ["경제적 효과","실제 채택 시 수량·단가·마진·교체주기 가운데 무엇이 변하는가?"],
       ].map((x,i)=><div className="insight-box" key={x[0]}><div className="eyebrow">{String(i+1).padStart(2,"0")} / FRAMEWORK</div><h3>{x[0]}</h3><p>{x[1]}</p></div>)}
     </div>
-    <div className="data-banner"><Icon name="shield" size={20}/><div><strong>출처·검증 수준을 포함한 {seed.edges.length}개 관계</strong><p>표준·공식 자료, 제조사 주장, 기술적 추론을 구분합니다. 완전한 고객 BOM이나 매출 기여가 확인되지 않은 경우 명시적으로 미확인으로 처리합니다.</p></div><Link href="/triggers">변화 추적 <Icon name="arrow-right" size={15}/></Link></div>
   </div>;
 }

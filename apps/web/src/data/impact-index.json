@@ -3,7 +3,7 @@
   "generated_from": "research/ecosystems/seed_graph.json",
   "schema_version": "0.3",
   "as_of": "2026-10-27",
-  "nodes_indexed": 42,
+  "nodes_indexed": 60,
   "caveat": "경로 신뢰도는 근거 등급의 곱이다. 'documented' 라도 기술 보유·협업까지이며 매출 증거가 아니다."
  },
  "nodes": {
@@ -60,6 +60,30 @@
      "upgrade_needed": "supplied_to(official_issuer 이상) + 매출 노출 공시"
     },
     {
+     "company_id": "company:nvmi",
+     "company": "Nova Ltd. (NVMI)",
+     "direction": "positive",
+     "confidence": 0.088,
+     "band": "inferred",
+     "in_universe": true,
+     "size_band": "unknown",
+     "ticker": "NVMI",
+     "role": "supplier",
+     "path": [
+      "HBM4 2,048 I/O 확대",
+      "미세범프·접합 오버레이/결함 검사",
+      "미세범프 형상·높이 2D/3D 검사",
+      "Nova Ltd. (NVMI)"
+     ],
+     "weakest": {
+      "id": "e003",
+      "relation": "creates_bottleneck",
+      "tier": "technical_inference",
+      "confidence": 0.4
+     },
+     "upgrade_needed": "supplied_to(official_issuer 이상) + 매출 노출 공시"
+    },
+    {
      "company_id": "company:besi",
      "company": "BE Semiconductor Industries (Euronext BESI, 비SEC)",
      "direction": "positive",
@@ -75,6 +99,81 @@
       "접합 계면 void·불량",
       "웨이퍼·다이 하이브리드 본더",
       "BE Semiconductor Industries (Euronext BESI, 비SEC)"
+     ],
+     "weakest": {
+      "id": "e003",
+      "relation": "creates_bottleneck",
+      "tier": "technical_inference",
+      "confidence": 0.4
+     },
+     "upgrade_needed": "supplied_to(official_issuer 이상) + 매출 노출 공시"
+    },
+    {
+     "company_id": "company:ichr",
+     "company": "Ichor Holdings, Ltd. (ICHR)",
+     "direction": "positive",
+     "confidence": 0.026,
+     "band": "inferred",
+     "in_universe": true,
+     "size_band": "small",
+     "ticker": "ICHR",
+     "role": "supplier",
+     "path": [
+      "HBM4 2,048 I/O 확대",
+      "미세범프·접합 오버레이/결함 검사",
+      "접합 계면 void·불량",
+      "Cu·절연체 CMP 평탄화",
+      "Ichor Holdings, Ltd. (ICHR)"
+     ],
+     "weakest": {
+      "id": "e003",
+      "relation": "creates_bottleneck",
+      "tier": "technical_inference",
+      "confidence": 0.4
+     },
+     "upgrade_needed": "supplied_to(official_issuer 이상) + 매출 노출 공시"
+    },
+    {
+     "company_id": "company:asys",
+     "company": "Amtech Systems Inc (ASYS)",
+     "direction": "positive",
+     "confidence": 0.026,
+     "band": "inferred",
+     "in_universe": true,
+     "size_band": "micro",
+     "ticker": "ASYS",
+     "role": "supplier",
+     "path": [
+      "HBM4 2,048 I/O 확대",
+      "미세범프·접합 오버레이/결함 검사",
+      "접합 계면 void·불량",
+      "Cu·절연체 CMP 평탄화",
+      "Amtech Systems Inc (ASYS)"
+     ],
+     "weakest": {
+      "id": "e003",
+      "relation": "creates_bottleneck",
+      "tier": "technical_inference",
+      "confidence": 0.4
+     },
+     "upgrade_needed": "supplied_to(official_issuer 이상) + 매출 노출 공시"
+    },
+    {
+     "company_id": "company:veco",
+     "company": "Veeco Instruments Inc (VECO)",
+     "direction": "positive",
+     "confidence": 0.026,
+     "band": "inferred",
+     "in_universe": true,
+     "size_band": "small",
+     "ticker": "VECO",
+     "role": "supplier",
+     "path": [
+      "HBM4 2,048 I/O 확대",
+      "미세범프·접합 오버레이/결함 검사",
+      "미세 접합 입자·잔류물 오염",
+      "웨이퍼 본딩 전 표면 활성화·세정",
+      "Veeco Instruments Inc (VECO)"
      ],
      "weakest": {
       "id": "e003",
@@ -139,6 +238,29 @@
      "upgrade_needed": "supplied_to(official_issuer 이상) + 매출 노출 공시"
     },
     {
+     "company_id": "company:form",
+     "company": "Formfactor Inc (FORM)",
+     "direction": "positive",
+     "confidence": 0.16,
+     "band": "inferred",
+     "in_universe": true,
+     "size_band": "unknown",
+     "ticker": "FORM",
+     "role": "supplier",
+     "path": [
+      "고적층·미세 접합 확대",
+      "실리콘 관통 전극 (TSV)",
+      "Formfactor Inc (FORM)"
+     ],
+     "weakest": {
+      "id": "e062",
+      "relation": "requires",
+      "tier": "technical_inference",
+      "confidence": 0.4
+     },
+     "upgrade_needed": "supplied_to(official_issuer 이상) + 매출 노출 공시"
+    },
+    {
      "company_id": "company:camt",
      "company": "Camtek (CAMT)",
      "direction": "positive",
@@ -179,6 +301,78 @@
       "미세범프 형상·높이 2D/3D 검사",
       "Onto Dragonfly G3 2D/3D 결함 검사기",
       "Onto Innovation (ONTO)"
+     ],
+     "weakest": {
+      "id": "e004",
+      "relation": "creates_bottleneck",
+      "tier": "technical_inference",
+      "confidence": 0.4
+     },
+     "upgrade_needed": "supplied_to(official_issuer 이상) + 매출 노출 공시"
+    },
+    {
+     "company_id": "company:adea",
+     "company": "Adeia Inc. (ADEA)",
+     "direction": "positive",
+     "confidence": 0.128,
+     "band": "inferred",
+     "in_universe": true,
+     "size_band": "small",
+     "ticker": "ADEA",
+     "role": "supplier",
+     "path": [
+      "고적층·미세 접합 확대",
+      "적층 열·변형·뒤틀림 관리",
+      "하이브리드 본딩",
+      "Adeia Inc. (ADEA)"
+     ],
+     "weakest": {
+      "id": "e008",
+      "relation": "mitigated_by",
+      "tier": "technical_inference",
+      "confidence": 0.4
+     },
+     "upgrade_needed": "supplied_to(official_issuer 이상) + 매출 노출 공시"
+    },
+    {
+     "company_id": "company:klic",
+     "company": "Kulicke & Soffa Industries Inc (KLIC)",
+     "direction": "positive",
+     "confidence": 0.128,
+     "band": "inferred",
+     "in_universe": true,
+     "size_band": "small",
+     "ticker": "KLIC",
+     "role": "supplier",
+     "path": [
+      "고적층·미세 접합 확대",
+      "적층 열·변형·뒤틀림 관리",
+      "하이브리드 본딩",
+      "Kulicke & Soffa Industries Inc (KLIC)"
+     ],
+     "weakest": {
+      "id": "e008",
+      "relation": "mitigated_by",
+      "tier": "technical_inference",
+      "confidence": 0.4
+     },
+     "upgrade_needed": "supplied_to(official_issuer 이상) + 매출 노출 공시"
+    },
+    {
+     "company_id": "company:nvmi",
+     "company": "Nova Ltd. (NVMI)",
+     "direction": "positive",
+     "confidence": 0.088,
+     "band": "inferred",
+     "in_universe": true,
+     "size_band": "unknown",
+     "ticker": "NVMI",
+     "role": "supplier",
+     "path": [
+      "고적층·미세 접합 확대",
+      "미세범프·접합 오버레이/결함 검사",
+      "미세범프 형상·높이 2D/3D 검사",
+      "Nova Ltd. (NVMI)"
      ],
      "weakest": {
       "id": "e004",
@@ -257,6 +451,29 @@
      "upgrade_needed": "supplied_to(official_issuer 이상) + 매출 노출 공시"
     },
     {
+     "company_id": "company:nvmi",
+     "company": "Nova Ltd. (NVMI)",
+     "direction": "positive",
+     "confidence": 0.22,
+     "band": "inferred",
+     "in_universe": true,
+     "size_band": "unknown",
+     "ticker": "NVMI",
+     "role": "supplier",
+     "path": [
+      "미세범프·접합 오버레이/결함 검사",
+      "미세범프 형상·높이 2D/3D 검사",
+      "Nova Ltd. (NVMI)"
+     ],
+     "weakest": {
+      "id": "d007",
+      "relation": "offered_by",
+      "tier": "technical_inference",
+      "confidence": 0.4
+     },
+     "upgrade_needed": "supplied_to(official_issuer 이상) + 매출 노출 공시"
+    },
+    {
      "company_id": "company:besi",
      "company": "BE Semiconductor Industries (Euronext BESI, 비SEC)",
      "direction": "positive",
@@ -274,6 +491,78 @@
      ],
      "weakest": {
       "id": "e066",
+      "relation": "creates_bottleneck",
+      "tier": "technical_inference",
+      "confidence": 0.4
+     },
+     "upgrade_needed": "supplied_to(official_issuer 이상) + 매출 노출 공시"
+    },
+    {
+     "company_id": "company:ichr",
+     "company": "Ichor Holdings, Ltd. (ICHR)",
+     "direction": "positive",
+     "confidence": 0.064,
+     "band": "inferred",
+     "in_universe": true,
+     "size_band": "small",
+     "ticker": "ICHR",
+     "role": "supplier",
+     "path": [
+      "미세범프·접합 오버레이/결함 검사",
+      "접합 계면 void·불량",
+      "Cu·절연체 CMP 평탄화",
+      "Ichor Holdings, Ltd. (ICHR)"
+     ],
+     "weakest": {
+      "id": "e066",
+      "relation": "creates_bottleneck",
+      "tier": "technical_inference",
+      "confidence": 0.4
+     },
+     "upgrade_needed": "supplied_to(official_issuer 이상) + 매출 노출 공시"
+    },
+    {
+     "company_id": "company:asys",
+     "company": "Amtech Systems Inc (ASYS)",
+     "direction": "positive",
+     "confidence": 0.064,
+     "band": "inferred",
+     "in_universe": true,
+     "size_band": "micro",
+     "ticker": "ASYS",
+     "role": "supplier",
+     "path": [
+      "미세범프·접합 오버레이/결함 검사",
+      "접합 계면 void·불량",
+      "Cu·절연체 CMP 평탄화",
+      "Amtech Systems Inc (ASYS)"
+     ],
+     "weakest": {
+      "id": "e066",
+      "relation": "creates_bottleneck",
+      "tier": "technical_inference",
+      "confidence": 0.4
+     },
+     "upgrade_needed": "supplied_to(official_issuer 이상) + 매출 노출 공시"
+    },
+    {
+     "company_id": "company:veco",
+     "company": "Veeco Instruments Inc (VECO)",
+     "direction": "positive",
+     "confidence": 0.064,
+     "band": "inferred",
+     "in_universe": true,
+     "size_band": "small",
+     "ticker": "VECO",
+     "role": "supplier",
+     "path": [
+      "미세범프·접합 오버레이/결함 검사",
+      "미세 접합 입자·잔류물 오염",
+      "웨이퍼 본딩 전 표면 활성화·세정",
+      "Veeco Instruments Inc (VECO)"
+     ],
+     "weakest": {
+      "id": "e067",
       "relation": "creates_bottleneck",
       "tier": "technical_inference",
       "confidence": 0.4
@@ -323,6 +612,52 @@
       "적층 열·변형·뒤틀림 관리",
       "하이브리드 본딩",
       "SK hynix (KRX 000660, 비SEC)"
+     ],
+     "weakest": {
+      "id": "e008",
+      "relation": "mitigated_by",
+      "tier": "technical_inference",
+      "confidence": 0.4
+     },
+     "upgrade_needed": "supplied_to(official_issuer 이상) + 매출 노출 공시"
+    },
+    {
+     "company_id": "company:adea",
+     "company": "Adeia Inc. (ADEA)",
+     "direction": "positive",
+     "confidence": 0.16,
+     "band": "inferred",
+     "in_universe": true,
+     "size_band": "small",
+     "ticker": "ADEA",
+     "role": "supplier",
+     "path": [
+      "적층 열·변형·뒤틀림 관리",
+      "하이브리드 본딩",
+      "Adeia Inc. (ADEA)"
+     ],
+     "weakest": {
+      "id": "e008",
+      "relation": "mitigated_by",
+      "tier": "technical_inference",
+      "confidence": 0.4
+     },
+     "upgrade_needed": "supplied_to(official_issuer 이상) + 매출 노출 공시"
+    },
+    {
+     "company_id": "company:klic",
+     "company": "Kulicke & Soffa Industries Inc (KLIC)",
+     "direction": "positive",
+     "confidence": 0.16,
+     "band": "inferred",
+     "in_universe": true,
+     "size_band": "small",
+     "ticker": "KLIC",
+     "role": "supplier",
+     "path": [
+      "적층 열·변형·뒤틀림 관리",
+      "하이브리드 본딩",
+      "Kulicke & Soffa Industries Inc (KLIC)"
      ],
      "weakest": {
       "id": "e008",
@@ -396,6 +731,50 @@
       "confidence": 0.6
      },
      "upgrade_needed": "매출 노출·수량·마진 공시"
+    },
+    {
+     "company_id": "company:adea",
+     "company": "Adeia Inc. (ADEA)",
+     "direction": "positive",
+     "confidence": 0.4,
+     "band": "claimed",
+     "in_universe": true,
+     "size_band": "small",
+     "ticker": "ADEA",
+     "role": "supplier",
+     "path": [
+      "하이브리드 본딩",
+      "Adeia Inc. (ADEA)"
+     ],
+     "weakest": {
+      "id": "d001",
+      "relation": "offered_by",
+      "tier": "technical_inference",
+      "confidence": 0.4
+     },
+     "upgrade_needed": "supplied_to(official_issuer 이상) + 매출 노출 공시"
+    },
+    {
+     "company_id": "company:klic",
+     "company": "Kulicke & Soffa Industries Inc (KLIC)",
+     "direction": "positive",
+     "confidence": 0.4,
+     "band": "claimed",
+     "in_universe": true,
+     "size_band": "small",
+     "ticker": "KLIC",
+     "role": "supplier",
+     "path": [
+      "하이브리드 본딩",
+      "Kulicke & Soffa Industries Inc (KLIC)"
+     ],
+     "weakest": {
+      "id": "d003",
+      "relation": "offered_by",
+      "tier": "technical_inference",
+      "confidence": 0.4
+     },
+     "upgrade_needed": "supplied_to(official_issuer 이상) + 매출 노출 공시"
     }
    ],
    "substitutions": [
@@ -438,6 +817,28 @@
       "confidence": 0.6
      },
      "upgrade_needed": "매출 노출·수량·마진 공시"
+    },
+    {
+     "company_id": "company:klic",
+     "company": "Kulicke & Soffa Industries Inc (KLIC)",
+     "direction": "positive",
+     "confidence": 0.4,
+     "band": "claimed",
+     "in_universe": true,
+     "size_band": "small",
+     "ticker": "KLIC",
+     "role": "supplier",
+     "path": [
+      "열압착 본딩(TCB)",
+      "Kulicke & Soffa Industries Inc (KLIC)"
+     ],
+     "weakest": {
+      "id": "d002",
+      "relation": "offered_by",
+      "tier": "technical_inference",
+      "confidence": 0.4
+     },
+     "upgrade_needed": "supplied_to(official_issuer 이상) + 매출 노출 공시"
     }
    ],
    "substitutions": [
@@ -452,6 +853,75 @@
   },
   "req:1p6t": {
    "companies": [
+    {
+     "company_id": "company:almu",
+     "company": "Aeluma, Inc. (ALMU)",
+     "direction": "positive",
+     "confidence": 0.32,
+     "band": "inferred",
+     "in_universe": true,
+     "size_band": "micro",
+     "ticker": "ALMU",
+     "role": "supplier",
+     "path": [
+      "1.6 Tb/s Ethernet 및 200 Gb/s/lane 전환",
+      "광원 레이저",
+      "Aeluma, Inc. (ALMU)"
+     ],
+     "weakest": {
+      "id": "d013",
+      "relation": "offered_by",
+      "tier": "technical_inference",
+      "confidence": 0.4
+     },
+     "upgrade_needed": "supplied_to(official_issuer 이상) + 매출 노출 공시"
+    },
+    {
+     "company_id": "company:lwlg",
+     "company": "Lightwave Logic, Inc. (LWLG)",
+     "direction": "positive",
+     "confidence": 0.32,
+     "band": "inferred",
+     "in_universe": true,
+     "size_band": "micro",
+     "ticker": "LWLG",
+     "role": "supplier",
+     "path": [
+      "1.6 Tb/s Ethernet 및 200 Gb/s/lane 전환",
+      "고속 광변조기",
+      "Lightwave Logic, Inc. (LWLG)"
+     ],
+     "weakest": {
+      "id": "d011",
+      "relation": "offered_by",
+      "tier": "technical_inference",
+      "confidence": 0.4
+     },
+     "upgrade_needed": "supplied_to(official_issuer 이상) + 매출 노출 공시"
+    },
+    {
+     "company_id": "company:belfa",
+     "company": "Bel Fuse Inc /Nj (BELFA)",
+     "direction": "positive",
+     "confidence": 0.32,
+     "band": "inferred",
+     "in_universe": true,
+     "size_band": "small",
+     "ticker": "BELFA",
+     "role": "supplier",
+     "path": [
+      "1.6 Tb/s Ethernet 및 200 Gb/s/lane 전환",
+      "고밀도 광섬유 인터페이스",
+      "Bel Fuse Inc /Nj (BELFA)"
+     ],
+     "weakest": {
+      "id": "d017",
+      "relation": "offered_by",
+      "tier": "technical_inference",
+      "confidence": 0.4
+     },
+     "upgrade_needed": "supplied_to(official_issuer 이상) + 매출 노출 공시"
+    },
     {
      "company_id": "company:lite",
      "company": "Lumentum (LITE)",
@@ -477,12 +947,35 @@
      "upgrade_needed": "supplied_to(official_issuer 이상) + 매출 노출 공시"
     },
     {
+     "company_id": "company:mxl",
+     "company": "Maxlinear, Inc (MXL)",
+     "direction": "positive",
+     "confidence": 0.16,
+     "band": "inferred",
+     "in_universe": true,
+     "size_band": "small",
+     "ticker": "MXL",
+     "role": "supplier",
+     "path": [
+      "1.6 Tb/s Ethernet 및 200 Gb/s/lane 전환",
+      "고속 SerDes·DSP",
+      "Maxlinear, Inc (MXL)"
+     ],
+     "weakest": {
+      "id": "e047",
+      "relation": "requires",
+      "tier": "technical_inference",
+      "confidence": 0.4
+     },
+     "upgrade_needed": "supplied_to(official_issuer 이상) + 매출 노출 공시"
+    },
+    {
      "company_id": "company:poet",
      "company": "POET Technologies (POET)",
      "direction": "positive",
      "confidence": 0.141,
      "band": "inferred",
-     "in_universe": false,
+     "in_universe": true,
      "size_band": "small",
      "ticker": "POET",
      "role": "supplier",
@@ -549,56 +1042,6 @@
       "confidence": 0.4
      },
      "upgrade_needed": "supplied_to(official_issuer 이상) + 매출 노출 공시"
-    },
-    {
-     "company_id": "company:cohr",
-     "company": "Coherent (COHR)",
-     "direction": "positive",
-     "confidence": 0.102,
-     "band": "inferred",
-     "in_universe": false,
-     "size_band": "large",
-     "ticker": "COHR",
-     "role": "supplier_via_customer",
-     "path": [
-      "1.6 Tb/s Ethernet 및 200 Gb/s/lane 전환",
-      "고대역폭 광연결의 전력·발열·밀도",
-      "Co-Packaged Optics (CPO)",
-      "NVIDIA (NVDA) — HBM·광·전력 공통 수요처",
-      "Coherent (COHR)"
-     ],
-     "weakest": {
-      "id": "e013",
-      "relation": "creates_bottleneck",
-      "tier": "technical_inference",
-      "confidence": 0.4
-     },
-     "upgrade_needed": "supplied_to(official_issuer 이상) + 매출 노출 공시"
-    },
-    {
-     "company_id": "company:fn",
-     "company": "Fabrinet (FN)",
-     "direction": "positive",
-     "confidence": 0.102,
-     "band": "inferred",
-     "in_universe": false,
-     "size_band": "large",
-     "ticker": "FN",
-     "role": "supplier_via_customer",
-     "path": [
-      "1.6 Tb/s Ethernet 및 200 Gb/s/lane 전환",
-      "고대역폭 광연결의 전력·발열·밀도",
-      "Co-Packaged Optics (CPO)",
-      "NVIDIA (NVDA) — HBM·광·전력 공통 수요처",
-      "Fabrinet (FN)"
-     ],
-     "weakest": {
-      "id": "e013",
-      "relation": "creates_bottleneck",
-      "tier": "technical_inference",
-      "confidence": 0.4
-     },
-     "upgrade_needed": "supplied_to(official_issuer 이상) + 매출 노출 공시"
     }
    ],
    "substitutions": [
@@ -640,7 +1083,7 @@
      "direction": "positive",
      "confidence": 0.352,
      "band": "claimed",
-     "in_universe": false,
+     "in_universe": true,
      "size_band": "small",
      "ticker": "POET",
      "role": "supplier",
@@ -781,6 +1224,79 @@
       "confidence": 0.4
      },
      "upgrade_needed": "supplied_to(official_issuer 이상) + 매출 노출 공시"
+    },
+    {
+     "company_id": "company:aaoi",
+     "company": "Applied Optoelectronics, Inc. (AAOI)",
+     "direction": "positive",
+     "confidence": 0.128,
+     "band": "inferred",
+     "in_universe": true,
+     "size_band": "small",
+     "ticker": "AAOI",
+     "role": "supplier",
+     "path": [
+      "고대역폭 광연결의 전력·발열·밀도",
+      "1.6T Pluggable transceiver",
+      "Applied Optoelectronics, Inc. (AAOI)"
+     ],
+     "weakest": {
+      "id": "e017",
+      "relation": "mitigated_by",
+      "tier": "technical_inference",
+      "confidence": 0.32
+     },
+     "upgrade_needed": "supplied_to(official_issuer 이상) + 매출 노출 공시"
+    },
+    {
+     "company_id": "company:almu",
+     "company": "Aeluma, Inc. (ALMU)",
+     "direction": "positive",
+     "confidence": 0.026,
+     "band": "inferred",
+     "in_universe": true,
+     "size_band": "micro",
+     "ticker": "ALMU",
+     "role": "supplier",
+     "path": [
+      "고대역폭 광연결의 전력·발열·밀도",
+      "고속 광엔진 발열·온도 안정성",
+      "200G EML 광변조 레이저",
+      "인듐인(InP) 화합물 반도체",
+      "Aeluma, Inc. (ALMU)"
+     ],
+     "weakest": {
+      "id": "e084",
+      "relation": "creates_bottleneck",
+      "tier": "technical_inference",
+      "confidence": 0.4
+     },
+     "upgrade_needed": "supplied_to(official_issuer 이상) + 매출 노출 공시"
+    },
+    {
+     "company_id": "company:axti",
+     "company": "Axt Inc (AXTI)",
+     "direction": "positive",
+     "confidence": 0.026,
+     "band": "inferred",
+     "in_universe": true,
+     "size_band": "micro",
+     "ticker": "AXTI",
+     "role": "supplier",
+     "path": [
+      "고대역폭 광연결의 전력·발열·밀도",
+      "고속 광엔진 발열·온도 안정성",
+      "200G EML 광변조 레이저",
+      "인듐인(InP) 화합물 반도체",
+      "Axt Inc (AXTI)"
+     ],
+     "weakest": {
+      "id": "e084",
+      "relation": "creates_bottleneck",
+      "tier": "technical_inference",
+      "confidence": 0.4
+     },
+     "upgrade_needed": "supplied_to(official_issuer 이상) + 매출 노출 공시"
     }
    ],
    "substitutions": [
@@ -838,6 +1354,28 @@
       "confidence": 0.8
      },
      "upgrade_needed": "매출 노출·수량·마진 공시"
+    },
+    {
+     "company_id": "company:aaoi",
+     "company": "Applied Optoelectronics, Inc. (AAOI)",
+     "direction": "positive",
+     "confidence": 0.4,
+     "band": "claimed",
+     "in_universe": true,
+     "size_band": "small",
+     "ticker": "AAOI",
+     "role": "supplier",
+     "path": [
+      "1.6T Pluggable transceiver",
+      "Applied Optoelectronics, Inc. (AAOI)"
+     ],
+     "weakest": {
+      "id": "d016",
+      "relation": "offered_by",
+      "tier": "technical_inference",
+      "confidence": 0.4
+     },
+     "upgrade_needed": "supplied_to(official_issuer 이상) + 매출 노출 공시"
     }
    ],
    "substitutions": [
@@ -949,6 +1487,29 @@
       "confidence": 0.8
      },
      "upgrade_needed": "매출 노출·수량·마진 공시"
+    },
+    {
+     "company_id": "company:aaoi",
+     "company": "Applied Optoelectronics, Inc. (AAOI)",
+     "direction": "positive",
+     "confidence": 0.176,
+     "band": "inferred",
+     "in_universe": true,
+     "size_band": "small",
+     "ticker": "AAOI",
+     "role": "supplier",
+     "path": [
+      "Co-Packaged Optics (CPO)",
+      "1.6T Pluggable transceiver",
+      "Applied Optoelectronics, Inc. (AAOI)"
+     ],
+     "weakest": {
+      "id": "d016",
+      "relation": "offered_by",
+      "tier": "technical_inference",
+      "confidence": 0.4
+     },
+     "upgrade_needed": "supplied_to(official_issuer 이상) + 매출 노출 공시"
     }
    ],
    "substitutions": [
@@ -1010,12 +1571,35 @@
      "upgrade_needed": "supplied_to(official_issuer 이상) + 매출 노출 공시"
     },
     {
+     "company_id": "company:ipwr",
+     "company": "Ideal Power Inc. (IPWR)",
+     "direction": "positive",
+     "confidence": 0.32,
+     "band": "inferred",
+     "in_universe": true,
+     "size_band": "micro",
+     "ticker": "IPWR",
+     "role": "supplier",
+     "path": [
+      "차세대 800VDC 배전 아키텍처",
+      "고전압 DC 차단·보호 장치",
+      "Ideal Power Inc. (IPWR)"
+     ],
+     "weakest": {
+      "id": "d020",
+      "relation": "offered_by",
+      "tier": "technical_inference",
+      "confidence": 0.4
+     },
+     "upgrade_needed": "supplied_to(official_issuer 이상) + 매출 노출 공시"
+    },
+    {
      "company_id": "company:nvts",
      "company": "Navitas Semiconductor (NVTS)",
      "direction": "positive",
      "confidence": 0.128,
      "band": "inferred",
-     "in_universe": false,
+     "in_universe": true,
      "size_band": "small",
      "ticker": "NVTS",
      "role": "supplier",
@@ -1058,26 +1642,97 @@
      "upgrade_needed": "supplied_to(official_issuer 이상) + 매출 노출 공시"
     },
     {
-     "company_id": "company:aehr",
-     "company": "Aehr Test Systems (AEHR)",
+     "company_id": "company:aosl",
+     "company": "Alpha & Omega Semiconductor Ltd (AOSL)",
      "direction": "positive",
-     "confidence": 0.023,
+     "confidence": 0.128,
      "band": "inferred",
-     "in_universe": false,
+     "in_universe": true,
      "size_band": "small",
-     "ticker": "AEHR",
+     "ticker": "AOSL",
      "role": "supplier",
      "path": [
       "차세대 800VDC 배전 아키텍처",
       "전력변환 단계·효율·제어",
-      "SiC 전력반도체",
-      "SiC 소자 신뢰성·번인 검사",
-      "SiC 웨이퍼 레벨 번인·신뢰성 검사",
-      "Aehr FOX-XP 웨이퍼 레벨 번인 시스템",
-      "Aehr Test Systems (AEHR)"
+      "SiC·GaN 전력반도체 게이트드라이버",
+      "Alpha & Omega Semiconductor Ltd (AOSL)"
      ],
      "weakest": {
-      "id": "e031",
+      "id": "e094",
+      "relation": "mitigated_by",
+      "tier": "technical_inference",
+      "confidence": 0.4
+     },
+     "upgrade_needed": "supplied_to(official_issuer 이상) + 매출 노출 공시"
+    },
+    {
+     "company_id": "company:wolf",
+     "company": "Wolfspeed, Inc. (WOLF)",
+     "direction": "positive",
+     "confidence": 0.064,
+     "band": "inferred",
+     "in_universe": true,
+     "size_band": "small",
+     "ticker": "WOLF",
+     "role": "supplier",
+     "path": [
+      "차세대 800VDC 배전 아키텍처",
+      "전력변환 단계·효율·제어",
+      "SiC MOSFET 소자",
+      "Wolfspeed, Inc. (WOLF)"
+     ],
+     "weakest": {
+      "id": "e056",
+      "relation": "mitigated_by",
+      "tier": "hypothesis",
+      "confidence": 0.2
+     },
+     "upgrade_needed": "supplied_to(official_issuer 이상) + 매출 노출 공시"
+    },
+    {
+     "company_id": "company:asys",
+     "company": "Amtech Systems Inc (ASYS)",
+     "direction": "positive",
+     "confidence": 0.026,
+     "band": "inferred",
+     "in_universe": true,
+     "size_band": "micro",
+     "ticker": "ASYS",
+     "role": "supplier",
+     "path": [
+      "차세대 800VDC 배전 아키텍처",
+      "전력변환 단계·효율·제어",
+      "SiC MOSFET 소자",
+      "SiC 결정 웨이퍼·에피층",
+      "Amtech Systems Inc (ASYS)"
+     ],
+     "weakest": {
+      "id": "e056",
+      "relation": "mitigated_by",
+      "tier": "hypothesis",
+      "confidence": 0.2
+     },
+     "upgrade_needed": "supplied_to(official_issuer 이상) + 매출 노출 공시"
+    },
+    {
+     "company_id": "company:cvv",
+     "company": "Cvd Equipment Corp (CVV)",
+     "direction": "positive",
+     "confidence": 0.026,
+     "band": "inferred",
+     "in_universe": true,
+     "size_band": "micro",
+     "ticker": "CVV",
+     "role": "supplier",
+     "path": [
+      "차세대 800VDC 배전 아키텍처",
+      "전력변환 단계·효율·제어",
+      "SiC MOSFET 소자",
+      "SiC 결정 웨이퍼·에피층",
+      "Cvd Equipment Corp (CVV)"
+     ],
+     "weakest": {
+      "id": "e056",
       "relation": "mitigated_by",
       "tier": "hypothesis",
       "confidence": 0.2
@@ -1129,12 +1784,35 @@
      "upgrade_needed": "supplied_to(official_issuer 이상) + 매출 노출 공시"
     },
     {
+     "company_id": "company:ipwr",
+     "company": "Ideal Power Inc. (IPWR)",
+     "direction": "positive",
+     "confidence": 0.32,
+     "band": "inferred",
+     "in_universe": true,
+     "size_band": "micro",
+     "ticker": "IPWR",
+     "role": "supplier",
+     "path": [
+      "전력변환 단계·효율·제어",
+      "DC/DC 전력변환 모듈",
+      "Ideal Power Inc. (IPWR)"
+     ],
+     "weakest": {
+      "id": "d021",
+      "relation": "offered_by",
+      "tier": "technical_inference",
+      "confidence": 0.4
+     },
+     "upgrade_needed": "supplied_to(official_issuer 이상) + 매출 노출 공시"
+    },
+    {
      "company_id": "company:nvts",
      "company": "Navitas Semiconductor (NVTS)",
      "direction": "positive",
      "confidence": 0.16,
      "band": "inferred",
-     "in_universe": false,
+     "in_universe": true,
      "size_band": "small",
      "ticker": "NVTS",
      "role": "supplier",
@@ -1175,25 +1853,93 @@
      "upgrade_needed": "supplied_to(official_issuer 이상) + 매출 노출 공시"
     },
     {
-     "company_id": "company:aehr",
-     "company": "Aehr Test Systems (AEHR)",
+     "company_id": "company:aosl",
+     "company": "Alpha & Omega Semiconductor Ltd (AOSL)",
      "direction": "positive",
-     "confidence": 0.028,
+     "confidence": 0.16,
      "band": "inferred",
-     "in_universe": false,
+     "in_universe": true,
      "size_band": "small",
-     "ticker": "AEHR",
+     "ticker": "AOSL",
      "role": "supplier",
      "path": [
       "전력변환 단계·효율·제어",
-      "SiC 전력반도체",
-      "SiC 소자 신뢰성·번인 검사",
-      "SiC 웨이퍼 레벨 번인·신뢰성 검사",
-      "Aehr FOX-XP 웨이퍼 레벨 번인 시스템",
-      "Aehr Test Systems (AEHR)"
+      "SiC·GaN 전력반도체 게이트드라이버",
+      "Alpha & Omega Semiconductor Ltd (AOSL)"
      ],
      "weakest": {
-      "id": "e031",
+      "id": "e094",
+      "relation": "mitigated_by",
+      "tier": "technical_inference",
+      "confidence": 0.4
+     },
+     "upgrade_needed": "supplied_to(official_issuer 이상) + 매출 노출 공시"
+    },
+    {
+     "company_id": "company:wolf",
+     "company": "Wolfspeed, Inc. (WOLF)",
+     "direction": "positive",
+     "confidence": 0.08,
+     "band": "inferred",
+     "in_universe": true,
+     "size_band": "small",
+     "ticker": "WOLF",
+     "role": "supplier",
+     "path": [
+      "전력변환 단계·효율·제어",
+      "SiC MOSFET 소자",
+      "Wolfspeed, Inc. (WOLF)"
+     ],
+     "weakest": {
+      "id": "e056",
+      "relation": "mitigated_by",
+      "tier": "hypothesis",
+      "confidence": 0.2
+     },
+     "upgrade_needed": "supplied_to(official_issuer 이상) + 매출 노출 공시"
+    },
+    {
+     "company_id": "company:asys",
+     "company": "Amtech Systems Inc (ASYS)",
+     "direction": "positive",
+     "confidence": 0.032,
+     "band": "inferred",
+     "in_universe": true,
+     "size_band": "micro",
+     "ticker": "ASYS",
+     "role": "supplier",
+     "path": [
+      "전력변환 단계·효율·제어",
+      "SiC MOSFET 소자",
+      "SiC 결정 웨이퍼·에피층",
+      "Amtech Systems Inc (ASYS)"
+     ],
+     "weakest": {
+      "id": "e056",
+      "relation": "mitigated_by",
+      "tier": "hypothesis",
+      "confidence": 0.2
+     },
+     "upgrade_needed": "supplied_to(official_issuer 이상) + 매출 노출 공시"
+    },
+    {
+     "company_id": "company:cvv",
+     "company": "Cvd Equipment Corp (CVV)",
+     "direction": "positive",
+     "confidence": 0.032,
+     "band": "inferred",
+     "in_universe": true,
+     "size_band": "micro",
+     "ticker": "CVV",
+     "role": "supplier",
+     "path": [
+      "전력변환 단계·효율·제어",
+      "SiC MOSFET 소자",
+      "SiC 결정 웨이퍼·에피층",
+      "Cvd Equipment Corp (CVV)"
+     ],
+     "weakest": {
+      "id": "e056",
       "relation": "mitigated_by",
       "tier": "hypothesis",
       "confidence": 0.2
@@ -1274,7 +2020,7 @@
      "direction": "positive",
      "confidence": 0.8,
      "band": "documented",
-     "in_universe": false,
+     "in_universe": true,
      "size_band": "small",
      "ticker": "NVTS",
      "role": "supplier",
@@ -1318,7 +2064,7 @@
      "direction": "positive",
      "confidence": 0.141,
      "band": "inferred",
-     "in_universe": false,
+     "in_universe": true,
      "size_band": "small",
      "ticker": "AEHR",
      "role": "supplier",
@@ -1328,6 +2074,30 @@
       "SiC 웨이퍼 레벨 번인·신뢰성 검사",
       "Aehr FOX-XP 웨이퍼 레벨 번인 시스템",
       "Aehr Test Systems (AEHR)"
+     ],
+     "weakest": {
+      "id": "e032",
+      "relation": "creates_bottleneck",
+      "tier": "technical_inference",
+      "confidence": 0.4
+     },
+     "upgrade_needed": "supplied_to(official_issuer 이상) + 매출 노출 공시"
+    },
+    {
+     "company_id": "company:intt",
+     "company": "Intest Corp (INTT)",
+     "direction": "positive",
+     "confidence": 0.088,
+     "band": "inferred",
+     "in_universe": true,
+     "size_band": "micro",
+     "ticker": "INTT",
+     "role": "supplier",
+     "path": [
+      "SiC 전력반도체",
+      "SiC 소자 신뢰성·번인 검사",
+      "SiC 웨이퍼 레벨 번인·신뢰성 검사",
+      "Intest Corp (INTT)"
      ],
      "weakest": {
       "id": "e032",
@@ -1348,7 +2118,7 @@
      "direction": "positive",
      "confidence": 0.352,
      "band": "claimed",
-     "in_universe": false,
+     "in_universe": true,
      "size_band": "small",
      "ticker": "AEHR",
      "role": "supplier",
@@ -1363,6 +2133,181 @@
       "relation": "mitigated_by",
       "tier": "vendor_claim",
       "confidence": 0.55
+     },
+     "upgrade_needed": "supplied_to(official_issuer 이상) + 매출 노출 공시"
+    },
+    {
+     "company_id": "company:intt",
+     "company": "Intest Corp (INTT)",
+     "direction": "positive",
+     "confidence": 0.22,
+     "band": "inferred",
+     "in_universe": true,
+     "size_band": "micro",
+     "ticker": "INTT",
+     "role": "supplier",
+     "path": [
+      "SiC 소자 신뢰성·번인 검사",
+      "SiC 웨이퍼 레벨 번인·신뢰성 검사",
+      "Intest Corp (INTT)"
+     ],
+     "weakest": {
+      "id": "d027",
+      "relation": "offered_by",
+      "tier": "technical_inference",
+      "confidence": 0.4
+     },
+     "upgrade_needed": "supplied_to(official_issuer 이상) + 매출 노출 공시"
+    }
+   ],
+   "substitutions": []
+  },
+  "bottleneck:hbm_kged": {
+   "companies": [
+    {
+     "company_id": "company:form",
+     "company": "Formfactor Inc (FORM)",
+     "direction": "positive",
+     "confidence": 0.16,
+     "band": "inferred",
+     "in_universe": true,
+     "size_band": "unknown",
+     "ticker": "FORM",
+     "role": "supplier",
+     "path": [
+      "적층 전 Known-Good-Die 수율 검사",
+      "적층 전 KGD 웨이퍼 테스트 (프로브·핸들러)",
+      "Formfactor Inc (FORM)"
+     ],
+     "weakest": {
+      "id": "p_kgd_test",
+      "relation": "mitigated_by",
+      "tier": "technical_inference",
+      "confidence": 0.4
+     },
+     "upgrade_needed": "supplied_to(official_issuer 이상) + 매출 노출 공시"
+    },
+    {
+     "company_id": "company:cohu",
+     "company": "Cohu Inc (COHU)",
+     "direction": "positive",
+     "confidence": 0.16,
+     "band": "inferred",
+     "in_universe": true,
+     "size_band": "small",
+     "ticker": "COHU",
+     "role": "supplier",
+     "path": [
+      "적층 전 Known-Good-Die 수율 검사",
+      "적층 전 KGD 웨이퍼 테스트 (프로브·핸들러)",
+      "Cohu Inc (COHU)"
+     ],
+     "weakest": {
+      "id": "p_kgd_test",
+      "relation": "mitigated_by",
+      "tier": "technical_inference",
+      "confidence": 0.4
+     },
+     "upgrade_needed": "supplied_to(official_issuer 이상) + 매출 노출 공시"
+    }
+   ],
+   "substitutions": []
+  },
+  "bottleneck:hbm_wafer_warpage": {
+   "companies": [
+    {
+     "company_id": "company:veco",
+     "company": "Veeco Instruments Inc (VECO)",
+     "direction": "positive",
+     "confidence": 0.064,
+     "band": "inferred",
+     "in_universe": true,
+     "size_band": "small",
+     "ticker": "VECO",
+     "role": "supplier",
+     "path": [
+      "적층 웨이퍼 휨(wafer warpage)",
+      "하이브리드 본딩 양산 적격성 검증",
+      "웨이퍼 본딩 전 표면 활성화·세정",
+      "Veeco Instruments Inc (VECO)"
+     ],
+     "weakest": {
+      "id": "e041",
+      "relation": "mitigated_by",
+      "tier": "technical_inference",
+      "confidence": 0.4
+     },
+     "upgrade_needed": "supplied_to(official_issuer 이상) + 매출 노출 공시"
+    },
+    {
+     "company_id": "company:nvmi",
+     "company": "Nova Ltd. (NVMI)",
+     "direction": "positive",
+     "confidence": 0.064,
+     "band": "inferred",
+     "in_universe": true,
+     "size_band": "unknown",
+     "ticker": "NVMI",
+     "role": "supplier",
+     "path": [
+      "적층 웨이퍼 휨(wafer warpage)",
+      "하이브리드 본딩 양산 적격성 검증",
+      "Cu·절연체 CMP 평탄화",
+      "Nova Ltd. (NVMI)"
+     ],
+     "weakest": {
+      "id": "e041",
+      "relation": "mitigated_by",
+      "tier": "technical_inference",
+      "confidence": 0.4
+     },
+     "upgrade_needed": "supplied_to(official_issuer 이상) + 매출 노출 공시"
+    },
+    {
+     "company_id": "company:ichr",
+     "company": "Ichor Holdings, Ltd. (ICHR)",
+     "direction": "positive",
+     "confidence": 0.064,
+     "band": "inferred",
+     "in_universe": true,
+     "size_band": "small",
+     "ticker": "ICHR",
+     "role": "supplier",
+     "path": [
+      "적층 웨이퍼 휨(wafer warpage)",
+      "하이브리드 본딩 양산 적격성 검증",
+      "Cu·절연체 CMP 평탄화",
+      "Ichor Holdings, Ltd. (ICHR)"
+     ],
+     "weakest": {
+      "id": "e041",
+      "relation": "mitigated_by",
+      "tier": "technical_inference",
+      "confidence": 0.4
+     },
+     "upgrade_needed": "supplied_to(official_issuer 이상) + 매출 노출 공시"
+    },
+    {
+     "company_id": "company:asys",
+     "company": "Amtech Systems Inc (ASYS)",
+     "direction": "positive",
+     "confidence": 0.064,
+     "band": "inferred",
+     "in_universe": true,
+     "size_band": "micro",
+     "ticker": "ASYS",
+     "role": "supplier",
+     "path": [
+      "적층 웨이퍼 휨(wafer warpage)",
+      "하이브리드 본딩 양산 적격성 검증",
+      "Cu·절연체 CMP 평탄화",
+      "Amtech Systems Inc (ASYS)"
+     ],
+     "weakest": {
+      "id": "e041",
+      "relation": "mitigated_by",
+      "tier": "technical_inference",
+      "confidence": 0.4
      },
      "upgrade_needed": "supplied_to(official_issuer 이상) + 매출 노출 공시"
     }
@@ -1416,6 +2361,410 @@
       "confidence": 0.8
      },
      "upgrade_needed": "매출 노출·수량·마진 공시"
+    },
+    {
+     "company_id": "company:nvmi",
+     "company": "Nova Ltd. (NVMI)",
+     "direction": "positive",
+     "confidence": 0.4,
+     "band": "claimed",
+     "in_universe": true,
+     "size_band": "unknown",
+     "ticker": "NVMI",
+     "role": "supplier",
+     "path": [
+      "미세범프 형상·높이 2D/3D 검사",
+      "Nova Ltd. (NVMI)"
+     ],
+     "weakest": {
+      "id": "d007",
+      "relation": "offered_by",
+      "tier": "technical_inference",
+      "confidence": 0.4
+     },
+     "upgrade_needed": "supplied_to(official_issuer 이상) + 매출 노출 공시"
+    }
+   ],
+   "substitutions": []
+  },
+  "process:hybrid_bond_qualification": {
+   "companies": [
+    {
+     "company_id": "company:veco",
+     "company": "Veeco Instruments Inc (VECO)",
+     "direction": "positive",
+     "confidence": 0.16,
+     "band": "inferred",
+     "in_universe": true,
+     "size_band": "small",
+     "ticker": "VECO",
+     "role": "supplier",
+     "path": [
+      "하이브리드 본딩 양산 적격성 검증",
+      "웨이퍼 본딩 전 표면 활성화·세정",
+      "Veeco Instruments Inc (VECO)"
+     ],
+     "weakest": {
+      "id": "e071",
+      "relation": "requires",
+      "tier": "technical_inference",
+      "confidence": 0.4
+     },
+     "upgrade_needed": "supplied_to(official_issuer 이상) + 매출 노출 공시"
+    },
+    {
+     "company_id": "company:nvmi",
+     "company": "Nova Ltd. (NVMI)",
+     "direction": "positive",
+     "confidence": 0.16,
+     "band": "inferred",
+     "in_universe": true,
+     "size_band": "unknown",
+     "ticker": "NVMI",
+     "role": "supplier",
+     "path": [
+      "하이브리드 본딩 양산 적격성 검증",
+      "Cu·절연체 CMP 평탄화",
+      "Nova Ltd. (NVMI)"
+     ],
+     "weakest": {
+      "id": "e072",
+      "relation": "requires",
+      "tier": "technical_inference",
+      "confidence": 0.4
+     },
+     "upgrade_needed": "supplied_to(official_issuer 이상) + 매출 노출 공시"
+    },
+    {
+     "company_id": "company:ichr",
+     "company": "Ichor Holdings, Ltd. (ICHR)",
+     "direction": "positive",
+     "confidence": 0.16,
+     "band": "inferred",
+     "in_universe": true,
+     "size_band": "small",
+     "ticker": "ICHR",
+     "role": "supplier",
+     "path": [
+      "하이브리드 본딩 양산 적격성 검증",
+      "Cu·절연체 CMP 평탄화",
+      "Ichor Holdings, Ltd. (ICHR)"
+     ],
+     "weakest": {
+      "id": "e072",
+      "relation": "requires",
+      "tier": "technical_inference",
+      "confidence": 0.4
+     },
+     "upgrade_needed": "supplied_to(official_issuer 이상) + 매출 노출 공시"
+    },
+    {
+     "company_id": "company:asys",
+     "company": "Amtech Systems Inc (ASYS)",
+     "direction": "positive",
+     "confidence": 0.16,
+     "band": "inferred",
+     "in_universe": true,
+     "size_band": "micro",
+     "ticker": "ASYS",
+     "role": "supplier",
+     "path": [
+      "하이브리드 본딩 양산 적격성 검증",
+      "Cu·절연체 CMP 평탄화",
+      "Amtech Systems Inc (ASYS)"
+     ],
+     "weakest": {
+      "id": "e072",
+      "relation": "requires",
+      "tier": "technical_inference",
+      "confidence": 0.4
+     },
+     "upgrade_needed": "supplied_to(official_issuer 이상) + 매출 노출 공시"
+    }
+   ],
+   "substitutions": []
+  },
+  "component:optical_laser": {
+   "companies": [
+    {
+     "company_id": "company:almu",
+     "company": "Aeluma, Inc. (ALMU)",
+     "direction": "positive",
+     "confidence": 0.4,
+     "band": "claimed",
+     "in_universe": true,
+     "size_band": "micro",
+     "ticker": "ALMU",
+     "role": "supplier",
+     "path": [
+      "광원 레이저",
+      "Aeluma, Inc. (ALMU)"
+     ],
+     "weakest": {
+      "id": "d013",
+      "relation": "offered_by",
+      "tier": "technical_inference",
+      "confidence": 0.4
+     },
+     "upgrade_needed": "supplied_to(official_issuer 이상) + 매출 노출 공시"
+    }
+   ],
+   "substitutions": []
+  },
+  "component:modulator": {
+   "companies": [
+    {
+     "company_id": "company:lwlg",
+     "company": "Lightwave Logic, Inc. (LWLG)",
+     "direction": "positive",
+     "confidence": 0.4,
+     "band": "claimed",
+     "in_universe": true,
+     "size_band": "micro",
+     "ticker": "LWLG",
+     "role": "supplier",
+     "path": [
+      "고속 광변조기",
+      "Lightwave Logic, Inc. (LWLG)"
+     ],
+     "weakest": {
+      "id": "d011",
+      "relation": "offered_by",
+      "tier": "technical_inference",
+      "confidence": 0.4
+     },
+     "upgrade_needed": "supplied_to(official_issuer 이상) + 매출 노출 공시"
+    }
+   ],
+   "substitutions": []
+  },
+  "component:optical_dsp": {
+   "companies": [
+    {
+     "company_id": "company:mxl",
+     "company": "Maxlinear, Inc (MXL)",
+     "direction": "positive",
+     "confidence": 0.4,
+     "band": "claimed",
+     "in_universe": true,
+     "size_band": "small",
+     "ticker": "MXL",
+     "role": "supplier",
+     "path": [
+      "고속 SerDes·DSP",
+      "Maxlinear, Inc (MXL)"
+     ],
+     "weakest": {
+      "id": "d015",
+      "relation": "offered_by",
+      "tier": "technical_inference",
+      "confidence": 0.4
+     },
+     "upgrade_needed": "supplied_to(official_issuer 이상) + 매출 노출 공시"
+    }
+   ],
+   "substitutions": []
+  },
+  "bottleneck:optic_ber": {
+   "companies": [
+    {
+     "company_id": "company:mxl",
+     "company": "Maxlinear, Inc (MXL)",
+     "direction": "positive",
+     "confidence": 0.16,
+     "band": "inferred",
+     "in_universe": true,
+     "size_band": "small",
+     "ticker": "MXL",
+     "role": "supplier",
+     "path": [
+      "신호 무결성·비트오류율 BER",
+      "고속 SerDes·DSP",
+      "Maxlinear, Inc (MXL)"
+     ],
+     "weakest": {
+      "id": "e050",
+      "relation": "mitigated_by",
+      "tier": "technical_inference",
+      "confidence": 0.4
+     },
+     "upgrade_needed": "supplied_to(official_issuer 이상) + 매출 노출 공시"
+    }
+   ],
+   "substitutions": []
+  },
+  "component:fiber_connector": {
+   "companies": [
+    {
+     "company_id": "company:belfa",
+     "company": "Bel Fuse Inc /Nj (BELFA)",
+     "direction": "positive",
+     "confidence": 0.4,
+     "band": "claimed",
+     "in_universe": true,
+     "size_band": "small",
+     "ticker": "BELFA",
+     "role": "supplier",
+     "path": [
+      "고밀도 광섬유 인터페이스",
+      "Bel Fuse Inc /Nj (BELFA)"
+     ],
+     "weakest": {
+      "id": "d017",
+      "relation": "offered_by",
+      "tier": "technical_inference",
+      "confidence": 0.4
+     },
+     "upgrade_needed": "supplied_to(official_issuer 이상) + 매출 노출 공시"
+    }
+   ],
+   "substitutions": []
+  },
+  "component:dc_breaker": {
+   "companies": [
+    {
+     "company_id": "company:ipwr",
+     "company": "Ideal Power Inc. (IPWR)",
+     "direction": "positive",
+     "confidence": 0.4,
+     "band": "claimed",
+     "in_universe": true,
+     "size_band": "micro",
+     "ticker": "IPWR",
+     "role": "supplier",
+     "path": [
+      "고전압 DC 차단·보호 장치",
+      "Ideal Power Inc. (IPWR)"
+     ],
+     "weakest": {
+      "id": "d020",
+      "relation": "offered_by",
+      "tier": "technical_inference",
+      "confidence": 0.4
+     },
+     "upgrade_needed": "supplied_to(official_issuer 이상) + 매출 노출 공시"
+    }
+   ],
+   "substitutions": []
+  },
+  "component:power_converter": {
+   "companies": [
+    {
+     "company_id": "company:ipwr",
+     "company": "Ideal Power Inc. (IPWR)",
+     "direction": "positive",
+     "confidence": 0.4,
+     "band": "claimed",
+     "in_universe": true,
+     "size_band": "micro",
+     "ticker": "IPWR",
+     "role": "supplier",
+     "path": [
+      "DC/DC 전력변환 모듈",
+      "Ideal Power Inc. (IPWR)"
+     ],
+     "weakest": {
+      "id": "d021",
+      "relation": "offered_by",
+      "tier": "technical_inference",
+      "confidence": 0.4
+     },
+     "upgrade_needed": "supplied_to(official_issuer 이상) + 매출 노출 공시"
+    }
+   ],
+   "substitutions": []
+  },
+  "component:sic_mosfet": {
+   "companies": [
+    {
+     "company_id": "company:aosl",
+     "company": "Alpha & Omega Semiconductor Ltd (AOSL)",
+     "direction": "positive",
+     "confidence": 0.4,
+     "band": "claimed",
+     "in_universe": true,
+     "size_band": "small",
+     "ticker": "AOSL",
+     "role": "supplier",
+     "path": [
+      "SiC MOSFET 소자",
+      "Alpha & Omega Semiconductor Ltd (AOSL)"
+     ],
+     "weakest": {
+      "id": "d019",
+      "relation": "offered_by",
+      "tier": "technical_inference",
+      "confidence": 0.4
+     },
+     "upgrade_needed": "supplied_to(official_issuer 이상) + 매출 노출 공시"
+    },
+    {
+     "company_id": "company:wolf",
+     "company": "Wolfspeed, Inc. (WOLF)",
+     "direction": "positive",
+     "confidence": 0.4,
+     "band": "claimed",
+     "in_universe": true,
+     "size_band": "small",
+     "ticker": "WOLF",
+     "role": "supplier",
+     "path": [
+      "SiC MOSFET 소자",
+      "Wolfspeed, Inc. (WOLF)"
+     ],
+     "weakest": {
+      "id": "d025",
+      "relation": "offered_by",
+      "tier": "technical_inference",
+      "confidence": 0.4
+     },
+     "upgrade_needed": "supplied_to(official_issuer 이상) + 매출 노출 공시"
+    },
+    {
+     "company_id": "company:asys",
+     "company": "Amtech Systems Inc (ASYS)",
+     "direction": "positive",
+     "confidence": 0.16,
+     "band": "inferred",
+     "in_universe": true,
+     "size_band": "micro",
+     "ticker": "ASYS",
+     "role": "supplier",
+     "path": [
+      "SiC MOSFET 소자",
+      "SiC 결정 웨이퍼·에피층",
+      "Amtech Systems Inc (ASYS)"
+     ],
+     "weakest": {
+      "id": "e096",
+      "relation": "requires",
+      "tier": "technical_inference",
+      "confidence": 0.4
+     },
+     "upgrade_needed": "supplied_to(official_issuer 이상) + 매출 노출 공시"
+    },
+    {
+     "company_id": "company:cvv",
+     "company": "Cvd Equipment Corp (CVV)",
+     "direction": "positive",
+     "confidence": 0.16,
+     "band": "inferred",
+     "in_universe": true,
+     "size_band": "micro",
+     "ticker": "CVV",
+     "role": "supplier",
+     "path": [
+      "SiC MOSFET 소자",
+      "SiC 결정 웨이퍼·에피층",
+      "Cvd Equipment Corp (CVV)"
+     ],
+     "weakest": {
+      "id": "e096",
+      "relation": "requires",
+      "tier": "technical_inference",
+      "confidence": 0.4
+     },
+     "upgrade_needed": "supplied_to(official_issuer 이상) + 매출 노출 공시"
     }
    ],
    "substitutions": []
@@ -1468,6 +2817,52 @@
       "confidence": 0.4
      },
      "upgrade_needed": "supplied_to(official_issuer 이상) + 매출 노출 공시"
+    },
+    {
+     "company_id": "company:adea",
+     "company": "Adeia Inc. (ADEA)",
+     "direction": "positive",
+     "confidence": 0.16,
+     "band": "inferred",
+     "in_universe": true,
+     "size_band": "small",
+     "ticker": "ADEA",
+     "role": "supplier",
+     "path": [
+      "고밀도 인터커넥트의 미세 피치 한계",
+      "하이브리드 본딩",
+      "Adeia Inc. (ADEA)"
+     ],
+     "weakest": {
+      "id": "e061",
+      "relation": "mitigated_by",
+      "tier": "technical_inference",
+      "confidence": 0.4
+     },
+     "upgrade_needed": "supplied_to(official_issuer 이상) + 매출 노출 공시"
+    },
+    {
+     "company_id": "company:klic",
+     "company": "Kulicke & Soffa Industries Inc (KLIC)",
+     "direction": "positive",
+     "confidence": 0.16,
+     "band": "inferred",
+     "in_universe": true,
+     "size_band": "small",
+     "ticker": "KLIC",
+     "role": "supplier",
+     "path": [
+      "고밀도 인터커넥트의 미세 피치 한계",
+      "하이브리드 본딩",
+      "Kulicke & Soffa Industries Inc (KLIC)"
+     ],
+     "weakest": {
+      "id": "e061",
+      "relation": "mitigated_by",
+      "tier": "technical_inference",
+      "confidence": 0.4
+     },
+     "upgrade_needed": "supplied_to(official_issuer 이상) + 매출 노출 공시"
     }
    ],
    "substitutions": [
@@ -1486,6 +2881,131 @@
      "note": "채택 시 범프 검사 수요 구조 변화 — 시점은 HBM5 이후"
     }
    ]
+  },
+  "component:tsv": {
+   "companies": [
+    {
+     "company_id": "company:form",
+     "company": "Formfactor Inc (FORM)",
+     "direction": "positive",
+     "confidence": 0.4,
+     "band": "claimed",
+     "in_universe": true,
+     "size_band": "unknown",
+     "ticker": "FORM",
+     "role": "supplier",
+     "path": [
+      "실리콘 관통 전극 (TSV)",
+      "Formfactor Inc (FORM)"
+     ],
+     "weakest": {
+      "id": "d005",
+      "relation": "offered_by",
+      "tier": "technical_inference",
+      "confidence": 0.4
+     },
+     "upgrade_needed": "supplied_to(official_issuer 이상) + 매출 노출 공시"
+    }
+   ],
+   "substitutions": []
+  },
+  "process:surface_activation": {
+   "companies": [
+    {
+     "company_id": "company:veco",
+     "company": "Veeco Instruments Inc (VECO)",
+     "direction": "positive",
+     "confidence": 0.4,
+     "band": "claimed",
+     "in_universe": true,
+     "size_band": "small",
+     "ticker": "VECO",
+     "role": "supplier",
+     "path": [
+      "웨이퍼 본딩 전 표면 활성화·세정",
+      "Veeco Instruments Inc (VECO)"
+     ],
+     "weakest": {
+      "id": "d009",
+      "relation": "offered_by",
+      "tier": "technical_inference",
+      "confidence": 0.4
+     },
+     "upgrade_needed": "supplied_to(official_issuer 이상) + 매출 노출 공시"
+    }
+   ],
+   "substitutions": []
+  },
+  "process:cmp": {
+   "companies": [
+    {
+     "company_id": "company:nvmi",
+     "company": "Nova Ltd. (NVMI)",
+     "direction": "positive",
+     "confidence": 0.4,
+     "band": "claimed",
+     "in_universe": true,
+     "size_band": "unknown",
+     "ticker": "NVMI",
+     "role": "supplier",
+     "path": [
+      "Cu·절연체 CMP 평탄화",
+      "Nova Ltd. (NVMI)"
+     ],
+     "weakest": {
+      "id": "d008",
+      "relation": "offered_by",
+      "tier": "technical_inference",
+      "confidence": 0.4
+     },
+     "upgrade_needed": "supplied_to(official_issuer 이상) + 매출 노출 공시"
+    },
+    {
+     "company_id": "company:ichr",
+     "company": "Ichor Holdings, Ltd. (ICHR)",
+     "direction": "positive",
+     "confidence": 0.4,
+     "band": "claimed",
+     "in_universe": true,
+     "size_band": "small",
+     "ticker": "ICHR",
+     "role": "supplier",
+     "path": [
+      "Cu·절연체 CMP 평탄화",
+      "Ichor Holdings, Ltd. (ICHR)"
+     ],
+     "weakest": {
+      "id": "d010",
+      "relation": "offered_by",
+      "tier": "technical_inference",
+      "confidence": 0.4
+     },
+     "upgrade_needed": "supplied_to(official_issuer 이상) + 매출 노출 공시"
+    },
+    {
+     "company_id": "company:asys",
+     "company": "Amtech Systems Inc (ASYS)",
+     "direction": "positive",
+     "confidence": 0.4,
+     "band": "claimed",
+     "in_universe": true,
+     "size_band": "micro",
+     "ticker": "ASYS",
+     "role": "supplier",
+     "path": [
+      "Cu·절연체 CMP 평탄화",
+      "Amtech Systems Inc (ASYS)"
+     ],
+     "weakest": {
+      "id": "d023",
+      "relation": "offered_by",
+      "tier": "technical_inference",
+      "confidence": 0.4
+     },
+     "upgrade_needed": "supplied_to(official_issuer 이상) + 매출 노출 공시"
+    }
+   ],
+   "substitutions": []
   },
   "bottleneck:bond_void": {
    "companies": [
@@ -1506,6 +3026,75 @@
      ],
      "weakest": {
       "id": "n026",
+      "relation": "mitigated_by",
+      "tier": "technical_inference",
+      "confidence": 0.4
+     },
+     "upgrade_needed": "supplied_to(official_issuer 이상) + 매출 노출 공시"
+    },
+    {
+     "company_id": "company:nvmi",
+     "company": "Nova Ltd. (NVMI)",
+     "direction": "positive",
+     "confidence": 0.16,
+     "band": "inferred",
+     "in_universe": true,
+     "size_band": "unknown",
+     "ticker": "NVMI",
+     "role": "supplier",
+     "path": [
+      "접합 계면 void·불량",
+      "Cu·절연체 CMP 평탄화",
+      "Nova Ltd. (NVMI)"
+     ],
+     "weakest": {
+      "id": "e069",
+      "relation": "mitigated_by",
+      "tier": "technical_inference",
+      "confidence": 0.4
+     },
+     "upgrade_needed": "supplied_to(official_issuer 이상) + 매출 노출 공시"
+    },
+    {
+     "company_id": "company:ichr",
+     "company": "Ichor Holdings, Ltd. (ICHR)",
+     "direction": "positive",
+     "confidence": 0.16,
+     "band": "inferred",
+     "in_universe": true,
+     "size_band": "small",
+     "ticker": "ICHR",
+     "role": "supplier",
+     "path": [
+      "접합 계면 void·불량",
+      "Cu·절연체 CMP 평탄화",
+      "Ichor Holdings, Ltd. (ICHR)"
+     ],
+     "weakest": {
+      "id": "e069",
+      "relation": "mitigated_by",
+      "tier": "technical_inference",
+      "confidence": 0.4
+     },
+     "upgrade_needed": "supplied_to(official_issuer 이상) + 매출 노출 공시"
+    },
+    {
+     "company_id": "company:asys",
+     "company": "Amtech Systems Inc (ASYS)",
+     "direction": "positive",
+     "confidence": 0.16,
+     "band": "inferred",
+     "in_universe": true,
+     "size_band": "micro",
+     "ticker": "ASYS",
+     "role": "supplier",
+     "path": [
+      "접합 계면 void·불량",
+      "Cu·절연체 CMP 평탄화",
+      "Amtech Systems Inc (ASYS)"
+     ],
+     "weakest": {
+      "id": "e069",
       "relation": "mitigated_by",
       "tier": "technical_inference",
       "confidence": 0.4
@@ -1564,6 +3153,101 @@
       "confidence": 0.55
      },
      "upgrade_needed": "supplied_to(official_issuer 이상) + 매출 노출 공시"
+    },
+    {
+     "company_id": "company:nvmi",
+     "company": "Nova Ltd. (NVMI)",
+     "direction": "positive",
+     "confidence": 0.22,
+     "band": "inferred",
+     "in_universe": true,
+     "size_band": "unknown",
+     "ticker": "NVMI",
+     "role": "supplier",
+     "path": [
+      "미세 접합 입자·잔류물 오염",
+      "미세범프 형상·높이 2D/3D 검사",
+      "Nova Ltd. (NVMI)"
+     ],
+     "weakest": {
+      "id": "d007",
+      "relation": "offered_by",
+      "tier": "technical_inference",
+      "confidence": 0.4
+     },
+     "upgrade_needed": "supplied_to(official_issuer 이상) + 매출 노출 공시"
+    },
+    {
+     "company_id": "company:veco",
+     "company": "Veeco Instruments Inc (VECO)",
+     "direction": "positive",
+     "confidence": 0.16,
+     "band": "inferred",
+     "in_universe": true,
+     "size_band": "small",
+     "ticker": "VECO",
+     "role": "supplier",
+     "path": [
+      "미세 접합 입자·잔류물 오염",
+      "웨이퍼 본딩 전 표면 활성화·세정",
+      "Veeco Instruments Inc (VECO)"
+     ],
+     "weakest": {
+      "id": "e068",
+      "relation": "mitigated_by",
+      "tier": "technical_inference",
+      "confidence": 0.4
+     },
+     "upgrade_needed": "supplied_to(official_issuer 이상) + 매출 노출 공시"
+    }
+   ],
+   "substitutions": []
+  },
+  "material:inp": {
+   "companies": [
+    {
+     "company_id": "company:almu",
+     "company": "Aeluma, Inc. (ALMU)",
+     "direction": "positive",
+     "confidence": 0.4,
+     "band": "claimed",
+     "in_universe": true,
+     "size_band": "micro",
+     "ticker": "ALMU",
+     "role": "supplier",
+     "path": [
+      "인듐인(InP) 화합물 반도체",
+      "Aeluma, Inc. (ALMU)"
+     ],
+     "weakest": {
+      "id": "d012",
+      "relation": "offered_by",
+      "tier": "technical_inference",
+      "confidence": 0.4
+     },
+     "upgrade_needed": "supplied_to(official_issuer 이상) + 매출 노출 공시"
+    },
+    {
+     "company_id": "company:axti",
+     "company": "Axt Inc (AXTI)",
+     "direction": "positive",
+     "confidence": 0.4,
+     "band": "claimed",
+     "in_universe": true,
+     "size_band": "micro",
+     "ticker": "AXTI",
+     "role": "supplier",
+     "path": [
+      "인듐인(InP) 화합물 반도체",
+      "Axt Inc (AXTI)"
+     ],
+     "weakest": {
+      "id": "d014",
+      "relation": "offered_by",
+      "tier": "technical_inference",
+      "confidence": 0.4
+     },
+     "upgrade_needed": "supplied_to(official_issuer 이상) + 매출 노출 공시"
     }
    ],
    "substitutions": []
@@ -1592,6 +3276,52 @@
       "confidence": 0.8
      },
      "upgrade_needed": "매출 노출·수량·마진 공시"
+    },
+    {
+     "company_id": "company:almu",
+     "company": "Aeluma, Inc. (ALMU)",
+     "direction": "positive",
+     "confidence": 0.16,
+     "band": "inferred",
+     "in_universe": true,
+     "size_band": "micro",
+     "ticker": "ALMU",
+     "role": "supplier",
+     "path": [
+      "200G EML 광변조 레이저",
+      "인듐인(InP) 화합물 반도체",
+      "Aeluma, Inc. (ALMU)"
+     ],
+     "weakest": {
+      "id": "e077",
+      "relation": "requires",
+      "tier": "technical_inference",
+      "confidence": 0.4
+     },
+     "upgrade_needed": "supplied_to(official_issuer 이상) + 매출 노출 공시"
+    },
+    {
+     "company_id": "company:axti",
+     "company": "Axt Inc (AXTI)",
+     "direction": "positive",
+     "confidence": 0.16,
+     "band": "inferred",
+     "in_universe": true,
+     "size_band": "micro",
+     "ticker": "AXTI",
+     "role": "supplier",
+     "path": [
+      "200G EML 광변조 레이저",
+      "인듐인(InP) 화합물 반도체",
+      "Axt Inc (AXTI)"
+     ],
+     "weakest": {
+      "id": "e077",
+      "relation": "requires",
+      "tier": "technical_inference",
+      "confidence": 0.4
+     },
+     "upgrade_needed": "supplied_to(official_issuer 이상) + 매출 노출 공시"
     }
    ],
    "substitutions": []
@@ -1621,6 +3351,152 @@
       "confidence": 0.4
      },
      "upgrade_needed": "supplied_to(official_issuer 이상) + 매출 노출 공시"
+    },
+    {
+     "company_id": "company:almu",
+     "company": "Aeluma, Inc. (ALMU)",
+     "direction": "positive",
+     "confidence": 0.064,
+     "band": "inferred",
+     "in_universe": true,
+     "size_band": "micro",
+     "ticker": "ALMU",
+     "role": "supplier",
+     "path": [
+      "고속 광엔진 발열·온도 안정성",
+      "200G EML 광변조 레이저",
+      "인듐인(InP) 화합물 반도체",
+      "Aeluma, Inc. (ALMU)"
+     ],
+     "weakest": {
+      "id": "e085",
+      "relation": "mitigated_by",
+      "tier": "technical_inference",
+      "confidence": 0.4
+     },
+     "upgrade_needed": "supplied_to(official_issuer 이상) + 매출 노출 공시"
+    },
+    {
+     "company_id": "company:axti",
+     "company": "Axt Inc (AXTI)",
+     "direction": "positive",
+     "confidence": 0.064,
+     "band": "inferred",
+     "in_universe": true,
+     "size_band": "micro",
+     "ticker": "AXTI",
+     "role": "supplier",
+     "path": [
+      "고속 광엔진 발열·온도 안정성",
+      "200G EML 광변조 레이저",
+      "인듐인(InP) 화합물 반도체",
+      "Axt Inc (AXTI)"
+     ],
+     "weakest": {
+      "id": "e085",
+      "relation": "mitigated_by",
+      "tier": "technical_inference",
+      "confidence": 0.4
+     },
+     "upgrade_needed": "supplied_to(official_issuer 이상) + 매출 노출 공시"
+    }
+   ],
+   "substitutions": []
+  },
+  "component:gate_driver": {
+   "companies": [
+    {
+     "company_id": "company:aosl",
+     "company": "Alpha & Omega Semiconductor Ltd (AOSL)",
+     "direction": "positive",
+     "confidence": 0.4,
+     "band": "claimed",
+     "in_universe": true,
+     "size_band": "small",
+     "ticker": "AOSL",
+     "role": "supplier",
+     "path": [
+      "SiC·GaN 전력반도체 게이트드라이버",
+      "Alpha & Omega Semiconductor Ltd (AOSL)"
+     ],
+     "weakest": {
+      "id": "d018",
+      "relation": "offered_by",
+      "tier": "technical_inference",
+      "confidence": 0.4
+     },
+     "upgrade_needed": "supplied_to(official_issuer 이상) + 매출 노출 공시"
+    }
+   ],
+   "substitutions": []
+  },
+  "material:sic_wafer": {
+   "companies": [
+    {
+     "company_id": "company:asys",
+     "company": "Amtech Systems Inc (ASYS)",
+     "direction": "positive",
+     "confidence": 0.4,
+     "band": "claimed",
+     "in_universe": true,
+     "size_band": "micro",
+     "ticker": "ASYS",
+     "role": "supplier",
+     "path": [
+      "SiC 결정 웨이퍼·에피층",
+      "Amtech Systems Inc (ASYS)"
+     ],
+     "weakest": {
+      "id": "d022",
+      "relation": "offered_by",
+      "tier": "technical_inference",
+      "confidence": 0.4
+     },
+     "upgrade_needed": "supplied_to(official_issuer 이상) + 매출 노출 공시"
+    },
+    {
+     "company_id": "company:wolf",
+     "company": "Wolfspeed, Inc. (WOLF)",
+     "direction": "positive",
+     "confidence": 0.4,
+     "band": "claimed",
+     "in_universe": true,
+     "size_band": "small",
+     "ticker": "WOLF",
+     "role": "supplier",
+     "path": [
+      "SiC 결정 웨이퍼·에피층",
+      "Wolfspeed, Inc. (WOLF)"
+     ],
+     "weakest": {
+      "id": "d024",
+      "relation": "offered_by",
+      "tier": "technical_inference",
+      "confidence": 0.4
+     },
+     "upgrade_needed": "supplied_to(official_issuer 이상) + 매출 노출 공시"
+    },
+    {
+     "company_id": "company:cvv",
+     "company": "Cvd Equipment Corp (CVV)",
+     "direction": "positive",
+     "confidence": 0.4,
+     "band": "claimed",
+     "in_universe": true,
+     "size_band": "micro",
+     "ticker": "CVV",
+     "role": "supplier",
+     "path": [
+      "SiC 결정 웨이퍼·에피층",
+      "Cvd Equipment Corp (CVV)"
+     ],
+     "weakest": {
+      "id": "d026",
+      "relation": "offered_by",
+      "tier": "technical_inference",
+      "confidence": 0.4
+     },
+     "upgrade_needed": "supplied_to(official_issuer 이상) + 매출 노출 공시"
     }
    ],
    "substitutions": []
@@ -1633,7 +3509,7 @@
      "direction": "positive",
      "confidence": 0.64,
      "band": "documented",
-     "in_universe": false,
+     "in_universe": true,
      "size_band": "small",
      "ticker": "AEHR",
      "role": "supplier",
@@ -1649,6 +3525,28 @@
       "confidence": 0.8
      },
      "upgrade_needed": "매출 노출·수량·마진 공시"
+    },
+    {
+     "company_id": "company:intt",
+     "company": "Intest Corp (INTT)",
+     "direction": "positive",
+     "confidence": 0.4,
+     "band": "claimed",
+     "in_universe": true,
+     "size_band": "micro",
+     "ticker": "INTT",
+     "role": "supplier",
+     "path": [
+      "SiC 웨이퍼 레벨 번인·신뢰성 검사",
+      "Intest Corp (INTT)"
+     ],
+     "weakest": {
+      "id": "d027",
+      "relation": "offered_by",
+      "tier": "technical_inference",
+      "confidence": 0.4
+     },
+     "upgrade_needed": "supplied_to(official_issuer 이상) + 매출 노출 공시"
     }
    ],
    "substitutions": []
@@ -1661,7 +3559,7 @@
      "direction": "positive",
      "confidence": 0.64,
      "band": "documented",
-     "in_universe": false,
+     "in_universe": true,
      "size_band": "small",
      "ticker": "POET",
      "role": "supplier",
@@ -1852,7 +3750,7 @@
      "direction": "positive",
      "confidence": 0.8,
      "band": "documented",
-     "in_universe": false,
+     "in_universe": true,
      "size_band": "small",
      "ticker": "AEHR",
      "role": "supplier",
@@ -1879,7 +3777,7 @@
      "direction": "positive",
      "confidence": 0.8,
      "band": "documented",
-     "in_universe": false,
+     "in_universe": true,
      "size_band": "small",
      "ticker": "POET",
      "role": "supplier",
@@ -2020,6 +3918,30 @@
      "upgrade_needed": "supplied_to(official_issuer 이상) + 매출 노출 공시"
     },
     {
+     "company_id": "company:form",
+     "company": "Formfactor Inc (FORM)",
+     "direction": "positive",
+     "confidence": 0.144,
+     "band": "inferred",
+     "in_universe": true,
+     "size_band": "unknown",
+     "ticker": "FORM",
+     "role": "supplier",
+     "path": [
+      "HBM4 (2,048 I/O, JESD270-4)",
+      "고적층·미세 접합 확대",
+      "실리콘 관통 전극 (TSV)",
+      "Formfactor Inc (FORM)"
+     ],
+     "weakest": {
+      "id": "e062",
+      "relation": "requires",
+      "tier": "technical_inference",
+      "confidence": 0.4
+     },
+     "upgrade_needed": "supplied_to(official_issuer 이상) + 매출 노출 공시"
+    },
+    {
      "company_id": "company:camt",
      "company": "Camtek (CAMT)",
      "direction": "positive",
@@ -2066,6 +3988,31 @@
      "weakest": {
       "id": "e004",
       "relation": "creates_bottleneck",
+      "tier": "technical_inference",
+      "confidence": 0.4
+     },
+     "upgrade_needed": "supplied_to(official_issuer 이상) + 매출 노출 공시"
+    },
+    {
+     "company_id": "company:adea",
+     "company": "Adeia Inc. (ADEA)",
+     "direction": "positive",
+     "confidence": 0.115,
+     "band": "inferred",
+     "in_universe": true,
+     "size_band": "small",
+     "ticker": "ADEA",
+     "role": "supplier",
+     "path": [
+      "HBM4 (2,048 I/O, JESD270-4)",
+      "고적층·미세 접합 확대",
+      "적층 열·변형·뒤틀림 관리",
+      "하이브리드 본딩",
+      "Adeia Inc. (ADEA)"
+     ],
+     "weakest": {
+      "id": "e008",
+      "relation": "mitigated_by",
       "tier": "technical_inference",
       "confidence": 0.4
      },
@@ -2129,6 +4076,52 @@
       "HBM5 (하이브리드 본딩 후보 세대)",
       "하이브리드 본딩",
       "SK hynix (KRX 000660, 비SEC)"
+     ],
+     "weakest": {
+      "id": "n022",
+      "relation": "adopts",
+      "tier": "hypothesis",
+      "confidence": 0.2
+     },
+     "upgrade_needed": "supplied_to(official_issuer 이상) + 매출 노출 공시"
+    },
+    {
+     "company_id": "company:adea",
+     "company": "Adeia Inc. (ADEA)",
+     "direction": "positive",
+     "confidence": 0.08,
+     "band": "inferred",
+     "in_universe": true,
+     "size_band": "small",
+     "ticker": "ADEA",
+     "role": "supplier",
+     "path": [
+      "HBM5 (하이브리드 본딩 후보 세대)",
+      "하이브리드 본딩",
+      "Adeia Inc. (ADEA)"
+     ],
+     "weakest": {
+      "id": "n022",
+      "relation": "adopts",
+      "tier": "hypothesis",
+      "confidence": 0.2
+     },
+     "upgrade_needed": "supplied_to(official_issuer 이상) + 매출 노출 공시"
+    },
+    {
+     "company_id": "company:klic",
+     "company": "Kulicke & Soffa Industries Inc (KLIC)",
+     "direction": "positive",
+     "confidence": 0.08,
+     "band": "inferred",
+     "in_universe": true,
+     "size_band": "small",
+     "ticker": "KLIC",
+     "role": "supplier",
+     "path": [
+      "HBM5 (하이브리드 본딩 후보 세대)",
+      "하이브리드 본딩",
+      "Kulicke & Soffa Industries Inc (KLIC)"
      ],
      "weakest": {
       "id": "n022",
@@ -2211,6 +4204,31 @@
      "upgrade_needed": "supplied_to(official_issuer 이상) + 매출 노출 공시"
     },
     {
+     "company_id": "company:nvmi",
+     "company": "Nova Ltd. (NVMI)",
+     "direction": "positive",
+     "confidence": 0.079,
+     "band": "inferred",
+     "in_universe": true,
+     "size_band": "unknown",
+     "ticker": "NVMI",
+     "role": "supplier",
+     "path": [
+      "JEDEC JESD270-4 HBM4 (2025-04)",
+      "HBM4 2,048 I/O 확대",
+      "미세범프·접합 오버레이/결함 검사",
+      "미세범프 형상·높이 2D/3D 검사",
+      "Nova Ltd. (NVMI)"
+     ],
+     "weakest": {
+      "id": "e003",
+      "relation": "creates_bottleneck",
+      "tier": "technical_inference",
+      "confidence": 0.4
+     },
+     "upgrade_needed": "supplied_to(official_issuer 이상) + 매출 노출 공시"
+    },
+    {
      "company_id": "company:besi",
      "company": "BE Semiconductor Industries (Euronext BESI, 비SEC)",
      "direction": "positive",
@@ -2227,6 +4245,84 @@
       "접합 계면 void·불량",
       "웨이퍼·다이 하이브리드 본더",
       "BE Semiconductor Industries (Euronext BESI, 비SEC)"
+     ],
+     "weakest": {
+      "id": "e003",
+      "relation": "creates_bottleneck",
+      "tier": "technical_inference",
+      "confidence": 0.4
+     },
+     "upgrade_needed": "supplied_to(official_issuer 이상) + 매출 노출 공시"
+    },
+    {
+     "company_id": "company:ichr",
+     "company": "Ichor Holdings, Ltd. (ICHR)",
+     "direction": "positive",
+     "confidence": 0.023,
+     "band": "inferred",
+     "in_universe": true,
+     "size_band": "small",
+     "ticker": "ICHR",
+     "role": "supplier",
+     "path": [
+      "JEDEC JESD270-4 HBM4 (2025-04)",
+      "HBM4 2,048 I/O 확대",
+      "미세범프·접합 오버레이/결함 검사",
+      "접합 계면 void·불량",
+      "Cu·절연체 CMP 평탄화",
+      "Ichor Holdings, Ltd. (ICHR)"
+     ],
+     "weakest": {
+      "id": "e003",
+      "relation": "creates_bottleneck",
+      "tier": "technical_inference",
+      "confidence": 0.4
+     },
+     "upgrade_needed": "supplied_to(official_issuer 이상) + 매출 노출 공시"
+    },
+    {
+     "company_id": "company:asys",
+     "company": "Amtech Systems Inc (ASYS)",
+     "direction": "positive",
+     "confidence": 0.023,
+     "band": "inferred",
+     "in_universe": true,
+     "size_band": "micro",
+     "ticker": "ASYS",
+     "role": "supplier",
+     "path": [
+      "JEDEC JESD270-4 HBM4 (2025-04)",
+      "HBM4 2,048 I/O 확대",
+      "미세범프·접합 오버레이/결함 검사",
+      "접합 계면 void·불량",
+      "Cu·절연체 CMP 평탄화",
+      "Amtech Systems Inc (ASYS)"
+     ],
+     "weakest": {
+      "id": "e003",
+      "relation": "creates_bottleneck",
+      "tier": "technical_inference",
+      "confidence": 0.4
+     },
+     "upgrade_needed": "supplied_to(official_issuer 이상) + 매출 노출 공시"
+    },
+    {
+     "company_id": "company:veco",
+     "company": "Veeco Instruments Inc (VECO)",
+     "direction": "positive",
+     "confidence": 0.023,
+     "band": "inferred",
+     "in_universe": true,
+     "size_band": "small",
+     "ticker": "VECO",
+     "role": "supplier",
+     "path": [
+      "JEDEC JESD270-4 HBM4 (2025-04)",
+      "HBM4 2,048 I/O 확대",
+      "미세범프·접합 오버레이/결함 검사",
+      "미세 접합 입자·잔류물 오염",
+      "웨이퍼 본딩 전 표면 활성화·세정",
+      "Veeco Instruments Inc (VECO)"
      ],
      "weakest": {
       "id": "e003",
@@ -2269,6 +4365,78 @@
   "gen:1p6t": {
    "companies": [
     {
+     "company_id": "company:almu",
+     "company": "Aeluma, Inc. (ALMU)",
+     "direction": "positive",
+     "confidence": 0.288,
+     "band": "inferred",
+     "in_universe": true,
+     "size_band": "micro",
+     "ticker": "ALMU",
+     "role": "supplier",
+     "path": [
+      "1.6T 광모듈 세대 (200G/lane)",
+      "1.6 Tb/s Ethernet 및 200 Gb/s/lane 전환",
+      "광원 레이저",
+      "Aeluma, Inc. (ALMU)"
+     ],
+     "weakest": {
+      "id": "d013",
+      "relation": "offered_by",
+      "tier": "technical_inference",
+      "confidence": 0.4
+     },
+     "upgrade_needed": "supplied_to(official_issuer 이상) + 매출 노출 공시"
+    },
+    {
+     "company_id": "company:lwlg",
+     "company": "Lightwave Logic, Inc. (LWLG)",
+     "direction": "positive",
+     "confidence": 0.288,
+     "band": "inferred",
+     "in_universe": true,
+     "size_band": "micro",
+     "ticker": "LWLG",
+     "role": "supplier",
+     "path": [
+      "1.6T 광모듈 세대 (200G/lane)",
+      "1.6 Tb/s Ethernet 및 200 Gb/s/lane 전환",
+      "고속 광변조기",
+      "Lightwave Logic, Inc. (LWLG)"
+     ],
+     "weakest": {
+      "id": "d011",
+      "relation": "offered_by",
+      "tier": "technical_inference",
+      "confidence": 0.4
+     },
+     "upgrade_needed": "supplied_to(official_issuer 이상) + 매출 노출 공시"
+    },
+    {
+     "company_id": "company:belfa",
+     "company": "Bel Fuse Inc /Nj (BELFA)",
+     "direction": "positive",
+     "confidence": 0.288,
+     "band": "inferred",
+     "in_universe": true,
+     "size_band": "small",
+     "ticker": "BELFA",
+     "role": "supplier",
+     "path": [
+      "1.6T 광모듈 세대 (200G/lane)",
+      "1.6 Tb/s Ethernet 및 200 Gb/s/lane 전환",
+      "고밀도 광섬유 인터페이스",
+      "Bel Fuse Inc /Nj (BELFA)"
+     ],
+     "weakest": {
+      "id": "d017",
+      "relation": "offered_by",
+      "tier": "technical_inference",
+      "confidence": 0.4
+     },
+     "upgrade_needed": "supplied_to(official_issuer 이상) + 매출 노출 공시"
+    },
+    {
      "company_id": "company:lite",
      "company": "Lumentum (LITE)",
      "direction": "positive",
@@ -2294,12 +4462,36 @@
      "upgrade_needed": "supplied_to(official_issuer 이상) + 매출 노출 공시"
     },
     {
+     "company_id": "company:mxl",
+     "company": "Maxlinear, Inc (MXL)",
+     "direction": "positive",
+     "confidence": 0.144,
+     "band": "inferred",
+     "in_universe": true,
+     "size_band": "small",
+     "ticker": "MXL",
+     "role": "supplier",
+     "path": [
+      "1.6T 광모듈 세대 (200G/lane)",
+      "1.6 Tb/s Ethernet 및 200 Gb/s/lane 전환",
+      "고속 SerDes·DSP",
+      "Maxlinear, Inc (MXL)"
+     ],
+     "weakest": {
+      "id": "e047",
+      "relation": "requires",
+      "tier": "technical_inference",
+      "confidence": 0.4
+     },
+     "upgrade_needed": "supplied_to(official_issuer 이상) + 매출 노출 공시"
+    },
+    {
      "company_id": "company:poet",
      "company": "POET Technologies (POET)",
      "direction": "positive",
      "confidence": 0.127,
      "band": "inferred",
-     "in_universe": false,
+     "in_universe": true,
      "size_band": "small",
      "ticker": "POET",
      "role": "supplier",
@@ -2361,58 +4553,6 @@
       "고대역폭 광연결의 전력·발열·밀도",
       "Co-Packaged Optics (CPO)",
       "NVIDIA (NVDA) — HBM·광·전력 공통 수요처"
-     ],
-     "weakest": {
-      "id": "e013",
-      "relation": "creates_bottleneck",
-      "tier": "technical_inference",
-      "confidence": 0.4
-     },
-     "upgrade_needed": "supplied_to(official_issuer 이상) + 매출 노출 공시"
-    },
-    {
-     "company_id": "company:cohr",
-     "company": "Coherent (COHR)",
-     "direction": "positive",
-     "confidence": 0.092,
-     "band": "inferred",
-     "in_universe": false,
-     "size_band": "large",
-     "ticker": "COHR",
-     "role": "supplier_via_customer",
-     "path": [
-      "1.6T 광모듈 세대 (200G/lane)",
-      "1.6 Tb/s Ethernet 및 200 Gb/s/lane 전환",
-      "고대역폭 광연결의 전력·발열·밀도",
-      "Co-Packaged Optics (CPO)",
-      "NVIDIA (NVDA) — HBM·광·전력 공통 수요처",
-      "Coherent (COHR)"
-     ],
-     "weakest": {
-      "id": "e013",
-      "relation": "creates_bottleneck",
-      "tier": "technical_inference",
-      "confidence": 0.4
-     },
-     "upgrade_needed": "supplied_to(official_issuer 이상) + 매출 노출 공시"
-    },
-    {
-     "company_id": "company:fn",
-     "company": "Fabrinet (FN)",
-     "direction": "positive",
-     "confidence": 0.092,
-     "band": "inferred",
-     "in_universe": false,
-     "size_band": "large",
-     "ticker": "FN",
-     "role": "supplier_via_customer",
-     "path": [
-      "1.6T 광모듈 세대 (200G/lane)",
-      "1.6 Tb/s Ethernet 및 200 Gb/s/lane 전환",
-      "고대역폭 광연결의 전력·발열·밀도",
-      "Co-Packaged Optics (CPO)",
-      "NVIDIA (NVDA) — HBM·광·전력 공통 수요처",
-      "Fabrinet (FN)"
      ],
      "weakest": {
       "id": "e013",
@@ -2547,7 +4687,7 @@
      "direction": "positive",
      "confidence": 0.64,
      "band": "documented",
-     "in_universe": false,
+     "in_universe": true,
      "size_band": "small",
      "ticker": "NVTS",
      "role": "supplier_via_customer",
@@ -2678,6 +4818,30 @@
       "confidence": 0.8
      },
      "upgrade_needed": "매출 노출·수량·마진 공시"
+    },
+    {
+     "company_id": "company:ipwr",
+     "company": "Ideal Power Inc. (IPWR)",
+     "direction": "positive",
+     "confidence": 0.256,
+     "band": "inferred",
+     "in_universe": true,
+     "size_band": "micro",
+     "ticker": "IPWR",
+     "role": "supplier",
+     "path": [
+      "800VDC 배전 아키텍처 (NVIDIA 2027 1MW 랙 목표)",
+      "차세대 800VDC 배전 아키텍처",
+      "고전압 DC 차단·보호 장치",
+      "Ideal Power Inc. (IPWR)"
+     ],
+     "weakest": {
+      "id": "d020",
+      "relation": "offered_by",
+      "tier": "technical_inference",
+      "confidence": 0.4
+     },
+     "upgrade_needed": "supplied_to(official_issuer 이상) + 매출 노출 공시"
     }
    ],
    "substitutions": [
@@ -2703,6 +4867,55 @@
      "note": "고객 인프라/시점에 따라 두 방식 공존 가능"
     }
    ]
+  },
+  "process:kgd_test": {
+   "companies": [
+    {
+     "company_id": "company:form",
+     "company": "Formfactor Inc (FORM)",
+     "direction": "positive",
+     "confidence": 0.4,
+     "band": "claimed",
+     "in_universe": true,
+     "size_band": "unknown",
+     "ticker": "FORM",
+     "role": "supplier",
+     "path": [
+      "적층 전 KGD 웨이퍼 테스트 (프로브·핸들러)",
+      "Formfactor Inc (FORM)"
+     ],
+     "weakest": {
+      "id": "d004",
+      "relation": "offered_by",
+      "tier": "technical_inference",
+      "confidence": 0.4
+     },
+     "upgrade_needed": "supplied_to(official_issuer 이상) + 매출 노출 공시"
+    },
+    {
+     "company_id": "company:cohu",
+     "company": "Cohu Inc (COHU)",
+     "direction": "positive",
+     "confidence": 0.4,
+     "band": "claimed",
+     "in_universe": true,
+     "size_band": "small",
+     "ticker": "COHU",
+     "role": "supplier",
+     "path": [
+      "적층 전 KGD 웨이퍼 테스트 (프로브·핸들러)",
+      "Cohu Inc (COHU)"
+     ],
+     "weakest": {
+      "id": "d006",
+      "relation": "offered_by",
+      "tier": "technical_inference",
+      "confidence": 0.4
+     },
+     "upgrade_needed": "supplied_to(official_issuer 이상) + 매출 노출 공시"
+    }
+   ],
+   "substitutions": []
   }
  }
 }

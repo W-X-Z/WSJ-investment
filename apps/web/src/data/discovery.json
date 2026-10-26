@@ -1,0 +1,5675 @@
+{
+ "as_of": "2026-10-27",
+ "window_start": "2025-08-03",
+ "summary": {
+  "queries": 79,
+  "companies": 188,
+  "by_size_band": {
+   "unknown": 62,
+   "small": 29,
+   "mid": 24,
+   "large": 35,
+   "micro": 38
+  },
+  "nodes_with_small_cap": 30,
+  "nodes_queried": 46
+ },
+ "nodes": {
+  "tech:hybrid_bond": {
+   "label": "하이브리드 본딩",
+   "companies_total": 7,
+   "companies_small": 2,
+   "small": [
+    {
+     "cik": 1803696,
+     "ticker": "ADEA",
+     "name": "Adeia Inc.",
+     "public_float": 887181255.0,
+     "score": 1.25
+    },
+    {
+     "cik": 56978,
+     "ticker": "KLIC",
+     "name": "KULICKE & SOFFA INDUSTRIES INC",
+     "public_float": 1753200000.0,
+     "score": 1.006
+    }
+   ]
+  },
+  "tech:tcb": {
+   "label": "열압착 본딩(TCB)",
+   "companies_total": 2,
+   "companies_small": 1,
+   "small": [
+    {
+     "cik": 56978,
+     "ticker": "KLIC",
+     "name": "KULICKE & SOFFA INDUSTRIES INC",
+     "public_float": 1753200000.0,
+     "score": 1.006
+    }
+   ]
+  },
+  "equipment:hybrid_bonder": {
+   "label": "웨이퍼·다이 하이브리드 본더",
+   "companies_total": 0,
+   "companies_small": 0,
+   "small": []
+  },
+  "process:microbump_metrology": {
+   "label": "미세범프 형상·높이 2D/3D 검사",
+   "companies_total": 0,
+   "companies_small": 0,
+   "small": []
+  },
+  "bottleneck:hbm_kged": {
+   "label": "적층 전 Known-Good-Die 수율 검사",
+   "companies_total": 5,
+   "companies_small": 2,
+   "small": [
+    {
+     "cik": 1040470,
+     "ticker": "AEHR",
+     "name": "AEHR TEST SYSTEMS",
+     "public_float": 671378691.0,
+     "score": 2.573
+    },
+    {
+     "cik": 1411690,
+     "ticker": "BNGO",
+     "name": "Bionano Genomics, Inc.",
+     "public_float": 12154000.0,
+     "score": 0.356
+    }
+   ]
+  },
+  "component:tsv": {
+   "label": "실리콘 관통 전극 (TSV)",
+   "companies_total": 10,
+   "companies_small": 1,
+   "small": [
+    {
+     "cik": 1040470,
+     "ticker": "AEHR",
+     "name": "AEHR TEST SYSTEMS",
+     "public_float": 671378691.0,
+     "score": 2.573
+    }
+   ]
+  },
+  "process:tsv_plating": {
+   "label": "TSV 구리 도금·충진 공정",
+   "companies_total": 0,
+   "companies_small": 0,
+   "small": []
+  },
+  "material:abf": {
+   "label": "미세 배선 패키지 절연·기판 소재",
+   "companies_total": 1,
+   "companies_small": 0,
+   "small": []
+  },
+  "component:package_substrate": {
+   "label": "고밀도 패키지 기판",
+   "companies_total": 6,
+   "companies_small": 0,
+   "small": []
+  },
+  "process:cmp": {
+   "label": "Cu·절연체 CMP 평탄화",
+   "companies_total": 8,
+   "companies_small": 2,
+   "small": [
+    {
+     "cik": 720500,
+     "ticker": "ASYS",
+     "name": "AMTECH SYSTEMS INC",
+     "public_float": 54346382.0,
+     "score": 0.979
+    },
+    {
+     "cik": 1652535,
+     "ticker": "ICHR",
+     "name": "ICHOR HOLDINGS, LTD.",
+     "public_float": 658256416.0,
+     "score": 0.301
+    }
+   ]
+  },
+  "material:underfill": {
+   "label": "Underfill 몰딩·충진 소재",
+   "companies_total": 7,
+   "companies_small": 3,
+   "small": [
+    {
+     "cik": 1387467,
+     "ticker": "AOSL",
+     "name": "ALPHA & OMEGA SEMICONDUCTOR Ltd",
+     "public_float": 487000000.0,
+     "score": 1.526
+    },
+    {
+     "cik": 863436,
+     "ticker": "BHE",
+     "name": "BENCHMARK ELECTRONICS INC",
+     "public_float": 1400000000.0,
+     "score": 0.5
+    },
+    {
+     "cik": 1786471,
+     "ticker": "SEV",
+     "name": "Aptera Motors Corp",
+     "public_float": 0.0,
+     "score": 0.315
+    }
+   ]
+  },
+  "bottleneck:hbm_wafer_warpage": {
+   "label": "적층 웨이퍼 휨(wafer warpage)",
+   "companies_total": 0,
+   "companies_small": 0,
+   "small": []
+  },
+  "gen:hbm4": {
+   "label": "HBM4 (2,048 I/O, JESD270-4)",
+   "companies_total": 33,
+   "companies_small": 11,
+   "small": [
+    {
+     "cik": 1040470,
+     "ticker": "AEHR",
+     "name": "AEHR TEST SYSTEMS",
+     "public_float": 671378691.0,
+     "score": 2.573
+    },
+    {
+     "cik": 1387467,
+     "ticker": "AOSL",
+     "name": "ALPHA & OMEGA SEMICONDUCTOR Ltd",
+     "public_float": 487000000.0,
+     "score": 1.526
+    },
+    {
+     "cik": 56978,
+     "ticker": "KLIC",
+     "name": "KULICKE & SOFFA INDUSTRIES INC",
+     "public_float": 1753200000.0,
+     "score": 1.006
+    },
+    {
+     "cik": 1288469,
+     "ticker": "MXL",
+     "name": "MAXLINEAR, INC",
+     "public_float": 1100000000.0,
+     "score": 0.754
+    },
+    {
+     "cik": 21535,
+     "ticker": "COHU",
+     "name": "COHU INC",
+     "public_float": 879400000.0,
+     "score": 0.565
+    },
+    {
+     "cik": 103145,
+     "ticker": "VECO",
+     "name": "VEECO INSTRUMENTS INC",
+     "public_float": 1205043869.0,
+     "score": 0.565
+    },
+    {
+     "cik": 732026,
+     "ticker": "TRT",
+     "name": "TRIO-TECH INTERNATIONAL",
+     "public_float": 32329000.0,
+     "score": 0.191
+    },
+    {
+     "cik": 1272842,
+     "ticker": "AIRG",
+     "name": "AIRGAIN INC",
+     "public_float": 48600000.0,
+     "score": 0.191
+    }
+   ]
+  },
+  "process:wafer_level_burn_in": {
+   "label": "SiC 웨이퍼 레벨 번인·신뢰성 검사",
+   "companies_total": 2,
+   "companies_small": 1,
+   "small": [
+    {
+     "cik": 1040470,
+     "ticker": "AEHR",
+     "name": "AEHR TEST SYSTEMS",
+     "public_float": 671378691.0,
+     "score": 2.573
+    }
+   ]
+  },
+  "tech:cpo": {
+   "label": "Co-Packaged Optics (CPO)",
+   "companies_total": 16,
+   "companies_small": 3,
+   "small": [
+    {
+     "cik": 1325964,
+     "ticker": "LWLG",
+     "name": "Lightwave Logic, Inc.",
+     "public_float": 155272461.0,
+     "score": 2.039
+    },
+    {
+     "cik": 1828805,
+     "ticker": "ALMU",
+     "name": "Aeluma, Inc.",
+     "public_float": 276200000.0,
+     "score": 1.232
+    },
+    {
+     "cik": 1938569,
+     "ticker": "PALX",
+     "name": "Palomino Laboratories Inc.",
+     "public_float": 0.0,
+     "score": 0.945
+    }
+   ]
+  },
+  "tech:pluggable": {
+   "label": "1.6T Pluggable transceiver",
+   "companies_total": 11,
+   "companies_small": 3,
+   "small": [
+    {
+     "cik": 1325964,
+     "ticker": "LWLG",
+     "name": "Lightwave Logic, Inc.",
+     "public_float": 155272461.0,
+     "score": 2.039
+    },
+    {
+     "cik": 1288469,
+     "ticker": "MXL",
+     "name": "MAXLINEAR, INC",
+     "public_float": 1100000000.0,
+     "score": 0.754
+    },
+    {
+     "cik": 1158114,
+     "ticker": "AAOI",
+     "name": "APPLIED OPTOELECTRONICS, INC.",
+     "public_float": 1491234829.0,
+     "score": 0.301
+    }
+   ]
+  },
+  "component:eml": {
+   "label": "200G EML 광변조 레이저",
+   "companies_total": 3,
+   "companies_small": 0,
+   "small": []
+  },
+  "component:vcsel": {
+   "label": "VCSEL 레이저 광원",
+   "companies_total": 9,
+   "companies_small": 3,
+   "small": [
+    {
+     "cik": 1828805,
+     "ticker": "ALMU",
+     "name": "Aeluma, Inc.",
+     "public_float": 276200000.0,
+     "score": 1.232
+    },
+    {
+     "cik": 1938569,
+     "ticker": "PALX",
+     "name": "Palomino Laboratories Inc.",
+     "public_float": 0.0,
+     "score": 0.945
+    },
+    {
+     "cik": 1816581,
+     "ticker": "OUST",
+     "name": "Ouster, Inc.",
+     "public_float": 1309700000.0,
+     "score": 0.27
+    }
+   ]
+  },
+  "component:pic": {
+   "label": "광집적회로(PIC)",
+   "companies_total": 35,
+   "companies_small": 12,
+   "small": [
+    {
+     "cik": 1040470,
+     "ticker": "AEHR",
+     "name": "AEHR TEST SYSTEMS",
+     "public_float": 671378691.0,
+     "score": 2.573
+    },
+    {
+     "cik": 1325964,
+     "ticker": "LWLG",
+     "name": "Lightwave Logic, Inc.",
+     "public_float": 155272461.0,
+     "score": 2.039
+    },
+    {
+     "cik": 1828805,
+     "ticker": "ALMU",
+     "name": "Aeluma, Inc.",
+     "public_float": 276200000.0,
+     "score": 1.232
+    },
+    {
+     "cik": 1938569,
+     "ticker": "PALX",
+     "name": "Palomino Laboratories Inc.",
+     "public_float": 0.0,
+     "score": 0.945
+    },
+    {
+     "cik": 1051627,
+     "ticker": "AXTI",
+     "name": "AXT INC",
+     "public_float": 83786290.0,
+     "score": 0.842
+    },
+    {
+     "cik": 1321834,
+     "ticker": "QCLS",
+     "name": "Q/C TECHNOLOGIES, INC.",
+     "public_float": 3616742.0,
+     "score": 0.188
+    },
+    {
+     "cik": 1866816,
+     "ticker": "OPTX",
+     "name": "SYNTEC OPTICS HOLDINGS, INC.",
+     "public_float": 8016116.0,
+     "score": 0.188
+    },
+    {
+     "cik": 1708341,
+     "ticker": "AIFA",
+     "name": "All In FutureTech Alliance, Inc.",
+     "public_float": 38282007.0,
+     "score": 0.188
+    }
+   ]
+  },
+  "component:optical_dsp": {
+   "label": "고속 SerDes·DSP",
+   "companies_total": 1,
+   "companies_small": 0,
+   "small": []
+  },
+  "component:fiber_ferrule": {
+   "label": "고정밀 광섬유 ferrule·어레이",
+   "companies_total": 2,
+   "companies_small": 0,
+   "small": []
+  },
+  "component:fiber_connector": {
+   "label": "고밀도 광섬유 인터페이스",
+   "companies_total": 1,
+   "companies_small": 1,
+   "small": [
+    {
+     "cik": 729580,
+     "ticker": "BELFA",
+     "name": "BEL FUSE INC /NJ",
+     "public_float": 1200000000.0,
+     "score": 0.631
+    }
+   ]
+  },
+  "material:inp": {
+   "label": "인듐인(InP) 화합물 반도체",
+   "companies_total": 9,
+   "companies_small": 3,
+   "small": [
+    {
+     "cik": 1325964,
+     "ticker": "LWLG",
+     "name": "Lightwave Logic, Inc.",
+     "public_float": 155272461.0,
+     "score": 2.039
+    },
+    {
+     "cik": 1828805,
+     "ticker": "ALMU",
+     "name": "Aeluma, Inc.",
+     "public_float": 276200000.0,
+     "score": 1.232
+    },
+    {
+     "cik": 1051627,
+     "ticker": "AXTI",
+     "name": "AXT INC",
+     "public_float": 83786290.0,
+     "score": 0.842
+    }
+   ]
+  },
+  "component:aec": {
+   "label": "능동 전기 케이블(AEC) — 단거리 구리 링크",
+   "companies_total": 2,
+   "companies_small": 0,
+   "small": []
+  },
+  "component:modulator": {
+   "label": "고속 광변조기",
+   "companies_total": 3,
+   "companies_small": 1,
+   "small": [
+    {
+     "cik": 1325964,
+     "ticker": "LWLG",
+     "name": "Lightwave Logic, Inc.",
+     "public_float": 155272461.0,
+     "score": 2.039
+    }
+   ]
+  },
+  "process:optical_test": {
+   "label": "광모듈 생산·패키징 테스트",
+   "companies_total": 19,
+   "companies_small": 7,
+   "small": [
+    {
+     "cik": 1040470,
+     "ticker": "AEHR",
+     "name": "AEHR TEST SYSTEMS",
+     "public_float": 671378691.0,
+     "score": 2.573
+    },
+    {
+     "cik": 1325964,
+     "ticker": "LWLG",
+     "name": "Lightwave Logic, Inc.",
+     "public_float": 155272461.0,
+     "score": 2.039
+    },
+    {
+     "cik": 1828805,
+     "ticker": "ALMU",
+     "name": "Aeluma, Inc.",
+     "public_float": 276200000.0,
+     "score": 1.232
+    },
+    {
+     "cik": 1938569,
+     "ticker": "PALX",
+     "name": "Palomino Laboratories Inc.",
+     "public_float": 0.0,
+     "score": 0.945
+    },
+    {
+     "cik": 1288469,
+     "ticker": "MXL",
+     "name": "MAXLINEAR, INC",
+     "public_float": 1100000000.0,
+     "score": 0.754
+    },
+    {
+     "cik": 1333822,
+     "ticker": "LEDS",
+     "name": "SemiLEDs Corp",
+     "public_float": 5700000.0,
+     "score": 0.27
+    },
+    {
+     "cik": 1378325,
+     "ticker": "CV",
+     "name": "CapsoVision, Inc",
+     "public_float": 0.0,
+     "score": 0.263
+    }
+   ]
+  },
+  "tech:optical_interposer": {
+   "label": "광학 인터포저 기반 통합 광엔진",
+   "companies_total": 1,
+   "companies_small": 0,
+   "small": []
+  },
+  "component:optical_laser": {
+   "label": "광원 레이저",
+   "companies_total": 0,
+   "companies_small": 0,
+   "small": []
+  },
+  "gen:800vdc": {
+   "label": "800VDC 배전 아키텍처 (NVIDIA 2027 1MW 랙 목표)",
+   "companies_total": 10,
+   "companies_small": 5,
+   "small": [
+    {
+     "cik": 1821769,
+     "ticker": "NVTS",
+     "name": "Navitas Semiconductor Corp",
+     "public_float": 1177000000.0,
+     "score": 1.862
+    },
+    {
+     "cik": 1387467,
+     "ticker": "AOSL",
+     "name": "ALPHA & OMEGA SEMICONDUCTOR Ltd",
+     "public_float": 487000000.0,
+     "score": 1.526
+    },
+    {
+     "cik": 1759631,
+     "ticker": "HYLN",
+     "name": "Hyliion Holdings Corp.",
+     "public_float": 183000000.0,
+     "score": 0.92
+    },
+    {
+     "cik": 1622345,
+     "ticker": "POLA",
+     "name": "Polar Power, Inc.",
+     "public_float": 2960372.0,
+     "score": 0.356
+    },
+    {
+     "cik": 1009759,
+     "ticker": "CEPL",
+     "name": "Capstone Energy Plus, Inc.",
+     "public_float": 52141534.0,
+     "score": 0.356
+    }
+   ]
+  },
+  "tech:sic": {
+   "label": "SiC 전력반도체",
+   "companies_total": 40,
+   "companies_small": 18,
+   "small": [
+    {
+     "cik": 1040470,
+     "ticker": "AEHR",
+     "name": "AEHR TEST SYSTEMS",
+     "public_float": 671378691.0,
+     "score": 2.573
+    },
+    {
+     "cik": 1821769,
+     "ticker": "NVTS",
+     "name": "Navitas Semiconductor Corp",
+     "public_float": 1177000000.0,
+     "score": 1.862
+    },
+    {
+     "cik": 1387467,
+     "ticker": "AOSL",
+     "name": "ALPHA & OMEGA SEMICONDUCTOR Ltd",
+     "public_float": 487000000.0,
+     "score": 1.526
+    },
+    {
+     "cik": 720500,
+     "ticker": "ASYS",
+     "name": "AMTECH SYSTEMS INC",
+     "public_float": 54346382.0,
+     "score": 0.979
+    },
+    {
+     "cik": 1051627,
+     "ticker": "AXTI",
+     "name": "AXT INC",
+     "public_float": 83786290.0,
+     "score": 0.842
+    },
+    {
+     "cik": 1507957,
+     "ticker": "IPWR",
+     "name": "Ideal Power Inc.",
+     "public_float": 37500000.0,
+     "score": 0.664
+    },
+    {
+     "cik": 1325702,
+     "ticker": "MX",
+     "name": "MAGNACHIP SEMICONDUCTOR Corp",
+     "public_float": 139249768.0,
+     "score": 0.664
+    },
+    {
+     "cik": 21535,
+     "ticker": "COHU",
+     "name": "COHU INC",
+     "public_float": 879400000.0,
+     "score": 0.565
+    }
+   ]
+  },
+  "material:sic_wafer": {
+   "label": "SiC 결정 웨이퍼·에피층",
+   "companies_total": 28,
+   "companies_small": 13,
+   "small": [
+    {
+     "cik": 1040470,
+     "ticker": "AEHR",
+     "name": "AEHR TEST SYSTEMS",
+     "public_float": 671378691.0,
+     "score": 2.573
+    },
+    {
+     "cik": 1821769,
+     "ticker": "NVTS",
+     "name": "Navitas Semiconductor Corp",
+     "public_float": 1177000000.0,
+     "score": 1.862
+    },
+    {
+     "cik": 1387467,
+     "ticker": "AOSL",
+     "name": "ALPHA & OMEGA SEMICONDUCTOR Ltd",
+     "public_float": 487000000.0,
+     "score": 1.526
+    },
+    {
+     "cik": 720500,
+     "ticker": "ASYS",
+     "name": "AMTECH SYSTEMS INC",
+     "public_float": 54346382.0,
+     "score": 0.979
+    },
+    {
+     "cik": 1051627,
+     "ticker": "AXTI",
+     "name": "AXT INC",
+     "public_float": 83786290.0,
+     "score": 0.842
+    },
+    {
+     "cik": 1507957,
+     "ticker": "IPWR",
+     "name": "Ideal Power Inc.",
+     "public_float": 37500000.0,
+     "score": 0.664
+    },
+    {
+     "cik": 1325702,
+     "ticker": "MX",
+     "name": "MAGNACHIP SEMICONDUCTOR Corp",
+     "public_float": 139249768.0,
+     "score": 0.664
+    },
+    {
+     "cik": 21535,
+     "ticker": "COHU",
+     "name": "COHU INC",
+     "public_float": 879400000.0,
+     "score": 0.565
+    }
+   ]
+  },
+  "component:sic_mosfet": {
+   "label": "SiC MOSFET 소자",
+   "companies_total": 1,
+   "companies_small": 1,
+   "small": [
+    {
+     "cik": 1821769,
+     "ticker": "NVTS",
+     "name": "Navitas Semiconductor Corp",
+     "public_float": 1177000000.0,
+     "score": 1.862
+    }
+   ]
+  },
+  "component:gate_driver": {
+   "label": "SiC·GaN 전력반도체 게이트드라이버",
+   "companies_total": 9,
+   "companies_small": 3,
+   "small": [
+    {
+     "cik": 1387467,
+     "ticker": "AOSL",
+     "name": "ALPHA & OMEGA SEMICONDUCTOR Ltd",
+     "public_float": 487000000.0,
+     "score": 1.526
+    },
+    {
+     "cik": 1325702,
+     "ticker": "MX",
+     "name": "MAGNACHIP SEMICONDUCTOR Corp",
+     "public_float": 139249768.0,
+     "score": 0.664
+    },
+    {
+     "cik": 1817760,
+     "ticker": "SMTK",
+     "name": "SmartKem, Inc.",
+     "public_float": 3596234.0,
+     "score": 0.289
+    }
+   ]
+  },
+  "component:dc_busbar": {
+   "label": "DC Busbar 구리·절연재",
+   "companies_total": 11,
+   "companies_small": 2,
+   "small": [
+    {
+     "cik": 1828318,
+     "ticker": "ENVX",
+     "name": "Enovix Corp",
+     "public_float": 1640000000.0,
+     "score": 0.27
+    },
+    {
+     "cik": 2080126,
+     "ticker": "FPS",
+     "name": "Forgent Power Solutions, Inc.",
+     "public_float": 0.0,
+     "score": 0.27
+    }
+   ]
+  },
+  "component:dc_breaker": {
+   "label": "고전압 DC 차단·보호 장치",
+   "companies_total": 0,
+   "companies_small": 0,
+   "small": []
+  },
+  "component:dc_contactor": {
+   "label": "고전압 DC 컨택터",
+   "companies_total": 0,
+   "companies_small": 0,
+   "small": []
+  },
+  "component:power_converter": {
+   "label": "DC/DC 전력변환 모듈",
+   "companies_total": 10,
+   "companies_small": 3,
+   "small": [
+    {
+     "cik": 1759631,
+     "ticker": "HYLN",
+     "name": "Hyliion Holdings Corp.",
+     "public_float": 183000000.0,
+     "score": 0.92
+    },
+    {
+     "cik": 1507957,
+     "ticker": "IPWR",
+     "name": "Ideal Power Inc.",
+     "public_float": 37500000.0,
+     "score": 0.664
+    },
+    {
+     "cik": 1819438,
+     "ticker": "GWHT",
+     "name": "ESS Tech, Inc.",
+     "public_float": 13600000.0,
+     "score": 0.289
+    }
+   ]
+  },
+  "component:planar_transformer": {
+   "label": "고밀도 절연형 전력변압부",
+   "companies_total": 4,
+   "companies_small": 1,
+   "small": [
+    {
+     "cik": 1821769,
+     "ticker": "NVTS",
+     "name": "Navitas Semiconductor Corp",
+     "public_float": 1177000000.0,
+     "score": 1.862
+    }
+   ]
+  },
+  "component:dc_capacitor": {
+   "label": "고전압 DC 링크 커패시터",
+   "companies_total": 0,
+   "companies_small": 0,
+   "small": []
+  },
+  "material:hv_insulation": {
+   "label": "HVDC 케이블·커넥터 절연소재",
+   "companies_total": 14,
+   "companies_small": 1,
+   "small": [
+    {
+     "cik": 314203,
+     "ticker": "MUX",
+     "name": "McEwen Inc.",
+     "public_float": 519882572.0,
+     "score": 0.25
+    }
+   ]
+  },
+  "bottleneck:liquidcool": {
+   "label": "고밀도 GPU 콜드플레이트 열저항",
+   "companies_total": 15,
+   "companies_small": 7,
+   "small": [
+    {
+     "cik": 1803696,
+     "ticker": "ADEA",
+     "name": "Adeia Inc.",
+     "public_float": 887181255.0,
+     "score": 1.25
+    },
+    {
+     "cik": 1394056,
+     "ticker": "OSS",
+     "name": "ONE STOP SYSTEMS, INC.",
+     "public_float": 75252644.0,
+     "score": 0.619
+    },
+    {
+     "cik": 2001557,
+     "ticker": "INV",
+     "name": "Innventure, Inc.",
+     "public_float": 126807206.0,
+     "score": 0.586
+    },
+    {
+     "cik": 64463,
+     "ticker": "SLNH",
+     "name": "Soluna Holdings, Inc",
+     "public_float": 8284532.0,
+     "score": 0.315
+    },
+    {
+     "cik": 896493,
+     "ticker": "GPUS",
+     "name": "Hyperscale Data, Inc.",
+     "public_float": 12100000.0,
+     "score": 0.263
+    },
+    {
+     "cik": 1964789,
+     "ticker": "HUT",
+     "name": "Hut 8 Corp.",
+     "public_float": 1747264000.0,
+     "score": 0.263
+    },
+    {
+     "cik": 2042022,
+     "ticker": "WYFI",
+     "name": "WhiteFiber, Inc.",
+     "public_float": 0.0,
+     "score": 0.263
+    }
+   ]
+  },
+  "component:coldplate": {
+   "label": "액체냉각 cold plate",
+   "companies_total": 4,
+   "companies_small": 2,
+   "small": [
+    {
+     "cik": 1803696,
+     "ticker": "ADEA",
+     "name": "Adeia Inc.",
+     "public_float": 887181255.0,
+     "score": 1.25
+    },
+    {
+     "cik": 1394056,
+     "ticker": "OSS",
+     "name": "ONE STOP SYSTEMS, INC.",
+     "public_float": 75252644.0,
+     "score": 0.619
+    }
+   ]
+  },
+  "tech:cdu": {
+   "label": "액체 냉각수 분배장치(CDU)",
+   "companies_total": 1,
+   "companies_small": 0,
+   "small": []
+  },
+  "process:cdu_pump": {
+   "label": "CDU 냉각수 펌핑·유량 제어",
+   "companies_total": 10,
+   "companies_small": 5,
+   "small": [
+    {
+     "cik": 2001557,
+     "ticker": "INV",
+     "name": "Innventure, Inc.",
+     "public_float": 126807206.0,
+     "score": 0.586
+    },
+    {
+     "cik": 827099,
+     "ticker": "CPWR",
+     "name": "Ocean Thermal Energy Corp",
+     "public_float": 181247.0,
+     "score": 0.27
+    },
+    {
+     "cik": 2019804,
+     "ticker": "IMSR",
+     "name": "Terrestrial Energy Inc. /DE/",
+     "public_float": 191475000.0,
+     "score": 0.27
+    },
+    {
+     "cik": 1680247,
+     "ticker": "PUMP",
+     "name": "ProPetro Holding Corp.",
+     "public_float": 513600000.0,
+     "score": 0.27
+    },
+    {
+     "cik": 1923891,
+     "ticker": "NNE",
+     "name": "Nano Nuclear Energy Inc.",
+     "public_float": 703834174.0,
+     "score": 0.27
+    }
+   ]
+  },
+  "tech:sidecar": {
+   "label": "480VAC에서 ±400/800VDC로 전환하는 Side Power Rack",
+   "companies_total": 12,
+   "companies_small": 4,
+   "small": [
+    {
+     "cik": 1341317,
+     "ticker": "BWB",
+     "name": "Bridgewater Bancshares Inc",
+     "public_float": 348524730.0,
+     "score": 0.263
+    },
+    {
+     "cik": 1934850,
+     "ticker": "FG",
+     "name": "F&G Annuities & Life, Inc.",
+     "public_float": 667849667.0,
+     "score": 0.263
+    },
+    {
+     "cik": 1786108,
+     "ticker": "TRIN",
+     "name": "Trinity Capital Inc.",
+     "public_float": 920918691.0,
+     "score": 0.263
+    },
+    {
+     "cik": 2064953,
+     "ticker": "SOLS",
+     "name": "Solstice Advanced Materials Inc.",
+     "public_float": 0.0,
+     "score": 0.263
+    }
+   ]
+  },
+  "bottleneck:sic_reliability": {
+   "label": "SiC 소자 신뢰성·번인 검사",
+   "companies_total": 3,
+   "companies_small": 1,
+   "small": [
+    {
+     "cik": 1040470,
+     "ticker": "AEHR",
+     "name": "AEHR TEST SYSTEMS",
+     "public_float": 671378691.0,
+     "score": 2.573
+    }
+   ]
+  }
+ },
+ "companies": [
+  {
+   "cik": 1122411,
+   "ticker": "ASX",
+   "name": "ASE Technology Holding Co., Ltd.",
+   "size_band": "unknown",
+   "public_float": null,
+   "sic": "3674",
+   "score": 2.838,
+   "node_count": 9,
+   "promoted": false,
+   "nodes": [
+    {
+     "id": "material:abf",
+     "label": "미세 배선 패키지 절연·기판 소재",
+     "queries": [
+      "\"build-up film\"",
+      "\"ABF substrate\""
+     ]
+    },
+    {
+     "id": "bottleneck:hbm_kged",
+     "label": "적층 전 Known-Good-Die 수율 검사",
+     "queries": [
+      "\"known good die\"",
+      "\"known-good die\""
+     ]
+    },
+    {
+     "id": "material:underfill",
+     "label": "Underfill 몰딩·충진 소재",
+     "queries": [
+      "\"molding compound\" \"semiconductor\""
+     ]
+    },
+    {
+     "id": "component:package_substrate",
+     "label": "고밀도 패키지 기판",
+     "queries": [
+      "\"IC substrate\""
+     ]
+    },
+    {
+     "id": "component:power_converter",
+     "label": "DC/DC 전력변환 모듈",
+     "queries": [
+      "\"power module\" \"data center\""
+     ]
+    },
+    {
+     "id": "process:optical_test",
+     "label": "광모듈 생산·패키징 테스트",
+     "queries": [
+      "\"wafer-level\" \"photonic\" test"
+     ]
+    },
+    {
+     "id": "component:tsv",
+     "label": "실리콘 관통 전극 (TSV)",
+     "queries": [
+      "\"through-silicon via\"",
+      "\"through silicon via\""
+     ]
+    },
+    {
+     "id": "tech:cpo",
+     "label": "Co-Packaged Optics (CPO)",
+     "queries": [
+      "\"co-packaged optics\""
+     ]
+    },
+    {
+     "id": "component:pic",
+     "label": "광집적회로(PIC)",
+     "queries": [
+      "\"silicon photonics\""
+     ]
+    }
+   ],
+   "filing": {
+    "form": "20-F",
+    "date": "2026-04-01"
+   }
+  },
+  {
+   "cik": 1040470,
+   "ticker": "AEHR",
+   "name": "AEHR TEST SYSTEMS",
+   "size_band": "small",
+   "public_float": 671378691.0,
+   "sic": 3825,
+   "score": 2.573,
+   "node_count": 9,
+   "promoted": true,
+   "nodes": [
+    {
+     "id": "process:wafer_level_burn_in",
+     "label": "SiC 웨이퍼 레벨 번인·신뢰성 검사",
+     "queries": [
+      "\"wafer-level burn-in\"",
+      "\"wafer level burn-in\""
+     ]
+    },
+    {
+     "id": "bottleneck:sic_reliability",
+     "label": "SiC 소자 신뢰성·번인 검사",
+     "queries": [
+      "\"burn-in\" \"silicon carbide\""
+     ]
+    },
+    {
+     "id": "bottleneck:hbm_kged",
+     "label": "적층 전 Known-Good-Die 수율 검사",
+     "queries": [
+      "\"known good die\"",
+      "\"known-good die\""
+     ]
+    },
+    {
+     "id": "process:optical_test",
+     "label": "광모듈 생산·패키징 테스트",
+     "queries": [
+      "\"wafer-level\" \"photonic\" test"
+     ]
+    },
+    {
+     "id": "component:tsv",
+     "label": "실리콘 관통 전극 (TSV)",
+     "queries": [
+      "\"through-silicon via\"",
+      "\"through silicon via\""
+     ]
+    },
+    {
+     "id": "material:sic_wafer",
+     "label": "SiC 결정 웨이퍼·에피층",
+     "queries": [
+      "\"silicon carbide\" wafer"
+     ]
+    },
+    {
+     "id": "gen:hbm4",
+     "label": "HBM4 (2,048 I/O, JESD270-4)",
+     "queries": [
+      "\"high bandwidth memory\""
+     ]
+    },
+    {
+     "id": "component:pic",
+     "label": "광집적회로(PIC)",
+     "queries": [
+      "\"silicon photonics\""
+     ]
+    },
+    {
+     "id": "tech:sic",
+     "label": "SiC 전력반도체",
+     "queries": [
+      "\"silicon carbide\" \"power\""
+     ]
+    }
+   ],
+   "filing": {
+    "form": "10-K",
+    "date": "2026-07-27"
+   }
+  },
+  {
+   "cik": 1047127,
+   "ticker": "AMKR",
+   "name": "AMKOR TECHNOLOGY, INC.",
+   "size_band": "mid",
+   "public_float": 2391000000.0,
+   "sic": "3674",
+   "score": 2.302,
+   "node_count": 9,
+   "promoted": false,
+   "nodes": [
+    {
+     "id": "bottleneck:sic_reliability",
+     "label": "SiC 소자 신뢰성·번인 검사",
+     "queries": [
+      "\"burn-in\" \"silicon carbide\""
+     ]
+    },
+    {
+     "id": "tech:hybrid_bond",
+     "label": "하이브리드 본딩",
+     "queries": [
+      "\"hybrid bonding\""
+     ]
+    },
+    {
+     "id": "material:underfill",
+     "label": "Underfill 몰딩·충진 소재",
+     "queries": [
+      "\"molding compound\" \"semiconductor\""
+     ]
+    },
+    {
+     "id": "component:tsv",
+     "label": "실리콘 관통 전극 (TSV)",
+     "queries": [
+      "\"through-silicon via\"",
+      "\"through silicon via\""
+     ]
+    },
+    {
+     "id": "tech:cpo",
+     "label": "Co-Packaged Optics (CPO)",
+     "queries": [
+      "\"co-packaged optics\""
+     ]
+    },
+    {
+     "id": "material:sic_wafer",
+     "label": "SiC 결정 웨이퍼·에피층",
+     "queries": [
+      "\"silicon carbide\" wafer"
+     ]
+    },
+    {
+     "id": "gen:hbm4",
+     "label": "HBM4 (2,048 I/O, JESD270-4)",
+     "queries": [
+      "\"high bandwidth memory\""
+     ]
+    },
+    {
+     "id": "component:pic",
+     "label": "광집적회로(PIC)",
+     "queries": [
+      "\"silicon photonics\""
+     ]
+    },
+    {
+     "id": "tech:sic",
+     "label": "SiC 전력반도체",
+     "queries": [
+      "\"silicon carbide\" \"power\""
+     ]
+    }
+   ],
+   "filing": {
+    "form": "10-K",
+    "date": "2026-02-20"
+   }
+  },
+  {
+   "cik": 1437424,
+   "ticker": "POET",
+   "name": "POET TECHNOLOGIES INC.",
+   "size_band": "unknown",
+   "public_float": null,
+   "sic": "3674",
+   "score": 2.04,
+   "node_count": 6,
+   "promoted": true,
+   "nodes": [
+    {
+     "id": "tech:optical_interposer",
+     "label": "광학 인터포저 기반 통합 광엔진",
+     "queries": [
+      "\"optical interposer\""
+     ]
+    },
+    {
+     "id": "component:eml",
+     "label": "200G EML 광변조 레이저",
+     "queries": [
+      "\"EML\" \"200G\""
+     ]
+    },
+    {
+     "id": "tech:pluggable",
+     "label": "1.6T Pluggable transceiver",
+     "queries": [
+      "\"1.6T\" transceiver",
+      "\"800G\" transceiver"
+     ]
+    },
+    {
+     "id": "process:optical_test",
+     "label": "광모듈 생산·패키징 테스트",
+     "queries": [
+      "\"optical transceiver\" test",
+      "\"wafer-level\" \"photonic\" test"
+     ]
+    },
+    {
+     "id": "component:tsv",
+     "label": "실리콘 관통 전극 (TSV)",
+     "queries": [
+      "\"through-silicon via\"",
+      "\"through silicon via\""
+     ]
+    },
+    {
+     "id": "component:pic",
+     "label": "광집적회로(PIC)",
+     "queries": [
+      "\"silicon photonics\""
+     ]
+    }
+   ],
+   "filing": {
+    "form": "20-F",
+    "date": "2026-03-31"
+   }
+  },
+  {
+   "cik": 1325964,
+   "ticker": "LWLG",
+   "name": "Lightwave Logic, Inc.",
+   "size_band": "micro",
+   "public_float": 155272461.0,
+   "sic": 3080,
+   "score": 2.039,
+   "node_count": 6,
+   "promoted": true,
+   "nodes": [
+    {
+     "id": "component:modulator",
+     "label": "고속 광변조기",
+     "queries": [
+      "\"thin-film lithium niobate\"",
+      "\"lithium niobate\" modulator"
+     ]
+    },
+    {
+     "id": "component:pic",
+     "label": "광집적회로(PIC)",
+     "queries": [
+      "\"photonic integrated circuit\"",
+      "\"silicon photonics\""
+     ]
+    },
+    {
+     "id": "tech:pluggable",
+     "label": "1.6T Pluggable transceiver",
+     "queries": [
+      "\"1.6T\" transceiver",
+      "\"800G\" transceiver"
+     ]
+    },
+    {
+     "id": "material:inp",
+     "label": "인듐인(InP) 화합물 반도체",
+     "queries": [
+      "\"indium phosphide\""
+     ]
+    },
+    {
+     "id": "process:optical_test",
+     "label": "광모듈 생산·패키징 테스트",
+     "queries": [
+      "\"optical transceiver\" test",
+      "\"wafer-level\" \"photonic\" test"
+     ]
+    },
+    {
+     "id": "tech:cpo",
+     "label": "Co-Packaged Optics (CPO)",
+     "queries": [
+      "\"co-packaged optics\""
+     ]
+    }
+   ],
+   "filing": {
+    "form": "10-K",
+    "date": "2026-03-20"
+   }
+  },
+  {
+   "cik": 1821769,
+   "ticker": "NVTS",
+   "name": "Navitas Semiconductor Corp",
+   "size_band": "small",
+   "public_float": 1177000000.0,
+   "sic": "3674",
+   "score": 1.862,
+   "node_count": 5,
+   "promoted": true,
+   "nodes": [
+    {
+     "id": "component:sic_mosfet",
+     "label": "SiC MOSFET 소자",
+     "queries": [
+      "\"SiC MOSFET\""
+     ]
+    },
+    {
+     "id": "component:planar_transformer",
+     "label": "고밀도 절연형 전력변압부",
+     "queries": [
+      "\"solid-state transformer\""
+     ]
+    },
+    {
+     "id": "gen:800vdc",
+     "label": "800VDC 배전 아키텍처 (NVIDIA 2027 1MW 랙 목표)",
+     "queries": [
+      "\"800 VDC\""
+     ]
+    },
+    {
+     "id": "material:sic_wafer",
+     "label": "SiC 결정 웨이퍼·에피층",
+     "queries": [
+      "\"silicon carbide\" wafer"
+     ]
+    },
+    {
+     "id": "tech:sic",
+     "label": "SiC 전력반도체",
+     "queries": [
+      "\"silicon carbide\" \"power\""
+     ]
+    }
+   ],
+   "filing": {
+    "form": "10-K",
+    "date": "2026-02-27"
+   }
+  },
+  {
+   "cik": 932787,
+   "ticker": "STM",
+   "name": "STMicroelectronics N.V.",
+   "size_band": "unknown",
+   "public_float": null,
+   "sic": "3674",
+   "score": 1.856,
+   "node_count": 6,
+   "promoted": false,
+   "nodes": [
+    {
+     "id": "material:sic_wafer",
+     "label": "SiC 결정 웨이퍼·에피층",
+     "queries": [
+      "\"silicon carbide\" wafer",
+      "\"SiC substrate\""
+     ]
+    },
+    {
+     "id": "bottleneck:sic_reliability",
+     "label": "SiC 소자 신뢰성·번인 검사",
+     "queries": [
+      "\"burn-in\" \"silicon carbide\""
+     ]
+    },
+    {
+     "id": "component:power_converter",
+     "label": "DC/DC 전력변환 모듈",
+     "queries": [
+      "\"power module\" \"data center\""
+     ]
+    },
+    {
+     "id": "process:optical_test",
+     "label": "광모듈 생산·패키징 테스트",
+     "queries": [
+      "\"wafer-level\" \"photonic\" test"
+     ]
+    },
+    {
+     "id": "component:pic",
+     "label": "광집적회로(PIC)",
+     "queries": [
+      "\"silicon photonics\""
+     ]
+    },
+    {
+     "id": "tech:sic",
+     "label": "SiC 전력반도체",
+     "queries": [
+      "\"silicon carbide\" \"power\""
+     ]
+    }
+   ],
+   "filing": {
+    "form": "20-F",
+    "date": "2026-02-26"
+   }
+  },
+  {
+   "cik": 866291,
+   "ticker": "ALGM",
+   "name": "ALLEGRO MICROSYSTEMS, INC.",
+   "size_band": "mid",
+   "public_float": 3703521114.0,
+   "sic": "3674",
+   "score": 1.725,
+   "node_count": 5,
+   "promoted": false,
+   "nodes": [
+    {
+     "id": "component:power_converter",
+     "label": "DC/DC 전력변환 모듈",
+     "queries": [
+      "\"DC-DC converter\" \"data center\""
+     ]
+    },
+    {
+     "id": "component:planar_transformer",
+     "label": "고밀도 절연형 전력변압부",
+     "queries": [
+      "\"planar transformer\""
+     ]
+    },
+    {
+     "id": "component:gate_driver",
+     "label": "SiC·GaN 전력반도체 게이트드라이버",
+     "queries": [
+      "\"gate driver\""
+     ]
+    },
+    {
+     "id": "material:sic_wafer",
+     "label": "SiC 결정 웨이퍼·에피층",
+     "queries": [
+      "\"silicon carbide\" wafer"
+     ]
+    },
+    {
+     "id": "tech:sic",
+     "label": "SiC 전력반도체",
+     "queries": [
+      "\"silicon carbide\" \"power\""
+     ]
+    }
+   ],
+   "filing": {
+    "form": "10-K",
+    "date": "2026-05-21"
+   }
+  },
+  {
+   "cik": 1123134,
+   "ticker": "IMOS",
+   "name": "CHIPMOS TECHNOLOGIES INC",
+   "size_band": "unknown",
+   "public_float": null,
+   "sic": "3674",
+   "score": 1.552,
+   "node_count": 4,
+   "promoted": false,
+   "nodes": [
+    {
+     "id": "material:underfill",
+     "label": "Underfill 몰딩·충진 소재",
+     "queries": [
+      "\"underfill\"",
+      "\"molding compound\" \"semiconductor\""
+     ]
+    },
+    {
+     "id": "process:wafer_level_burn_in",
+     "label": "SiC 웨이퍼 레벨 번인·신뢰성 검사",
+     "queries": [
+      "\"wafer-level burn-in\"",
+      "\"wafer level burn-in\""
+     ]
+    },
+    {
+     "id": "component:gate_driver",
+     "label": "SiC·GaN 전력반도체 게이트드라이버",
+     "queries": [
+      "\"gate driver\""
+     ]
+    },
+    {
+     "id": "component:tsv",
+     "label": "실리콘 관통 전극 (TSV)",
+     "queries": [
+      "\"through-silicon via\"",
+      "\"through silicon via\""
+     ]
+    }
+   ],
+   "filing": {
+    "form": "20-F",
+    "date": "2026-04-14"
+   }
+  },
+  {
+   "cik": 1387467,
+   "ticker": "AOSL",
+   "name": "ALPHA & OMEGA SEMICONDUCTOR Ltd",
+   "size_band": "small",
+   "public_float": 487000000.0,
+   "sic": 3674,
+   "score": 1.526,
+   "node_count": 6,
+   "promoted": true,
+   "nodes": [
+    {
+     "id": "gen:800vdc",
+     "label": "800VDC 배전 아키텍처 (NVIDIA 2027 1MW 랙 목표)",
+     "queries": [
+      "\"800 VDC\""
+     ]
+    },
+    {
+     "id": "material:underfill",
+     "label": "Underfill 몰딩·충진 소재",
+     "queries": [
+      "\"molding compound\" \"semiconductor\""
+     ]
+    },
+    {
+     "id": "component:gate_driver",
+     "label": "SiC·GaN 전력반도체 게이트드라이버",
+     "queries": [
+      "\"gate driver\""
+     ]
+    },
+    {
+     "id": "material:sic_wafer",
+     "label": "SiC 결정 웨이퍼·에피층",
+     "queries": [
+      "\"silicon carbide\" wafer"
+     ]
+    },
+    {
+     "id": "gen:hbm4",
+     "label": "HBM4 (2,048 I/O, JESD270-4)",
+     "queries": [
+      "\"high bandwidth memory\""
+     ]
+    },
+    {
+     "id": "tech:sic",
+     "label": "SiC 전력반도체",
+     "queries": [
+      "\"silicon carbide\" \"power\""
+     ]
+    }
+   ],
+   "filing": {
+    "form": "10-K",
+    "date": "2026-08-27"
+   }
+  },
+  {
+   "cik": 1342338,
+   "ticker": "HIMX",
+   "name": "Himax Technologies, Inc.",
+   "size_band": "unknown",
+   "public_float": null,
+   "sic": "3674",
+   "score": 1.471,
+   "node_count": 5,
+   "promoted": false,
+   "nodes": [
+    {
+     "id": "component:fiber_ferrule",
+     "label": "고정밀 광섬유 ferrule·어레이",
+     "queries": [
+      "\"fiber array\""
+     ]
+    },
+    {
+     "id": "component:gate_driver",
+     "label": "SiC·GaN 전력반도체 게이트드라이버",
+     "queries": [
+      "\"gate driver\""
+     ]
+    },
+    {
+     "id": "process:optical_test",
+     "label": "광모듈 생산·패키징 테스트",
+     "queries": [
+      "\"wafer-level\" \"photonic\" test"
+     ]
+    },
+    {
+     "id": "tech:cpo",
+     "label": "Co-Packaged Optics (CPO)",
+     "queries": [
+      "\"co-packaged optics\""
+     ]
+    },
+    {
+     "id": "component:pic",
+     "label": "광집적회로(PIC)",
+     "queries": [
+      "\"silicon photonics\""
+     ]
+    }
+   ],
+   "filing": {
+    "form": "20-F",
+    "date": "2026-03-27"
+   }
+  },
+  {
+   "cik": 1493594,
+   "ticker": "MTSI",
+   "name": "MACOM Technology Solutions Holdings, Inc.",
+   "size_band": "mid",
+   "public_float": 5700000000.0,
+   "sic": "3674",
+   "score": 1.405,
+   "node_count": 6,
+   "promoted": false,
+   "nodes": [
+    {
+     "id": "tech:pluggable",
+     "label": "1.6T Pluggable transceiver",
+     "queries": [
+      "\"1.6T\" transceiver",
+      "\"800G\" transceiver"
+     ]
+    },
+    {
+     "id": "material:inp",
+     "label": "인듐인(InP) 화합물 반도체",
+     "queries": [
+      "\"indium phosphide\""
+     ]
+    },
+    {
+     "id": "process:optical_test",
+     "label": "광모듈 생산·패키징 테스트",
+     "queries": [
+      "\"optical transceiver\" test"
+     ]
+    },
+    {
+     "id": "material:sic_wafer",
+     "label": "SiC 결정 웨이퍼·에피층",
+     "queries": [
+      "\"silicon carbide\" wafer"
+     ]
+    },
+    {
+     "id": "component:pic",
+     "label": "광집적회로(PIC)",
+     "queries": [
+      "\"silicon photonics\""
+     ]
+    },
+    {
+     "id": "tech:sic",
+     "label": "SiC 전력반도체",
+     "queries": [
+      "\"silicon carbide\" \"power\""
+     ]
+    }
+   ],
+   "filing": {
+    "form": "10-K",
+    "date": "2025-11-14"
+   }
+  },
+  {
+   "cik": 1039399,
+   "ticker": "FORM",
+   "name": "FORMFACTOR INC",
+   "size_band": "unknown",
+   "public_float": null,
+   "sic": "3674",
+   "score": 1.365,
+   "node_count": 5,
+   "promoted": true,
+   "nodes": [
+    {
+     "id": "tech:tcb",
+     "label": "열압착 본딩(TCB)",
+     "queries": [
+      "\"thermo-compression bonding\""
+     ]
+    },
+    {
+     "id": "component:tsv",
+     "label": "실리콘 관통 전극 (TSV)",
+     "queries": [
+      "\"through-silicon via\"",
+      "\"through silicon via\""
+     ]
+    },
+    {
+     "id": "tech:cpo",
+     "label": "Co-Packaged Optics (CPO)",
+     "queries": [
+      "\"co-packaged optics\""
+     ]
+    },
+    {
+     "id": "gen:hbm4",
+     "label": "HBM4 (2,048 I/O, JESD270-4)",
+     "queries": [
+      "\"high bandwidth memory\""
+     ]
+    },
+    {
+     "id": "component:pic",
+     "label": "광집적회로(PIC)",
+     "queries": [
+      "\"silicon photonics\""
+     ]
+    }
+   ],
+   "filing": {
+    "form": "10-K",
+    "date": "2026-02-20"
+   }
+  },
+  {
+   "cik": 2097163,
+   "ticker": "XNDU",
+   "name": "Xanadu Quantum Technologies Ltd",
+   "size_band": "unknown",
+   "public_float": null,
+   "sic": "3571",
+   "score": 1.264,
+   "node_count": 3,
+   "promoted": false,
+   "nodes": [
+    {
+     "id": "component:fiber_ferrule",
+     "label": "고정밀 광섬유 ferrule·어레이",
+     "queries": [
+      "\"fiber array\""
+     ]
+    },
+    {
+     "id": "component:modulator",
+     "label": "고속 광변조기",
+     "queries": [
+      "\"thin-film lithium niobate\""
+     ]
+    },
+    {
+     "id": "component:pic",
+     "label": "광집적회로(PIC)",
+     "queries": [
+      "\"photonic integrated circuit\"",
+      "\"silicon photonics\""
+     ]
+    }
+   ],
+   "filing": {
+    "form": "20-F",
+    "date": "2026-04-09"
+   }
+  },
+  {
+   "cik": 1803696,
+   "ticker": "ADEA",
+   "name": "Adeia Inc.",
+   "size_band": "small",
+   "public_float": 887181255.0,
+   "sic": 4841,
+   "score": 1.25,
+   "node_count": 3,
+   "promoted": true,
+   "nodes": [
+    {
+     "id": "tech:hybrid_bond",
+     "label": "하이브리드 본딩",
+     "queries": [
+      "\"hybrid bonding\"",
+      "\"direct bond interconnect\""
+     ]
+    },
+    {
+     "id": "component:coldplate",
+     "label": "액체냉각 cold plate",
+     "queries": [
+      "\"cold plate\""
+     ]
+    },
+    {
+     "id": "bottleneck:liquidcool",
+     "label": "고밀도 GPU 콜드플레이트 열저항",
+     "queries": [
+      "\"direct-to-chip\""
+     ]
+    }
+   ],
+   "filing": {
+    "form": "10-K",
+    "date": "2026-02-26"
+   }
+  },
+  {
+   "cik": 1828805,
+   "ticker": "ALMU",
+   "name": "Aeluma, Inc.",
+   "size_band": "micro",
+   "public_float": 276200000.0,
+   "sic": 3674,
+   "score": 1.232,
+   "node_count": 5,
+   "promoted": true,
+   "nodes": [
+    {
+     "id": "material:inp",
+     "label": "인듐인(InP) 화합물 반도체",
+     "queries": [
+      "\"indium phosphide\""
+     ]
+    },
+    {
+     "id": "component:vcsel",
+     "label": "VCSEL 레이저 광원",
+     "queries": [
+      "\"VCSEL\""
+     ]
+    },
+    {
+     "id": "process:optical_test",
+     "label": "광모듈 생산·패키징 테스트",
+     "queries": [
+      "\"wafer-level\" \"photonic\" test"
+     ]
+    },
+    {
+     "id": "tech:cpo",
+     "label": "Co-Packaged Optics (CPO)",
+     "queries": [
+      "\"co-packaged optics\""
+     ]
+    },
+    {
+     "id": "component:pic",
+     "label": "광집적회로(PIC)",
+     "queries": [
+      "\"silicon photonics\""
+     ]
+    }
+   ],
+   "filing": {
+    "form": "10-K",
+    "date": "2026-09-16"
+   }
+  },
+  {
+   "cik": 1101302,
+   "ticker": "ENTG",
+   "name": "ENTEGRIS INC",
+   "size_band": "mid",
+   "public_float": 8500000000.0,
+   "sic": "3089",
+   "score": 1.196,
+   "node_count": 4,
+   "promoted": false,
+   "nodes": [
+    {
+     "id": "process:cmp",
+     "label": "Cu·절연체 CMP 평탄화",
+     "queries": [
+      "\"chemical mechanical planarization\"",
+      "\"CMP slurry\""
+     ]
+    },
+    {
+     "id": "material:sic_wafer",
+     "label": "SiC 결정 웨이퍼·에피층",
+     "queries": [
+      "\"silicon carbide\" wafer"
+     ]
+    },
+    {
+     "id": "gen:hbm4",
+     "label": "HBM4 (2,048 I/O, JESD270-4)",
+     "queries": [
+      "\"high bandwidth memory\""
+     ]
+    },
+    {
+     "id": "tech:sic",
+     "label": "SiC 전력반도체",
+     "queries": [
+      "\"silicon carbide\" \"power\""
+     ]
+    }
+   ],
+   "filing": {
+    "form": "10-K",
+    "date": "2026-02-11"
+   }
+  },
+  {
+   "cik": 1033767,
+   "ticker": "UMC",
+   "name": "UNITED MICROELECTRONICS CORP",
+   "size_band": "unknown",
+   "public_float": null,
+   "sic": "3674",
+   "score": 1.181,
+   "node_count": 5,
+   "promoted": false,
+   "nodes": [
+    {
+     "id": "tech:hybrid_bond",
+     "label": "하이브리드 본딩",
+     "queries": [
+      "\"hybrid bonding\""
+     ]
+    },
+    {
+     "id": "component:tsv",
+     "label": "실리콘 관통 전극 (TSV)",
+     "queries": [
+      "\"through-silicon via\"",
+      "\"through silicon via\""
+     ]
+    },
+    {
+     "id": "tech:cpo",
+     "label": "Co-Packaged Optics (CPO)",
+     "queries": [
+      "\"co-packaged optics\""
+     ]
+    },
+    {
+     "id": "gen:hbm4",
+     "label": "HBM4 (2,048 I/O, JESD270-4)",
+     "queries": [
+      "\"high bandwidth memory\""
+     ]
+    },
+    {
+     "id": "component:pic",
+     "label": "광집적회로(PIC)",
+     "queries": [
+      "\"silicon photonics\""
+     ]
+    }
+   ],
+   "filing": {
+    "form": "20-F",
+    "date": "2026-04-30"
+   }
+  },
+  {
+   "cik": 1109345,
+   "ticker": "NVMI",
+   "name": "NOVA LTD.",
+   "size_band": "unknown",
+   "public_float": null,
+   "sic": "3827",
+   "score": 1.108,
+   "node_count": 4,
+   "promoted": true,
+   "nodes": [
+    {
+     "id": "tech:hybrid_bond",
+     "label": "하이브리드 본딩",
+     "queries": [
+      "\"hybrid bonding\""
+     ]
+    },
+    {
+     "id": "component:package_substrate",
+     "label": "고밀도 패키지 기판",
+     "queries": [
+      "\"IC substrate\""
+     ]
+    },
+    {
+     "id": "process:cmp",
+     "label": "Cu·절연체 CMP 평탄화",
+     "queries": [
+      "\"chemical mechanical planarization\""
+     ]
+    },
+    {
+     "id": "gen:hbm4",
+     "label": "HBM4 (2,048 I/O, JESD270-4)",
+     "queries": [
+      "\"high bandwidth memory\""
+     ]
+    }
+   ],
+   "filing": {
+    "form": "20-F",
+    "date": "2026-02-17"
+   }
+  },
+  {
+   "cik": 1109138,
+   "ticker": "CAMT",
+   "name": "CAMTEK LTD",
+   "size_band": "unknown",
+   "public_float": null,
+   "sic": "3827",
+   "score": 1.069,
+   "node_count": 5,
+   "promoted": true,
+   "nodes": [
+    {
+     "id": "tech:hybrid_bond",
+     "label": "하이브리드 본딩",
+     "queries": [
+      "\"hybrid bonding\""
+     ]
+    },
+    {
+     "id": "material:sic_wafer",
+     "label": "SiC 결정 웨이퍼·에피층",
+     "queries": [
+      "\"silicon carbide\" wafer"
+     ]
+    },
+    {
+     "id": "gen:hbm4",
+     "label": "HBM4 (2,048 I/O, JESD270-4)",
+     "queries": [
+      "\"high bandwidth memory\""
+     ]
+    },
+    {
+     "id": "component:pic",
+     "label": "광집적회로(PIC)",
+     "queries": [
+      "\"silicon photonics\""
+     ]
+    },
+    {
+     "id": "tech:sic",
+     "label": "SiC 전력반도체",
+     "queries": [
+      "\"silicon carbide\" \"power\""
+     ]
+    }
+   ],
+   "filing": {
+    "form": "20-F",
+    "date": "2026-03-19"
+   }
+  },
+  {
+   "cik": 56978,
+   "ticker": "KLIC",
+   "name": "KULICKE & SOFFA INDUSTRIES INC",
+   "size_band": "small",
+   "public_float": 1753200000.0,
+   "sic": "3674",
+   "score": 1.006,
+   "node_count": 3,
+   "promoted": true,
+   "nodes": [
+    {
+     "id": "tech:tcb",
+     "label": "열압착 본딩(TCB)",
+     "queries": [
+      "\"thermo-compression bonding\""
+     ]
+    },
+    {
+     "id": "tech:hybrid_bond",
+     "label": "하이브리드 본딩",
+     "queries": [
+      "\"hybrid bonding\""
+     ]
+    },
+    {
+     "id": "gen:hbm4",
+     "label": "HBM4 (2,048 I/O, JESD270-4)",
+     "queries": [
+      "\"high bandwidth memory\""
+     ]
+    }
+   ],
+   "filing": {
+    "form": "10-K",
+    "date": "2025-11-20"
+   }
+  },
+  {
+   "cik": 720500,
+   "ticker": "ASYS",
+   "name": "AMTECH SYSTEMS INC",
+   "size_band": "micro",
+   "public_float": 54346382.0,
+   "sic": 3559,
+   "score": 0.979,
+   "node_count": 3,
+   "promoted": true,
+   "nodes": [
+    {
+     "id": "material:sic_wafer",
+     "label": "SiC 결정 웨이퍼·에피층",
+     "queries": [
+      "\"silicon carbide\" wafer",
+      "\"SiC substrate\""
+     ]
+    },
+    {
+     "id": "process:cmp",
+     "label": "Cu·절연체 CMP 평탄화",
+     "queries": [
+      "\"chemical mechanical planarization\""
+     ]
+    },
+    {
+     "id": "tech:sic",
+     "label": "SiC 전력반도체",
+     "queries": [
+      "\"silicon carbide\" \"power\""
+     ]
+    }
+   ],
+   "filing": {
+    "form": "10-K",
+    "date": "2025-12-10"
+   }
+  },
+  {
+   "cik": 833640,
+   "ticker": "POWI",
+   "name": "POWER INTEGRATIONS INC",
+   "size_band": "mid",
+   "public_float": 2300000000.0,
+   "sic": "3674",
+   "score": 0.979,
+   "node_count": 4,
+   "promoted": false,
+   "nodes": [
+    {
+     "id": "material:underfill",
+     "label": "Underfill 몰딩·충진 소재",
+     "queries": [
+      "\"molding compound\" \"semiconductor\""
+     ]
+    },
+    {
+     "id": "component:gate_driver",
+     "label": "SiC·GaN 전력반도체 게이트드라이버",
+     "queries": [
+      "\"gate driver\""
+     ]
+    },
+    {
+     "id": "material:sic_wafer",
+     "label": "SiC 결정 웨이퍼·에피층",
+     "queries": [
+      "\"silicon carbide\" wafer"
+     ]
+    },
+    {
+     "id": "tech:sic",
+     "label": "SiC 전력반도체",
+     "queries": [
+      "\"silicon carbide\" \"power\""
+     ]
+    }
+   ],
+   "filing": {
+    "form": "10-K",
+    "date": "2026-02-06"
+   }
+  },
+  {
+   "cik": 1938569,
+   "ticker": "PALX",
+   "name": "Palomino Laboratories Inc.",
+   "size_band": "micro",
+   "public_float": 0.0,
+   "sic": "6770",
+   "score": 0.945,
+   "node_count": 4,
+   "promoted": false,
+   "nodes": [
+    {
+     "id": "component:vcsel",
+     "label": "VCSEL 레이저 광원",
+     "queries": [
+      "\"VCSEL\""
+     ]
+    },
+    {
+     "id": "process:optical_test",
+     "label": "광모듈 생산·패키징 테스트",
+     "queries": [
+      "\"optical transceiver\" test"
+     ]
+    },
+    {
+     "id": "tech:cpo",
+     "label": "Co-Packaged Optics (CPO)",
+     "queries": [
+      "\"co-packaged optics\""
+     ]
+    },
+    {
+     "id": "component:pic",
+     "label": "광집적회로(PIC)",
+     "queries": [
+      "\"silicon photonics\""
+     ]
+    }
+   ],
+   "filing": {
+    "form": "10-K",
+    "date": "2026-03-31"
+   }
+  },
+  {
+   "cik": 1759631,
+   "ticker": "HYLN",
+   "name": "Hyliion Holdings Corp.",
+   "size_band": "micro",
+   "public_float": 183000000.0,
+   "sic": 3713,
+   "score": 0.92,
+   "node_count": 2,
+   "promoted": false,
+   "nodes": [
+    {
+     "id": "gen:800vdc",
+     "label": "800VDC 배전 아키텍처 (NVIDIA 2027 1MW 랙 목표)",
+     "queries": [
+      "\"800V DC\""
+     ]
+    },
+    {
+     "id": "component:power_converter",
+     "label": "DC/DC 전력변환 모듈",
+     "queries": [
+      "\"power module\" \"data center\""
+     ]
+    }
+   ],
+   "filing": {
+    "form": "10-K",
+    "date": "2026-02-25"
+   }
+  },
+  {
+   "cik": 824142,
+   "ticker": "AAON",
+   "name": "AAON, INC.",
+   "size_band": "mid",
+   "public_float": 4993400000.0,
+   "sic": "3585",
+   "score": 0.901,
+   "node_count": 2,
+   "promoted": false,
+   "nodes": [
+    {
+     "id": "tech:cdu",
+     "label": "액체 냉각수 분배장치(CDU)",
+     "queries": [
+      "\"coolant distribution unit\""
+     ]
+    },
+    {
+     "id": "process:cdu_pump",
+     "label": "CDU 냉각수 펌핑·유량 제어",
+     "queries": [
+      "\"coolant\" pump \"data center\""
+     ]
+    }
+   ],
+   "filing": {
+    "form": "10-K",
+    "date": "2026-03-02"
+   }
+  },
+  {
+   "cik": 1051627,
+   "ticker": "AXTI",
+   "name": "AXT INC",
+   "size_band": "micro",
+   "public_float": 83786290.0,
+   "sic": 3674,
+   "score": 0.842,
+   "node_count": 4,
+   "promoted": true,
+   "nodes": [
+    {
+     "id": "material:inp",
+     "label": "인듐인(InP) 화합물 반도체",
+     "queries": [
+      "\"indium phosphide\""
+     ]
+    },
+    {
+     "id": "material:sic_wafer",
+     "label": "SiC 결정 웨이퍼·에피층",
+     "queries": [
+      "\"silicon carbide\" wafer"
+     ]
+    },
+    {
+     "id": "component:pic",
+     "label": "광집적회로(PIC)",
+     "queries": [
+      "\"silicon photonics\""
+     ]
+    },
+    {
+     "id": "tech:sic",
+     "label": "SiC 전력반도체",
+     "queries": [
+      "\"silicon carbide\" \"power\""
+     ]
+    }
+   ],
+   "filing": {
+    "form": "10-K",
+    "date": "2026-03-17"
+   }
+  },
+  {
+   "cik": 1758009,
+   "ticker": "QUBT",
+   "name": "Quantum Computing Inc.",
+   "size_band": "mid",
+   "public_float": 2545765591.0,
+   "sic": "7372",
+   "score": 0.764,
+   "node_count": 2,
+   "promoted": false,
+   "nodes": [
+    {
+     "id": "component:modulator",
+     "label": "고속 광변조기",
+     "queries": [
+      "\"thin-film lithium niobate\""
+     ]
+    },
+    {
+     "id": "component:pic",
+     "label": "광집적회로(PIC)",
+     "queries": [
+      "\"photonic integrated circuit\""
+     ]
+    }
+   ],
+   "filing": {
+    "form": "10-K",
+    "date": "2026-03-02"
+   }
+  },
+  {
+   "cik": 1288469,
+   "ticker": "MXL",
+   "name": "MAXLINEAR, INC",
+   "size_band": "small",
+   "public_float": 1100000000.0,
+   "sic": "3674",
+   "score": 0.754,
+   "node_count": 3,
+   "promoted": true,
+   "nodes": [
+    {
+     "id": "tech:pluggable",
+     "label": "1.6T Pluggable transceiver",
+     "queries": [
+      "\"1.6T\" transceiver"
+     ]
+    },
+    {
+     "id": "process:optical_test",
+     "label": "광모듈 생산·패키징 테스트",
+     "queries": [
+      "\"optical transceiver\" test"
+     ]
+    },
+    {
+     "id": "gen:hbm4",
+     "label": "HBM4 (2,048 I/O, JESD270-4)",
+     "queries": [
+      "\"high bandwidth memory\""
+     ]
+    }
+   ],
+   "filing": {
+    "form": "10-K",
+    "date": "2026-01-29"
+   }
+  },
+  {
+   "cik": 1507957,
+   "ticker": "IPWR",
+   "name": "Ideal Power Inc.",
+   "size_band": "micro",
+   "public_float": 37500000.0,
+   "sic": 3674,
+   "score": 0.664,
+   "node_count": 3,
+   "promoted": true,
+   "nodes": [
+    {
+     "id": "component:power_converter",
+     "label": "DC/DC 전력변환 모듈",
+     "queries": [
+      "\"power module\" \"data center\""
+     ]
+    },
+    {
+     "id": "material:sic_wafer",
+     "label": "SiC 결정 웨이퍼·에피층",
+     "queries": [
+      "\"silicon carbide\" wafer"
+     ]
+    },
+    {
+     "id": "tech:sic",
+     "label": "SiC 전력반도체",
+     "queries": [
+      "\"silicon carbide\" \"power\""
+     ]
+    }
+   ],
+   "filing": {
+    "form": "10-K",
+    "date": "2026-03-27"
+   }
+  },
+  {
+   "cik": 1325702,
+   "ticker": "MX",
+   "name": "MAGNACHIP SEMICONDUCTOR Corp",
+   "size_band": "micro",
+   "public_float": 139249768.0,
+   "sic": 3674,
+   "score": 0.664,
+   "node_count": 3,
+   "promoted": false,
+   "nodes": [
+    {
+     "id": "component:gate_driver",
+     "label": "SiC·GaN 전력반도체 게이트드라이버",
+     "queries": [
+      "\"gate driver\""
+     ]
+    },
+    {
+     "id": "material:sic_wafer",
+     "label": "SiC 결정 웨이퍼·에피층",
+     "queries": [
+      "\"silicon carbide\" wafer"
+     ]
+    },
+    {
+     "id": "tech:sic",
+     "label": "SiC 전력반도체",
+     "queries": [
+      "\"silicon carbide\" \"power\""
+     ]
+    }
+   ],
+   "filing": {
+    "form": "10-K",
+    "date": "2026-03-16"
+   }
+  },
+  {
+   "cik": 1664703,
+   "ticker": "BE",
+   "name": "Bloom Energy Corp",
+   "size_band": "mid",
+   "public_float": 3900000000.0,
+   "sic": "3620",
+   "score": 0.645,
+   "node_count": 2,
+   "promoted": false,
+   "nodes": [
+    {
+     "id": "gen:800vdc",
+     "label": "800VDC 배전 아키텍처 (NVIDIA 2027 1MW 랙 목표)",
+     "queries": [
+      "\"800 VDC\""
+     ]
+    },
+    {
+     "id": "component:power_converter",
+     "label": "DC/DC 전력변환 모듈",
+     "queries": [
+      "\"power module\" \"data center\""
+     ]
+    }
+   ],
+   "filing": {
+    "form": "10-K",
+    "date": "2026-02-09"
+   }
+  },
+  {
+   "cik": 729580,
+   "ticker": "BELFA",
+   "name": "BEL FUSE INC /NJ",
+   "size_band": "small",
+   "public_float": 1200000000.0,
+   "sic": "3677",
+   "score": 0.631,
+   "node_count": 1,
+   "promoted": true,
+   "nodes": [
+    {
+     "id": "component:fiber_connector",
+     "label": "고밀도 광섬유 인터페이스",
+     "queries": [
+      "\"expanded beam\" connector"
+     ]
+    }
+   ],
+   "filing": {
+    "form": "10-K",
+    "date": "2026-02-24"
+   }
+  },
+  {
+   "cik": 1847075,
+   "ticker": "SAIH",
+   "name": "SAIHEAT Ltd",
+   "size_band": "unknown",
+   "public_float": null,
+   "sic": "6199",
+   "score": 0.626,
+   "node_count": 2,
+   "promoted": false,
+   "nodes": [
+    {
+     "id": "component:coldplate",
+     "label": "액체냉각 cold plate",
+     "queries": [
+      "\"cold plate\""
+     ]
+    },
+    {
+     "id": "process:cdu_pump",
+     "label": "CDU 냉각수 펌핑·유량 제어",
+     "queries": [
+      "\"coolant\" pump \"data center\""
+     ]
+    }
+   ],
+   "filing": {
+    "form": "20-F",
+    "date": "2026-04-30"
+   }
+  },
+  {
+   "cik": 1394056,
+   "ticker": "OSS",
+   "name": "ONE STOP SYSTEMS, INC.",
+   "size_band": "micro",
+   "public_float": 75252644.0,
+   "sic": 3571,
+   "score": 0.619,
+   "node_count": 2,
+   "promoted": false,
+   "nodes": [
+    {
+     "id": "component:coldplate",
+     "label": "액체냉각 cold plate",
+     "queries": [
+      "\"cold plate\""
+     ]
+    },
+    {
+     "id": "bottleneck:liquidcool",
+     "label": "고밀도 GPU 콜드플레이트 열저항",
+     "queries": [
+      "\"direct-to-chip\""
+     ]
+    }
+   ],
+   "filing": {
+    "form": "10-K",
+    "date": "2026-03-18"
+   }
+  },
+  {
+   "cik": 1987240,
+   "ticker": "SHMD",
+   "name": "SCHMID Group N.V.",
+   "size_band": "unknown",
+   "public_float": null,
+   "sic": "3590",
+   "score": 0.602,
+   "node_count": 2,
+   "promoted": false,
+   "nodes": [
+    {
+     "id": "component:package_substrate",
+     "label": "고밀도 패키지 기판",
+     "queries": [
+      "\"IC substrate\""
+     ]
+    },
+    {
+     "id": "process:cmp",
+     "label": "Cu·절연체 CMP 평탄화",
+     "queries": [
+      "\"chemical mechanical planarization\""
+     ]
+    }
+   ],
+   "filing": {
+    "form": "20-F",
+    "date": "2026-05-15"
+   }
+  },
+  {
+   "cik": 2001557,
+   "ticker": "INV",
+   "name": "Innventure, Inc.",
+   "size_band": "micro",
+   "public_float": 126807206.0,
+   "sic": 6770,
+   "score": 0.586,
+   "node_count": 2,
+   "promoted": false,
+   "nodes": [
+    {
+     "id": "bottleneck:liquidcool",
+     "label": "고밀도 GPU 콜드플레이트 열저항",
+     "queries": [
+      "\"direct liquid cooling\"",
+      "\"direct-to-chip\""
+     ]
+    },
+    {
+     "id": "process:cdu_pump",
+     "label": "CDU 냉각수 펌핑·유량 제어",
+     "queries": [
+      "\"coolant\" pump \"data center\""
+     ]
+    }
+   ],
+   "filing": {
+    "form": "10-K",
+    "date": "2026-03-30"
+   }
+  },
+  {
+   "cik": 21535,
+   "ticker": "COHU",
+   "name": "COHU INC",
+   "size_band": "small",
+   "public_float": 879400000.0,
+   "sic": 3825,
+   "score": 0.565,
+   "node_count": 3,
+   "promoted": true,
+   "nodes": [
+    {
+     "id": "material:sic_wafer",
+     "label": "SiC 결정 웨이퍼·에피층",
+     "queries": [
+      "\"silicon carbide\" wafer"
+     ]
+    },
+    {
+     "id": "gen:hbm4",
+     "label": "HBM4 (2,048 I/O, JESD270-4)",
+     "queries": [
+      "\"high bandwidth memory\""
+     ]
+    },
+    {
+     "id": "tech:sic",
+     "label": "SiC 전력반도체",
+     "queries": [
+      "\"silicon carbide\" \"power\""
+     ]
+    }
+   ],
+   "filing": {
+    "form": "10-K",
+    "date": "2026-02-17"
+   }
+  },
+  {
+   "cik": 103145,
+   "ticker": "VECO",
+   "name": "VEECO INSTRUMENTS INC",
+   "size_band": "small",
+   "public_float": 1205043869.0,
+   "sic": "3559",
+   "score": 0.565,
+   "node_count": 3,
+   "promoted": true,
+   "nodes": [
+    {
+     "id": "material:sic_wafer",
+     "label": "SiC 결정 웨이퍼·에피층",
+     "queries": [
+      "\"silicon carbide\" wafer"
+     ]
+    },
+    {
+     "id": "gen:hbm4",
+     "label": "HBM4 (2,048 I/O, JESD270-4)",
+     "queries": [
+      "\"high bandwidth memory\""
+     ]
+    },
+    {
+     "id": "tech:sic",
+     "label": "SiC 전력반도체",
+     "queries": [
+      "\"silicon carbide\" \"power\""
+     ]
+    }
+   ],
+   "filing": {
+    "form": "10-K",
+    "date": "2026-02-25"
+   }
+  },
+  {
+   "cik": 1791706,
+   "ticker": "LI",
+   "name": "Li Auto Inc.",
+   "size_band": "unknown",
+   "public_float": null,
+   "sic": "3711",
+   "score": 0.534,
+   "node_count": 2,
+   "promoted": false,
+   "nodes": [
+    {
+     "id": "gen:800vdc",
+     "label": "800VDC 배전 아키텍처 (NVIDIA 2027 1MW 랙 목표)",
+     "queries": [
+      "\"800-volt\""
+     ]
+    },
+    {
+     "id": "tech:sic",
+     "label": "SiC 전력반도체",
+     "queries": [
+      "\"silicon carbide\" \"power\""
+     ]
+    }
+   ],
+   "filing": {
+    "form": "20-F",
+    "date": "2026-04-10"
+   }
+  },
+  {
+   "cik": 1875994,
+   "ticker": null,
+   "name": "XINXU COPPER INDUSTRY TECHNOLOGY Ltd",
+   "size_band": "unknown",
+   "public_float": null,
+   "sic": "3350",
+   "score": 0.52,
+   "node_count": 2,
+   "promoted": false,
+   "nodes": [
+    {
+     "id": "component:dc_busbar",
+     "label": "DC Busbar 구리·절연재",
+     "queries": [
+      "\"busbar\""
+     ]
+    },
+    {
+     "id": "material:hv_insulation",
+     "label": "HVDC 케이블·커넥터 절연소재",
+     "queries": [
+      "\"high-voltage\" insulation \"cable\""
+     ]
+    }
+   ],
+   "filing": {
+    "form": "20-F",
+    "date": "2025-11-18"
+   }
+  },
+  {
+   "cik": 1395213,
+   "ticker": "EDN",
+   "name": "EDENOR",
+   "size_band": "unknown",
+   "public_float": null,
+   "sic": "4911",
+   "score": 0.52,
+   "node_count": 2,
+   "promoted": false,
+   "nodes": [
+    {
+     "id": "component:dc_busbar",
+     "label": "DC Busbar 구리·절연재",
+     "queries": [
+      "\"busbar\""
+     ]
+    },
+    {
+     "id": "material:hv_insulation",
+     "label": "HVDC 케이블·커넥터 절연소재",
+     "queries": [
+      "\"high-voltage\" insulation \"cable\""
+     ]
+    }
+   ],
+   "filing": {
+    "form": "20-F",
+    "date": "2026-04-15"
+   }
+  },
+  {
+   "cik": 924613,
+   "ticker": "NOK",
+   "name": "NOKIA CORP",
+   "size_band": "unknown",
+   "public_float": null,
+   "sic": "3663",
+   "score": 0.503,
+   "node_count": 2,
+   "promoted": false,
+   "nodes": [
+    {
+     "id": "material:inp",
+     "label": "인듐인(InP) 화합물 반도체",
+     "queries": [
+      "\"indium phosphide\""
+     ]
+    },
+    {
+     "id": "tech:cpo",
+     "label": "Co-Packaged Optics (CPO)",
+     "queries": [
+      "\"co-packaged optics\""
+     ]
+    }
+   ],
+   "filing": {
+    "form": "20-F",
+    "date": "2026-03-05"
+   }
+  },
+  {
+   "cik": 863436,
+   "ticker": "BHE",
+   "name": "BENCHMARK ELECTRONICS INC",
+   "size_band": "small",
+   "public_float": 1400000000.0,
+   "sic": "3672",
+   "score": 0.5,
+   "node_count": 1,
+   "promoted": false,
+   "nodes": [
+    {
+     "id": "material:underfill",
+     "label": "Underfill 몰딩·충진 소재",
+     "queries": [
+      "\"underfill\""
+     ]
+    }
+   ],
+   "filing": {
+    "form": "10-K",
+    "date": "2026-02-24"
+   }
+  },
+  {
+   "cik": 1109354,
+   "ticker": "BRKR",
+   "name": "BRUKER CORP",
+   "size_band": "mid",
+   "public_float": 4251097535.0,
+   "sic": "3826",
+   "score": 0.461,
+   "node_count": 2,
+   "promoted": false,
+   "nodes": [
+    {
+     "id": "component:dc_busbar",
+     "label": "DC Busbar 구리·절연재",
+     "queries": [
+      "\"busbar\""
+     ]
+    },
+    {
+     "id": "gen:hbm4",
+     "label": "HBM4 (2,048 I/O, JESD270-4)",
+     "queries": [
+      "\"high bandwidth memory\""
+     ]
+    }
+   ],
+   "filing": {
+    "form": "10-K",
+    "date": "2026-02-27"
+   }
+  },
+  {
+   "cik": 1990950,
+   "ticker": "SELXF",
+   "name": "Semilux International Ltd.",
+   "size_band": "unknown",
+   "public_float": null,
+   "sic": "3674",
+   "score": 0.458,
+   "node_count": 2,
+   "promoted": false,
+   "nodes": [
+    {
+     "id": "component:vcsel",
+     "label": "VCSEL 레이저 광원",
+     "queries": [
+      "\"VCSEL\""
+     ]
+    },
+    {
+     "id": "component:pic",
+     "label": "광집적회로(PIC)",
+     "queries": [
+      "\"silicon photonics\""
+     ]
+    }
+   ],
+   "filing": {
+    "form": "20-F",
+    "date": "2025-11-10"
+   }
+  },
+  {
+   "cik": 310354,
+   "ticker": "SXI",
+   "name": "STANDEX INTERNATIONAL CORP/DE/",
+   "size_band": "mid",
+   "public_float": 2681246305.0,
+   "sic": "3580",
+   "score": 0.431,
+   "node_count": 1,
+   "promoted": false,
+   "nodes": [
+    {
+     "id": "component:planar_transformer",
+     "label": "고밀도 절연형 전력변압부",
+     "queries": [
+      "\"planar transformer\""
+     ]
+    }
+   ],
+   "filing": {
+    "form": "10-K",
+    "date": "2026-08-14"
+   }
+  },
+  {
+   "cik": 917273,
+   "ticker": "RMBS",
+   "name": "RAMBUS INC",
+   "size_band": "mid",
+   "public_float": 5200000000.0,
+   "sic": "3674",
+   "score": 0.431,
+   "node_count": 1,
+   "promoted": false,
+   "nodes": [
+    {
+     "id": "gen:hbm4",
+     "label": "HBM4 (2,048 I/O, JESD270-4)",
+     "queries": [
+      "\"HBM4\""
+     ]
+    }
+   ],
+   "filing": {
+    "form": "10-K",
+    "date": "2026-02-18"
+   }
+  },
+  {
+   "cik": 928876,
+   "ticker": "TSEM",
+   "name": "TOWER SEMICONDUCTOR LTD",
+   "size_band": "unknown",
+   "public_float": null,
+   "sic": "3674",
+   "score": 0.412,
+   "node_count": 2,
+   "promoted": false,
+   "nodes": [
+    {
+     "id": "tech:cpo",
+     "label": "Co-Packaged Optics (CPO)",
+     "queries": [
+      "\"co-packaged optics\""
+     ]
+    },
+    {
+     "id": "component:pic",
+     "label": "광집적회로(PIC)",
+     "queries": [
+      "\"silicon photonics\""
+     ]
+    }
+   ],
+   "filing": {
+    "form": "20-F",
+    "date": "2026-04-30"
+   }
+  },
+  {
+   "cik": 766792,
+   "ticker": "CVV",
+   "name": "CVD EQUIPMENT CORP",
+   "size_band": "micro",
+   "public_float": 14612028.0,
+   "sic": 3559,
+   "score": 0.375,
+   "node_count": 2,
+   "promoted": true,
+   "nodes": [
+    {
+     "id": "material:sic_wafer",
+     "label": "SiC 결정 웨이퍼·에피층",
+     "queries": [
+      "\"silicon carbide\" wafer"
+     ]
+    },
+    {
+     "id": "tech:sic",
+     "label": "SiC 전력반도체",
+     "queries": [
+      "\"silicon carbide\" \"power\""
+     ]
+    }
+   ],
+   "filing": {
+    "form": "10-K",
+    "date": "2026-03-30"
+   }
+  },
+  {
+   "cik": 1036262,
+   "ticker": "INTT",
+   "name": "INTEST CORP",
+   "size_band": "micro",
+   "public_float": 85351987.0,
+   "sic": 3825,
+   "score": 0.375,
+   "node_count": 2,
+   "promoted": true,
+   "nodes": [
+    {
+     "id": "material:sic_wafer",
+     "label": "SiC 결정 웨이퍼·에피층",
+     "queries": [
+      "\"silicon carbide\" wafer"
+     ]
+    },
+    {
+     "id": "tech:sic",
+     "label": "SiC 전력반도체",
+     "queries": [
+      "\"silicon carbide\" \"power\""
+     ]
+    }
+   ],
+   "filing": {
+    "form": "10-K",
+    "date": "2026-03-12"
+   }
+  },
+  {
+   "cik": 895419,
+   "ticker": "WOLF",
+   "name": "WOLFSPEED, INC.",
+   "size_band": "small",
+   "public_float": 491198896.0,
+   "sic": 3674,
+   "score": 0.375,
+   "node_count": 2,
+   "promoted": true,
+   "nodes": [
+    {
+     "id": "material:sic_wafer",
+     "label": "SiC 결정 웨이퍼·에피층",
+     "queries": [
+      "\"silicon carbide\" wafer"
+     ]
+    },
+    {
+     "id": "tech:sic",
+     "label": "SiC 전력반도체",
+     "queries": [
+      "\"silicon carbide\" \"power\""
+     ]
+    }
+   ],
+   "filing": {
+    "form": "10-K",
+    "date": "2026-08-20"
+   }
+  },
+  {
+   "cik": 103730,
+   "ticker": "VSH",
+   "name": "VISHAY INTERTECHNOLOGY INC",
+   "size_band": "small",
+   "public_float": 1984000000.0,
+   "sic": "3670",
+   "score": 0.375,
+   "node_count": 2,
+   "promoted": false,
+   "nodes": [
+    {
+     "id": "material:sic_wafer",
+     "label": "SiC 결정 웨이퍼·에피층",
+     "queries": [
+      "\"silicon carbide\" wafer"
+     ]
+    },
+    {
+     "id": "tech:sic",
+     "label": "SiC 전력반도체",
+     "queries": [
+      "\"silicon carbide\" \"power\""
+     ]
+    }
+   ],
+   "filing": {
+    "form": "10-K",
+    "date": "2026-02-13"
+   }
+  },
+  {
+   "cik": 1113232,
+   "ticker": "ACLS",
+   "name": "AXCELIS TECHNOLOGIES INC",
+   "size_band": "mid",
+   "public_float": 2179725003.0,
+   "sic": "3559",
+   "score": 0.375,
+   "node_count": 2,
+   "promoted": false,
+   "nodes": [
+    {
+     "id": "material:sic_wafer",
+     "label": "SiC 결정 웨이퍼·에피층",
+     "queries": [
+      "\"silicon carbide\" wafer"
+     ]
+    },
+    {
+     "id": "tech:sic",
+     "label": "SiC 전력반도체",
+     "queries": [
+      "\"silicon carbide\" \"power\""
+     ]
+    }
+   ],
+   "filing": {
+    "form": "10-K",
+    "date": "2026-02-26"
+   }
+  },
+  {
+   "cik": 889331,
+   "ticker": "LFUS",
+   "name": "LITTELFUSE INC /DE",
+   "size_band": "mid",
+   "public_float": 5591411587.0,
+   "sic": "3613",
+   "score": 0.375,
+   "node_count": 2,
+   "promoted": false,
+   "nodes": [
+    {
+     "id": "material:sic_wafer",
+     "label": "SiC 결정 웨이퍼·에피층",
+     "queries": [
+      "\"silicon carbide\" wafer"
+     ]
+    },
+    {
+     "id": "tech:sic",
+     "label": "SiC 전력반도체",
+     "queries": [
+      "\"silicon carbide\" \"power\""
+     ]
+    }
+   ],
+   "filing": {
+    "form": "10-K",
+    "date": "2026-02-19"
+   }
+  },
+  {
+   "cik": 1604778,
+   "ticker": null,
+   "name": "Qorvo, Inc.",
+   "size_band": "unknown",
+   "public_float": null,
+   "sic": "3674",
+   "score": 0.375,
+   "node_count": 2,
+   "promoted": false,
+   "nodes": [
+    {
+     "id": "material:sic_wafer",
+     "label": "SiC 결정 웨이퍼·에피층",
+     "queries": [
+      "\"silicon carbide\" wafer"
+     ]
+    },
+    {
+     "id": "tech:sic",
+     "label": "SiC 전력반도체",
+     "queries": [
+      "\"silicon carbide\" \"power\""
+     ]
+    }
+   ],
+   "filing": {
+    "form": "10-K",
+    "date": "2026-05-08"
+   }
+  },
+  {
+   "cik": 1622345,
+   "ticker": "POLA",
+   "name": "Polar Power, Inc.",
+   "size_band": "micro",
+   "public_float": 2960372.0,
+   "sic": 3690,
+   "score": 0.356,
+   "node_count": 1,
+   "promoted": false,
+   "nodes": [
+    {
+     "id": "gen:800vdc",
+     "label": "800VDC 배전 아키텍처 (NVIDIA 2027 1MW 랙 목표)",
+     "queries": [
+      "\"800 VDC\""
+     ]
+    }
+   ],
+   "filing": {
+    "form": "10-K",
+    "date": "2026-04-15"
+   }
+  },
+  {
+   "cik": 1411690,
+   "ticker": "BNGO",
+   "name": "Bionano Genomics, Inc.",
+   "size_band": "micro",
+   "public_float": 12154000.0,
+   "sic": 3826,
+   "score": 0.356,
+   "node_count": 1,
+   "promoted": false,
+   "nodes": [
+    {
+     "id": "bottleneck:hbm_kged",
+     "label": "적층 전 Known-Good-Die 수율 검사",
+     "queries": [
+      "\"known good die\"",
+      "\"known-good die\""
+     ]
+    }
+   ],
+   "filing": {
+    "form": "10-K",
+    "date": "2026-03-23"
+   }
+  },
+  {
+   "cik": 1009759,
+   "ticker": "CEPL",
+   "name": "Capstone Energy Plus, Inc.",
+   "size_band": "micro",
+   "public_float": 52141534.0,
+   "sic": 3510,
+   "score": 0.356,
+   "node_count": 1,
+   "promoted": false,
+   "nodes": [
+    {
+     "id": "gen:800vdc",
+     "label": "800VDC 배전 아키텍처 (NVIDIA 2027 1MW 랙 목표)",
+     "queries": [
+      "\"800 VDC\"",
+      "\"800-volt\""
+     ]
+    }
+   ],
+   "filing": {
+    "form": "10-K",
+    "date": "2026-06-25"
+   }
+  },
+  {
+   "cik": 1111335,
+   "ticker": "VC",
+   "name": "VISTEON CORP",
+   "size_band": "mid",
+   "public_float": 2500000000.0,
+   "sic": "3714",
+   "score": 0.356,
+   "node_count": 1,
+   "promoted": false,
+   "nodes": [
+    {
+     "id": "gen:800vdc",
+     "label": "800VDC 배전 아키텍처 (NVIDIA 2027 1MW 랙 목표)",
+     "queries": [
+      "\"800-volt\""
+     ]
+    }
+   ],
+   "filing": {
+    "form": "10-K",
+    "date": "2026-02-19"
+   }
+  },
+  {
+   "cik": 1383395,
+   "ticker": "SQNS",
+   "name": "SEQUANS COMMUNICATIONS",
+   "size_band": "unknown",
+   "public_float": null,
+   "sic": "3674",
+   "score": 0.356,
+   "node_count": 1,
+   "promoted": false,
+   "nodes": [
+    {
+     "id": "bottleneck:hbm_kged",
+     "label": "적층 전 Known-Good-Die 수율 검사",
+     "queries": [
+      "\"known good die\"",
+      "\"known-good die\""
+     ]
+    }
+   ],
+   "filing": {
+    "form": "20-F",
+    "date": "2026-05-11"
+   }
+  },
+  {
+   "cik": 1962746,
+   "ticker": "LOT",
+   "name": "Lotus Technology Inc.",
+   "size_band": "unknown",
+   "public_float": null,
+   "sic": "3711",
+   "score": 0.356,
+   "node_count": 1,
+   "promoted": false,
+   "nodes": [
+    {
+     "id": "gen:800vdc",
+     "label": "800VDC 배전 아키텍처 (NVIDIA 2027 1MW 랙 목표)",
+     "queries": [
+      "\"800-volt\""
+     ]
+    }
+   ],
+   "filing": {
+    "form": "20-F",
+    "date": "2026-04-28"
+   }
+  },
+  {
+   "cik": 1884082,
+   "ticker": "PSNY",
+   "name": "Polestar Automotive Holding UK PLC",
+   "size_band": "unknown",
+   "public_float": null,
+   "sic": "3711",
+   "score": 0.356,
+   "node_count": 1,
+   "promoted": false,
+   "nodes": [
+    {
+     "id": "gen:800vdc",
+     "label": "800VDC 배전 아키텍처 (NVIDIA 2027 1MW 랙 목표)",
+     "queries": [
+      "\"800-volt\""
+     ]
+    }
+   ],
+   "filing": {
+    "form": "20-F",
+    "date": "2026-04-17"
+   }
+  },
+  {
+   "cik": 64463,
+   "ticker": "SLNH",
+   "name": "Soluna Holdings, Inc",
+   "size_band": "micro",
+   "public_float": 8284532.0,
+   "sic": 6199,
+   "score": 0.315,
+   "node_count": 1,
+   "promoted": false,
+   "nodes": [
+    {
+     "id": "bottleneck:liquidcool",
+     "label": "고밀도 GPU 콜드플레이트 열저항",
+     "queries": [
+      "\"direct liquid cooling\""
+     ]
+    }
+   ],
+   "filing": {
+    "form": "10-K",
+    "date": "2026-03-30"
+   }
+  },
+  {
+   "cik": 1786471,
+   "ticker": "SEV",
+   "name": "Aptera Motors Corp",
+   "size_band": "micro",
+   "public_float": 0.0,
+   "sic": "3711",
+   "score": 0.315,
+   "node_count": 1,
+   "promoted": false,
+   "nodes": [
+    {
+     "id": "material:underfill",
+     "label": "Underfill 몰딩·충진 소재",
+     "queries": [
+      "\"molding compound\" \"semiconductor\""
+     ]
+    }
+   ],
+   "filing": {
+    "form": "10-K",
+    "date": "2026-03-30"
+   }
+  },
+  {
+   "cik": 1926293,
+   "ticker": "GCDT",
+   "name": "Green Circle Decarbonize Technology Ltd",
+   "size_band": "unknown",
+   "public_float": null,
+   "sic": "3585",
+   "score": 0.315,
+   "node_count": 1,
+   "promoted": false,
+   "nodes": [
+    {
+     "id": "bottleneck:liquidcool",
+     "label": "고밀도 GPU 콜드플레이트 열저항",
+     "queries": [
+      "\"direct liquid cooling\""
+     ]
+    }
+   ],
+   "filing": {
+    "form": "20-F",
+    "date": "2026-08-14"
+   }
+  },
+  {
+   "cik": 312069,
+   "ticker": "BCS",
+   "name": "BARCLAYS PLC",
+   "size_band": "unknown",
+   "public_float": null,
+   "sic": "6029",
+   "score": 0.315,
+   "node_count": 1,
+   "promoted": false,
+   "nodes": [
+    {
+     "id": "bottleneck:liquidcool",
+     "label": "고밀도 GPU 콜드플레이트 열저항",
+     "queries": [
+      "\"direct liquid cooling\""
+     ]
+    }
+   ],
+   "filing": {
+    "form": "20-F",
+    "date": "2026-02-10"
+   }
+  },
+  {
+   "cik": 1652535,
+   "ticker": "ICHR",
+   "name": "ICHOR HOLDINGS, LTD.",
+   "size_band": "small",
+   "public_float": 658256416.0,
+   "sic": 3674,
+   "score": 0.301,
+   "node_count": 1,
+   "promoted": true,
+   "nodes": [
+    {
+     "id": "process:cmp",
+     "label": "Cu·절연체 CMP 평탄화",
+     "queries": [
+      "\"chemical mechanical planarization\""
+     ]
+    }
+   ],
+   "filing": {
+    "form": "10-K",
+    "date": "2026-02-20"
+   }
+  },
+  {
+   "cik": 1158114,
+   "ticker": "AAOI",
+   "name": "APPLIED OPTOELECTRONICS, INC.",
+   "size_band": "small",
+   "public_float": 1491234829.0,
+   "sic": "3674",
+   "score": 0.301,
+   "node_count": 1,
+   "promoted": true,
+   "nodes": [
+    {
+     "id": "tech:pluggable",
+     "label": "1.6T Pluggable transceiver",
+     "queries": [
+      "\"1.6T\" transceiver",
+      "\"800G\" transceiver"
+     ]
+    }
+   ],
+   "filing": {
+    "form": "10-K",
+    "date": "2026-02-26"
+   }
+  },
+  {
+   "cik": 1817760,
+   "ticker": "SMTK",
+   "name": "SmartKem, Inc.",
+   "size_band": "micro",
+   "public_float": 3596234.0,
+   "sic": 3674,
+   "score": 0.289,
+   "node_count": 1,
+   "promoted": false,
+   "nodes": [
+    {
+     "id": "component:gate_driver",
+     "label": "SiC·GaN 전력반도체 게이트드라이버",
+     "queries": [
+      "\"gate driver\""
+     ]
+    }
+   ],
+   "filing": {
+    "form": "10-K",
+    "date": "2026-04-08"
+   }
+  },
+  {
+   "cik": 1819438,
+   "ticker": "GWHT",
+   "name": "ESS Tech, Inc.",
+   "size_band": "micro",
+   "public_float": 13600000.0,
+   "sic": "3690",
+   "score": 0.289,
+   "node_count": 1,
+   "promoted": false,
+   "nodes": [
+    {
+     "id": "component:power_converter",
+     "label": "DC/DC 전력변환 모듈",
+     "queries": [
+      "\"power module\" \"data center\""
+     ]
+    }
+   ],
+   "filing": {
+    "form": "10-K",
+    "date": "2026-03-05"
+   }
+  },
+  {
+   "cik": 29002,
+   "ticker": "DIOD",
+   "name": "DIODES INC /DEL/",
+   "size_band": "mid",
+   "public_float": 2400000000.0,
+   "sic": "3674",
+   "score": 0.289,
+   "node_count": 1,
+   "promoted": false,
+   "nodes": [
+    {
+     "id": "component:gate_driver",
+     "label": "SiC·GaN 전력반도체 게이트드라이버",
+     "queries": [
+      "\"gate driver\""
+     ]
+    }
+   ],
+   "filing": {
+    "form": "10-K",
+    "date": "2026-02-10"
+   }
+  },
+  {
+   "cik": 1822966,
+   "ticker": "SMR",
+   "name": "NUSCALE POWER Corp",
+   "size_band": "mid",
+   "public_float": 5300000000.0,
+   "sic": "3443",
+   "score": 0.289,
+   "node_count": 1,
+   "promoted": false,
+   "nodes": [
+    {
+     "id": "component:power_converter",
+     "label": "DC/DC 전력변환 모듈",
+     "queries": [
+      "\"power module\" \"data center\""
+     ]
+    }
+   ],
+   "filing": {
+    "form": "10-K",
+    "date": "2026-02-26"
+   }
+  },
+  {
+   "cik": 1971828,
+   "ticker": "ENGS",
+   "name": "Energys Group Ltd",
+   "size_band": "unknown",
+   "public_float": null,
+   "sic": "1731",
+   "score": 0.289,
+   "node_count": 1,
+   "promoted": false,
+   "nodes": [
+    {
+     "id": "component:power_converter",
+     "label": "DC/DC 전력변환 모듈",
+     "queries": [
+      "\"power module\" \"data center\""
+     ]
+    }
+   ],
+   "filing": {
+    "form": "20-F",
+    "date": "2025-11-03"
+   }
+  },
+  {
+   "cik": 827099,
+   "ticker": "CPWR",
+   "name": "Ocean Thermal Energy Corp",
+   "size_band": "micro",
+   "public_float": 181247.0,
+   "sic": "4931",
+   "score": 0.27,
+   "node_count": 1,
+   "promoted": false,
+   "nodes": [
+    {
+     "id": "process:cdu_pump",
+     "label": "CDU 냉각수 펌핑·유량 제어",
+     "queries": [
+      "\"coolant\" pump \"data center\""
+     ]
+    }
+   ],
+   "filing": {
+    "form": "10-K",
+    "date": "2025-10-27"
+   }
+  },
+  {
+   "cik": 1333822,
+   "ticker": "LEDS",
+   "name": "SemiLEDs Corp",
+   "size_band": "micro",
+   "public_float": 5700000.0,
+   "sic": 3674,
+   "score": 0.27,
+   "node_count": 1,
+   "promoted": false,
+   "nodes": [
+    {
+     "id": "process:optical_test",
+     "label": "광모듈 생산·패키징 테스트",
+     "queries": [
+      "\"wafer-level\" \"photonic\" test"
+     ]
+    }
+   ],
+   "filing": {
+    "form": "10-K",
+    "date": "2025-11-28"
+   }
+  },
+  {
+   "cik": 2019804,
+   "ticker": "IMSR",
+   "name": "Terrestrial Energy Inc. /DE/",
+   "size_band": "micro",
+   "public_float": 191475000.0,
+   "sic": 3443,
+   "score": 0.27,
+   "node_count": 1,
+   "promoted": false,
+   "nodes": [
+    {
+     "id": "process:cdu_pump",
+     "label": "CDU 냉각수 펌핑·유량 제어",
+     "queries": [
+      "\"coolant\" pump \"data center\""
+     ]
+    }
+   ],
+   "filing": {
+    "form": "10-K",
+    "date": "2026-03-30"
+   }
+  },
+  {
+   "cik": 1680247,
+   "ticker": "PUMP",
+   "name": "ProPetro Holding Corp.",
+   "size_band": "small",
+   "public_float": 513600000.0,
+   "sic": 1389,
+   "score": 0.27,
+   "node_count": 1,
+   "promoted": false,
+   "nodes": [
+    {
+     "id": "process:cdu_pump",
+     "label": "CDU 냉각수 펌핑·유량 제어",
+     "queries": [
+      "\"coolant\" pump \"data center\""
+     ]
+    }
+   ],
+   "filing": {
+    "form": "10-K",
+    "date": "2026-02-19"
+   }
+  },
+  {
+   "cik": 1923891,
+   "ticker": "NNE",
+   "name": "Nano Nuclear Energy Inc.",
+   "size_band": "small",
+   "public_float": 703834174.0,
+   "sic": 4911,
+   "score": 0.27,
+   "node_count": 1,
+   "promoted": false,
+   "nodes": [
+    {
+     "id": "process:cdu_pump",
+     "label": "CDU 냉각수 펌핑·유량 제어",
+     "queries": [
+      "\"coolant\" pump \"data center\""
+     ]
+    }
+   ],
+   "filing": {
+    "form": "10-K",
+    "date": "2025-12-18"
+   }
+  },
+  {
+   "cik": 1816581,
+   "ticker": "OUST",
+   "name": "Ouster, Inc.",
+   "size_band": "small",
+   "public_float": 1309700000.0,
+   "sic": "3569",
+   "score": 0.27,
+   "node_count": 1,
+   "promoted": false,
+   "nodes": [
+    {
+     "id": "component:vcsel",
+     "label": "VCSEL 레이저 광원",
+     "queries": [
+      "\"VCSEL\""
+     ]
+    }
+   ],
+   "filing": {
+    "form": "10-K",
+    "date": "2026-03-02"
+   }
+  },
+  {
+   "cik": 1828318,
+   "ticker": "ENVX",
+   "name": "Enovix Corp",
+   "size_band": "small",
+   "public_float": 1640000000.0,
+   "sic": "3690",
+   "score": 0.27,
+   "node_count": 1,
+   "promoted": false,
+   "nodes": [
+    {
+     "id": "component:dc_busbar",
+     "label": "DC Busbar 구리·절연재",
+     "queries": [
+      "\"busbar\""
+     ]
+    }
+   ],
+   "filing": {
+    "form": "10-K",
+    "date": "2026-02-25"
+   }
+  },
+  {
+   "cik": 1718512,
+   "ticker": "GTES",
+   "name": "Gates Industrial Corp Ltd.",
+   "size_band": "mid",
+   "public_float": 5792400000.0,
+   "sic": "3560",
+   "score": 0.27,
+   "node_count": 1,
+   "promoted": false,
+   "nodes": [
+    {
+     "id": "process:cdu_pump",
+     "label": "CDU 냉각수 펌핑·유량 제어",
+     "queries": [
+      "\"coolant\" pump \"data center\""
+     ]
+    }
+   ],
+   "filing": {
+    "form": "10-K",
+    "date": "2026-02-12"
+   }
+  },
+  {
+   "cik": 1049502,
+   "ticker": "MKSI",
+   "name": "MKS INC",
+   "size_band": "mid",
+   "public_float": 6672873031.0,
+   "sic": "3823",
+   "score": 0.27,
+   "node_count": 1,
+   "promoted": false,
+   "nodes": [
+    {
+     "id": "process:optical_test",
+     "label": "광모듈 생산·패키징 테스트",
+     "queries": [
+      "\"wafer-level\" \"photonic\" test"
+     ]
+    }
+   ],
+   "filing": {
+    "form": "10-K",
+    "date": "2026-02-24"
+   }
+  },
+  {
+   "cik": 67347,
+   "ticker": "MOD",
+   "name": "MODINE MANUFACTURING CO",
+   "size_band": "mid",
+   "public_float": 7390000000.0,
+   "sic": "3714",
+   "score": 0.27,
+   "node_count": 1,
+   "promoted": false,
+   "nodes": [
+    {
+     "id": "process:cdu_pump",
+     "label": "CDU 냉각수 펌핑·유량 제어",
+     "queries": [
+      "\"coolant\" pump \"data center\""
+     ]
+    }
+   ],
+   "filing": {
+    "form": "10-K",
+    "date": "2026-05-27"
+   }
+  },
+  {
+   "cik": 1071321,
+   "ticker": "TKC",
+   "name": "TURKCELL ILETISIM HIZMETLERI A S",
+   "size_band": "unknown",
+   "public_float": null,
+   "sic": "4813",
+   "score": 0.27,
+   "node_count": 1,
+   "promoted": false,
+   "nodes": [
+    {
+     "id": "tech:pluggable",
+     "label": "1.6T Pluggable transceiver",
+     "queries": [
+      "\"800G\" transceiver"
+     ]
+    }
+   ],
+   "filing": {
+    "form": "20-F",
+    "date": "2026-04-17"
+   }
+  },
+  {
+   "cik": 1066119,
+   "ticker": "VIV",
+   "name": "TELEFONICA BRASIL S.A.",
+   "size_band": "unknown",
+   "public_float": null,
+   "sic": "4813",
+   "score": 0.27,
+   "node_count": 1,
+   "promoted": false,
+   "nodes": [
+    {
+     "id": "tech:pluggable",
+     "label": "1.6T Pluggable transceiver",
+     "queries": [
+      "\"800G\" transceiver"
+     ]
+    }
+   ],
+   "filing": {
+    "form": "20-F",
+    "date": "2026-02-24"
+   }
+  },
+  {
+   "cik": 1861737,
+   "ticker": "HSAI",
+   "name": "Hesai Group",
+   "size_band": "unknown",
+   "public_float": null,
+   "sic": "3569",
+   "score": 0.27,
+   "node_count": 1,
+   "promoted": false,
+   "nodes": [
+    {
+     "id": "component:vcsel",
+     "label": "VCSEL 레이저 광원",
+     "queries": [
+      "\"VCSEL\""
+     ]
+    }
+   ],
+   "filing": {
+    "form": "20-F",
+    "date": "2026-04-24"
+   }
+  },
+  {
+   "cik": 1819974,
+   "ticker": null,
+   "name": "SkyWater Technology, Inc",
+   "size_band": "unknown",
+   "public_float": null,
+   "sic": "3674",
+   "score": 0.27,
+   "node_count": 1,
+   "promoted": false,
+   "nodes": [
+    {
+     "id": "process:optical_test",
+     "label": "광모듈 생산·패키징 테스트",
+     "queries": [
+      "\"wafer-level\" \"photonic\" test"
+     ]
+    }
+   ],
+   "filing": {
+    "form": "10-K",
+    "date": "2026-03-11"
+   }
+  },
+  {
+   "cik": 1221029,
+   "ticker": "CPAC",
+   "name": "CEMENTOS PACASMAYO SAA",
+   "size_band": "unknown",
+   "public_float": null,
+   "sic": "3241",
+   "score": 0.27,
+   "node_count": 1,
+   "promoted": false,
+   "nodes": [
+    {
+     "id": "component:dc_busbar",
+     "label": "DC Busbar 구리·절연재",
+     "queries": [
+      "\"busbar\""
+     ]
+    }
+   ],
+   "filing": {
+    "form": "20-F",
+    "date": "2026-04-28"
+   }
+  },
+  {
+   "cik": 1922641,
+   "ticker": "ENLT",
+   "name": "Enlight Renewable Energy Ltd.",
+   "size_band": "unknown",
+   "public_float": null,
+   "sic": "4911",
+   "score": 0.27,
+   "node_count": 1,
+   "promoted": false,
+   "nodes": [
+    {
+     "id": "component:dc_busbar",
+     "label": "DC Busbar 구리·절연재",
+     "queries": [
+      "\"busbar\""
+     ]
+    }
+   ],
+   "filing": {
+    "form": "20-F",
+    "date": "2026-03-30"
+   }
+  },
+  {
+   "cik": 1477641,
+   "ticker": "DQ",
+   "name": "DAQO NEW ENERGY CORP.",
+   "size_band": "unknown",
+   "public_float": null,
+   "sic": "3674",
+   "score": 0.27,
+   "node_count": 1,
+   "promoted": false,
+   "nodes": [
+    {
+     "id": "component:dc_busbar",
+     "label": "DC Busbar 구리·절연재",
+     "queries": [
+      "\"busbar\""
+     ]
+    }
+   ],
+   "filing": {
+    "form": "20-F",
+    "date": "2026-04-20"
+   }
+  },
+  {
+   "cik": 2080126,
+   "ticker": "FPS",
+   "name": "Forgent Power Solutions, Inc.",
+   "size_band": "micro",
+   "public_float": 0.0,
+   "sic": "3620",
+   "score": 0.27,
+   "node_count": 1,
+   "promoted": false,
+   "nodes": [
+    {
+     "id": "component:dc_busbar",
+     "label": "DC Busbar 구리·절연재",
+     "queries": [
+      "\"busbar\""
+     ]
+    }
+   ],
+   "filing": {
+    "form": "10-K",
+    "date": "2026-09-15"
+   }
+  },
+  {
+   "cik": 1375877,
+   "ticker": "CSIQ",
+   "name": "Canadian Solar Inc.",
+   "size_band": "unknown",
+   "public_float": null,
+   "sic": "3674",
+   "score": 0.27,
+   "node_count": 1,
+   "promoted": false,
+   "nodes": [
+    {
+     "id": "component:dc_busbar",
+     "label": "DC Busbar 구리·절연재",
+     "queries": [
+      "\"busbar\""
+     ]
+    }
+   ],
+   "filing": {
+    "form": "20-F",
+    "date": "2026-04-10"
+   }
+  },
+  {
+   "cik": 1848763,
+   "ticker": "RNW",
+   "name": "ReNew Energy Global plc",
+   "size_band": "unknown",
+   "public_float": null,
+   "sic": "4911",
+   "score": 0.27,
+   "node_count": 1,
+   "promoted": false,
+   "nodes": [
+    {
+     "id": "component:dc_busbar",
+     "label": "DC Busbar 구리·절연재",
+     "queries": [
+      "\"busbar\""
+     ]
+    }
+   ],
+   "filing": {
+    "form": "20-F",
+    "date": "2026-07-30"
+   }
+  },
+  {
+   "cik": 896493,
+   "ticker": "GPUS",
+   "name": "Hyperscale Data, Inc.",
+   "size_band": "micro",
+   "public_float": 12100000.0,
+   "sic": 3533,
+   "score": 0.263,
+   "node_count": 1,
+   "promoted": false,
+   "nodes": [
+    {
+     "id": "bottleneck:liquidcool",
+     "label": "고밀도 GPU 콜드플레이트 열저항",
+     "queries": [
+      "\"direct-to-chip\""
+     ]
+    }
+   ],
+   "filing": {
+    "form": "10-K",
+    "date": "2026-04-15"
+   }
+  },
+  {
+   "cik": 1341317,
+   "ticker": "BWB",
+   "name": "Bridgewater Bancshares Inc",
+   "size_band": "small",
+   "public_float": 348524730.0,
+   "sic": 6022,
+   "score": 0.263,
+   "node_count": 1,
+   "promoted": false,
+   "nodes": [
+    {
+     "id": "tech:sidecar",
+     "label": "480VAC에서 ±400/800VDC로 전환하는 Side Power Rack",
+     "queries": [
+      "\"sidecar\" \"800\""
+     ]
+    }
+   ],
+   "filing": {
+    "form": "10-K",
+    "date": "2026-02-26"
+   }
+  },
+  {
+   "cik": 1934850,
+   "ticker": "FG",
+   "name": "F&G Annuities & Life, Inc.",
+   "size_band": "small",
+   "public_float": 667849667.0,
+   "sic": 6311,
+   "score": 0.263,
+   "node_count": 1,
+   "promoted": false,
+   "nodes": [
+    {
+     "id": "tech:sidecar",
+     "label": "480VAC에서 ±400/800VDC로 전환하는 Side Power Rack",
+     "queries": [
+      "\"sidecar\" \"800\""
+     ]
+    }
+   ],
+   "filing": {
+    "form": "10-K",
+    "date": "2026-02-26"
+   }
+  },
+  {
+   "cik": 1786108,
+   "ticker": "TRIN",
+   "name": "Trinity Capital Inc.",
+   "size_band": "small",
+   "public_float": 920918691.0,
+   "sic": null,
+   "score": 0.263,
+   "node_count": 1,
+   "promoted": false,
+   "nodes": [
+    {
+     "id": "tech:sidecar",
+     "label": "480VAC에서 ±400/800VDC로 전환하는 Side Power Rack",
+     "queries": [
+      "\"sidecar\" \"800\""
+     ]
+    }
+   ],
+   "filing": {
+    "form": "10-K",
+    "date": "2026-02-25"
+   }
+  },
+  {
+   "cik": 1964789,
+   "ticker": "HUT",
+   "name": "Hut 8 Corp.",
+   "size_band": "small",
+   "public_float": 1747264000.0,
+   "sic": "6199",
+   "score": 0.263,
+   "node_count": 1,
+   "promoted": false,
+   "nodes": [
+    {
+     "id": "bottleneck:liquidcool",
+     "label": "고밀도 GPU 콜드플레이트 열저항",
+     "queries": [
+      "\"direct-to-chip\""
+     ]
+    }
+   ],
+   "filing": {
+    "form": "10-K",
+    "date": "2026-02-25"
+   }
+  },
+  {
+   "cik": 1838359,
+   "ticker": "RGTI",
+   "name": "Rigetti Computing, Inc.",
+   "size_band": "mid",
+   "public_float": 3820000000.0,
+   "sic": "7371",
+   "score": 0.263,
+   "node_count": 1,
+   "promoted": false,
+   "nodes": [
+    {
+     "id": "component:tsv",
+     "label": "실리콘 관통 전극 (TSV)",
+     "queries": [
+      "\"through-silicon via\"",
+      "\"through silicon via\""
+     ]
+    }
+   ],
+   "filing": {
+    "form": "10-K",
+    "date": "2026-03-04"
+   }
+  },
+  {
+   "cik": 825313,
+   "ticker": "AB",
+   "name": "ALLIANCEBERNSTEIN HOLDING L.P.",
+   "size_band": "mid",
+   "public_float": 4500000000.0,
+   "sic": "6282",
+   "score": 0.263,
+   "node_count": 1,
+   "promoted": false,
+   "nodes": [
+    {
+     "id": "tech:sidecar",
+     "label": "480VAC에서 ±400/800VDC로 전환하는 Side Power Rack",
+     "queries": [
+      "\"sidecar\" \"800\""
+     ]
+    }
+   ],
+   "filing": {
+    "form": "10-K",
+    "date": "2026-02-12"
+   }
+  },
+  {
+   "cik": 1378325,
+   "ticker": "CV",
+   "name": "CapsoVision, Inc",
+   "size_band": "micro",
+   "public_float": 0.0,
+   "sic": "3845",
+   "score": 0.263,
+   "node_count": 1,
+   "promoted": false,
+   "nodes": [
+    {
+     "id": "process:optical_test",
+     "label": "광모듈 생산·패키징 테스트",
+     "queries": [
+      "\"optical transceiver\" test"
+     ]
+    }
+   ],
+   "filing": {
+    "form": "10-K",
+    "date": "2026-03-26"
+   }
+  },
+  {
+   "cik": 2054174,
+   "ticker": null,
+   "name": "Crane Harbor Acquisition Corp.",
+   "size_band": "unknown",
+   "public_float": null,
+   "sic": "6770",
+   "score": 0.263,
+   "node_count": 1,
+   "promoted": false,
+   "nodes": [
+    {
+     "id": "process:optical_test",
+     "label": "광모듈 생산·패키징 테스트",
+     "queries": [
+      "\"optical transceiver\" test"
+     ]
+    }
+   ],
+   "filing": {
+    "form": "10-K",
+    "date": "2026-02-06"
+   }
+  },
+  {
+   "cik": 2042022,
+   "ticker": "WYFI",
+   "name": "WhiteFiber, Inc.",
+   "size_band": "micro",
+   "public_float": 0.0,
+   "sic": "6199",
+   "score": 0.263,
+   "node_count": 1,
+   "promoted": false,
+   "nodes": [
+    {
+     "id": "bottleneck:liquidcool",
+     "label": "고밀도 GPU 콜드플레이트 열저항",
+     "queries": [
+      "\"direct-to-chip\""
+     ]
+    }
+   ],
+   "filing": {
+    "form": "10-K",
+    "date": "2026-03-26"
+   }
+  },
+  {
+   "cik": 29915,
+   "ticker": null,
+   "name": "DOW CHEMICAL CO /DE/",
+   "size_band": "unknown",
+   "public_float": null,
+   "sic": "2821",
+   "score": 0.263,
+   "node_count": 1,
+   "promoted": false,
+   "nodes": [
+    {
+     "id": "bottleneck:liquidcool",
+     "label": "고밀도 GPU 콜드플레이트 열저항",
+     "queries": [
+      "\"direct-to-chip\""
+     ]
+    }
+   ],
+   "filing": {
+    "form": "10-K",
+    "date": "2026-02-03"
+   }
+  },
+  {
+   "cik": 1109448,
+   "ticker": null,
+   "name": "ALLIANCEBERNSTEIN L.P.",
+   "size_band": "unknown",
+   "public_float": null,
+   "sic": "6282",
+   "score": 0.263,
+   "node_count": 1,
+   "promoted": false,
+   "nodes": [
+    {
+     "id": "tech:sidecar",
+     "label": "480VAC에서 ±400/800VDC로 전환하는 Side Power Rack",
+     "queries": [
+      "\"sidecar\" \"800\""
+     ]
+    }
+   ],
+   "filing": {
+    "form": "10-K",
+    "date": "2026-02-12"
+   }
+  },
+  {
+   "cik": 2064953,
+   "ticker": "SOLS",
+   "name": "Solstice Advanced Materials Inc.",
+   "size_band": "micro",
+   "public_float": 0.0,
+   "sic": "2800",
+   "score": 0.263,
+   "node_count": 1,
+   "promoted": false,
+   "nodes": [
+    {
+     "id": "tech:sidecar",
+     "label": "480VAC에서 ±400/800VDC로 전환하는 Side Power Rack",
+     "queries": [
+      "\"sidecar\" \"800\""
+     ]
+    }
+   ],
+   "filing": {
+    "form": "10-K",
+    "date": "2026-02-19"
+   }
+  },
+  {
+   "cik": 1792509,
+   "ticker": null,
+   "name": "TriplePoint Private Venture Credit Inc.",
+   "size_band": "unknown",
+   "public_float": null,
+   "sic": null,
+   "score": 0.263,
+   "node_count": 1,
+   "promoted": false,
+   "nodes": [
+    {
+     "id": "tech:sidecar",
+     "label": "480VAC에서 ±400/800VDC로 전환하는 Side Power Rack",
+     "queries": [
+      "\"sidecar\" \"800\""
+     ]
+    }
+   ],
+   "filing": {
+    "form": "10-K",
+    "date": "2026-03-10"
+   }
+  },
+  {
+   "cik": 1654795,
+   "ticker": "BBUC",
+   "name": "Brookfield Business Corp",
+   "size_band": "unknown",
+   "public_float": null,
+   "sic": "1700",
+   "score": 0.263,
+   "node_count": 1,
+   "promoted": false,
+   "nodes": [
+    {
+     "id": "tech:sidecar",
+     "label": "480VAC에서 ±400/800VDC로 전환하는 Side Power Rack",
+     "queries": [
+      "\"sidecar\" \"800\""
+     ]
+    }
+   ],
+   "filing": {
+    "form": "20-F",
+    "date": "2026-03-31"
+   }
+  },
+  {
+   "cik": 1533232,
+   "ticker": "BEP",
+   "name": "Brookfield Renewable Partners L.P.",
+   "size_band": "unknown",
+   "public_float": null,
+   "sic": "4911",
+   "score": 0.263,
+   "node_count": 1,
+   "promoted": false,
+   "nodes": [
+    {
+     "id": "tech:sidecar",
+     "label": "480VAC에서 ±400/800VDC로 전환하는 Side Power Rack",
+     "queries": [
+      "\"sidecar\" \"800\""
+     ]
+    }
+   ],
+   "filing": {
+    "form": "20-F",
+    "date": "2026-02-27"
+   }
+  },
+  {
+   "cik": 1406234,
+   "ticker": "BIPH",
+   "name": "Brookfield Infrastructure Partners L.P.",
+   "size_band": "unknown",
+   "public_float": null,
+   "sic": "4400",
+   "score": 0.263,
+   "node_count": 1,
+   "promoted": false,
+   "nodes": [
+    {
+     "id": "tech:sidecar",
+     "label": "480VAC에서 ±400/800VDC로 전환하는 Side Power Rack",
+     "queries": [
+      "\"sidecar\" \"800\""
+     ]
+    }
+   ],
+   "filing": {
+    "form": "20-F",
+    "date": "2026-03-17"
+   }
+  },
+  {
+   "cik": 1837429,
+   "ticker": "BNT",
+   "name": "Brookfield Wealth Solutions Ltd.",
+   "size_band": "unknown",
+   "public_float": null,
+   "sic": "6399",
+   "score": 0.263,
+   "node_count": 1,
+   "promoted": false,
+   "nodes": [
+    {
+     "id": "tech:sidecar",
+     "label": "480VAC에서 ±400/800VDC로 전환하는 Side Power Rack",
+     "queries": [
+      "\"sidecar\" \"800\""
+     ]
+    }
+   ],
+   "filing": {
+    "form": "20-F",
+    "date": "2026-03-26"
+   }
+  },
+  {
+   "cik": 314203,
+   "ticker": "MUX",
+   "name": "McEwen Inc.",
+   "size_band": "small",
+   "public_float": 519882572.0,
+   "sic": 1040,
+   "score": 0.25,
+   "node_count": 1,
+   "promoted": false,
+   "nodes": [
+    {
+     "id": "material:hv_insulation",
+     "label": "HVDC 케이블·커넥터 절연소재",
+     "queries": [
+      "\"high-voltage\" insulation \"cable\""
+     ]
+    }
+   ],
+   "filing": {
+    "form": "10-K",
+    "date": "2026-03-17"
+   }
+  },
+  {
+   "cik": 915913,
+   "ticker": "ALB",
+   "name": "ALBEMARLE CORP",
+   "size_band": "mid",
+   "public_float": 7400000000.0,
+   "sic": "2821",
+   "score": 0.25,
+   "node_count": 1,
+   "promoted": false,
+   "nodes": [
+    {
+     "id": "material:hv_insulation",
+     "label": "HVDC 케이블·커넥터 절연소재",
+     "queries": [
+      "\"high-voltage\" insulation \"cable\""
+     ]
+    }
+   ],
+   "filing": {
+    "form": "10-K",
+    "date": "2026-02-11"
+   }
+  },
+  {
+   "cik": 1026980,
+   "ticker": "APWC",
+   "name": "ASIA PACIFIC WIRE & CABLE CORP LTD",
+   "size_band": "unknown",
+   "public_float": null,
+   "sic": "3357",
+   "score": 0.25,
+   "node_count": 1,
+   "promoted": false,
+   "nodes": [
+    {
+     "id": "material:hv_insulation",
+     "label": "HVDC 케이블·커넥터 절연소재",
+     "queries": [
+      "\"high-voltage\" insulation \"cable\""
+     ]
+    }
+   ],
+   "filing": {
+    "form": "20-F",
+    "date": "2026-04-29"
+   }
+  },
+  {
+   "cik": 2001288,
+   "ticker": "PN",
+   "name": "PN Smart Energy Ltd",
+   "size_band": "unknown",
+   "public_float": null,
+   "sic": "5045",
+   "score": 0.25,
+   "node_count": 1,
+   "promoted": false,
+   "nodes": [
+    {
+     "id": "material:hv_insulation",
+     "label": "HVDC 케이블·커넥터 절연소재",
+     "queries": [
+      "\"high-voltage\" insulation \"cable\""
+     ]
+    }
+   ],
+   "filing": {
+    "form": "20-F",
+    "date": "2026-02-12"
+   }
+  },
+  {
+   "cik": 1469395,
+   "ticker": "PAM",
+   "name": "Pampa Energy Inc.",
+   "size_band": "unknown",
+   "public_float": null,
+   "sic": "4911",
+   "score": 0.25,
+   "node_count": 1,
+   "promoted": false,
+   "nodes": [
+    {
+     "id": "material:hv_insulation",
+     "label": "HVDC 케이블·커넥터 절연소재",
+     "queries": [
+      "\"high-voltage\" insulation \"cable\""
+     ]
+    }
+   ],
+   "filing": {
+    "form": "20-F",
+    "date": "2026-04-09"
+   }
+  },
+  {
+   "cik": 1717161,
+   "ticker": "CEPU",
+   "name": "CENTRAL PUERTO S.A.",
+   "size_band": "unknown",
+   "public_float": null,
+   "sic": "4911",
+   "score": 0.25,
+   "node_count": 1,
+   "promoted": false,
+   "nodes": [
+    {
+     "id": "material:hv_insulation",
+     "label": "HVDC 케이블·커넥터 절연소재",
+     "queries": [
+      "\"high-voltage\" insulation \"cable\""
+     ]
+    }
+   ],
+   "filing": {
+    "form": "20-F",
+    "date": "2026-04-22"
+   }
+  },
+  {
+   "cik": 1190723,
+   "ticker": "TS",
+   "name": "TENARIS SA",
+   "size_band": "unknown",
+   "public_float": null,
+   "sic": "3312",
+   "score": 0.25,
+   "node_count": 1,
+   "promoted": false,
+   "nodes": [
+    {
+     "id": "material:hv_insulation",
+     "label": "HVDC 케이블·커넥터 절연소재",
+     "queries": [
+      "\"high-voltage\" insulation \"cable\""
+     ]
+    }
+   ],
+   "filing": {
+    "form": "20-F",
+    "date": "2026-03-31"
+   }
+  },
+  {
+   "cik": 2015691,
+   "ticker": "ELPW",
+   "name": "Elong Power Holding Ltd.",
+   "size_band": "unknown",
+   "public_float": null,
+   "sic": "3690",
+   "score": 0.25,
+   "node_count": 1,
+   "promoted": false,
+   "nodes": [
+    {
+     "id": "material:hv_insulation",
+     "label": "HVDC 케이블·커넥터 절연소재",
+     "queries": [
+      "\"high-voltage\" insulation \"cable\""
+     ]
+    }
+   ],
+   "filing": {
+    "form": "20-F",
+    "date": "2025-09-22"
+   }
+  },
+  {
+   "cik": 879764,
+   "ticker": "TTE",
+   "name": "TotalEnergies SE",
+   "size_band": "unknown",
+   "public_float": null,
+   "sic": "1311",
+   "score": 0.25,
+   "node_count": 1,
+   "promoted": false,
+   "nodes": [
+    {
+     "id": "material:hv_insulation",
+     "label": "HVDC 케이블·커넥터 절연소재",
+     "queries": [
+      "\"high-voltage\" insulation \"cable\""
+     ]
+    }
+   ],
+   "filing": {
+    "form": "20-F",
+    "date": "2026-03-27"
+   }
+  },
+  {
+   "cik": 941221,
+   "ticker": "ICL",
+   "name": "ICL Group Ltd.",
+   "size_band": "unknown",
+   "public_float": null,
+   "sic": "2870",
+   "score": 0.25,
+   "node_count": 1,
+   "promoted": false,
+   "nodes": [
+    {
+     "id": "material:hv_insulation",
+     "label": "HVDC 케이블·커넥터 절연소재",
+     "queries": [
+      "\"high-voltage\" insulation \"cable\""
+     ]
+    }
+   ],
+   "filing": {
+    "form": "20-F",
+    "date": "2026-03-11"
+   }
+  },
+  {
+   "cik": 2488,
+   "ticker": "AMD",
+   "name": "ADVANCED MICRO DEVICES INC",
+   "size_band": "unknown",
+   "public_float": null,
+   "sic": "3674",
+   "score": 0.224,
+   "node_count": 1,
+   "promoted": false,
+   "nodes": [
+    {
+     "id": "tech:cpo",
+     "label": "Co-Packaged Optics (CPO)",
+     "queries": [
+      "\"co-packaged optics\""
+     ]
+    }
+   ],
+   "filing": {
+    "form": "10-K/A",
+    "date": "2026-02-04"
+   }
+  },
+  {
+   "cik": 732026,
+   "ticker": "TRT",
+   "name": "TRIO-TECH INTERNATIONAL",
+   "size_band": "micro",
+   "public_float": 32329000.0,
+   "sic": 3559,
+   "score": 0.191,
+   "node_count": 1,
+   "promoted": false,
+   "nodes": [
+    {
+     "id": "gen:hbm4",
+     "label": "HBM4 (2,048 I/O, JESD270-4)",
+     "queries": [
+      "\"high bandwidth memory\""
+     ]
+    }
+   ],
+   "filing": {
+    "form": "10-K",
+    "date": "2026-09-24"
+   }
+  },
+  {
+   "cik": 1272842,
+   "ticker": "AIRG",
+   "name": "AIRGAIN INC",
+   "size_band": "micro",
+   "public_float": 48600000.0,
+   "sic": 3663,
+   "score": 0.191,
+   "node_count": 1,
+   "promoted": false,
+   "nodes": [
+    {
+     "id": "gen:hbm4",
+     "label": "HBM4 (2,048 I/O, JESD270-4)",
+     "queries": [
+      "\"high bandwidth memory\""
+     ]
+    }
+   ],
+   "filing": {
+    "form": "10-K",
+    "date": "2026-02-26"
+   }
+  },
+  {
+   "cik": 1816708,
+   "ticker": "OWLT",
+   "name": "Owlet, Inc.",
+   "size_band": "micro",
+   "public_float": 95600000.0,
+   "sic": 3829,
+   "score": 0.191,
+   "node_count": 1,
+   "promoted": false,
+   "nodes": [
+    {
+     "id": "gen:hbm4",
+     "label": "HBM4 (2,048 I/O, JESD270-4)",
+     "queries": [
+      "\"high bandwidth memory\""
+     ]
+    }
+   ],
+   "filing": {
+    "form": "10-K",
+    "date": "2026-03-09"
+   }
+  },
+  {
+   "cik": 1282631,
+   "ticker": "NLST",
+   "name": "NETLIST INC",
+   "size_band": "micro",
+   "public_float": 189200000.0,
+   "sic": "3674",
+   "score": 0.191,
+   "node_count": 1,
+   "promoted": false,
+   "nodes": [
+    {
+     "id": "gen:hbm4",
+     "label": "HBM4 (2,048 I/O, JESD270-4)",
+     "queries": [
+      "\"high bandwidth memory\""
+     ]
+    }
+   ],
+   "filing": {
+    "form": "10-K",
+    "date": "2026-03-19"
+   }
+  },
+  {
+   "cik": 1275014,
+   "ticker": "UCTT",
+   "name": "Ultra Clean Holdings, Inc.",
+   "size_band": "small",
+   "public_float": 1019600000.0,
+   "sic": "3674",
+   "score": 0.191,
+   "node_count": 1,
+   "promoted": false,
+   "nodes": [
+    {
+     "id": "gen:hbm4",
+     "label": "HBM4 (2,048 I/O, JESD270-4)",
+     "queries": [
+      "\"high bandwidth memory\""
+     ]
+    }
+   ],
+   "filing": {
+    "form": "10-K",
+    "date": "2026-02-23"
+   }
+  },
+  {
+   "cik": 1474627,
+   "ticker": "NEGG",
+   "name": "Newegg Commerce, Inc.",
+   "size_band": "unknown",
+   "public_float": null,
+   "sic": "5990",
+   "score": 0.191,
+   "node_count": 1,
+   "promoted": false,
+   "nodes": [
+    {
+     "id": "gen:hbm4",
+     "label": "HBM4 (2,048 I/O, JESD270-4)",
+     "queries": [
+      "\"high bandwidth memory\""
+     ]
+    }
+   ],
+   "filing": {
+    "form": "20-F",
+    "date": "2026-04-28"
+   }
+  },
+  {
+   "cik": 1872302,
+   "ticker": "NA",
+   "name": "Nano Labs Ltd",
+   "size_band": "unknown",
+   "public_float": null,
+   "sic": "3674",
+   "score": 0.191,
+   "node_count": 1,
+   "promoted": false,
+   "nodes": [
+    {
+     "id": "gen:hbm4",
+     "label": "HBM4 (2,048 I/O, JESD270-4)",
+     "queries": [
+      "\"high bandwidth memory\""
+     ]
+    }
+   ],
+   "filing": {
+    "form": "20-F",
+    "date": "2026-04-13"
+   }
+  },
+  {
+   "cik": 1095435,
+   "ticker": "ALP",
+   "name": "Alpha Compute Corp",
+   "size_band": "unknown",
+   "public_float": null,
+   "sic": "6199",
+   "score": 0.191,
+   "node_count": 1,
+   "promoted": false,
+   "nodes": [
+    {
+     "id": "gen:hbm4",
+     "label": "HBM4 (2,048 I/O, JESD270-4)",
+     "queries": [
+      "\"high bandwidth memory\""
+     ]
+    }
+   ],
+   "filing": {
+    "form": "20-F",
+    "date": "2026-07-16"
+   }
+  },
+  {
+   "cik": 937966,
+   "ticker": "ASML",
+   "name": "ASML HOLDING NV",
+   "size_band": "unknown",
+   "public_float": null,
+   "sic": "3559",
+   "score": 0.191,
+   "node_count": 1,
+   "promoted": false,
+   "nodes": [
+    {
+     "id": "gen:hbm4",
+     "label": "HBM4 (2,048 I/O, JESD270-4)",
+     "queries": [
+      "\"high bandwidth memory\""
+     ]
+    }
+   ],
+   "filing": {
+    "form": "20-F",
+    "date": "2026-02-25"
+   }
+  },
+  {
+   "cik": 1973239,
+   "ticker": "ARM",
+   "name": "ARM HOLDINGS PLC /UK",
+   "size_band": "unknown",
+   "public_float": null,
+   "sic": "3674",
+   "score": 0.191,
+   "node_count": 1,
+   "promoted": false,
+   "nodes": [
+    {
+     "id": "gen:hbm4",
+     "label": "HBM4 (2,048 I/O, JESD270-4)",
+     "queries": [
+      "\"high bandwidth memory\""
+     ]
+    }
+   ],
+   "filing": {
+    "form": "20-F",
+    "date": "2026-05-26"
+   }
+  },
+  {
+   "cik": 1321834,
+   "ticker": "QCLS",
+   "name": "Q/C TECHNOLOGIES, INC.",
+   "size_band": "micro",
+   "public_float": 3616742.0,
+   "sic": 2835,
+   "score": 0.188,
+   "node_count": 1,
+   "promoted": false,
+   "nodes": [
+    {
+     "id": "component:pic",
+     "label": "광집적회로(PIC)",
+     "queries": [
+      "\"silicon photonics\""
+     ]
+    }
+   ],
+   "filing": {
+    "form": "10-K",
+    "date": "2026-04-15"
+   }
+  },
+  {
+   "cik": 1866816,
+   "ticker": "OPTX",
+   "name": "SYNTEC OPTICS HOLDINGS, INC.",
+   "size_band": "micro",
+   "public_float": 8016116.0,
+   "sic": 3827,
+   "score": 0.188,
+   "node_count": 1,
+   "promoted": false,
+   "nodes": [
+    {
+     "id": "component:pic",
+     "label": "광집적회로(PIC)",
+     "queries": [
+      "\"silicon photonics\""
+     ]
+    }
+   ],
+   "filing": {
+    "form": "10-K/A",
+    "date": "2026-04-30"
+   }
+  },
+  {
+   "cik": 1708341,
+   "ticker": "AIFA",
+   "name": "All In FutureTech Alliance, Inc.",
+   "size_band": "micro",
+   "public_float": 38282007.0,
+   "sic": 7900,
+   "score": 0.188,
+   "node_count": 1,
+   "promoted": false,
+   "nodes": [
+    {
+     "id": "component:pic",
+     "label": "광집적회로(PIC)",
+     "queries": [
+      "\"silicon photonics\""
+     ]
+    }
+   ],
+   "filing": {
+    "form": "10-K",
+    "date": "2026-05-22"
+   }
+  },
+  {
+   "cik": 46129,
+   "ticker": "ALNT",
+   "name": "ALLIENT INC",
+   "size_band": "small",
+   "public_float": 517545669.0,
+   "sic": 3825,
+   "score": 0.188,
+   "node_count": 1,
+   "promoted": false,
+   "nodes": [
+    {
+     "id": "component:pic",
+     "label": "광집적회로(PIC)",
+     "queries": [
+      "\"silicon photonics\""
+     ]
+    }
+   ],
+   "filing": {
+    "form": "10-K",
+    "date": "2026-03-05"
+   }
+  },
+  {
+   "cik": 926282,
+   "ticker": "ADTN",
+   "name": "ADTRAN Holdings, Inc.",
+   "size_band": "small",
+   "public_float": 706155805.0,
+   "sic": 3661,
+   "score": 0.188,
+   "node_count": 1,
+   "promoted": false,
+   "nodes": [
+    {
+     "id": "component:pic",
+     "label": "광집적회로(PIC)",
+     "queries": [
+      "\"silicon photonics\""
+     ]
+    }
+   ],
+   "filing": {
+    "form": "10-K",
+    "date": "2026-02-26"
+   }
+  },
+  {
+   "cik": 810136,
+   "ticker": "PLAB",
+   "name": "PHOTRONICS INC",
+   "size_band": "small",
+   "public_float": 934773176.0,
+   "sic": 3674,
+   "score": 0.188,
+   "node_count": 1,
+   "promoted": false,
+   "nodes": [
+    {
+     "id": "component:pic",
+     "label": "광집적회로(PIC)",
+     "queries": [
+      "\"silicon photonics\""
+     ]
+    }
+   ],
+   "filing": {
+    "form": "10-K",
+    "date": "2025-12-17"
+   }
+  },
+  {
+   "cik": 1789029,
+   "ticker": "AEVA",
+   "name": "Aeva Technologies, Inc.",
+   "size_band": "small",
+   "public_float": 1197000000.0,
+   "sic": "3714",
+   "score": 0.188,
+   "node_count": 1,
+   "promoted": false,
+   "nodes": [
+    {
+     "id": "component:pic",
+     "label": "광집적회로(PIC)",
+     "queries": [
+      "\"silicon photonics\""
+     ]
+    }
+   ],
+   "filing": {
+    "form": "10-K",
+    "date": "2026-03-20"
+   }
+  },
+  {
+   "cik": 2041385,
+   "ticker": "RAL",
+   "name": "Ralliant Corp",
+   "size_band": "mid",
+   "public_float": 3050000000.0,
+   "sic": "3823",
+   "score": 0.188,
+   "node_count": 1,
+   "promoted": false,
+   "nodes": [
+    {
+     "id": "component:pic",
+     "label": "광집적회로(PIC)",
+     "queries": [
+      "\"silicon photonics\""
+     ]
+    }
+   ],
+   "filing": {
+    "form": "10-K",
+    "date": "2026-02-26"
+   }
+  },
+  {
+   "cik": 1709048,
+   "ticker": "GFS",
+   "name": "GLOBALFOUNDRIES Inc.",
+   "size_band": "unknown",
+   "public_float": null,
+   "sic": "3674",
+   "score": 0.188,
+   "node_count": 1,
+   "promoted": false,
+   "nodes": [
+    {
+     "id": "component:pic",
+     "label": "광집적회로(PIC)",
+     "queries": [
+      "\"silicon photonics\""
+     ]
+    }
+   ],
+   "filing": {
+    "form": "20-F",
+    "date": "2026-02-27"
+   }
+  },
+  {
+   "cik": 1307579,
+   "ticker": "LIQT",
+   "name": "LIQTECH INTERNATIONAL INC",
+   "size_band": "micro",
+   "public_float": 9702533.0,
+   "sic": 3590,
+   "score": 0.178,
+   "node_count": 1,
+   "promoted": false,
+   "nodes": [
+    {
+     "id": "tech:sic",
+     "label": "SiC 전력반도체",
+     "queries": [
+      "\"silicon carbide\" \"power\""
+     ]
+    }
+   ],
+   "filing": {
+    "form": "10-K",
+    "date": "2026-02-27"
+   }
+  },
+  {
+   "cik": 1831979,
+   "ticker": "SDST",
+   "name": "Stardust Power Inc.",
+   "size_band": "micro",
+   "public_float": 9765270.0,
+   "sic": 3330,
+   "score": 0.178,
+   "node_count": 1,
+   "promoted": false,
+   "nodes": [
+    {
+     "id": "tech:sic",
+     "label": "SiC 전력반도체",
+     "queries": [
+      "\"silicon carbide\" \"power\""
+     ]
+    }
+   ],
+   "filing": {
+    "form": "10-K",
+    "date": "2026-03-25"
+   }
+  },
+  {
+   "cik": 814676,
+   "ticker": "CPSH",
+   "name": "CPS TECHNOLOGIES CORP/DE/",
+   "size_band": "micro",
+   "public_float": 52000000.0,
+   "sic": 3260,
+   "score": 0.178,
+   "node_count": 1,
+   "promoted": false,
+   "nodes": [
+    {
+     "id": "tech:sic",
+     "label": "SiC 전력반도체",
+     "queries": [
+      "\"silicon carbide\" \"power\""
+     ]
+    }
+   ],
+   "filing": {
+    "form": "10-K",
+    "date": "2026-03-03"
+   }
+  },
+  {
+   "cik": 1753373,
+   "ticker": "MTWO",
+   "name": "M2i Global, Inc.",
+   "size_band": "micro",
+   "public_float": 64912936.0,
+   "sic": "5050",
+   "score": 0.178,
+   "node_count": 1,
+   "promoted": false,
+   "nodes": [
+    {
+     "id": "tech:sic",
+     "label": "SiC 전력반도체",
+     "queries": [
+      "\"silicon carbide\" \"power\""
+     ]
+    }
+   ],
+   "filing": {
+    "form": "10-K",
+    "date": "2026-01-28"
+   }
+  },
+  {
+   "cik": 1104657,
+   "ticker": "MTRN",
+   "name": "MATERION Corp",
+   "size_band": "small",
+   "public_float": 1673905817.0,
+   "sic": "3460",
+   "score": 0.178,
+   "node_count": 1,
+   "promoted": false,
+   "nodes": [
+    {
+     "id": "tech:sic",
+     "label": "SiC 전력반도체",
+     "queries": [
+      "\"silicon carbide\" \"power\""
+     ]
+    }
+   ],
+   "filing": {
+    "form": "10-K",
+    "date": "2026-02-12"
+   }
+  },
+  {
+   "cik": 1811210,
+   "ticker": "LCID",
+   "name": "Lucid Group, Inc.",
+   "size_band": "mid",
+   "public_float": 2700000000.0,
+   "sic": "3711",
+   "score": 0.178,
+   "node_count": 1,
+   "promoted": false,
+   "nodes": [
+    {
+     "id": "tech:sic",
+     "label": "SiC 전력반도체",
+     "queries": [
+      "\"silicon carbide\" \"power\""
+     ]
+    }
+   ],
+   "filing": {
+    "form": "10-K",
+    "date": "2026-02-24"
+   }
+  },
+  {
+   "cik": 1992818,
+   "ticker": "ZOOZ",
+   "name": "ZOOZ Strategy Ltd.",
+   "size_band": "unknown",
+   "public_float": null,
+   "sic": "3590",
+   "score": 0.178,
+   "node_count": 1,
+   "promoted": false,
+   "nodes": [
+    {
+     "id": "tech:sic",
+     "label": "SiC 전력반도체",
+     "queries": [
+      "\"silicon carbide\" \"power\""
+     ]
+    }
+   ],
+   "filing": {
+    "form": "20-F",
+    "date": "2026-03-27"
+   }
+  },
+  {
+   "cik": 1639877,
+   "ticker": "GSM",
+   "name": "Ferroglobe PLC",
+   "size_band": "unknown",
+   "public_float": null,
+   "sic": "1000",
+   "score": 0.178,
+   "node_count": 1,
+   "promoted": false,
+   "nodes": [
+    {
+     "id": "tech:sic",
+     "label": "SiC 전력반도체",
+     "queries": [
+      "\"silicon carbide\" \"power\""
+     ]
+    }
+   ],
+   "filing": {
+    "form": "20-F",
+    "date": "2026-03-26"
+   }
+  },
+  {
+   "cik": 1882464,
+   "ticker": null,
+   "name": "Metal Sky Star Acquisition Corp",
+   "size_band": "unknown",
+   "public_float": null,
+   "sic": "6770",
+   "score": 0.178,
+   "node_count": 1,
+   "promoted": false,
+   "nodes": [
+    {
+     "id": "tech:sic",
+     "label": "SiC 전력반도체",
+     "queries": [
+      "\"silicon carbide\" \"power\""
+     ]
+    }
+   ],
+   "filing": {
+    "form": "10-K",
+    "date": "2026-03-31"
+   }
+  },
+  {
+   "cik": 1825875,
+   "ticker": "RAYA",
+   "name": "Erayak Power Solution Group Inc.",
+   "size_band": "unknown",
+   "public_float": null,
+   "sic": "3621",
+   "score": 0.178,
+   "node_count": 1,
+   "promoted": false,
+   "nodes": [
+    {
+     "id": "tech:sic",
+     "label": "SiC 전력반도체",
+     "queries": [
+      "\"silicon carbide\" \"power\""
+     ]
+    }
+   ],
+   "filing": {
+    "form": "20-F",
+    "date": "2026-04-29"
+   }
+  },
+  {
+   "cik": 1810997,
+   "ticker": "XPEV",
+   "name": "XPENG INC.",
+   "size_band": "unknown",
+   "public_float": null,
+   "sic": "3711",
+   "score": 0.178,
+   "node_count": 1,
+   "promoted": false,
+   "nodes": [
+    {
+     "id": "tech:sic",
+     "label": "SiC 전력반도체",
+     "queries": [
+      "\"silicon carbide\" \"power\""
+     ]
+    }
+   ],
+   "filing": {
+    "form": "20-F",
+    "date": "2026-04-16"
+   }
+  }
+ ]
+}

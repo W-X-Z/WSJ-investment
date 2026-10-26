@@ -2,6 +2,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Para, Prob, Section, Sev, Url, VERDICT } from "@/components/BriefBits";
 import { fmtDate, fmtNum, fmtUsd } from "@/lib/format";
+import { MoatCard } from "@/components/MoatCard";
 import { db } from "@/lib/supabase";
 
 export const dynamic = "force-dynamic";
@@ -125,7 +126,15 @@ export default async function BriefDetail({ params }: { params: Promise<{ id: st
         ))}
       </div>
 
-      {!!b.title && (
+      {row.kind === "moat" && (
+        <>
+          <Section title={S(b.one_liner) || "해자 카드"}>
+            <p className="text-xs text-neutral-500">공급망 해자 카드 · {S(row.model)} · 프롬프트 {S(row.prompt_version)}</p>
+          </Section>
+          <MoatCard card={b} nodes={arr<string>(row.ontology_nodes)} />
+        </>
+      )}
+      {row.kind !== "moat" && !!b.title && (
         <Section title={S(b.title)}>
           <Para text={b.one_paragraph} />
           <div className="flex flex-wrap gap-x-4 text-xs text-neutral-600 pt-1">

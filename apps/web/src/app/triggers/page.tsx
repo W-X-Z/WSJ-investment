@@ -27,10 +27,9 @@ export default async function Triggers({searchParams}:{searchParams:Promise<SP>}
       <div className="watch-card-foot"><span className="watch-card-flag"><i/> 규칙 정의됨 · 자동 판정 미연동</span><Link href={`/ecosystems/${id}`} className="section-action">영향 경로 <Icon name="arrow-right" size={14}/></Link></div>
     </article>;
    })}</div>
-  <div className="section-heading"><div><div className="eyebrow">MONITORING PIPELINE</div><h2>실제 수집과 가설 판정을 분리합니다</h2><p>데이터 수집은 이미 운영 중이지만 기술 변화의 의미 판단에는 원문 비교와 교차검증이 필요합니다.</p></div></div>
   <div className="insight-cols">
    {[["01","수집·스냅샷","공시·표준·논문 원문을 주기적으로 확인하고 이전 버전과 비교합니다."],["02","가설 영향 분석","변화가 기술적 요구·병목·대체 기술·기업 노출에 어떻게 연결되는지 분석합니다."],["03","인간 검증 및 추적","독립 원천과 실제 고객 채택을 확인한 뒤 중요한 변화만 투자 리서치에 반영합니다."]].map(x=><div className="insight-box" key={x[0]}><div className="eyebrow">{x[0]} / WORKFLOW</div><h3>{x[1]}</h3><p>{x[2]}</p></div>)}
   </div>
-  <div className="data-banner"><Icon name="activity" size={20}/><div><strong>GitHub Actions 기술 인텔리전스 모니터링</strong><p>정식 DB 연동 및 규칙 판정과 별개로 공개 원천 수집 작업의 실제 실행 상태·로그를 확인할 수 있습니다.</p></div><a href="https://github.com/W-X-Z/WSJ-investment/actions/workflows/technology-intelligence-monitor.yml" target="_blank" rel="noreferrer">실행 로그 <Icon name="external" size={15}/></a></div>
+  <p className="soft-text"><a href="https://github.com/W-X-Z/WSJ-investment/actions/workflows/technology-intelligence-monitor.yml" target="_blank" rel="noreferrer">6시간 모니터 실행 로그 ↗</a></p>
  </div>;
 }

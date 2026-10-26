@@ -21,6 +21,5 @@ export default async function Ideas({searchParams}:{searchParams:Promise<Params>
   </form>
   <div className="notice-inline"><Icon name="alert" size={15}/> 아래 산업·기업 연결 중 일부는 조건부 연구 가설입니다. 실제 공급 계약·실적·주가 수익을 확인한 투자 추천으로 해석하면 안 됩니다.</div>
   {filtered.length?<div className="idea-grid">{filtered.map(i=><IdeaTile idea={i} key={i.id}/>)}</div>:<div className="surface"><EmptyState title="조건에 맞는 투자 가설이 없습니다" copy="검색어 또는 분야 필터를 조정해 보세요." href="/ideas"/></div>}
-  <div className="data-banner"><Icon name="book" size={20}/><div><strong>이전 Analyst·Risk 브리프도 그대로 유지됩니다</strong><p>새 기술 그래프의 연구 가설과 과거 SEC 기반 기업 브리프는 독립적인 근거 체계로 구분해 연결합니다.</p></div><Link href="/briefs">기존 브리프 <Icon name="arrow-right" size={15}/></Link></div>
  </div>;
 }

@@ -20,3 +20,4 @@
 | [0010](0010-technology-ecosystem-knowledge-graph.md) | 기술 생태계 온톨로지·증거 그래프·트리거 (설계안) | proposed | 2026-10-26 |
 | [0011](0011-historical-evidence-linkage.md) | 과거 1차 자료 ↔ 그래프 연결 (리뷰 전용 인덱싱) | implemented | 2026-10-26 |
 | [0012](0012-ontology-v03-closed-vocabulary.md) | 온톨로지 v0.3 — 닫힌 어휘, 수요 측 노드, 방향·근거 가중 영향 전파 | accepted | 2026-10-27 |
+| [0013](0013-discovery-and-moat-cards.md) | 발굴 → 승격 → 해자 카드: 온톨로지가 유니버스를 만든다 | accepted | 2026-10-27 |

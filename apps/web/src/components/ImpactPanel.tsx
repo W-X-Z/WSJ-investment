@@ -36,6 +36,5 @@ export function ImpactPanel({nodeId}:{nodeId:string}){
    <h4>대체·잠식 시나리오 (수치 영향 없음)</h4>
    {entry.substitutions.map((s,i)=><div key={i} className="sc-impact-sub"><strong>{s.technology}</strong> <span>{s.relation==="displaces"?"잠식 →":"대체 가능 ↔"}</span> <strong>{s.alternative}</strong>{s.note&&<small> — {s.note}</small>}</div>)}
   </>}
-  <div className="sc-caution">{index.meta.caveat}</div>
  </div>;
 }

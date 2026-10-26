@@ -73,7 +73,10 @@
 | O-1 | 온톨로지 v0.3 닫힌 어휘·검증기·린트 | P1 | ✅ | `ontology.json`, `wsj.ecosystems.ontology --check` |
 | O-2 | 수요 측 노드(세대·표준·고객)·경쟁·대체·연기 관계 | P1 | ✅ 1차 | 121 노드/153 관계. 다음: TSMC CoWoS·OSAT·하이퍼스케일러, 병목별 소형 전문 공급사 |
 | O-3 | 방향·근거 가중 영향 전파 + 웹 패널 | P1 | ✅ | `impact.py`, `impact-index.json` |
-| O-4 | 유니버스 재정의 (온톨로지 기업 + SEC 필러 경쟁사) | P1 | 결정 대기 | ADR-0013 후보. 현재 공급사 0/25 가 유니버스 안 |
+| O-4 | 유니버스 재정의 — 온톨로지 기업이 유니버스 | P1 | ✅ (ADR-0013) | `wsj.ecosystems.universe sync`, `sec_universe` 가 ontology 행 보존. 22사 편입 |
+| O-10 | 발굴 `wsj.ecosystems.discover` + 승격 `promote` + `/discovery` | P1 | ✅ | 46 노드·79 구문, 188사, 소형사 있는 병목 30/46. CURATED 19사 승격 |
+| O-11 | 해자 카드 `wsj moat build` + `moat.yml` + 카드 화면 | P1 | ✅ MVP | 첫 실행 LWLG·AEHR·ADEA 로 프롬프트 검증 → 전체 22사. 다음: 카드 결과로 offered_by 등급 자동 승격 |
+| O-12 | 20-F 필러 공개유동 보강 (주가×주식수), 발굴 구문 확장(특허·학회), 노이즈 구문 제거 | P2 | 미구현 | CAMT·NVMI·POET 크기 미상 |
 | O-5 | 백필 재생성(단어 경계 필터)·별칭 유일성·웹 번들 제거 | P1 | 미구현 | 노이즈 hbm 52%·optics 34%·power 84% |
 | O-6 | 모니터 운영화: 상태 커밋, daily 판정 cron 슬롯, 리포트 덮어쓰기 수정 | P2 | 미구현 | 또는 크론 중지 |
 | O-7 | 관계별 원문 발췌(excerpt)로 단일 출처 집중 해소 | P2 | 미구현 | 린트 경고 3건 |

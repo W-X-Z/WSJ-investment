@@ -193,18 +193,22 @@ class SecUniverseCollector(Collector):
             sic_val = row.get("sic")
             bucket = sector_for(sic_val)
             in_universe = cik in cand_set and bucket != "other"
-            row.update(
-                {
-                    "sector_bucket": bucket,
-                    "in_universe": in_universe,
-                    "universe_reason": (
-                        f"float={row.get('public_float')} sic={sic_val} bucket={bucket}"
-                        if in_universe
-                        else None
-                    ),
-                    "updated_at": now,
-                }
-            )
+            if str(row.get("universe_reason") or "").startswith("ontology"):
+                # 온톨로지(공급망 그래프)로 승격된 회사는 SIC 버킷과 무관하게 유지한다 (ADR-0013)
+                row.update({"sector_bucket": row.get("sector_bucket") or "supply_chain", "updated_at": now})
+            else:
+                row.update(
+                    {
+                        "sector_bucket": bucket,
+                        "in_universe": in_universe,
+                        "universe_reason": (
+                            f"float={row.get('public_float')} sic={sic_val} bucket={bucket}"
+                            if in_universe
+                            else None
+                        ),
+                        "updated_at": now,
+                    }
+                )
             rows.append(row)
 
         # 상폐·티커 소멸: 현재 목록에 없는 기존 CIK 는 유니버스에서 뺀다

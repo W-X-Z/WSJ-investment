@@ -30,6 +30,13 @@ python -m wsj signals build     # 신호·후보 재계산
 python -m wsj briefs build --cik 2012593 --dry-run   # 데이터팩·프롬프트만 (LLM 없음)
 python -m wsj briefs build --top 3                    # ANTHROPIC_API_KEY 필요
 
+# 공급망 온톨로지 (ADR-0012·0013)
+python -m wsj.ecosystems.ontology --check             # 닫힌 어휘 검증
+python -m wsj.ecosystems.impact --node tech:hybrid_bond   # 이 노드가 바뀌면 누가 영향
+python -m wsj.ecosystems.discover                     # 병목별 소형 공급사 발굴 (EDGAR 전문검색)
+python -m wsj.ecosystems.promote && python -m wsj.ecosystems.export_web   # 승격 → 웹 데이터
+python -m wsj moat build --ticker LWLG --dry-run      # 해자 카드 입력 확인 / 키 있으면 실제 생성
+
 # 로컬 검증용 (Supabase 없이 SQLite)
 WSJ_STORE=sqlite python -m wsj run sec_form4 --since 2026-10-20 --limit 50
 

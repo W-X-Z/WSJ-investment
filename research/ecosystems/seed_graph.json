@@ -129,7 +129,7 @@
         "filer_type": "40-F"
       },
       "size_band": "small",
-      "in_universe": false
+      "in_universe": true
     },
     {
       "id": "company:lessengers",
@@ -233,7 +233,7 @@
         "filer_type": "10-K"
       },
       "size_band": "small",
-      "in_universe": false
+      "in_universe": true
     },
     {
       "id": "bottleneck:hbm_kged",
@@ -1153,7 +1153,7 @@
         "cik": 1821769,
         "filer_type": "10-K"
       },
-      "in_universe": false,
+      "in_universe": true,
       "size_band": "small"
     },
     {
@@ -1215,6 +1215,434 @@
       },
       "in_universe": false,
       "size_band": "mega"
+    },
+    {
+      "id": "process:kgd_test",
+      "kind": "process",
+      "label": "적층 전 KGD 웨이퍼 테스트 (프로브·핸들러)",
+      "ecosystem": "hbm",
+      "measured_metrics": [
+        "test_time_s",
+        "contact_yield_percent"
+      ]
+    },
+    {
+      "id": "company:adea",
+      "kind": "company",
+      "label": "Adeia Inc. (ADEA)",
+      "ecosystem": "hbm",
+      "role": "supplier",
+      "listing": {
+        "ticker": "ADEA",
+        "exchange": "Nasdaq",
+        "cik": 1803696,
+        "filer_type": "10-K"
+      },
+      "in_universe": true,
+      "size_band": "small",
+      "public_float": 887181255.0,
+      "sic": 4841,
+      "discovery": {
+        "as_of": "2026-10-27",
+        "score": 1.25,
+        "note": "하이브리드 본딩(DBI) 특허 라이선스 — 장비가 아니라 IP 로 병목에 노출"
+      }
+    },
+    {
+      "id": "company:klic",
+      "kind": "company",
+      "label": "Kulicke & Soffa Industries Inc (KLIC)",
+      "ecosystem": "hbm",
+      "role": "supplier",
+      "listing": {
+        "ticker": "KLIC",
+        "exchange": "Nasdaq",
+        "cik": 56978,
+        "filer_type": "10-K"
+      },
+      "in_universe": true,
+      "size_band": "small",
+      "public_float": 1753200000.0,
+      "sic": "3674",
+      "discovery": {
+        "as_of": "2026-10-27",
+        "score": 1.006,
+        "note": "TCB 본더 공급사, 하이브리드 본딩 장비 개발 중"
+      }
+    },
+    {
+      "id": "company:form",
+      "kind": "company",
+      "label": "Formfactor Inc (FORM)",
+      "ecosystem": "hbm",
+      "role": "supplier",
+      "listing": {
+        "ticker": "FORM",
+        "exchange": "Nasdaq",
+        "cik": 1039399,
+        "filer_type": "10-K"
+      },
+      "in_universe": true,
+      "size_band": "unknown",
+      "public_float": null,
+      "sic": "3674",
+      "discovery": {
+        "as_of": "2026-10-27",
+        "score": 1.365,
+        "note": "프로브 카드 — HBM 적층 전 KGD 테스트"
+      }
+    },
+    {
+      "id": "company:cohu",
+      "kind": "company",
+      "label": "Cohu Inc (COHU)",
+      "ecosystem": "hbm",
+      "role": "supplier",
+      "listing": {
+        "ticker": "COHU",
+        "exchange": "Nasdaq",
+        "cik": 21535,
+        "filer_type": "10-K"
+      },
+      "in_universe": true,
+      "size_band": "small",
+      "public_float": 879400000.0,
+      "sic": 3825,
+      "discovery": {
+        "as_of": "2026-10-27",
+        "score": 0.565,
+        "note": "테스트 핸들러·인터페이스"
+      }
+    },
+    {
+      "id": "company:nvmi",
+      "kind": "company",
+      "label": "Nova Ltd. (NVMI)",
+      "ecosystem": "hbm",
+      "role": "supplier",
+      "listing": {
+        "ticker": "NVMI",
+        "exchange": "Nasdaq",
+        "cik": 1109345,
+        "filer_type": "10-K"
+      },
+      "in_universe": true,
+      "size_band": "unknown",
+      "public_float": null,
+      "sic": "3827",
+      "discovery": {
+        "as_of": "2026-10-27",
+        "score": 1.108,
+        "note": "계측 (Camtek·Onto 경쟁)"
+      }
+    },
+    {
+      "id": "company:veco",
+      "kind": "company",
+      "label": "Veeco Instruments Inc (VECO)",
+      "ecosystem": "hbm",
+      "role": "supplier",
+      "listing": {
+        "ticker": "VECO",
+        "exchange": "Nasdaq",
+        "cik": 103145,
+        "filer_type": "10-K"
+      },
+      "in_universe": true,
+      "size_band": "small",
+      "public_float": 1205043869.0,
+      "sic": "3559",
+      "discovery": {
+        "as_of": "2026-10-27",
+        "score": 0.565,
+        "note": "웨트 프로세싱·레이저 어닐 장비"
+      }
+    },
+    {
+      "id": "company:ichr",
+      "kind": "company",
+      "label": "Ichor Holdings, Ltd. (ICHR)",
+      "ecosystem": "hbm",
+      "role": "supplier",
+      "listing": {
+        "ticker": "ICHR",
+        "exchange": "Nasdaq",
+        "cik": 1652535,
+        "filer_type": "10-K"
+      },
+      "in_universe": true,
+      "size_band": "small",
+      "public_float": 658256416.0,
+      "sic": 3674,
+      "discovery": {
+        "as_of": "2026-10-27",
+        "score": 0.301,
+        "note": "유체 전달 서브시스템 (장비사 공급망)"
+      }
+    },
+    {
+      "id": "company:lwlg",
+      "kind": "company",
+      "label": "Lightwave Logic, Inc. (LWLG)",
+      "ecosystem": "optics",
+      "role": "supplier",
+      "listing": {
+        "ticker": "LWLG",
+        "exchange": "Nasdaq",
+        "cik": 1325964,
+        "filer_type": "10-K"
+      },
+      "in_universe": true,
+      "size_band": "micro",
+      "public_float": 155272461.0,
+      "sic": 3080,
+      "discovery": {
+        "as_of": "2026-10-27",
+        "score": 2.039,
+        "note": "전기광학 폴리머 변조기 — 200G+/lane 후보, 매출 전 단계"
+      }
+    },
+    {
+      "id": "company:almu",
+      "kind": "company",
+      "label": "Aeluma, Inc. (ALMU)",
+      "ecosystem": "optics",
+      "role": "supplier",
+      "listing": {
+        "ticker": "ALMU",
+        "exchange": "Nasdaq",
+        "cik": 1828805,
+        "filer_type": "10-K"
+      },
+      "in_universe": true,
+      "size_band": "micro",
+      "public_float": 276200000.0,
+      "sic": 3674,
+      "discovery": {
+        "as_of": "2026-10-27",
+        "score": 1.232,
+        "note": "InP-on-Si 광소자 플랫폼, 마이크로캡"
+      }
+    },
+    {
+      "id": "company:axti",
+      "kind": "company",
+      "label": "Axt Inc (AXTI)",
+      "ecosystem": "optics",
+      "role": "supplier",
+      "listing": {
+        "ticker": "AXTI",
+        "exchange": "Nasdaq",
+        "cik": 1051627,
+        "filer_type": "10-K"
+      },
+      "in_universe": true,
+      "size_band": "micro",
+      "public_float": 83786290.0,
+      "sic": 3674,
+      "discovery": {
+        "as_of": "2026-10-27",
+        "score": 0.842,
+        "note": "InP·GaAs 기판 — 레이저 소재 공급"
+      }
+    },
+    {
+      "id": "company:mxl",
+      "kind": "company",
+      "label": "Maxlinear, Inc (MXL)",
+      "ecosystem": "optics",
+      "role": "supplier",
+      "listing": {
+        "ticker": "MXL",
+        "exchange": "Nasdaq",
+        "cik": 1288469,
+        "filer_type": "10-K"
+      },
+      "in_universe": true,
+      "size_band": "small",
+      "public_float": 1100000000.0,
+      "sic": "3674",
+      "discovery": {
+        "as_of": "2026-10-27",
+        "score": 0.754,
+        "note": "PAM4 광 DSP (Keystone)"
+      }
+    },
+    {
+      "id": "company:aaoi",
+      "kind": "company",
+      "label": "Applied Optoelectronics, Inc. (AAOI)",
+      "ecosystem": "optics",
+      "role": "supplier",
+      "listing": {
+        "ticker": "AAOI",
+        "exchange": "Nasdaq",
+        "cik": 1158114,
+        "filer_type": "10-K"
+      },
+      "in_universe": true,
+      "size_band": "small",
+      "public_float": 1491234829.0,
+      "sic": "3674",
+      "discovery": {
+        "as_of": "2026-10-27",
+        "score": 0.301,
+        "note": "800G/1.6T 트랜시버 조립"
+      }
+    },
+    {
+      "id": "company:belfa",
+      "kind": "company",
+      "label": "Bel Fuse Inc /Nj (BELFA)",
+      "ecosystem": "optics",
+      "role": "supplier",
+      "listing": {
+        "ticker": "BELFA",
+        "exchange": "Nasdaq",
+        "cik": 729580,
+        "filer_type": "10-K"
+      },
+      "in_universe": true,
+      "size_band": "small",
+      "public_float": 1200000000.0,
+      "sic": "3677",
+      "discovery": {
+        "as_of": "2026-10-27",
+        "score": 0.631,
+        "note": "커넥터·전원 — 광 커넥터 일부"
+      }
+    },
+    {
+      "id": "company:aosl",
+      "kind": "company",
+      "label": "Alpha & Omega Semiconductor Ltd (AOSL)",
+      "ecosystem": "power",
+      "role": "supplier",
+      "listing": {
+        "ticker": "AOSL",
+        "exchange": "Nasdaq",
+        "cik": 1387467,
+        "filer_type": "10-K"
+      },
+      "in_universe": true,
+      "size_band": "small",
+      "public_float": 487000000.0,
+      "sic": 3674,
+      "discovery": {
+        "as_of": "2026-10-27",
+        "score": 1.526,
+        "note": "전력 디스크리트·모듈, 800V 언급"
+      }
+    },
+    {
+      "id": "company:ipwr",
+      "kind": "company",
+      "label": "Ideal Power Inc. (IPWR)",
+      "ecosystem": "power",
+      "role": "supplier",
+      "listing": {
+        "ticker": "IPWR",
+        "exchange": "Nasdaq",
+        "cik": 1507957,
+        "filer_type": "10-K"
+      },
+      "in_universe": true,
+      "size_band": "micro",
+      "public_float": 37500000.0,
+      "sic": 3674,
+      "discovery": {
+        "as_of": "2026-10-27",
+        "score": 0.664,
+        "note": "B-TRAN 양방향 스위치 — 고체 차단기 후보"
+      }
+    },
+    {
+      "id": "company:asys",
+      "kind": "company",
+      "label": "Amtech Systems Inc (ASYS)",
+      "ecosystem": "power",
+      "role": "supplier",
+      "listing": {
+        "ticker": "ASYS",
+        "exchange": "Nasdaq",
+        "cik": 720500,
+        "filer_type": "10-K"
+      },
+      "in_universe": true,
+      "size_band": "micro",
+      "public_float": 54346382.0,
+      "sic": 3559,
+      "discovery": {
+        "as_of": "2026-10-27",
+        "score": 0.979,
+        "note": "SiC 웨이퍼 가공·CMP 소모품"
+      }
+    },
+    {
+      "id": "company:wolf",
+      "kind": "company",
+      "label": "Wolfspeed, Inc. (WOLF)",
+      "ecosystem": "power",
+      "role": "supplier",
+      "listing": {
+        "ticker": "WOLF",
+        "exchange": "NYSE",
+        "cik": 895419,
+        "filer_type": "10-K"
+      },
+      "in_universe": true,
+      "size_band": "small",
+      "public_float": 491198896.0,
+      "sic": 3674,
+      "discovery": {
+        "as_of": "2026-10-27",
+        "score": 0.375,
+        "note": "SiC 웨이퍼·소자 (구조조정 후 소형)"
+      }
+    },
+    {
+      "id": "company:cvv",
+      "kind": "company",
+      "label": "Cvd Equipment Corp (CVV)",
+      "ecosystem": "power",
+      "role": "supplier",
+      "listing": {
+        "ticker": "CVV",
+        "exchange": "Nasdaq",
+        "cik": 766792,
+        "filer_type": "10-K"
+      },
+      "in_universe": true,
+      "size_band": "micro",
+      "public_float": 14612028.0,
+      "sic": 3559,
+      "discovery": {
+        "as_of": "2026-10-27",
+        "score": 0.375,
+        "note": "SiC CVD 장비, 마이크로캡"
+      }
+    },
+    {
+      "id": "company:intt",
+      "kind": "company",
+      "label": "Intest Corp (INTT)",
+      "ecosystem": "power",
+      "role": "supplier",
+      "listing": {
+        "ticker": "INTT",
+        "exchange": "NYSE",
+        "cik": 1036262,
+        "filer_type": "10-K"
+      },
+      "in_universe": true,
+      "size_band": "micro",
+      "public_float": 85351987.0,
+      "sic": 3825,
+      "discovery": {
+        "as_of": "2026-10-27",
+        "score": 0.375,
+        "note": "열 시험·테스트 장비"
+      }
     }
   ],
   "edges": [
@@ -3820,6 +4248,535 @@
         }
       ],
       "note": "",
+      "confidence": 0.4
+    },
+    {
+      "id": "p_kgd_test",
+      "from": "bottleneck:hbm_kged",
+      "to": "process:kgd_test",
+      "relation": "mitigated_by",
+      "evidence_tier": "technical_inference",
+      "polarity": "positive",
+      "evidence": [
+        {
+          "url": "https://www.storagenewsletter.com/2025/04/17/jedec-and-industry-leaders-collaborate-to-release-jesd270-4-hbm4-standard/",
+          "source_type": "standard_body_via_press"
+        }
+      ],
+      "note": "16-high 적층은 KGD 테스트 비용을 키운다",
+      "confidence": 0.4
+    },
+    {
+      "id": "d001",
+      "from": "tech:hybrid_bond",
+      "to": "company:adea",
+      "relation": "offered_by",
+      "evidence_tier": "technical_inference",
+      "polarity": "positive",
+      "evidence": [
+        {
+          "url": "https://www.sec.gov/Archives/edgar/data/1803696/000119312526076549/0001193125-26-076549-index.htm",
+          "source_type": "official_issuer_filing_mention",
+          "published_at": "2026-02-26",
+          "date_precision": "day",
+          "note": "10-K 본문에 노드 구문 등장 (발굴 2026-10-27). 공급 여부는 해자 카드에서 검증"
+        }
+      ],
+      "note": "하이브리드 본딩(DBI) 특허 라이선스 — 장비가 아니라 IP 로 병목에 노출",
+      "confidence": 0.4
+    },
+    {
+      "id": "d002",
+      "from": "tech:tcb",
+      "to": "company:klic",
+      "relation": "offered_by",
+      "evidence_tier": "technical_inference",
+      "polarity": "positive",
+      "evidence": [
+        {
+          "url": "https://www.sec.gov/Archives/edgar/data/56978/000005697825000081/0000056978-25-000081-index.htm",
+          "source_type": "official_issuer_filing_mention",
+          "published_at": "2025-11-20",
+          "date_precision": "day",
+          "note": "10-K 본문에 노드 구문 등장 (발굴 2026-10-27). 공급 여부는 해자 카드에서 검증"
+        }
+      ],
+      "note": "TCB 본더 공급사, 하이브리드 본딩 장비 개발 중",
+      "confidence": 0.4
+    },
+    {
+      "id": "d003",
+      "from": "tech:hybrid_bond",
+      "to": "company:klic",
+      "relation": "offered_by",
+      "evidence_tier": "technical_inference",
+      "polarity": "positive",
+      "evidence": [
+        {
+          "url": "https://www.sec.gov/Archives/edgar/data/56978/000005697825000081/0000056978-25-000081-index.htm",
+          "source_type": "official_issuer_filing_mention",
+          "published_at": "2025-11-20",
+          "date_precision": "day",
+          "note": "10-K 본문에 노드 구문 등장 (발굴 2026-10-27). 공급 여부는 해자 카드에서 검증"
+        }
+      ],
+      "note": "TCB 본더 공급사, 하이브리드 본딩 장비 개발 중",
+      "confidence": 0.4
+    },
+    {
+      "id": "d004",
+      "from": "process:kgd_test",
+      "to": "company:form",
+      "relation": "offered_by",
+      "evidence_tier": "technical_inference",
+      "polarity": "positive",
+      "evidence": [
+        {
+          "url": "https://www.sec.gov/Archives/edgar/data/1039399/000103939926000009/0001039399-26-000009-index.htm",
+          "source_type": "official_issuer_filing_mention",
+          "published_at": "2026-02-20",
+          "date_precision": "day",
+          "note": "10-K 본문에 노드 구문 등장 (발굴 2026-10-27). 공급 여부는 해자 카드에서 검증"
+        }
+      ],
+      "note": "프로브 카드 — HBM 적층 전 KGD 테스트",
+      "confidence": 0.4
+    },
+    {
+      "id": "d005",
+      "from": "component:tsv",
+      "to": "company:form",
+      "relation": "offered_by",
+      "evidence_tier": "technical_inference",
+      "polarity": "positive",
+      "evidence": [
+        {
+          "url": "https://www.sec.gov/Archives/edgar/data/1039399/000103939926000009/0001039399-26-000009-index.htm",
+          "source_type": "official_issuer_filing_mention",
+          "published_at": "2026-02-20",
+          "date_precision": "day",
+          "note": "10-K 본문에 노드 구문 등장 (발굴 2026-10-27). 공급 여부는 해자 카드에서 검증"
+        }
+      ],
+      "note": "프로브 카드 — HBM 적층 전 KGD 테스트",
+      "confidence": 0.4
+    },
+    {
+      "id": "d006",
+      "from": "process:kgd_test",
+      "to": "company:cohu",
+      "relation": "offered_by",
+      "evidence_tier": "technical_inference",
+      "polarity": "positive",
+      "evidence": [
+        {
+          "url": "https://www.sec.gov/Archives/edgar/data/21535/000143774926004339/0001437749-26-004339-index.htm",
+          "source_type": "official_issuer_filing_mention",
+          "published_at": "2026-02-17",
+          "date_precision": "day",
+          "note": "10-K 본문에 노드 구문 등장 (발굴 2026-10-27). 공급 여부는 해자 카드에서 검증"
+        }
+      ],
+      "note": "테스트 핸들러·인터페이스",
+      "confidence": 0.4
+    },
+    {
+      "id": "d007",
+      "from": "process:microbump_metrology",
+      "to": "company:nvmi",
+      "relation": "offered_by",
+      "evidence_tier": "technical_inference",
+      "polarity": "positive",
+      "evidence": [
+        {
+          "url": "https://www.sec.gov/Archives/edgar/data/1109345/000117891326000504/0001178913-26-000504-index.htm",
+          "source_type": "official_issuer_filing_mention",
+          "published_at": "2026-02-17",
+          "date_precision": "day",
+          "note": "20-F 본문에 노드 구문 등장 (발굴 2026-10-27). 공급 여부는 해자 카드에서 검증"
+        }
+      ],
+      "note": "계측 (Camtek·Onto 경쟁)",
+      "confidence": 0.4
+    },
+    {
+      "id": "d008",
+      "from": "process:cmp",
+      "to": "company:nvmi",
+      "relation": "offered_by",
+      "evidence_tier": "technical_inference",
+      "polarity": "positive",
+      "evidence": [
+        {
+          "url": "https://www.sec.gov/Archives/edgar/data/1109345/000117891326000504/0001178913-26-000504-index.htm",
+          "source_type": "official_issuer_filing_mention",
+          "published_at": "2026-02-17",
+          "date_precision": "day",
+          "note": "20-F 본문에 노드 구문 등장 (발굴 2026-10-27). 공급 여부는 해자 카드에서 검증"
+        }
+      ],
+      "note": "계측 (Camtek·Onto 경쟁)",
+      "confidence": 0.4
+    },
+    {
+      "id": "d009",
+      "from": "process:surface_activation",
+      "to": "company:veco",
+      "relation": "offered_by",
+      "evidence_tier": "technical_inference",
+      "polarity": "positive",
+      "evidence": [
+        {
+          "url": "https://www.sec.gov/Archives/edgar/data/103145/000110465926019711/0001104659-26-019711-index.htm",
+          "source_type": "official_issuer_filing_mention",
+          "published_at": "2026-02-25",
+          "date_precision": "day",
+          "note": "10-K 본문에 노드 구문 등장 (발굴 2026-10-27). 공급 여부는 해자 카드에서 검증"
+        }
+      ],
+      "note": "웨트 프로세싱·레이저 어닐 장비",
+      "confidence": 0.4
+    },
+    {
+      "id": "d010",
+      "from": "process:cmp",
+      "to": "company:ichr",
+      "relation": "offered_by",
+      "evidence_tier": "technical_inference",
+      "polarity": "positive",
+      "evidence": [
+        {
+          "url": "https://www.sec.gov/Archives/edgar/data/1652535/000165253526000012/0001652535-26-000012-index.htm",
+          "source_type": "official_issuer_filing_mention",
+          "published_at": "2026-02-20",
+          "date_precision": "day",
+          "note": "10-K 본문에 노드 구문 등장 (발굴 2026-10-27). 공급 여부는 해자 카드에서 검증"
+        }
+      ],
+      "note": "유체 전달 서브시스템 (장비사 공급망)",
+      "confidence": 0.4
+    },
+    {
+      "id": "d011",
+      "from": "component:modulator",
+      "to": "company:lwlg",
+      "relation": "offered_by",
+      "evidence_tier": "technical_inference",
+      "polarity": "positive",
+      "evidence": [
+        {
+          "url": "https://www.sec.gov/Archives/edgar/data/1325964/000107997326000348/0001079973-26-000348-index.htm",
+          "source_type": "official_issuer_filing_mention",
+          "published_at": "2026-03-20",
+          "date_precision": "day",
+          "note": "10-K 본문에 노드 구문 등장 (발굴 2026-10-27). 공급 여부는 해자 카드에서 검증"
+        }
+      ],
+      "note": "전기광학 폴리머 변조기 — 200G+/lane 후보, 매출 전 단계",
+      "confidence": 0.4
+    },
+    {
+      "id": "d012",
+      "from": "material:inp",
+      "to": "company:almu",
+      "relation": "offered_by",
+      "evidence_tier": "technical_inference",
+      "polarity": "positive",
+      "evidence": [
+        {
+          "url": "https://www.sec.gov/Archives/edgar/data/1828805/000121390026100584/0001213900-26-100584-index.htm",
+          "source_type": "official_issuer_filing_mention",
+          "published_at": "2026-09-16",
+          "date_precision": "day",
+          "note": "10-K 본문에 노드 구문 등장 (발굴 2026-10-27). 공급 여부는 해자 카드에서 검증"
+        }
+      ],
+      "note": "InP-on-Si 광소자 플랫폼, 마이크로캡",
+      "confidence": 0.4
+    },
+    {
+      "id": "d013",
+      "from": "component:optical_laser",
+      "to": "company:almu",
+      "relation": "offered_by",
+      "evidence_tier": "technical_inference",
+      "polarity": "positive",
+      "evidence": [
+        {
+          "url": "https://www.sec.gov/Archives/edgar/data/1828805/000121390026100584/0001213900-26-100584-index.htm",
+          "source_type": "official_issuer_filing_mention",
+          "published_at": "2026-09-16",
+          "date_precision": "day",
+          "note": "10-K 본문에 노드 구문 등장 (발굴 2026-10-27). 공급 여부는 해자 카드에서 검증"
+        }
+      ],
+      "note": "InP-on-Si 광소자 플랫폼, 마이크로캡",
+      "confidence": 0.4
+    },
+    {
+      "id": "d014",
+      "from": "material:inp",
+      "to": "company:axti",
+      "relation": "offered_by",
+      "evidence_tier": "technical_inference",
+      "polarity": "positive",
+      "evidence": [
+        {
+          "url": "https://www.sec.gov/Archives/edgar/data/1051627/000143774926008612/0001437749-26-008612-index.htm",
+          "source_type": "official_issuer_filing_mention",
+          "published_at": "2026-03-17",
+          "date_precision": "day",
+          "note": "10-K 본문에 노드 구문 등장 (발굴 2026-10-27). 공급 여부는 해자 카드에서 검증"
+        }
+      ],
+      "note": "InP·GaAs 기판 — 레이저 소재 공급",
+      "confidence": 0.4
+    },
+    {
+      "id": "d015",
+      "from": "component:optical_dsp",
+      "to": "company:mxl",
+      "relation": "offered_by",
+      "evidence_tier": "technical_inference",
+      "polarity": "positive",
+      "evidence": [
+        {
+          "url": "https://www.sec.gov/Archives/edgar/data/1288469/000128846926000011/0001288469-26-000011-index.htm",
+          "source_type": "official_issuer_filing_mention",
+          "published_at": "2026-01-29",
+          "date_precision": "day",
+          "note": "10-K 본문에 노드 구문 등장 (발굴 2026-10-27). 공급 여부는 해자 카드에서 검증"
+        }
+      ],
+      "note": "PAM4 광 DSP (Keystone)",
+      "confidence": 0.4
+    },
+    {
+      "id": "d016",
+      "from": "tech:pluggable",
+      "to": "company:aaoi",
+      "relation": "offered_by",
+      "evidence_tier": "technical_inference",
+      "polarity": "positive",
+      "evidence": [
+        {
+          "url": "https://www.sec.gov/Archives/edgar/data/1158114/000143774926005875/0001437749-26-005875-index.htm",
+          "source_type": "official_issuer_filing_mention",
+          "published_at": "2026-02-26",
+          "date_precision": "day",
+          "note": "10-K 본문에 노드 구문 등장 (발굴 2026-10-27). 공급 여부는 해자 카드에서 검증"
+        }
+      ],
+      "note": "800G/1.6T 트랜시버 조립",
+      "confidence": 0.4
+    },
+    {
+      "id": "d017",
+      "from": "component:fiber_connector",
+      "to": "company:belfa",
+      "relation": "offered_by",
+      "evidence_tier": "technical_inference",
+      "polarity": "positive",
+      "evidence": [
+        {
+          "url": "https://www.sec.gov/Archives/edgar/data/729580/000143774926005354/0001437749-26-005354-index.htm",
+          "source_type": "official_issuer_filing_mention",
+          "published_at": "2026-02-24",
+          "date_precision": "day",
+          "note": "10-K 본문에 노드 구문 등장 (발굴 2026-10-27). 공급 여부는 해자 카드에서 검증"
+        }
+      ],
+      "note": "커넥터·전원 — 광 커넥터 일부",
+      "confidence": 0.4
+    },
+    {
+      "id": "d018",
+      "from": "component:gate_driver",
+      "to": "company:aosl",
+      "relation": "offered_by",
+      "evidence_tier": "technical_inference",
+      "polarity": "positive",
+      "evidence": [
+        {
+          "url": "https://www.sec.gov/Archives/edgar/data/1387467/000162828026059261/0001628280-26-059261-index.htm",
+          "source_type": "official_issuer_filing_mention",
+          "published_at": "2026-08-27",
+          "date_precision": "day",
+          "note": "10-K 본문에 노드 구문 등장 (발굴 2026-10-27). 공급 여부는 해자 카드에서 검증"
+        }
+      ],
+      "note": "전력 디스크리트·모듈, 800V 언급",
+      "confidence": 0.4
+    },
+    {
+      "id": "d019",
+      "from": "component:sic_mosfet",
+      "to": "company:aosl",
+      "relation": "offered_by",
+      "evidence_tier": "technical_inference",
+      "polarity": "positive",
+      "evidence": [
+        {
+          "url": "https://www.sec.gov/Archives/edgar/data/1387467/000162828026059261/0001628280-26-059261-index.htm",
+          "source_type": "official_issuer_filing_mention",
+          "published_at": "2026-08-27",
+          "date_precision": "day",
+          "note": "10-K 본문에 노드 구문 등장 (발굴 2026-10-27). 공급 여부는 해자 카드에서 검증"
+        }
+      ],
+      "note": "전력 디스크리트·모듈, 800V 언급",
+      "confidence": 0.4
+    },
+    {
+      "id": "d020",
+      "from": "component:dc_breaker",
+      "to": "company:ipwr",
+      "relation": "offered_by",
+      "evidence_tier": "technical_inference",
+      "polarity": "positive",
+      "evidence": [
+        {
+          "url": "https://www.sec.gov/Archives/edgar/data/1507957/000143774926009995/0001437749-26-009995-index.htm",
+          "source_type": "official_issuer_filing_mention",
+          "published_at": "2026-03-27",
+          "date_precision": "day",
+          "note": "10-K 본문에 노드 구문 등장 (발굴 2026-10-27). 공급 여부는 해자 카드에서 검증"
+        }
+      ],
+      "note": "B-TRAN 양방향 스위치 — 고체 차단기 후보",
+      "confidence": 0.4
+    },
+    {
+      "id": "d021",
+      "from": "component:power_converter",
+      "to": "company:ipwr",
+      "relation": "offered_by",
+      "evidence_tier": "technical_inference",
+      "polarity": "positive",
+      "evidence": [
+        {
+          "url": "https://www.sec.gov/Archives/edgar/data/1507957/000143774926009995/0001437749-26-009995-index.htm",
+          "source_type": "official_issuer_filing_mention",
+          "published_at": "2026-03-27",
+          "date_precision": "day",
+          "note": "10-K 본문에 노드 구문 등장 (발굴 2026-10-27). 공급 여부는 해자 카드에서 검증"
+        }
+      ],
+      "note": "B-TRAN 양방향 스위치 — 고체 차단기 후보",
+      "confidence": 0.4
+    },
+    {
+      "id": "d022",
+      "from": "material:sic_wafer",
+      "to": "company:asys",
+      "relation": "offered_by",
+      "evidence_tier": "technical_inference",
+      "polarity": "positive",
+      "evidence": [
+        {
+          "url": "https://www.sec.gov/Archives/edgar/data/720500/000119312525314147/0001193125-25-314147-index.htm",
+          "source_type": "official_issuer_filing_mention",
+          "published_at": "2025-12-10",
+          "date_precision": "day",
+          "note": "10-K 본문에 노드 구문 등장 (발굴 2026-10-27). 공급 여부는 해자 카드에서 검증"
+        }
+      ],
+      "note": "SiC 웨이퍼 가공·CMP 소모품",
+      "confidence": 0.4
+    },
+    {
+      "id": "d023",
+      "from": "process:cmp",
+      "to": "company:asys",
+      "relation": "offered_by",
+      "evidence_tier": "technical_inference",
+      "polarity": "positive",
+      "evidence": [
+        {
+          "url": "https://www.sec.gov/Archives/edgar/data/720500/000119312525314147/0001193125-25-314147-index.htm",
+          "source_type": "official_issuer_filing_mention",
+          "published_at": "2025-12-10",
+          "date_precision": "day",
+          "note": "10-K 본문에 노드 구문 등장 (발굴 2026-10-27). 공급 여부는 해자 카드에서 검증"
+        }
+      ],
+      "note": "SiC 웨이퍼 가공·CMP 소모품",
+      "confidence": 0.4
+    },
+    {
+      "id": "d024",
+      "from": "material:sic_wafer",
+      "to": "company:wolf",
+      "relation": "offered_by",
+      "evidence_tier": "technical_inference",
+      "polarity": "positive",
+      "evidence": [
+        {
+          "url": "https://www.sec.gov/Archives/edgar/data/895419/000089541926000054/0000895419-26-000054-index.htm",
+          "source_type": "official_issuer_filing_mention",
+          "published_at": "2026-08-20",
+          "date_precision": "day",
+          "note": "10-K 본문에 노드 구문 등장 (발굴 2026-10-27). 공급 여부는 해자 카드에서 검증"
+        }
+      ],
+      "note": "SiC 웨이퍼·소자 (구조조정 후 소형)",
+      "confidence": 0.4
+    },
+    {
+      "id": "d025",
+      "from": "component:sic_mosfet",
+      "to": "company:wolf",
+      "relation": "offered_by",
+      "evidence_tier": "technical_inference",
+      "polarity": "positive",
+      "evidence": [
+        {
+          "url": "https://www.sec.gov/Archives/edgar/data/895419/000089541926000054/0000895419-26-000054-index.htm",
+          "source_type": "official_issuer_filing_mention",
+          "published_at": "2026-08-20",
+          "date_precision": "day",
+          "note": "10-K 본문에 노드 구문 등장 (발굴 2026-10-27). 공급 여부는 해자 카드에서 검증"
+        }
+      ],
+      "note": "SiC 웨이퍼·소자 (구조조정 후 소형)",
+      "confidence": 0.4
+    },
+    {
+      "id": "d026",
+      "from": "material:sic_wafer",
+      "to": "company:cvv",
+      "relation": "offered_by",
+      "evidence_tier": "technical_inference",
+      "polarity": "positive",
+      "evidence": [
+        {
+          "url": "https://www.sec.gov/Archives/edgar/data/766792/000149315226013567/0001493152-26-013567-index.htm",
+          "source_type": "official_issuer_filing_mention",
+          "published_at": "2026-03-30",
+          "date_precision": "day",
+          "note": "10-K 본문에 노드 구문 등장 (발굴 2026-10-27). 공급 여부는 해자 카드에서 검증"
+        }
+      ],
+      "note": "SiC CVD 장비, 마이크로캡",
+      "confidence": 0.4
+    },
+    {
+      "id": "d027",
+      "from": "process:wafer_level_burn_in",
+      "to": "company:intt",
+      "relation": "offered_by",
+      "evidence_tier": "technical_inference",
+      "polarity": "positive",
+      "evidence": [
+        {
+          "url": "https://www.sec.gov/Archives/edgar/data/1036262/000103626226000012/0001036262-26-000012-index.htm",
+          "source_type": "official_issuer_filing_mention",
+          "published_at": "2026-03-12",
+          "date_precision": "day",
+          "note": "10-K 본문에 노드 구문 등장 (발굴 2026-10-27). 공급 여부는 해자 카드에서 검증"
+        }
+      ],
+      "note": "열 시험·테스트 장비",
       "confidence": 0.4
     }
   ],

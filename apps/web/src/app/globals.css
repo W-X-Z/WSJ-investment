@@ -495,3 +495,5 @@ tr:hover td{background:#f8faff}
 .review-explore{margin-top:auto;display:flex;gap:7px;align-items:center;justify-content:center;border:1px solid #d5e2f4;background:#f1f6ff;color:#4165a4;font-size:11px;font-weight:750;border-radius:8px;padding:11px}
 @media(max-width:850px){.review-grid{grid-template-columns:1fr}}
 @media(max-width:550px){.review-stats{gap:6px}.review-stats>div{padding:11px}.review-stats strong{font-size:22px}.review-stats small{font-size:9px}.review-card{padding:12px}.review-pair strong{font-size:11px}}
+
+.tag-active{background:#1f3557;color:#fff}

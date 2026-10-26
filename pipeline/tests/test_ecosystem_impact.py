@@ -126,7 +126,7 @@ def test_paths_report_weakest_link_and_listing():
     aehr = by_company(paths, "company:aehr")
     assert aehr and aehr[0]["band"] == "inferred" and aehr[0]["listing"]["cik"] == 1040470
     assert aehr[0]["weakest_edge"]["confidence"] <= min(0.55, aehr[0]["confidence"] + 0.5)
-    assert all(p["in_universe"] is False for p in paths)
+    assert aehr[0]["in_universe"] is True  # promote 로 유니버스 편입
 
 
 def test_optics_reaches_poet_not_unrelated_camtek():

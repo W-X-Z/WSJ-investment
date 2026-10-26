@@ -16,18 +16,21 @@ type Row = {
   id: number; cik: number; ticker: string | null; name: string; sector_bucket: string | null; as_of: string; version: number;
   status: string; title: string | null; scores: Scores | null; model: string | null; prompt_version: string | null;
   usage: { total?: { cost_usd?: number; web_searches?: number } } | null; error: string | null; created_at: string; prediction_count: number;
+  kind?: string; ontology_nodes?: string[];
 };
 
 
 export default async function Briefs({ searchParams }: { searchParams: Promise<SearchParams> }) {
   const sp = await searchParams;
   const status = param(sp, "status");
+  const kind = param(sp, "kind");
   const verdict = param(sp, "verdict");
   const q = param(sp, "q");
   const page = pageOf(sp);
 
   let query = db("public").from("v_briefs").select("*", { count: "exact" });
   if (status) query = query.eq("status", status);
+  if (kind) query = query.eq("kind", kind);
   if (verdict) query = query.eq("scores->>verdict", verdict);
   if (q) query = query.or(`ticker.ilike.%${q}%,name.ilike.%${q}%`);
   const [from, to] = range(page);
@@ -43,9 +46,10 @@ export default async function Briefs({ searchParams }: { searchParams: Promise<S
       </p>
       <Toolbar
         path="/briefs"
-        params={{ status, verdict, q }}
+        params={{ status, verdict, q, kind }}
         fields={[
           { name: "q", placeholder: "티커/이름" },
+          { name: "kind", placeholder: "종류(전체)", options: ["brief", "moat"] },
           { name: "status", placeholder: "상태(전체)", options: ["final", "draft", "failed", "superseded"] },
           { name: "verdict", placeholder: "Risk 판정(전체)", options: ["proceed", "watch", "pass"] },
         ]}
@@ -67,11 +71,14 @@ export default async function Briefs({ searchParams }: { searchParams: Promise<S
                 <Link className="text-base font-semibold underline" href={`/briefs/${b.id}`}>
                   {b.ticker ?? b.cik} · {b.name}
                 </Link>
+                {b.kind === "moat" && <span className="text-xs rounded px-1.5 py-0.5 bg-indigo-100 text-indigo-900">해자 카드</span>}
                 <span className="text-neutral-500 text-xs">{b.sector_bucket} · {b.as_of} · v{b.version} · {b.model}</span>
                 {s.verdict && <span className={`text-xs rounded px-1.5 py-0.5 ${VERDICT[s.verdict] ?? "bg-neutral-100"}`}>{s.verdict}</span>}
                 {b.status !== "final" && <span className="text-xs rounded px-1.5 py-0.5 border">{b.status}</span>}
                 <span className="ml-auto text-xs text-neutral-500 font-mono">
-                  확신 {s.conviction ?? "–"}→{s.final_conviction ?? "–"} · 비대칭 {s.asymmetry ?? "–"}→{s.final_asymmetry ?? "–"} · 데이터 {s.data_quality ?? "–"} · {s.time_horizon_months ?? "–"}개월
+                  {b.kind === "moat"
+                    ? `종합 ${(s as { overall?: number }).overall ?? "–"} · 해자 ${(s as { moat?: number }).moat ?? "–"} · 타이밍 ${(s as { timing?: number }).timing ?? "–"} · 재무 ${(s as { financial?: number }).financial ?? "–"}`
+                    : `확신 ${s.conviction ?? "–"}→${s.final_conviction ?? "–"} · 비대칭 ${s.asymmetry ?? "–"}→${s.final_asymmetry ?? "–"} · 데이터 ${s.data_quality ?? "–"} · ${s.time_horizon_months ?? "–"}개월`}
                 </span>
               </div>
               {b.title && <div className="mt-1">{b.title}</div>}
@@ -82,7 +89,7 @@ export default async function Briefs({ searchParams }: { searchParams: Promise<S
                 <span>${fmtNum(b.usage?.total?.cost_usd, 2)} · 검색 {b.usage?.total?.web_searches ?? 0}</span>
                 <span>{fmtDate(b.created_at)}</span>
               </div>
-              {b.error && <pre className="mt-1 text-xs text-red-600 whitespace-pre-wrap">{b.error.slice(-400)}</pre>}
+              {b.error && <p className="mt-1 text-xs text-red-600">생성 실패 — {b.error.split("\n").filter(Boolean).slice(-1)[0]?.slice(0, 160)}</p>}
             </div>
           );
         })}
