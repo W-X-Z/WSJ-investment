@@ -1,5 +1,5 @@
 # 브리프 생성 (Analyst + Risk). 시크릿: SUPABASE_URL, SUPABASE_SECRET_KEY, ANTHROPIC_API_KEY
-# 비용은 후보 수에 비례한다 (건당 ≈ $0.3~0.7, Sonnet 기준). 주 1회 상위 5건 + 수동 실행.
+# 저비용 기본: Haiku 5.5 3단계, 웹 검색 4회. 중요한 후보는 model=sonnet 으로 상향.
 name: briefs
 
 on:
@@ -18,7 +18,19 @@ on:
       model:
         description: "종합 단계 모델: sonnet | opus | fable"
         required: false
-        default: "sonnet"
+        default: "haiku"
+      research_model:
+        description: "웹 리서치 모델 (기본 haiku)"
+        required: false
+        default: "haiku"
+      critique_model:
+        description: "비평 모델 (기본 haiku)"
+        required: false
+        default: "haiku"
+      searches:
+        description: "웹 검색 상한 (기본 4)"
+        required: false
+        default: "4"
       dry_run:
         description: "true 면 LLM 없이 데이터팩·프롬프트만 아티팩트로"
         required: false
@@ -54,13 +66,37 @@ jobs:
         run: pip install -e .
       - name: Build briefs
         working-directory: pipeline
+        env:
+          BRIEF_CIKS: ${{ inputs.ciks }}
+          BRIEF_TOP: ${{ inputs.top || '3' }}
+          BRIEF_MODEL: ${{ inputs.model || 'haiku' }}
+          BRIEF_RESEARCH_MODEL: ${{ inputs.research_model || 'haiku' }}
+          BRIEF_CRITIQUE_MODEL: ${{ inputs.critique_model || 'haiku' }}
+          BRIEF_SEARCHES: ${{ inputs.searches || '4' }}
+          BRIEF_DRY_RUN: ${{ inputs.dry_run || 'false' }}
+          BRIEF_FORCE: ${{ inputs.force || 'false' }}
         run: |
-          ARGS=""
-          if [ -n "${{ github.event.inputs.ciks }}" ]; then ARGS="$ARGS --cik ${{ github.event.inputs.ciks }}"; else ARGS="$ARGS --top ${{ github.event.inputs.top || '5' }}"; fi
-          ARGS="$ARGS --model ${{ github.event.inputs.model || 'sonnet' }}"
-          if [ "${{ github.event.inputs.dry_run }}" = "true" ]; then ARGS="$ARGS --dry-run"; fi
-          if [ "${{ github.event.inputs.force }}" = "true" ]; then ARGS="$ARGS --force"; fi
-          python -m wsj briefs build $ARGS --out data/briefs
+          set -euo pipefail
+          args=()
+          ciks="${BRIEF_CIKS#ciks=}"
+          ciks="${ciks//,/ }"
+          if [[ -n "${ciks//[[:space:]]/}" ]]; then
+            read -r -a cik_values <<< "$ciks"
+            for cik in "${cik_values[@]}"; do
+              if [[ ! "$cik" =~ ^[0-9]+$ ]]; then
+                echo "Invalid CIK: $cik (numeric CIK only)" >&2
+                exit 2
+              fi
+            done
+            args+=(--cik "${cik_values[@]}")
+          else
+            args+=(--top "$BRIEF_TOP")
+          fi
+          args+=(--model "$BRIEF_MODEL" --research-model "$BRIEF_RESEARCH_MODEL")
+          args+=(--critique-model "$BRIEF_CRITIQUE_MODEL" --searches "$BRIEF_SEARCHES")
+          if [[ "$BRIEF_DRY_RUN" == "true" ]]; then args+=(--dry-run); fi
+          if [[ "$BRIEF_FORCE" == "true" ]]; then args+=(--force); fi
+          python -m wsj briefs build "${args[@]}" --out data/briefs
       - name: Upload outputs
         if: always()
         uses: actions/upload-artifact@v4
