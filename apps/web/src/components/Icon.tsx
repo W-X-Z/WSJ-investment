@@ -5,7 +5,8 @@ type IconName =
   | "arrow-up-right" | "arrow-right" | "chevron-down" | "chevron-right" | "activity"
   | "layers" | "cpu" | "zap" | "book" | "filter" | "external" | "clock"
   | "x" | "menu" | "command" | "target" | "shield" | "file" | "git-branch"
-  | "check" | "alert" | "plus" | "calendar" | "link" | "eye";
+  | "check" | "alert" | "plus" | "calendar" | "link" | "eye"
+  | "maximize" | "panel-right" | "archive" | "info";
 
 const paths: Record<IconName, React.ReactNode> = {
   grid: <><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></>,
@@ -40,6 +41,10 @@ const paths: Record<IconName, React.ReactNode> = {
   calendar: <><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M7 2v6m10-6v6M3 10h18"/></>,
   link: <><path d="m10 13 4-4M7 15H6a4 4 0 0 1 0-8h4m4 2h4a4 4 0 0 1 0 8h-4"/></>,
   eye: <><path d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7S2 12 2 12Z"/><circle cx="12" cy="12" r="3"/></>,
+  maximize: <path d="M8 3H3v5m13-5h5v5M3 16v5h5m13-5v5h-5M3 3l6 6m12-6-6 6M3 21l6-6m12 6-6-6"/>,
+  "panel-right": <><rect x="2" y="3" width="20" height="18" rx="2"/><path d="M15 3v18"/></>,
+  archive: <><rect x="3" y="3" width="18" height="5" rx="1"/><path d="M5 8v13h14V8M10 12h4"/></>,
+  info: <><circle cx="12" cy="12" r="9"/><path d="M12 11v6M12 7h.01"/></>,
 };
 export function Icon({
   name, size = 18, ...props
