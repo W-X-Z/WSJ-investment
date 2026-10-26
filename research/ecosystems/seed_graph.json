@@ -393,6 +393,15 @@
         "rack_heat_kw"
       ],
       "disclosure_note": "Metrics require traceable conditions and source timestamps; no values inferred"
+    },
+    {
+      "id": "bottleneck:hbm_pitch_density",
+      "kind": "bottleneck",
+      "label": "고밀도 인터커넥트의 미세 피치 한계",
+      "measured_metrics": [
+        "bond_pitch_um",
+        "stack_height_um"
+      ]
     }
   ],
   "edges": [
@@ -485,21 +494,6 @@
         }
       ],
       "note": ""
-    },
-    {
-      "id": "e007",
-      "from": "bottleneck:hbm_overlay",
-      "to": "tech:hybrid_bond",
-      "relation": "mitigated_by",
-      "stage": "technology_option",
-      "polarity": "conditional",
-      "evidence": [
-        {
-          "url": "https://news.skhynix.com/en/tech-note-series-ep2/",
-          "source_quality": "official_issuer"
-        }
-      ],
-      "note": "하이브리드 본딩은 검사기술 자체가 아니므로 이 엣지는 제조공정의 미세범프 병목을 줄일 수 있다는 제한된 뜻"
     },
     {
       "id": "e008",
@@ -940,7 +934,7 @@
       "id": "e037",
       "from": "req:hbm_stack",
       "to": "component:microbump",
-      "relation": "drives_requirement",
+      "relation": "requires_component_or_material",
       "stage": "established",
       "polarity": "positive",
       "evidence": [
@@ -955,7 +949,7 @@
       "id": "e038",
       "from": "req:hbm_stack",
       "to": "material:underfill",
-      "relation": "drives_requirement",
+      "relation": "requires_component_or_material",
       "stage": "technology_option",
       "polarity": "positive",
       "evidence": [
@@ -985,7 +979,7 @@
       "id": "e040",
       "from": "process:microbump_metrology",
       "to": "tech:hawk",
-      "relation": "drives_requirement",
+      "relation": "uses_component_or_equipment",
       "stage": "vendor_claim",
       "polarity": "positive",
       "evidence": [
@@ -1015,7 +1009,7 @@
       "id": "e042",
       "from": "process:hybrid_bond_qualification",
       "to": "material:cu_cu",
-      "relation": "drives_requirement",
+      "relation": "uses_component_or_equipment",
       "stage": "documented_architecture",
       "polarity": "positive",
       "evidence": [
@@ -1045,7 +1039,7 @@
       "id": "e044",
       "from": "req:1p6t",
       "to": "component:optical_laser",
-      "relation": "drives_requirement",
+      "relation": "requires_component_or_material",
       "stage": "documented_architecture",
       "polarity": "positive",
       "evidence": [
@@ -1060,7 +1054,7 @@
       "id": "e045",
       "from": "req:1p6t",
       "to": "component:modulator",
-      "relation": "drives_requirement",
+      "relation": "requires_component_or_material",
       "stage": "documented_architecture",
       "polarity": "positive",
       "evidence": [
@@ -1075,7 +1069,7 @@
       "id": "e046",
       "from": "req:1p6t",
       "to": "component:photodiode",
-      "relation": "drives_requirement",
+      "relation": "requires_component_or_material",
       "stage": "documented_architecture",
       "polarity": "positive",
       "evidence": [
@@ -1090,7 +1084,7 @@
       "id": "e047",
       "from": "req:1p6t",
       "to": "component:optical_dsp",
-      "relation": "drives_requirement",
+      "relation": "requires_component_or_material",
       "stage": "technical_inference",
       "polarity": "positive",
       "evidence": [
@@ -1150,7 +1144,7 @@
       "id": "e051",
       "from": "req:1p6t",
       "to": "component:fiber_connector",
-      "relation": "drives_requirement",
+      "relation": "requires_component_or_material",
       "stage": "documented_architecture",
       "polarity": "positive",
       "evidence": [
@@ -1165,7 +1159,7 @@
       "id": "e052",
       "from": "req:800v",
       "to": "component:dc_busbar",
-      "relation": "drives_requirement",
+      "relation": "requires_component_or_material",
       "stage": "documented_architecture",
       "polarity": "positive",
       "evidence": [
@@ -1180,7 +1174,7 @@
       "id": "e053",
       "from": "req:800v",
       "to": "component:dc_breaker",
-      "relation": "drives_requirement",
+      "relation": "requires_component_or_material",
       "stage": "documented_architecture",
       "polarity": "positive",
       "evidence": [
@@ -1195,7 +1189,7 @@
       "id": "e054",
       "from": "req:800v",
       "to": "material:hv_insulation",
-      "relation": "drives_requirement",
+      "relation": "requires_component_or_material",
       "stage": "technical_inference",
       "polarity": "positive",
       "evidence": [
@@ -1240,7 +1234,7 @@
       "id": "e057",
       "from": "req:highdensity",
       "to": "req:coldplate",
-      "relation": "drives_requirement",
+      "relation": "requires_component_or_material",
       "stage": "established",
       "polarity": "positive",
       "evidence": [
@@ -1280,6 +1274,36 @@
         }
       ],
       "note": ""
+    },
+    {
+      "id": "e060",
+      "from": "req:hbm_stack",
+      "to": "bottleneck:hbm_pitch_density",
+      "relation": "creates_bottleneck",
+      "stage": "technical_inference",
+      "polarity": "positive",
+      "evidence": [
+        {
+          "url": "https://news.skhynix.com/en/tech-note-series-ep2/",
+          "source_quality": "manufacturer_technical_note"
+        }
+      ],
+      "note": "HBM4 전면 채택 주장이 아니라 세대별 기술 옵션"
+    },
+    {
+      "id": "e061",
+      "from": "bottleneck:hbm_pitch_density",
+      "to": "tech:hybrid_bond",
+      "relation": "mitigated_by",
+      "stage": "technology_option",
+      "polarity": "positive",
+      "evidence": [
+        {
+          "url": "https://news.skhynix.com/en/tech-note-series-ep2/",
+          "source_quality": "manufacturer_technical_note"
+        }
+      ],
+      "note": "HBM4 전면 채택 주장이 아니라 세대별 기술 옵션"
     }
   ],
   "events": [
