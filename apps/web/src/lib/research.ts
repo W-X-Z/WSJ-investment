@@ -12,7 +12,7 @@ export type GraphEvent = {
   id: string; ecosystem: string; target_id: string; type: string;
   source_id: string; published_at?: string | null; date_precision: string;
   checked_as_of?: string; source_url: string; summary: string;
-  data?: Record<string, string | number>; evidence_level?: string; interpretation?: string;
+  data?: Record<string, string | number | undefined>; evidence_level?: string; interpretation?: string;
 };
 export type GraphWatch = {
   id: string; ecosystem: string; target_id: string; signal: string; condition: string;
@@ -24,7 +24,7 @@ export type Seed = {
   events: GraphEvent[]; watches: GraphWatch[]; notes?: string[];
 };
 
-export const seed: Seed = seedJson as Seed;
+export const seed: Seed = seedJson as unknown as Seed;
 
 export type EcoId = "hbm" | "optics" | "power";
 export type Ecosystem = {
