@@ -12,7 +12,8 @@ from wsj.collectors._efts import index_url, iter_hits
 from wsj.collectors.base import Collector, RunContext, RunResult
 from wsj.util import parse_date
 
-FORMS = "8-K,10-K,10-Q,10-K/A,10-Q/A,SCHEDULE 13D,SCHEDULE 13D/A,SCHEDULE 13G,SCHEDULE 13G/A,S-1,S-3,424B5,DEF 14A"
+# 주의: "/A"(정정) 폼을 목록에 섞으면 EFTS 가 0건을 돌려준다 (2026-10 확인). 정정은 별도 수집 (BACKLOG).
+FORMS = "8-K,10-K,10-Q,SCHEDULE 13D,SCHEDULE 13G,S-1,S-3,424B5,DEF 14A"
 
 
 class SecFilingsCollector(Collector):

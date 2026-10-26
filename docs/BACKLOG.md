@@ -47,6 +47,12 @@
 
 ## 알려진 제약 (2026-10)
 
+- `EntityPublicFloat` 일부 필링이 천 달러 단위로 잘못 태깅됨 (PTCT 3,350,589 등) → 하한 $10M 으로 걸러냄. 근본 해결은 C-19 가격×주식수.
+- EFTS `forms` 에 `/A`(정정) 폼을 섞으면 0건 반환 → 정정은 별도 수집 필요 (C-03 후속).
+- FINRA 미발행 파티션은 204/빈 본문 → `[]` 처리.
+- ClinicalTrials `query.spons` 는 협력기관까지 매칭해 유니버스 562개 질의에 7,224건 → 스폰서 매칭(P-02)으로 걸러서 본다.
+- 시드: 서비스 롤 키 없이 샌드박스에서 Supabase 에 전량 적재 불가. `pipeline/scripts/sqlite_to_sql.py` 로 변환 가능하나 평상시엔 GitHub Actions(시크릿) 가 정식 경로.
+
 - SAM.gov 무료 키 10회/일 → 입찰 사전공고는 Grants.gov·DoD SBIR 토픽으로 대체.
 - PatentsView API 오프라인 → 벌크만.
 - RPO XBRL 태그 소형주 7% → 전문검색.

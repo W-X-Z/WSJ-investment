@@ -19,6 +19,9 @@ SEC = "https://www.sec.gov"
 DATA = "https://data.sec.gov"
 
 PUBLIC_FLOAT_MAX = 1_000_000_000
+# 하한: XBRL 공개유동이 "천 달러" 단위로 잘못 태깅된 대형주(PTCT 3,350,589 등)를 걸러내고,
+# 어차피 유동성 없는 초소형도 제외한다. 가격×주식수 기반 시총으로 대체 예정 (BACKLOG C-19).
+PUBLIC_FLOAT_MIN = 10_000_000
 UNIVERSE_EXCHANGES = {"Nasdaq", "NYSE"}  # NYSE American 은 이 파일에서 'NYSE'
 
 SECTOR_SIC: dict[str, set[int]] = {
@@ -101,11 +104,11 @@ class SecUniverseCollector(Collector):
             if row["exchange"] in UNIVERSE_EXCHANGES
             and cik in latest
             and latest[cik]["val"] is not None
-            and 0 < float(latest[cik]["val"]) < PUBLIC_FLOAT_MAX
+            and PUBLIC_FLOAT_MIN <= float(latest[cik]["val"]) < PUBLIC_FLOAT_MAX
         ]
         if ctx.limit:
             candidates = candidates[: ctx.limit]
-        log.info("candidates (exchange ok, 0 < float < $1B): %d", len(candidates))
+        log.info("candidates (exchange ok, $10M <= float < $1B): %d", len(candidates))
 
         subs: dict[int, dict] = {}
         fetched = 0

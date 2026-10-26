@@ -143,8 +143,11 @@ class SqliteStore:
     def delete(self, table: str, filters: Filters) -> None:
         if not filters:
             raise ValueError("refusing to delete without filters")
+        t = self._t(table)
+        if not self.conn.execute("select 1 from sqlite_master where name=?", (t,)).fetchone():
+            return  # 아직 만들어지지 않은 테이블 = 지울 것 없음
         where, args = self._where(filters)
-        self.conn.execute(f'delete from "{self._t(table)}"{where}', args)
+        self.conn.execute(f'delete from "{t}"{where}', args)
         self.conn.commit()
 
     def get_watermark(self, collector: str) -> dict[str, Any]:

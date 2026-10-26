@@ -39,7 +39,7 @@ def _query(http, dataset: str, equal: dict[str, str], symbols: list[str], symbol
             if resp.status_code == 404:
                 break  # 해당 파티션 없음 (아직 미발행 날짜)
             resp.raise_for_status()
-            rows = resp.json() or []
+            rows = resp.json() if resp.content else []  # 미발행 파티션은 204/빈 본문
             out.extend(rows)
             if len(rows) < PAGE:
                 break
@@ -157,7 +157,7 @@ class FinraCollector(Collector):
 
         # 3) weeklySummary (ATS, T1+T2) — 발행 지연이 커서 6주 전부터 다시 본다
         start = self.start_date(ctx, "ats_last_week", default_lookback_days=60)
-        start = min(start, end - timedelta(days=42))
+        start = min(start, end - timedelta(days=56))  # T2 는 4주 지연이라 넉넉히
         n_wk = 0
         for monday in _mondays(start, end):
             for tier in ("T1", "T2"):

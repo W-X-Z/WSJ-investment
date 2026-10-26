@@ -66,7 +66,15 @@ sqlite3 data/wsj.sqlite 'select count(*) from raw__sec_form4_transactions'
 ```
 SQLite 테이블은 `schema__table` 이름으로 자동 생성된다 (운영 스키마와 타입은 다름).
 
-## 7. 조회 화면
+## 7. 로컬 결과를 Supabase 로 옮기기 (비상용)
+
+```bash
+python scripts/sqlite_to_sql.py data/wsj.sqlite out/ --batch 500 --exclude-cols payload
+# out/*.sql 을 Supabase SQL Editor 에 순서대로 붙여넣기 (companies → form4_filings → transactions)
+```
+정식 경로는 Actions. 이 스크립트는 키 없이 수집한 결과를 한 번 옮길 때만 쓴다.
+
+## 8. 조회 화면
 
 ```bash
 cd apps/web && cp .env.local.example .env.local && npm install && npm run dev
