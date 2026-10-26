@@ -29,7 +29,7 @@ class Settings(BaseSettings):
 
     # briefs (Analyst / Risk)
     anthropic_api_key: str = ""
-    wsj_brief_model: str = "sonnet"  # 종합 단계: sonnet | opus | fable | 모델 ID
+    wsj_brief_model: str = "haiku"  # 기본 저비용 분석; 중요한 후보만 sonnet
 
     # misc
     wsj_log_level: str = "INFO"
