@@ -156,12 +156,12 @@ function MiniMap({positions,camera,size,center}:{positions:Map<string,Vec>;camer
  </svg>;
 }
 
-export function SupplyNetworkCanvas({initialEcosystem="all",compact=false}:{initialEcosystem?:Scope;compact?:boolean}){
+export function SupplyNetworkCanvas({initialEcosystem="all",initialFocus=null,compact=false}:{initialEcosystem?:Scope;initialFocus?:string|null;compact?:boolean}){
  const [scope,setScope]=useState<Scope>(initialEcosystem);
  const [mode,setMode]=useState<Mode>("layers");
  const [trust,setTrust]=useState<"all"|"documented">("all");
  const [query,setQuery]=useState("");
- const [selected,setSelected]=useState<string|null>(null);
+ const [selected,setSelected]=useState<string|null>(initialFocus&&nodeIndex.has(initialFocus)?initialFocus:null);
  const [selectedEdge,setSelectedEdge]=useState<string|null>(null);
  const [depth,setDepth]=useState(2);
  const [camera,setCamera]=useState<Camera>({x:40,y:40,z:.65});
@@ -210,7 +210,8 @@ export function SupplyNetworkCanvas({initialEcosystem="all",compact=false}:{init
    const rect=el.getBoundingClientRect();if(!rect.width||!rect.height)return;
    const b=extent(layout),z=Math.max(.13,Math.min(1.1,(rect.width-125)/(b.maxx-b.minx+80),(rect.height-130)/(b.maxy-b.miny+80)));
    setBoundsSize({w:rect.width,h:rect.height});
-   setCamera({z,x:(rect.width-(b.maxx+b.minx)*z)/2,y:(rect.height-(b.maxy+b.miny)*z)/2});
+   const focus=initialFocus?layout.get(initialFocus):null;
+   setCamera(focus?{z:Math.max(.65,z),x:rect.width/2-(focus.x+W/2)*Math.max(.65,z),y:rect.height/2-(focus.y+H/2)*Math.max(.65,z)}:{z,x:(rect.width-(b.maxx+b.minx)*z)/2,y:(rect.height-(b.maxy+b.miny)*z)/2});
   };
   apply();
   const frame=requestAnimationFrame(apply);
