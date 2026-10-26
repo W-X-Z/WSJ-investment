@@ -8,11 +8,6 @@ on:
         type: choice
         default: "2020"
         options: ["2018","2019","2020","2021","2022","2023"]
-  push:
-    branches: [feat/historical-backfill-graph-canvas-20261026]
-    paths:
-      - "pipeline/wsj/ecosystems/backfill.py"
-      - ".github/workflows/technology-historical-backfill.yml"
 
 permissions:
   contents: write

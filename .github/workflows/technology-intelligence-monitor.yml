@@ -2,16 +2,9 @@ name: technology-intelligence-monitor
 
 on:
   schedule:
-    # 08:30, 14:30, 20:30, 02:30 KST (UTC 23:30, 05:30, 11:30, 17:30).
+    # 하루 1회 20:30 KST (UTC 11:30) daily 합성. 6시간 watch 는 Actions 분 한도 때문에 중지 (2026-10-27).
     # GitHub cron can run late; reports record actual observed_at.
-    - cron: "30 5,11,17,23 * * *"
-  push:
-    branches: [main]
-    paths:
-      - "pipeline/wsj/ecosystems/monitor.py"
-      - "pipeline/wsj/ecosystems/publish_digest.py"
-      - "research/ecosystems/seed_graph.json"
-      - ".github/workflows/technology-intelligence-monitor.yml"
+    - cron: "30 11 * * *"
   workflow_dispatch:
     inputs:
       stage:
@@ -25,13 +18,6 @@ on:
         required: false
         type: boolean
         default: false
-  pull_request:
-    paths:
-      - "pipeline/wsj/ecosystems/monitor.py"
-      - "pipeline/wsj/ecosystems/publish_digest.py"
-      - "pipeline/tests/test_ecosystem_monitor.py"
-      - "research/ecosystems/seed_graph.json"
-      - ".github/workflows/technology-intelligence-monitor.yml"
 
 concurrency:
   group: technology-intelligence-monitor-${{ github.ref == 'refs/heads/main' && 'production' || github.ref }}
@@ -98,9 +84,8 @@ jobs:
           KST_HOUR="$(TZ=Asia/Seoul date +%H)"
           mode="$INPUT_STAGE"
           if [[ "$GITHUB_EVENT_NAME" == "push" ]]; then mode="watch"; fi
-          if [[ "$GITHUB_EVENT_NAME" != "push" && "$mode" != "watch" && "$mode" != "daily" ]]; then
-            if [[ "$KST_HOUR" == "20" ]]; then mode="daily"; else mode="watch"; fi
-          fi
+          if [[ "$GITHUB_EVENT_NAME" == "schedule" ]]; then mode="daily"; fi  # cron 지연과 무관하게 일 1회 = daily
+          if [[ "$mode" != "watch" && "$mode" != "daily" ]]; then mode="daily"; fi
           echo "stage=$mode" >> "$GITHUB_OUTPUT"
           echo "no_ai=${INPUT_NO_AI:-false}" >> "$GITHUB_OUTPUT"
           echo "Monitor mode=$mode (actual KST hour=$KST_HOUR)"

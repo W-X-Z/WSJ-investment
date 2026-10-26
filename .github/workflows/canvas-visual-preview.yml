@@ -1,14 +1,7 @@
 name: canvas-visual-preview
 
 on:
-  push:
-    branches: [feat/historical-backfill-graph-canvas-20261026]
-    paths:
-      - "apps/web/src/components/SupplyNetworkCanvas.tsx"
-      - "apps/web/src/components/SupplyNetworkCanvas.css"
-      - "apps/web/src/app/map/**"
-      - "apps/web/scripts/canvas-smoke.mjs"
-      - ".github/workflows/canvas-visual-preview.yml"
+  workflow_dispatch:
 
 permissions:
   contents: read

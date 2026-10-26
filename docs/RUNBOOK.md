@@ -92,3 +92,10 @@ python scripts/sqlite_to_sql.py data/wsj.sqlite out/ --batch 500 --exclude-cols 
 cd apps/web && cp .env.local.example .env.local && npm install && npm run dev
 ```
 `NEXT_PUBLIC_SUPABASE_KEY` 는 **publishable** 키 (`sb_publishable_...`). 읽기 전용 RLS 로만 접근한다.
+
+## 9. 사용량 한도 (2026-10-27)
+
+- 레포는 **private** → GitHub Actions 무료 분(월 2,000분, Linux) 차감. 2026-10-26 하루에 PR 6개 워크플로 중복 실행·6시간 모니터로 약 900분(벽시계 기준) 소모.
+- Vercel Hobby 는 배포 일일 한도가 있어 커밋마다 배포하면 "Deployment rate limited — retry in 24 hours" 실패 상태가 남고 메일이 온다.
+- 조치: `apps/web/vercel.json` `ignoreCommand` — `apps/web` 변경이 없는 커밋은 빌드 생략. 모니터는 하루 1회(20:30 KST daily). `canvas-web-build`·`canvas-visual-preview`·`ecosystem-impact-preview`·`technology-evidence-graph-enrichment`·`technology-historical-backfill` 은 수동 실행만. PR 워크플로(`web-quality`·`pipeline-tests`)는 같은 브랜치의 이전 실행을 취소.
+- 정기 실행 예상: collect 평일 1회 + 토 1회, monitor 일 1회, briefs 월 1회, moat 화 1회 → 월 약 700~900분.

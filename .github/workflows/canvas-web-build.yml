@@ -1,16 +1,7 @@
 name: canvas-web-build
 
 on:
-  pull_request:
-    paths:
-      - "apps/web/**"
-      - ".github/workflows/canvas-web-build.yml"
-  push:
-    branches: [feat/historical-backfill-graph-canvas-20261026]
-    paths:
-      - "apps/web/**"
-      - ".github/workflows/canvas-web-build.yml"
-
+  workflow_dispatch:
 permissions:
   contents: read
 
