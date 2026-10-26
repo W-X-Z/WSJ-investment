@@ -25,12 +25,12 @@ export function MoatCard({ card, nodes }: { card: Any; nodes: string[] }) {
 
       <Section title="공급망 위치" sub={nodes.length ? `온톨로지 노드: ${nodes.join(", ")}` : undefined}>
         {arr<Any>(card.position_in_chain).map((p, i) => (
-          <div key={i} className="flex gap-2 items-baseline"><Link href={`/map?focus=${nodes[i] ?? ""}`} className="font-medium whitespace-nowrap">{S(p.node)}</Link><span className="text-xs rounded px-1.5 py-0.5 bg-neutral-100">{FIT[S(p.fit)] ?? S(p.fit)}</span><span className="text-neutral-600">{S(p.evidence)}</span><Url u={p.source} label="출처" /></div>
+          <div key={i} className="flex gap-2 items-baseline"><Link href={`/map?focus=${nodes[i] ?? ""}`} className="font-medium whitespace-nowrap">{S(p.node)}</Link><span className="text-xs rounded px-1.5 py-0.5 bg-neutral-100">{FIT[S(p.fit)] ?? S(p.fit)}</span><span className="text-neutral-600">{S(p.evidence)} <span className="text-xs text-neutral-400 whitespace-nowrap">({S(p.source)})</span></span></div>
         ))}
       </Section>
 
       <Section title={`해자 — ${(MOAT[S(moat.type)] ?? S(moat.type)) || "–"} (강도 ${S(moat.strength) || "–"}/5)`}>
-        <ul className="list-disc pl-5">{arr<Any>(moat.evidence).map((e, i) => <li key={i}>{S(e.claim)} <Url u={e.source} label="출처" /></li>)}</ul>
+        <ul className="list-disc pl-5">{arr<Any>(moat.evidence).map((e, i) => <li key={i}>{S(e.claim)} <span className="text-xs text-neutral-400">({S(e.source)})</span></li>)}</ul>
         {!!moat.what_breaks_it && <p><span className="text-neutral-500">깨지는 조건:</span> {S(moat.what_breaks_it)}</p>}
       </Section>
 

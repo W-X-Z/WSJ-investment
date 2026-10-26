@@ -117,7 +117,7 @@ export default async function BriefDetail({ params }: { params: Promise<{ id: st
           ["3M / 12M", `${pct(px.ret_3m)} / ${pct(px.ret_12m)}`],
           ["52주 고가 대비", pct(px.pct_from_52w_high)],
           ["현금+단기투자", fmtUsd(der.liquidity_cash_and_st_investments) || "–"],
-          ["런웨이", der.runway_months ? `${fmtNum(der.runway_months, 0)}개월` : "–"],
+          ["런웨이", der.runway_months ? (Number(der.runway_months) > 120 ? "120개월+" : `${fmtNum(der.runway_months, 0)}개월`) : "–"],
         ].map(([k, v]) => (
           <div key={k as string} className="border border-neutral-200 rounded bg-white px-2 py-1">
             <div className="text-xs text-neutral-500">{k as string}</div>
