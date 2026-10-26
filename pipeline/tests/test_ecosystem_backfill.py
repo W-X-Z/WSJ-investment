@@ -28,7 +28,9 @@ def test_doi_normalization_and_dedupe_are_not_independent_confirmation():
 
 
 def test_crossref_pub_date_precision_conservative():
-    assert backfill.pub_date({"issued":{"date-parts":[[2022]]}})=="2022-12-28"
+    assert backfill.pub_date({"issued":{"date-parts":[[2022]]}})=="2022-01-01"
+    assert backfill.pub_date_info({"issued":{"date-parts":[[2022]]}})==("2022-01-01","year")
+    assert backfill.pub_date_info({"issued":{"date-parts":[[2022,5]]}})==("2022-05-01","month")
     assert backfill.pub_date({"issued":{"date-parts":[[2022,1,4]]}})=="2022-01-04"
     assert backfill.pub_date({}) is None
 
@@ -84,3 +86,17 @@ def test_no_false_full_coverage_claim():
     report=backfill.create_summary([], [{"source":"openalex","error":"403"}],2020,2026,"today")
     assert report["status"]=="partial_with_errors"
     assert report["historical_period"]==[2020,2026]
+
+
+def test_future_dated_crossref_excluded_and_precision_preserved():
+    with patch.object(backfill,"fetch_json",return_value={"message":{"items":[
+        {"DOI":"10.5555/future","title":["Hybrid bonding future study"],
+         "published":{"date-parts":[[2026,12,12]]}},
+        {"DOI":"10.5555/year","title":["Hybrid bonding yearly review"],
+         "issued":{"date-parts":[[2026]]}}
+    ]}}):
+        rows=backfill.crossref("hbm",2026,"2026-10-26T14:00:00+00:00",35,1)
+    assert len(rows)==1
+    assert rows[0]["published_precision"]=="year"
+    assert rows[0]["published_at"]=="2026-01-01"
+    assert rows[0]["details"]["date_precision"]=="year"
