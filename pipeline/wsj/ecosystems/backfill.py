@@ -163,7 +163,7 @@ def openalex(ecosystem: str, year: int, observed_at: str, per_page: int, pages: 
             if len(works) < min(per_page, 100):
                 break
             time.sleep(.15)
-    return output
+    return list({row["id"]:row for row in output}.values())
 
 
 def crossref(ecosystem: str, year: int, observed_at: str, per_page: int, pages: int) -> list[dict]:
@@ -194,7 +194,7 @@ def crossref(ecosystem: str, year: int, observed_at: str, per_page: int, pages: 
             if len(items) < min(per_page, 100):
                 break
             time.sleep(.15)
-    return output
+    return list({row["id"]:row for row in output}.values())
 
 
 def federal(ecosystem: str, year: int, observed_at: str, per_page: int, pages: int) -> list[dict]:
@@ -224,7 +224,7 @@ def federal(ecosystem: str, year: int, observed_at: str, per_page: int, pages: i
         if len(items) < min(per_page, 100):
             break
         time.sleep(.15)
-    return output
+    return list({row["id"]:row for row in output}.values())
 
 
 def _sec_rows(submissions: dict) -> list[dict]:
