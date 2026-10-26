@@ -82,26 +82,54 @@ def load_sources(folder:Path):
                 except (ValueError,TypeError) as exc:
                     raise ValueError(f"Invalid historical source at {path}:{line_no}: {exc}") from exc
 
-def quantitative_passages(text:str, matches:list[tuple[int,int]], max_count:int=5) -> list[dict]:
-    """Attach numeric substrings to nearby matched technical phrases ONLY.
+def expected_unit_tokens(metric_names: list[str]) -> set[str]:
+    """Only accept numeric units named in the node ontology."""
+    units=set()
+    suffixes={
+        "nm":{"nm"}, "um":{"um"}, "mm":{"mm"},
+        "gbps":{"gb/s"}, "tbps":{"tb/s"},"v":{"v","vdc"},
+        "w":{"w"},"mw":{"mw"},"kw":{"kw"},"ghz":{"ghz"},
+        "percent":{"%"},"db":{"db"},"ppm":{"ppm"},
+        "mhz":{"mhz"},"a":{"a"},"ma":{"ma"},"dbm":{"dbm"},
+    }
+    for name in metric_names:
+        for suffix,tokens in suffixes.items():
+            if name.endswith("_"+suffix):
+                units.update(tokens)
+    return units
 
-    Measurements extracted from bibliographic text are candidates, not audited
-    results. Document may discuss a prior benchmark, simulation or aspiration.
+
+def quantitative_passages(text:str, matches:list[tuple[int,int]],
+                          allowed_units:set[str]|None=None, max_count:int=5)->list[dict]:
+    """Link numeric phrases to nearby technical aliases, never assert measurement truth.
+
+    Units must be part of the ontology, not arbitrary numbers in an abstract.
+    Preserve < > ~ qualifiers, so a reported upper bound is not an exact result.
     """
+    if not matches or not allowed_units:
+        return []
     output=[];known=set()
     for metric in METRIC.finditer(text):
         value=float(metric.group("value").replace(",",""))
         if value>10_000_000 or value<0:
             continue
-        if not matches or min(min(abs(metric.start()-a),abs(metric.start()-b)) for a,b in matches)>145:
+        if min(min(abs(metric.start()-a),abs(metric.start()-b)) for a,b in matches)>125:
             continue
-        unit=UNITS.get(metric.group("unit"),metric.group("unit"))
+        literal_unit=metric.group("unit").lower()
+        unit={"μm":"um","µm":"um","gbps":"gb/s","tbps":"tb/s"}.get(literal_unit,literal_unit)
+        if unit not in allowed_units:
+            continue
         key=(metric.start(),unit)
         if key in known:continue
         known.add(key)
-        lo=max(0,metric.start()-85);hi=min(len(text),metric.end()+100)
+        before=text[max(0,metric.start()-5):metric.start()]
+        comparator=re.search(r"(<=|>=|<|>|~|≈)\s*$",before)
+        op=(comparator.group(1) if comparator else "")
+        lo=max(0,metric.start()-90);hi=min(len(text),metric.end()+110)
         output.append({
-            "value":value,"unit":unit,"literal":metric.group(0),
+            "value":value,"unit":unit,"literal":op+metric.group(0),
+            "operator": {"<":"less_than",">":"greater_than","<=":"less_or_equal",
+                         ">=":"greater_or_equal","~":"approximate","≈":"approximate"}.get(op,"unspecified"),
             "passage":re.sub(r"\s+"," ",text[lo:hi]),
             "passage_location":"indexed_abstract_or_title",
             "verification":"unverified_numeric_mention",
@@ -110,7 +138,8 @@ def quantitative_passages(text:str, matches:list[tuple[int,int]], max_count:int=
         if len(output)>=max_count:break
     return output
 
-def links(row:dict, lex:dict) -> list[dict]:
+
+def links(row:dict, lex:dict, graph_nodes:dict[str,dict]|None=None)->list[dict]:
     title=normalize(row.get("title",""))[:300]
     abstract=normalize(row.get("excerpt",""))[:620]
     result=[]
@@ -123,17 +152,22 @@ def links(row:dict, lex:dict) -> list[dict]:
             if a:hits_title.append(alias)
             if b:
                 hits_abstract.append(alias);positions.append(b.span())
-        # Require title match for short aliases (or multiple distinct abstract
-        # aliases), so generic body mention does not fan out to every node.
         if not hits_title and len(set(hits_abstract))<2:
             continue
         rank=min(30,6*len(set(hits_title))+2*len(set(hits_abstract)))
         if any(" " in x or "-" in x for x in hits_title):rank+=2
         if rank<4:continue
-        metrics=quantitative_passages(abstract,positions)
+        node=(graph_nodes or {}).get(node_id,{})
+        # Ecosystem overview / company-name matches never carry a performance
+        # number by implication; do not place a 4.5Gb/s paper under HBM I/O
+        # if the ontology only specifies an I/O count metric.
+        allowed=expected_unit_tokens(node.get("measured_metrics") or [])
+        if node.get("kind") in ("company","ecosystem"):
+            allowed=set()
+        metrics=quantitative_passages(abstract,positions,allowed_units=allowed)
         if not metrics:
             title_positions=[m.span() for _,pat in aliases for m in list(pat.finditer(title))[:1]]
-            metrics=quantitative_passages(title,title_positions,max_count=3)
+            metrics=quantitative_passages(title,title_positions,allowed_units=allowed,max_count=3)
         result.append({
             "node_id":node_id,"rank":rank,"title_matches":sorted(set(hits_title)),
             "abstract_matches":sorted(set(hits_abstract)),
@@ -141,7 +175,6 @@ def links(row:dict, lex:dict) -> list[dict]:
             "match_reason":"lexical_title_or_multi_alias_abstract_only",
             "semantic_validation":"NOT_PERFORMED",
         })
-    # Limit each source to a few *research leads*, not dense invented edges.
     return sorted(result,key=lambda x:(-x["rank"],x["node_id"]))[:7]
 
 def as_of_ok(row:dict,as_of:str)->bool:
@@ -167,6 +200,7 @@ def build(*,folder:Path,graph_path:Path,alias_path:Path,as_of:str,source_cap:int
     graph=json.loads(graph_path.read_text(encoding="utf-8"))
     aliases=json.loads(alias_path.read_text(encoding="utf-8"))
     lx=lexicon(graph,aliases)
+    graph_nodes={x["id"]:x for x in graph["nodes"]}
     node_data={n["id"]:{"node_id":n["id"],"name":n["label"],"kind":n["kind"],
                          "total_document_leads":0,
                          "year_counts":{},"source_counts":{},"sources":[],
@@ -182,7 +216,7 @@ def build(*,folder:Path,graph_path:Path,alias_path:Path,as_of:str,source_cap:int
         dedupe=(source["ecosystem"],source.get("canonical_id") or source["id"])
         if dedupe in source_ids:continue
         source_ids.add(dedupe)
-        found=links(source,lx)
+        found=links(source,lx,graph_nodes)
         if not found:continue
         linked+=1
         for match in found:
