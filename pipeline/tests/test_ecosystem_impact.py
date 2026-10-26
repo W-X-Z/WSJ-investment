@@ -8,6 +8,7 @@ from wsj.ecosystems.impact import (
     _public_by,
     event_fingerprint,
     influence_paths,
+    displacement_scenarios,
     possible_watch_matches,
     replay,
     validate_graph,
@@ -94,3 +95,11 @@ def test_rejects_unknown_relation_and_dangling_node():
     g["edges"][0]["to"] = "company:does_not_exist"
     with pytest.raises(ValueError, match="Dangling edge"):
         validate_graph(g)
+
+
+def test_substitutes_are_scenarios_not_assumed_negative_sales():
+    g = graph()
+    scenarios = displacement_scenarios(g, "req:800v")
+    assert any(s["technology"].startswith("중전압 AC") for s in scenarios)
+    assert all(s["status"] == "competing_technology_scenario_only" for s in scenarios)
+    assert all("NOT established" in s["warning"] for s in scenarios)
