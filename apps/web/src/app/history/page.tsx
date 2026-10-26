@@ -2,7 +2,7 @@ import Link from "next/link";
 import { Icon } from "@/components/Icon";
 import historical from "@/data/historical-evidence.json";
 type SP={q?:string;eco?:string;year?:string;source?:string;page?:string};
-type Row={id:string;title:string;published_at:string;url:string;source:string;ecosystem:string;kind:string;excerpt:string;first_seen_at:string;historical_backfill:boolean};
+type Row={id:string;title:string;published_at:string;url:string;source:string;ecosystem:string;kind:string;excerpt:string;first_seen_at:string;published_precision?:string;historical_backfill:boolean};
 const DATA=historical as unknown as {summary:{
   records:number;historical_period:number[];by_source:Record<string,number>;
   by_ecosystem:Record<string,number>;by_publication_year:Record<string,number>;
@@ -11,6 +11,11 @@ const DATA=historical as unknown as {summary:{
 const SOURCES=["openalex","crossref","sec","federalregister"];
 const ECO={hbm:"HBM·반도체 패키징",optics:"광통신·포토닉스",power:"전력·전력반도체"} as Record<string,string>;
 export const metadata={title:"과거 기술 자료 아카이브 | Signal Atlas"};
+function displayedDate(record:Row):string{
+ const date=record.published_at;
+ return record.published_precision==="year"?date.slice(0,4)+"년 (연도만 확인)"
+ :record.published_precision==="month"?date.slice(0,7)+" (월까지 확인)":date;
+}
 export default async function History({searchParams}:{searchParams:Promise<SP>}){
  const sp=await searchParams;
  const q=(sp.q??"").trim().toLowerCase();
@@ -42,7 +47,7 @@ export default async function History({searchParams}:{searchParams:Promise<SP>})
     <Link href="/history" aria-label="필터 초기화">초기화</Link>
    </form>
    <div className="history-notice"><Icon name="info" size={17}/><span>이 화면은 전체 {(DATA.summary?.records??0).toLocaleString("ko-KR")}건 중 <strong>연도·출처별 표본 {DATA.events.length}건</strong>을 보여줍니다. 전체 JSONL 자료는 <a href="https://github.com/W-X-Z/WSJ-investment/tree/feat/historical-backfill-graph-canvas-20261026/research/backfill" target="_blank" rel="noreferrer">GitHub 백필 저장소</a>에서 확인할 수 있습니다. 학술 색인은 논문 결과의 독립 검증이 아닙니다.</span></div>
-   <div className="history-list">{shown.length?shown.map(row=><article key={row.id} className="history-row"><div className="history-row-date"><strong>{row.published_at.slice(0,4)}</strong><span>{row.published_at.slice(5)}</span></div><div><div className="history-row-tags"><span>{ECO[row.ecosystem]??row.ecosystem}</span><span>{row.source.toUpperCase()}</span><span>{row.kind}</span></div><a href={row.url} target="_blank" rel="noreferrer" className="history-row-title">{row.title}<Icon name="arrow-up-right" size={15}/></a><p>{row.excerpt||"원문 연구 전 메타데이터"}</p><small>발표일 {row.published_at} · 최초 관측 {row.first_seen_at.slice(0,10)} · 역사적 데이터 재수집</small></div></article>):<div className="history-empty">검색 조건에 맞는 공개자료가 없습니다. 다른 연도·산업·검색어를 선택하세요.</div>}</div>
+   <div className="history-list">{shown.length?shown.map(row=><article key={row.id} className="history-row"><div className="history-row-date"><strong>{row.published_at.slice(0,4)}</strong><span>{row.published_precision==="year"?"연도만":row.published_precision==="month"?row.published_at.slice(5,7)+"월":row.published_at.slice(5)}</span></div><div><div className="history-row-tags"><span>{ECO[row.ecosystem]??row.ecosystem}</span><span>{row.source.toUpperCase()}</span><span>{row.kind}</span></div><a href={row.url} target="_blank" rel="noreferrer" className="history-row-title">{row.title}<Icon name="arrow-up-right" size={15}/></a><p>{row.excerpt||"원문 연구 전 메타데이터"}</p><small>발표일 {displayedDate(row)} · 최초 관측 {row.first_seen_at.slice(0,10)} · 역사적 데이터 재수집</small></div></article>):<div className="history-empty">검색 조건에 맞는 공개자료가 없습니다. 다른 연도·산업·검색어를 선택하세요.</div>}</div>
    <div className="history-page-controls"><span>{rows.length}건 중 {shown.length}건 표시 · {Math.min(page,totalPages)}/{totalPages} 페이지</span><div>{page>1&&<Link href={linkPage(page-1)}>이전</Link>}{page<totalPages&&<Link href={linkPage(page+1)}>다음</Link>}</div></div>
  </div>;
 }
