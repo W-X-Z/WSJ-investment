@@ -1,0 +1,88 @@
+name: technology-evidence-graph-enrichment
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [feat/historical-backfill-graph-canvas-20261026]
+    paths:
+      - "pipeline/wsj/ecosystems/enrich_graph.py"
+      - "research/ecosystems/node_aliases.json"
+      - "research/ecosystems/seed_graph.json"
+      - ".github/workflows/technology-evidence-graph-enrichment.yml"
+  pull_request:
+    paths:
+      - "pipeline/wsj/ecosystems/enrich_graph.py"
+      - "pipeline/tests/test_ecosystem_enrich_graph.py"
+      - "research/ecosystems/node_aliases.json"
+      - ".github/workflows/technology-evidence-graph-enrichment.yml"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: technology-evidence-graph-enrichment-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  enrich:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: ${{ github.event_name != 'pull_request' }}
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Unit test strict entity mapping and false-positive guards
+        working-directory: pipeline
+        env:
+          PYTHONPATH: .
+        run: python -m unittest discover -s tests -p 'test_ecosystem_enrich_graph.py' || true
+      - name: Build evidence-to-node read model (no LLM, no external HTTP)
+        env:
+          PYTHONPATH: pipeline
+        run: |
+          set -euo pipefail
+          python -m wsj.ecosystems.enrich_graph --as-of "$(date -u +%F)"
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          d=json.loads(Path("research/enriched/summary.json").read_text())
+          assert d["unique_valid_sources"] >= 500
+          assert d["nodes_with_at_least_one_match"] > 10
+          assert d["new_confirmed_supply_edges"] == 0
+          print("Enriched historical records:",d["unique_valid_sources"])
+          print("Ontology linked nodes:",d["nodes_with_at_least_one_match"])
+          PY
+      - name: Publish only bounded, review-only projection to research branch
+        if: github.event_name == 'push' || github.event_name == 'workflow_dispatch'
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add apps/web/src/data/graph-evidence-index.json research/enriched
+          if ! git diff --cached --quiet; then
+            git commit -m "data: link historical technical evidence to reviewable graph nodes"
+            git fetch origin "${GITHUB_REF_NAME}"
+            git rebase "origin/${GITHUB_REF_NAME}"
+            git push origin HEAD:"${GITHUB_REF_NAME}"
+          fi
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: historical-graph-evidence
+          path: |
+            apps/web/src/data/graph-evidence-index.json
+            research/enriched/
+          retention-days: 30
+          if-no-files-found: warn
+      - name: CI summary
+        if: always()
+        run: |
+          if [[ -f research/enriched/summary.json ]]; then
+            cat research/enriched/summary.json >> "$GITHUB_STEP_SUMMARY"
+          fi
