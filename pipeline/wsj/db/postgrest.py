@@ -131,6 +131,11 @@ class PostgrestStore:
             n += len(chunk)
         return n
 
+    def insert_returning(self, table: str, row: dict[str, Any]) -> dict[str, Any]:
+        resp = self._req("POST", table, body=[row], prefer="return=representation")
+        data = resp.json()
+        return data[0] if isinstance(data, list) and data else dict(row)
+
     def select(
         self,
         table: str,

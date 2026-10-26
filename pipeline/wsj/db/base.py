@@ -23,6 +23,10 @@ class Store(Protocol):
         """순수 insert (append-only 테이블용)."""
         ...
 
+    def insert_returning(self, table: str, row: dict[str, Any]) -> dict[str, Any]:
+        """한 행 insert 후 DB 가 채운 값(identity id 등)을 포함한 행을 돌려준다."""
+        ...
+
     def select(
         self,
         table: str,

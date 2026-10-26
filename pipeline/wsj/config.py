@@ -27,6 +27,10 @@ class Settings(BaseSettings):
     sec_user_agent: str = "WSJ-investment research contact@example.com"
     openfda_api_key: str = ""
 
+    # briefs (Analyst / Risk)
+    anthropic_api_key: str = ""
+    wsj_brief_model: str = "sonnet"  # 종합 단계: sonnet | opus | fable | 모델 ID
+
     # misc
     wsj_log_level: str = "INFO"
     wsj_data_dir: Path = PIPELINE_DIR / "data"

@@ -17,10 +17,15 @@
 | DERA 13F / Form D / N-PORT 데이터셋 | T | 없음 | 분기 (13F ~45–60일) | CIK/CUSIP | ✅ |
 | 13D/13G | C | 없음 | 10일 내, XML 필수(2024-12~) | CIK | ⚠️ 벌크 없음, EFTS `SCHEDULE 13D`로 개별 파싱 |
 | 8-K Item 1.01 (중요 계약) | C | EFTS `items` 필터 | 4영업일 내 | CIK | ✅ |
+| `Archives/edgar/data/{cik}/{acc}/{primary}.htm` (10-K/10-Q/8-K 본문) | — | 없음, UA 필수 | 실시간 | accession | ✅ 브리프 입력. 10-K Item 1/1A/7 은 목차 앵커(`href="#id"`→`id`)로, 없으면 제목 정규식 폴백. 캐시 `raw.sec_documents` |
 
 함정: 2026 Q2+ DERA zip 경로가 `/files/datastandardsinnovation/`로 이동. `RevenueRemainingPerformanceObligation`은 자산 <$1B 필러의 **7.4%**만 태깅 → 수주잔고 프록시 불가, 전문검색으로 대체. 벌크 nightly: `Archives/edgar/daily-index/xbrl/companyfacts.zip`, `bulkdata/submissions.zip`.
 
 ## 2. 시장 수급
+
+| 소스 | 선행성 | 인증 | 갱신·지연 | 조인 키 | 상태 |
+|---|---|---|---|---|---|
+| Nasdaq `api.nasdaq.com/api/quote/{T}/historical?assetclass=stocks&fromdate&todate&limit=9999` | — | 없음, **브라우저 UA 필수** | 일봉, 당일 마감 후 | 티커 | ✅ 브리프 주가 (비공식, NYSE 종목 포함, 미조정). 캐시 `raw.px_daily`. Stooq 는 봇 차단 |
 
 | 소스 | 선행성 | 인증 | 갱신·지연 | 조인 키 | 상태 |
 |---|---|---|---|---|---|
@@ -118,3 +123,4 @@
 ## 변경 이력
 
 - 2026-10-26 최초 작성. 조사 원문은 `docs/log/2026-10-26.md` 참조.
+- 2026-10-26 브리프 입력 추가: EDGAR 본문(10-K 섹션 앵커 추출), companyfacts 분기 시계열(YTD 차분), Nasdaq historical 일봉. Claude 웹 검색 서버 도구 `web_search_20250305` ($10/1,000회).

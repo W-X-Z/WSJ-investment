@@ -16,3 +16,4 @@
 | [0006](0006-dev-console-frontend.md) | 개발용 조회 화면은 Next.js 최소 구성 | accepted | 2026-10-26 |
 | [0007](0007-alpha-hypothesis-and-validation-order.md) | 알파 가설과 검증 순서 (백테스트 → 에이전트) | partially superseded by 0008 | 2026-10-26 |
 | [0008](0008-product-is-the-brief.md) | 제품은 후보 브리프 — 백테스트·모의투자 제외, 섹터 확장 | accepted | 2026-10-26 |
+| [0009](0009-brief-workflow.md) | 브리프 워크플로: 데이터팩 → 리서치 → 종합 → 비평, 날짜 박힌 예측 | accepted | 2026-10-26 |

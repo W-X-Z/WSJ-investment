@@ -1,7 +1,7 @@
 import { createClient } from "@supabase/supabase-js";
 
 /** 서버 컴포넌트용 읽기 전용 클라이언트. publishable 키 + RLS(SELECT) 로만 접근한다. */
-export function db(schema: "public" | "raw" | "core" | "ops" = "public") {
+export function db(schema: "public" | "raw" | "core" | "ops" | "ideas" = "public") {
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
   const key = process.env.NEXT_PUBLIC_SUPABASE_KEY;
   if (!url || !key) {

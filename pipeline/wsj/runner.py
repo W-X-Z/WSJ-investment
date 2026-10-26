@@ -5,6 +5,7 @@
   python -m wsj run --all
   python -m wsj entities resolve
   python -m wsj signals build [--as-of 2026-10-26] [--window 120]
+  python -m wsj briefs build [--cik 2012593 ...] [--top 5] [--dry-run] [--model opus] [--force]
 
 러너가 하는 일: 워터마크 읽기 → run() → ops.collector_runs 기록 → 워터마크 갱신.
 수집기 예외는 잡아서 failed 로 남기고 다음으로 넘어간다 (ADR-0003 §7).
@@ -170,6 +171,50 @@ def cmd_signals(args: argparse.Namespace) -> int:
     return 2
 
 
+def cmd_briefs(args: argparse.Namespace) -> int:
+    settings = load_settings()
+    _setup_logging(settings.wsj_log_level)
+    if args.store:
+        settings.wsj_store = args.store
+    store = make_store(settings)
+    http = HttpClient(user_agent=settings.sec_user_agent)
+    try:
+        if args.briefs_cmd == "build":
+            from pathlib import Path
+
+            from wsj.briefs.build import BriefOptions, build
+
+            opt = BriefOptions(
+                model=args.model or settings.wsj_brief_model,
+                research_searches=args.searches,
+                skip_research=args.no_research,
+                skip_critique=args.no_critique,
+                dry_run=args.dry_run,
+                out_dir=Path(args.out)
+                if args.out
+                else (settings.wsj_data_dir / "briefs" if args.dry_run else None),
+                force=args.force,
+            )
+            results = build(
+                store,
+                http,
+                settings.anthropic_api_key or None,
+                parse_date(args.as_of) if args.as_of else None,
+                [int(c) for c in args.cik] if args.cik else None,
+                args.top,
+                opt,
+            )
+            import json as _json
+
+            for r in results:
+                print(_json.dumps(r, ensure_ascii=False, default=str))
+            return 1 if any(r.get("status") == "failed" for r in results) else 0
+    finally:
+        http.close()
+        store.close()
+    return 2
+
+
 def build_parser() -> argparse.ArgumentParser:
     p = argparse.ArgumentParser(prog="wsj", description="WSJ-investment 데이터 수집 파이프라인")
     sub = p.add_subparsers(dest="cmd", required=True)
@@ -195,6 +240,22 @@ def build_parser() -> argparse.ArgumentParser:
     gb.add_argument("--as-of", help="기준일 YYYY-MM-DD (기본 오늘)")
     gb.add_argument("--window", type=int, default=120, help="신호 생성 창(일)")
     gb.add_argument("--store", choices=["postgrest", "sqlite"])
+
+    b = sub.add_parser("briefs", help="브리프: 후보 → 데이터팩 → 리서치 → 종합 → 비평 → ideas.briefs")
+    bs = b.add_subparsers(dest="briefs_cmd", required=True)
+    bb = bs.add_parser("build", help="브리프 생성")
+    bb.add_argument("--cik", nargs="*", help="대상 CIK (없으면 candidates new/watch 점수순)")
+    bb.add_argument("--top", type=int, help="후보 상위 N 개만")
+    bb.add_argument("--as-of", help="기준일 YYYY-MM-DD (기본 오늘)")
+    bb.add_argument("--model", help="종합 단계 모델: sonnet | opus | fable | 모델 ID (기본 WSJ_BRIEF_MODEL)")
+    bb.add_argument("--searches", type=int, default=8, help="리서치 단계 웹 검색 상한")
+    bb.add_argument("--no-research", action="store_true", help="리서치 단계 생략")
+    bb.add_argument("--no-critique", action="store_true", help="비평 단계 생략")
+    bb.add_argument("--thinking", type=int, default=6000, help="종합·비평 확장 사고 예산 토큰 (0=끔)")
+    bb.add_argument("--dry-run", action="store_true", help="LLM 없이 데이터팩·프롬프트만 파일로")
+    bb.add_argument("--out", help="산출물 디렉터리 (기본 data/briefs, dry-run 시)")
+    bb.add_argument("--force", action="store_true", help="같은 기준일 브리프가 있어도 다시 생성")
+    bb.add_argument("--store", choices=["postgrest", "sqlite"])
     return p
 
 
@@ -208,6 +269,8 @@ def main(argv: list[str] | None = None) -> int:
         return cmd_entities(args)
     if args.cmd == "signals":
         return cmd_signals(args)
+    if args.cmd == "briefs":
+        return cmd_briefs(args)
     return 2
 
 

@@ -23,7 +23,9 @@
                        ops: 수집기 실행 로그·워터마크
 ```
 
-Phase 1에서는 `raw`, `core`, `ops`만 채운다. Phase 2 는 `core.signals`/`core.candidates`(연결)와 `ideas.briefs`(해석). `orders`/`fills`/`decisions` 는 ADR-0008 로 보류 ([ADR-0002](adr/0002-department-schemas.md)).
+Phase 1에서는 `raw`, `core`, `ops`만 채운다. Phase 2 는 `core.signals`/`core.candidates`(연결)와 `ideas.briefs`/`ideas.predictions`(해석, [ADR-0009](adr/0009-brief-workflow.md)). `orders`/`fills`/`decisions` 는 ADR-0008 로 보류 ([ADR-0002](adr/0002-department-schemas.md)).
+
+브리프 파이프라인 (`wsj briefs build`): ① 데이터팩 (코드, LLM 없음: 10-K Item 1/1A/7 · 10-Q MD&A · 8-K ≤3 · XBRL 12분기 · 1y 주가 · 신호 · 내부자 · 피어) → ② 리서치 (Claude + web_search ≤8회: 매크로·섹터·테마·경쟁·뉴스, 출처 URL) → ③ 종합 (Claude, 검색 없음: 히스토리 → 현재 → 시장맥락 → 사업변화 → 주가맥락 → 반대가설 → 왜 지금 → 시나리오 → 텐배거 경로 → 리스크 → 반증·예측) → ④ 비평 (Risk 프롬프트: 근거 없는 주장·기저율·희석·바이너리·유동성·확률 재조정·사전부검·판정). 원문·주가는 `raw.sec_documents`/`raw.px_daily` 에 캐시.
 
 ## 3. 데이터 흐름
 

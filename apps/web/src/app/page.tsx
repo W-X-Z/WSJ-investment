@@ -15,6 +15,8 @@ type Overview = Record<string, unknown> & {
 };
 
 const TABLES = [
+  "ideas.briefs",
+  "ideas.predictions",
   "core.candidates",
   "core.signals",
   "core.companies",
@@ -34,7 +36,7 @@ const TABLES = [
 ];
 
 async function exactCount(table: string, filter?: Record<string, unknown>): Promise<number | null> {
-  const [schema, name] = table.split(".") as ["raw" | "core" | "ops", string];
+  const [schema, name] = table.split(".") as ["raw" | "core" | "ops" | "ideas", string];
   let q = db(schema).from(name).select("*", { count: "exact", head: true });
   if (filter) q = q.match(filter);
   const { count, error } = await q;

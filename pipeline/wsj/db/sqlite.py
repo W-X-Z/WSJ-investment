@@ -126,6 +126,18 @@ class SqliteStore:
                 args.append(_enc(val))
         return " where " + " and ".join(parts), args
 
+    def insert_returning(self, table: str, row: dict[str, Any]) -> dict[str, Any]:
+        keys = sorted(row)
+        self._ensure(table, keys, None)
+        t = self._t(table)
+        cols = ", ".join(f'"{k}"' for k in keys)
+        ph = ", ".join("?" for _ in keys)
+        cur = self.conn.execute(f'insert into "{t}" ({cols}) values ({ph})', [_enc(row.get(k)) for k in keys])
+        self.conn.commit()
+        out = dict(row)
+        out.setdefault("id", cur.lastrowid)
+        return out
+
     def select(self, table, columns=None, filters=None, limit=None, order=None) -> list[dict[str, Any]]:
         t = self._t(table)
         if not self.conn.execute("select 1 from sqlite_master where name=?", (t,)).fetchone():

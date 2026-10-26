@@ -13,6 +13,7 @@
 | `SUPABASE_URL` | `https://dcatgfivsvbktylmtvgf.supabase.co` |
 | `SUPABASE_SECRET_KEY` | 서비스 롤 키 |
 | `OPENFDA_API_KEY` | (선택) https://open.fda.gov/apis/authentication/ 에서 발급. 없으면 1,000/일 |
+| `ANTHROPIC_API_KEY` | 브리프 생성용 (`briefs` 워크플로). https://console.anthropic.com 에서 발급. 건당 ≈ $0.3~0.7 (Sonnet) |
 
 ### 로컬
 ```bash
@@ -26,6 +27,17 @@ python -m wsj list
 - 스케줄: 평일 10:17 UTC 일간 수집기 6개, 토요일 유니버스 재구축 (`.github/workflows/collect.yml`).
 - 수동 실행: Actions → collect → Run workflow. `collectors` 에 이름을 공백으로 나눠 넣고, `since` 로 재수집 시작일 지정.
 - 상태 확인: 조회 화면 `/` (수집기별 마지막 실행·에러) 또는 `select * from public.v_collector_overview`.
+
+### 브리프 (ADR-0009)
+- 스케줄: 월 12:23 UTC 후보 상위 5건 (`.github/workflows/briefs.yml`). 수동: Actions → briefs → `ciks` 또는 `top`, `model`(sonnet/opus/fable), `dry_run`.
+- 로컬:
+  ```bash
+  python -m wsj briefs build --cik 2012593 --dry-run        # LLM 없이 data/briefs/<티커>_<날짜>/ 에 데이터팩·프롬프트
+  python -m wsj briefs build --top 3                         # ANTHROPIC_API_KEY 필요, ideas.briefs 저장
+  python -m wsj briefs build --cik 2012593 --model opus --force
+  ```
+- 프롬프트를 고치면 `wsj/briefs/prompts.py` 의 `PROMPT_VERSION` 을 올린다. 먼저 `--dry-run` 으로 입력을 확인하고, 한 종목에 `--force` 로 돌려 비평의 '근거 없는 주장' 수가 줄었는지 본다.
+- 채점: 분기마다 `select * from public.v_predictions where outcome='pending' and due_date <= current_date` 를 보고 `ideas.predictions.outcome` 을 hit/miss/unclear 로 갱신 (S-5 에서 화면화).
 
 ## 3. 처음 돌릴 때 순서
 
