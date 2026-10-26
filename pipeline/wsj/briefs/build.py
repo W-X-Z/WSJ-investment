@@ -16,7 +16,7 @@ from typing import Any
 
 from wsj.briefs import prompts
 from wsj.briefs.datapack import DataPack, build_datapack
-from wsj.briefs.llm import LLM, Completion, resolve_model, sum_usage
+from wsj.briefs.llm import LLM, Completion, JSONGenerationError, resolve_model, sum_usage
 from wsj.db.base import Store
 from wsj.http import HttpClient
 
@@ -25,14 +25,15 @@ log = logging.getLogger("wsj.briefs")
 
 @dataclass
 class BriefOptions:
-    model: str = "sonnet"  # 종합 단계
-    research_model: str = "sonnet"
-    critique_model: str = "sonnet"
-    research_searches: int = 8
+    model: str = "haiku"  # 기본: Haiku, 정밀 검토 시 --model sonnet
+    research_model: str = "haiku"
+    critique_model: str = "haiku"
+    research_searches: int = 4
+    effort: str = "medium"
     skip_research: bool = False
     skip_critique: bool = False
     synthesis_max_tokens: int = 20_000
-    thinking_budget: int = 6_000  # 종합·비평 단계 확장 사고 예산 (0 이면 끔)
+    thinking_budget: int = 0  # 레거시 모델 옵션, Claude 5.5는 effort 사용
     dry_run: bool = False
     out_dir: Path | None = None
     force: bool = False  # 같은 as_of 에 이미 브리프가 있어도 다시 만든다
@@ -173,47 +174,60 @@ def build_one(
     brief: dict[str, Any] = {}
     critique: dict[str, Any] | None = None
     error: str | None = None
+
+    def call_stage(stage: str, system: str, user: str, model: str, **kwargs: Any) -> dict[str, Any]:
+        assert llm is not None
+        try:
+            result, calls = llm.complete_json(system, user, model, prompts.REPAIR_USER, **kwargs)
+        except JSONGenerationError as exc:
+            comps[stage] = exc.completions
+            raise
+        comps[stage] = calls
+        return result
+
     try:
         # ② 리서치
         if not opt.skip_research:
-            research, c = llm.complete_json(
+            research = call_stage(
+                "research",
                 prompts.RESEARCH_SYSTEM,
                 prompts.research_user(core, _business_summary(dp), as_of.isoformat()),
                 resolve_model(opt.research_model),
-                prompts.REPAIR_USER,
                 max_tokens=8000,
                 web_search_max_uses=opt.research_searches,
+                effort="medium",
             )
-            comps["research"] = c
-            research["_citations"] = c[0].citations[:60]
+            research["_citations"] = comps["research"][0].citations[:60]
         research_json = (
             json.dumps(research, ensure_ascii=False, indent=1) if research else "(리서치 단계 생략)"
         )
 
         # ③ 종합
-        brief, c = llm.complete_json(
+        brief = call_stage(
+            "synthesis",
             prompts.SYNTHESIS_SYSTEM,
             prompts.synthesis_user(full, research_json, as_of.isoformat()),
             resolve_model(opt.model),
-            prompts.REPAIR_USER,
             max_tokens=opt.synthesis_max_tokens,
             thinking_budget=opt.thinking_budget or None,
+            effort=opt.effort,
+            minimize_thinking=True,
         )
-        comps["synthesis"] = c
 
         # ④ 비평
         if not opt.skip_critique:
-            critique, c = llm.complete_json(
+            critique = call_stage(
+                "critique",
                 prompts.CRITIQUE_SYSTEM,
                 prompts.critique_user(
                     core, json.dumps(brief, ensure_ascii=False, indent=1), research_json, as_of.isoformat()
                 ),
                 resolve_model(opt.critique_model),
-                prompts.REPAIR_USER,
                 max_tokens=8000,
                 thinking_budget=min(opt.thinking_budget, 4000) or None,
+                effort="low",
+                minimize_thinking=True,
             )
-            comps["critique"] = c
     except Exception as exc:  # noqa: BLE001 - 종목 단위 격리
         error = "".join(traceback.format_exception(exc))[-4000:]
         log.error("[%s] brief failed: %s", ticker, exc)
@@ -244,7 +258,7 @@ def build_one(
         preds = _predictions_rows(brief_id, cik, brief)
         if preds:
             n_pred = store.insert("ideas.predictions", preds)
-    if brief and dp.candidate:
+    if not error and brief and dp.candidate:
         _mark_briefed(store, dp.candidate)
     log.info(
         "[%s] brief #%s v%d %s — predictions %d, cost $%s",
