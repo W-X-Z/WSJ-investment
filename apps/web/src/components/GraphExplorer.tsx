@@ -1,8 +1,15 @@
 "use client";
 
 import Link from "next/link";
+import dynamic from "next/dynamic";
 import { type EcoId } from "@/lib/research-client";
-import { SupplyNetworkCanvas } from "@/components/SupplyNetworkCanvas";
+
+/** The canvas (React Flow + graph seed) is below the fold on every page that embeds it, so it is
+ *  code-split out of the page's initial bundle. The placeholder reserves the same height. */
+const SupplyNetworkCanvas = dynamic(() => import("@/components/SupplyNetworkCanvas").then((m) => m.SupplyNetworkCanvas), {
+  ssr: false,
+  loading: () => <div aria-busy="true" aria-label="산업망 캔버스 불러오는 중" style={{ height: 760, border: "1px solid #dae3ee", borderRadius: 17, background: "#f6f9fe", marginBottom: 28 }}/>,
+});
 
 /** All existing ecosystem routes now use the freely navigable graph. */
 export function GraphExplorer({ecoId,compact=false}:{ecoId:EcoId;compact?:boolean}) {

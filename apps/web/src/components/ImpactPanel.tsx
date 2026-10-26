@@ -1,6 +1,7 @@
 "use client";
 
 import impactIndex from "@/data/impact-index.json";
+import "./ImpactPanel.css";
 
 /** "이 노드에 변화가 생기면 어느 기업이 어느 경로로 영향받나" — pipeline(impact.py)이 미리 계산한 결과.
  *  방향·근거 등급의 곱(신뢰도)·부호를 보여 준다. 매출 증거가 아니다. */
