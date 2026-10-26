@@ -318,10 +318,6 @@
       "cold plate",
       "direct liquid cooling"
     ],
-    "component:hv_insulation": [
-      "high voltage insulation",
-      "dielectric strength"
-    ],
     "material:hv_insulation": [
       "high voltage insulation",
       "dielectric"
