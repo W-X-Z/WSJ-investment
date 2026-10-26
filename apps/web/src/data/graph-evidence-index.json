@@ -1,0 +1,17 @@
+{
+  "schema_version": 1,
+  "summary": {
+    "as_of": "2026-10-26",
+    "total_historical_records_read": 0,
+    "unique_valid_sources": 0,
+    "excluded_future_or_invalid": 0,
+    "documents_with_ontology_matches": 0,
+    "ontology_nodes": 90,
+    "nodes_with_at_least_one_match": 0,
+    "numeric_mentions_requiring_validation": 0,
+    "co_mention_pairs_requiring_review": 0,
+    "new_confirmed_supply_edges": 0,
+    "interpretation": "Evidence enrichment pipeline not yet run."
+  },
+  "nodes": {}
+}
