@@ -1,0 +1,60 @@
+name: canvas-visual-preview
+
+on:
+  push:
+    branches: [feat/historical-backfill-graph-canvas-20261026]
+    paths:
+      - "apps/web/src/components/SupplyNetworkCanvas.tsx"
+      - "apps/web/src/components/SupplyNetworkCanvas.css"
+      - "apps/web/src/app/map/**"
+      - ".github/workflows/canvas-visual-preview.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  snapshot:
+    runs-on: ubuntu-latest
+    timeout-minutes: 16
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+          cache-dependency-path: apps/web/package-lock.json
+      - name: Install and build
+        working-directory: apps/web
+        env:
+          NEXT_TELEMETRY_DISABLED: '1'
+        run: |
+          npm ci --no-fund --no-audit
+          npm run build
+      - name: Install browser and run real screenshot
+        working-directory: apps/web
+        run: |
+          set -euo pipefail
+          npx --yes playwright@1.56.1 install chromium
+          (npm run start -- --port 3011 > /tmp/atlas-next.log 2>&1 & echo $! > /tmp/atlas-next.pid)
+          ready=0
+          for i in $(seq 1 45); do
+            if curl -fsS http://localhost:3011/map >/dev/null; then ready=1; break; fi
+            sleep 2
+          done
+          if [[ "$ready" != "1" ]]; then cat /tmp/atlas-next.log; exit 1; fi
+          mkdir -p ../../research/preview
+          npx --yes playwright@1.56.1 screenshot \
+            --browser chromium --viewport-size "1600,1080" --wait-for-timeout 2200 \
+            http://localhost:3011/map ../../research/preview/industry-canvas-desktop.png
+          npx --yes playwright@1.56.1 screenshot \
+            --browser chromium --viewport-size "390,844" --wait-for-timeout 2200 \
+            http://localhost:3011/map ../../research/preview/industry-canvas-mobile.png
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: industrial-canvas-rendered-screenshots
+          path: research/preview/
+          if-no-files-found: warn
+          retention-days: 14
