@@ -48,11 +48,11 @@ function ownerMap():Map<string,EcoId>{
  const owners=new Map<string,EcoId>();
  const distance=new Map<string,number>();
  for(const eco of ECOS){
-  const queue:[[string,number]]=[[ECO_ROOT[eco.id],0]];
+  const queue:Array<[string,number]>=[[ECO_ROOT[eco.id],0]];
   let head=0;
   while(head<queue.length){
    const [id,d]=queue[head++];
-   if(distance.has(id)&&distance.get(id)!<=d)continue;
+   if(distance.has(id)&&distance.get(id)! <= d)continue;
    distance.set(id,d);owners.set(id,eco.id);
    for(const adj of neighborIndex.get(id)??[])queue.push([adj,d+1]);
   }
@@ -85,7 +85,7 @@ function arrange(ids:Set<string>,mode:Mode,scope:Scope,focus:string|null):Map<st
  if(mode==="impact"&&focus){
   const dist=levelsFrom(focus);
   const groups=new Map<number,string[]>();
-  for(const id of ids)if(dist.has(id)&&dist.get(id)!<=3){
+  for(const id of ids)if(dist.has(id)&&dist.get(id)! <= 3){
    const rank=dist.get(id)!;groups.set(rank,[...(groups.get(rank)??[]),id]);
   }
   for(const [rank,values] of groups){
@@ -169,7 +169,7 @@ export function SupplyNetworkCanvas({initialEcosystem="all",compact=false}:{init
  const drag=useRef<DragState|null>(null);
  const graphIds=useMemo(()=>new Set(seed.nodes.filter(n=>scope==="all"||owners.get(n.id)===scope).map(n=>n.id)),[scope]);
  const layout=useMemo(()=>arrange(graphIds,mode,scope,selected),[graphIds,mode,scope,selected]);
- const positions=useMemo(()=>new Map(Array.from(layout).map(([id,pos])=>[id,overrides[id]??pos])),[layout,overrides]);
+ const positions=useMemo(()=>new Map<string,Vec>(Array.from(layout).map(([id,pos]):[string,Vec]=>[id,overrides[id]??pos])),[layout,overrides]);
  const displayedEdges=useMemo(()=>seed.edges.filter(e=>positions.has(e.from)&&positions.has(e.to)&&
    (trust==="all"||epistemic(e)==="documented")),[positions,trust]);
  const neighbors=useMemo(()=>selected?discover(selected,depth):new Set<string>(),[selected,depth]);
@@ -196,7 +196,7 @@ export function SupplyNetworkCanvas({initialEcosystem="all",compact=false}:{init
   setBoundsSize({w:rect.width,h:rect.height});
   setCamera({x:(rect.width-(b.maxx+b.minx)*scale)/2,y:(rect.height-(b.maxy+b.miny)*scale)/2,z:scale});
  },[positions]);
- useEffect(()=>{fit();},[scope,mode,fit]);
+ // Deliberately reframe on navigation/layout switches only, not during node dragging.\n useEffect(()=>{fit();},[scope,mode]);
  useEffect(()=>{
   const el=canvasRef.current;if(!el)return;
   const wheel=(ev:WheelEvent)=>{
@@ -218,7 +218,7 @@ export function SupplyNetworkCanvas({initialEcosystem="all",compact=false}:{init
   const pt=positions.get(id);if(pt)centerAt(pt.x+W/2,pt.y+H/2,Math.max(camera.z,.72));
  }
  function panDown(e:React.PointerEvent<HTMLDivElement>){
-  if(e.button!==0|| (e.target as Element).closest(".sc-graph-node,.sc-link-path"))return;
+  if(e.button!==0|| (e.target as Element).closest(".sc-graph-node,.sc-link-path,.sc-canvas-tools,.sc-map-holder,.sc-selection-hint,.sc-reopen-inspector"))return;
   drag.current={type:"pan",px:e.clientX,py:e.clientY,cam:camera};
   e.currentTarget.setPointerCapture(e.pointerId);
  }
@@ -272,7 +272,7 @@ export function SupplyNetworkCanvas({initialEcosystem="all",compact=false}:{init
    <div ref={canvasRef} className="sc-viewport" onPointerDown={panDown} onPointerMove={panMove} onPointerUp={()=>{if(drag.current?.type==="pan")drag.current=null;}} onPointerCancel={()=>{drag.current=null;}}>
     <div className="sc-grid-layer"/>
     <div className="sc-world" style={{transform:`translate(${camera.x}px,${camera.y}px) scale(${camera.z})`}}>
-     <svg className="sc-links" width={5100} height={3600} viewBox="-1300 -1100 6400 4700" aria-label="산업망 기술 관계 연결선">
+     <svg className="sc-links" width={7000} height={5500} viewBox="0 0 7000 5500" aria-label="산업망 기술 관계 연결선">
       <defs><marker id="sc-arrow" markerWidth="7" markerHeight="7" refX="6" refY="3.5" orient="auto"><path d="M0 0 L7 3.5 L0 7" fill="none" stroke="#96a7c1" strokeWidth="1.25"/></marker><marker id="sc-selected-arrow" markerWidth="7" markerHeight="7" refX="6" refY="3.5" orient="auto"><path d="M0 0 L7 3.5 L0 7" fill="none" stroke="#4c6ed0" strokeWidth="2"/></marker></defs>
       {displayedEdges.map(e=>{
        const a=positions.get(e.from)!,b=positions.get(e.to)!,d=edgePath(a,b);
