@@ -1,0 +1,25 @@
+name: pipeline-tests
+
+on:
+  pull_request:
+    paths:
+      - "pipeline/**"
+      - ".github/workflows/briefs.yml"
+      - ".github/workflows/pipeline-tests.yml"
+
+jobs:
+  pytest:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: pipeline/pyproject.toml
+      - name: Install test dependencies
+        working-directory: pipeline
+        run: pip install -e ".[dev]"
+      - name: Run unit tests (no external API calls)
+        working-directory: pipeline
+        run: pytest -q
