@@ -1,0 +1,25 @@
+@import "tailwindcss";
+
+:root {
+  color-scheme: light;
+}
+
+body {
+  @apply bg-neutral-50 text-neutral-900 text-sm;
+}
+
+table {
+  @apply w-full border-collapse;
+}
+th {
+  @apply text-left font-medium text-neutral-500 border-b border-neutral-200 px-2 py-1.5 whitespace-nowrap bg-white sticky top-0;
+}
+td {
+  @apply border-b border-neutral-100 px-2 py-1 align-top whitespace-nowrap;
+}
+tr:hover td {
+  @apply bg-neutral-100;
+}
+.num {
+  @apply text-right tabular-nums;
+}

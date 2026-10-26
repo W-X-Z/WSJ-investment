@@ -118,7 +118,9 @@ class SecUniverseCollector(Collector):
             if resp.status_code == 404:
                 continue
             resp.raise_for_status()
-            subs[cik] = resp.json()
+            s = resp.json()
+            s.pop("filings", None)  # 공시 목록(최대 1,000건)은 여기서 안 쓴다 — 메모리 절약
+            subs[cik] = s
             fetched += 1
             if fetched % 200 == 0:
                 log.info("submissions fetched: %d", fetched)
