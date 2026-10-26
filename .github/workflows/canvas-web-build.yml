@@ -1,0 +1,39 @@
+name: canvas-web-build
+
+on:
+  pull_request:
+    paths:
+      - "apps/web/**"
+      - ".github/workflows/canvas-web-build.yml"
+  push:
+    branches: [feat/historical-backfill-graph-canvas-20261026]
+    paths:
+      - "apps/web/**"
+      - ".github/workflows/canvas-web-build.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  nextjs:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+          cache-dependency-path: apps/web/package-lock.json
+      - name: Install pinned frontend dependencies
+        working-directory: apps/web
+        run: npm ci --no-audit --no-fund
+      - name: Verify graph research seed consistency
+        run: python apps/web/scripts/sync_ecosystem_seed.py --check
+      - name: TypeScript and full Next.js build
+        working-directory: apps/web
+        env:
+          NEXT_TELEMETRY_DISABLED: "1"
+        run: npm run build
