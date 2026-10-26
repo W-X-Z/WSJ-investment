@@ -45,6 +45,9 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
+      - name: Install monitor test dependencies
+        working-directory: pipeline
+        run: pip install -e ".[dev]"
       - name: Run isolated monitoring tests (no network, no paid API)
         working-directory: pipeline
         env:
@@ -63,7 +66,7 @@ jobs:
       GH_TOKEN: ${{ github.token }}
       GITHUB_TOKEN: ${{ github.token }}
       ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
-      SEC_USER_AGENT: "WSJ-investment tech research research@wsj-investment.invalid"
+      SEC_USER_AGENT: "WSJ-investment research dnltmdwhd@gmail.com"
       WSJ_MONITOR_MODEL: "haiku"
     steps:
       - uses: actions/checkout@v4
