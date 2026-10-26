@@ -370,10 +370,18 @@ def run(*, out: Path, since: int, until: int, per_page: int = 35,
             for item in rows:
                 if item["ecosystem"]==eco:
                     fp.write(json.dumps(item,ensure_ascii=False,sort_keys=True)+"\n")
-    # A bounded homepage-usable index, not every historical record in a browser.
-    highlights=[x for x in rows if x["source"] in {"sec","federalregister"} or x["kind"]=="paper"]
-    highlights.sort(key=lambda x:(x["published_at"],x["source"]=="sec"),reverse=True)
-    index=highlights[:150]
+    # Compact, year-balanced browser index: oldest technical inflections remain
+    # discoverable instead of taking only 2026's most recent headlines.
+    index=[]
+    for eco in ECOSYSTEMS:
+        for year in range(since,until+1):
+            for source in ("openalex","crossref","sec","federalregister"):
+                group=[x for x in rows if x["ecosystem"]==eco
+                       and x["published_at"].startswith(str(year))
+                       and x["source"]==source]
+                group.sort(key=lambda x:x["published_at"],reverse=True)
+                index.extend(group[:5])
+    index.sort(key=lambda x:(x["published_at"],x["ecosystem"]),reverse=True)
     (out/"feed-index.json").write_text(json.dumps(index,ensure_ascii=False,indent=2)+"\n",encoding="utf-8")
     summary=create_summary(rows,failures,since,until,observed)
     (out/"summary.json").write_text(json.dumps(summary,ensure_ascii=False,indent=2)+"\n",encoding="utf-8")
