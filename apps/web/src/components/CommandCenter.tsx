@@ -4,6 +4,7 @@ import { useMemo, useState } from "react";
 import Link from "next/link";
 import { Icon } from "@/components/Icon";
 import { GraphExplorer } from "@/components/GraphExplorer";
+import { IndustryMilestones } from "@/components/IndustryMilestones";
 import { type EcoId } from "@/lib/research-client";
 
 type Story = {id:string;title:string;summary:string;date:string;ecoId:string;type:string;source:string;significance:string;status:string;sourceUrl?:string;target?:string};
@@ -41,6 +42,7 @@ export function CommandCenter({stories,ideas,ecosystems,sourceOnline,asOf}:{stor
    </div>
    <div className="cc-priority-aside"><div className="cc-eyebrow">02 / ACTIVE THESES</div><h2>검증할 투자 가설</h2>{topIdeas.length?topIdeas.map(x=><Link key={x.id} href={x.href??`/ideas/${x.id}`} className="cc-mini-idea"><div><strong>{x.ticker}</strong><span>{STATUS[x.state]??"조사 중"}</span></div><p>{x.title}</p><Icon name="arrow-up-right" size={16}/></Link>):<p>현재 검증할 가설이 없습니다.</p>}<Link className="cc-aside-link" href="/ideas">모든 투자 가설 <Icon name="arrow-right" size={15}/></Link></div>
   </div>
+  <IndustryMilestones compact/>
   <div className="cc-section-heading"><div><div className="cc-eyebrow">03 / TECHNOLOGY SYSTEMS</div><h2>산업망의 주요 흐름</h2><p>기술 요구가 바뀌면 어떤 병목·공정·기업이 영향을 받는지 탐색합니다.</p></div><Link href="/ecosystems">전체 산업망 <Icon name="arrow-up-right" size={15}/></Link></div>
   <div className="cc-system-tabs" role="group" aria-label="기술 생태계 선택">{ecosystems.map((x,i)=><button key={x.id} type="button" className={focus===x.id?"cc-system-tab cc-system-tab-active":"cc-system-tab"} onClick={()=>setFocus(x.id)} aria-pressed={focus===x.id}><span>0{i+1} / {NAMES[x.id]}</span><strong>{x.title}</strong><small>{x.trajectory}</small></button>)}</div>
   <div className="cc-system-detail"><div><span className="cc-system-badge">{selected.metricLabel} · {selected.metric}</span><strong>핵심 병목: {selected.bottleneck}</strong><p>{selected.summary}</p></div><Link href={`/ecosystems/${focus}`}>기술·근거 상세 <Icon name="arrow-right" size={15}/></Link></div>
