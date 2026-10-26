@@ -1,10 +1,7 @@
 name: technology-intelligence-monitor
 
 on:
-  schedule:
-    # 하루 1회 20:30 KST (UTC 11:30) daily 합성. 6시간 watch 는 Actions 분 한도 때문에 중지 (2026-10-27).
-    # GitHub cron can run late; reports record actual observed_at.
-    - cron: "30 11 * * *"
+  # 정기 실행은 issues.yml(공급망 이슈 피드, DB·웹 노출)로 대체 (2026-10-27, ADR-0014). 수동 실행만 남긴다.
   workflow_dispatch:
     inputs:
       stage:
