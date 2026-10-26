@@ -24,6 +24,8 @@ jobs:
           node-version: "22"
           cache: npm
           cache-dependency-path: apps/web/package-lock.json
+      - name: Verify bundled technology seed matches source graph
+        run: python3 apps/web/scripts/sync_ecosystem_seed.py --check
       - name: Install dependencies from lockfile
         working-directory: apps/web
         run: npm ci
