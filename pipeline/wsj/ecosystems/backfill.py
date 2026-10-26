@@ -64,10 +64,9 @@ def normalize_doi(doi: str | None) -> str | None:
     return x if x.startswith("10.") and "/" in x else None
 
 
-def pub_date(item: dict) -> str | None:
-    """Crossref multiple date forms; use bibliographic publication date (not indexed date)."""
-    fields = ("published", "published-online", "published-print", "issued")
-    for field in fields:
+def pub_date_info(item: dict) -> tuple[str | None, str]:
+    """Return normalized bibliographic date and its precision; never invent December 28."""
+    for field in ("published", "published-online", "published-print", "issued"):
         value = item.get(field)
         if not isinstance(value, dict):
             continue
@@ -75,12 +74,21 @@ def pub_date(item: dict) -> str | None:
         if not parts or not parts[0]:
             continue
         try:
-            y = int(parts[0][0]); m = int(parts[0][1]) if len(parts[0]) > 1 else 12
-            d = int(parts[0][2]) if len(parts[0]) > 2 else 28
-            return date(y, m, d).isoformat()
+            tokens = parts[0]
+            precision = "day" if len(tokens) >= 3 else "month" if len(tokens) >= 2 else "year"
+            y = int(tokens[0])
+            m = int(tokens[1]) if len(tokens) >= 2 else 1
+            d = int(tokens[2]) if len(tokens) >= 3 else 1
+            if not 2010 <= y <= 2100:
+                continue
+            return date(y, m, d).isoformat(), precision
         except (TypeError, ValueError):
             continue
-    return None
+    return None, "unknown"
+
+
+def pub_date(item: dict) -> str | None:
+    return pub_date_info(item)[0]
 
 
 def fetch_json(url: str) -> dict:
@@ -109,7 +117,7 @@ def fetch_json(url: str) -> dict:
 
 def record(*, source: str, source_id: str, ecosystem: str, kind: str, day: str,
            title: str, url: str, excerpt: str, observed_at: str, doi: str | None = None,
-           extra: dict | None = None) -> dict:
+           extra: dict | None = None, published_precision: str = "day") -> dict:
     normalized = normalize_doi(doi)
     canonical = "doi:" + normalized if normalized else f"{source}:{source_id}"
     return {
@@ -117,7 +125,7 @@ def record(*, source: str, source_id: str, ecosystem: str, kind: str, day: str,
         "canonical_id": canonical, "ecosystem": ecosystem, "kind": kind,
         "source": source, "source_group": "scholarly_bibliography" if source in {"openalex", "crossref"} else source,
         "source_id": source_id,
-        "published_at": day, "first_seen_at": observed_at,
+        "published_at": day, "published_precision": published_precision, "first_seen_at": observed_at,
         "historical_backfill": True, "historical_investor_observation_unverified": True,
         "title": re.sub(r"\s+", " ", title).strip()[:300],
         "excerpt": re.sub(r"\s+", " ", excerpt).strip()[:620],
@@ -145,7 +153,7 @@ def openalex(ecosystem: str, year: int, observed_at: str, per_page: int, pages: 
             for item in works:
                 title = item.get("display_name") or ""
                 when = item.get("publication_date") or ""
-                if not title or not when.startswith(str(year)) or not relevant(title, ecosystem):
+                if not title or not when.startswith(str(year)) or when > observed_at[:10] or not relevant(title, ecosystem):
                     continue
                 source_id = item.get("id") or ""
                 if not source_id:
@@ -179,17 +187,17 @@ def crossref(ecosystem: str, year: int, observed_at: str, per_page: int, pages: 
             items = data.get("message", {}).get("items", [])
             for item in items:
                 title = (item.get("title") or [""])[0]
-                when = pub_date(item)
+                when, precision = pub_date_info(item)
                 doi = normalize_doi(item.get("DOI"))
-                if not title or not when or when[:4] != str(year) or not relevant(title, ecosystem) or not doi:
+                if not title or not when or when > observed_at[:10] or when[:4] != str(year) or not relevant(title, ecosystem) or not doi:
                     continue
                 excerpt = re.sub(r"<[^>]+>", " ", item.get("abstract") or "").strip()
                 output.append(record(
                     source="crossref", source_id=doi, ecosystem=ecosystem, kind="paper",
                     day=when, title=title, url=f"https://api.crossref.org/works/{doi}",
                     excerpt=excerpt or "Title/DOI bibliographic record; primary technical result not verified",
-                    observed_at=observed_at, doi=doi,
-                    extra={"query": query, "work_type": item.get("type")},
+                    observed_at=observed_at, doi=doi, published_precision=precision,
+                    extra={"query": query, "work_type": item.get("type"), "date_precision":precision},
                 ))
             if len(items) < min(per_page, 100):
                 break
@@ -213,7 +221,7 @@ def federal(ecosystem: str, year: int, observed_at: str, per_page: int, pages: i
             excerpt = item.get("abstract") or ""
             when = item.get("publication_date") or ""
             url = item.get("html_url") or ""
-            if not title or not when.startswith(str(year)) or not url.startswith("https://www.federalregister.gov/") or not relevant(title + " " + excerpt, ecosystem):
+            if not title or not when.startswith(str(year)) or when > observed_at[:10] or not url.startswith("https://www.federalregister.gov/") or not relevant(title + " " + excerpt, ecosystem):
                 continue
             output.append(record(
                 source="federalregister", source_id=str(item.get("document_number") or url),
@@ -264,7 +272,7 @@ def sec_filings(ecosystem: str, ticker: str, cik: int, start_year: int, end_year
                 continue
             seen.add(accession)
             y = int(when[:4])
-            if start_year <= y <= end_year:
+            if start_year <= y <= end_year and when <= observed_at[:10]:
                 by_year[y].append(row)
     output: list[dict] = []
     for year, rows in by_year.items():
@@ -316,6 +324,8 @@ def create_summary(rows: list[dict], failures: list[dict], start: int, end: int,
             "Crossref and OpenAlex are bibliographic indexes, not independent validation of paper contents.",
             "SEC submission archive availability and filing caps differ by issuer.",
             "Original publication date != first_seen_at; historical index snapshots were NOT retained.",
+            "Imprecise year/month is normalized to Jan 1 with published_precision field, not an exact date.",
+            "Future-dated results are excluded relative to actual collector date.",
         ],
     }
 
