@@ -1,0 +1,13 @@
+/* ImpactPanel — moved from SupplyNetworkCanvas.css so it loads with the (lazy) panel */
+.sc-impact{margin-top:14px}
+.sc-impact h4{margin:12px 0 6px}
+.sc-impact-empty{font-size:11px;color:#8b96a5}
+.sc-impact-row{border:1px solid #e6eaf1;border-radius:8px;padding:8px 10px;margin-bottom:6px;background:#fff}
+.sc-impact-positive{border-left:3px solid #2f9e6a}.sc-impact-negative{border-left:3px solid #d14343}.sc-impact-mixed{border-left:3px solid #c59a2a}
+.sc-impact-head{display:flex;gap:8px;align-items:baseline;flex-wrap:wrap;font-size:12px}
+.sc-impact-sign{font-weight:800}.sc-sign-positive{color:#2f9e6a}.sc-sign-negative{color:#d14343}.sc-sign-mixed{color:#c59a2a}
+.sc-impact-meta{font-size:10.5px;color:#6f7d90}
+.sc-impact-path{font-size:11px;color:#4a5a70;margin-top:4px;line-height:1.5}
+.sc-impact-weak{font-size:10.5px;color:#8b96a5;margin-top:3px}
+.sc-impact-sub{font-size:11px;padding:6px 0;border-bottom:1px solid #eef1f6}
+.sc-impact-sub small{color:#8b96a5}
