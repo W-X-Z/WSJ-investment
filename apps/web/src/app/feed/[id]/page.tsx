@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Icon } from "@/components/Icon";
-import { dateShort, ECOSYSTEMS, ECO_BY_ID, EVENT_LABEL, loadLiveData, mergeFeed, nodeName, seed } from "@/lib/research";
+import { chipName, dateShort, ECOSYSTEMS, ECO_BY_ID, EVENT_LABEL, loadLiveData, mergeFeed, nodeName, seed } from "@/lib/research";
 
 export const dynamic="force-dynamic";
 export const metadata={title:"이슈 분석"};
@@ -23,7 +23,7 @@ export default async function FeedDetail({params}:{params:Promise<{id:string}>})
     <div className="detail-content-quote">{item.summary}</div>
     {item.kind==="issue"&&<>
      {item.why&&<><h2>공급망에 닿는 지점</h2><p>{item.why}</p></>}
-     {!!item.companies?.length&&<><h3>영향 기업</h3><div className="related-list">{item.companies.map(c=><div key={c.company_id} style={{borderBottom:"1px solid #edf0f6",padding:"10px 0",display:"flex",gap:10,alignItems:"baseline"}}><span className={`co-chip co-${c.direction==="+"?"pos":c.direction==="-"?"neg":"mix"}${c.size_band==="micro"||c.size_band==="small"?" co-small":""}`}>{c.direction} {c.ticker??c.label}</span><Link href={`/map?focus=${encodeURIComponent(c.company_id)}`} style={{fontSize:12,fontWeight:650}}>{c.label}</Link><span style={{fontSize:11,color:"#8b96a5"}}>{c.size_band}{c.basis?` · ${c.basis}`:""}</span></div>)}</div></>}
+     {!!item.companies?.length&&<><h3>영향 기업</h3><div className="related-list">{item.companies.map(c=><div key={c.company_id} style={{borderBottom:"1px solid #edf0f6",padding:"10px 0",display:"flex",gap:10,alignItems:"baseline"}}><span className={`co-chip co-${c.direction==="+"?"pos":c.direction==="-"?"neg":"mix"}${c.size_band==="micro"||c.size_band==="small"?" co-small":""}`}>{c.direction} {chipName(c)}</span><Link href={`/map?focus=${encodeURIComponent(c.company_id)}`} style={{fontSize:12,fontWeight:650}}>{c.label}</Link><span style={{fontSize:11,color:"#8b96a5"}}>{c.size_band}{c.basis?` · ${c.basis}`:""}</span></div>)}</div></>}
      {!!item.nodes?.length&&<><h3>연결 노드</h3><div className="tag-row">{item.nodes.map(n=><Link key={n} className="tag" href={`/map?focus=${encodeURIComponent(n)}`}>{nodeName(n)}</Link>)}</div></>}
      {!!item.sources?.length&&<><h3>출처 {item.sources.length}건</h3><div className="related-list">{item.sources.map(s=><a key={s.url} href={s.url} target="_blank" rel="noreferrer" style={{display:"block",borderBottom:"1px solid #edf0f6",padding:"10px 0"}}><div className="story-meta"><span>{s.publisher}</span><span className="meta-sep">·</span><span>{dateShort(s.published_at.slice(0,10))}</span><span className="meta-sep">·</span><span>{s.source_type}</span></div><div style={{fontSize:12,color:"#31465e",marginTop:4}}>{s.title}</div></a>)}</div></>}
     </>}

@@ -505,3 +505,13 @@ tr:hover td{background:#f8faff}
 .co-chip{font-size:10.5px;font-family:ui-monospace,monospace;padding:2px 7px;border-radius:999px;border:1px solid #dfe5ee;color:#4a5a70;background:#fff;white-space:nowrap}
 .co-pos{border-color:#9fd7bc;color:#1f7a50;background:#f1fbf6}.co-neg{border-color:#f0b4b4;color:#b03030;background:#fdf3f3}.co-mix{border-color:#e8d39a;color:#8a6a10;background:#fdf9ee}
 .co-small{font-weight:750;box-shadow:inset 0 0 0 1px currentColor}
+
+.cc-issue-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin:0 0 34px}
+.cc-issue{display:flex;flex-direction:column;gap:8px;padding:16px 18px;border:1px solid #e3e8f0;border-radius:14px;background:#fff;color:inherit;text-decoration:none;transition:border-color .15s,box-shadow .15s}
+.cc-issue:hover{border-color:#b9c6e0;box-shadow:0 6px 18px rgba(20,35,70,.06)}
+.cc-issue-top{display:flex;align-items:center;gap:8px;font-size:11px;color:#6b7686}
+.cc-issue-top small{margin-left:auto;color:#98a2b3}
+.cc-issue strong{font-size:14.5px;line-height:1.4;color:#14213d}
+.cc-issue p{font-size:12.5px;line-height:1.55;color:#5b6576;margin:0;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+@media (max-width:1100px){.cc-issue-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:680px){.cc-issue-grid{grid-template-columns:1fr}}
