@@ -5,7 +5,7 @@
  * link selection, trusted-vs-inferred relation filtering, search and minimap.
  * Pure React/SVG; no heavyweight editor dependency or fabricated supplier edges.
  */
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import { Icon } from "@/components/Icon";
 import { seed, KINDS, RELATIONS, type GraphNode, type Edge, type EcoId } from "@/lib/research-client";
@@ -197,7 +197,22 @@ export function SupplyNetworkCanvas({initialEcosystem="all",compact=false}:{init
   setBoundsSize({w:rect.width,h:rect.height});
   setCamera({x:(rect.width-(b.maxx+b.minx)*scale)/2,y:(rect.height-(b.maxy+b.miny)*scale)/2,z:scale});
  },[positions]);
- // Deliberately reframe on navigation/layout switches only, not during node dragging.\n useEffect(()=>{fit();},[scope,mode]);
+ // Deliberately reframe on navigation/layout switches only, not during node dragging.\n // Reframe on sector/layout changes *after* the DOM has measured.
+ // We use canonical layout rather than dragged positions so node repositioning does not
+ // unexpectedly zoom the whole scene during a drag.
+ useLayoutEffect(()=>{
+  const el=canvasRef.current;if(!el||!layout.size)return;
+  const apply=()=>{
+   const rect=el.getBoundingClientRect();if(!rect.width||!rect.height)return;
+   const b=extent(layout),z=Math.max(.13,Math.min(1.1,(rect.width-125)/(b.maxx-b.minx+80),(rect.height-130)/(b.maxy-b.miny+80)));
+   setBoundsSize({w:rect.width,h:rect.height});
+   setCamera({z,x:(rect.width-(b.maxx+b.minx)*z)/2,y:(rect.height-(b.maxy+b.miny)*z)/2});
+  };
+  apply();
+  const frame=requestAnimationFrame(apply);
+  const resize=new ResizeObserver(apply);resize.observe(el);
+  return ()=>{cancelAnimationFrame(frame);resize.disconnect();};
+ },[layout]);
  useEffect(()=>{
   const el=canvasRef.current;if(!el)return;
   const wheel=(ev:WheelEvent)=>{
