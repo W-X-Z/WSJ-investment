@@ -26,6 +26,7 @@ MODELS = {
 # USD per 1M tokens (input, output). 모르는 모델은 None → 비용 미산출.
 PRICES: dict[str, tuple[float, float]] = {
     "claude-sonnet-5-5": (2.0, 10.0),
+    "claude-haiku-5-5": (0.10, 0.50),
     "claude-opus-5-5": (4.0, 20.0),
     "claude-fable-5-1": (10.0, 50.0),
 }
@@ -57,9 +58,10 @@ class Completion:
         if not p:
             return None
         base_in = self.input_tokens - self.cache_read_tokens - self.cache_write_tokens
+        cache_multiplier = 0.05 if self.model in ("claude-sonnet-5-5", "claude-opus-5-5") else 0.1
         cost = (
             max(base_in, 0) * p[0]
-            + self.cache_read_tokens * p[0] * 0.1
+            + self.cache_read_tokens * p[0] * cache_multiplier
             + self.cache_write_tokens * p[0] * 1.25
             + self.output_tokens * p[1]
         ) / 1_000_000
@@ -79,6 +81,14 @@ class Completion:
         }
 
 
+class JSONGenerationError(ValueError):
+    """JSON 복구 실패 시에도 호출별 토큰 사용량을 전달한다."""
+
+    def __init__(self, message: str, completions: list[Completion]) -> None:
+        super().__init__(message)
+        self.completions = completions
+
+
 class LLM:
     def __init__(self, api_key: str, max_retries: int = 3) -> None:
         import anthropic  # 지연 임포트: 키 없는 --dry-run 에서는 SDK 가 없어도 된다
@@ -95,6 +105,8 @@ class LLM:
         temperature: float | None = None,
         prior: list[dict[str, Any]] | None = None,
         thinking_budget: int | None = None,
+        effort: str | None = None,
+        minimize_thinking: bool = False,
     ) -> Completion:
         """단일 턴 호출. prior 를 주면 그 뒤에 user 를 붙인다 (복구 재시도용). pause_turn 은 자동으로 이어 간다.
         thinking_budget 을 주면 확장 사고를 켠다 (출력 토큰으로 과금, temperature 와 동시 사용 불가)."""
@@ -105,10 +117,21 @@ class LLM:
             "system": [{"type": "text", "text": system, "cache_control": {"type": "ephemeral"}}],
             "messages": messages,
         }
-        if thinking_budget:
-            kwargs["thinking"] = {"type": "enabled", "budget_tokens": thinking_budget}
-            kwargs["max_tokens"] = max(max_tokens, thinking_budget + 4000)
-        elif temperature is not None:
+        if effort is not None:
+            kwargs["output_config"] = {"effort": effort}
+        # Claude 5.5는 구형 thinking.enabled 방식을 지원하지 않는다.
+        if minimize_thinking and not web_search_max_uses:
+            if model == "claude-haiku-5-5":
+                kwargs["thinking"] = {"type": "disabled"}
+            elif model == "claude-sonnet-5-5":
+                kwargs["thinking"] = {"type": "between_tools"}
+        elif thinking_budget:
+            if model in {"claude-sonnet-5-5", "claude-haiku-5-5", "claude-opus-5-5"}:
+                kwargs["thinking"] = {"type": "adaptive"}
+            else:
+                kwargs["thinking"] = {"type": "enabled", "budget_tokens": thinking_budget}
+                kwargs["max_tokens"] = max(max_tokens, thinking_budget + 4000)
+        if temperature is not None and "thinking" not in kwargs:
             kwargs["temperature"] = temperature
         if web_search_max_uses:
             kwargs["tools"] = [{**WEB_SEARCH_TOOL, "max_uses": web_search_max_uses}]
@@ -183,7 +206,10 @@ class LLM:
             kw2 = {k: v for k, v in kw.items() if k != "web_search_max_uses"}
             comp2 = self.complete(system, repair_user.format(error=str(exc)[:200]), model, prior=prior, **kw2)
             comps.append(comp2)
-            return extract_json(comp2.text), comps
+            try:
+                return extract_json(comp2.text), comps
+            except ValueError as repair_error:
+                raise JSONGenerationError(str(repair_error), comps) from repair_error
 
 
 _RE_FENCE = re.compile(r"```(?:json)?\s*(\{.*?\})\s*```", re.S)
