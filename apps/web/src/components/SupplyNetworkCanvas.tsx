@@ -10,6 +10,7 @@ import Link from "next/link";
 import { Icon } from "@/components/Icon";
 import { seed, KINDS, RELATIONS, type GraphNode, type Edge, type EcoId } from "@/lib/research-client";
 import history from "@/data/historical-evidence.json";
+import { relevantHistoricalTerms } from "@/lib/technical-keywords";
 import "./SupplyNetworkCanvas.css";
 
 type Scope = EcoId | "all";
@@ -184,7 +185,7 @@ export function SupplyNetworkCanvas({initialEcosystem="all",compact=false}:{init
  const activeEdges=displayedEdges.filter(e=>e.from===selected||e.to===selected||e.id===selectedEdge);
  const historyRows=useMemo(()=>{
   if(!node)return [];
-  const keywords=[node.label.toLowerCase(),...node.label.toLowerCase().split(/[ ·/()\-]+/).filter(x=>x.length>=5)];
+  const keywords=relevantHistoricalTerms(node);
   return h.events.filter(x=>scope==="all"||x.ecosystem===scope)
     .map(x=>({x,hit:keywords.reduce((sum,key)=>sum+(x.title.toLowerCase().includes(key)?1:0),0)}))
     .filter(x=>x.hit>0).sort((a,b)=>b.hit-a.hit||b.x.published_at.localeCompare(a.x.published_at)).slice(0,4).map(x=>x.x);
@@ -319,7 +320,7 @@ export function SupplyNetworkCanvas({initialEcosystem="all",compact=false}:{init
       {node.measured_metrics?.length?<><h4>관측해야 할 물리량</h4><div className="sc-metrics">{node.measured_metrics.map(m=><span key={m}>{m.replaceAll("_"," ")}</span>)}</div></>:null}
       <h4>직접 연결된 기술 관계</h4>
       <div className="sc-related-edges">{nodeEdges.map(e=><button key={e.id} type="button" onClick={()=>setSelectedEdge(e.id)}><span className={`sc-small-mark sc-mark-${epistemic(e)}`}/><div><span>{RELATIONS[e.relation]??e.relation}</span><strong>{nodeIndex.get(e.from===node.id?e.to:e.from)?.label}</strong></div><Icon name="chevron-right" size={14}/></button>)}</div>
-      {historyRows.length>0&&<><h4>연관 과거 공개자료 · 백필</h4><div className="sc-history">{historyRows.map(x=><a key={x.id} href={x.url} target="_blank" rel="noreferrer"><small>{fmt(x.published_at)} · {x.source}</small><strong>{x.title}</strong></a>)}</div></>}
+      {historyRows.length>0&&<><h4>관련 키워드로 찾은 과거 자료 · 미검증</h4><div className="sc-history">{historyRows.map(x=><a key={x.id} href={x.url} target="_blank" rel="noreferrer"><small>{fmt(x.published_at)} · {x.source}</small><strong>{x.title}</strong></a>)}</div></>}
       <div className="sc-inspector-actions"><button type="button" onClick={()=>{shiftMode("impact");setInspectorOpen(true)}}><Icon name="network" size={15}/> 이 노드 중심으로 펼치기</button><Link href={`/search?q=${encodeURIComponent(node.label)}`}><Icon name="search" size={15}/> 전체 근거 검색</Link></div>
       <div className="sc-caution">노드와 공개 문헌의 관련성은 실제 공급 실적이나 사업적 수혜의 확증이 아닙니다.</div>
      </div>:<div className="sc-inspector-content sc-empty-inspector"><Icon name="network" size={28}/><h3>복잡한 공급망을 탐색하세요</h3><p>캔버스의 노드·연결선을 선택하면 검증된 내용, 추론 관계, 물리적 측정 항목과 원문을 확인할 수 있습니다.</p><div><span>{seed.nodes.length}개 기술·기업 노드</span><span>공식 근거 / 기술 추론 분리</span><span>1–3단계 연결 강조</span></div></div>}
