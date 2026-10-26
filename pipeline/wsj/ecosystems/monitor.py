@@ -65,7 +65,7 @@ SPEC_PAGES = (
      "terms": ("lvdc", "800v", "white paper", "version", "v1.", "sidecar")},
     {"source_id": "camtek_hawk", "ecosystem": "hbm", "url": "https://www.camtek.com/products/hawk/",
      "terms": ("hawk", "inspection", "bump", "hybrid", "micron", "throughput")},
-    {"source_id": "poet_news", "ecosystem": "optics", "url": "https://www.poet-technologies.com/news/",
+    {"source_id": "poet_news", "ecosystem": "optics", "url": "https://www.poet-technologies.com/news-media",
      "terms": ("1.6t", "optical", "customer", "volume", "qualified")},
 )
 FORMS = frozenset({"8-K", "6-K", "10-Q", "10-K", "20-F", "S-3", "F-3", "424B5", "424B3"})
