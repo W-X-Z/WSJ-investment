@@ -3,7 +3,7 @@ import seedJson from "@/data/ecosystem-seed.json";
 // Client-safe, static projection of the same documented research seed.
 export type EcoId = "hbm" | "optics" | "power";
 export type GraphNode = { id: string; kind: string; label: string; measured_metrics?: string[] };
-export type Edge = { id: string; from: string; to: string; relation: string; stage: string; polarity: string; evidence: {url:string}[] };
+export type Edge = { id: string; from: string; to: string; relation: string; stage: string; polarity: string; note?: string; evidence: {url:string}[] };
 export const seed = seedJson as unknown as {nodes:GraphNode[];edges:Edge[]};
 export const KINDS: Record<string,string> = {
   ecosystem:"생태계",requirement:"기술 요구",bottleneck:"기술 병목",technology:"해결 기술",
