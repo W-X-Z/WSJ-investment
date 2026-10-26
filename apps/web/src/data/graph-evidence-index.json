@@ -2,10 +2,10 @@
   "schema_version": 1,
   "summary": {
     "as_of": "2026-10-26",
-    "total_historical_records_read": 5373,
-    "unique_valid_sources": 5373,
+    "total_historical_records_read": 5458,
+    "unique_valid_sources": 5458,
     "excluded_future_or_invalid": 0,
-    "documents_with_ontology_matches": 1781,
+    "documents_with_ontology_matches": 1806,
     "ontology_nodes": 90,
     "nodes_with_at_least_one_match": 46,
     "numeric_mentions_requiring_validation": 36,
@@ -25,10 +25,10 @@
       "node_id": "eco:hbm",
       "name": "HBM 첨단 패키징·검사",
       "kind": "ecosystem",
-      "total_document_leads": 480,
+      "total_document_leads": 481,
       "year_counts": {
-        "2026": 80,
-        "2025": 110,
+        "2026": 82,
+        "2025": 109,
         "2024": 86,
         "2023": 68,
         "2022": 54,
@@ -36,7 +36,7 @@
         "2020": 35
       },
       "source_counts": {
-        "scholarly_bibliography": 475,
+        "scholarly_bibliography": 476,
         "federalregister": 5
       },
       "sources": [
@@ -62,15 +62,15 @@
           "historical_investor_observation_unverified": true
         },
         {
-          "id": "6a5161b8977743b550be573c",
+          "id": "cbc000210391d976864e8e78",
           "canonical_id": "doi:10.3390/electronics14132682",
           "title": "Thermal Issues Related to Hybrid Bonding of 3D-Stacked High Bandwidth Memory: A Comprehensive Review",
           "published_at": "2025-07-02",
           "published_precision": "day",
           "first_seen_at": "2026-10-26T14:40:32+00:00",
-          "source": "openalex",
+          "source": "crossref",
           "source_group": "scholarly_bibliography",
-          "url": "https://api.openalex.org/works/W4411930181",
+          "url": "https://api.crossref.org/works/10.3390/electronics14132682",
           "excerpt": "High-Bandwidth Memory (HBM) enables the bandwidth required by modern AI and high-performance computing, yet its three dimensional stack traps heat and amplifies thermo mechanical stress. We first review how conventional solutions such as heat spreaders, microchannels, high density Through-",
           "rank": 18,
           "matched_terms": [
@@ -167,16 +167,16 @@
           "historical_investor_observation_unverified": true
         },
         {
-          "id": "390bdf5c267748785dd6cea1",
+          "id": "54d1f6aafe86fcc21e6dda6a",
           "canonical_id": "doi:10.1007/s13391-025-00557-9",
           "title": "3D Integrated Process and Hybrid Bonding of High Bandwidth Memory (HBM)",
           "published_at": "2025-03-02",
           "published_precision": "day",
           "first_seen_at": "2026-10-26T14:40:32+00:00",
-          "source": "openalex",
+          "source": "crossref",
           "source_group": "scholarly_bibliography",
-          "url": "https://api.openalex.org/works/W4408080844",
-          "excerpt": "Abstract absent; title-only bibliographic record",
+          "url": "https://api.crossref.org/works/10.1007/s13391-025-00557-9",
+          "excerpt": "Title/DOI bibliographic record; primary technical result not verified",
           "rank": 14,
           "matched_terms": [
             "high bandwidth memory",
@@ -210,16 +210,16 @@
           "historical_investor_observation_unverified": true
         },
         {
-          "id": "b75f20e8a3ed4210a8167e50",
+          "id": "832eb07eac32cff2a49c5066",
           "canonical_id": "doi:10.1109/ectc51846.2026.00024",
           "title": "Reliable Low-Temperature (≤ 250 °C) Cu/Dielectric Hybrid Bonding for High-Bandwidth Memory (HBM) Stack Integration",
           "published_at": "2026-05-26",
           "published_precision": "day",
           "first_seen_at": "2026-10-26T14:40:32+00:00",
-          "source": "openalex",
+          "source": "crossref",
           "source_group": "scholarly_bibliography",
-          "url": "https://api.openalex.org/works/W7165032739",
-          "excerpt": "Abstract absent; title-only bibliographic record",
+          "url": "https://api.crossref.org/works/10.1109/ectc51846.2026.00024",
+          "excerpt": "Title/DOI bibliographic record; primary technical result not verified",
           "rank": 14,
           "matched_terms": [
             "high bandwidth memory",
@@ -702,15 +702,15 @@
           "historical_investor_observation_unverified": true
         },
         {
-          "id": "6a5161b8977743b550be573c",
+          "id": "cbc000210391d976864e8e78",
           "canonical_id": "doi:10.3390/electronics14132682",
           "title": "Thermal Issues Related to Hybrid Bonding of 3D-Stacked High Bandwidth Memory: A Comprehensive Review",
           "published_at": "2025-07-02",
           "published_precision": "day",
           "first_seen_at": "2026-10-26T14:40:32+00:00",
-          "source": "openalex",
+          "source": "crossref",
           "source_group": "scholarly_bibliography",
-          "url": "https://api.openalex.org/works/W4411930181",
+          "url": "https://api.crossref.org/works/10.3390/electronics14132682",
           "excerpt": "High-Bandwidth Memory (HBM) enables the bandwidth required by modern AI and high-performance computing, yet its three dimensional stack traps heat and amplifies thermo mechanical stress. We first review how conventional solutions such as heat spreaders, microchannels, high density Through-",
           "rank": 10,
           "matched_terms": [
@@ -802,15 +802,15 @@
           "historical_investor_observation_unverified": true
         },
         {
-          "id": "4ed7b70a4e4a762c0e2780e5",
+          "id": "fb84171893aae6ea50a9d775",
           "canonical_id": "doi:10.3389/fmats.2026.1926885",
           "title": "Stacking-factor-integrated production planning for 3D-Stacked high-bandwidth memory manufacturing: an optimization approach",
           "published_at": "2026-10-13",
           "published_precision": "day",
           "first_seen_at": "2026-10-26T14:40:32+00:00",
-          "source": "openalex",
+          "source": "crossref",
           "source_group": "scholarly_bibliography",
-          "url": "https://api.openalex.org/works/W7221597623",
+          "url": "https://api.crossref.org/works/10.3389/fmats.2026.1926885",
           "excerpt": "As AI-driven computing accelerates, demand for High-Bandwidth Memory (HBM) manufactured through 3D DRAM stacking and Through-Silicon-Via (TSV) technology has surged, yet existing production-planning models risk overestimating package-level capacity by treating multi-layer stacking conversi",
           "rank": 10,
           "matched_terms": [
@@ -1123,15 +1123,15 @@
           "historical_investor_observation_unverified": true
         },
         {
-          "id": "6a5161b8977743b550be573c",
+          "id": "cbc000210391d976864e8e78",
           "canonical_id": "doi:10.3390/electronics14132682",
           "title": "Thermal Issues Related to Hybrid Bonding of 3D-Stacked High Bandwidth Memory: A Comprehensive Review",
           "published_at": "2025-07-02",
           "published_precision": "day",
           "first_seen_at": "2026-10-26T14:40:32+00:00",
-          "source": "openalex",
+          "source": "crossref",
           "source_group": "scholarly_bibliography",
-          "url": "https://api.openalex.org/works/W4411930181",
+          "url": "https://api.crossref.org/works/10.3390/electronics14132682",
           "excerpt": "High-Bandwidth Memory (HBM) enables the bandwidth required by modern AI and high-performance computing, yet its three dimensional stack traps heat and amplifies thermo mechanical stress. We first review how conventional solutions such as heat spreaders, microchannels, high density Through-",
           "rank": 10,
           "matched_terms": [
@@ -1243,15 +1243,15 @@
           "historical_investor_observation_unverified": true
         },
         {
-          "id": "4ed7b70a4e4a762c0e2780e5",
+          "id": "fb84171893aae6ea50a9d775",
           "canonical_id": "doi:10.3389/fmats.2026.1926885",
           "title": "Stacking-factor-integrated production planning for 3D-Stacked high-bandwidth memory manufacturing: an optimization approach",
           "published_at": "2026-10-13",
           "published_precision": "day",
           "first_seen_at": "2026-10-26T14:40:32+00:00",
-          "source": "openalex",
+          "source": "crossref",
           "source_group": "scholarly_bibliography",
-          "url": "https://api.openalex.org/works/W7221597623",
+          "url": "https://api.crossref.org/works/10.3389/fmats.2026.1926885",
           "excerpt": "As AI-driven computing accelerates, demand for High-Bandwidth Memory (HBM) manufactured through 3D DRAM stacking and Through-Silicon-Via (TSV) technology has surged, yet existing production-planning models risk overestimating package-level capacity by treating multi-layer stacking conversi",
           "rank": 10,
           "matched_terms": [
@@ -1329,9 +1329,9 @@
       "node_id": "bottleneck:hbm_overlay",
       "name": "미세범프·접합 오버레이/결함 검사",
       "kind": "bottleneck",
-      "total_document_leads": 216,
+      "total_document_leads": 217,
       "year_counts": {
-        "2026": 33,
+        "2026": 34,
         "2025": 45,
         "2024": 37,
         "2023": 41,
@@ -1340,7 +1340,7 @@
         "2020": 15
       },
       "source_counts": {
-        "scholarly_bibliography": 216
+        "scholarly_bibliography": 217
       },
       "sources": [
         {
@@ -1686,16 +1686,16 @@
           "historical_investor_observation_unverified": true
         },
         {
-          "id": "a9b527a5e8ecf32f5d0aa993",
-          "canonical_id": "doi:10.1149/ma2023-02331594mtgabs",
-          "title": "SAB-Enabled Room Temperature Hybrid Bonding",
+          "id": "bfea33dfbae9027f92fdfeed",
+          "canonical_id": "doi:10.1149/ma2023-02331593mtgabs",
+          "title": "Process and Design Challenges for Hybrid Bonding",
           "published_at": "2023-12-22",
           "published_precision": "day",
           "first_seen_at": "2026-10-26T14:40:32+00:00",
           "source": "crossref",
           "source_group": "scholarly_bibliography",
-          "url": "https://api.crossref.org/works/10.1149/ma2023-02331594mtgabs",
-          "excerpt": "3D integration is gaining more and more interest for a large panel of applications including CMOS Image Sensor, High Performance Computing, DRAM including HBM stacks and display. Image sensors based on hybrid bonding 3D stacking are the state-of-the-art in imaging applications[1]. Highest ",
+          "url": "https://api.crossref.org/works/10.1149/ma2023-02331593mtgabs",
+          "excerpt": "Hybrid bonding is one of the key technology to enable solutions for high bandwidth with increasing power and signal integrity. Hybrid bonding involves, face-to-face interconnect formation between wafers and it acts as an extension of fusion bonding technology. Wherein, dielectric materials",
           "rank": 10,
           "matched_terms": [
             "hybrid bonding"
@@ -1822,9 +1822,9 @@
       "node_id": "tech:hybrid_bond",
       "name": "하이브리드 본딩",
       "kind": "technology",
-      "total_document_leads": 207,
+      "total_document_leads": 208,
       "year_counts": {
-        "2026": 33,
+        "2026": 34,
         "2025": 44,
         "2024": 36,
         "2023": 38,
@@ -1833,7 +1833,7 @@
         "2020": 14
       },
       "source_counts": {
-        "scholarly_bibliography": 207
+        "scholarly_bibliography": 208
       },
       "sources": [
         {
@@ -2232,16 +2232,16 @@
           "historical_investor_observation_unverified": true
         },
         {
-          "id": "a9b527a5e8ecf32f5d0aa993",
-          "canonical_id": "doi:10.1149/ma2023-02331594mtgabs",
-          "title": "SAB-Enabled Room Temperature Hybrid Bonding",
+          "id": "bfea33dfbae9027f92fdfeed",
+          "canonical_id": "doi:10.1149/ma2023-02331593mtgabs",
+          "title": "Process and Design Challenges for Hybrid Bonding",
           "published_at": "2023-12-22",
           "published_precision": "day",
           "first_seen_at": "2026-10-26T14:40:32+00:00",
           "source": "crossref",
           "source_group": "scholarly_bibliography",
-          "url": "https://api.crossref.org/works/10.1149/ma2023-02331594mtgabs",
-          "excerpt": "3D integration is gaining more and more interest for a large panel of applications including CMOS Image Sensor, High Performance Computing, DRAM including HBM stacks and display. Image sensors based on hybrid bonding 3D stacking are the state-of-the-art in imaging applications[1]. Highest ",
+          "url": "https://api.crossref.org/works/10.1149/ma2023-02331593mtgabs",
+          "excerpt": "Hybrid bonding is one of the key technology to enable solutions for high bandwidth with increasing power and signal integrity. Hybrid bonding involves, face-to-face interconnect formation between wafers and it acts as an extension of fusion bonding technology. Wherein, dielectric materials",
           "rank": 10,
           "matched_terms": [
             "hybrid bonding"
@@ -2615,18 +2615,18 @@
       "node_id": "eco:optics",
       "name": "AI 광통신 800G/1.6T",
       "kind": "ecosystem",
-      "total_document_leads": 685,
+      "total_document_leads": 705,
       "year_counts": {
-        "2026": 121,
-        "2025": 103,
+        "2026": 122,
+        "2025": 121,
         "2024": 106,
-        "2023": 104,
+        "2023": 105,
         "2022": 99,
         "2021": 80,
         "2020": 72
       },
       "source_counts": {
-        "scholarly_bibliography": 685
+        "scholarly_bibliography": 705
       },
       "sources": [
         {
@@ -2693,15 +2693,15 @@
           "historical_investor_observation_unverified": true
         },
         {
-          "id": "0cf32ce171d00d3a656ba8a0",
+          "id": "98a3dd27e47e458284047796",
           "canonical_id": "doi:10.1364/optica.559260",
           "title": "Low-loss integration of high-density polymer waveguides with silicon photonics for co-packaged optics",
-          "published_at": "2025-04-24",
+          "published_at": "2025-06-04",
           "published_precision": "day",
           "first_seen_at": "2026-10-26T14:40:32+00:00",
-          "source": "openalex",
+          "source": "crossref",
           "source_group": "scholarly_bibliography",
-          "url": "https://api.openalex.org/works/W4409736607",
+          "url": "https://api.crossref.org/works/10.1364/optica.559260",
           "excerpt": "Co-packaged optics applications require scalable and high-yield optical interfacing solutions to silicon photonic chiplets, offering low-loss, broadband, and polarization-independent optical coupling while maintaining compatibility with widely used approaches for electrical redistribution.",
           "rank": 16,
           "matched_terms": [
@@ -3053,16 +3053,16 @@
       "node_id": "req:1p6t",
       "name": "1.6 Tb/s Ethernet 및 200 Gb/s/lane 전환",
       "kind": "requirement",
-      "total_document_leads": 10,
+      "total_document_leads": 11,
       "year_counts": {
         "2026": 1,
-        "2025": 3,
+        "2025": 4,
         "2024": 3,
         "2023": 2,
         "2020": 1
       },
       "source_counts": {
-        "scholarly_bibliography": 10
+        "scholarly_bibliography": 11
       },
       "sources": [
         {
@@ -3224,6 +3224,26 @@
               "conditions_verified": false
             }
           ],
+          "verification_status": "index_match_only",
+          "source_independence_verified": false,
+          "historical_investor_observation_unverified": true
+        },
+        {
+          "id": "bacf8442f5cdd4141747beaf",
+          "canonical_id": "doi:10.1364/ofc.2025.w1c.5",
+          "title": "Real-time 1.6-Tbps Transmission over 10 km for 6G Fronthaul in Co-packaged Optics Radio Access Networks using Eye-Safe Standard-Single-Mode-Fiber-Fed Remote Laser Sources",
+          "published_at": "2025-01-01",
+          "published_precision": "year",
+          "first_seen_at": "2026-10-26T14:57:08+00:00",
+          "source": "crossref",
+          "source_group": "scholarly_bibliography",
+          "url": "https://api.crossref.org/works/10.1364/ofc.2025.w1c.5",
+          "excerpt": "We demonstrate real-time 16x100-Gbps full-duplex 10-km transmission using a high-density, low-power, fully-packaged optical engine. Remote laser light is supplied via standard single-mode fiber without the need for active polarization management and with an eye-safety shutoff.",
+          "rank": 8,
+          "matched_terms": [
+            "1.6 tbps"
+          ],
+          "metric_candidates": [],
           "verification_status": "index_match_only",
           "source_independence_verified": false,
           "historical_investor_observation_unverified": true
@@ -3618,10 +3638,10 @@
       "node_id": "tech:cpo",
       "name": "Co-Packaged Optics (CPO)",
       "kind": "technology",
-      "total_document_leads": 231,
+      "total_document_leads": 249,
       "year_counts": {
         "2026": 61,
-        "2025": 47,
+        "2025": 65,
         "2024": 45,
         "2023": 40,
         "2022": 23,
@@ -3629,7 +3649,7 @@
         "2020": 7
       },
       "source_counts": {
-        "scholarly_bibliography": 231
+        "scholarly_bibliography": 249
       },
       "sources": [
         {
@@ -3960,16 +3980,16 @@
           "historical_investor_observation_unverified": true
         },
         {
-          "id": "41ad82903e5496079404d0e6",
+          "id": "29519385e998c8ac75f50187",
           "canonical_id": "doi:10.1007/s12200-022-00055-y",
           "title": "Co-packaged optics (CPO): status, challenges, and solutions",
           "published_at": "2023-03-20",
           "published_precision": "day",
           "first_seen_at": "2026-10-26T14:40:32+00:00",
-          "source": "openalex",
+          "source": "crossref",
           "source_group": "scholarly_bibliography",
-          "url": "https://api.openalex.org/works/W4327898871",
-          "excerpt": "Due to the rise of 5G, IoT, AI, and high-performance computing applications, datacenter traffic has grown at a compound annual growth rate of nearly 30%. Furthermore, nearly three-fourths of the datacenter traffic resides within datacenters. The conventional pluggable optics increases at a",
+          "url": "https://api.crossref.org/works/10.1007/s12200-022-00055-y",
+          "excerpt": "Abstract Due to the rise of 5G, IoT, AI, and high-performance computing applications, datacenter traffic has grown at a compound annual growth rate of nearly 30%. Furthermore, nearly three-fourths of the datacenter traffic resides within datacenters. The conventional pluggable optics incre",
           "rank": 18,
           "matched_terms": [
             "co packaged optics",
@@ -3981,15 +4001,15 @@
           "historical_investor_observation_unverified": true
         },
         {
-          "id": "9bdc7530f3e5849e77ef3793",
+          "id": "9a130f7103736e97f74cc864",
           "canonical_id": "doi:10.4071/001c.74749",
           "title": "Glass Substrate for Co-Packaged Optics",
           "published_at": "2023-05-01",
           "published_precision": "day",
           "first_seen_at": "2026-10-26T14:40:32+00:00",
-          "source": "openalex",
+          "source": "crossref",
           "source_group": "scholarly_bibliography",
-          "url": "https://api.openalex.org/works/W4368363432",
+          "url": "https://api.crossref.org/works/10.4071/001c.74749",
           "excerpt": "Co-packaged optics leads to significant power reduction by placing the electronic and photonic chiplets in a single package. An integrated electro-optical substrate made of glass with optical waveguides, through vias and electrical redistribution layers inside a single-sided cavity enables",
           "rank": 18,
           "matched_terms": [
@@ -4023,15 +4043,15 @@
           "historical_investor_observation_unverified": true
         },
         {
-          "id": "cfd7e6cc07d6ea209649dd54",
+          "id": "6f1910a4c3433d6627e870d1",
           "canonical_id": "doi:10.3389/aot.2023.1244009",
           "title": "Ultrafast laser processing of glass waveguide substrates for multi-fiber connectivity in co-packaged optics",
           "published_at": "2023-08-30",
           "published_precision": "day",
           "first_seen_at": "2026-10-26T14:40:32+00:00",
-          "source": "openalex",
+          "source": "crossref",
           "source_group": "scholarly_bibliography",
-          "url": "https://api.openalex.org/works/W4386309311",
+          "url": "https://api.crossref.org/works/10.3389/aot.2023.1244009",
           "excerpt": "High bandwidth demanding applications such as high-performance computing and hyperscale datacenters are drivers for co-packaged optics, which aims to bring optical signals as close as possible to the electrical computing chips by integrating the electro-optic transceivers and ASICs on the ",
           "rank": 18,
           "matched_terms": [
@@ -4086,15 +4106,15 @@
           "historical_investor_observation_unverified": true
         },
         {
-          "id": "0fce7184c47495e8e381019d",
+          "id": "e05ba623ac45236879849e25",
           "canonical_id": "doi:10.3390/mi15101211",
           "title": "Progress in Research on Co-Packaged Optics",
           "published_at": "2024-09-29",
           "published_precision": "day",
           "first_seen_at": "2026-10-26T14:40:32+00:00",
-          "source": "openalex",
+          "source": "crossref",
           "source_group": "scholarly_bibliography",
-          "url": "https://api.openalex.org/works/W4402995495",
+          "url": "https://api.crossref.org/works/10.3390/mi15101211",
           "excerpt": "In the 5G era, the demand for high-bandwidth computing, transmission, and storage has led to the development of optoelectronic interconnect technology. This technology has evolved from traditional board-edge optical modules to smaller and more integrated solutions. Co-packaged optics (CPO)",
           "rank": 18,
           "matched_terms": [
@@ -4107,16 +4127,16 @@
           "historical_investor_observation_unverified": true
         },
         {
-          "id": "c2384a6573f7c831289b1586",
-          "canonical_id": "doi:10.1364/oe.571527",
-          "title": "C2PO: coherent co-packaged optics using offset-QAM-16 for beyond PAM-4 optical I/O",
-          "published_at": "2025-10-28",
+          "id": "54f6186e0fdcce640a11eb1a",
+          "canonical_id": "doi:10.1088/1742-6596/3134/1/012005",
+          "title": "Challenges and Opportunities of Detachable Metallic Interconnects Fiber-to-Chip Connectors for Co-Packaged Optics in High-Volume Production",
+          "published_at": "2025-11-01",
           "published_precision": "day",
-          "first_seen_at": "2026-10-26T14:40:32+00:00",
+          "first_seen_at": "2026-10-26T14:57:08+00:00",
           "source": "crossref",
           "source_group": "scholarly_bibliography",
-          "url": "https://api.crossref.org/works/10.1364/oe.571527",
-          "excerpt": "Co-packaged optics (CPO) has emerged as an ultimate solution for achieving the ultra-high bandwidths, shoreline densities, and energy efficiencies required by future GPUs and network switches for AI. Microring modulators (MRMs) are well-suited for transmitters due to their compact size, hi",
+          "url": "https://api.crossref.org/works/10.1088/1742-6596/3134/1/012005",
+          "excerpt": "Abstract The recent exponential growth of AI/ML workloads, hyperscale data centers, and high-performance computing has intensified the demand for co-packaged optics (CPO), which integrate optics and electronics to overcome the bandwidth and power limitations of traditional pluggable transc",
           "rank": 18,
           "matched_terms": [
             "co packaged optics",
@@ -4128,15 +4148,15 @@
           "historical_investor_observation_unverified": true
         },
         {
-          "id": "9748b5da9e058646f872c577",
+          "id": "e5507334f2f54497477be06c",
           "canonical_id": "doi:10.4071/001c.154275",
           "title": "Co-Packaged Optics - Heterogeneous Integration of Chiplets (Switch, Photonic IC, and Electronic IC)",
           "published_at": "2025-12-15",
           "published_precision": "day",
           "first_seen_at": "2026-10-26T14:40:32+00:00",
-          "source": "openalex",
+          "source": "crossref",
           "source_group": "scholarly_bibliography",
-          "url": "https://api.openalex.org/works/W7116743017",
+          "url": "https://api.crossref.org/works/10.4071/001c.154275",
           "excerpt": "There have been strong demands for lower power consumption and higher bandwidth in optical/electrical interconnects used for artificial intelligence (AI) and networks in a data center. The adoption of co-packaged optics (CPO) has been expected for both high-performance computing (HPC) driv",
           "rank": 18,
           "matched_terms": [
@@ -4149,15 +4169,15 @@
           "historical_investor_observation_unverified": true
         },
         {
-          "id": "16909294a3a06dc976d286b9",
+          "id": "2a79e19dd3948b0830fde237",
           "canonical_id": "doi:10.3390/chips5030021",
           "title": "A Smart, Sensor-Augmented Probe Card for Wafer-Level Photonic Testing of Co-Packaged Optics Devices",
           "published_at": "2026-08-02",
           "published_precision": "day",
           "first_seen_at": "2026-10-26T14:40:32+00:00",
-          "source": "openalex",
+          "source": "crossref",
           "source_group": "scholarly_bibliography",
-          "url": "https://api.openalex.org/works/W7172209353",
+          "url": "https://api.crossref.org/works/10.3390/chips5030021",
           "excerpt": "The transition from electrical to optical interconnects, enabled by the adoption of co-packaged optics (CPO) in advanced processors, is accelerating the scale-up to high volumes and redefining wafer-level test requirements. As optical interfaces migrate closer to the compute die, an increa",
           "rank": 18,
           "matched_terms": [
@@ -5549,26 +5569,6 @@
           "historical_investor_observation_unverified": true
         },
         {
-          "id": "90e849839840e2d8d7bc8cf4",
-          "canonical_id": "doi:10.11591/ijpeds.v11.i4.pp2194-2202",
-          "title": "Silicon carbide power device characteristics, applications and challenges: an overview",
-          "published_at": "2020-09-19",
-          "published_precision": "day",
-          "first_seen_at": "2026-10-26T14:40:32+00:00",
-          "source": "openalex",
-          "source_group": "scholarly_bibliography",
-          "url": "https://api.openalex.org/works/W3092138926",
-          "excerpt": "Silicon (Si) based power devices have been employed in most high power applications since decades ago. However, nowadays, most major applications demand higher efficiency and power density due to various reasons. The previously well-known Si devices, unfortunately, have reached their perfo",
-          "rank": 10,
-          "matched_terms": [
-            "silicon carbide"
-          ],
-          "metric_candidates": [],
-          "verification_status": "index_match_only",
-          "source_independence_verified": false,
-          "historical_investor_observation_unverified": true
-        },
-        {
           "id": "dc60f8e758b41c12fa9ed932",
           "canonical_id": "doi:10.1116/6.0000490",
           "title": "Fabrication of free-standing silicon carbide on silicon microstructures via massive silicon sublimation",
@@ -5650,6 +5650,26 @@
           "source_group": "scholarly_bibliography",
           "url": "https://api.crossref.org/works/10.15407/spqeo23.04.346",
           "excerpt": "Plasma-enhanced chemical vapor deposition, reactive magnetron sputtering, hot-wire chemical vapor deposition and radio frequency plasma-enhanced chemical vapor deposition were used to develop technology for preparation of nano-bio silicon carbide coating of ceramic materials for dental app",
+          "rank": 10,
+          "matched_terms": [
+            "silicon carbide"
+          ],
+          "metric_candidates": [],
+          "verification_status": "index_match_only",
+          "source_independence_verified": false,
+          "historical_investor_observation_unverified": true
+        },
+        {
+          "id": "f672be93d4fadfb4e038338d",
+          "canonical_id": "doi:10.1149/ma2020-02241761mtgabs",
+          "title": "(Invited) Epitaxy of Silicon Carbide for Power Devices",
+          "published_at": "2020-11-23",
+          "published_precision": "day",
+          "first_seen_at": "2026-10-26T14:40:32+00:00",
+          "source": "crossref",
+          "source_group": "scholarly_bibliography",
+          "url": "https://api.crossref.org/works/10.1149/ma2020-02241761mtgabs",
+          "excerpt": "We observe an evolution how electric power is generated, converted, distributed and used. The world making an attempt to move away from fossil fuels towards a more renewable, energy efficient and electrified energy ecosystems, and therefor efficiency in power conversion processes becomes c",
           "rank": 10,
           "matched_terms": [
             "silicon carbide"
@@ -6108,14 +6128,14 @@
       "node_id": "material:underfill",
       "name": "Underfill 몰딩·충진 소재",
       "kind": "material",
-      "total_document_leads": 5,
+      "total_document_leads": 6,
       "year_counts": {
-        "2025": 1,
+        "2025": 2,
         "2024": 1,
         "2023": 3
       },
       "source_counts": {
-        "scholarly_bibliography": 5
+        "scholarly_bibliography": 6
       },
       "sources": [
         {
@@ -6210,6 +6230,26 @@
           "url": "https://api.crossref.org/works/10.4071/001c.129614",
           "excerpt": "As semiconductor chip design transforms to meet the increased functionality, performance, and miniaturization needs of applications such as 5G, high-performance computing (HPC) and autonomous vehicles, advances in packaging materials and technologies have become crucial to enable tighter p",
           "rank": 8,
+          "matched_terms": [
+            "underfill"
+          ],
+          "metric_candidates": [],
+          "verification_status": "index_match_only",
+          "source_independence_verified": false,
+          "historical_investor_observation_unverified": true
+        },
+        {
+          "id": "a2e2798653c1ea21f03b62a8",
+          "canonical_id": "doi:10.1109/icsj66986.2025.11302565",
+          "title": "Underfill with High Thermal Conductivity in Silicon Photonic Chiplets for Co-Packaged Optics (CPO) Devices",
+          "published_at": "2025-11-12",
+          "published_precision": "day",
+          "first_seen_at": "2026-10-26T14:57:08+00:00",
+          "source": "crossref",
+          "source_group": "scholarly_bibliography",
+          "url": "https://api.crossref.org/works/10.1109/icsj66986.2025.11302565",
+          "excerpt": "Title/DOI bibliographic record; primary technical result not verified",
+          "rank": 6,
           "matched_terms": [
             "underfill"
           ],
@@ -6856,15 +6896,15 @@
       "node_id": "component:fiber_connector",
       "name": "고밀도 광섬유 인터페이스",
       "kind": "component",
-      "total_document_leads": 6,
+      "total_document_leads": 7,
       "year_counts": {
         "2026": 1,
-        "2025": 3,
+        "2025": 4,
         "2024": 1,
         "2023": 1
       },
       "source_counts": {
-        "scholarly_bibliography": 6
+        "scholarly_bibliography": 7
       },
       "sources": [
         {
@@ -6942,6 +6982,26 @@
           "rank": 8,
           "matched_terms": [
             "optical connector"
+          ],
+          "metric_candidates": [],
+          "verification_status": "index_match_only",
+          "source_independence_verified": false,
+          "historical_investor_observation_unverified": true
+        },
+        {
+          "id": "4f3d826c5a0e67fbac0bc161",
+          "canonical_id": "doi:10.1364/ofc.2025.th3h.1",
+          "title": "High-density Evanescent Chip Coupling with Detachable Fiber Connector for Co-packaged Optics",
+          "published_at": "2025-01-01",
+          "published_precision": "year",
+          "first_seen_at": "2026-10-26T14:57:08+00:00",
+          "source": "crossref",
+          "source_group": "scholarly_bibliography",
+          "url": "https://api.crossref.org/works/10.1364/ofc.2025.th3h.1",
+          "excerpt": "A glass interconnect for fiber-to-chip coupling with integrated pitch conversion and detachable fiber array connector for CPO is reported. The minimum evanescent coupling loss is 0.38 dB at 1337 nm for flip-chip assembled SiN chip.",
+          "rank": 8,
+          "matched_terms": [
+            "fiber connector"
           ],
           "metric_candidates": [],
           "verification_status": "index_match_only",
@@ -7062,18 +7122,18 @@
       "node_id": "component:power_converter",
       "name": "DC/DC 전력변환 모듈",
       "kind": "component",
-      "total_document_leads": 171,
+      "total_document_leads": 172,
       "year_counts": {
         "2026": 21,
         "2025": 25,
         "2024": 21,
-        "2023": 26,
+        "2023": 27,
         "2022": 25,
         "2021": 30,
         "2020": 23
       },
       "source_counts": {
-        "scholarly_bibliography": 171
+        "scholarly_bibliography": 172
       },
       "sources": [
         {
@@ -8439,16 +8499,16 @@
           "historical_investor_observation_unverified": true
         },
         {
-          "id": "1d4bbbec6ab14bdb99493403",
+          "id": "0fb87be39439b0a47865e7e6",
           "canonical_id": "doi:10.1007/s12200-025-00156-4",
           "title": "Simulation and experimental investigation of liquid-cooling thermal management for high-bandwidth co-packaged optics",
           "published_at": "2025-05-14",
           "published_precision": "day",
           "first_seen_at": "2026-10-26T14:40:32+00:00",
-          "source": "openalex",
+          "source": "crossref",
           "source_group": "scholarly_bibliography",
-          "url": "https://api.openalex.org/works/W4410373523",
-          "excerpt": "This study explores the application of cold plate liquid cooling technology in co-packaged optics (CPO). By integrating optical modules and the switch chip on the same substrate, CPO shortens the electrical interconnection distance, effectively solving the problems of high power consumptio",
+          "url": "https://api.crossref.org/works/10.1007/s12200-025-00156-4",
+          "excerpt": "Abstract This study explores the application of cold plate liquid cooling technology in co-packaged optics (CPO). By integrating optical modules and the switch chip on the same substrate, CPO shortens the electrical interconnection distance, effectively solving the problems of high power c",
           "rank": 12,
           "matched_terms": [
             "cold plate",
@@ -9214,18 +9274,18 @@
       "node_id": "material:silicon_photonics",
       "name": "실리콘 포토닉스 PIC 플랫폼",
       "kind": "material",
-      "total_document_leads": 489,
+      "total_document_leads": 492,
       "year_counts": {
-        "2026": 67,
-        "2025": 65,
+        "2026": 68,
+        "2025": 66,
         "2024": 66,
-        "2023": 69,
+        "2023": 70,
         "2022": 80,
         "2021": 74,
         "2020": 68
       },
       "source_counts": {
-        "scholarly_bibliography": 489
+        "scholarly_bibliography": 492
       },
       "sources": [
         {
@@ -9662,17 +9722,18 @@
       "node_id": "component:vcsel",
       "name": "VCSEL 레이저 광원",
       "kind": "component",
-      "total_document_leads": 23,
+      "total_document_leads": 26,
       "year_counts": {
         "2026": 6,
-        "2025": 4,
+        "2025": 5,
         "2024": 2,
         "2023": 4,
         "2022": 6,
-        "2021": 1
+        "2021": 1,
+        "2020": 2
       },
       "source_counts": {
-        "scholarly_bibliography": 23
+        "scholarly_bibliography": 26
       },
       "sources": [
         {
@@ -9781,6 +9842,26 @@
           "historical_investor_observation_unverified": true
         },
         {
+          "id": "e78aadaedc1c437be752340c",
+          "canonical_id": "doi:10.1364/ofc.2020.m2a.4",
+          "title": "4×112 Gbps/fiber CWDM VCSEL Arrays for Co-Packaged Interconnects",
+          "published_at": "2020-01-01",
+          "published_precision": "year",
+          "first_seen_at": "2026-10-26T14:57:08+00:00",
+          "source": "crossref",
+          "source_group": "scholarly_bibliography",
+          "url": "https://api.crossref.org/works/10.1364/ofc.2020.m2a.4",
+          "excerpt": "We demonstrate a 4×112 Gbps/fiber VCSEL link using a co-packaged coarse wavelength division multiplexing (CWDM) optical module. A complete co-packaged CWDM module can achieve a 2.668 Tb/s aggregated bandwidth by assembling four 1×6 VCSEL arrays.",
+          "rank": 8,
+          "matched_terms": [
+            "vcsel"
+          ],
+          "metric_candidates": [],
+          "verification_status": "index_match_only",
+          "source_independence_verified": false,
+          "historical_investor_observation_unverified": true
+        },
+        {
           "id": "e0b2f7363a8925c1ce707776",
           "canonical_id": "doi:10.1109/jlt.2022.3160128",
           "title": "Co-Packaged Optics With Multimode Fiber Interface Employing 2-D VCSEL Matrix",
@@ -9832,6 +9913,26 @@
           "url": "https://api.openalex.org/works/W4413824569",
           "excerpt": "Multimode VCSELs coupled into waveguides can be a practical path toward realizing commercially viable photonic interposer chips. The experimental coupling of multimode VCSEL light to a non-silicon waveguide fabricated using a CMOS-compatible process is demonstrated. The GaP prism was teste",
           "rank": 8,
+          "matched_terms": [
+            "vcsel"
+          ],
+          "metric_candidates": [],
+          "verification_status": "index_match_only",
+          "source_independence_verified": false,
+          "historical_investor_observation_unverified": true
+        },
+        {
+          "id": "d45ea173986bbdf4ec30108e",
+          "canonical_id": "doi:10.1109/jlt.2020.2980986",
+          "title": "4×112 Gbps/Fiber CWDM VCSEL Arrays for Co-Packaged Interconnects",
+          "published_at": "2020-07-01",
+          "published_precision": "day",
+          "first_seen_at": "2026-10-26T14:57:08+00:00",
+          "source": "crossref",
+          "source_group": "scholarly_bibliography",
+          "url": "https://api.crossref.org/works/10.1109/jlt.2020.2980986",
+          "excerpt": "Title/DOI bibliographic record; primary technical result not verified",
+          "rank": 6,
           "matched_terms": [
             "vcsel"
           ],
@@ -9961,26 +10062,6 @@
           "historical_investor_observation_unverified": true
         },
         {
-          "id": "9e382d2c1038ae5401aadfa0",
-          "canonical_id": "doi:10.1049/icp.2023.2296",
-          "title": "VCSEL-based ultra-compact optical transceiver for co-packaged optics",
-          "published_at": "2023-11-13",
-          "published_precision": "day",
-          "first_seen_at": "2026-10-26T14:40:32+00:00",
-          "source": "crossref",
-          "source_group": "scholarly_bibliography",
-          "url": "https://api.crossref.org/works/10.1049/icp.2023.2296",
-          "excerpt": "Title/DOI bibliographic record; primary technical result not verified",
-          "rank": 6,
-          "matched_terms": [
-            "vcsel"
-          ],
-          "metric_candidates": [],
-          "verification_status": "index_match_only",
-          "source_independence_verified": false,
-          "historical_investor_observation_unverified": true
-        },
-        {
           "id": "b3daf752cd930502482772f0",
           "canonical_id": "doi:10.1109/icsj59341.2023.10339586",
           "title": "Jitter Margin Analysis of 56-Gb/s $\\text{PAM}4\\times 8-\\text{Channel}$ VCSEL-Based Optical Transceiver for Co-Packaged Optics",
@@ -10067,18 +10148,18 @@
       "node_id": "component:pic",
       "name": "광집적회로(PIC)",
       "kind": "component",
-      "total_document_leads": 473,
+      "total_document_leads": 476,
       "year_counts": {
-        "2026": 66,
-        "2025": 61,
+        "2026": 67,
+        "2025": 62,
         "2024": 62,
-        "2023": 68,
+        "2023": 69,
         "2022": 78,
         "2021": 72,
         "2020": 66
       },
       "source_counts": {
-        "scholarly_bibliography": 473
+        "scholarly_bibliography": 476
       },
       "sources": [
         {
@@ -10980,18 +11061,18 @@
       "node_id": "component:gate_driver",
       "name": "SiC·GaN 전력반도체 게이트드라이버",
       "kind": "component",
-      "total_document_leads": 14,
+      "total_document_leads": 15,
       "year_counts": {
+        "2020": 4,
         "2026": 1,
         "2025": 2,
         "2024": 3,
         "2023": 1,
         "2022": 2,
-        "2021": 2,
-        "2020": 3
+        "2021": 2
       },
       "source_counts": {
-        "scholarly_bibliography": 14
+        "scholarly_bibliography": 15
       },
       "sources": [
         {
@@ -11136,15 +11217,15 @@
           "historical_investor_observation_unverified": true
         },
         {
-          "id": "7b4628dd3e91db688fc43977",
+          "id": "af7448a279451f792e2712ce",
           "canonical_id": "doi:10.3390/electronics9050703",
           "title": "Characterization Circuit, Gate Driver and Fixture for Wide-Bandgap Power Semiconductor Device Testing",
           "published_at": "2020-04-25",
           "published_precision": "day",
           "first_seen_at": "2026-10-26T14:40:32+00:00",
-          "source": "openalex",
+          "source": "crossref",
           "source_group": "scholarly_bibliography",
-          "url": "https://api.openalex.org/works/W3018883048",
+          "url": "https://api.crossref.org/works/10.3390/electronics9050703",
           "excerpt": "The world is currently experiencing major advancement in the electrification of both the industrial and commercial sectors. This is part of an effort to reduce reliance on combustible fuels, reduce emissions, integrate renewable energy systems and increase efficiency. Due to the complexity",
           "rank": 8,
           "matched_terms": [
@@ -11269,6 +11350,26 @@
           "rank": 8,
           "matched_terms": [
             "gate driver"
+          ],
+          "metric_candidates": [],
+          "verification_status": "index_match_only",
+          "source_independence_verified": false,
+          "historical_investor_observation_unverified": true
+        },
+        {
+          "id": "06e7607ac715d3152ed95a17",
+          "canonical_id": "doi:10.1109/ispsd46842.2020.9170127",
+          "title": "Dv/Dt-control of 1200-V Co-packaged SiC- JFET/GaN-HEMT Cascode Device",
+          "published_at": "2020-09-01",
+          "published_precision": "month",
+          "first_seen_at": "2026-10-26T14:57:08+00:00",
+          "source": "crossref",
+          "source_group": "scholarly_bibliography",
+          "url": "https://api.crossref.org/works/10.1109/ispsd46842.2020.9170127",
+          "excerpt": "Title/DOI bibliographic record; primary technical result not verified",
+          "rank": 6,
+          "matched_terms": [
+            "dv/dt"
           ],
           "metric_candidates": [],
           "verification_status": "index_match_only",

@@ -7,7 +7,7 @@
     {
       "left_node_id": "component:pic",
       "right_node_id": "material:silicon_photonics",
-      "shared_source_count": 473,
+      "shared_source_count": 476,
       "years": [
         "2020",
         "2021",
@@ -44,7 +44,7 @@
     {
       "left_node_id": "bottleneck:hbm_overlay",
       "right_node_id": "tech:hybrid_bond",
-      "shared_source_count": 207,
+      "shared_source_count": 208,
       "years": [
         "2020",
         "2021",
@@ -81,7 +81,7 @@
     {
       "left_node_id": "material:silicon_photonics",
       "right_node_id": "tech:cpo",
-      "shared_source_count": 22,
+      "shared_source_count": 23,
       "years": [
         "2020",
         "2022",
@@ -117,7 +117,7 @@
     {
       "left_node_id": "component:pic",
       "right_node_id": "tech:cpo",
-      "shared_source_count": 20,
+      "shared_source_count": 21,
       "years": [
         "2020",
         "2022",
@@ -153,7 +153,7 @@
     {
       "left_node_id": "component:vcsel",
       "right_node_id": "tech:cpo",
-      "shared_source_count": 16,
+      "shared_source_count": 17,
       "years": [
         "2022",
         "2023",
@@ -310,8 +310,8 @@
       ],
       "example_documents": [
         {
-          "source_id": "b75f20e8a3ed4210a8167e50",
-          "url": "https://api.openalex.org/works/W7165032739",
+          "source_id": "832eb07eac32cff2a49c5066",
+          "url": "https://api.crossref.org/works/10.1109/ectc51846.2026.00024",
           "title": "Reliable Low-Temperature (≤ 250 °C) Cu/Dielectric Hybrid Bonding for High-Bandwidth Memory (HBM) Stack Integration",
           "published_at": "2026-05-26"
         },
@@ -346,8 +346,8 @@
       ],
       "example_documents": [
         {
-          "source_id": "b75f20e8a3ed4210a8167e50",
-          "url": "https://api.openalex.org/works/W7165032739",
+          "source_id": "832eb07eac32cff2a49c5066",
+          "url": "https://api.crossref.org/works/10.1109/ectc51846.2026.00024",
           "title": "Reliable Low-Temperature (≤ 250 °C) Cu/Dielectric Hybrid Bonding for High-Bandwidth Memory (HBM) Stack Integration",
           "published_at": "2026-05-26"
         },
@@ -380,14 +380,14 @@
       ],
       "example_documents": [
         {
-          "source_id": "877e398dfa2fb2d510f88104",
-          "url": "https://api.openalex.org/works/W7166817838",
+          "source_id": "f0d691ce4ca85bf8d9359407",
+          "url": "https://api.crossref.org/works/10.3390/mi17070802",
           "title": "A Super Memory Processing Unit Based on 3D Stacking and Hybrid Bonding for High-Efficiency AI Computing",
           "published_at": "2026-06-30"
         },
         {
-          "source_id": "b75f20e8a3ed4210a8167e50",
-          "url": "https://api.openalex.org/works/W7165032739",
+          "source_id": "832eb07eac32cff2a49c5066",
+          "url": "https://api.crossref.org/works/10.1109/ectc51846.2026.00024",
           "title": "Reliable Low-Temperature (≤ 250 °C) Cu/Dielectric Hybrid Bonding for High-Bandwidth Memory (HBM) Stack Integration",
           "published_at": "2026-05-26"
         },
@@ -414,14 +414,14 @@
       ],
       "example_documents": [
         {
-          "source_id": "877e398dfa2fb2d510f88104",
-          "url": "https://api.openalex.org/works/W7166817838",
+          "source_id": "f0d691ce4ca85bf8d9359407",
+          "url": "https://api.crossref.org/works/10.3390/mi17070802",
           "title": "A Super Memory Processing Unit Based on 3D Stacking and Hybrid Bonding for High-Efficiency AI Computing",
           "published_at": "2026-06-30"
         },
         {
-          "source_id": "b75f20e8a3ed4210a8167e50",
-          "url": "https://api.openalex.org/works/W7165032739",
+          "source_id": "832eb07eac32cff2a49c5066",
+          "url": "https://api.crossref.org/works/10.1109/ectc51846.2026.00024",
           "title": "Reliable Low-Temperature (≤ 250 °C) Cu/Dielectric Hybrid Bonding for High-Bandwidth Memory (HBM) Stack Integration",
           "published_at": "2026-05-26"
         },
@@ -430,6 +430,40 @@
           "url": "https://api.openalex.org/works/W7151908323",
           "title": "eBeam process control for yield and reliability in advanced HBM hybrid bonding",
           "published_at": "2026-04-08"
+        }
+      ],
+      "status": "lexical_co_mention_not_supply_relation",
+      "should_create_graph_edge": false,
+      "review_prompt": "Does source text explicitly assert a causal relation? If not, keep separate from tech_edges."
+    },
+    {
+      "left_node_id": "component:fiber_connector",
+      "right_node_id": "tech:cpo",
+      "shared_source_count": 7,
+      "years": [
+        "2023",
+        "2024",
+        "2025",
+        "2026"
+      ],
+      "example_documents": [
+        {
+          "source_id": "87d19ee22563cd503e03541c",
+          "url": "https://api.crossref.org/works/10.1109/ectc51846.2026.00112",
+          "title": "Integrated Assembly Process For Pluggable Fiber Connector For Co-Packaged Optics",
+          "published_at": "2026-05-26"
+        },
+        {
+          "source_id": "5ca9fc4eee40f87fb802c3e8",
+          "url": "https://api.crossref.org/works/10.1109/icsj66986.2025.11302643",
+          "title": "40-Channel Detachable Optical Connector Enabling Ultra-High Density Connectivity in Co-Packaged Optics",
+          "published_at": "2025-11-12"
+        },
+        {
+          "source_id": "becd44dd0058e4d3f6af6c1c",
+          "url": "https://api.crossref.org/works/10.1109/ecoc66593.2025.11263261",
+          "title": "Compact Detachable Optical Connector with Low Loss and High Stability for Co-Packaged Optics",
+          "published_at": "2025-09-28"
         }
       ],
       "status": "lexical_co_mention_not_supply_relation",
@@ -471,9 +505,9 @@
       "review_prompt": "Does source text explicitly assert a causal relation? If not, keep separate from tech_edges."
     },
     {
-      "left_node_id": "component:fiber_connector",
+      "left_node_id": "req:1p6t",
       "right_node_id": "tech:cpo",
-      "shared_source_count": 6,
+      "shared_source_count": 7,
       "years": [
         "2023",
         "2024",
@@ -482,22 +516,22 @@
       ],
       "example_documents": [
         {
-          "source_id": "87d19ee22563cd503e03541c",
-          "url": "https://api.crossref.org/works/10.1109/ectc51846.2026.00112",
-          "title": "Integrated Assembly Process For Pluggable Fiber Connector For Co-Packaged Optics",
-          "published_at": "2026-05-26"
+          "source_id": "f6b583d84b9d40b6179be5a2",
+          "url": "https://api.crossref.org/works/10.2139/ssrn.6672598",
+          "title": "Non-Electric-Field Perturbation and Coherent Compensation Architecture for Photoelectric Conversion Nodes: A Substrate-Level Physical Compensation Framework for 1.6T/3.2T Co-Packaged Optics",
+          "published_at": "2026-01-01"
         },
         {
-          "source_id": "5ca9fc4eee40f87fb802c3e8",
-          "url": "https://api.crossref.org/works/10.1109/icsj66986.2025.11302643",
-          "title": "40-Channel Detachable Optical Connector Enabling Ultra-High Density Connectivity in Co-Packaged Optics",
-          "published_at": "2025-11-12"
+          "source_id": "b9fdc252c222cf24cb28dd55",
+          "url": "https://api.openalex.org/works/W7106270531",
+          "title": "Investment Risk Assessment: Silicon Photonics for AI Datacenter Interconnects - 1.6T Transceivers and Co-Packaged Optics Transition Analysis",
+          "published_at": "2025-11-17"
         },
         {
-          "source_id": "becd44dd0058e4d3f6af6c1c",
-          "url": "https://api.crossref.org/works/10.1109/ecoc66593.2025.11263261",
-          "title": "Compact Detachable Optical Connector with Low Loss and High Stability for Co-Packaged Optics",
-          "published_at": "2025-09-28"
+          "source_id": "3ba57eb80603012680ab468a",
+          "url": "https://api.openalex.org/works/W4408507877",
+          "title": "1.6T linear-drive optical engine for Chinese co-packaged optics standard",
+          "published_at": "2025-03-17"
         }
       ],
       "status": "lexical_co_mention_not_supply_relation",
@@ -531,40 +565,6 @@
           "url": "https://api.crossref.org/works/10.1109/icsj62869.2024.10804708",
           "title": "High-Bandwidth Optical Transmission with Single External Laser Source (ELS) and Polymer Splitters for Co-packaged Optics",
           "published_at": "2024-11-13"
-        }
-      ],
-      "status": "lexical_co_mention_not_supply_relation",
-      "should_create_graph_edge": false,
-      "review_prompt": "Does source text explicitly assert a causal relation? If not, keep separate from tech_edges."
-    },
-    {
-      "left_node_id": "req:1p6t",
-      "right_node_id": "tech:cpo",
-      "shared_source_count": 6,
-      "years": [
-        "2023",
-        "2024",
-        "2025",
-        "2026"
-      ],
-      "example_documents": [
-        {
-          "source_id": "f6b583d84b9d40b6179be5a2",
-          "url": "https://api.crossref.org/works/10.2139/ssrn.6672598",
-          "title": "Non-Electric-Field Perturbation and Coherent Compensation Architecture for Photoelectric Conversion Nodes: A Substrate-Level Physical Compensation Framework for 1.6T/3.2T Co-Packaged Optics",
-          "published_at": "2026-01-01"
-        },
-        {
-          "source_id": "b9fdc252c222cf24cb28dd55",
-          "url": "https://api.openalex.org/works/W7106270531",
-          "title": "Investment Risk Assessment: Silicon Photonics for AI Datacenter Interconnects - 1.6T Transceivers and Co-Packaged Optics Transition Analysis",
-          "published_at": "2025-11-17"
-        },
-        {
-          "source_id": "3ba57eb80603012680ab468a",
-          "url": "https://api.openalex.org/works/W4408507877",
-          "title": "1.6T linear-drive optical engine for Chinese co-packaged optics standard",
-          "published_at": "2025-03-17"
         }
       ],
       "status": "lexical_co_mention_not_supply_relation",
@@ -617,20 +617,20 @@
       ],
       "example_documents": [
         {
-          "source_id": "b75f20e8a3ed4210a8167e50",
-          "url": "https://api.openalex.org/works/W7165032739",
+          "source_id": "832eb07eac32cff2a49c5066",
+          "url": "https://api.crossref.org/works/10.1109/ectc51846.2026.00024",
           "title": "Reliable Low-Temperature (≤ 250 °C) Cu/Dielectric Hybrid Bonding for High-Bandwidth Memory (HBM) Stack Integration",
           "published_at": "2026-05-26"
         },
         {
-          "source_id": "6a5161b8977743b550be573c",
-          "url": "https://api.openalex.org/works/W4411930181",
+          "source_id": "cbc000210391d976864e8e78",
+          "url": "https://api.crossref.org/works/10.3390/electronics14132682",
           "title": "Thermal Issues Related to Hybrid Bonding of 3D-Stacked High Bandwidth Memory: A Comprehensive Review",
           "published_at": "2025-07-02"
         },
         {
-          "source_id": "390bdf5c267748785dd6cea1",
-          "url": "https://api.openalex.org/works/W4408080844",
+          "source_id": "54d1f6aafe86fcc21e6dda6a",
+          "url": "https://api.crossref.org/works/10.1007/s13391-025-00557-9",
           "title": "3D Integrated Process and Hybrid Bonding of High Bandwidth Memory (HBM)",
           "published_at": "2025-03-02"
         }
@@ -814,20 +814,20 @@
       ],
       "example_documents": [
         {
-          "source_id": "b75f20e8a3ed4210a8167e50",
-          "url": "https://api.openalex.org/works/W7165032739",
+          "source_id": "832eb07eac32cff2a49c5066",
+          "url": "https://api.crossref.org/works/10.1109/ectc51846.2026.00024",
           "title": "Reliable Low-Temperature (≤ 250 °C) Cu/Dielectric Hybrid Bonding for High-Bandwidth Memory (HBM) Stack Integration",
           "published_at": "2026-05-26"
         },
         {
-          "source_id": "6a5161b8977743b550be573c",
-          "url": "https://api.openalex.org/works/W4411930181",
+          "source_id": "cbc000210391d976864e8e78",
+          "url": "https://api.crossref.org/works/10.3390/electronics14132682",
           "title": "Thermal Issues Related to Hybrid Bonding of 3D-Stacked High Bandwidth Memory: A Comprehensive Review",
           "published_at": "2025-07-02"
         },
         {
-          "source_id": "390bdf5c267748785dd6cea1",
-          "url": "https://api.openalex.org/works/W4408080844",
+          "source_id": "54d1f6aafe86fcc21e6dda6a",
+          "url": "https://api.crossref.org/works/10.1007/s13391-025-00557-9",
           "title": "3D Integrated Process and Hybrid Bonding of High Bandwidth Memory (HBM)",
           "published_at": "2025-03-02"
         }
@@ -1002,8 +1002,8 @@
           "published_at": "2026-03-09"
         },
         {
-          "source_id": "1d4bbbec6ab14bdb99493403",
-          "url": "https://api.openalex.org/works/W4410373523",
+          "source_id": "0fb87be39439b0a47865e7e6",
+          "url": "https://api.crossref.org/works/10.1007/s12200-025-00156-4",
           "title": "Simulation and experimental investigation of liquid-cooling thermal management for high-bandwidth co-packaged optics",
           "published_at": "2025-05-14"
         }
@@ -1126,8 +1126,8 @@
       ],
       "example_documents": [
         {
-          "source_id": "b75f20e8a3ed4210a8167e50",
-          "url": "https://api.openalex.org/works/W7165032739",
+          "source_id": "832eb07eac32cff2a49c5066",
+          "url": "https://api.crossref.org/works/10.1109/ectc51846.2026.00024",
           "title": "Reliable Low-Temperature (≤ 250 °C) Cu/Dielectric Hybrid Bonding for High-Bandwidth Memory (HBM) Stack Integration",
           "published_at": "2026-05-26"
         },

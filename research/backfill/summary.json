@@ -1,30 +1,30 @@
 {
   "status": "completed_with_limits",
-  "collected_at": "2026-10-26T14:40:32+00:00",
+  "collected_at": "2026-10-26T14:57:08+00:00",
   "historical_period": [
     2020,
     2026
   ],
-  "records": 5373,
+  "records": 5458,
   "by_source": {
     "sec": 1068,
-    "openalex": 1285,
-    "crossref": 2847,
+    "openalex": 1214,
+    "crossref": 3003,
     "federalregister": 173
   },
   "by_ecosystem": {
-    "power": 1915,
-    "hbm": 1772,
-    "optics": 1686
+    "power": 1918,
+    "hbm": 1776,
+    "optics": 1764
   },
   "by_publication_year": {
-    "2020": 675,
-    "2021": 747,
-    "2022": 757,
-    "2023": 816,
+    "2020": 715,
+    "2021": 748,
+    "2022": 758,
+    "2023": 820,
     "2024": 807,
-    "2025": 783,
-    "2026": 788
+    "2025": 819,
+    "2026": 791
   },
   "failed_source_segments": [],
   "interpretation": "Historical metadata sample (bounded pagination), not exhaustive corpus, real-time alerts, or point-in-time investment proof",
@@ -35,6 +35,12 @@
     "SEC submission archive availability and filing caps differ by issuer.",
     "Original publication date != first_seen_at; historical index snapshots were NOT retained.",
     "Imprecise year/month is normalized to Jan 1 with published_precision field, not an exact date.",
-    "Future-dated results are excluded relative to actual collector date."
-  ]
+    "Future-dated results are excluded relative to actual collector date.",
+    "API page ordering changes across runs: preserve all earlier valid documents, not only today's top-ranked results."
+  ],
+  "records_from_previous_archive": 5373,
+  "current_api_snapshot_records": 5404,
+  "newly_discovered_archive_records": 85,
+  "previously_observed_but_not_in_current_snapshot": 54,
+  "storage_mode": "cumulative_union_preserve_first_seen"
 }
