@@ -228,7 +228,7 @@ def test_budget_brief_defaults():
     assert opt.research_searches == 4
     assert opt.thinking_budget == 0
     args = build_parser().parse_args(["briefs", "build"])
-    assert (args.model, args.research_model, args.critique_model) == ("haiku", "haiku", "haiku")
+    assert (args.model, args.research_model, args.critique_model) == (None, "haiku", "haiku")
     assert args.searches == 4 and args.effort == "medium"
 
 
