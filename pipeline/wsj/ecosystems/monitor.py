@@ -524,24 +524,28 @@ def run(stage: str, *, state_path: Path, graph_path: Path, data_dir: Path,
     new, state = apply_observations(state, list(fetched.values()), now, initial_run=baseline)
     if baseline:
         state["initialized_at"] = now
-
-    hypotheses = hypotheses_from_events(graph, new)
+    enrich_new_sec_filings(new)
+    recent = (read_recent_history(data_dir / "events.jsonl", now) + new) if stage == "daily" else new
+    recent = list({event["id"]: event for event in recent}.values())
+    recent.sort(key=lambda e: (-e["research_priority"], e["id"]))
+    hypotheses = hypotheses_from_events(graph, recent)
     review = None
     key = os.environ.get("ANTHROPIC_API_KEY", "")
-    if stage == "daily" and hypotheses and key and not no_ai and not baseline:
+    already_reported = (data_dir / "reports" / f"{today}.md").exists()
+    if stage == "daily" and hypotheses and key and not no_ai and not baseline and not already_reported:
         try:
             review = generate_ai_review(
-                sorted(new, key=lambda e: -e["research_priority"])[:8], hypotheses, key,
+                recent[:8], hypotheses, key,
                 model=os.environ.get("WSJ_MONITOR_MODEL", "haiku"),
             )
         except Exception as exc:
             failures.append({"source": "llm_analyst", "error": str(exc)[:230]})
     latest = {
         "run_at": now, "stage": stage, "baseline_created": baseline,
-        "new_evidence": len(new), "observations_evaluated": len(fetched),
+        "new_evidence": len(new), "events_reviewed_30h": len(recent), "observations_evaluated": len(fetched),
         "failures": failures, "hypotheses_proposed": len(hypotheses),
         "ai_review_status": "success" if review else ("skipped" if not key or no_ai or stage != "daily" or not hypotheses else "failed"),
-        "top_events": new[:20], "hypotheses": hypotheses, "llm_review": review,
+        "top_events": recent[:20], "hypotheses": hypotheses, "llm_review": review,
     }
     state["last_run_utc"] = now
     state["run_history"] = (state.get("run_history", []) + [{
@@ -562,12 +566,12 @@ def run(stage: str, *, state_path: Path, graph_path: Path, data_dir: Path,
             reports = data_dir / "reports"
             reports.mkdir(parents=True, exist_ok=True)
             (reports / f"{today}.md").write_text(
-                markdown_report(stage=stage, now=now, new=new, hypotheses=hypotheses,
+                markdown_report(stage=stage, now=now, new=recent, hypotheses=hypotheses,
                                 failures=failures, ai_review=review, baseline=baseline), encoding="utf-8",
             )
         # A monitor-only run still provides a full ephemeral report for GH Actions.
         (data_dir / "run-summary.md").write_text(
-            markdown_report(stage=stage, now=now, new=new, hypotheses=hypotheses,
+            markdown_report(stage=stage, now=now, new=recent, hypotheses=hypotheses,
                             failures=failures, ai_review=review, baseline=baseline), encoding="utf-8")
     return latest
 
