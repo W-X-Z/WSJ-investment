@@ -28,7 +28,7 @@ export default async function Companies({ searchParams }: { searchParams: Promis
         params={{ q, bucket, universe }}
         fields={[
           { name: "q", placeholder: "이름/티커" },
-          { name: "bucket", placeholder: "섹터", options: ["biotech", "medtech", "gov_procurement", "other"] },
+          { name: "bucket", placeholder: "섹터", options: ["biotech", "medtech", "gov_procurement", "energy", "ai_software", "semis", "other"] },
           { name: "universe", placeholder: "유니버스만", options: ["1", "0"] },
         ]}
         page={page}

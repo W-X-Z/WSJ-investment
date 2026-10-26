@@ -13,7 +13,7 @@
 | C-05 | `clinicaltrials` | `raw.ct_studies`, `raw.ct_study_changes` | P1 | ✅ 구현 | 스냅샷 diff |
 | C-06 | `openfda` | `raw.fda_drug_applications`, `raw.fda_device_510k` | P1 | ✅ 구현 | |
 | C-07 | `usaspending` | `raw.gov_awards` | P1 | ✅ 구현 | 유니버스 수신자명 검색 |
-| C-08 | `sec_form4_backfill` | `raw.sec_form4_transactions` | P1 | 미구현 | DERA 분기 zip 2006~ (백테스트 전제) |
+| C-08 | `sec_form4_backfill` | `raw.sec_form4_transactions` | P3 | 보류 | ADR-0008: 백테스트 제외. 내부자 '루틴 매수' 판별용 1~2년치만 필요해지면 재검토 |
 | C-09 | `federal_register` | `raw.fedreg_documents` | P2 | 미구현 | public inspection 포함 |
 | C-10 | `war_gov_contracts` | `raw.dod_contract_announcements` | P2 | 미구현 | RSS 파싱 |
 | C-11 | `cms_partd` | `raw.cms_partd_quarterly` | P2 | 미구현 | 분기 |
@@ -24,7 +24,7 @@
 | C-16 | `nih_nsf` | `raw.gov_grants` | P2 | 미구현 | |
 | C-17 | `eia_860m` | `raw.eia_planned_generators` | P3 | 미구현 | PUDL changelog |
 | C-18 | `fcc_eas` / `nist_cmvp` / `crtsh` | — | P3 | 미구현 | 스크래핑, 브라우저 필요 |
-| C-19 | `nhplug_quotes` | `raw.px_daily` | P2 | 미구현 | 백테스트 가격. 모의투자 도메인 |
+| C-19 | `nhplug_quotes` | `raw.px_daily` | P2 | 미구현 | 현재가·시총 보강용 (백테스트 아님). 사용신청 필요 |
 
 ## 플랫폼
 
@@ -38,13 +38,17 @@
 | P-05 | 알림(수집 실패) | P2 | Actions 실패 알림으로 우선 대체 |
 | P-06 | 조회 화면 Vercel 배포 | P2 | |
 
-## 백테스트·연구
+## 연결·해석 (ADR-0008)
 
-| ID | 항목 | 우선 | 설계 요지 |
-|---|---|---|---|
-| B-1 | Form 4 × 촉매 교차 이벤트 스터디 | P1 | 이벤트: 공개유동 <$1B, 클러스터 매수(≥2인 or ≥$100k, 코드 P), 루틴 매수 제외(전년 동월 매수 이력), 같은 분기 내 독립 촉매(8-K 1.01 / 임상 상태 변경 / FDA / 정부계약) 교차. 측정: CAR(0,2) vs CAR(3,750/1250), 벤치마크 Russell 2000 또는 사이즈 매칭. 데이터: C-08 + C-19 |
-| B-2 | 13F 화이트리스트 기관 선정 | P2 | 소형주 전문·승률 기준 20~30개 |
-| B-3 | 기술 변화량 점수 (10-K 연도별 diff) | P3 | ADR-0007: 수준이 아닌 변화량 |
+| ID | 항목 | 우선 | 상태 | 설계 요지 |
+|---|---|---|---|---|
+| S-1 | 신호 레이어 `core.signals` / `core.candidates` | P1 | ✅ 구현 | 규칙 기반 (`wsj/signals/rules.py`). 가족(family): insider / contract / clinical / fda / gov / flow / dilution / activist. 후보 = 독립 2계열 이상 90일 내 교차 |
+| S-2 | Analyst 에이전트 → `ideas.briefs` | P1 | 미구현 | 후보별 10-K 사업 섹션·8-K·신호 원문을 읽고 브리프(왜 지금·하드데이터·아이디어·리스크·반증·점수) 작성 |
+| S-3 | Risk 에이전트 (리스크 섹션) | P1 | 미구현 | 자금 소진·희석·바이너리·유동성·집중 고객 — 근거 링크 필수 |
+| S-4 | 브리프 화면 `/briefs` + 분기 채점 | P2 | 미구현 | predictions 채점 UI |
+| B-2 | 13F 화이트리스트 기관 선정 | P2 | 미구현 | 소형주 전문·승률 기준 20~30개 — 신호 가족 'institution' |
+| B-3 | 기술 변화량 점수 (10-K 연도별 diff) | P3 | 미구현 | ADR-0007: 수준이 아닌 변화량 |
+| ~~B-1~~ | ~~Form 4 × 촉매 이벤트 스터디~~ | — | 취소 | ADR-0008 |
 
 ## 알려진 제약 (2026-10)
 

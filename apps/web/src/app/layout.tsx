@@ -9,6 +9,8 @@ export const metadata: Metadata = {
 
 const NAV = [
   ["/", "개요"],
+  ["/candidates", "후보"],
+  ["/signals", "신호"],
   ["/companies", "유니버스"],
   ["/insider", "내부자 거래"],
   ["/filings", "공시"],

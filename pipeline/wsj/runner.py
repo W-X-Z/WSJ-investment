@@ -4,6 +4,7 @@
   python -m wsj run sec_form4 [--since 2026-10-01] [--until 2026-10-23] [--limit 50]
   python -m wsj run --all
   python -m wsj entities resolve
+  python -m wsj signals build [--as-of 2026-10-26] [--window 120]
 
 러너가 하는 일: 워터마크 읽기 → run() → ops.collector_runs 기록 → 워터마크 갱신.
 수집기 예외는 잡아서 failed 로 남기고 다음으로 넘어간다 (ADR-0003 §7).
@@ -148,6 +149,27 @@ def cmd_entities(args: argparse.Namespace) -> int:
     return 2
 
 
+def cmd_signals(args: argparse.Namespace) -> int:
+    settings = load_settings()
+    _setup_logging(settings.wsj_log_level)
+    if args.store:
+        settings.wsj_store = args.store
+    store = make_store(settings)
+    try:
+        if args.signals_cmd == "build":
+            from wsj.signals.build import build
+
+            summary = build(
+                store, as_of=parse_date(args.as_of) if args.as_of else None, window_days=args.window
+            )
+            for k, v in summary.items():
+                print(f"{k}: {v}")
+            return 0
+    finally:
+        store.close()
+    return 2
+
+
 def build_parser() -> argparse.ArgumentParser:
     p = argparse.ArgumentParser(prog="wsj", description="WSJ-investment 데이터 수집 파이프라인")
     sub = p.add_subparsers(dest="cmd", required=True)
@@ -167,6 +189,12 @@ def build_parser() -> argparse.ArgumentParser:
     rs = es.add_parser("resolve", help="raw 의 소스별 이름을 core.entity_aliases 로 매칭")
     rs.add_argument("--dry-run", action="store_true")
     rs.add_argument("--store", choices=["postgrest", "sqlite"])
+    g = sub.add_parser("signals", help="연결 레이어: core.signals / core.candidates")
+    gs = g.add_subparsers(dest="signals_cmd", required=True)
+    gb = gs.add_parser("build", help="raw → signals → candidates 재계산")
+    gb.add_argument("--as-of", help="기준일 YYYY-MM-DD (기본 오늘)")
+    gb.add_argument("--window", type=int, default=120, help="신호 생성 창(일)")
+    gb.add_argument("--store", choices=["postgrest", "sqlite"])
     return p
 
 
@@ -178,6 +206,8 @@ def main(argv: list[str] | None = None) -> int:
         return cmd_run(args)
     if args.cmd == "entities":
         return cmd_entities(args)
+    if args.cmd == "signals":
+        return cmd_signals(args)
     return 2
 
 

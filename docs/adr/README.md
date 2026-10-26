@@ -14,4 +14,5 @@
 | [0004](0004-initial-universe.md) | 초기 유니버스: 공개유동 <$1B, 바이오·의료기기·정부조달 | accepted | 2026-10-26 |
 | [0005](0005-entity-resolution.md) | 엔티티 매칭: CIK 허브 + 소스별 별칭 테이블 | accepted | 2026-10-26 |
 | [0006](0006-dev-console-frontend.md) | 개발용 조회 화면은 Next.js 최소 구성 | accepted | 2026-10-26 |
-| [0007](0007-alpha-hypothesis-and-validation-order.md) | 알파 가설과 검증 순서 (백테스트 → 에이전트) | accepted | 2026-10-26 |
+| [0007](0007-alpha-hypothesis-and-validation-order.md) | 알파 가설과 검증 순서 (백테스트 → 에이전트) | partially superseded by 0008 | 2026-10-26 |
+| [0008](0008-product-is-the-brief.md) | 제품은 후보 브리프 — 백테스트·모의투자 제외, 섹터 확장 | accepted | 2026-10-26 |

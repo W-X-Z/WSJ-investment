@@ -3,8 +3,9 @@
 ## 1. 목표와 가설
 
 - **목표**: 공개 하드데이터 교차검증으로 미국 소형주(시총/공개유동 < $1B) 중 사업 변곡 종목을 찾아, 3~5년 보유로 텐배거를 노리는 바벨 포트폴리오를 운용한다.
-- **알파 가설**: 신호 하나(예: 내부자 매수)는 반영돼 있다. 알파는 (a) 서로 독립적인 데이터셋의 **교집합**, (b) 기관이 못 들어가는 **용량 제약 구간**, (c) 승자를 안 파는 **시간 지평**에서 나온다. 이 가설은 Form 4 × 촉매 교차 이벤트 스터디(3~5년 드리프트)로 먼저 검증한다 ([BACKLOG](BACKLOG.md) B-1).
-- **초기 유니버스**: 바이오·의료기기·정부조달(방산/우주/인프라) 소형주. Phase 1 소스가 가장 두터운 섹터 ([ADR-0004](adr/0004-initial-universe.md)).
+- **제품**: 텐배거 후보 **브리프** — 왜 지금 / 하드데이터·원문 링크 / 투자 아이디어 / 리스크 / 반증 조건 / 점수 ([ADR-0008](adr/0008-product-is-the-brief.md)). 매매는 사용자가 직접. 백테스트·모의투자 없음, 브리프 예측을 분기마다 채점.
+- **알파 가설**: 신호 하나(예: 내부자 매수)는 반영돼 있다. 알파는 (a) 서로 독립적인 데이터셋의 **교집합**, (b) 기관이 못 들어가는 **용량 제약 구간**, (c) 승자를 안 파는 **시간 지평**에서 나온다 ([ADR-0007](adr/0007-alpha-hypothesis-and-validation-order.md)).
+- **유니버스**: 공개유동 $10M~$1B 소형주, 섹터 버킷 biotech · medtech · gov_procurement · energy · ai_software · semis ([ADR-0004](adr/0004-initial-universe.md), [ADR-0008](adr/0008-product-is-the-brief.md)).
 
 ## 2. 부서 = 에이전트 = 스키마
 
@@ -22,7 +23,7 @@
                        ops: 수집기 실행 로그·워터마크
 ```
 
-Phase 1에서는 `raw`, `core`, `ops`만 채운다. 나머지 스키마는 빈 채로 만들어 구조를 고정한다 ([ADR-0002](adr/0002-department-schemas.md)).
+Phase 1에서는 `raw`, `core`, `ops`만 채운다. Phase 2 는 `core.signals`/`core.candidates`(연결)와 `ideas.briefs`(해석). `orders`/`fills`/`decisions` 는 ADR-0008 로 보류 ([ADR-0002](adr/0002-department-schemas.md)).
 
 ## 3. 데이터 흐름
 

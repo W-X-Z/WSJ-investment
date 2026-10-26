@@ -66,3 +66,7 @@ jobs:
         if: always()
         working-directory: pipeline
         run: python -m wsj entities resolve
+      - name: Build signals and candidates
+        if: always()
+        working-directory: pipeline
+        run: python -m wsj signals build

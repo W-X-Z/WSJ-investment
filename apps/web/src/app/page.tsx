@@ -15,6 +15,8 @@ type Overview = Record<string, unknown> & {
 };
 
 const TABLES = [
+  "core.candidates",
+  "core.signals",
   "core.companies",
   "core.entity_aliases",
   "core.entity_unresolved",
