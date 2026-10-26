@@ -10,7 +10,7 @@ import argparse
 import json
 import os
 import sys
-from datetime import datetime, timezone
+from datetime import date, datetime, timezone
 from pathlib import Path
 from urllib.error import HTTPError, URLError
 from urllib.parse import urlencode, urlsplit
@@ -44,7 +44,16 @@ QUERIES = [
 
 
 def _is_historical_date(value: str | None, as_of: str) -> bool:
-    return bool(value and len(str(value)) >= 10 and str(value)[:10] <= as_of)
+    if not value:
+        return False
+    text = str(value).strip()
+    normalized = text[:10] if len(text) >= 10 and text[4:5] == "-" else text[:8]
+    if len(normalized) == 8 and normalized.isdigit():
+        normalized = f"{normalized[:4]}-{normalized[4:6]}-{normalized[6:8]}"
+    try:
+        return date.fromisoformat(normalized) <= date.fromisoformat(as_of)
+    except ValueError:
+        return False
 
 
 def parse_records(source: str, payload: object, as_of: str) -> tuple[list[dict], str]:
@@ -76,7 +85,7 @@ def parse_records(source: str, payload: object, as_of: str) -> tuple[list[dict],
         cols = ("form", "filingDate", "accessionNumber", "primaryDocument")
         rows = zip(*(recent.get(c, []) for c in cols))
         out = [{"id": a, "date": d, "name": f, "document": p} for f, d, a, p in rows if f in ("8-K", "10-Q", "10-K") and _is_historical_date(d, as_of)]
-        return out[-8:], "Most recent array is partial; filing date not exact intraday publication; archive indexes are needed"
+        return out[:8], "Most recent array is partial; filing date not exact intraday publication; archive indexes are needed"
     if source == "usaspending":
         items = payload.get("results", []) if isinstance(payload, dict) else []
         # Base Obligation Date is NOT the public release date; do not mark as contemporaneously available.
