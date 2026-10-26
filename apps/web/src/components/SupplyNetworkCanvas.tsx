@@ -12,6 +12,7 @@ import { seed, KINDS, RELATIONS, type GraphNode, type Edge, type EcoId } from "@
 import history from "@/data/historical-evidence.json";
 import { relevantHistoricalTerms } from "@/lib/technical-keywords";
 import { NodeEvidencePanel } from "@/components/NodeEvidencePanel";
+import { IndustryMilestones } from "@/components/IndustryMilestones";
 import "./SupplyNetworkCanvas.css";
 
 type Scope = EcoId | "all";
@@ -368,6 +369,7 @@ export function SupplyNetworkCanvas({initialEcosystem="all",compact=false}:{init
       {node.measured_metrics?.length?<><h4>관측해야 할 물리량</h4><div className="sc-metrics">{node.measured_metrics.map(m=><span key={m}>{m.replaceAll("_"," ")}</span>)}</div></>:null}
       <h4>직접 연결된 기술 관계</h4>
       <div className="sc-related-edges">{nodeEdges.map(e=><button key={e.id} type="button" onClick={()=>setSelectedEdge(e.id)}><span className={`sc-small-mark sc-mark-${epistemic(e)}`}/><div><span>{RELATIONS[e.relation]??e.relation}</span><strong>{nodeIndex.get(e.from===node.id?e.to:e.from)?.label}</strong></div><Icon name="chevron-right" size={14}/></button>)}</div>
+      <IndustryMilestones nodeId={node.id} compact/>
       <NodeEvidencePanel nodeId={node.id}/>
       {historyRows.length>0&&<><h4>관련 키워드로 찾은 과거 자료 · 미검증</h4><div className="sc-history">{historyRows.map(x=><a key={x.id} href={x.url} target="_blank" rel="noreferrer"><small>{fmt(x.published_at)} · {x.source}</small><strong>{x.title}</strong></a>)}</div></>}
       <div className="sc-inspector-actions"><button type="button" onClick={()=>{shiftMode("impact");setInspectorOpen(true)}}><Icon name="network" size={15}/> 이 노드 중심으로 펼치기</button><Link href={`/search?q=${encodeURIComponent(node.label)}`}><Icon name="search" size={15}/> 전체 근거 검색</Link></div>
