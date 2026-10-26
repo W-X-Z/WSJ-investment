@@ -22,11 +22,11 @@ async function check(viewport,label){
   const r=el.getBoundingClientRect(),v=document.querySelector(".sc-viewport")?.getBoundingClientRect();
   return v&&r.right>v.left&&r.left<v.right&&r.bottom>v.top&&r.top<v.bottom;
  }).length);
- await page.locator(".sc-shell").screenshot({path:`${output}/industry-canvas-${label}.png`,animations:"disabled"});
+ await page.screenshot({path:`${output}/industry-canvas-${label}.png`,fullPage:true,animations:"disabled"});
  await page.getByRole("button",{name:"HBM",exact:true}).click();
  await page.waitForTimeout(200);
  const scopedCount=await page.locator(".sc-graph-node").count();
- await page.locator(".sc-shell").screenshot({path:`${output}/industry-canvas-${label}-hbm.png`,animations:"disabled"});
+ await page.screenshot({path:`${output}/industry-canvas-${label}-hbm.png`,fullPage:true,animations:"disabled"});
  const chosen=page.locator(".sc-graph-node").filter({hasText:"Camtek"}).first();
  if(await chosen.count()){await chosen.click();await page.waitForTimeout(100);}
  const inspector=await page.locator(".sc-inspector").innerText().catch(()=>"");
