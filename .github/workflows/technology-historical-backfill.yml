@@ -74,6 +74,7 @@ jobs:
           from pathlib import Path
           s=json.loads(Path('research/enriched/summary.json').read_text())
           assert s['new_confirmed_supply_edges'] == 0
+          Path('apps/web/src/data/relation-candidates.json').write_text(Path('research/enriched/relation-candidates.json').read_text())
           assert s['unique_valid_sources'] > 100
           print("Review-only graph index linked",s['documents_with_ontology_matches'],"documents")
           PY
@@ -83,7 +84,7 @@ jobs:
           set -euo pipefail
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add research/backfill research/enriched apps/web/src/data/historical-evidence.json apps/web/src/data/graph-evidence-index.json
+          git add research/backfill research/enriched apps/web/src/data/historical-evidence.json apps/web/src/data/graph-evidence-index.json apps/web/src/data/relation-candidates.json
           if ! git diff --cached --quiet; then
             git commit -m "data: six-year technology-supply-chain historical source backfill"
             git fetch origin "${GITHUB_REF_NAME}"
