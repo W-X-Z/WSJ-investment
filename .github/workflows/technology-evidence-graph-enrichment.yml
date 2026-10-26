@@ -40,7 +40,9 @@ jobs:
         working-directory: pipeline
         env:
           PYTHONPATH: .
-        run: python -m unittest discover -s tests -p 'test_ecosystem_enrich_graph.py' || true
+        run: |
+          python -m pip install pytest
+          PYTHONPATH=. python -m pytest -q tests/test_ecosystem_enrich_graph.py
       - name: Build evidence-to-node read model (no LLM, no external HTTP)
         env:
           PYTHONPATH: pipeline
