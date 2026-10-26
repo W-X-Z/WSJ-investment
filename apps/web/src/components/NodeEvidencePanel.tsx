@@ -9,11 +9,12 @@ type CandidateMetric = {
  value:number;unit:string;literal:string;passage:string;source_id:string;
  source_url:string;published_at:string;conditions_verified:boolean;
 };
+type RawNumericMention = Omit<CandidateMetric,"source_id"|"source_url"|"published_at">;
 type CandidateSource = {
  id:string;title:string;published_at:string;published_precision?:string;
  first_seen_at?:string;source:string;url:string;rank:number;
  matched_terms:string[];verification_status:string;
- metric_candidates:CandidateMetric[];
+ metric_candidates:RawNumericMention[];
 };
 type EvidenceNode = {
  node_id:string;total_document_leads:number;year_counts:Record<string,number>;
@@ -25,7 +26,7 @@ type EvidenceData = {summary:{
  nodes_with_at_least_one_match:number;new_confirmed_supply_edges:number;
  interpretation:string;
 };nodes:Record<string,EvidenceNode>};
-const data=evidence as EvidenceData;
+const data=evidence as unknown as EvidenceData;
 function yearLabel(value:string,precision?:string){
  if(precision==="year")return value.slice(0,4)+"년 · 연도까지만 확인";
  if(precision==="month")return value.slice(0,7)+" · 월까지만 확인";
