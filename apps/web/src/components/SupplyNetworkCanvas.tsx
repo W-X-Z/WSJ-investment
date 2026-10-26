@@ -168,6 +168,8 @@ export function SupplyNetworkCanvas({initialEcosystem="all",compact=false}:{init
  const [inspectorOpen,setInspectorOpen]=useState(!compact);
  const canvasRef=useRef<HTMLDivElement>(null);
  const drag=useRef<DragState|null>(null);
+ const touchPoints=useRef(new Map<number,Vec>());
+ const pinchStart=useRef<{distance:number;camera:Camera;mid:Vec}|null>(null);
  const graphIds=useMemo(()=>new Set(seed.nodes.filter(n=>scope==="all"||owners.get(n.id)===scope).map(n=>n.id)),[scope]);
  const layout=useMemo(()=>arrange(graphIds,mode,scope,selected),[graphIds,mode,scope,selected]);
  const positions=useMemo(()=>new Map<string,Vec>(Array.from(layout).map(([id,pos]):[string,Vec]=>[id,overrides[id]??pos])),[layout,overrides]);
@@ -235,12 +237,42 @@ export function SupplyNetworkCanvas({initialEcosystem="all",compact=false}:{init
  }
  function panDown(e:React.PointerEvent<HTMLDivElement>){
   if(e.button!==0|| (e.target as Element).closest(".sc-graph-node,.sc-link-path,.sc-canvas-tools,.sc-map-holder,.sc-selection-hint,.sc-reopen-inspector"))return;
+  if(e.pointerType==="touch"){
+   touchPoints.current.set(e.pointerId,{x:e.clientX,y:e.clientY});
+   if(touchPoints.current.size===2){
+    const [a,b]=Array.from(touchPoints.current.values());
+    pinchStart.current={distance:Math.max(1,Math.hypot(b.x-a.x,b.y-a.y)),camera:{...camera},mid:{x:(a.x+b.x)/2,y:(a.y+b.y)/2}};
+    drag.current=null;
+    e.currentTarget.setPointerCapture(e.pointerId);
+    return;
+   }
+  }
   drag.current={type:"pan",px:e.clientX,py:e.clientY,cam:camera};
   e.currentTarget.setPointerCapture(e.pointerId);
  }
  function panMove(e:React.PointerEvent<HTMLDivElement>){
+  if(e.pointerType==="touch"&&touchPoints.current.has(e.pointerId)){
+   touchPoints.current.set(e.pointerId,{x:e.clientX,y:e.clientY});
+   if(pinchStart.current&&touchPoints.current.size>=2){
+    const [a,b]=Array.from(touchPoints.current.values()),start=pinchStart.current;
+    const distance=Math.max(1,Math.hypot(b.x-a.x,b.y-a.y));
+    const rect=canvasRef.current?.getBoundingClientRect();
+    if(!rect)return;
+    const x=(a.x+b.x)/2-rect.left,y=(a.y+b.y)/2-rect.top;
+    const z=Math.max(.13,Math.min(2.7,start.camera.z*distance/start.distance));
+    const worldX=(start.mid.x-rect.left-start.camera.x)/start.camera.z;
+    const worldY=(start.mid.y-rect.top-start.camera.y)/start.camera.z;
+    setCamera({z,x:x-worldX*z,y:y-worldY*z});
+    return;
+   }
+  }
   const d=drag.current;
   if(d?.type==="pan")setCamera({...d.cam,x:d.cam.x+e.clientX-d.px,y:d.cam.y+e.clientY-d.py});
+ }
+ function panEnd(e:React.PointerEvent<HTMLDivElement>){
+  touchPoints.current.delete(e.pointerId);
+  if(touchPoints.current.size<2)pinchStart.current=null;
+  if(drag.current?.type==="pan")drag.current=null;
  }
  function nodeDown(e:React.PointerEvent<HTMLButtonElement>,id:string){
   if(e.button!==0)return;
@@ -285,7 +317,7 @@ export function SupplyNetworkCanvas({initialEcosystem="all",compact=false}:{init
   </div>
   <div className="sc-context"><div className="sc-type-legend"><span><i className="sc-kind-dot sc-dot-requirement"/>기술 요구</span><span><i className="sc-kind-dot sc-dot-bottleneck"/>병목</span><span><i className="sc-kind-dot sc-dot-technology"/>기술</span><span><i className="sc-kind-dot sc-dot-component"/>소재·부품·공정</span><span><i className="sc-kind-dot sc-dot-company"/>기업</span></div><div className="sc-trust-toggle" role="group" aria-label="근거 필터"><button type="button" aria-pressed={trust==="all"} className={trust==="all"?"active":""} onClick={()=>setTrust("all")}>전체 관계</button><button type="button" aria-pressed={trust==="documented"} className={trust==="documented"?"active":""} onClick={()=>setTrust("documented")}>추론 제외</button></div></div>
   <div className="sc-body">
-   <div ref={canvasRef} className="sc-viewport" onPointerDown={panDown} onPointerMove={panMove} onPointerUp={()=>{if(drag.current?.type==="pan")drag.current=null;}} onPointerCancel={()=>{drag.current=null;}}>
+   <div ref={canvasRef} className="sc-viewport" onPointerDown={panDown} onPointerMove={panMove} onPointerUp={panEnd} onPointerCancel={e=>{panEnd(e);drag.current=null;}}>
     <div className="sc-grid-layer"/>
     <div className="sc-world" style={{transform:`translate(${camera.x}px,${camera.y}px) scale(${camera.z})`}}>
      <svg className="sc-links" width={7000} height={5500} viewBox="0 0 7000 5500" aria-label="산업망 기술 관계 연결선">
