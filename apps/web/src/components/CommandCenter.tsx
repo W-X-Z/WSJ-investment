@@ -4,7 +4,7 @@ import { useMemo, useState } from "react";
 import Link from "next/link";
 import { Icon } from "@/components/Icon";
 import { GraphExplorer } from "@/components/GraphExplorer";
-import { ECO_BY_ID, type EcoId } from "@/lib/research-client";
+import { type EcoId } from "@/lib/research-client";
 
 type Story = {id:string;title:string;summary:string;date:string;ecoId:string;type:string;source:string;significance:string;status:string;sourceUrl?:string;target?:string};
 type Thesis = {id:string;ticker:string;company:string;title:string;description:string;ecoId:string;state:string;trigger:string;risk:string;href?:string;live?:boolean};
@@ -32,11 +32,11 @@ export function CommandCenter({stories,ideas,ecosystems,sourceOnline,asOf}:{stor
  return <div className="cc">
   <div className="cc-topline"><span><i className="cc-live-dot"/> SIGNAL ATLAS / RESEARCH INTELLIGENCE</span><span>연구 기준일 {fmt(asOf)} · {sourceOnline?"기업 데이터 연결":"기업 데이터 연결 미확인"}</span></div>
   <div className="cc-intro">
-   <div><div className="cc-eyebrow">TODAY&apos;S RESEARCH BRIEF</div><h1>기술은 어디서 바뀌고,<br/><span>가치는 어디로 이동하는가.</span></h1><p>기술의 병목과 공급망의 변화를 연결합니다. 검증된 사실, 기업의 주장, 아직 확인되지 않은 가설을 분리해 보여줍니다.</p></div>
+   <div><div className="cc-eyebrow">RESEARCH INTELLIGENCE BRIEF</div><h1>기술은 어디서 바뀌고,<br/><span>가치는 어디로 이동하는가.</span></h1><p>기술의 병목과 공급망의 변화를 연결합니다. 검증된 사실, 기업의 주장, 아직 확인되지 않은 가설을 분리해 보여줍니다.</p></div>
    <Link href="/search" className="cc-search"><Icon name="search" size={19}/><span>기업·기술·소재·공정 통합 검색</span><kbd>⌘ K</kbd></Link>
   </div>
   <div className="cc-priority">
-   <div className="cc-priority-main"><div className="cc-eyebrow">01 / IMPORTANT SIGNAL</div><span className="cc-overline">가장 먼저 검토할 기술 변화 · {headline?NAMES[headline.ecoId]??"공급망":"연구 이벤트"}</span>
+   <div className="cc-priority-main"><div className="cc-eyebrow">01 / IMPORTANT SIGNAL</div><span className="cc-overline">우선 검토할 기술 변화 · {headline?NAMES[headline.ecoId]??"공급망":"연구 이벤트"}</span>
     {headline?<><Link href={`/feed/${encodeURIComponent(headline.id)}`} className="cc-lead-title">{headline.title}<Icon name="arrow-up-right" size={20}/></Link><p>{headline.summary}</p><div className="cc-lead-foot"><span>{fmt(headline.date)} · {headline.source}</span><Link href={`/feed/${encodeURIComponent(headline.id)}`}>변화의 영향 분석 <Icon name="arrow-right" size={15}/></Link></div></>:<p>검토 가능한 주요 이슈가 아직 없습니다. 수집 현황은 연구 데이터에서 확인할 수 있습니다.</p>}
    </div>
    <div className="cc-priority-aside"><div className="cc-eyebrow">02 / ACTIVE THESES</div><h2>검증할 투자 가설</h2>{topIdeas.length?topIdeas.map(x=><Link key={x.id} href={x.href??`/ideas/${x.id}`} className="cc-mini-idea"><div><strong>{x.ticker}</strong><span>{STATUS[x.state]??"조사 중"}</span></div><p>{x.title}</p><Icon name="arrow-up-right" size={16}/></Link>):<p>현재 검증할 가설이 없습니다.</p>}<Link className="cc-aside-link" href="/ideas">모든 투자 가설 <Icon name="arrow-right" size={15}/></Link></div>
