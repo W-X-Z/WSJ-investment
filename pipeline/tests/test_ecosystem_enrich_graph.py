@@ -11,7 +11,7 @@ def tiny_fixture(tmp_path:Path):
     graph=tmp_path/"graph.json"
     graph.write_text(json.dumps({"nodes":[
         {"id":"eco:hbm","kind":"ecosystem","label":"HBM"},
-        {"id":"process:hybrid_bond","kind":"process","label":"Hybrid bonding"},
+        {"id":"process:hybrid_bond","kind":"process","label":"Hybrid bonding","measured_metrics":["overlay_nm"]},
         {"id":"material:cu_cu","kind":"material","label":"Cu-Cu bonding"},
     ],"edges":[]}))
     alias=tmp_path/"aliases.json"
@@ -52,13 +52,15 @@ def test_regex_alias_word_boundaries_and_metrics():
 
 def test_quantitative_passage_requires_alias_proximity_and_no_physics_certainty():
     text="Hybrid bonding achieved 50 nm pitch. Test conditions not described. "
-    extracted=quantitative_passages(text,[(0,14)])
+    extracted=quantitative_passages(text,[(0,14)],allowed_units={"nm"})
     assert len(extracted)==1
     assert extracted[0]["value"]==50
     assert extracted[0]["unit"]=="nm"
     assert extracted[0]["verification"]=="unverified_numeric_mention"
     assert not extracted[0]["conditions_verified"]
-    assert not quantitative_passages("150 nm isolated statement",[])
+    assert not quantitative_passages("150 nm isolated statement",[],allowed_units={"nm"})
+    assert not quantitative_passages("Hybrid bonding with 450 Gb/s",[(0,14)],allowed_units={"nm"})
+    assert quantitative_passages("Hybrid bonding achieved <1 nm overlay",[(0,14)],allowed_units={"nm"})[0]["operator"]=="less_than"
 
 
 def test_future_date_not_backfilled_as_historical():
