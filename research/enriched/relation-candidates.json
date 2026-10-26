@@ -7,7 +7,7 @@
     {
       "left_node_id": "component:pic",
       "right_node_id": "material:silicon_photonics",
-      "shared_source_count": 475,
+      "shared_source_count": 473,
       "years": [
         "2020",
         "2021",
@@ -44,7 +44,7 @@
     {
       "left_node_id": "bottleneck:hbm_overlay",
       "right_node_id": "tech:hybrid_bond",
-      "shared_source_count": 208,
+      "shared_source_count": 207,
       "years": [
         "2020",
         "2021",
@@ -81,7 +81,7 @@
     {
       "left_node_id": "material:silicon_photonics",
       "right_node_id": "tech:cpo",
-      "shared_source_count": 23,
+      "shared_source_count": 22,
       "years": [
         "2020",
         "2022",
@@ -117,7 +117,7 @@
     {
       "left_node_id": "component:pic",
       "right_node_id": "tech:cpo",
-      "shared_source_count": 21,
+      "shared_source_count": 20,
       "years": [
         "2020",
         "2022",
@@ -153,7 +153,7 @@
     {
       "left_node_id": "component:vcsel",
       "right_node_id": "tech:cpo",
-      "shared_source_count": 17,
+      "shared_source_count": 16,
       "years": [
         "2022",
         "2023",
@@ -437,40 +437,6 @@
       "review_prompt": "Does source text explicitly assert a causal relation? If not, keep separate from tech_edges."
     },
     {
-      "left_node_id": "component:fiber_connector",
-      "right_node_id": "tech:cpo",
-      "shared_source_count": 7,
-      "years": [
-        "2023",
-        "2024",
-        "2025",
-        "2026"
-      ],
-      "example_documents": [
-        {
-          "source_id": "87d19ee22563cd503e03541c",
-          "url": "https://api.crossref.org/works/10.1109/ectc51846.2026.00112",
-          "title": "Integrated Assembly Process For Pluggable Fiber Connector For Co-Packaged Optics",
-          "published_at": "2026-05-26"
-        },
-        {
-          "source_id": "5ca9fc4eee40f87fb802c3e8",
-          "url": "https://api.crossref.org/works/10.1109/icsj66986.2025.11302643",
-          "title": "40-Channel Detachable Optical Connector Enabling Ultra-High Density Connectivity in Co-Packaged Optics",
-          "published_at": "2025-11-12"
-        },
-        {
-          "source_id": "becd44dd0058e4d3f6af6c1c",
-          "url": "https://api.crossref.org/works/10.1109/ecoc66593.2025.11263261",
-          "title": "Compact Detachable Optical Connector with Low Loss and High Stability for Co-Packaged Optics",
-          "published_at": "2025-09-28"
-        }
-      ],
-      "status": "lexical_co_mention_not_supply_relation",
-      "should_create_graph_edge": false,
-      "review_prompt": "Does source text explicitly assert a causal relation? If not, keep separate from tech_edges."
-    },
-    {
       "left_node_id": "component:power_converter",
       "right_node_id": "tech:sic",
       "shared_source_count": 7,
@@ -505,9 +471,9 @@
       "review_prompt": "Does source text explicitly assert a causal relation? If not, keep separate from tech_edges."
     },
     {
-      "left_node_id": "req:1p6t",
+      "left_node_id": "component:fiber_connector",
       "right_node_id": "tech:cpo",
-      "shared_source_count": 7,
+      "shared_source_count": 6,
       "years": [
         "2023",
         "2024",
@@ -516,22 +482,22 @@
       ],
       "example_documents": [
         {
-          "source_id": "f6b583d84b9d40b6179be5a2",
-          "url": "https://api.crossref.org/works/10.2139/ssrn.6672598",
-          "title": "Non-Electric-Field Perturbation and Coherent Compensation Architecture for Photoelectric Conversion Nodes: A Substrate-Level Physical Compensation Framework for 1.6T/3.2T Co-Packaged Optics",
-          "published_at": "2026-01-01"
+          "source_id": "87d19ee22563cd503e03541c",
+          "url": "https://api.crossref.org/works/10.1109/ectc51846.2026.00112",
+          "title": "Integrated Assembly Process For Pluggable Fiber Connector For Co-Packaged Optics",
+          "published_at": "2026-05-26"
         },
         {
-          "source_id": "b9fdc252c222cf24cb28dd55",
-          "url": "https://api.openalex.org/works/W7106270531",
-          "title": "Investment Risk Assessment: Silicon Photonics for AI Datacenter Interconnects - 1.6T Transceivers and Co-Packaged Optics Transition Analysis",
-          "published_at": "2025-11-17"
+          "source_id": "5ca9fc4eee40f87fb802c3e8",
+          "url": "https://api.crossref.org/works/10.1109/icsj66986.2025.11302643",
+          "title": "40-Channel Detachable Optical Connector Enabling Ultra-High Density Connectivity in Co-Packaged Optics",
+          "published_at": "2025-11-12"
         },
         {
-          "source_id": "3ba57eb80603012680ab468a",
-          "url": "https://api.openalex.org/works/W4408507877",
-          "title": "1.6T linear-drive optical engine for Chinese co-packaged optics standard",
-          "published_at": "2025-03-17"
+          "source_id": "becd44dd0058e4d3f6af6c1c",
+          "url": "https://api.crossref.org/works/10.1109/ecoc66593.2025.11263261",
+          "title": "Compact Detachable Optical Connector with Low Loss and High Stability for Co-Packaged Optics",
+          "published_at": "2025-09-28"
         }
       ],
       "status": "lexical_co_mention_not_supply_relation",
@@ -565,6 +531,40 @@
           "url": "https://api.crossref.org/works/10.1109/icsj62869.2024.10804708",
           "title": "High-Bandwidth Optical Transmission with Single External Laser Source (ELS) and Polymer Splitters for Co-packaged Optics",
           "published_at": "2024-11-13"
+        }
+      ],
+      "status": "lexical_co_mention_not_supply_relation",
+      "should_create_graph_edge": false,
+      "review_prompt": "Does source text explicitly assert a causal relation? If not, keep separate from tech_edges."
+    },
+    {
+      "left_node_id": "req:1p6t",
+      "right_node_id": "tech:cpo",
+      "shared_source_count": 6,
+      "years": [
+        "2023",
+        "2024",
+        "2025",
+        "2026"
+      ],
+      "example_documents": [
+        {
+          "source_id": "f6b583d84b9d40b6179be5a2",
+          "url": "https://api.crossref.org/works/10.2139/ssrn.6672598",
+          "title": "Non-Electric-Field Perturbation and Coherent Compensation Architecture for Photoelectric Conversion Nodes: A Substrate-Level Physical Compensation Framework for 1.6T/3.2T Co-Packaged Optics",
+          "published_at": "2026-01-01"
+        },
+        {
+          "source_id": "b9fdc252c222cf24cb28dd55",
+          "url": "https://api.openalex.org/works/W7106270531",
+          "title": "Investment Risk Assessment: Silicon Photonics for AI Datacenter Interconnects - 1.6T Transceivers and Co-Packaged Optics Transition Analysis",
+          "published_at": "2025-11-17"
+        },
+        {
+          "source_id": "3ba57eb80603012680ab468a",
+          "url": "https://api.openalex.org/works/W4408507877",
+          "title": "1.6T linear-drive optical engine for Chinese co-packaged optics standard",
+          "published_at": "2025-03-17"
         }
       ],
       "status": "lexical_co_mention_not_supply_relation",
