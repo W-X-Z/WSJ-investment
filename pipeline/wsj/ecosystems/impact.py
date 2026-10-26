@@ -16,7 +16,7 @@ from pathlib import Path
 from typing import Any
 
 DEFAULT_GRAPH = Path(__file__).resolve().parents[3] / "research" / "ecosystems" / "seed_graph.json"
-PATH_RELATIONS = {"drives_requirement", "creates_bottleneck", "mitigated_by", "offered_by"}
+PATH_RELATIONS = {"drives_requirement", "creates_bottleneck", "mitigated_by", "offered_by", "requires_component_or_material", "uses_component_or_equipment"}
 WARNING_STAGES = {
     "technical_inference", "technology_option", "vendor_claim",
     "unverified_hypothesis", "scenario", "standard_draft", "standardization_in_progress",
