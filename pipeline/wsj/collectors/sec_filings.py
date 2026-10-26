@@ -44,6 +44,9 @@ class SecFilingsCollector(Collector):
             if not hit_universe:
                 continue
             fname = hit["_id"].split(":", 1)[1] if ":" in hit["_id"] else None
+            if not src.get("form") or not src.get("file_date"):
+                res.notes.append(f"skip {adsh}: form/file_date 없음")
+                continue
             rows[adsh] = {
                 "accession_no": adsh,
                 "cik": hit_universe[0],

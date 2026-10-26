@@ -26,7 +26,7 @@
 1. **허브 키는 CIK.** `core.companies(cik pk)`.
 2. `core.entity_aliases(source, alias_type, alias, cik, confidence, method, verified_at)`에 소스별 별칭을 쌓는다. `method`는 `exact | normalized | fuzzy | manual | llm`.
 3. 수집기는 **매칭하지 않는다.** raw 테이블에 소스 원문 이름을 그대로 저장하고, 매칭은 `wsj entities resolve` 별도 단계가 한다. 이유: 매칭 규칙이 바뀌어도 raw를 다시 긁을 필요가 없어야 한다.
-4. 매칭 순서: (a) 티커/UEI 등 정확 키 → (b) 법인명 정규화(접미사 INC/CORP/LTD 제거, 대문자, 구두점 제거) 정확 일치 → (c) 그 외는 `unresolved` 큐에 남기고 LLM/수동으로 처리. 퍼지 매칭 자동 승인은 하지 않는다 (오염이 모든 조인에 전파되므로).
+4. 매칭 순서: (a) 티커/UEI 등 정확 키 → (b) 법인명 정규화(접미사 INC/CORP/LTD 제거, 대문자, 구두점 제거) 정확 일치: **현재 사명 유일 일치 = 0.9, 구 사명 유일 일치 = 0.8** → (c) 같은 정규화 이름이 둘 이상의 CIK 를 가리키면(동명·사명 승계, 예: RXI PHARMACEUTICALS) 자동 매칭하지 않고 후보와 함께 `unresolved` 큐로 → (d) 그 외 업종어 제거 후보만 있는 경우도 큐. 퍼지 매칭 자동 승인은 하지 않는다 (오염이 모든 조인에 전파되므로).
 5. 자회사는 모회사 CIK에 매핑하되 `alias_type='subsidiary'`로 구분한다.
 
 ## 결과

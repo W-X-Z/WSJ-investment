@@ -106,6 +106,7 @@ class SecUniverseCollector(Collector):
             and latest[cik]["val"] is not None
             and PUBLIC_FLOAT_MIN <= float(latest[cik]["val"]) < PUBLIC_FLOAT_MAX
         ]
+        all_candidates = candidates
         if ctx.limit:
             candidates = candidates[: ctx.limit]
         log.info("candidates (exchange ok, $10M <= float < $1B): %d", len(candidates))
@@ -132,8 +133,10 @@ class SecUniverseCollector(Collector):
         # 4) 행 조립 — 모든 티커는 companies 에 들어가고, 후보만 상세·유니버스 판정
         now = datetime.utcnow().isoformat()
         rows: list[dict] = []
-        cand_set = set(candidates)
-        for cik, base in seed.items():
+        cand_set = set(all_candidates)
+        # --limit 스모크는 후보 일부만 건드린다. 전체를 쓰면 나머지 유니버스가 false 로 지워진다.
+        targets = {c: seed[c] for c in candidates} if ctx.limit else seed
+        for cik, base in targets.items():
             row = dict(existing.get(cik, {}))  # 기존 값 보존 (sic 등)
             row.update(base)
             pf = latest.get(cik)
@@ -182,6 +185,14 @@ class SecUniverseCollector(Collector):
                 }
             )
             rows.append(row)
+
+        # 상폐·티커 소멸: 현재 목록에 없는 기존 CIK 는 유니버스에서 뺀다
+        if not ctx.limit:
+            for cik, prev in existing.items():
+                if cik not in seed and prev.get("in_universe"):
+                    rows.append(
+                        {**prev, "in_universe": False, "universe_reason": "delisted", "updated_at": now}
+                    )
 
         for chunk in chunked(rows, 500):
             res.add(store.upsert("core.companies", chunk, ["cik"]))

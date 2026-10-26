@@ -61,6 +61,7 @@ class UsaSpendingCollector(Collector):
         log.info("usaspending companies=%d window %s..%s", len(companies), start, end)
 
         rows: dict[str, dict] = {}
+        capped_oldest: list[str] = []  # 페이지 상한에 걸린 회사의 가장 오래된 수정일
         for c in companies:
             q = normalize_name(c["name"])
             if len(q) < 4:
@@ -114,11 +115,24 @@ class UsaSpendingCollector(Collector):
                         "search_text": q,
                         "payload": {"internal_id": a.get("internal_id"), "agency_slug": a.get("agency_slug")},
                     }
-                if not data.get("page_metadata", {}).get("hasNext") or page >= 20:
+                has_next = data.get("page_metadata", {}).get("hasNext")
+                if has_next and page >= 20:
+                    oldest = min(
+                        (a.get("Last Modified Date") or "" for a in data.get("results", [])), default=""
+                    )
+                    if oldest:
+                        capped_oldest.append(oldest[:10])
+                        res.notes.append(f"{q}: page cap at {page}, oldest seen {oldest[:10]}")
+                    break
+                if not has_next:
                     break
                 page += 1
         for chunk in chunked(list(rows.values()), 200):
             res.add(store.upsert("raw.gov_awards", chunk, ["generated_internal_id"]))
         res.notes.append(f"companies={len(companies)} awards={len(rows)}")
-        res.watermark = {"last_modified": (end - timedelta(days=7)).isoformat()}
+        # 상한에 걸린 회사가 있으면 그 회사가 본 가장 오래된 날짜까지만 전진 (누락 방지)
+        wm_date = (end - timedelta(days=7)).isoformat()
+        if capped_oldest:
+            wm_date = min(wm_date, min(capped_oldest))
+        res.watermark = {"last_modified": wm_date}
         return res

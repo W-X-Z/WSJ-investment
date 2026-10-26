@@ -31,7 +31,8 @@
 | ID | 항목 | 우선 | 비고 |
 |---|---|---|---|
 | P-01 | GitHub Actions 스케줄 | P1 | ✅ `collect.yml` |
-| P-02 | 엔티티 매칭 `wsj entities resolve` | P1 | 정확·정규화 매칭 구현, 퍼지는 큐로 |
+| P-02 | 엔티티 매칭 `wsj entities resolve` | P1 | ✅ 정규화 매칭(0.9/0.8)·동명 충돌 큐. 남은 것: 후보 없는 이름은 큐에 안 넣어 백로그가 과소집계, `seen_count` 미증가 |
+| P-07 | 수집기 리뷰 잔여 (LOW) | P2 | sec_filings 정정(/A) 별도 수집, FINRA 202/HTML 응답 재시도 검증, usaspending 페이지 상한 시 창 분할 |
 | P-03 | 에이전트별 Postgres 롤·GRANT | P2 | ADR-0002 Phase 2 |
 | P-04 | 노션 단방향 동기화 | P3 | 사용자 보류 |
 | P-05 | 알림(수집 실패) | P2 | Actions 실패 알림으로 우선 대체 |

@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 import re
-from collections.abc import Iterable, Iterator
+from collections.abc import Iterable, Iterator, Sequence
 from datetime import date, datetime, timedelta
 from typing import TypeVar
 
@@ -19,6 +19,14 @@ def chunked(items: Iterable[T], size: int) -> Iterator[list[T]]:
             buf = []
     if buf:
         yield buf
+
+
+def dedupe(rows: list[dict], keys: Sequence[str]) -> list[dict]:
+    """자연키가 같은 행은 마지막 것만 남긴다. 한 배치 안의 중복은 Postgres upsert 가 21000 으로 거부한다."""
+    seen: dict[tuple, dict] = {}
+    for r in rows:
+        seen[tuple(r.get(k) for k in keys)] = r
+    return list(seen.values())
 
 
 def parse_date(value: str | None) -> date | None:

@@ -59,6 +59,11 @@ class HttpClient:
     def close(self) -> None:
         self._client.close()
 
+    @staticmethod
+    def _safe(url: str) -> str:
+        """로그·예외용: 쿼리스트링(API 키가 들어갈 수 있음)을 뗀 URL."""
+        return urlsplit(url)._replace(query="", fragment="").geturl()
+
     def _bucket(self, url: str) -> _TokenBucket:
         host = urlsplit(url).netloc
         if host not in self._buckets:
@@ -75,16 +80,18 @@ class HttpClient:
                 resp = self._client.request(method, url, **kwargs)
             except (httpx.TransportError, httpx.TimeoutException) as exc:
                 last_exc = exc
-                log.warning("%s %s transport error (%s), attempt %d", method, url, exc, attempt + 1)
+                log.warning(
+                    "%s %s transport error (%s), attempt %d", method, self._safe(url), exc, attempt + 1
+                )
                 self._backoff(attempt, None)
                 continue
             if resp.status_code in RETRY_STATUS and attempt < self.max_retries:
                 self.stats["retries"] += 1
-                log.warning("%s %s -> %d, attempt %d", method, url[:120], resp.status_code, attempt + 1)
+                log.warning("%s %s -> %d, attempt %d", method, self._safe(url), resp.status_code, attempt + 1)
                 self._backoff(attempt, resp.headers.get("Retry-After"))
                 continue
             return resp
-        raise RuntimeError(f"{method} {url}: retries exhausted ({last_exc})")
+        raise RuntimeError(f"{method} {self._safe(url)}: retries exhausted ({last_exc})")
 
     @staticmethod
     def _backoff(attempt: int, retry_after: str | None) -> None:
@@ -100,23 +107,36 @@ class HttpClient:
 
     def get_json(self, url: str, params: dict | None = None, headers: dict | None = None) -> Any:
         resp = self.request("GET", url, params=params, headers=headers)
-        resp.raise_for_status()
+        self._raise(resp)
         return resp.json()
 
     def get_text(self, url: str, params: dict | None = None, headers: dict | None = None) -> str:
         resp = self.request("GET", url, params=params, headers=headers)
-        resp.raise_for_status()
+        self._raise(resp)
         return resp.text
 
     def post_json(self, url: str, json: Any, headers: dict | None = None) -> Any:
         resp = self.request("POST", url, json=json, headers=headers)
-        resp.raise_for_status()
+        self._raise(resp)
         return resp.json()
 
-    def get_json_or_none(self, url: str, params: dict | None = None, not_found_ok: bool = True) -> Any:
-        """openFDA 처럼 결과 없음을 404 로 주는 API 용."""
-        resp = self.request("GET", url, params=params)
+    def get_json_or_none(
+        self,
+        url: str,
+        params: dict | None = None,
+        not_found_ok: bool = True,
+        auth: tuple[str, str] | None = None,
+    ) -> Any:
+        """openFDA 처럼 결과 없음을 404 로 주는 API 용. 키는 auth(basic) 로 보내 URL 에 남기지 않는다."""
+        resp = self.request("GET", url, params=params, auth=auth)
         if resp.status_code == 404 and not_found_ok:
             return None
-        resp.raise_for_status()
+        self._raise(resp)
         return resp.json()
+
+    def _raise(self, resp: httpx.Response) -> None:
+        """raise_for_status 대신: 예외 메시지에 쿼리스트링이 남지 않게 한다."""
+        if resp.status_code >= 400:
+            raise RuntimeError(
+                f"HTTP {resp.status_code} for {self._safe(str(resp.request.url))}: {resp.text[:200]}"
+            )

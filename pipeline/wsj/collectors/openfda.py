@@ -21,22 +21,30 @@ def _ymd(d: date) -> str:
     return d.strftime("%Y%m%d")
 
 
-def _paged(http, endpoint: str, search: str, api_key: str, limit_rows: int | None) -> list[dict]:
-    out: list[dict] = []
+def _paged(
+    http, endpoint: str, search: str, api_key: str, limit_rows: int | None, key_field: str, notes: list[str]
+) -> list[dict]:
+    """skip 페이징. 키는 basic auth(username=key) 로 보내 URL·로그에 남기지 않는다.
+    같은 레코드가 페이지 사이에서 중복될 수 있어 key_field 로 dedupe 한다 (PG 21000 방지)."""
+    out: dict[str, dict] = {}
     skip = 0
+    auth = (api_key, "") if api_key else None
     while True:
         params = {"search": search, "limit": PAGE, "skip": skip}
-        if api_key:
-            params["api_key"] = api_key
-        data = http.get_json_or_none(f"{BASE}/{endpoint}.json", params=params)
+        data = http.get_json_or_none(f"{BASE}/{endpoint}.json", params=params, auth=auth)
         if not data or "results" not in data:
             break
-        out.extend(data["results"])
+        for r in data["results"]:
+            if r.get(key_field):
+                out[r[key_field]] = r
         total = data.get("meta", {}).get("results", {}).get("total", 0)
         skip += PAGE
-        if skip >= total or skip >= MAX_SKIP or (limit_rows and len(out) >= limit_rows):
+        if skip >= MAX_SKIP and skip < total:
+            notes.append(f"{endpoint}: skip cap {MAX_SKIP} hit (total={total}) — 창을 줄여 재수집 필요")
             break
-    return out
+        if skip >= total or (limit_rows and len(out) >= limit_rows):
+            break
+    return list(out.values())
 
 
 class OpenFdaCollector(Collector):
@@ -55,7 +63,7 @@ class OpenFdaCollector(Collector):
         # 1) drugsfda — 제출 상태일이 창에 있는 신청
         start = self.start_date(ctx, "drugsfda_last", default_lookback_days=30)
         search = f"submissions.submission_status_date:[{_ymd(start)} TO {_ymd(end)}]"
-        apps = _paged(http, "drug/drugsfda", search, key, ctx.limit)
+        apps = _paged(http, "drug/drugsfda", search, key, ctx.limit, "application_number", res.notes)
         rows = []
         for a in apps:
             subs = a.get("submissions") or []
@@ -92,7 +100,7 @@ class OpenFdaCollector(Collector):
         # 2) device/510k — 결정일 창
         start = self.start_date(ctx, "k510_last", default_lookback_days=60)
         search = f"decision_date:[{_ymd(start)} TO {_ymd(end)}]"
-        devs = _paged(http, "device/510k", search, key, ctx.limit)
+        devs = _paged(http, "device/510k", search, key, ctx.limit, "k_number", res.notes)
         rows = [
             {
                 "k_number": d["k_number"],

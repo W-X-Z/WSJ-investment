@@ -56,6 +56,9 @@ class SecForm4Collector(Collector):
                 continue
             if parsed.header["issuer_cik"] not in universe:
                 continue
+            if not parsed.header.get("document_type"):
+                res.notes.append(f"skip {adsh}: documentType 없음")
+                continue
             fd = parse_date(src.get("file_date"))
             header = {
                 **parsed.header,

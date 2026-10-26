@@ -10,10 +10,11 @@
 
 from __future__ import annotations
 
+import time
 from datetime import date, timedelta
 
 from wsj.collectors.base import Collector, RunContext, RunResult
-from wsj.util import chunked, daterange, parse_date
+from wsj.util import chunked, daterange, dedupe, parse_date
 
 BASE = "https://api.finra.org/data/group/otcMarket/name"
 SYMBOL_CHUNK = 100
@@ -45,6 +46,21 @@ def _query(http, dataset: str, equal: dict[str, str], symbols: list[str], symbol
                 break
             offset += PAGE
     return out
+
+
+def _post_rows(http, dataset: str, body: dict) -> list[dict] | None:
+    """404 → None(파티션 없음), 204/빈 본문 → [], 202/HTML(비동기·스로틀) → 재시도 후 실패."""
+    for attempt in range(4):
+        resp = http.request("POST", f"{BASE}/{dataset}", json=body, headers={"Accept": "application/json"})
+        if resp.status_code == 404:
+            return None
+        if resp.status_code == 204 or not resp.content:
+            return []
+        ctype = resp.headers.get("content-type", "")
+        if resp.status_code == 200 and "json" in ctype:
+            return resp.json()
+        time.sleep(2.0 * (attempt + 1))
+    raise RuntimeError(f"FINRA {dataset}: non-JSON response {resp.status_code} ({ctype[:40]})")
 
 
 def _settlement_dates(start: date, end: date) -> list[date]:
@@ -101,18 +117,21 @@ class FinraCollector(Collector):
             res.add(
                 store.upsert(
                     "raw.finra_short_daily",
-                    [
-                        {
-                            "trade_report_date": r["tradeReportDate"],
-                            "symbol": r["securitiesInformationProcessorSymbolIdentifier"],
-                            "market_code": r.get("marketCode") or "",
-                            "reporting_facility_code": r.get("reportingFacilityCode") or "",
-                            "short_par_quantity": r.get("shortParQuantity"),
-                            "short_exempt_par_quantity": r.get("shortExemptParQuantity"),
-                            "total_par_quantity": r.get("totalParQuantity"),
-                        }
-                        for r in rows
-                    ],
+                    dedupe(
+                        [
+                            {
+                                "trade_report_date": r["tradeReportDate"],
+                                "symbol": r["securitiesInformationProcessorSymbolIdentifier"],
+                                "market_code": r.get("marketCode") or "",
+                                "reporting_facility_code": r.get("reportingFacilityCode") or "",
+                                "short_par_quantity": r.get("shortParQuantity"),
+                                "short_exempt_par_quantity": r.get("shortExemptParQuantity"),
+                                "total_par_quantity": r.get("totalParQuantity"),
+                            }
+                            for r in rows
+                        ],
+                        ["trade_report_date", "symbol", "market_code", "reporting_facility_code"],
+                    ),
                     ["trade_report_date", "symbol", "market_code", "reporting_facility_code"],
                 )
             )
@@ -132,23 +151,26 @@ class FinraCollector(Collector):
             res.add(
                 store.upsert(
                     "raw.finra_short_interest",
-                    [
-                        {
-                            "settlement_date": r["settlementDate"],
-                            "symbol": r["symbolCode"],
-                            "issue_name": r.get("issueName"),
-                            "market_class_code": r.get("marketClassCode"),
-                            "current_short_position_quantity": r.get("currentShortPositionQuantity"),
-                            "previous_short_position_quantity": r.get("previousShortPositionQuantity"),
-                            "average_daily_volume_quantity": r.get("averageDailyVolumeQuantity"),
-                            "days_to_cover_quantity": r.get("daysToCoverQuantity"),
-                            "change_percent": r.get("changePercent"),
-                            "change_previous_number": r.get("changePreviousNumber"),
-                            "stock_split_flag": r.get("stockSplitFlag"),
-                            "revision_flag": r.get("revisionFlag"),
-                        }
-                        for r in rows
-                    ],
+                    dedupe(
+                        [
+                            {
+                                "settlement_date": r["settlementDate"],
+                                "symbol": r["symbolCode"],
+                                "issue_name": r.get("issueName"),
+                                "market_class_code": r.get("marketClassCode"),
+                                "current_short_position_quantity": r.get("currentShortPositionQuantity"),
+                                "previous_short_position_quantity": r.get("previousShortPositionQuantity"),
+                                "average_daily_volume_quantity": r.get("averageDailyVolumeQuantity"),
+                                "days_to_cover_quantity": r.get("daysToCoverQuantity"),
+                                "change_percent": r.get("changePercent"),
+                                "change_previous_number": r.get("changePreviousNumber"),
+                                "stock_split_flag": r.get("stockSplitFlag"),
+                                "revision_flag": r.get("revisionFlag"),
+                            }
+                            for r in rows
+                        ],
+                        ["settlement_date", "symbol"],
+                    ),
                     ["settlement_date", "symbol"],
                 )
             )
@@ -174,25 +196,34 @@ class FinraCollector(Collector):
                 res.add(
                     store.upsert(
                         "raw.finra_ats_weekly",
-                        [
-                            {
-                                "week_start_date": r["weekStartDate"],
-                                "tier_identifier": r["tierIdentifier"],
-                                "symbol": r["issueSymbolIdentifier"],
-                                "mpid": r.get("MPID") or "",
-                                "summary_type_code": r.get("summaryTypeCode") or "",
-                                "issue_name": r.get("issueName"),
-                                "market_participant_name": r.get("marketParticipantName"),
-                                "firm_crd_number": str(r["firmCRDNumber"])
-                                if r.get("firmCRDNumber") is not None
-                                else None,
-                                "total_weekly_trade_count": r.get("totalWeeklyTradeCount"),
-                                "total_weekly_share_quantity": r.get("totalWeeklyShareQuantity"),
-                                "total_notional_sum": r.get("totalNotionalSum"),
-                                "last_update_date": parse_date(r.get("lastUpdateDate")),
-                            }
-                            for r in rows
-                        ],
+                        dedupe(
+                            [
+                                {
+                                    "week_start_date": r["weekStartDate"],
+                                    "tier_identifier": r["tierIdentifier"],
+                                    "symbol": r["issueSymbolIdentifier"],
+                                    # OTC_W_SMBL_FIRM 행은 MPID 가 없고 firmCRDNumber 만 있다 → PK 충돌 방지
+                                    "mpid": r.get("MPID")
+                                    or (
+                                        f"CRD{r['firmCRDNumber']}"
+                                        if r.get("firmCRDNumber") is not None
+                                        else ""
+                                    ),
+                                    "summary_type_code": r.get("summaryTypeCode") or "",
+                                    "issue_name": r.get("issueName"),
+                                    "market_participant_name": r.get("marketParticipantName"),
+                                    "firm_crd_number": str(r["firmCRDNumber"])
+                                    if r.get("firmCRDNumber") is not None
+                                    else None,
+                                    "total_weekly_trade_count": r.get("totalWeeklyTradeCount"),
+                                    "total_weekly_share_quantity": r.get("totalWeeklyShareQuantity"),
+                                    "total_notional_sum": r.get("totalNotionalSum"),
+                                    "last_update_date": parse_date(r.get("lastUpdateDate")),
+                                }
+                                for r in rows
+                            ],
+                            ["week_start_date", "tier_identifier", "symbol", "mpid", "summary_type_code"],
+                        ),
                         ["week_start_date", "tier_identifier", "symbol", "mpid", "summary_type_code"],
                     )
                 )

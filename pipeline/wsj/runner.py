@@ -66,7 +66,7 @@ def run_one(name: str, ctx: RunContext) -> RunResult | None:
         err = "".join(traceback.format_exception(exc))
         log.error("[%s] FAILED: %s", name, exc)
         store.run_finished(run_id, "failed", 0, None, err)
-        return None
+        return "failed"
     if result.watermark is not None and not ctx.limit:
         # --limit 스모크 실행은 워터마크를 건드리지 않는다
         store.set_watermark(name, result.watermark)
@@ -115,13 +115,18 @@ def cmd_run(args: argparse.Namespace) -> int:
                 until=parse_date(args.until) if args.until else None,
                 limit=args.limit,
             )
-            if run_one(name, ctx) is None:
+            try:
+                status = run_one(name, ctx)
+            except Exception as exc:  # noqa: BLE001 - 북키핑(워터마크·런 로그) 단계의 실패도 격리
+                log.error("[%s] runner error: %s", name, exc)
+                status = "failed"
+            if status == "failed":
                 failed += 1
     finally:
         http.close()
         store.close()
     log.info("http stats: %s", http.stats)
-    return 1 if failed and not args.all else 0
+    return 1 if failed else 0
 
 
 def cmd_entities(args: argparse.Namespace) -> int:
