@@ -387,6 +387,47 @@ def generate_ai_review(events: list[dict], hypotheses: list[dict], key: str,
             "usage": sum_usage(usages), "evidence_constraint": "No source outside input independently verified"}
 
 
+def read_recent_history(path: Path, at: str, hours: int = 30) -> list[dict]:
+    """Persist evidence across 6h monitors while preparing a 24h daily digest."""
+    if not path.exists():
+        return []
+    threshold = datetime.fromisoformat(at) - timedelta(hours=hours)
+    items = deque(maxlen=2000)
+    with path.open("r", encoding="utf-8") as stream:
+        for line in stream:
+            try:
+                item = json.loads(line)
+                observed = datetime.fromisoformat(item["first_seen_at"])
+                if observed >= threshold:
+                    items.append(item)
+            except (ValueError, TypeError, KeyError):
+                continue
+    return list(items)
+
+
+def enrich_new_sec_filings(events: list[dict], limit: int = 3) -> None:
+    """Fetch original filing text for a few newly observed priority issuer filings."""
+    processed = 0
+    for event in sorted(events, key=lambda x: -x["research_priority"]):
+        if processed >= limit:
+            break
+        if event["origin"] != "sec" or event["kind"] == "financing":
+            continue
+        processed += 1
+        try:
+            content = strip_html(fetch_url(event["url"], json_mode=False))
+            excerpts = page_highlights(content, ECOSYSTEMS[event["ecosystem"]]["terms"])
+            if excerpts:
+                event["excerpt"] = " | ".join(excerpts[:3])[:550]
+                event["details"]["filing_technical_excerpts"] = excerpts[:5]
+            else:
+                event["details"]["filing_technical_excerpts"] = []
+            event["details"]["content_checked"] = True
+        except Exception as exc:
+            event["details"]["content_checked"] = False
+            event["details"]["content_read_error"] = str(exc)[:120]
+
+
 def markdown_report(*, stage: str, now: str, new: list[dict],
                     hypotheses: list[dict], failures: list[dict],
                     ai_review: dict | None = None, baseline: bool = False) -> str:
