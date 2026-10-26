@@ -72,3 +72,28 @@ def test_all_sources_have_allowlisted_https_hosts():
         parts = urlsplit(q["url"])
         assert parts.scheme == "https"
         assert parts.hostname in study.ALLOWED_HOSTS
+
+
+def test_fda_compact_date_and_calendar_validation():
+    assert study._is_historical_date("20220427", "2022-06-30")
+    assert not study._is_historical_date("20230227", "2022-06-30")
+    assert not study._is_historical_date("20229999", "2023-06-30")
+
+
+def test_sec_is_sorted_descending_and_has_cutoff():
+    payload = {"filings": {"recent": {
+        "form": ["10-Q", "8-K", "8-K", "S-1"],
+        "filingDate": ["2020-01-01", "2023-12-21", "2024-01-08", "2023-01-01"],
+        "accessionNumber": ["A", "B", "C", "D"],
+        "primaryDocument": ["a.htm", "b.htm", "c.htm", "d.htm"],
+    }}}
+    rows, _ = study.parse_records("sec", payload, "2023-12-22")
+    assert [x["id"] for x in rows] == ["B", "A"]
+
+
+def test_unstructured_source_dated_after_asof_cannot_enter():
+    payload = {"text": "14 Mbps unmodified smartphone", "url": "https://example.com", "source_published_at": "2023-09-19", "terms": ["14 Mbps"]}
+    included, _ = study.parse_records("html_document", payload, "2023-09-30")
+    excluded, _ = study.parse_records("html_document", payload, "2023-06-30")
+    assert len(included) == 1 and len(included[0]["matches"]) == 1
+    assert excluded == []
