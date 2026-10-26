@@ -7,6 +7,7 @@ on:
       - "apps/web/src/components/SupplyNetworkCanvas.tsx"
       - "apps/web/src/components/SupplyNetworkCanvas.css"
       - "apps/web/src/app/map/**"
+      - "apps/web/scripts/canvas-smoke.mjs"
       - ".github/workflows/canvas-visual-preview.yml"
 
 permissions:
@@ -45,12 +46,8 @@ jobs:
           done
           if [[ "$ready" != "1" ]]; then cat /tmp/atlas-next.log; exit 1; fi
           mkdir -p ../../research/preview
-          npx --yes playwright@1.56.1 screenshot \
-            --browser chromium --viewport-size "1600,1080" --wait-for-timeout 2200 \
-            http://localhost:3011/map ../../research/preview/industry-canvas-desktop.png
-          npx --yes playwright@1.56.1 screenshot \
-            --browser chromium --viewport-size "390,844" --wait-for-timeout 2200 \
-            http://localhost:3011/map ../../research/preview/industry-canvas-mobile.png
+          npm install --no-save --package-lock=false --ignore-scripts playwright@1.56.1
+          node scripts/canvas-smoke.mjs
       - uses: actions/upload-artifact@v4
         if: always()
         with:
