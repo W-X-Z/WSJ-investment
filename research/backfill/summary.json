@@ -1,0 +1,38 @@
+{
+  "status": "completed_with_limits",
+  "collected_at": "2026-10-26T12:50:14+00:00",
+  "historical_period": [
+    2020,
+    2026
+  ],
+  "records": 5453,
+  "by_source": {
+    "crossref": 2927,
+    "sec": 1068,
+    "openalex": 1285,
+    "federalregister": 173
+  },
+  "by_ecosystem": {
+    "optics": 1760,
+    "hbm": 1774,
+    "power": 1919
+  },
+  "by_publication_year": {
+    "2020": 713,
+    "2021": 747,
+    "2022": 757,
+    "2023": 817,
+    "2024": 807,
+    "2025": 819,
+    "2026": 793
+  },
+  "failed_source_segments": [],
+  "interpretation": "Historical metadata sample (bounded pagination), not exhaustive corpus, real-time alerts, or point-in-time investment proof",
+  "limits": [
+    "Only a few bounded pages per year and search term; unreturned records may exist.",
+    "OpenAlex may need OPENALEX_API_KEY for sustained searching; failures must not be hidden.",
+    "Crossref and OpenAlex are bibliographic indexes, not independent validation of paper contents.",
+    "SEC submission archive availability and filing caps differ by issuer.",
+    "Original publication date != first_seen_at; historical index snapshots were NOT retained."
+  ]
+}
