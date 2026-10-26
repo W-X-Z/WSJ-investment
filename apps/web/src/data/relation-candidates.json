@@ -7,7 +7,7 @@
     {
       "left_node_id": "component:pic",
       "right_node_id": "material:silicon_photonics",
-      "shared_source_count": 476,
+      "shared_source_count": 477,
       "years": [
         "2020",
         "2021",
@@ -44,7 +44,7 @@
     {
       "left_node_id": "bottleneck:hbm_overlay",
       "right_node_id": "tech:hybrid_bond",
-      "shared_source_count": 208,
+      "shared_source_count": 209,
       "years": [
         "2020",
         "2021",

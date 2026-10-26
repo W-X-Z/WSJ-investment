@@ -2,10 +2,10 @@
   "schema_version": 1,
   "summary": {
     "as_of": "2026-10-26",
-    "total_historical_records_read": 5458,
-    "unique_valid_sources": 5458,
+    "total_historical_records_read": 5465,
+    "unique_valid_sources": 5465,
     "excluded_future_or_invalid": 0,
-    "documents_with_ontology_matches": 1806,
+    "documents_with_ontology_matches": 1811,
     "ontology_nodes": 90,
     "nodes_with_at_least_one_match": 46,
     "numeric_mentions_requiring_validation": 36,
@@ -25,18 +25,18 @@
       "node_id": "eco:hbm",
       "name": "HBM 첨단 패키징·검사",
       "kind": "ecosystem",
-      "total_document_leads": 481,
+      "total_document_leads": 483,
       "year_counts": {
         "2026": 82,
-        "2025": 109,
-        "2024": 86,
+        "2025": 110,
+        "2024": 87,
         "2023": 68,
         "2022": 54,
         "2021": 47,
         "2020": 35
       },
       "source_counts": {
-        "scholarly_bibliography": 476,
+        "scholarly_bibliography": 478,
         "federalregister": 5
       },
       "sources": [
@@ -1329,10 +1329,10 @@
       "node_id": "bottleneck:hbm_overlay",
       "name": "미세범프·접합 오버레이/결함 검사",
       "kind": "bottleneck",
-      "total_document_leads": 217,
+      "total_document_leads": 218,
       "year_counts": {
         "2026": 34,
-        "2025": 45,
+        "2025": 46,
         "2024": 37,
         "2023": 41,
         "2022": 21,
@@ -1340,7 +1340,7 @@
         "2020": 15
       },
       "source_counts": {
-        "scholarly_bibliography": 217
+        "scholarly_bibliography": 218
       },
       "sources": [
         {
@@ -1822,10 +1822,10 @@
       "node_id": "tech:hybrid_bond",
       "name": "하이브리드 본딩",
       "kind": "technology",
-      "total_document_leads": 208,
+      "total_document_leads": 209,
       "year_counts": {
         "2026": 34,
-        "2025": 44,
+        "2025": 45,
         "2024": 36,
         "2023": 38,
         "2022": 20,
@@ -1833,7 +1833,7 @@
         "2020": 14
       },
       "source_counts": {
-        "scholarly_bibliography": 208
+        "scholarly_bibliography": 209
       },
       "sources": [
         {
@@ -2615,7 +2615,7 @@
       "node_id": "eco:optics",
       "name": "AI 광통신 800G/1.6T",
       "kind": "ecosystem",
-      "total_document_leads": 705,
+      "total_document_leads": 706,
       "year_counts": {
         "2026": 122,
         "2025": 121,
@@ -2623,10 +2623,10 @@
         "2023": 105,
         "2022": 99,
         "2021": 80,
-        "2020": 72
+        "2020": 73
       },
       "source_counts": {
-        "scholarly_bibliography": 705
+        "scholarly_bibliography": 706
       },
       "sources": [
         {
@@ -4345,16 +4345,16 @@
       "node_id": "eco:power",
       "name": "AI 데이터센터 고밀도 전력",
       "kind": "ecosystem",
-      "total_document_leads": 10,
+      "total_document_leads": 11,
       "year_counts": {
-        "2026": 1,
+        "2026": 2,
         "2024": 2,
         "2023": 3,
         "2022": 1,
         "2020": 3
       },
       "source_counts": {
-        "scholarly_bibliography": 10
+        "scholarly_bibliography": 11
       },
       "sources": [
         {
@@ -4527,6 +4527,26 @@
           "source": "crossref",
           "source_group": "scholarly_bibliography",
           "url": "https://api.crossref.org/works/10.1007/s43236-023-00714-z",
+          "excerpt": "Title/DOI bibliographic record; primary technical result not verified",
+          "rank": 8,
+          "matched_terms": [
+            "high voltage dc"
+          ],
+          "metric_candidates": [],
+          "verification_status": "index_match_only",
+          "source_independence_verified": false,
+          "historical_investor_observation_unverified": true
+        },
+        {
+          "id": "aaa750d50ebf13c2cb0b5041",
+          "canonical_id": "doi:10.3850/esrel2026061419_esrel26-p27920-cd",
+          "title": "A System-Level Functional Safety Architecture for Industrial High-Voltage DC Networks Beyond 800V",
+          "published_at": "2026-01-01",
+          "published_precision": "year",
+          "first_seen_at": "2026-10-26T15:40:35+00:00",
+          "source": "crossref",
+          "source_group": "scholarly_bibliography",
+          "url": "https://api.crossref.org/works/10.3850/esrel2026061419_esrel26-p27920-cd",
           "excerpt": "Title/DOI bibliographic record; primary technical result not verified",
           "rank": 8,
           "matched_terms": [
@@ -7122,7 +7142,7 @@
       "node_id": "component:power_converter",
       "name": "DC/DC 전력변환 모듈",
       "kind": "component",
-      "total_document_leads": 172,
+      "total_document_leads": 173,
       "year_counts": {
         "2026": 21,
         "2025": 25,
@@ -7130,10 +7150,10 @@
         "2023": 27,
         "2022": 25,
         "2021": 30,
-        "2020": 23
+        "2020": 24
       },
       "source_counts": {
-        "scholarly_bibliography": 172
+        "scholarly_bibliography": 173
       },
       "sources": [
         {
@@ -9274,7 +9294,7 @@
       "node_id": "material:silicon_photonics",
       "name": "실리콘 포토닉스 PIC 플랫폼",
       "kind": "material",
-      "total_document_leads": 492,
+      "total_document_leads": 493,
       "year_counts": {
         "2026": 68,
         "2025": 66,
@@ -9282,10 +9302,10 @@
         "2023": 70,
         "2022": 80,
         "2021": 74,
-        "2020": 68
+        "2020": 69
       },
       "source_counts": {
-        "scholarly_bibliography": 492
+        "scholarly_bibliography": 493
       },
       "sources": [
         {
@@ -10148,7 +10168,7 @@
       "node_id": "component:pic",
       "name": "광집적회로(PIC)",
       "kind": "component",
-      "total_document_leads": 476,
+      "total_document_leads": 477,
       "year_counts": {
         "2026": 67,
         "2025": 62,
@@ -10156,10 +10176,10 @@
         "2023": 69,
         "2022": 78,
         "2021": 72,
-        "2020": 66
+        "2020": 67
       },
       "source_counts": {
-        "scholarly_bibliography": 476
+        "scholarly_bibliography": 477
       },
       "sources": [
         {

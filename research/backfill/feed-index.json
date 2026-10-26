@@ -117,34 +117,34 @@
     "url": "https://api.openalex.org/works/W7223201341"
   },
   {
-    "id": "1708adb47f88ed15edf6eb13",
-    "canonical_id": "doi:10.1088/1361-6463/aeb6f8",
-    "ecosystem": "power",
-    "kind": "paper",
-    "source": "crossref",
-    "source_group": "scholarly_bibliography",
-    "source_id": "10.1088/1361-6463/aeb6f8",
-    "published_at": "2026-10-21",
-    "published_precision": "day",
-    "first_seen_at": "2026-10-26T14:40:32+00:00",
-    "historical_backfill": true,
-    "historical_investor_observation_unverified": true,
-    "title": "The Quest for the Ideal Power Transistor: Are Ultra-Wide Bandgap Devices the Answer?",
-    "excerpt": "Abstract Power devices are undergoing a renaissance, driven by wide bandgap semiconductors such as gallium nitride and silicon carbide, which are rapidly displacing traditional silicon devices in electric vehicles, data centres, consumer electronics, and other key applications. On the horizon, a new class of ultra-wide bandgap materials—including aluminium gallium nitride alloys, diamond, and gallium oxide—is emerging. Thanks to their excellent material properties, these semiconductors could, in theory, enable near-ideal transistor performance with lower conduction and switching losses, as well as smaller chip fo",
-    "url": "https://api.crossref.org/works/10.1088/1361-6463/aeb6f8",
-    "doi": "10.1088/1361-6463/aeb6f8",
-    "details": {
-      "query": "silicon carbide wide bandgap power converter",
-      "work_type": "journal-article",
-      "date_precision": "day"
-    },
-    "provenance_status": "bibliographic_metadata_only",
-    "research_priority": "unrated",
-    "not_a_live_trigger": true,
     "also_indexed_by": [
       "crossref",
       "openalex"
-    ]
+    ],
+    "canonical_id": "doi:10.1088/1361-6463/aeb6f8",
+    "details": {
+      "date_precision": "day",
+      "query": "silicon carbide wide bandgap power converter",
+      "work_type": "journal-article"
+    },
+    "doi": "10.1088/1361-6463/aeb6f8",
+    "ecosystem": "power",
+    "excerpt": "Abstract Power devices are undergoing a renaissance, driven by wide bandgap semiconductors such as gallium nitride and silicon carbide, which are rapidly displacing traditional silicon devices in electric vehicles, data centres, consumer electronics, and other key applications. On the horizon, a new class of ultra-wide bandgap materials—including aluminium gallium nitride alloys, diamond, and gallium oxide—is emerging. Thanks to their excellent material properties, these semiconductors could, in theory, enable near-ideal transistor performance with lower conduction and switching losses, as well as smaller chip fo",
+    "first_seen_at": "2026-10-26T14:40:32+00:00",
+    "historical_backfill": true,
+    "historical_investor_observation_unverified": true,
+    "id": "1708adb47f88ed15edf6eb13",
+    "kind": "paper",
+    "not_a_live_trigger": true,
+    "provenance_status": "bibliographic_metadata_only",
+    "published_at": "2026-10-21",
+    "published_precision": "day",
+    "research_priority": "unrated",
+    "source": "crossref",
+    "source_group": "scholarly_bibliography",
+    "source_id": "10.1088/1361-6463/aeb6f8",
+    "title": "The Quest for the Ideal Power Transistor: Are Ultra-Wide Bandgap Devices the Answer?",
+    "url": "https://api.crossref.org/works/10.1088/1361-6463/aeb6f8"
   },
   {
     "also_indexed_by": [
@@ -470,34 +470,34 @@
     "url": "https://api.crossref.org/works/10.1117/12.3139732"
   },
   {
-    "id": "fb84171893aae6ea50a9d775",
-    "canonical_id": "doi:10.3389/fmats.2026.1926885",
-    "ecosystem": "hbm",
-    "kind": "paper",
-    "source": "crossref",
-    "source_group": "scholarly_bibliography",
-    "source_id": "10.3389/fmats.2026.1926885",
-    "published_at": "2026-10-13",
-    "published_precision": "day",
-    "first_seen_at": "2026-10-26T14:40:32+00:00",
-    "historical_backfill": true,
-    "historical_investor_observation_unverified": true,
-    "title": "Stacking-factor-integrated production planning for 3D-Stacked high-bandwidth memory manufacturing: an optimization approach",
-    "excerpt": "As AI-driven computing accelerates, demand for High-Bandwidth Memory (HBM) manufactured through 3D DRAM stacking and Through-Silicon-Via (TSV) technology has surged, yet existing production-planning models risk overestimating package-level capacity by treating multi-layer stacking conversion linearly. We develop a mixed-integer optimization framework that explicitly incorporates a stacking factor ( S j ) for 4-, 8-, 12-, and 16-layer HBM structures and refines turn-around-time logic to preserve physical flow consistency across extended lead times. Applied to a 6-month, three-line, fourteen-configuration case stud",
-    "url": "https://api.crossref.org/works/10.3389/fmats.2026.1926885",
-    "doi": "10.3389/fmats.2026.1926885",
-    "details": {
-      "query": "high bandwidth memory hybrid bonding",
-      "work_type": "journal-article",
-      "date_precision": "day"
-    },
-    "provenance_status": "bibliographic_metadata_only",
-    "research_priority": "unrated",
-    "not_a_live_trigger": true,
     "also_indexed_by": [
       "crossref",
       "openalex"
-    ]
+    ],
+    "canonical_id": "doi:10.3389/fmats.2026.1926885",
+    "details": {
+      "date_precision": "day",
+      "query": "high bandwidth memory hybrid bonding",
+      "work_type": "journal-article"
+    },
+    "doi": "10.3389/fmats.2026.1926885",
+    "ecosystem": "hbm",
+    "excerpt": "As AI-driven computing accelerates, demand for High-Bandwidth Memory (HBM) manufactured through 3D DRAM stacking and Through-Silicon-Via (TSV) technology has surged, yet existing production-planning models risk overestimating package-level capacity by treating multi-layer stacking conversion linearly. We develop a mixed-integer optimization framework that explicitly incorporates a stacking factor ( S j ) for 4-, 8-, 12-, and 16-layer HBM structures and refines turn-around-time logic to preserve physical flow consistency across extended lead times. Applied to a 6-month, three-line, fourteen-configuration case stud",
+    "first_seen_at": "2026-10-26T14:40:32+00:00",
+    "historical_backfill": true,
+    "historical_investor_observation_unverified": true,
+    "id": "fb84171893aae6ea50a9d775",
+    "kind": "paper",
+    "not_a_live_trigger": true,
+    "provenance_status": "bibliographic_metadata_only",
+    "published_at": "2026-10-13",
+    "published_precision": "day",
+    "research_priority": "unrated",
+    "source": "crossref",
+    "source_group": "scholarly_bibliography",
+    "source_id": "10.3389/fmats.2026.1926885",
+    "title": "Stacking-factor-integrated production planning for 3D-Stacked high-bandwidth memory manufacturing: an optimization approach",
+    "url": "https://api.crossref.org/works/10.3389/fmats.2026.1926885"
   },
   {
     "also_indexed_by": [
@@ -761,34 +761,34 @@
     "url": "https://api.openalex.org/works/W7215694433"
   },
   {
-    "id": "00d7d088249345c782105e36",
-    "canonical_id": "doi:10.31224/8410",
-    "ecosystem": "hbm",
-    "kind": "paper",
-    "source": "crossref",
-    "source_group": "scholarly_bibliography",
-    "source_id": "10.31224/8410",
-    "published_at": "2026-10-02",
-    "published_precision": "day",
-    "first_seen_at": "2026-10-26T14:40:32+00:00",
-    "historical_backfill": true,
-    "historical_investor_observation_unverified": true,
-    "title": "Variation-Aware Thermal Design for Advanced Packaging",
-    "excerpt": "Thermal design of flip-chip, 2.5D and 3D packages uses nominal values of features—bond line thickness, voids, coverage, warpage, die thickness, bonded-interface conductance—that are manufactured outcomes with unit-to-unit distributions. This systematic review, conducted to a protocol written before the search and reported following PRISMA 2020, asks what the peer-reviewed literature reports about the magnitude and distribution of such variation, its thermal effect, the metrology that resolves it, and the statistical and specification practice connecting the three. From 2,253 records screened, 388 studies were inc",
-    "url": "https://api.crossref.org/works/10.31224/8410",
-    "doi": "10.31224/8410",
-    "details": {
-      "query": "advanced packaging wafer inspection metrology",
-      "work_type": "posted-content",
-      "date_precision": "day"
-    },
-    "provenance_status": "bibliographic_metadata_only",
-    "research_priority": "unrated",
-    "not_a_live_trigger": true,
     "also_indexed_by": [
       "crossref",
       "openalex"
-    ]
+    ],
+    "canonical_id": "doi:10.31224/8410",
+    "details": {
+      "date_precision": "day",
+      "query": "advanced packaging wafer inspection metrology",
+      "work_type": "posted-content"
+    },
+    "doi": "10.31224/8410",
+    "ecosystem": "hbm",
+    "excerpt": "Thermal design of flip-chip, 2.5D and 3D packages uses nominal values of features—bond line thickness, voids, coverage, warpage, die thickness, bonded-interface conductance—that are manufactured outcomes with unit-to-unit distributions. This systematic review, conducted to a protocol written before the search and reported following PRISMA 2020, asks what the peer-reviewed literature reports about the magnitude and distribution of such variation, its thermal effect, the metrology that resolves it, and the statistical and specification practice connecting the three. From 2,253 records screened, 388 studies were inc",
+    "first_seen_at": "2026-10-26T14:40:32+00:00",
+    "historical_backfill": true,
+    "historical_investor_observation_unverified": true,
+    "id": "00d7d088249345c782105e36",
+    "kind": "paper",
+    "not_a_live_trigger": true,
+    "provenance_status": "bibliographic_metadata_only",
+    "published_at": "2026-10-02",
+    "published_precision": "day",
+    "research_priority": "unrated",
+    "source": "crossref",
+    "source_group": "scholarly_bibliography",
+    "source_id": "10.31224/8410",
+    "title": "Variation-Aware Thermal Design for Advanced Packaging",
+    "url": "https://api.crossref.org/works/10.31224/8410"
   },
   {
     "also_indexed_by": [
@@ -820,34 +820,34 @@
     "url": "https://api.openalex.org/works/W7221640859"
   },
   {
-    "id": "eb0a958d0c291d5aba664224",
-    "canonical_id": "doi:10.11591/ijece.v16i5.pp2431-2453",
-    "ecosystem": "power",
-    "kind": "paper",
-    "source": "crossref",
-    "source_group": "scholarly_bibliography",
-    "source_id": "10.11591/ijece.v16i5.pp2431-2453",
-    "published_at": "2026-10-01",
-    "published_precision": "day",
-    "first_seen_at": "2026-10-26T14:40:32+00:00",
-    "historical_backfill": true,
-    "historical_investor_observation_unverified": true,
-    "title": "Electromagnetic interference challenges and mitigation strategies in wide-bandgap power converters: A critical review",
-    "excerpt": "The widespread adoption of high-frequency power electronic converters, particularly those utilizing wide-bandgap (WBG) semiconductors like silicon carbide (SiC) and gallium nitride (GaN), has significantly escalated electromagnetic interference (EMI) challenges. Driven by ultra-fast switching transitions and parasitic coupling, these EMI disturbances now span wider frequency ranges. This review highlights that conventional, filter-only mitigation strategies are increasingly inadequate for modern, high-power-density converters. Instead, effective EMI suppression requires a coordinated, multilayer approach incorpor",
-    "url": "https://api.crossref.org/works/10.11591/ijece.v16i5.pp2431-2453",
-    "doi": "10.11591/ijece.v16i5.pp2431-2453",
-    "details": {
-      "query": "silicon carbide wide bandgap power converter",
-      "work_type": "journal-article",
-      "date_precision": "day"
-    },
-    "provenance_status": "bibliographic_metadata_only",
-    "research_priority": "unrated",
-    "not_a_live_trigger": true,
     "also_indexed_by": [
       "crossref",
       "openalex"
-    ]
+    ],
+    "canonical_id": "doi:10.11591/ijece.v16i5.pp2431-2453",
+    "details": {
+      "date_precision": "day",
+      "query": "silicon carbide wide bandgap power converter",
+      "work_type": "journal-article"
+    },
+    "doi": "10.11591/ijece.v16i5.pp2431-2453",
+    "ecosystem": "power",
+    "excerpt": "The widespread adoption of high-frequency power electronic converters, particularly those utilizing wide-bandgap (WBG) semiconductors like silicon carbide (SiC) and gallium nitride (GaN), has significantly escalated electromagnetic interference (EMI) challenges. Driven by ultra-fast switching transitions and parasitic coupling, these EMI disturbances now span wider frequency ranges. This review highlights that conventional, filter-only mitigation strategies are increasingly inadequate for modern, high-power-density converters. Instead, effective EMI suppression requires a coordinated, multilayer approach incorpor",
+    "first_seen_at": "2026-10-26T14:40:32+00:00",
+    "historical_backfill": true,
+    "historical_investor_observation_unverified": true,
+    "id": "eb0a958d0c291d5aba664224",
+    "kind": "paper",
+    "not_a_live_trigger": true,
+    "provenance_status": "bibliographic_metadata_only",
+    "published_at": "2026-10-01",
+    "published_precision": "day",
+    "research_priority": "unrated",
+    "source": "crossref",
+    "source_group": "scholarly_bibliography",
+    "source_id": "10.11591/ijece.v16i5.pp2431-2453",
+    "title": "Electromagnetic interference challenges and mitigation strategies in wide-bandgap power converters: A critical review",
+    "url": "https://api.crossref.org/works/10.11591/ijece.v16i5.pp2431-2453"
   },
   {
     "also_indexed_by": [
@@ -2205,34 +2205,34 @@
     "url": "https://www.sec.gov/Archives/edgar/data/820318/000082031825000024/iivi-20251216.htm"
   },
   {
-    "id": "e5507334f2f54497477be06c",
-    "canonical_id": "doi:10.4071/001c.154275",
-    "ecosystem": "optics",
-    "kind": "paper",
-    "source": "crossref",
-    "source_group": "scholarly_bibliography",
-    "source_id": "10.4071/001c.154275",
-    "published_at": "2025-12-15",
-    "published_precision": "day",
-    "first_seen_at": "2026-10-26T14:40:32+00:00",
-    "historical_backfill": true,
-    "historical_investor_observation_unverified": true,
-    "title": "Co-Packaged Optics - Heterogeneous Integration of Chiplets (Switch, Photonic IC, and Electronic IC)",
-    "excerpt": "There have been strong demands for lower power consumption and higher bandwidth in optical/electrical interconnects used for artificial intelligence (AI) and networks in a data center. The adoption of co-packaged optics (CPO) has been expected for both high-performance computing (HPC) driven by AI and high-bandwidth and high-speed communications networks in a data center. In this study, on-board optics (OBO), near package optics (NPO), and CPO will be discussed. Emphasis is placed on 3D heterogeneous integration of chiplets such as photonic integrated circuits (PIC), electronic integrated circuits (EIC), and appl",
-    "url": "https://api.crossref.org/works/10.4071/001c.154275",
-    "doi": "10.4071/001c.154275",
-    "details": {
-      "query": "co packaged optics laser optical interposer",
-      "work_type": "journal-article",
-      "date_precision": "day"
-    },
-    "provenance_status": "bibliographic_metadata_only",
-    "research_priority": "unrated",
-    "not_a_live_trigger": true,
     "also_indexed_by": [
       "crossref",
       "openalex"
-    ]
+    ],
+    "canonical_id": "doi:10.4071/001c.154275",
+    "details": {
+      "date_precision": "day",
+      "query": "co packaged optics laser optical interposer",
+      "work_type": "journal-article"
+    },
+    "doi": "10.4071/001c.154275",
+    "ecosystem": "optics",
+    "excerpt": "There have been strong demands for lower power consumption and higher bandwidth in optical/electrical interconnects used for artificial intelligence (AI) and networks in a data center. The adoption of co-packaged optics (CPO) has been expected for both high-performance computing (HPC) driven by AI and high-bandwidth and high-speed communications networks in a data center. In this study, on-board optics (OBO), near package optics (NPO), and CPO will be discussed. Emphasis is placed on 3D heterogeneous integration of chiplets such as photonic integrated circuits (PIC), electronic integrated circuits (EIC), and appl",
+    "first_seen_at": "2026-10-26T14:40:32+00:00",
+    "historical_backfill": true,
+    "historical_investor_observation_unverified": true,
+    "id": "e5507334f2f54497477be06c",
+    "kind": "paper",
+    "not_a_live_trigger": true,
+    "provenance_status": "bibliographic_metadata_only",
+    "published_at": "2025-12-15",
+    "published_precision": "day",
+    "research_priority": "unrated",
+    "source": "crossref",
+    "source_group": "scholarly_bibliography",
+    "source_id": "10.4071/001c.154275",
+    "title": "Co-Packaged Optics - Heterogeneous Integration of Chiplets (Switch, Photonic IC, and Electronic IC)",
+    "url": "https://api.crossref.org/works/10.4071/001c.154275"
   },
   {
     "also_indexed_by": [
@@ -2586,33 +2586,33 @@
     "url": "https://api.openalex.org/works/W7125813911"
   },
   {
-    "id": "a766bbec1f012ff396bb8ec2",
+    "also_indexed_by": [
+      "crossref"
+    ],
     "canonical_id": "doi:10.1117/12.3071763",
+    "details": {
+      "date_precision": "day",
+      "query": "co packaged optics laser optical interposer",
+      "work_type": "proceedings-article"
+    },
+    "doi": "10.1117/12.3071763",
     "ecosystem": "optics",
-    "kind": "paper",
-    "source": "crossref",
-    "source_group": "scholarly_bibliography",
-    "source_id": "10.1117/12.3071763",
-    "published_at": "2025-12-03",
-    "published_precision": "day",
+    "excerpt": "Title/DOI bibliographic record; primary technical result not verified",
     "first_seen_at": "2026-10-26T14:57:08+00:00",
     "historical_backfill": true,
     "historical_investor_observation_unverified": true,
-    "title": "Femtosecond laser inscription of 3D gradient-index optics in optical glasses",
-    "excerpt": "Title/DOI bibliographic record; primary technical result not verified",
-    "url": "https://api.crossref.org/works/10.1117/12.3071763",
-    "doi": "10.1117/12.3071763",
-    "details": {
-      "query": "co packaged optics laser optical interposer",
-      "work_type": "proceedings-article",
-      "date_precision": "day"
-    },
-    "provenance_status": "bibliographic_metadata_only",
-    "research_priority": "unrated",
+    "id": "a766bbec1f012ff396bb8ec2",
+    "kind": "paper",
     "not_a_live_trigger": true,
-    "also_indexed_by": [
-      "crossref"
-    ]
+    "provenance_status": "bibliographic_metadata_only",
+    "published_at": "2025-12-03",
+    "published_precision": "day",
+    "research_priority": "unrated",
+    "source": "crossref",
+    "source_group": "scholarly_bibliography",
+    "source_id": "10.1117/12.3071763",
+    "title": "Femtosecond laser inscription of 3D gradient-index optics in optical glasses",
+    "url": "https://api.crossref.org/works/10.1117/12.3071763"
   },
   {
     "also_indexed_by": [
@@ -3734,34 +3734,34 @@
     "url": "https://api.crossref.org/works/10.1109/edaps64431.2024.10988462"
   },
   {
-    "id": "1d8f26672db47a3e2cecd320",
-    "canonical_id": "doi:10.1007/s11432-023-3965-1",
-    "ecosystem": "hbm",
-    "kind": "paper",
-    "source": "crossref",
-    "source_group": "scholarly_bibliography",
-    "source_id": "10.1007/s11432-023-3965-1",
-    "published_at": "2024-12-17",
-    "published_precision": "day",
-    "first_seen_at": "2026-10-26T14:40:32+00:00",
-    "historical_backfill": true,
-    "historical_investor_observation_unverified": true,
-    "title": "Software-defined process-near-memory architecture using 3D hybrid bonding integration",
-    "excerpt": "Title/DOI bibliographic record; primary technical result not verified",
-    "url": "https://api.crossref.org/works/10.1007/s11432-023-3965-1",
-    "doi": "10.1007/s11432-023-3965-1",
-    "details": {
-      "query": "high bandwidth memory hybrid bonding",
-      "work_type": "journal-article",
-      "date_precision": "day"
-    },
-    "provenance_status": "bibliographic_metadata_only",
-    "research_priority": "unrated",
-    "not_a_live_trigger": true,
     "also_indexed_by": [
       "crossref",
       "openalex"
-    ]
+    ],
+    "canonical_id": "doi:10.1007/s11432-023-3965-1",
+    "details": {
+      "date_precision": "day",
+      "query": "high bandwidth memory hybrid bonding",
+      "work_type": "journal-article"
+    },
+    "doi": "10.1007/s11432-023-3965-1",
+    "ecosystem": "hbm",
+    "excerpt": "Title/DOI bibliographic record; primary technical result not verified",
+    "first_seen_at": "2026-10-26T14:40:32+00:00",
+    "historical_backfill": true,
+    "historical_investor_observation_unverified": true,
+    "id": "1d8f26672db47a3e2cecd320",
+    "kind": "paper",
+    "not_a_live_trigger": true,
+    "provenance_status": "bibliographic_metadata_only",
+    "published_at": "2024-12-17",
+    "published_precision": "day",
+    "research_priority": "unrated",
+    "source": "crossref",
+    "source_group": "scholarly_bibliography",
+    "source_id": "10.1007/s11432-023-3965-1",
+    "title": "Software-defined process-near-memory architecture using 3D hybrid bonding integration",
+    "url": "https://api.crossref.org/works/10.1007/s11432-023-3965-1"
   },
   {
     "also_indexed_by": [
@@ -5037,34 +5037,34 @@
     "url": "https://api.crossref.org/works/10.1149/ma2023-02171178mtgabs"
   },
   {
-    "id": "bfea33dfbae9027f92fdfeed",
-    "canonical_id": "doi:10.1149/ma2023-02331593mtgabs",
-    "ecosystem": "hbm",
-    "kind": "paper",
-    "source": "crossref",
-    "source_group": "scholarly_bibliography",
-    "source_id": "10.1149/ma2023-02331593mtgabs",
-    "published_at": "2023-12-22",
-    "published_precision": "day",
-    "first_seen_at": "2026-10-26T14:40:32+00:00",
-    "historical_backfill": true,
-    "historical_investor_observation_unverified": true,
-    "title": "Process and Design Challenges for Hybrid Bonding",
-    "excerpt": "Hybrid bonding is one of the key technology to enable solutions for high bandwidth with increasing power and signal integrity. Hybrid bonding involves, face-to-face interconnect formation between wafers and it acts as an extension of fusion bonding technology. Wherein, dielectric materials such as silicon dioxide bond at room temperature and the copper vias embedded in the dielectric expand to form the electrical connections, enabling the interconnect formation between the top and bottom wafer. Hybrid bonding provides advantages over traditional C4 flip-chip bonding involving solder-based micro-bumps, such as, in",
-    "url": "https://api.crossref.org/works/10.1149/ma2023-02331593mtgabs",
-    "doi": "10.1149/ma2023-02331593mtgabs",
-    "details": {
-      "query": "high bandwidth memory hybrid bonding",
-      "work_type": "journal-article",
-      "date_precision": "day"
-    },
-    "provenance_status": "bibliographic_metadata_only",
-    "research_priority": "unrated",
-    "not_a_live_trigger": true,
     "also_indexed_by": [
       "crossref",
       "openalex"
-    ]
+    ],
+    "canonical_id": "doi:10.1149/ma2023-02331593mtgabs",
+    "details": {
+      "date_precision": "day",
+      "query": "high bandwidth memory hybrid bonding",
+      "work_type": "journal-article"
+    },
+    "doi": "10.1149/ma2023-02331593mtgabs",
+    "ecosystem": "hbm",
+    "excerpt": "Hybrid bonding is one of the key technology to enable solutions for high bandwidth with increasing power and signal integrity. Hybrid bonding involves, face-to-face interconnect formation between wafers and it acts as an extension of fusion bonding technology. Wherein, dielectric materials such as silicon dioxide bond at room temperature and the copper vias embedded in the dielectric expand to form the electrical connections, enabling the interconnect formation between the top and bottom wafer. Hybrid bonding provides advantages over traditional C4 flip-chip bonding involving solder-based micro-bumps, such as, in",
+    "first_seen_at": "2026-10-26T14:40:32+00:00",
+    "historical_backfill": true,
+    "historical_investor_observation_unverified": true,
+    "id": "bfea33dfbae9027f92fdfeed",
+    "kind": "paper",
+    "not_a_live_trigger": true,
+    "provenance_status": "bibliographic_metadata_only",
+    "published_at": "2023-12-22",
+    "published_precision": "day",
+    "research_priority": "unrated",
+    "source": "crossref",
+    "source_group": "scholarly_bibliography",
+    "source_id": "10.1149/ma2023-02331593mtgabs",
+    "title": "Process and Design Challenges for Hybrid Bonding",
+    "url": "https://api.crossref.org/works/10.1149/ma2023-02331593mtgabs"
   },
   {
     "also_indexed_by": [
@@ -8275,34 +8275,34 @@
     "url": "https://api.openalex.org/works/W4206430883"
   },
   {
-    "id": "5101a8d7340b8fb479fbb57a",
-    "canonical_id": "doi:10.3390/electronics11010010",
-    "ecosystem": "power",
-    "kind": "paper",
-    "source": "crossref",
-    "source_group": "scholarly_bibliography",
-    "source_id": "10.3390/electronics11010010",
-    "published_at": "2021-12-22",
-    "published_precision": "day",
-    "first_seen_at": "2026-10-26T14:40:32+00:00",
-    "historical_backfill": true,
-    "historical_investor_observation_unverified": true,
-    "title": "Challenges of Overcoming Defects in Wide Bandgap Semiconductor Power Electronics",
-    "excerpt": "The role of crystal defects in wide bandgap semiconductors and dielectrics under extreme environments (high temperature, high electric and magnetic fields, intense radiation, and mechanical stresses) found in power electronics is reviewed. Understanding defects requires real-time in situ material characterization during material synthesis and when the material is subjected to extreme environmental stress. Wide bandgap semiconductor devices are reviewed from the point of view of the role of defects and their impact on performance. It is shown that the reduction of defects represents a fundamental breakthrough that",
-    "url": "https://api.crossref.org/works/10.3390/electronics11010010",
-    "doi": "10.3390/electronics11010010",
-    "details": {
-      "query": "silicon carbide wide bandgap power converter",
-      "work_type": "journal-article",
-      "date_precision": "day"
-    },
-    "provenance_status": "bibliographic_metadata_only",
-    "research_priority": "unrated",
-    "not_a_live_trigger": true,
     "also_indexed_by": [
       "crossref",
       "openalex"
-    ]
+    ],
+    "canonical_id": "doi:10.3390/electronics11010010",
+    "details": {
+      "date_precision": "day",
+      "query": "silicon carbide wide bandgap power converter",
+      "work_type": "journal-article"
+    },
+    "doi": "10.3390/electronics11010010",
+    "ecosystem": "power",
+    "excerpt": "The role of crystal defects in wide bandgap semiconductors and dielectrics under extreme environments (high temperature, high electric and magnetic fields, intense radiation, and mechanical stresses) found in power electronics is reviewed. Understanding defects requires real-time in situ material characterization during material synthesis and when the material is subjected to extreme environmental stress. Wide bandgap semiconductor devices are reviewed from the point of view of the role of defects and their impact on performance. It is shown that the reduction of defects represents a fundamental breakthrough that",
+    "first_seen_at": "2026-10-26T14:40:32+00:00",
+    "historical_backfill": true,
+    "historical_investor_observation_unverified": true,
+    "id": "5101a8d7340b8fb479fbb57a",
+    "kind": "paper",
+    "not_a_live_trigger": true,
+    "provenance_status": "bibliographic_metadata_only",
+    "published_at": "2021-12-22",
+    "published_precision": "day",
+    "research_priority": "unrated",
+    "source": "crossref",
+    "source_group": "scholarly_bibliography",
+    "source_id": "10.3390/electronics11010010",
+    "title": "Challenges of Overcoming Defects in Wide Bandgap Semiconductor Power Electronics",
+    "url": "https://api.crossref.org/works/10.3390/electronics11010010"
   },
   {
     "also_indexed_by": [
@@ -9719,34 +9719,34 @@
     "url": "https://api.openalex.org/works/W3116850923"
   },
   {
-    "id": "36635374754f01035c77f8b5",
-    "canonical_id": "doi:10.71465/ajpeps2468",
-    "ecosystem": "power",
-    "kind": "paper",
-    "source": "crossref",
-    "source_group": "scholarly_bibliography",
-    "source_id": "10.71465/ajpeps2468",
-    "published_at": "2020-12-31",
-    "published_precision": "day",
-    "first_seen_at": "2026-10-26T14:40:32+00:00",
-    "historical_backfill": true,
-    "historical_investor_observation_unverified": true,
-    "title": "Wide-Bandgap Semiconductors for High-Power Electronics in Power Systems",
-    "excerpt": "Wide-bandgap (WBG) semiconductors have emerged as a transformative technology in the realm of high-power electronics, offering substantial advantages over traditional silicon-based devices. The key benefits of WBG materials such as Silicon Carbide (SiC) and Gallium Nitride (GaN) include their ability to operate at higher voltages, frequencies, and temperatures, leading to improved efficiency and compactness in power systems. This article explores the principles, advancements, and applications of WBG semiconductors in power systems, with a focus on their role in power converters, inverters, and electric propulsion",
-    "url": "https://api.crossref.org/works/10.71465/ajpeps2468",
-    "doi": "10.71465/ajpeps2468",
-    "details": {
-      "query": "silicon carbide wide bandgap power converter",
-      "work_type": "journal-article",
-      "date_precision": "day"
-    },
-    "provenance_status": "bibliographic_metadata_only",
-    "research_priority": "unrated",
-    "not_a_live_trigger": true,
     "also_indexed_by": [
       "crossref",
       "openalex"
-    ]
+    ],
+    "canonical_id": "doi:10.71465/ajpeps2468",
+    "details": {
+      "date_precision": "day",
+      "query": "silicon carbide wide bandgap power converter",
+      "work_type": "journal-article"
+    },
+    "doi": "10.71465/ajpeps2468",
+    "ecosystem": "power",
+    "excerpt": "Wide-bandgap (WBG) semiconductors have emerged as a transformative technology in the realm of high-power electronics, offering substantial advantages over traditional silicon-based devices. The key benefits of WBG materials such as Silicon Carbide (SiC) and Gallium Nitride (GaN) include their ability to operate at higher voltages, frequencies, and temperatures, leading to improved efficiency and compactness in power systems. This article explores the principles, advancements, and applications of WBG semiconductors in power systems, with a focus on their role in power converters, inverters, and electric propulsion",
+    "first_seen_at": "2026-10-26T14:40:32+00:00",
+    "historical_backfill": true,
+    "historical_investor_observation_unverified": true,
+    "id": "36635374754f01035c77f8b5",
+    "kind": "paper",
+    "not_a_live_trigger": true,
+    "provenance_status": "bibliographic_metadata_only",
+    "published_at": "2020-12-31",
+    "published_precision": "day",
+    "research_priority": "unrated",
+    "source": "crossref",
+    "source_group": "scholarly_bibliography",
+    "source_id": "10.71465/ajpeps2468",
+    "title": "Wide-Bandgap Semiconductors for High-Power Electronics in Power Systems",
+    "url": "https://api.crossref.org/works/10.71465/ajpeps2468"
   },
   {
     "also_indexed_by": [
@@ -9778,33 +9778,33 @@
     "url": "https://api.crossref.org/works/10.1515/9781800101050-014"
   },
   {
-    "id": "b6fb6cf7b1b2c80fdad60428",
+    "also_indexed_by": [
+      "crossref"
+    ],
     "canonical_id": "doi:10.1002/3527600434.eap867",
+    "details": {
+      "date_precision": "day",
+      "query": "co packaged optics laser optical interposer",
+      "work_type": "other"
+    },
+    "doi": "10.1002/3527600434.eap867",
     "ecosystem": "optics",
-    "kind": "paper",
-    "source": "crossref",
-    "source_group": "scholarly_bibliography",
-    "source_id": "10.1002/3527600434.eap867",
-    "published_at": "2020-12-31",
-    "published_precision": "day",
+    "excerpt": "Abstract This article introduces a new class of broadband semiconductor lasers by presenting the perspective of their principle of operation and potential application in energy‐efficient optical communication. Firstly, the working principle of a semiconductor laser is discussed, followed by the significant advancements in the form of quantum‐confined active semiconductor materials and heterostructure laser devices. Then, the underlying principle of broadband emission, which are the broad gain‐bandwidth active materials and the related carrier dynamics, are discussed in detail. Finally, the demonstration and statu",
     "first_seen_at": "2026-10-26T14:57:08+00:00",
     "historical_backfill": true,
     "historical_investor_observation_unverified": true,
-    "title": "Broadband Laser for Optical Telecommunication",
-    "excerpt": "Abstract This article introduces a new class of broadband semiconductor lasers by presenting the perspective of their principle of operation and potential application in energy‐efficient optical communication. Firstly, the working principle of a semiconductor laser is discussed, followed by the significant advancements in the form of quantum‐confined active semiconductor materials and heterostructure laser devices. Then, the underlying principle of broadband emission, which are the broad gain‐bandwidth active materials and the related carrier dynamics, are discussed in detail. Finally, the demonstration and statu",
-    "url": "https://api.crossref.org/works/10.1002/3527600434.eap867",
-    "doi": "10.1002/3527600434.eap867",
-    "details": {
-      "query": "co packaged optics laser optical interposer",
-      "work_type": "other",
-      "date_precision": "day"
-    },
-    "provenance_status": "bibliographic_metadata_only",
-    "research_priority": "unrated",
+    "id": "b6fb6cf7b1b2c80fdad60428",
+    "kind": "paper",
     "not_a_live_trigger": true,
-    "also_indexed_by": [
-      "crossref"
-    ]
+    "provenance_status": "bibliographic_metadata_only",
+    "published_at": "2020-12-31",
+    "published_precision": "day",
+    "research_priority": "unrated",
+    "source": "crossref",
+    "source_group": "scholarly_bibliography",
+    "source_id": "10.1002/3527600434.eap867",
+    "title": "Broadband Laser for Optical Telecommunication",
+    "url": "https://api.crossref.org/works/10.1002/3527600434.eap867"
   },
   {
     "also_indexed_by": [
@@ -9956,33 +9956,33 @@
     "url": "https://www.federalregister.gov/documents/2020/12/28/2020-28648/make-inoperative-exemptions-vehicle-modifications-to-accommodate-people-with-disabilities"
   },
   {
-    "id": "cdc899f11d51dd3807187da3",
+    "also_indexed_by": [
+      "crossref"
+    ],
     "canonical_id": "doi:10.1002/lpor.202000167",
+    "details": {
+      "date_precision": "day",
+      "query": "co packaged optics laser optical interposer",
+      "work_type": "journal-article"
+    },
+    "doi": "10.1002/lpor.202000167",
     "ecosystem": "optics",
-    "kind": "paper",
-    "source": "crossref",
-    "source_group": "scholarly_bibliography",
-    "source_id": "10.1002/lpor.202000167",
-    "published_at": "2020-12-28",
-    "published_precision": "day",
+    "excerpt": "Abstract Satellite‐based quantum technologies represent a possible route for extending the achievable range of quantum communication, allowing the construction of worldwide quantum networks without quantum repeaters. In space missions, however, the volume available for the instrumentation is limited, and footprint is a crucial specification of the devices that can be employed. Integrated optics could be highly beneficial in this sense, as it allows for the miniaturization of different functionalities in small and monolithic photonic circuits. This article reports on qualification of waveguides fabricated in glass",
     "first_seen_at": "2026-10-26T14:57:08+00:00",
     "historical_backfill": true,
     "historical_investor_observation_unverified": true,
-    "title": "Space Qualification of Ultrafast Laser‐Written Integrated Waveguide Optics",
-    "excerpt": "Abstract Satellite‐based quantum technologies represent a possible route for extending the achievable range of quantum communication, allowing the construction of worldwide quantum networks without quantum repeaters. In space missions, however, the volume available for the instrumentation is limited, and footprint is a crucial specification of the devices that can be employed. Integrated optics could be highly beneficial in this sense, as it allows for the miniaturization of different functionalities in small and monolithic photonic circuits. This article reports on qualification of waveguides fabricated in glass",
-    "url": "https://api.crossref.org/works/10.1002/lpor.202000167",
-    "doi": "10.1002/lpor.202000167",
-    "details": {
-      "query": "co packaged optics laser optical interposer",
-      "work_type": "journal-article",
-      "date_precision": "day"
-    },
-    "provenance_status": "bibliographic_metadata_only",
-    "research_priority": "unrated",
+    "id": "cdc899f11d51dd3807187da3",
+    "kind": "paper",
     "not_a_live_trigger": true,
-    "also_indexed_by": [
-      "crossref"
-    ]
+    "provenance_status": "bibliographic_metadata_only",
+    "published_at": "2020-12-28",
+    "published_precision": "day",
+    "research_priority": "unrated",
+    "source": "crossref",
+    "source_group": "scholarly_bibliography",
+    "source_id": "10.1002/lpor.202000167",
+    "title": "Space Qualification of Ultrafast Laser‐Written Integrated Waveguide Optics",
+    "url": "https://api.crossref.org/works/10.1002/lpor.202000167"
   },
   {
     "also_indexed_by": [
@@ -10335,33 +10335,33 @@
     "url": "https://api.crossref.org/works/10.1109/wsc48552.2020.9383861"
   },
   {
-    "id": "51042a307b4e4d31de11f518",
+    "also_indexed_by": [
+      "crossref"
+    ],
     "canonical_id": "doi:10.1117/12.2562015",
+    "details": {
+      "date_precision": "day",
+      "query": "co packaged optics laser optical interposer",
+      "work_type": "proceedings-article"
+    },
+    "doi": "10.1117/12.2562015",
     "ecosystem": "optics",
-    "kind": "paper",
-    "source": "crossref",
-    "source_group": "scholarly_bibliography",
-    "source_id": "10.1117/12.2562015",
-    "published_at": "2020-12-13",
-    "published_precision": "day",
+    "excerpt": "Title/DOI bibliographic record; primary technical result not verified",
     "first_seen_at": "2026-10-26T14:57:08+00:00",
     "historical_backfill": true,
     "historical_investor_observation_unverified": true,
-    "title": "Development of an experimental optical adaptive optics for small telescopes",
-    "excerpt": "Title/DOI bibliographic record; primary technical result not verified",
-    "url": "https://api.crossref.org/works/10.1117/12.2562015",
-    "doi": "10.1117/12.2562015",
-    "details": {
-      "query": "co packaged optics laser optical interposer",
-      "work_type": "proceedings-article",
-      "date_precision": "day"
-    },
-    "provenance_status": "bibliographic_metadata_only",
-    "research_priority": "unrated",
+    "id": "51042a307b4e4d31de11f518",
+    "kind": "paper",
     "not_a_live_trigger": true,
-    "also_indexed_by": [
-      "crossref"
-    ]
+    "provenance_status": "bibliographic_metadata_only",
+    "published_at": "2020-12-13",
+    "published_precision": "day",
+    "research_priority": "unrated",
+    "source": "crossref",
+    "source_group": "scholarly_bibliography",
+    "source_id": "10.1117/12.2562015",
+    "title": "Development of an experimental optical adaptive optics for small telescopes",
+    "url": "https://api.crossref.org/works/10.1117/12.2562015"
   },
   {
     "also_indexed_by": [

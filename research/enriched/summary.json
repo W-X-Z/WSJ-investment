@@ -1,9 +1,9 @@
 {
   "as_of": "2026-10-26",
-  "total_historical_records_read": 5458,
-  "unique_valid_sources": 5458,
+  "total_historical_records_read": 5465,
+  "unique_valid_sources": 5465,
   "excluded_future_or_invalid": 0,
-  "documents_with_ontology_matches": 1806,
+  "documents_with_ontology_matches": 1811,
   "ontology_nodes": 90,
   "nodes_with_at_least_one_match": 46,
   "numeric_mentions_requiring_validation": 36,
