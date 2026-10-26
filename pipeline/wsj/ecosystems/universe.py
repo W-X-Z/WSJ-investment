@@ -11,7 +11,7 @@ from __future__ import annotations
 
 import argparse
 import logging
-from datetime import datetime
+from datetime import UTC, datetime
 
 from wsj.config import load_settings
 from wsj.db import make_store
@@ -34,16 +34,11 @@ def sync(store, graph: dict, dry_run: bool = False) -> dict:
         wanted[int(cik)] = f"ontology:{n.get('ecosystem')}:{','.join(nodes)[:200]}"
     existing = {
         int(r["cik"]): r
-        for r in store.select(
-            "core.companies",
-            ["cik", "in_universe", "universe_reason", "sector_bucket"],
-            {"cik": list(wanted)},
-        )
+        # PostgREST upsert 는 NOT NULL 열이 빠지면 거부한다 (충돌 전에 insert 튜플 검사) → 전체 행을 들고 간다
+        for r in store.select("core.companies", None, {"cik": list(wanted)})
     }
-    prior = store.select(
-        "core.companies", ["cik", "universe_reason"], {"universe_reason": ("like", "ontology%")}
-    )
-    now = datetime.utcnow().isoformat()
+    prior = store.select("core.companies", None, {"universe_reason": ("like", "ontology%")})
+    now = datetime.now(UTC).isoformat()
     ups, downs = [], []
     for cik, reason in wanted.items():
         if cik not in existing:
@@ -53,7 +48,7 @@ def sync(store, graph: dict, dry_run: bool = False) -> dict:
         if r.get("universe_reason") != reason or not r.get("in_universe"):
             ups.append(
                 {
-                    "cik": cik,
+                    **r,
                     "in_universe": True,
                     "universe_reason": reason,
                     "sector_bucket": "supply_chain",
@@ -62,9 +57,7 @@ def sync(store, graph: dict, dry_run: bool = False) -> dict:
             )
     for r in prior:
         if int(r["cik"]) not in wanted:
-            downs.append(
-                {"cik": int(r["cik"]), "in_universe": False, "universe_reason": None, "updated_at": now}
-            )
+            downs.append({**r, "in_universe": False, "universe_reason": None, "updated_at": now})
     if not dry_run:
         if ups:
             store.upsert("core.companies", ups, ["cik"])
