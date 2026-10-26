@@ -8,7 +8,8 @@ from __future__ import annotations
 
 import argparse
 import json
-import os
+import html
+import re
 import sys
 from datetime import date, datetime, timezone
 from pathlib import Path
@@ -19,7 +20,7 @@ from urllib.request import Request, urlopen
 ALLOWED_HOSTS = frozenset({
     "api.fda.gov", "clinicaltrials.gov", "www.ebi.ac.uk", "api.openalex.org",
     "data.sec.gov", "api.usaspending.gov", "api.github.com",
-    "www.federalregister.gov", "web.archive.org",
+    "www.federalregister.gov", "web.archive.org", "www.sec.gov", "ast-science.com", "ionq.com",
 })
 OUTPUT_DEFAULT = Path(__file__).resolve().parents[3] / "research" / "probe_sample.json"
 MAX_BYTES = 1_500_000
@@ -30,8 +31,11 @@ QUERIES = [
     {"id": "TMDX-fda-liver", "ticker": "TMDX", "h": "H01", "source": "fda", "url": "https://api.fda.gov/device/pma.json", "params": {"search": 'pma_number:"P200031"', "limit": "5"}, "as_of": "2022-06-30"},
     {"id": "TMDX-fda-heart", "ticker": "TMDX", "h": "H01", "source": "fda", "url": "https://api.fda.gov/device/pma.json", "params": {"search": 'pma_number:"P180051"', "limit": "10"}, "as_of": "2022-06-30"},
     {"id": "TMDX-clinical", "ticker": "TMDX", "h": "H02", "source": "clinical", "url": "https://clinicaltrials.gov/api/v2/studies/NCT02522871", "as_of": "2022-06-30"},
-    {"id": "TMDX-europepmc", "ticker": "TMDX", "h": "H02", "source": "europepmc", "url": "https://www.ebi.ac.uk/europepmc/webservices/rest/search", "params": {"query": "normothermic AND liver AND FIRST_PDATE:[2019-01-01 TO 2022-06-30]", "format": "json", "pageSize": "5"}, "as_of": "2022-06-30"},
+    {"id": "TMDX-europepmc", "ticker": "TMDX", "h": "H02", "source": "europepmc", "url": "https://www.ebi.ac.uk/europepmc/webservices/rest/search", "params": {"query": "normothermic AND liver AND FIRST_PDATE:[2019-01-01 TO 2022-06-30]", "format": "json", "resultType": "core", "pageSize": "5"}, "as_of": "2022-06-30"},
     {"id": "TMDX-openalex", "ticker": "TMDX", "h": "H02", "source": "openalex", "url": "https://api.openalex.org/works", "params": {"search": "normothermic machine perfusion liver transplantation", "filter": "to_publication_date:2022-06-30", "per_page": "5", "select": "id,display_name,publication_date,doi"}, "as_of": "2022-06-30"},
+    {"id": "ASTS-5g-company-release", "ticker": "ASTS", "h": "H04", "source": "html_document", "url": "https://ast-science.com/ast-spacemobile-achieves-space-based-5g-cellular-broadband-connectivity-from-everyday-smartphones-another-historic-world-first/", "as_of": "2023-09-30", "source_published_at": "2023-09-19", "terms": ["14 Mbps", "5G"]},
+    {"id": "RKLB-sec-award-original", "ticker": "RKLB", "h": "H07", "source": "html_document", "url": "https://www.sec.gov/Archives/edgar/data/1819994/000095017023072224/rklb-20231221.htm", "as_of": "2023-12-22", "source_published_at": "2023-12-21", "terms": ["515 million", "18 space vehicles"]},
+    {"id": "IONQ-self-benchmark-29AQ", "ticker": "IONQ", "h": "H10", "source": "html_document", "url": "https://ionq.com/blog/ionq-achieves-new-performance-milestone-of-29-algorithmic-qubits-aq-on-ionq", "as_of": "2023-07-01", "source_published_at": "2023-06-22", "terms": ["29 algorithmic qubits", "29"]},
     {"id": "TMDX-sec", "ticker": "TMDX", "h": "H03", "source": "sec", "url": "https://data.sec.gov/submissions/CIK0001756262.json", "as_of": "2022-11-15"},
     {"id": "ASTS-sec", "ticker": "ASTS", "h": "H04", "source": "sec", "url": "https://data.sec.gov/submissions/CIK0001780312.json", "as_of": "2023-09-30"},
     {"id": "ASTS-federalregister", "ticker": "ASTS", "h": "H06", "source": "federalregister", "url": "https://www.federalregister.gov/api/v1/documents.json", "params": {"conditions[term]": "AST SpaceMobile", "conditions[publication_date][lte]": "2023-09-30", "per_page": "5"}, "as_of": "2023-09-30"},
@@ -72,9 +76,17 @@ def parse_records(source: str, payload: object, as_of: str) -> tuple[list[dict],
         if not _is_historical_date(first, as_of):
             return [], "first study posting after cutoff or missing"
         return [{"id": ident.get("nctId"), "date": first, "name": ident.get("briefTitle"), "study_type": (data.get("designModule") or {}).get("studyType")}], "Record is currently updated; study historical change history must be requested separately"
+    if source == "html_document":
+        if not isinstance(payload, dict):
+            return [], "Not an HTML document"
+        raw_text = payload.get("text") or ""
+        return ([{"id": payload.get("url"), "date": payload.get("source_published_at"), "name": "historical source text available", "matches": [
+            {"term": term, "context": raw_text[max(0, (pos := raw_text.lower().find(term.lower())) - 80):pos + len(term) + 130] }
+            for term in payload.get("terms", []) if term.lower() in raw_text.lower()
+        ]}] if raw_text and _is_historical_date(payload.get("source_published_at"), as_of) else []), "Historical timestamp supplied from separately verified publication; fetched HTML is today's live representation, not preserved snapshot"
     if source == "europepmc":
         items = (payload.get("resultList") or {}).get("result", []) if isinstance(payload, dict) else []
-        out = [{"id": x.get("id"), "date": x.get("firstPublicationDate"), "name": x.get("title"), "doi": x.get("doi")} for x in items if _is_historical_date(x.get("firstPublicationDate"), as_of)]
+        out = [{"id": x.get("id"), "date": x.get("firstPublicationDate"), "name": x.get("title"), "doi": x.get("doi"), "abstract_excerpt": re.sub(r"\\s+", " ", re.sub(r"<[^>]+>", " ", html.unescape(x.get("abstractText") or ""))).strip()[:360]} for x in items if _is_historical_date(x.get("firstPublicationDate"), as_of)]
         return out, "Topic publications, not necessarily issued by/for the company"
     if source == "openalex":
         items = payload.get("results", []) if isinstance(payload, dict) else []
@@ -85,11 +97,11 @@ def parse_records(source: str, payload: object, as_of: str) -> tuple[list[dict],
         cols = ("form", "filingDate", "accessionNumber", "primaryDocument")
         rows = zip(*(recent.get(c, []) for c in cols))
         out = [{"id": a, "date": d, "name": f, "document": p} for f, d, a, p in rows if f in ("8-K", "10-Q", "10-K") and _is_historical_date(d, as_of)]
-        return out[:8], "Most recent array is partial; filing date not exact intraday publication; archive indexes are needed"
+        return sorted(out, key=lambda r: r["date"], reverse=True)[:8], "Most recent array is partial; filing date not exact intraday publication; archive indexes are needed"
     if source == "usaspending":
         items = payload.get("results", []) if isinstance(payload, dict) else []
         # Base Obligation Date is NOT the public release date; do not mark as contemporaneously available.
-        out = [{"id": x.get("Award ID"), "date": x.get("Base Obligation Date"), "name": x.get("Recipient Name"), "amount": x.get("Award Amount")} for x in items]
+        out = [{"id": x.get("Award ID"), "date": x.get("Base Obligation Date"), "name": x.get("Recipient Name"), "amount": x.get("Award Amount"), "description_excerpt": (x.get("Description") or "")[:230]} for x in items]
         return out, "Disclosure lag incl. DoD 90d+: award date is not public availability, cannot assert signal timing"
     if source == "federalregister":
         items = payload.get("results", []) if isinstance(payload, dict) else []
@@ -130,6 +142,12 @@ def _request(query: dict) -> object:
         raw = resp.read(MAX_BYTES + 1)
         if len(raw) > MAX_BYTES:
             raise ValueError("Public API response exceeded cap")
+    if query["source"] == "html_document":
+        content = raw.decode("utf-8", errors="replace")
+        # Drop scripts/styles and tags; hold short text contexts, never full copyrighted articles.
+        content = re.sub(r"<(script|style)[^>]*>.*?</\\1>", " ", content, flags=re.IGNORECASE | re.DOTALL)
+        content = re.sub(r"\\s+", " ", re.sub(r"<[^>]+>", " ", html.unescape(content)))
+        return {"text": content[:250_000], "url": query["url"], "terms": query["terms"], "source_published_at": query["source_published_at"]}
     return json.loads(raw)
 
 
