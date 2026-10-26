@@ -121,6 +121,16 @@ def build(
     if dropped:
         log.info("dropped non-universe signals: %d", dropped)
 
+    # 규칙이 바뀌어 더 이상 생성되지 않는 창 안의 옛 신호는 지운다 (규칙 변경 반영·멱등)
+    fresh = {(x["cik"], x["family"], x["kind"], x["source_key"]) for x in signals}
+    old = store.select(
+        "core.signals", ["id", "cik", "family", "kind", "source_key"], {"signal_date": ("gte", since.isoformat())}
+    )
+    stale_ids = [r["id"] for r in old if (int(r["cik"]), r["family"], r["kind"], r["source_key"]) not in fresh]
+    if stale_ids:
+        store.delete("core.signals", {"id": stale_ids})
+        log.info("removed stale signals: %d", len(stale_ids))
+
     # upsert signals
     n = 0
     for chunk in chunked(signals, 300):
