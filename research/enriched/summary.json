@@ -1,0 +1,20 @@
+{
+  "as_of": "2026-10-26",
+  "total_historical_records_read": 5444,
+  "unique_valid_sources": 5444,
+  "excluded_future_or_invalid": 0,
+  "documents_with_ontology_matches": 1801,
+  "ontology_nodes": 90,
+  "nodes_with_at_least_one_match": 46,
+  "numeric_mentions_requiring_validation": 99,
+  "co_mention_pairs_requiring_review": 38,
+  "independent_factual_correlations_confirmed": 0,
+  "new_confirmed_supply_edges": 0,
+  "interpretation": "Lexical bibliographic evidence links and numeric quote candidates are NOT verified technological breakthroughs, customer adoption, or investment ideas.",
+  "limitations": [
+    "Metadata/abstract only, no full-text scientific fact verification.",
+    "Historical publication dates do not establish historical collector access.",
+    "Count trends are bibliographic visibility, not commercialization or scientific efficacy.",
+    "Co-mentions never automatically create technology, supplier, or customer relations."
+  ]
+}
