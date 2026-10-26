@@ -6,6 +6,7 @@ on:
     branches: [feat/historical-backfill-graph-canvas-20261026]
     paths:
       - "pipeline/wsj/ecosystems/enrich_graph.py"
+      - "pipeline/tests/test_ecosystem_enrich_graph.py"
       - "research/ecosystems/node_aliases.json"
       - "research/ecosystems/seed_graph.json"
       - ".github/workflows/technology-evidence-graph-enrichment.yml"
