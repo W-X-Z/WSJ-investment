@@ -120,6 +120,45 @@ WATCH_EVENT_TYPES = {
 }
 
 
+def displacement_scenarios(graph: dict[str, Any], start: str, max_depth: int = 5) -> list[dict[str, Any]]:
+    """List plausible substitution risks, *not* predicted negative revenue impacts.
+
+    A substitute edge means architectures MAY compete. A change affecting both
+    can favor either; this function never assigns a numeric sign or probability.
+    """
+    nodes = {n["id"]: n for n in graph["nodes"]}
+    adjacency: dict[str, list[str]] = defaultdict(list)
+    alternatives: dict[str, list[dict[str, Any]]] = defaultdict(list)
+    for edge in graph["edges"]:
+        if edge["relation"] in PATH_RELATIONS:
+            adjacency[edge["from"]].append(edge["to"])
+        elif edge["relation"] == "substitutes_for":
+            alternatives[edge["from"]].append(edge)
+    queue = deque([(start, [start])])
+    found, seen = [], set()
+    while queue:
+        node, path = queue.popleft()
+        if nodes[node]["kind"] == "technology":
+            for edge in alternatives.get(node, []):
+                key = (node, edge["to"])
+                if key in seen:
+                    continue
+                seen.add(key)
+                found.append({
+                    "technology": nodes[node]["label"],
+                    "alternative": nodes[edge["to"]]["label"],
+                    "path": path + [edge["to"]],
+                    "status": "competing_technology_scenario_only",
+                    "warning": "Replacement is NOT established; architectures may coexist, and customer adoption must be verified.",
+                })
+        if len(path) > max_depth:
+            continue
+        for nxt in adjacency.get(node, []):
+            if nxt not in path:
+                queue.append((nxt, path + [nxt]))
+    return found
+
+
 def possible_watch_matches(event: dict[str, Any], graph: dict[str, Any]) -> list[dict]:
     matches = []
     for watch in graph["watches"]:
@@ -152,6 +191,7 @@ def replay(graph: dict[str, Any], as_of: str) -> dict[str, Any]:
             "event_fingerprint": fingerprint,
             "summary": event["summary"],
             "possible_company_paths": paths,
+            "possible_substitution_risks": displacement_scenarios(graph, event["target_id"]),
             "watch_candidates": possible_watch_matches(event, graph),
             "source_independence": "NOT ESTABLISHED: multiple press reproductions count as one source group",
             "asof_integrity": "Contemporary evidence must be re-validated. Graph is 2026 ontology, not historic graph snapshot.",
