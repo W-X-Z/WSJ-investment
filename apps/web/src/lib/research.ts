@@ -2,10 +2,10 @@ import "server-only";
 import seedJson from "@/data/ecosystem-seed.json";
 import { db } from "@/lib/supabase";
 
-export type GraphNode = { id: string; kind: string; label: string; measured_metrics?: string[]; disclosure_note?: string };
+export type GraphNode = { id: string; kind: string; label: string; ecosystem?: string; also_in?: string[]; measured_metrics?: string[]; role?: string; listing?: { ticker?: string|null; cik?: number|null; filer_type?: string }; in_universe?: boolean; size_band?: string };
 export type Evidence = { url: string; source_quality?: string };
 export type GraphEdge = {
-  id: string; from: string; to: string; relation: string; stage: string;
+  id: string; from: string; to: string; relation: string; evidence_tier: string; confidence?: number;
   polarity: string; evidence: Evidence[]; note?: string;
 };
 export type GraphEvent = {
@@ -74,15 +74,19 @@ export const GRAPH_TO_ECO: Record<string, EcoId> = {
   "eco:hbm": "hbm", "eco:optics": "optics", "eco:power": "power",
 };
 export const KINDS: Record<string, string> = {
-  ecosystem: "산업 생태계", requirement: "기술 요구", bottleneck: "핵심 병목",
-  technology: "해결 기술", component: "부품", material: "소재",
-  process: "공정", company: "기업", equipment: "장비",
+  ecosystem: "산업 생태계", product_generation: "제품 세대", standard: "표준·사양", requirement: "기술 요구",
+  bottleneck: "핵심 병목", technology: "해결 기술", process: "공정·검사", component: "부품·모듈", material: "소재",
+  equipment: "장비 유형", product: "제품", company: "기업",
 };
 export const RELATIONS: Record<string, string> = {
-  drives_requirement: "요구를 생성", creates_bottleneck: "병목을 야기",
-  mitigated_by: "해결 기술", offered_by: "공급·개발",
-  substitutes_for: "대체 가능", requires_component_or_material: "부품·소재 요구",
-  uses_component_or_equipment: "공정 사용",
+  drives_requirement: "요구를 만든다", specified_by: "규격으로 정의", succeeds: "다음 세대", creates_bottleneck: "병목을 만든다",
+  mitigated_by: "완화 수단", requires: "필요로 한다", implements: "제품이 구현", offered_by: "공급 가능(판매 보유)",
+  supplied_to: "확인된 납품", qualifying_with: "인증·협업 진행", adopts: "채택", defers: "채택 연기(부정)",
+  substitutes_for: "대체 가능", displaces: "수요 잠식(부정)", competes_with: "경쟁", invests_in: "지분 투자",
+};
+export const TIERS: Record<string, string> = {
+  independent_measurement: "독립 실측", standard_body: "표준 기구", official_issuer: "당사자 공식", customer_statement: "고객사 진술",
+  third_party_report: "제3자 보도", vendor_claim: "공급사 주장", technical_inference: "기술적 추론", hypothesis: "가설",
 };
 export const EVENT_LABEL: Record<string, string> = {
   commercial_order: "상업화", repeat_order: "수주 확대", joint_development: "기술 협력",

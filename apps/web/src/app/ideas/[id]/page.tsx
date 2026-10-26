@@ -22,7 +22,7 @@ export default async function IdeaDetail({params}:{params:Promise<{id:string}>})
     <p>고객사의 기술 요구 변화가 어떤 소재·부품·공정의 중요도를 높이는지, 해당 기술의 공급기업이 새로운 고객을 확보할 수 있는지 확인하는 가설입니다. 산업 성장과 특정 상장기업의 경제적 이익을 직접 동일시하지 않습니다.</p>
     <div style={{marginTop:18}} className="research-note"><strong>아직 입증되지 않은 사항</strong>{idea.risk}</div>
     <h3>기술 그래프 내 인접 관계</h3>
-    <div className="related-list">{targetEdges.map(edge=><div key={edge.id} style={{padding:"12px 0",borderBottom:"1px solid #eaeef5"}}><div className="story-meta"><span>{edge.relation.replaceAll("_"," ")}</span><span className="meta-sep">·</span><span>{edge.stage.replaceAll("_"," ")}</span></div><strong style={{display:"block",marginTop:5,fontSize:12,color:"#3d5370"}}>{nodeName(edge.from)} → {nodeName(edge.to)}</strong></div>)}</div>
+    <div className="related-list">{targetEdges.map(edge=><div key={edge.id} style={{padding:"12px 0",borderBottom:"1px solid #eaeef5"}}><div className="story-meta"><span>{edge.relation.replaceAll("_"," ")}</span><span className="meta-sep">·</span><span>{edge.evidence_tier.replaceAll("_"," ")}</span></div><strong style={{display:"block",marginTop:5,fontSize:12,color:"#3d5370"}}>{nodeName(edge.from)} → {nodeName(edge.to)}</strong></div>)}</div>
     <h3>다음에 확인할 결정적 사실</h3>
     <div className="detail-content-quote" style={{borderColor:"#49bba7",background:"#f2faf7"}}>{idea.trigger}</div>
     <h3>독립 검증과 추적</h3>

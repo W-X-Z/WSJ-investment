@@ -17,3 +17,6 @@
 | [0007](0007-alpha-hypothesis-and-validation-order.md) | 알파 가설과 검증 순서 (백테스트 → 에이전트) | partially superseded by 0008 | 2026-10-26 |
 | [0008](0008-product-is-the-brief.md) | 제품은 후보 브리프 — 백테스트·모의투자 제외, 섹터 확장 | accepted | 2026-10-26 |
 | [0009](0009-brief-workflow.md) | 브리프 워크플로: 데이터팩 → 리서치 → 종합 → 비평, 날짜 박힌 예측 | accepted | 2026-10-26 |
+| [0010](0010-technology-ecosystem-knowledge-graph.md) | 기술 생태계 온톨로지·증거 그래프·트리거 (설계안) | proposed | 2026-10-26 |
+| [0011](0011-historical-evidence-linkage.md) | 과거 1차 자료 ↔ 그래프 연결 (리뷰 전용 인덱싱) | implemented | 2026-10-26 |
+| [0012](0012-ontology-v03-closed-vocabulary.md) | 온톨로지 v0.3 — 닫힌 어휘, 수요 측 노드, 방향·근거 가중 영향 전파 | accepted | 2026-10-27 |

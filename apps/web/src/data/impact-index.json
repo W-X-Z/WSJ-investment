@@ -1,0 +1,2708 @@
+{
+ "meta": {
+  "generated_from": "research/ecosystems/seed_graph.json",
+  "schema_version": "0.3",
+  "as_of": "2026-10-27",
+  "nodes_indexed": 42,
+  "caveat": "경로 신뢰도는 근거 등급의 곱이다. 'documented' 라도 기술 보유·협업까지이며 매출 증거가 아니다."
+ },
+ "nodes": {
+  "req:hbm_io": {
+   "companies": [
+    {
+     "company_id": "company:camt",
+     "company": "Camtek (CAMT)",
+     "direction": "positive",
+     "confidence": 0.141,
+     "band": "inferred",
+     "in_universe": false,
+     "size_band": "mid",
+     "ticker": "CAMT",
+     "role": "supplier",
+     "path": [
+      "HBM4 2,048 I/O 확대",
+      "미세범프·접합 오버레이/결함 검사",
+      "미세범프 형상·높이 2D/3D 검사",
+      "Camtek Hawk 2D/3D 범프 검사·계측기",
+      "Camtek (CAMT)"
+     ],
+     "weakest": {
+      "id": "e003",
+      "relation": "creates_bottleneck",
+      "tier": "technical_inference",
+      "confidence": 0.4
+     },
+     "upgrade_needed": "supplied_to(official_issuer 이상) + 매출 노출 공시"
+    },
+    {
+     "company_id": "company:onto",
+     "company": "Onto Innovation (ONTO)",
+     "direction": "positive",
+     "confidence": 0.141,
+     "band": "inferred",
+     "in_universe": false,
+     "size_band": "mid",
+     "ticker": "ONTO",
+     "role": "supplier",
+     "path": [
+      "HBM4 2,048 I/O 확대",
+      "미세범프·접합 오버레이/결함 검사",
+      "미세범프 형상·높이 2D/3D 검사",
+      "Onto Dragonfly G3 2D/3D 결함 검사기",
+      "Onto Innovation (ONTO)"
+     ],
+     "weakest": {
+      "id": "e003",
+      "relation": "creates_bottleneck",
+      "tier": "technical_inference",
+      "confidence": 0.4
+     },
+     "upgrade_needed": "supplied_to(official_issuer 이상) + 매출 노출 공시"
+    },
+    {
+     "company_id": "company:besi",
+     "company": "BE Semiconductor Industries (Euronext BESI, 비SEC)",
+     "direction": "positive",
+     "confidence": 0.051,
+     "band": "inferred",
+     "in_universe": false,
+     "size_band": "large",
+     "ticker": "BESI",
+     "role": "supplier",
+     "path": [
+      "HBM4 2,048 I/O 확대",
+      "미세범프·접합 오버레이/결함 검사",
+      "접합 계면 void·불량",
+      "웨이퍼·다이 하이브리드 본더",
+      "BE Semiconductor Industries (Euronext BESI, 비SEC)"
+     ],
+     "weakest": {
+      "id": "e003",
+      "relation": "creates_bottleneck",
+      "tier": "technical_inference",
+      "confidence": 0.4
+     },
+     "upgrade_needed": "supplied_to(official_issuer 이상) + 매출 노출 공시"
+    }
+   ],
+   "substitutions": []
+  },
+  "req:hbm_stack": {
+   "companies": [
+    {
+     "company_id": "company:besi",
+     "company": "BE Semiconductor Industries (Euronext BESI, 비SEC)",
+     "direction": "positive",
+     "confidence": 0.205,
+     "band": "inferred",
+     "in_universe": false,
+     "size_band": "large",
+     "ticker": "BESI",
+     "role": "supplier",
+     "path": [
+      "고적층·미세 접합 확대",
+      "적층 열·변형·뒤틀림 관리",
+      "하이브리드 본딩",
+      "웨이퍼·다이 하이브리드 본더",
+      "BE Semiconductor Industries (Euronext BESI, 비SEC)"
+     ],
+     "weakest": {
+      "id": "e008",
+      "relation": "mitigated_by",
+      "tier": "technical_inference",
+      "confidence": 0.4
+     },
+     "upgrade_needed": "supplied_to(official_issuer 이상) + 매출 노출 공시"
+    },
+    {
+     "company_id": "company:skhynix",
+     "company": "SK hynix (KRX 000660, 비SEC)",
+     "direction": "negative",
+     "confidence": 0.192,
+     "band": "inferred",
+     "in_universe": false,
+     "size_band": "mega",
+     "ticker": "000660",
+     "role": "adopter",
+     "path": [
+      "고적층·미세 접합 확대",
+      "적층 열·변형·뒤틀림 관리",
+      "하이브리드 본딩",
+      "SK hynix (KRX 000660, 비SEC)"
+     ],
+     "weakest": {
+      "id": "e008",
+      "relation": "mitigated_by",
+      "tier": "technical_inference",
+      "confidence": 0.4
+     },
+     "upgrade_needed": "supplied_to(official_issuer 이상) + 매출 노출 공시"
+    },
+    {
+     "company_id": "company:camt",
+     "company": "Camtek (CAMT)",
+     "direction": "positive",
+     "confidence": 0.141,
+     "band": "inferred",
+     "in_universe": false,
+     "size_band": "mid",
+     "ticker": "CAMT",
+     "role": "supplier",
+     "path": [
+      "고적층·미세 접합 확대",
+      "미세범프·접합 오버레이/결함 검사",
+      "미세범프 형상·높이 2D/3D 검사",
+      "Camtek Hawk 2D/3D 범프 검사·계측기",
+      "Camtek (CAMT)"
+     ],
+     "weakest": {
+      "id": "e004",
+      "relation": "creates_bottleneck",
+      "tier": "technical_inference",
+      "confidence": 0.4
+     },
+     "upgrade_needed": "supplied_to(official_issuer 이상) + 매출 노출 공시"
+    },
+    {
+     "company_id": "company:onto",
+     "company": "Onto Innovation (ONTO)",
+     "direction": "positive",
+     "confidence": 0.141,
+     "band": "inferred",
+     "in_universe": false,
+     "size_band": "mid",
+     "ticker": "ONTO",
+     "role": "supplier",
+     "path": [
+      "고적층·미세 접합 확대",
+      "미세범프·접합 오버레이/결함 검사",
+      "미세범프 형상·높이 2D/3D 검사",
+      "Onto Dragonfly G3 2D/3D 결함 검사기",
+      "Onto Innovation (ONTO)"
+     ],
+     "weakest": {
+      "id": "e004",
+      "relation": "creates_bottleneck",
+      "tier": "technical_inference",
+      "confidence": 0.4
+     },
+     "upgrade_needed": "supplied_to(official_issuer 이상) + 매출 노출 공시"
+    }
+   ],
+   "substitutions": [
+    {
+     "technology": "하이브리드 본딩",
+     "alternative": "열압착 본딩(TCB)",
+     "relation": "substitutes_for",
+     "polarity": "negative",
+     "note": "HBM4 전체가 즉시 하이브리드 본딩으로 전환되는 것은 아님"
+    },
+    {
+     "technology": "하이브리드 본딩",
+     "alternative": "Cu 미세범프 상호연결",
+     "relation": "displaces",
+     "polarity": "negative",
+     "note": "채택 시 범프 검사 수요 구조 변화 — 시점은 HBM5 이후"
+    }
+   ]
+  },
+  "bottleneck:hbm_overlay": {
+   "companies": [
+    {
+     "company_id": "company:camt",
+     "company": "Camtek (CAMT)",
+     "direction": "positive",
+     "confidence": 0.352,
+     "band": "claimed",
+     "in_universe": false,
+     "size_band": "mid",
+     "ticker": "CAMT",
+     "role": "supplier",
+     "path": [
+      "미세범프·접합 오버레이/결함 검사",
+      "미세범프 형상·높이 2D/3D 검사",
+      "Camtek Hawk 2D/3D 범프 검사·계측기",
+      "Camtek (CAMT)"
+     ],
+     "weakest": {
+      "id": "e039",
+      "relation": "mitigated_by",
+      "tier": "vendor_claim",
+      "confidence": 0.55
+     },
+     "upgrade_needed": "supplied_to(official_issuer 이상) + 매출 노출 공시"
+    },
+    {
+     "company_id": "company:onto",
+     "company": "Onto Innovation (ONTO)",
+     "direction": "positive",
+     "confidence": 0.352,
+     "band": "claimed",
+     "in_universe": false,
+     "size_band": "mid",
+     "ticker": "ONTO",
+     "role": "supplier",
+     "path": [
+      "미세범프·접합 오버레이/결함 검사",
+      "미세범프 형상·높이 2D/3D 검사",
+      "Onto Dragonfly G3 2D/3D 결함 검사기",
+      "Onto Innovation (ONTO)"
+     ],
+     "weakest": {
+      "id": "e039",
+      "relation": "mitigated_by",
+      "tier": "vendor_claim",
+      "confidence": 0.55
+     },
+     "upgrade_needed": "supplied_to(official_issuer 이상) + 매출 노출 공시"
+    },
+    {
+     "company_id": "company:besi",
+     "company": "BE Semiconductor Industries (Euronext BESI, 비SEC)",
+     "direction": "positive",
+     "confidence": 0.128,
+     "band": "inferred",
+     "in_universe": false,
+     "size_band": "large",
+     "ticker": "BESI",
+     "role": "supplier",
+     "path": [
+      "미세범프·접합 오버레이/결함 검사",
+      "접합 계면 void·불량",
+      "웨이퍼·다이 하이브리드 본더",
+      "BE Semiconductor Industries (Euronext BESI, 비SEC)"
+     ],
+     "weakest": {
+      "id": "e066",
+      "relation": "creates_bottleneck",
+      "tier": "technical_inference",
+      "confidence": 0.4
+     },
+     "upgrade_needed": "supplied_to(official_issuer 이상) + 매출 노출 공시"
+    }
+   ],
+   "substitutions": []
+  },
+  "bottleneck:hbm_thermal": {
+   "companies": [
+    {
+     "company_id": "company:besi",
+     "company": "BE Semiconductor Industries (Euronext BESI, 비SEC)",
+     "direction": "positive",
+     "confidence": 0.256,
+     "band": "inferred",
+     "in_universe": false,
+     "size_band": "large",
+     "ticker": "BESI",
+     "role": "supplier",
+     "path": [
+      "적층 열·변형·뒤틀림 관리",
+      "하이브리드 본딩",
+      "웨이퍼·다이 하이브리드 본더",
+      "BE Semiconductor Industries (Euronext BESI, 비SEC)"
+     ],
+     "weakest": {
+      "id": "e008",
+      "relation": "mitigated_by",
+      "tier": "technical_inference",
+      "confidence": 0.4
+     },
+     "upgrade_needed": "supplied_to(official_issuer 이상) + 매출 노출 공시"
+    },
+    {
+     "company_id": "company:skhynix",
+     "company": "SK hynix (KRX 000660, 비SEC)",
+     "direction": "negative",
+     "confidence": 0.24,
+     "band": "inferred",
+     "in_universe": false,
+     "size_band": "mega",
+     "ticker": "000660",
+     "role": "adopter",
+     "path": [
+      "적층 열·변형·뒤틀림 관리",
+      "하이브리드 본딩",
+      "SK hynix (KRX 000660, 비SEC)"
+     ],
+     "weakest": {
+      "id": "e008",
+      "relation": "mitigated_by",
+      "tier": "technical_inference",
+      "confidence": 0.4
+     },
+     "upgrade_needed": "supplied_to(official_issuer 이상) + 매출 노출 공시"
+    }
+   ],
+   "substitutions": [
+    {
+     "technology": "하이브리드 본딩",
+     "alternative": "열압착 본딩(TCB)",
+     "relation": "substitutes_for",
+     "polarity": "negative",
+     "note": "HBM4 전체가 즉시 하이브리드 본딩으로 전환되는 것은 아님"
+    },
+    {
+     "technology": "하이브리드 본딩",
+     "alternative": "Cu 미세범프 상호연결",
+     "relation": "displaces",
+     "polarity": "negative",
+     "note": "채택 시 범프 검사 수요 구조 변화 — 시점은 HBM5 이후"
+    }
+   ]
+  },
+  "tech:hybrid_bond": {
+   "companies": [
+    {
+     "company_id": "company:besi",
+     "company": "BE Semiconductor Industries (Euronext BESI, 비SEC)",
+     "direction": "positive",
+     "confidence": 0.64,
+     "band": "documented",
+     "in_universe": false,
+     "size_band": "large",
+     "ticker": "BESI",
+     "role": "supplier",
+     "path": [
+      "하이브리드 본딩",
+      "웨이퍼·다이 하이브리드 본더",
+      "BE Semiconductor Industries (Euronext BESI, 비SEC)"
+     ],
+     "weakest": {
+      "id": "n026b",
+      "relation": "requires",
+      "tier": "official_issuer",
+      "confidence": 0.8
+     },
+     "upgrade_needed": "매출 노출·수량·마진 공시"
+    },
+    {
+     "company_id": "company:skhynix",
+     "company": "SK hynix (KRX 000660, 비SEC)",
+     "direction": "negative",
+     "confidence": 0.6,
+     "band": "documented",
+     "in_universe": false,
+     "size_band": "mega",
+     "ticker": "000660",
+     "role": "adopter",
+     "path": [
+      "하이브리드 본딩",
+      "SK hynix (KRX 000660, 비SEC)"
+     ],
+     "weakest": {
+      "id": "n021",
+      "relation": "defers",
+      "tier": "third_party_report",
+      "confidence": 0.6
+     },
+     "upgrade_needed": "매출 노출·수량·마진 공시"
+    }
+   ],
+   "substitutions": [
+    {
+     "technology": "하이브리드 본딩",
+     "alternative": "열압착 본딩(TCB)",
+     "relation": "substitutes_for",
+     "polarity": "negative",
+     "note": "HBM4 전체가 즉시 하이브리드 본딩으로 전환되는 것은 아님"
+    },
+    {
+     "technology": "하이브리드 본딩",
+     "alternative": "Cu 미세범프 상호연결",
+     "relation": "displaces",
+     "polarity": "negative",
+     "note": "채택 시 범프 검사 수요 구조 변화 — 시점은 HBM5 이후"
+    }
+   ]
+  },
+  "tech:tcb": {
+   "companies": [
+    {
+     "company_id": "company:skhynix",
+     "company": "SK hynix (KRX 000660, 비SEC)",
+     "direction": "positive",
+     "confidence": 0.6,
+     "band": "documented",
+     "in_universe": false,
+     "size_band": "mega",
+     "ticker": "000660",
+     "role": "adopter",
+     "path": [
+      "열압착 본딩(TCB)",
+      "SK hynix (KRX 000660, 비SEC)"
+     ],
+     "weakest": {
+      "id": "n020",
+      "relation": "adopts",
+      "tier": "third_party_report",
+      "confidence": 0.6
+     },
+     "upgrade_needed": "매출 노출·수량·마진 공시"
+    }
+   ],
+   "substitutions": [
+    {
+     "technology": "열압착 본딩(TCB)",
+     "alternative": "하이브리드 본딩",
+     "relation": "substitutes_for",
+     "polarity": "negative",
+     "note": "HBM4 전체가 즉시 하이브리드 본딩으로 전환되는 것은 아님"
+    }
+   ]
+  },
+  "req:1p6t": {
+   "companies": [
+    {
+     "company_id": "company:lite",
+     "company": "Lumentum (LITE)",
+     "direction": "positive",
+     "confidence": 0.256,
+     "band": "inferred",
+     "in_universe": false,
+     "size_band": "large",
+     "ticker": "LITE",
+     "role": "supplier",
+     "path": [
+      "1.6 Tb/s Ethernet 및 200 Gb/s/lane 전환",
+      "200G EML 광변조 레이저",
+      "Lumentum 200G PAM4 EML",
+      "Lumentum (LITE)"
+     ],
+     "weakest": {
+      "id": "e076",
+      "relation": "requires",
+      "tier": "technical_inference",
+      "confidence": 0.4
+     },
+     "upgrade_needed": "supplied_to(official_issuer 이상) + 매출 노출 공시"
+    },
+    {
+     "company_id": "company:poet",
+     "company": "POET Technologies (POET)",
+     "direction": "positive",
+     "confidence": 0.141,
+     "band": "inferred",
+     "in_universe": false,
+     "size_band": "small",
+     "ticker": "POET",
+     "role": "supplier",
+     "path": [
+      "1.6 Tb/s Ethernet 및 200 Gb/s/lane 전환",
+      "광학 소자 결합 손실·조립 정밀도",
+      "광학 인터포저 기반 통합 광엔진",
+      "POET 광학 인터포저 광엔진",
+      "POET Technologies (POET)"
+     ],
+     "weakest": {
+      "id": "e012",
+      "relation": "creates_bottleneck",
+      "tier": "technical_inference",
+      "confidence": 0.4
+     },
+     "upgrade_needed": "supplied_to(official_issuer 이상) + 매출 노출 공시"
+    },
+    {
+     "company_id": "company:lessengers",
+     "company": "Lessengers (비상장·상장여부 별도 검증)",
+     "direction": "positive",
+     "confidence": 0.141,
+     "band": "inferred",
+     "in_universe": false,
+     "size_band": "private",
+     "ticker": null,
+     "role": "supplier",
+     "path": [
+      "1.6 Tb/s Ethernet 및 200 Gb/s/lane 전환",
+      "광학 소자 결합 손실·조립 정밀도",
+      "Direct Optical Wiring (광섬유 직접 배선)",
+      "Lessengers DOW 광배선 모듈",
+      "Lessengers (비상장·상장여부 별도 검증)"
+     ],
+     "weakest": {
+      "id": "e012",
+      "relation": "creates_bottleneck",
+      "tier": "technical_inference",
+      "confidence": 0.4
+     },
+     "upgrade_needed": "supplied_to(official_issuer 이상) + 매출 노출 공시"
+    },
+    {
+     "company_id": "company:nvda",
+     "company": "NVIDIA (NVDA) — HBM·광·전력 공통 수요처",
+     "direction": "positive",
+     "confidence": 0.128,
+     "band": "inferred",
+     "in_universe": false,
+     "size_band": "mega",
+     "ticker": "NVDA",
+     "role": "adopter",
+     "path": [
+      "1.6 Tb/s Ethernet 및 200 Gb/s/lane 전환",
+      "고대역폭 광연결의 전력·발열·밀도",
+      "Co-Packaged Optics (CPO)",
+      "NVIDIA (NVDA) — HBM·광·전력 공통 수요처"
+     ],
+     "weakest": {
+      "id": "e013",
+      "relation": "creates_bottleneck",
+      "tier": "technical_inference",
+      "confidence": 0.4
+     },
+     "upgrade_needed": "supplied_to(official_issuer 이상) + 매출 노출 공시"
+    },
+    {
+     "company_id": "company:cohr",
+     "company": "Coherent (COHR)",
+     "direction": "positive",
+     "confidence": 0.102,
+     "band": "inferred",
+     "in_universe": false,
+     "size_band": "large",
+     "ticker": "COHR",
+     "role": "supplier_via_customer",
+     "path": [
+      "1.6 Tb/s Ethernet 및 200 Gb/s/lane 전환",
+      "고대역폭 광연결의 전력·발열·밀도",
+      "Co-Packaged Optics (CPO)",
+      "NVIDIA (NVDA) — HBM·광·전력 공통 수요처",
+      "Coherent (COHR)"
+     ],
+     "weakest": {
+      "id": "e013",
+      "relation": "creates_bottleneck",
+      "tier": "technical_inference",
+      "confidence": 0.4
+     },
+     "upgrade_needed": "supplied_to(official_issuer 이상) + 매출 노출 공시"
+    },
+    {
+     "company_id": "company:fn",
+     "company": "Fabrinet (FN)",
+     "direction": "positive",
+     "confidence": 0.102,
+     "band": "inferred",
+     "in_universe": false,
+     "size_band": "large",
+     "ticker": "FN",
+     "role": "supplier_via_customer",
+     "path": [
+      "1.6 Tb/s Ethernet 및 200 Gb/s/lane 전환",
+      "고대역폭 광연결의 전력·발열·밀도",
+      "Co-Packaged Optics (CPO)",
+      "NVIDIA (NVDA) — HBM·광·전력 공통 수요처",
+      "Fabrinet (FN)"
+     ],
+     "weakest": {
+      "id": "e013",
+      "relation": "creates_bottleneck",
+      "tier": "technical_inference",
+      "confidence": 0.4
+     },
+     "upgrade_needed": "supplied_to(official_issuer 이상) + 매출 노출 공시"
+    }
+   ],
+   "substitutions": [
+    {
+     "technology": "Co-Packaged Optics (CPO)",
+     "alternative": "1.6T Pluggable transceiver",
+     "relation": "substitutes_for",
+     "polarity": "negative",
+     "note": "배치에 따라 두 방식이 공존할 수 있어 보편적 대체가 아님"
+    },
+    {
+     "technology": "Co-Packaged Optics (CPO)",
+     "alternative": "1.6T Pluggable transceiver",
+     "relation": "displaces",
+     "polarity": "conditional",
+     "note": "NVIDIA 는 pluggable 을 보완재로 명시. 스케일아웃 일부 대체 가능성"
+    },
+    {
+     "technology": "1.6T Pluggable transceiver",
+     "alternative": "Co-Packaged Optics (CPO)",
+     "relation": "substitutes_for",
+     "polarity": "negative",
+     "note": "배치에 따라 두 방식이 공존할 수 있어 보편적 대체가 아님"
+    },
+    {
+     "technology": "1.6T Pluggable transceiver",
+     "alternative": "능동 전기 케이블(AEC) — 단거리 구리 링크",
+     "relation": "substitutes_for",
+     "polarity": "conditional",
+     "note": "단거리(랙 내·인접 랙)에서만"
+    }
+   ]
+  },
+  "bottleneck:optic_coupling": {
+   "companies": [
+    {
+     "company_id": "company:poet",
+     "company": "POET Technologies (POET)",
+     "direction": "positive",
+     "confidence": 0.352,
+     "band": "claimed",
+     "in_universe": false,
+     "size_band": "small",
+     "ticker": "POET",
+     "role": "supplier",
+     "path": [
+      "광학 소자 결합 손실·조립 정밀도",
+      "광학 인터포저 기반 통합 광엔진",
+      "POET 광학 인터포저 광엔진",
+      "POET Technologies (POET)"
+     ],
+     "weakest": {
+      "id": "e014",
+      "relation": "mitigated_by",
+      "tier": "vendor_claim",
+      "confidence": 0.55
+     },
+     "upgrade_needed": "supplied_to(official_issuer 이상) + 매출 노출 공시"
+    },
+    {
+     "company_id": "company:lessengers",
+     "company": "Lessengers (비상장·상장여부 별도 검증)",
+     "direction": "positive",
+     "confidence": 0.352,
+     "band": "claimed",
+     "in_universe": false,
+     "size_band": "private",
+     "ticker": null,
+     "role": "supplier",
+     "path": [
+      "광학 소자 결합 손실·조립 정밀도",
+      "Direct Optical Wiring (광섬유 직접 배선)",
+      "Lessengers DOW 광배선 모듈",
+      "Lessengers (비상장·상장여부 별도 검증)"
+     ],
+     "weakest": {
+      "id": "e015",
+      "relation": "mitigated_by",
+      "tier": "vendor_claim",
+      "confidence": 0.55
+     },
+     "upgrade_needed": "supplied_to(official_issuer 이상) + 매출 노출 공시"
+    }
+   ],
+   "substitutions": []
+  },
+  "bottleneck:optic_power": {
+   "companies": [
+    {
+     "company_id": "company:nvda",
+     "company": "NVIDIA (NVDA) — HBM·광·전력 공통 수요처",
+     "direction": "positive",
+     "confidence": 0.32,
+     "band": "inferred",
+     "in_universe": false,
+     "size_band": "mega",
+     "ticker": "NVDA",
+     "role": "adopter",
+     "path": [
+      "고대역폭 광연결의 전력·발열·밀도",
+      "Co-Packaged Optics (CPO)",
+      "NVIDIA (NVDA) — HBM·광·전력 공통 수요처"
+     ],
+     "weakest": {
+      "id": "e016",
+      "relation": "mitigated_by",
+      "tier": "technical_inference",
+      "confidence": 0.4
+     },
+     "upgrade_needed": "supplied_to(official_issuer 이상) + 매출 노출 공시"
+    },
+    {
+     "company_id": "company:cohr",
+     "company": "Coherent (COHR)",
+     "direction": "positive",
+     "confidence": 0.256,
+     "band": "inferred",
+     "in_universe": false,
+     "size_band": "large",
+     "ticker": "COHR",
+     "role": "supplier_via_customer",
+     "path": [
+      "고대역폭 광연결의 전력·발열·밀도",
+      "Co-Packaged Optics (CPO)",
+      "NVIDIA (NVDA) — HBM·광·전력 공통 수요처",
+      "Coherent (COHR)"
+     ],
+     "weakest": {
+      "id": "e016",
+      "relation": "mitigated_by",
+      "tier": "technical_inference",
+      "confidence": 0.4
+     },
+     "upgrade_needed": "supplied_to(official_issuer 이상) + 매출 노출 공시"
+    },
+    {
+     "company_id": "company:lite",
+     "company": "Lumentum (LITE)",
+     "direction": "positive",
+     "confidence": 0.256,
+     "band": "inferred",
+     "in_universe": false,
+     "size_band": "large",
+     "ticker": "LITE",
+     "role": "supplier_via_customer",
+     "path": [
+      "고대역폭 광연결의 전력·발열·밀도",
+      "Co-Packaged Optics (CPO)",
+      "NVIDIA (NVDA) — HBM·광·전력 공통 수요처",
+      "Lumentum (LITE)"
+     ],
+     "weakest": {
+      "id": "e016",
+      "relation": "mitigated_by",
+      "tier": "technical_inference",
+      "confidence": 0.4
+     },
+     "upgrade_needed": "supplied_to(official_issuer 이상) + 매출 노출 공시"
+    },
+    {
+     "company_id": "company:fn",
+     "company": "Fabrinet (FN)",
+     "direction": "positive",
+     "confidence": 0.256,
+     "band": "inferred",
+     "in_universe": false,
+     "size_band": "large",
+     "ticker": "FN",
+     "role": "supplier_via_customer",
+     "path": [
+      "고대역폭 광연결의 전력·발열·밀도",
+      "Co-Packaged Optics (CPO)",
+      "NVIDIA (NVDA) — HBM·광·전력 공통 수요처",
+      "Fabrinet (FN)"
+     ],
+     "weakest": {
+      "id": "e016",
+      "relation": "mitigated_by",
+      "tier": "technical_inference",
+      "confidence": 0.4
+     },
+     "upgrade_needed": "supplied_to(official_issuer 이상) + 매출 노출 공시"
+    }
+   ],
+   "substitutions": [
+    {
+     "technology": "Co-Packaged Optics (CPO)",
+     "alternative": "1.6T Pluggable transceiver",
+     "relation": "substitutes_for",
+     "polarity": "negative",
+     "note": "배치에 따라 두 방식이 공존할 수 있어 보편적 대체가 아님"
+    },
+    {
+     "technology": "Co-Packaged Optics (CPO)",
+     "alternative": "1.6T Pluggable transceiver",
+     "relation": "displaces",
+     "polarity": "conditional",
+     "note": "NVIDIA 는 pluggable 을 보완재로 명시. 스케일아웃 일부 대체 가능성"
+    },
+    {
+     "technology": "1.6T Pluggable transceiver",
+     "alternative": "Co-Packaged Optics (CPO)",
+     "relation": "substitutes_for",
+     "polarity": "negative",
+     "note": "배치에 따라 두 방식이 공존할 수 있어 보편적 대체가 아님"
+    },
+    {
+     "technology": "1.6T Pluggable transceiver",
+     "alternative": "능동 전기 케이블(AEC) — 단거리 구리 링크",
+     "relation": "substitutes_for",
+     "polarity": "conditional",
+     "note": "단거리(랙 내·인접 랙)에서만"
+    }
+   ]
+  },
+  "tech:pluggable": {
+   "companies": [
+    {
+     "company_id": "company:cohr",
+     "company": "Coherent (COHR)",
+     "direction": "positive",
+     "confidence": 0.64,
+     "band": "documented",
+     "in_universe": false,
+     "size_band": "large",
+     "ticker": "COHR",
+     "role": "supplier",
+     "path": [
+      "1.6T Pluggable transceiver",
+      "Coherent 1.6T 광트랜시버",
+      "Coherent (COHR)"
+     ],
+     "weakest": {
+      "id": "p_cohr_1p6t_transceiver",
+      "relation": "implements",
+      "tier": "official_issuer",
+      "confidence": 0.8
+     },
+     "upgrade_needed": "매출 노출·수량·마진 공시"
+    }
+   ],
+   "substitutions": [
+    {
+     "technology": "1.6T Pluggable transceiver",
+     "alternative": "Co-Packaged Optics (CPO)",
+     "relation": "substitutes_for",
+     "polarity": "negative",
+     "note": "배치에 따라 두 방식이 공존할 수 있어 보편적 대체가 아님"
+    },
+    {
+     "technology": "1.6T Pluggable transceiver",
+     "alternative": "능동 전기 케이블(AEC) — 단거리 구리 링크",
+     "relation": "substitutes_for",
+     "polarity": "conditional",
+     "note": "단거리(랙 내·인접 랙)에서만"
+    }
+   ]
+  },
+  "tech:cpo": {
+   "companies": [
+    {
+     "company_id": "company:nvda",
+     "company": "NVIDIA (NVDA) — HBM·광·전력 공통 수요처",
+     "direction": "positive",
+     "confidence": 0.8,
+     "band": "documented",
+     "in_universe": false,
+     "size_band": "mega",
+     "ticker": "NVDA",
+     "role": "adopter",
+     "path": [
+      "Co-Packaged Optics (CPO)",
+      "NVIDIA (NVDA) — HBM·광·전력 공통 수요처"
+     ],
+     "weakest": {
+      "id": "n033",
+      "relation": "adopts",
+      "tier": "official_issuer",
+      "confidence": 0.8
+     },
+     "upgrade_needed": "매출 노출·수량·마진 공시"
+    },
+    {
+     "company_id": "company:cohr",
+     "company": "Coherent (COHR)",
+     "direction": "positive",
+     "confidence": 0.64,
+     "band": "documented",
+     "in_universe": false,
+     "size_band": "large",
+     "ticker": "COHR",
+     "role": "supplier_via_customer",
+     "path": [
+      "Co-Packaged Optics (CPO)",
+      "NVIDIA (NVDA) — HBM·광·전력 공통 수요처",
+      "Coherent (COHR)"
+     ],
+     "weakest": {
+      "id": "n033",
+      "relation": "adopts",
+      "tier": "official_issuer",
+      "confidence": 0.8
+     },
+     "upgrade_needed": "매출 노출·수량·마진 공시"
+    },
+    {
+     "company_id": "company:lite",
+     "company": "Lumentum (LITE)",
+     "direction": "positive",
+     "confidence": 0.64,
+     "band": "documented",
+     "in_universe": false,
+     "size_band": "large",
+     "ticker": "LITE",
+     "role": "supplier_via_customer",
+     "path": [
+      "Co-Packaged Optics (CPO)",
+      "NVIDIA (NVDA) — HBM·광·전력 공통 수요처",
+      "Lumentum (LITE)"
+     ],
+     "weakest": {
+      "id": "n033",
+      "relation": "adopts",
+      "tier": "official_issuer",
+      "confidence": 0.8
+     },
+     "upgrade_needed": "매출 노출·수량·마진 공시"
+    },
+    {
+     "company_id": "company:fn",
+     "company": "Fabrinet (FN)",
+     "direction": "positive",
+     "confidence": 0.64,
+     "band": "documented",
+     "in_universe": false,
+     "size_band": "large",
+     "ticker": "FN",
+     "role": "supplier_via_customer",
+     "path": [
+      "Co-Packaged Optics (CPO)",
+      "NVIDIA (NVDA) — HBM·광·전력 공통 수요처",
+      "Fabrinet (FN)"
+     ],
+     "weakest": {
+      "id": "n033",
+      "relation": "adopts",
+      "tier": "official_issuer",
+      "confidence": 0.8
+     },
+     "upgrade_needed": "매출 노출·수량·마진 공시"
+    }
+   ],
+   "substitutions": [
+    {
+     "technology": "Co-Packaged Optics (CPO)",
+     "alternative": "1.6T Pluggable transceiver",
+     "relation": "substitutes_for",
+     "polarity": "negative",
+     "note": "배치에 따라 두 방식이 공존할 수 있어 보편적 대체가 아님"
+    },
+    {
+     "technology": "Co-Packaged Optics (CPO)",
+     "alternative": "1.6T Pluggable transceiver",
+     "relation": "displaces",
+     "polarity": "conditional",
+     "note": "NVIDIA 는 pluggable 을 보완재로 명시. 스케일아웃 일부 대체 가능성"
+    },
+    {
+     "technology": "1.6T Pluggable transceiver",
+     "alternative": "Co-Packaged Optics (CPO)",
+     "relation": "substitutes_for",
+     "polarity": "negative",
+     "note": "배치에 따라 두 방식이 공존할 수 있어 보편적 대체가 아님"
+    },
+    {
+     "technology": "1.6T Pluggable transceiver",
+     "alternative": "능동 전기 케이블(AEC) — 단거리 구리 링크",
+     "relation": "substitutes_for",
+     "polarity": "conditional",
+     "note": "단거리(랙 내·인접 랙)에서만"
+    }
+   ]
+  },
+  "req:800v": {
+   "companies": [
+    {
+     "company_id": "company:vrt",
+     "company": "Vertiv (VRT)",
+     "direction": "positive",
+     "confidence": 0.41,
+     "band": "claimed",
+     "in_universe": false,
+     "size_band": "large",
+     "ticker": "VRT",
+     "role": "supplier",
+     "path": [
+      "차세대 800VDC 배전 아키텍처",
+      "전력변환 단계·효율·제어",
+      "480VAC에서 ±400/800VDC로 전환하는 Side Power Rack",
+      "Vertiv 800VDC 전력·냉각 인프라 제품군",
+      "Vertiv (VRT)"
+     ],
+     "weakest": {
+      "id": "e025",
+      "relation": "creates_bottleneck",
+      "tier": "official_issuer",
+      "confidence": 0.8
+     },
+     "upgrade_needed": "supplied_to(official_issuer 이상) + 매출 노출 공시"
+    },
+    {
+     "company_id": "company:nvts",
+     "company": "Navitas Semiconductor (NVTS)",
+     "direction": "positive",
+     "confidence": 0.128,
+     "band": "inferred",
+     "in_universe": false,
+     "size_band": "small",
+     "ticker": "NVTS",
+     "role": "supplier",
+     "path": [
+      "차세대 800VDC 배전 아키텍처",
+      "전력변환 단계·효율·제어",
+      "SiC 전력반도체",
+      "Navitas Semiconductor (NVTS)"
+     ],
+     "weakest": {
+      "id": "e031",
+      "relation": "mitigated_by",
+      "tier": "hypothesis",
+      "confidence": 0.2
+     },
+     "upgrade_needed": "supplied_to(official_issuer 이상) + 매출 노출 공시"
+    },
+    {
+     "company_id": "company:on",
+     "company": "onsemi (ON)",
+     "direction": "positive",
+     "confidence": 0.128,
+     "band": "inferred",
+     "in_universe": false,
+     "size_band": "large",
+     "ticker": "ON",
+     "role": "supplier",
+     "path": [
+      "차세대 800VDC 배전 아키텍처",
+      "전력변환 단계·효율·제어",
+      "SiC 전력반도체",
+      "onsemi (ON)"
+     ],
+     "weakest": {
+      "id": "e031",
+      "relation": "mitigated_by",
+      "tier": "hypothesis",
+      "confidence": 0.2
+     },
+     "upgrade_needed": "supplied_to(official_issuer 이상) + 매출 노출 공시"
+    },
+    {
+     "company_id": "company:aehr",
+     "company": "Aehr Test Systems (AEHR)",
+     "direction": "positive",
+     "confidence": 0.023,
+     "band": "inferred",
+     "in_universe": false,
+     "size_band": "small",
+     "ticker": "AEHR",
+     "role": "supplier",
+     "path": [
+      "차세대 800VDC 배전 아키텍처",
+      "전력변환 단계·효율·제어",
+      "SiC 전력반도체",
+      "SiC 소자 신뢰성·번인 검사",
+      "SiC 웨이퍼 레벨 번인·신뢰성 검사",
+      "Aehr FOX-XP 웨이퍼 레벨 번인 시스템",
+      "Aehr Test Systems (AEHR)"
+     ],
+     "weakest": {
+      "id": "e031",
+      "relation": "mitigated_by",
+      "tier": "hypothesis",
+      "confidence": 0.2
+     },
+     "upgrade_needed": "supplied_to(official_issuer 이상) + 매출 노출 공시"
+    }
+   ],
+   "substitutions": [
+    {
+     "technology": "480VAC에서 ±400/800VDC로 전환하는 Side Power Rack",
+     "alternative": "중전압 AC에서 800VDC 직접 전환",
+     "relation": "substitutes_for",
+     "polarity": "negative",
+     "note": "고객 인프라/시점에 따라 두 방식 공존 가능"
+    },
+    {
+     "technology": "중전압 AC에서 800VDC 직접 전환",
+     "alternative": "480VAC에서 ±400/800VDC로 전환하는 Side Power Rack",
+     "relation": "substitutes_for",
+     "polarity": "negative",
+     "note": "고객 인프라/시점에 따라 두 방식 공존 가능"
+    }
+   ]
+  },
+  "bottleneck:conversion": {
+   "companies": [
+    {
+     "company_id": "company:vrt",
+     "company": "Vertiv (VRT)",
+     "direction": "positive",
+     "confidence": 0.512,
+     "band": "claimed",
+     "in_universe": false,
+     "size_band": "large",
+     "ticker": "VRT",
+     "role": "supplier",
+     "path": [
+      "전력변환 단계·효율·제어",
+      "480VAC에서 ±400/800VDC로 전환하는 Side Power Rack",
+      "Vertiv 800VDC 전력·냉각 인프라 제품군",
+      "Vertiv (VRT)"
+     ],
+     "weakest": {
+      "id": "e028",
+      "relation": "mitigated_by",
+      "tier": "official_issuer",
+      "confidence": 0.8
+     },
+     "upgrade_needed": "supplied_to(official_issuer 이상) + 매출 노출 공시"
+    },
+    {
+     "company_id": "company:nvts",
+     "company": "Navitas Semiconductor (NVTS)",
+     "direction": "positive",
+     "confidence": 0.16,
+     "band": "inferred",
+     "in_universe": false,
+     "size_band": "small",
+     "ticker": "NVTS",
+     "role": "supplier",
+     "path": [
+      "전력변환 단계·효율·제어",
+      "SiC 전력반도체",
+      "Navitas Semiconductor (NVTS)"
+     ],
+     "weakest": {
+      "id": "e031",
+      "relation": "mitigated_by",
+      "tier": "hypothesis",
+      "confidence": 0.2
+     },
+     "upgrade_needed": "supplied_to(official_issuer 이상) + 매출 노출 공시"
+    },
+    {
+     "company_id": "company:on",
+     "company": "onsemi (ON)",
+     "direction": "positive",
+     "confidence": 0.16,
+     "band": "inferred",
+     "in_universe": false,
+     "size_band": "large",
+     "ticker": "ON",
+     "role": "supplier",
+     "path": [
+      "전력변환 단계·효율·제어",
+      "SiC 전력반도체",
+      "onsemi (ON)"
+     ],
+     "weakest": {
+      "id": "e031",
+      "relation": "mitigated_by",
+      "tier": "hypothesis",
+      "confidence": 0.2
+     },
+     "upgrade_needed": "supplied_to(official_issuer 이상) + 매출 노출 공시"
+    },
+    {
+     "company_id": "company:aehr",
+     "company": "Aehr Test Systems (AEHR)",
+     "direction": "positive",
+     "confidence": 0.028,
+     "band": "inferred",
+     "in_universe": false,
+     "size_band": "small",
+     "ticker": "AEHR",
+     "role": "supplier",
+     "path": [
+      "전력변환 단계·효율·제어",
+      "SiC 전력반도체",
+      "SiC 소자 신뢰성·번인 검사",
+      "SiC 웨이퍼 레벨 번인·신뢰성 검사",
+      "Aehr FOX-XP 웨이퍼 레벨 번인 시스템",
+      "Aehr Test Systems (AEHR)"
+     ],
+     "weakest": {
+      "id": "e031",
+      "relation": "mitigated_by",
+      "tier": "hypothesis",
+      "confidence": 0.2
+     },
+     "upgrade_needed": "supplied_to(official_issuer 이상) + 매출 노출 공시"
+    }
+   ],
+   "substitutions": [
+    {
+     "technology": "480VAC에서 ±400/800VDC로 전환하는 Side Power Rack",
+     "alternative": "중전압 AC에서 800VDC 직접 전환",
+     "relation": "substitutes_for",
+     "polarity": "negative",
+     "note": "고객 인프라/시점에 따라 두 방식 공존 가능"
+    },
+    {
+     "technology": "중전압 AC에서 800VDC 직접 전환",
+     "alternative": "480VAC에서 ±400/800VDC로 전환하는 Side Power Rack",
+     "relation": "substitutes_for",
+     "polarity": "negative",
+     "note": "고객 인프라/시점에 따라 두 방식 공존 가능"
+    }
+   ]
+  },
+  "tech:sidecar": {
+   "companies": [
+    {
+     "company_id": "company:vrt",
+     "company": "Vertiv (VRT)",
+     "direction": "positive",
+     "confidence": 0.64,
+     "band": "documented",
+     "in_universe": false,
+     "size_band": "large",
+     "ticker": "VRT",
+     "role": "supplier",
+     "path": [
+      "480VAC에서 ±400/800VDC로 전환하는 Side Power Rack",
+      "Vertiv 800VDC 전력·냉각 인프라 제품군",
+      "Vertiv (VRT)"
+     ],
+     "weakest": {
+      "id": "p_vrt_800vdc_portfolio",
+      "relation": "implements",
+      "tier": "official_issuer",
+      "confidence": 0.8
+     },
+     "upgrade_needed": "매출 노출·수량·마진 공시"
+    }
+   ],
+   "substitutions": [
+    {
+     "technology": "480VAC에서 ±400/800VDC로 전환하는 Side Power Rack",
+     "alternative": "중전압 AC에서 800VDC 직접 전환",
+     "relation": "substitutes_for",
+     "polarity": "negative",
+     "note": "고객 인프라/시점에 따라 두 방식 공존 가능"
+    }
+   ]
+  },
+  "tech:directmv": {
+   "companies": [],
+   "substitutions": [
+    {
+     "technology": "중전압 AC에서 800VDC 직접 전환",
+     "alternative": "480VAC에서 ±400/800VDC로 전환하는 Side Power Rack",
+     "relation": "substitutes_for",
+     "polarity": "negative",
+     "note": "고객 인프라/시점에 따라 두 방식 공존 가능"
+    }
+   ]
+  },
+  "tech:sic": {
+   "companies": [
+    {
+     "company_id": "company:nvts",
+     "company": "Navitas Semiconductor (NVTS)",
+     "direction": "positive",
+     "confidence": 0.8,
+     "band": "documented",
+     "in_universe": false,
+     "size_band": "small",
+     "ticker": "NVTS",
+     "role": "supplier",
+     "path": [
+      "SiC 전력반도체",
+      "Navitas Semiconductor (NVTS)"
+     ],
+     "weakest": {
+      "id": "n060",
+      "relation": "offered_by",
+      "tier": "official_issuer",
+      "confidence": 0.8
+     },
+     "upgrade_needed": "매출 노출·수량·마진 공시"
+    },
+    {
+     "company_id": "company:on",
+     "company": "onsemi (ON)",
+     "direction": "positive",
+     "confidence": 0.8,
+     "band": "documented",
+     "in_universe": false,
+     "size_band": "large",
+     "ticker": "ON",
+     "role": "supplier",
+     "path": [
+      "SiC 전력반도체",
+      "onsemi (ON)"
+     ],
+     "weakest": {
+      "id": "n061",
+      "relation": "offered_by",
+      "tier": "customer_statement",
+      "confidence": 0.8
+     },
+     "upgrade_needed": "매출 노출·수량·마진 공시"
+    },
+    {
+     "company_id": "company:aehr",
+     "company": "Aehr Test Systems (AEHR)",
+     "direction": "positive",
+     "confidence": 0.141,
+     "band": "inferred",
+     "in_universe": false,
+     "size_band": "small",
+     "ticker": "AEHR",
+     "role": "supplier",
+     "path": [
+      "SiC 전력반도체",
+      "SiC 소자 신뢰성·번인 검사",
+      "SiC 웨이퍼 레벨 번인·신뢰성 검사",
+      "Aehr FOX-XP 웨이퍼 레벨 번인 시스템",
+      "Aehr Test Systems (AEHR)"
+     ],
+     "weakest": {
+      "id": "e032",
+      "relation": "creates_bottleneck",
+      "tier": "technical_inference",
+      "confidence": 0.4
+     },
+     "upgrade_needed": "supplied_to(official_issuer 이상) + 매출 노출 공시"
+    }
+   ],
+   "substitutions": []
+  },
+  "bottleneck:sic_reliability": {
+   "companies": [
+    {
+     "company_id": "company:aehr",
+     "company": "Aehr Test Systems (AEHR)",
+     "direction": "positive",
+     "confidence": 0.352,
+     "band": "claimed",
+     "in_universe": false,
+     "size_band": "small",
+     "ticker": "AEHR",
+     "role": "supplier",
+     "path": [
+      "SiC 소자 신뢰성·번인 검사",
+      "SiC 웨이퍼 레벨 번인·신뢰성 검사",
+      "Aehr FOX-XP 웨이퍼 레벨 번인 시스템",
+      "Aehr Test Systems (AEHR)"
+     ],
+     "weakest": {
+      "id": "e033",
+      "relation": "mitigated_by",
+      "tier": "vendor_claim",
+      "confidence": 0.55
+     },
+     "upgrade_needed": "supplied_to(official_issuer 이상) + 매출 노출 공시"
+    }
+   ],
+   "substitutions": []
+  },
+  "process:microbump_metrology": {
+   "companies": [
+    {
+     "company_id": "company:camt",
+     "company": "Camtek (CAMT)",
+     "direction": "positive",
+     "confidence": 0.64,
+     "band": "documented",
+     "in_universe": false,
+     "size_band": "mid",
+     "ticker": "CAMT",
+     "role": "supplier",
+     "path": [
+      "미세범프 형상·높이 2D/3D 검사",
+      "Camtek Hawk 2D/3D 범프 검사·계측기",
+      "Camtek (CAMT)"
+     ],
+     "weakest": {
+      "id": "p_camt_hawk",
+      "relation": "implements",
+      "tier": "official_issuer",
+      "confidence": 0.8
+     },
+     "upgrade_needed": "매출 노출·수량·마진 공시"
+    },
+    {
+     "company_id": "company:onto",
+     "company": "Onto Innovation (ONTO)",
+     "direction": "positive",
+     "confidence": 0.64,
+     "band": "documented",
+     "in_universe": false,
+     "size_band": "mid",
+     "ticker": "ONTO",
+     "role": "supplier",
+     "path": [
+      "미세범프 형상·높이 2D/3D 검사",
+      "Onto Dragonfly G3 2D/3D 결함 검사기",
+      "Onto Innovation (ONTO)"
+     ],
+     "weakest": {
+      "id": "p_onto_dragonfly_g3",
+      "relation": "implements",
+      "tier": "official_issuer",
+      "confidence": 0.8
+     },
+     "upgrade_needed": "매출 노출·수량·마진 공시"
+    }
+   ],
+   "substitutions": []
+  },
+  "bottleneck:hbm_pitch_density": {
+   "companies": [
+    {
+     "company_id": "company:besi",
+     "company": "BE Semiconductor Industries (Euronext BESI, 비SEC)",
+     "direction": "positive",
+     "confidence": 0.256,
+     "band": "inferred",
+     "in_universe": false,
+     "size_band": "large",
+     "ticker": "BESI",
+     "role": "supplier",
+     "path": [
+      "고밀도 인터커넥트의 미세 피치 한계",
+      "하이브리드 본딩",
+      "웨이퍼·다이 하이브리드 본더",
+      "BE Semiconductor Industries (Euronext BESI, 비SEC)"
+     ],
+     "weakest": {
+      "id": "e061",
+      "relation": "mitigated_by",
+      "tier": "technical_inference",
+      "confidence": 0.4
+     },
+     "upgrade_needed": "supplied_to(official_issuer 이상) + 매출 노출 공시"
+    },
+    {
+     "company_id": "company:skhynix",
+     "company": "SK hynix (KRX 000660, 비SEC)",
+     "direction": "negative",
+     "confidence": 0.24,
+     "band": "inferred",
+     "in_universe": false,
+     "size_band": "mega",
+     "ticker": "000660",
+     "role": "adopter",
+     "path": [
+      "고밀도 인터커넥트의 미세 피치 한계",
+      "하이브리드 본딩",
+      "SK hynix (KRX 000660, 비SEC)"
+     ],
+     "weakest": {
+      "id": "e061",
+      "relation": "mitigated_by",
+      "tier": "technical_inference",
+      "confidence": 0.4
+     },
+     "upgrade_needed": "supplied_to(official_issuer 이상) + 매출 노출 공시"
+    }
+   ],
+   "substitutions": [
+    {
+     "technology": "하이브리드 본딩",
+     "alternative": "열압착 본딩(TCB)",
+     "relation": "substitutes_for",
+     "polarity": "negative",
+     "note": "HBM4 전체가 즉시 하이브리드 본딩으로 전환되는 것은 아님"
+    },
+    {
+     "technology": "하이브리드 본딩",
+     "alternative": "Cu 미세범프 상호연결",
+     "relation": "displaces",
+     "polarity": "negative",
+     "note": "채택 시 범프 검사 수요 구조 변화 — 시점은 HBM5 이후"
+    }
+   ]
+  },
+  "bottleneck:bond_void": {
+   "companies": [
+    {
+     "company_id": "company:besi",
+     "company": "BE Semiconductor Industries (Euronext BESI, 비SEC)",
+     "direction": "positive",
+     "confidence": 0.32,
+     "band": "inferred",
+     "in_universe": false,
+     "size_band": "large",
+     "ticker": "BESI",
+     "role": "supplier",
+     "path": [
+      "접합 계면 void·불량",
+      "웨이퍼·다이 하이브리드 본더",
+      "BE Semiconductor Industries (Euronext BESI, 비SEC)"
+     ],
+     "weakest": {
+      "id": "n026",
+      "relation": "mitigated_by",
+      "tier": "technical_inference",
+      "confidence": 0.4
+     },
+     "upgrade_needed": "supplied_to(official_issuer 이상) + 매출 노출 공시"
+    }
+   ],
+   "substitutions": []
+  },
+  "bottleneck:bond_particle": {
+   "companies": [
+    {
+     "company_id": "company:camt",
+     "company": "Camtek (CAMT)",
+     "direction": "positive",
+     "confidence": 0.352,
+     "band": "claimed",
+     "in_universe": false,
+     "size_band": "mid",
+     "ticker": "CAMT",
+     "role": "supplier",
+     "path": [
+      "미세 접합 입자·잔류물 오염",
+      "미세범프 형상·높이 2D/3D 검사",
+      "Camtek Hawk 2D/3D 범프 검사·계측기",
+      "Camtek (CAMT)"
+     ],
+     "weakest": {
+      "id": "e073",
+      "relation": "mitigated_by",
+      "tier": "vendor_claim",
+      "confidence": 0.55
+     },
+     "upgrade_needed": "supplied_to(official_issuer 이상) + 매출 노출 공시"
+    },
+    {
+     "company_id": "company:onto",
+     "company": "Onto Innovation (ONTO)",
+     "direction": "positive",
+     "confidence": 0.352,
+     "band": "claimed",
+     "in_universe": false,
+     "size_band": "mid",
+     "ticker": "ONTO",
+     "role": "supplier",
+     "path": [
+      "미세 접합 입자·잔류물 오염",
+      "미세범프 형상·높이 2D/3D 검사",
+      "Onto Dragonfly G3 2D/3D 결함 검사기",
+      "Onto Innovation (ONTO)"
+     ],
+     "weakest": {
+      "id": "e073",
+      "relation": "mitigated_by",
+      "tier": "vendor_claim",
+      "confidence": 0.55
+     },
+     "upgrade_needed": "supplied_to(official_issuer 이상) + 매출 노출 공시"
+    }
+   ],
+   "substitutions": []
+  },
+  "component:eml": {
+   "companies": [
+    {
+     "company_id": "company:lite",
+     "company": "Lumentum (LITE)",
+     "direction": "positive",
+     "confidence": 0.64,
+     "band": "documented",
+     "in_universe": false,
+     "size_band": "large",
+     "ticker": "LITE",
+     "role": "supplier",
+     "path": [
+      "200G EML 광변조 레이저",
+      "Lumentum 200G PAM4 EML",
+      "Lumentum (LITE)"
+     ],
+     "weakest": {
+      "id": "p_lite_eml_200g",
+      "relation": "implements",
+      "tier": "official_issuer",
+      "confidence": 0.8
+     },
+     "upgrade_needed": "매출 노출·수량·마진 공시"
+    }
+   ],
+   "substitutions": []
+  },
+  "bottleneck:optic_thermal": {
+   "companies": [
+    {
+     "company_id": "company:lite",
+     "company": "Lumentum (LITE)",
+     "direction": "positive",
+     "confidence": 0.256,
+     "band": "inferred",
+     "in_universe": false,
+     "size_band": "large",
+     "ticker": "LITE",
+     "role": "supplier",
+     "path": [
+      "고속 광엔진 발열·온도 안정성",
+      "200G EML 광변조 레이저",
+      "Lumentum 200G PAM4 EML",
+      "Lumentum (LITE)"
+     ],
+     "weakest": {
+      "id": "e085",
+      "relation": "mitigated_by",
+      "tier": "technical_inference",
+      "confidence": 0.4
+     },
+     "upgrade_needed": "supplied_to(official_issuer 이상) + 매출 노출 공시"
+    }
+   ],
+   "substitutions": []
+  },
+  "process:wafer_level_burn_in": {
+   "companies": [
+    {
+     "company_id": "company:aehr",
+     "company": "Aehr Test Systems (AEHR)",
+     "direction": "positive",
+     "confidence": 0.64,
+     "band": "documented",
+     "in_universe": false,
+     "size_band": "small",
+     "ticker": "AEHR",
+     "role": "supplier",
+     "path": [
+      "SiC 웨이퍼 레벨 번인·신뢰성 검사",
+      "Aehr FOX-XP 웨이퍼 레벨 번인 시스템",
+      "Aehr Test Systems (AEHR)"
+     ],
+     "weakest": {
+      "id": "p_aehr_fox_xp",
+      "relation": "implements",
+      "tier": "official_issuer",
+      "confidence": 0.8
+     },
+     "upgrade_needed": "매출 노출·수량·마진 공시"
+    }
+   ],
+   "substitutions": []
+  },
+  "tech:optical_interposer": {
+   "companies": [
+    {
+     "company_id": "company:poet",
+     "company": "POET Technologies (POET)",
+     "direction": "positive",
+     "confidence": 0.64,
+     "band": "documented",
+     "in_universe": false,
+     "size_band": "small",
+     "ticker": "POET",
+     "role": "supplier",
+     "path": [
+      "광학 인터포저 기반 통합 광엔진",
+      "POET 광학 인터포저 광엔진",
+      "POET Technologies (POET)"
+     ],
+     "weakest": {
+      "id": "p_poet_optical_interposer",
+      "relation": "implements",
+      "tier": "official_issuer",
+      "confidence": 0.8
+     },
+     "upgrade_needed": "매출 노출·수량·마진 공시"
+    }
+   ],
+   "substitutions": []
+  },
+  "tech:dow": {
+   "companies": [
+    {
+     "company_id": "company:lessengers",
+     "company": "Lessengers (비상장·상장여부 별도 검증)",
+     "direction": "positive",
+     "confidence": 0.64,
+     "band": "documented",
+     "in_universe": false,
+     "size_band": "private",
+     "ticker": null,
+     "role": "supplier",
+     "path": [
+      "Direct Optical Wiring (광섬유 직접 배선)",
+      "Lessengers DOW 광배선 모듈",
+      "Lessengers (비상장·상장여부 별도 검증)"
+     ],
+     "weakest": {
+      "id": "p_lessengers_dow",
+      "relation": "implements",
+      "tier": "official_issuer",
+      "confidence": 0.8
+     },
+     "upgrade_needed": "매출 노출·수량·마진 공시"
+    }
+   ],
+   "substitutions": []
+  },
+  "product:camt_hawk": {
+   "companies": [
+    {
+     "company_id": "company:camt",
+     "company": "Camtek (CAMT)",
+     "direction": "positive",
+     "confidence": 0.8,
+     "band": "documented",
+     "in_universe": false,
+     "size_band": "mid",
+     "ticker": "CAMT",
+     "role": "supplier",
+     "path": [
+      "Camtek Hawk 2D/3D 범프 검사·계측기",
+      "Camtek (CAMT)"
+     ],
+     "weakest": {
+      "id": "e010",
+      "relation": "offered_by",
+      "tier": "official_issuer",
+      "confidence": 0.8
+     },
+     "upgrade_needed": "매출 노출·수량·마진 공시"
+    }
+   ],
+   "substitutions": []
+  },
+  "product:onto_dragonfly_g3": {
+   "companies": [
+    {
+     "company_id": "company:onto",
+     "company": "Onto Innovation (ONTO)",
+     "direction": "positive",
+     "confidence": 0.8,
+     "band": "documented",
+     "in_universe": false,
+     "size_band": "mid",
+     "ticker": "ONTO",
+     "role": "supplier",
+     "path": [
+      "Onto Dragonfly G3 2D/3D 결함 검사기",
+      "Onto Innovation (ONTO)"
+     ],
+     "weakest": {
+      "id": "e075",
+      "relation": "offered_by",
+      "tier": "official_issuer",
+      "confidence": 0.8
+     },
+     "upgrade_needed": "매출 노출·수량·마진 공시"
+    }
+   ],
+   "substitutions": []
+  },
+  "product:lite_eml_200g": {
+   "companies": [
+    {
+     "company_id": "company:lite",
+     "company": "Lumentum (LITE)",
+     "direction": "positive",
+     "confidence": 0.8,
+     "band": "documented",
+     "in_universe": false,
+     "size_band": "large",
+     "ticker": "LITE",
+     "role": "supplier",
+     "path": [
+      "Lumentum 200G PAM4 EML",
+      "Lumentum (LITE)"
+     ],
+     "weakest": {
+      "id": "e087",
+      "relation": "offered_by",
+      "tier": "official_issuer",
+      "confidence": 0.8
+     },
+     "upgrade_needed": "매출 노출·수량·마진 공시"
+    }
+   ],
+   "substitutions": []
+  },
+  "product:cohr_1p6t_transceiver": {
+   "companies": [
+    {
+     "company_id": "company:cohr",
+     "company": "Coherent (COHR)",
+     "direction": "positive",
+     "confidence": 0.8,
+     "band": "documented",
+     "in_universe": false,
+     "size_band": "large",
+     "ticker": "COHR",
+     "role": "supplier",
+     "path": [
+      "Coherent 1.6T 광트랜시버",
+      "Coherent (COHR)"
+     ],
+     "weakest": {
+      "id": "e089",
+      "relation": "offered_by",
+      "tier": "official_issuer",
+      "confidence": 0.8
+     },
+     "upgrade_needed": "매출 노출·수량·마진 공시"
+    }
+   ],
+   "substitutions": []
+  },
+  "product:vrt_800vdc_portfolio": {
+   "companies": [
+    {
+     "company_id": "company:vrt",
+     "company": "Vertiv (VRT)",
+     "direction": "positive",
+     "confidence": 0.8,
+     "band": "documented",
+     "in_universe": false,
+     "size_band": "large",
+     "ticker": "VRT",
+     "role": "supplier",
+     "path": [
+      "Vertiv 800VDC 전력·냉각 인프라 제품군",
+      "Vertiv (VRT)"
+     ],
+     "weakest": {
+      "id": "e104",
+      "relation": "offered_by",
+      "tier": "official_issuer",
+      "confidence": 0.8
+     },
+     "upgrade_needed": "매출 노출·수량·마진 공시"
+    }
+   ],
+   "substitutions": []
+  },
+  "product:aehr_fox_xp": {
+   "companies": [
+    {
+     "company_id": "company:aehr",
+     "company": "Aehr Test Systems (AEHR)",
+     "direction": "positive",
+     "confidence": 0.8,
+     "band": "documented",
+     "in_universe": false,
+     "size_band": "small",
+     "ticker": "AEHR",
+     "role": "supplier",
+     "path": [
+      "Aehr FOX-XP 웨이퍼 레벨 번인 시스템",
+      "Aehr Test Systems (AEHR)"
+     ],
+     "weakest": {
+      "id": "e034",
+      "relation": "offered_by",
+      "tier": "official_issuer",
+      "confidence": 0.8
+     },
+     "upgrade_needed": "매출 노출·수량·마진 공시"
+    }
+   ],
+   "substitutions": []
+  },
+  "product:poet_optical_interposer": {
+   "companies": [
+    {
+     "company_id": "company:poet",
+     "company": "POET Technologies (POET)",
+     "direction": "positive",
+     "confidence": 0.8,
+     "band": "documented",
+     "in_universe": false,
+     "size_band": "small",
+     "ticker": "POET",
+     "role": "supplier",
+     "path": [
+      "POET 광학 인터포저 광엔진",
+      "POET Technologies (POET)"
+     ],
+     "weakest": {
+      "id": "e018",
+      "relation": "offered_by",
+      "tier": "official_issuer",
+      "confidence": 0.8
+     },
+     "upgrade_needed": "매출 노출·수량·마진 공시"
+    }
+   ],
+   "substitutions": []
+  },
+  "product:lessengers_dow": {
+   "companies": [
+    {
+     "company_id": "company:lessengers",
+     "company": "Lessengers (비상장·상장여부 별도 검증)",
+     "direction": "positive",
+     "confidence": 0.8,
+     "band": "documented",
+     "in_universe": false,
+     "size_band": "private",
+     "ticker": null,
+     "role": "supplier",
+     "path": [
+      "Lessengers DOW 광배선 모듈",
+      "Lessengers (비상장·상장여부 별도 검증)"
+     ],
+     "weakest": {
+      "id": "e019",
+      "relation": "offered_by",
+      "tier": "official_issuer",
+      "confidence": 0.8
+     },
+     "upgrade_needed": "매출 노출·수량·마진 공시"
+    }
+   ],
+   "substitutions": []
+  },
+  "gen:hbm4": {
+   "companies": [
+    {
+     "company_id": "company:mu",
+     "company": "Micron (MU)",
+     "direction": "positive",
+     "confidence": 0.8,
+     "band": "documented",
+     "in_universe": false,
+     "size_band": "mega",
+     "ticker": "MU",
+     "role": "supplier",
+     "path": [
+      "HBM4 (2,048 I/O, JESD270-4)",
+      "Micron (MU)"
+     ],
+     "weakest": {
+      "id": "n011",
+      "relation": "offered_by",
+      "tier": "official_issuer",
+      "confidence": 0.8
+     },
+     "upgrade_needed": "매출 노출·수량·마진 공시"
+    },
+    {
+     "company_id": "company:skhynix",
+     "company": "SK hynix (KRX 000660, 비SEC)",
+     "direction": "positive",
+     "confidence": 0.6,
+     "band": "documented",
+     "in_universe": false,
+     "size_band": "mega",
+     "ticker": "000660",
+     "role": "supplier",
+     "path": [
+      "HBM4 (2,048 I/O, JESD270-4)",
+      "SK hynix (KRX 000660, 비SEC)"
+     ],
+     "weakest": {
+      "id": "n010",
+      "relation": "offered_by",
+      "tier": "third_party_report",
+      "confidence": 0.6
+     },
+     "upgrade_needed": "매출 노출·수량·마진 공시"
+    },
+    {
+     "company_id": "company:samsung",
+     "company": "Samsung Electronics (KRX 005930, 비SEC)",
+     "direction": "positive",
+     "confidence": 0.6,
+     "band": "documented",
+     "in_universe": false,
+     "size_band": "mega",
+     "ticker": "005930",
+     "role": "supplier",
+     "path": [
+      "HBM4 (2,048 I/O, JESD270-4)",
+      "Samsung Electronics (KRX 005930, 비SEC)"
+     ],
+     "weakest": {
+      "id": "n012",
+      "relation": "offered_by",
+      "tier": "third_party_report",
+      "confidence": 0.6
+     },
+     "upgrade_needed": "매출 노출·수량·마진 공시"
+    },
+    {
+     "company_id": "company:besi",
+     "company": "BE Semiconductor Industries (Euronext BESI, 비SEC)",
+     "direction": "positive",
+     "confidence": 0.184,
+     "band": "inferred",
+     "in_universe": false,
+     "size_band": "large",
+     "ticker": "BESI",
+     "role": "supplier",
+     "path": [
+      "HBM4 (2,048 I/O, JESD270-4)",
+      "고적층·미세 접합 확대",
+      "적층 열·변형·뒤틀림 관리",
+      "하이브리드 본딩",
+      "웨이퍼·다이 하이브리드 본더",
+      "BE Semiconductor Industries (Euronext BESI, 비SEC)"
+     ],
+     "weakest": {
+      "id": "e008",
+      "relation": "mitigated_by",
+      "tier": "technical_inference",
+      "confidence": 0.4
+     },
+     "upgrade_needed": "supplied_to(official_issuer 이상) + 매출 노출 공시"
+    },
+    {
+     "company_id": "company:camt",
+     "company": "Camtek (CAMT)",
+     "direction": "positive",
+     "confidence": 0.127,
+     "band": "inferred",
+     "in_universe": false,
+     "size_band": "mid",
+     "ticker": "CAMT",
+     "role": "supplier",
+     "path": [
+      "HBM4 (2,048 I/O, JESD270-4)",
+      "고적층·미세 접합 확대",
+      "미세범프·접합 오버레이/결함 검사",
+      "미세범프 형상·높이 2D/3D 검사",
+      "Camtek Hawk 2D/3D 범프 검사·계측기",
+      "Camtek (CAMT)"
+     ],
+     "weakest": {
+      "id": "e004",
+      "relation": "creates_bottleneck",
+      "tier": "technical_inference",
+      "confidence": 0.4
+     },
+     "upgrade_needed": "supplied_to(official_issuer 이상) + 매출 노출 공시"
+    },
+    {
+     "company_id": "company:onto",
+     "company": "Onto Innovation (ONTO)",
+     "direction": "positive",
+     "confidence": 0.127,
+     "band": "inferred",
+     "in_universe": false,
+     "size_band": "mid",
+     "ticker": "ONTO",
+     "role": "supplier",
+     "path": [
+      "HBM4 (2,048 I/O, JESD270-4)",
+      "고적층·미세 접합 확대",
+      "미세범프·접합 오버레이/결함 검사",
+      "미세범프 형상·높이 2D/3D 검사",
+      "Onto Dragonfly G3 2D/3D 결함 검사기",
+      "Onto Innovation (ONTO)"
+     ],
+     "weakest": {
+      "id": "e004",
+      "relation": "creates_bottleneck",
+      "tier": "technical_inference",
+      "confidence": 0.4
+     },
+     "upgrade_needed": "supplied_to(official_issuer 이상) + 매출 노출 공시"
+    }
+   ],
+   "substitutions": [
+    {
+     "technology": "하이브리드 본딩",
+     "alternative": "열압착 본딩(TCB)",
+     "relation": "substitutes_for",
+     "polarity": "negative",
+     "note": "HBM4 전체가 즉시 하이브리드 본딩으로 전환되는 것은 아님"
+    },
+    {
+     "technology": "하이브리드 본딩",
+     "alternative": "Cu 미세범프 상호연결",
+     "relation": "displaces",
+     "polarity": "negative",
+     "note": "채택 시 범프 검사 수요 구조 변화 — 시점은 HBM5 이후"
+    }
+   ]
+  },
+  "gen:hbm5": {
+   "companies": [
+    {
+     "company_id": "company:besi",
+     "company": "BE Semiconductor Industries (Euronext BESI, 비SEC)",
+     "direction": "positive",
+     "confidence": 0.128,
+     "band": "inferred",
+     "in_universe": false,
+     "size_band": "large",
+     "ticker": "BESI",
+     "role": "supplier",
+     "path": [
+      "HBM5 (하이브리드 본딩 후보 세대)",
+      "하이브리드 본딩",
+      "웨이퍼·다이 하이브리드 본더",
+      "BE Semiconductor Industries (Euronext BESI, 비SEC)"
+     ],
+     "weakest": {
+      "id": "n022",
+      "relation": "adopts",
+      "tier": "hypothesis",
+      "confidence": 0.2
+     },
+     "upgrade_needed": "supplied_to(official_issuer 이상) + 매출 노출 공시"
+    },
+    {
+     "company_id": "company:skhynix",
+     "company": "SK hynix (KRX 000660, 비SEC)",
+     "direction": "negative",
+     "confidence": 0.12,
+     "band": "inferred",
+     "in_universe": false,
+     "size_band": "mega",
+     "ticker": "000660",
+     "role": "adopter",
+     "path": [
+      "HBM5 (하이브리드 본딩 후보 세대)",
+      "하이브리드 본딩",
+      "SK hynix (KRX 000660, 비SEC)"
+     ],
+     "weakest": {
+      "id": "n022",
+      "relation": "adopts",
+      "tier": "hypothesis",
+      "confidence": 0.2
+     },
+     "upgrade_needed": "supplied_to(official_issuer 이상) + 매출 노출 공시"
+    }
+   ],
+   "substitutions": [
+    {
+     "technology": "하이브리드 본딩",
+     "alternative": "열압착 본딩(TCB)",
+     "relation": "substitutes_for",
+     "polarity": "negative",
+     "note": "HBM4 전체가 즉시 하이브리드 본딩으로 전환되는 것은 아님"
+    },
+    {
+     "technology": "하이브리드 본딩",
+     "alternative": "Cu 미세범프 상호연결",
+     "relation": "displaces",
+     "polarity": "negative",
+     "note": "채택 시 범프 검사 수요 구조 변화 — 시점은 HBM5 이후"
+    }
+   ]
+  },
+  "std:jesd270_4": {
+   "companies": [
+    {
+     "company_id": "company:camt",
+     "company": "Camtek (CAMT)",
+     "direction": "positive",
+     "confidence": 0.127,
+     "band": "inferred",
+     "in_universe": false,
+     "size_band": "mid",
+     "ticker": "CAMT",
+     "role": "supplier",
+     "path": [
+      "JEDEC JESD270-4 HBM4 (2025-04)",
+      "HBM4 2,048 I/O 확대",
+      "미세범프·접합 오버레이/결함 검사",
+      "미세범프 형상·높이 2D/3D 검사",
+      "Camtek Hawk 2D/3D 범프 검사·계측기",
+      "Camtek (CAMT)"
+     ],
+     "weakest": {
+      "id": "e003",
+      "relation": "creates_bottleneck",
+      "tier": "technical_inference",
+      "confidence": 0.4
+     },
+     "upgrade_needed": "supplied_to(official_issuer 이상) + 매출 노출 공시"
+    },
+    {
+     "company_id": "company:onto",
+     "company": "Onto Innovation (ONTO)",
+     "direction": "positive",
+     "confidence": 0.127,
+     "band": "inferred",
+     "in_universe": false,
+     "size_band": "mid",
+     "ticker": "ONTO",
+     "role": "supplier",
+     "path": [
+      "JEDEC JESD270-4 HBM4 (2025-04)",
+      "HBM4 2,048 I/O 확대",
+      "미세범프·접합 오버레이/결함 검사",
+      "미세범프 형상·높이 2D/3D 검사",
+      "Onto Dragonfly G3 2D/3D 결함 검사기",
+      "Onto Innovation (ONTO)"
+     ],
+     "weakest": {
+      "id": "e003",
+      "relation": "creates_bottleneck",
+      "tier": "technical_inference",
+      "confidence": 0.4
+     },
+     "upgrade_needed": "supplied_to(official_issuer 이상) + 매출 노출 공시"
+    },
+    {
+     "company_id": "company:besi",
+     "company": "BE Semiconductor Industries (Euronext BESI, 비SEC)",
+     "direction": "positive",
+     "confidence": 0.046,
+     "band": "inferred",
+     "in_universe": false,
+     "size_band": "large",
+     "ticker": "BESI",
+     "role": "supplier",
+     "path": [
+      "JEDEC JESD270-4 HBM4 (2025-04)",
+      "HBM4 2,048 I/O 확대",
+      "미세범프·접합 오버레이/결함 검사",
+      "접합 계면 void·불량",
+      "웨이퍼·다이 하이브리드 본더",
+      "BE Semiconductor Industries (Euronext BESI, 비SEC)"
+     ],
+     "weakest": {
+      "id": "e003",
+      "relation": "creates_bottleneck",
+      "tier": "technical_inference",
+      "confidence": 0.4
+     },
+     "upgrade_needed": "supplied_to(official_issuer 이상) + 매출 노출 공시"
+    }
+   ],
+   "substitutions": []
+  },
+  "equipment:hybrid_bonder": {
+   "companies": [
+    {
+     "company_id": "company:besi",
+     "company": "BE Semiconductor Industries (Euronext BESI, 비SEC)",
+     "direction": "positive",
+     "confidence": 0.8,
+     "band": "documented",
+     "in_universe": false,
+     "size_band": "large",
+     "ticker": "BESI",
+     "role": "supplier",
+     "path": [
+      "웨이퍼·다이 하이브리드 본더",
+      "BE Semiconductor Industries (Euronext BESI, 비SEC)"
+     ],
+     "weakest": {
+      "id": "n024",
+      "relation": "offered_by",
+      "tier": "official_issuer",
+      "confidence": 0.8
+     },
+     "upgrade_needed": "매출 노출·수량·마진 공시"
+    }
+   ],
+   "substitutions": []
+  },
+  "gen:1p6t": {
+   "companies": [
+    {
+     "company_id": "company:lite",
+     "company": "Lumentum (LITE)",
+     "direction": "positive",
+     "confidence": 0.23,
+     "band": "inferred",
+     "in_universe": false,
+     "size_band": "large",
+     "ticker": "LITE",
+     "role": "supplier",
+     "path": [
+      "1.6T 광모듈 세대 (200G/lane)",
+      "1.6 Tb/s Ethernet 및 200 Gb/s/lane 전환",
+      "200G EML 광변조 레이저",
+      "Lumentum 200G PAM4 EML",
+      "Lumentum (LITE)"
+     ],
+     "weakest": {
+      "id": "e076",
+      "relation": "requires",
+      "tier": "technical_inference",
+      "confidence": 0.4
+     },
+     "upgrade_needed": "supplied_to(official_issuer 이상) + 매출 노출 공시"
+    },
+    {
+     "company_id": "company:poet",
+     "company": "POET Technologies (POET)",
+     "direction": "positive",
+     "confidence": 0.127,
+     "band": "inferred",
+     "in_universe": false,
+     "size_band": "small",
+     "ticker": "POET",
+     "role": "supplier",
+     "path": [
+      "1.6T 광모듈 세대 (200G/lane)",
+      "1.6 Tb/s Ethernet 및 200 Gb/s/lane 전환",
+      "광학 소자 결합 손실·조립 정밀도",
+      "광학 인터포저 기반 통합 광엔진",
+      "POET 광학 인터포저 광엔진",
+      "POET Technologies (POET)"
+     ],
+     "weakest": {
+      "id": "e012",
+      "relation": "creates_bottleneck",
+      "tier": "technical_inference",
+      "confidence": 0.4
+     },
+     "upgrade_needed": "supplied_to(official_issuer 이상) + 매출 노출 공시"
+    },
+    {
+     "company_id": "company:lessengers",
+     "company": "Lessengers (비상장·상장여부 별도 검증)",
+     "direction": "positive",
+     "confidence": 0.127,
+     "band": "inferred",
+     "in_universe": false,
+     "size_band": "private",
+     "ticker": null,
+     "role": "supplier",
+     "path": [
+      "1.6T 광모듈 세대 (200G/lane)",
+      "1.6 Tb/s Ethernet 및 200 Gb/s/lane 전환",
+      "광학 소자 결합 손실·조립 정밀도",
+      "Direct Optical Wiring (광섬유 직접 배선)",
+      "Lessengers DOW 광배선 모듈",
+      "Lessengers (비상장·상장여부 별도 검증)"
+     ],
+     "weakest": {
+      "id": "e012",
+      "relation": "creates_bottleneck",
+      "tier": "technical_inference",
+      "confidence": 0.4
+     },
+     "upgrade_needed": "supplied_to(official_issuer 이상) + 매출 노출 공시"
+    },
+    {
+     "company_id": "company:nvda",
+     "company": "NVIDIA (NVDA) — HBM·광·전력 공통 수요처",
+     "direction": "positive",
+     "confidence": 0.115,
+     "band": "inferred",
+     "in_universe": false,
+     "size_band": "mega",
+     "ticker": "NVDA",
+     "role": "adopter",
+     "path": [
+      "1.6T 광모듈 세대 (200G/lane)",
+      "1.6 Tb/s Ethernet 및 200 Gb/s/lane 전환",
+      "고대역폭 광연결의 전력·발열·밀도",
+      "Co-Packaged Optics (CPO)",
+      "NVIDIA (NVDA) — HBM·광·전력 공통 수요처"
+     ],
+     "weakest": {
+      "id": "e013",
+      "relation": "creates_bottleneck",
+      "tier": "technical_inference",
+      "confidence": 0.4
+     },
+     "upgrade_needed": "supplied_to(official_issuer 이상) + 매출 노출 공시"
+    },
+    {
+     "company_id": "company:cohr",
+     "company": "Coherent (COHR)",
+     "direction": "positive",
+     "confidence": 0.092,
+     "band": "inferred",
+     "in_universe": false,
+     "size_band": "large",
+     "ticker": "COHR",
+     "role": "supplier_via_customer",
+     "path": [
+      "1.6T 광모듈 세대 (200G/lane)",
+      "1.6 Tb/s Ethernet 및 200 Gb/s/lane 전환",
+      "고대역폭 광연결의 전력·발열·밀도",
+      "Co-Packaged Optics (CPO)",
+      "NVIDIA (NVDA) — HBM·광·전력 공통 수요처",
+      "Coherent (COHR)"
+     ],
+     "weakest": {
+      "id": "e013",
+      "relation": "creates_bottleneck",
+      "tier": "technical_inference",
+      "confidence": 0.4
+     },
+     "upgrade_needed": "supplied_to(official_issuer 이상) + 매출 노출 공시"
+    },
+    {
+     "company_id": "company:fn",
+     "company": "Fabrinet (FN)",
+     "direction": "positive",
+     "confidence": 0.092,
+     "band": "inferred",
+     "in_universe": false,
+     "size_band": "large",
+     "ticker": "FN",
+     "role": "supplier_via_customer",
+     "path": [
+      "1.6T 광모듈 세대 (200G/lane)",
+      "1.6 Tb/s Ethernet 및 200 Gb/s/lane 전환",
+      "고대역폭 광연결의 전력·발열·밀도",
+      "Co-Packaged Optics (CPO)",
+      "NVIDIA (NVDA) — HBM·광·전력 공통 수요처",
+      "Fabrinet (FN)"
+     ],
+     "weakest": {
+      "id": "e013",
+      "relation": "creates_bottleneck",
+      "tier": "technical_inference",
+      "confidence": 0.4
+     },
+     "upgrade_needed": "supplied_to(official_issuer 이상) + 매출 노출 공시"
+    }
+   ],
+   "substitutions": [
+    {
+     "technology": "Co-Packaged Optics (CPO)",
+     "alternative": "1.6T Pluggable transceiver",
+     "relation": "substitutes_for",
+     "polarity": "negative",
+     "note": "배치에 따라 두 방식이 공존할 수 있어 보편적 대체가 아님"
+    },
+    {
+     "technology": "Co-Packaged Optics (CPO)",
+     "alternative": "1.6T Pluggable transceiver",
+     "relation": "displaces",
+     "polarity": "conditional",
+     "note": "NVIDIA 는 pluggable 을 보완재로 명시. 스케일아웃 일부 대체 가능성"
+    },
+    {
+     "technology": "1.6T Pluggable transceiver",
+     "alternative": "Co-Packaged Optics (CPO)",
+     "relation": "substitutes_for",
+     "polarity": "negative",
+     "note": "배치에 따라 두 방식이 공존할 수 있어 보편적 대체가 아님"
+    },
+    {
+     "technology": "1.6T Pluggable transceiver",
+     "alternative": "능동 전기 케이블(AEC) — 단거리 구리 링크",
+     "relation": "substitutes_for",
+     "polarity": "conditional",
+     "note": "단거리(랙 내·인접 랙)에서만"
+    }
+   ]
+  },
+  "product:credo_aec": {
+   "companies": [
+    {
+     "company_id": "company:crdo",
+     "company": "Credo (CRDO)",
+     "direction": "positive",
+     "confidence": 0.55,
+     "band": "claimed",
+     "in_universe": false,
+     "size_band": "large",
+     "ticker": "CRDO",
+     "role": "supplier",
+     "path": [
+      "Credo HiWire 능동 전기 케이블(AEC)",
+      "Credo (CRDO)"
+     ],
+     "weakest": {
+      "id": "n039",
+      "relation": "offered_by",
+      "tier": "vendor_claim",
+      "confidence": 0.55
+     },
+     "upgrade_needed": "supplied_to(official_issuer 이상) + 매출 노출 공시"
+    }
+   ],
+   "substitutions": []
+  },
+  "component:aec": {
+   "companies": [
+    {
+     "company_id": "company:crdo",
+     "company": "Credo (CRDO)",
+     "direction": "positive",
+     "confidence": 0.303,
+     "band": "inferred",
+     "in_universe": false,
+     "size_band": "large",
+     "ticker": "CRDO",
+     "role": "supplier",
+     "path": [
+      "능동 전기 케이블(AEC) — 단거리 구리 링크",
+      "Credo HiWire 능동 전기 케이블(AEC)",
+      "Credo (CRDO)"
+     ],
+     "weakest": {
+      "id": "n038",
+      "relation": "implements",
+      "tier": "vendor_claim",
+      "confidence": 0.55
+     },
+     "upgrade_needed": "supplied_to(official_issuer 이상) + 매출 노출 공시"
+    }
+   ],
+   "substitutions": [
+    {
+     "technology": "능동 전기 케이블(AEC) — 단거리 구리 링크",
+     "alternative": "1.6T Pluggable transceiver",
+     "relation": "substitutes_for",
+     "polarity": "conditional",
+     "note": "단거리(랙 내·인접 랙)에서만"
+    }
+   ]
+  },
+  "gen:800vdc": {
+   "companies": [
+    {
+     "company_id": "company:nvda",
+     "company": "NVIDIA (NVDA) — HBM·광·전력 공통 수요처",
+     "direction": "positive",
+     "confidence": 0.8,
+     "band": "documented",
+     "in_universe": false,
+     "size_band": "mega",
+     "ticker": "NVDA",
+     "role": "adopter",
+     "path": [
+      "800VDC 배전 아키텍처 (NVIDIA 2027 1MW 랙 목표)",
+      "NVIDIA (NVDA) — HBM·광·전력 공통 수요처"
+     ],
+     "weakest": {
+      "id": "n053",
+      "relation": "adopts",
+      "tier": "customer_statement",
+      "confidence": 0.8
+     },
+     "upgrade_needed": "매출 노출·수량·마진 공시"
+    },
+    {
+     "company_id": "company:nvts",
+     "company": "Navitas Semiconductor (NVTS)",
+     "direction": "positive",
+     "confidence": 0.64,
+     "band": "documented",
+     "in_universe": false,
+     "size_band": "small",
+     "ticker": "NVTS",
+     "role": "supplier_via_customer",
+     "path": [
+      "800VDC 배전 아키텍처 (NVIDIA 2027 1MW 랙 목표)",
+      "NVIDIA (NVDA) — HBM·광·전력 공통 수요처",
+      "Navitas Semiconductor (NVTS)"
+     ],
+     "weakest": {
+      "id": "n053",
+      "relation": "adopts",
+      "tier": "customer_statement",
+      "confidence": 0.8
+     },
+     "upgrade_needed": "매출 노출·수량·마진 공시"
+    },
+    {
+     "company_id": "company:on",
+     "company": "onsemi (ON)",
+     "direction": "positive",
+     "confidence": 0.64,
+     "band": "documented",
+     "in_universe": false,
+     "size_band": "large",
+     "ticker": "ON",
+     "role": "supplier_via_customer",
+     "path": [
+      "800VDC 배전 아키텍처 (NVIDIA 2027 1MW 랙 목표)",
+      "NVIDIA (NVDA) — HBM·광·전력 공통 수요처",
+      "onsemi (ON)"
+     ],
+     "weakest": {
+      "id": "n053",
+      "relation": "adopts",
+      "tier": "customer_statement",
+      "confidence": 0.8
+     },
+     "upgrade_needed": "매출 노출·수량·마진 공시"
+    },
+    {
+     "company_id": "company:mpwr",
+     "company": "Monolithic Power Systems (MPWR)",
+     "direction": "positive",
+     "confidence": 0.64,
+     "band": "documented",
+     "in_universe": false,
+     "size_band": "large",
+     "ticker": "MPWR",
+     "role": "supplier_via_customer",
+     "path": [
+      "800VDC 배전 아키텍처 (NVIDIA 2027 1MW 랙 목표)",
+      "NVIDIA (NVDA) — HBM·광·전력 공통 수요처",
+      "Monolithic Power Systems (MPWR)"
+     ],
+     "weakest": {
+      "id": "n053",
+      "relation": "adopts",
+      "tier": "customer_statement",
+      "confidence": 0.8
+     },
+     "upgrade_needed": "매출 노출·수량·마진 공시"
+    },
+    {
+     "company_id": "company:txn",
+     "company": "Texas Instruments (TXN)",
+     "direction": "positive",
+     "confidence": 0.64,
+     "band": "documented",
+     "in_universe": false,
+     "size_band": "mega",
+     "ticker": "TXN",
+     "role": "supplier_via_customer",
+     "path": [
+      "800VDC 배전 아키텍처 (NVIDIA 2027 1MW 랙 목표)",
+      "NVIDIA (NVDA) — HBM·광·전력 공통 수요처",
+      "Texas Instruments (TXN)"
+     ],
+     "weakest": {
+      "id": "n053",
+      "relation": "adopts",
+      "tier": "customer_statement",
+      "confidence": 0.8
+     },
+     "upgrade_needed": "매출 노출·수량·마진 공시"
+    },
+    {
+     "company_id": "company:etn",
+     "company": "Eaton (ETN)",
+     "direction": "positive",
+     "confidence": 0.64,
+     "band": "documented",
+     "in_universe": false,
+     "size_band": "mega",
+     "ticker": "ETN",
+     "role": "supplier_via_customer",
+     "path": [
+      "800VDC 배전 아키텍처 (NVIDIA 2027 1MW 랙 목표)",
+      "NVIDIA (NVDA) — HBM·광·전력 공통 수요처",
+      "Eaton (ETN)"
+     ],
+     "weakest": {
+      "id": "n053",
+      "relation": "adopts",
+      "tier": "customer_statement",
+      "confidence": 0.8
+     },
+     "upgrade_needed": "매출 노출·수량·마진 공시"
+    },
+    {
+     "company_id": "company:vrt",
+     "company": "Vertiv (VRT)",
+     "direction": "positive",
+     "confidence": 0.64,
+     "band": "documented",
+     "in_universe": false,
+     "size_band": "large",
+     "ticker": "VRT",
+     "role": "supplier_via_customer",
+     "path": [
+      "800VDC 배전 아키텍처 (NVIDIA 2027 1MW 랙 목표)",
+      "NVIDIA (NVDA) — HBM·광·전력 공통 수요처",
+      "Vertiv (VRT)"
+     ],
+     "weakest": {
+      "id": "n053",
+      "relation": "adopts",
+      "tier": "customer_statement",
+      "confidence": 0.8
+     },
+     "upgrade_needed": "매출 노출·수량·마진 공시"
+    }
+   ],
+   "substitutions": [
+    {
+     "technology": "800VDC 배전 아키텍처 (NVIDIA 2027 1MW 랙 목표)",
+     "alternative": "DC Busbar 구리·절연재",
+     "relation": "displaces",
+     "polarity": "negative",
+     "note": "구리 사용량 감소 — 부스바 물량 역효과 가능"
+    },
+    {
+     "technology": "480VAC에서 ±400/800VDC로 전환하는 Side Power Rack",
+     "alternative": "중전압 AC에서 800VDC 직접 전환",
+     "relation": "substitutes_for",
+     "polarity": "negative",
+     "note": "고객 인프라/시점에 따라 두 방식 공존 가능"
+    },
+    {
+     "technology": "중전압 AC에서 800VDC 직접 전환",
+     "alternative": "480VAC에서 ±400/800VDC로 전환하는 Side Power Rack",
+     "relation": "substitutes_for",
+     "polarity": "negative",
+     "note": "고객 인프라/시점에 따라 두 방식 공존 가능"
+    }
+   ]
+  }
+ }
+}

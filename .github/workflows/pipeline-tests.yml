@@ -4,6 +4,9 @@ on:
   pull_request:
     paths:
       - "pipeline/**"
+      - "research/ecosystems/**"
+      - "apps/web/src/data/ecosystem-seed.json"
+      - "apps/web/src/data/impact-index.json"
       - ".github/workflows/briefs.yml"
       - ".github/workflows/pipeline-tests.yml"
 
@@ -23,3 +26,8 @@ jobs:
       - name: Run unit tests (no external API calls)
         working-directory: pipeline
         run: pytest -q
+      - name: Ontology closed-vocabulary check and web data sync
+        working-directory: pipeline
+        run: |
+          python -m wsj.ecosystems.ontology --check
+          python -m wsj.ecosystems.export_web --check

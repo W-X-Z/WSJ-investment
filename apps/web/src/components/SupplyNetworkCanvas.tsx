@@ -13,6 +13,7 @@ import history from "@/data/historical-evidence.json";
 import { relevantHistoricalTerms } from "@/lib/technical-keywords";
 import { NodeEvidencePanel } from "@/components/NodeEvidencePanel";
 import { IndustryMilestones } from "@/components/IndustryMilestones";
+import { ImpactPanel } from "@/components/ImpactPanel";
 import "./SupplyNetworkCanvas.css";
 
 type Scope = EcoId | "all";
@@ -32,13 +33,14 @@ const ECOS:{id:EcoId;name:string;short:string;color:string}[]=[
 ];
 const ECO_ROOT: Record<EcoId,string>={hbm:"eco:hbm",optics:"eco:optics",power:"eco:power"};
 const KIND_ORDER: Record<string,number>={
- ecosystem:0,requirement:1,bottleneck:2,technology:3,process:4,material:4,component:4,equipment:4,company:5,
+ ecosystem:0,product_generation:0,standard:0,requirement:1,bottleneck:2,technology:3,process:4,material:4,component:4,equipment:4,product:5,company:6,
 };
-const KIND_NAME:Record<string,string>={
- ecosystem:"생태계",requirement:"요구사항",bottleneck:"기술 병목",technology:"해결 기술",
- process:"제조 공정",component:"부품·모듈",material:"소재",equipment:"장비",company:"기업",
-};
-const epistemic=(e:Edge)=>e.stage==="technical_inference"||e.stage==="unverified_hypothesis"||e.stage==="technology_option"||e.stage==="scenario"||e.polarity==="conditional"?"inferred":e.stage==="vendor_claim"?"issuer":"documented";
+const KIND_NAME:Record<string,string>=KINDS;
+const DOCUMENTED=new Set(["independent_measurement","standard_body","official_issuer","customer_statement"]);
+const CLAIMED=new Set(["vendor_claim","third_party_report"]);
+const epistemic=(e:Edge)=>e.polarity==="conditional"?"inferred":DOCUMENTED.has(e.evidence_tier)?"documented":CLAIMED.has(e.evidence_tier)?"issuer":"inferred";
+const TIER_NAME:Record<string,string>={independent_measurement:"독립 실측",standard_body:"표준 기구 문서",official_issuer:"당사자 공식 공시",customer_statement:"고객사 공식 진술",third_party_report:"제3자 보도",vendor_claim:"공급사 성능 주장",technical_inference:"기술적 추론 · 검증 필요",hypothesis:"가설"};
+const safeHost=(u:string)=>{try{return new URL(u).hostname}catch{return u}};
 const nodeIndex=new Map(seed.nodes.map(n=>[n.id,n]));
 const neighborIndex=new Map<string,Set<string>>();
 for(const e of seed.edges){
@@ -126,7 +128,7 @@ function arrange(ids:Set<string>,mode:Mode,scope:Scope,focus:string|null):Map<st
    const cy=780;
    const byLayer=new Map<number,string[]>();
    for(const id of members){
-    const layer=Math.min(KIND_ORDER[nodeIndex.get(id)?.kind??""]??4,5);
+    const layer=Math.min(KIND_ORDER[nodeIndex.get(id)?.kind??""]??4,6);
     byLayer.set(layer,[...(byLayer.get(layer)??[]),id]);
    }
    for(const [layer,list] of byLayer){
@@ -318,7 +320,7 @@ export function SupplyNetworkCanvas({initialEcosystem="all",initialFocus=null,co
    </div>
    {hasSearch&&<div className="sc-search-results">{hit.length?hit.map(n=><button type="button" key={n.id} onClick={()=>{go(n.id);setQuery("");}}><span className={`sc-kind-dot sc-dot-${n.kind}`}/><span>{n.label}</span><small>{KIND_NAME[n.kind]??n.kind}</small></button>):<span>일치하는 노드를 찾지 못했습니다.</span>}</div>}
   </div>
-  <div className="sc-context"><div className="sc-type-legend"><span><i className="sc-kind-dot sc-dot-requirement"/>기술 요구</span><span><i className="sc-kind-dot sc-dot-bottleneck"/>병목</span><span><i className="sc-kind-dot sc-dot-technology"/>기술</span><span><i className="sc-kind-dot sc-dot-component"/>소재·부품·공정</span><span><i className="sc-kind-dot sc-dot-company"/>기업</span></div><div className="sc-trust-toggle" role="group" aria-label="근거 필터"><button type="button" aria-pressed={trust==="all"} className={trust==="all"?"active":""} onClick={()=>setTrust("all")}>전체 관계</button><button type="button" aria-pressed={trust==="documented"} className={trust==="documented"?"active":""} onClick={()=>setTrust("documented")}>추론 제외</button></div></div>
+  <div className="sc-context"><div className="sc-type-legend"><span><i className="sc-kind-dot sc-dot-requirement"/>기술 요구</span><span><i className="sc-kind-dot sc-dot-bottleneck"/>병목</span><span><i className="sc-kind-dot sc-dot-technology"/>기술</span><span><i className="sc-kind-dot sc-dot-component"/>소재·부품·공정</span><span><i className="sc-kind-dot sc-dot-product"/>제품</span><span><i className="sc-kind-dot sc-dot-company"/>기업</span><span><i className="sc-kind-dot sc-dot-standard"/>세대·표준</span></div><div className="sc-trust-toggle" role="group" aria-label="근거 필터"><button type="button" aria-pressed={trust==="all"} className={trust==="all"?"active":""} onClick={()=>setTrust("all")}>전체 관계</button><button type="button" aria-pressed={trust==="documented"} className={trust==="documented"?"active":""} onClick={()=>setTrust("documented")}>추론 제외</button></div></div>
   <div className="sc-body">
    <div ref={canvasRef} className="sc-viewport" onPointerDown={panDown} onPointerMove={panMove} onPointerUp={panEnd} onPointerCancel={e=>{panEnd(e);drag.current=null;}}>
     <div className="sc-grid-layer"/>
@@ -358,10 +360,10 @@ export function SupplyNetworkCanvas({initialEcosystem="all",initialFocus=null,co
     {focusedEdge?<div className="sc-inspector-content">
       <span className="sc-inspector-kicker">RELATIONSHIP · {RELATIONS[focusedEdge.relation]??focusedEdge.relation}</span>
       <h3>{nodeIndex.get(focusedEdge.from)?.label} → {nodeIndex.get(focusedEdge.to)?.label}</h3>
-      <span className={`sc-evidence-class sc-evidence-${epistemic(focusedEdge)}`}>{epistemic(focusedEdge)==="inferred"?"기술적 추론·검증 필요":epistemic(focusedEdge)==="issuer"?"제조사 주장":"문서화된 관계"}</span>
+      <span className={`sc-evidence-class sc-evidence-${epistemic(focusedEdge)}`}>{TIER_NAME[focusedEdge.evidence_tier]??focusedEdge.evidence_tier} · 신뢰도 {Math.round((focusedEdge.confidence??0)*100)}%{focusedEdge.polarity!=="positive"?` · ${focusedEdge.polarity==="negative"?"부정":"조건부"}`:""}</span>
       <p>{focusedEdge.note||"이 기술 관계의 정량적·상업적 의미는 원문과 시험 조건을 함께 확인해야 합니다."}</p>
       <h4>출처 및 검증 근거</h4>
-      {focusedEdge.evidence.map((src,i)=><a className="sc-source-card" target="_blank" rel="noreferrer" key={i} href={src.url}><Icon name="external" size={15}/><span>{new URL(src.url).hostname}<small>{src.url}</small></span></a>)}
+      {focusedEdge.evidence.map((src,i)=><a className="sc-source-card" target="_blank" rel="noreferrer" key={i} href={src.url}><Icon name="external" size={15}/><span>{safeHost(src.url)}<small>{src.url}</small></span></a>)}
       <div className="sc-caution">공급망의 연결은 실제 납품 계약·영업이익 증가를 의미하지 않습니다.</div>
      </div>:node?<div className="sc-inspector-content">
       <span className="sc-inspector-kicker">{KIND_NAME[node.kind]??node.kind} · {owners.get(node.id)?.toUpperCase()??"NETWORK"}</span>
@@ -369,7 +371,8 @@ export function SupplyNetworkCanvas({initialEcosystem="all",initialFocus=null,co
       <div className="sc-inspector-stats"><span><b>{nodeEdges.length}</b> 연결 관계</span><span><b>{node.measured_metrics?.length??0}</b> 검증 지표</span></div>
       {node.measured_metrics?.length?<><h4>관측해야 할 물리량</h4><div className="sc-metrics">{node.measured_metrics.map(m=><span key={m}>{m.replaceAll("_"," ")}</span>)}</div></>:null}
       <h4>직접 연결된 기술 관계</h4>
-      <div className="sc-related-edges">{nodeEdges.map(e=><button key={e.id} type="button" onClick={()=>setSelectedEdge(e.id)}><span className={`sc-small-mark sc-mark-${epistemic(e)}`}/><div><span>{RELATIONS[e.relation]??e.relation}</span><strong>{nodeIndex.get(e.from===node.id?e.to:e.from)?.label}</strong></div><Icon name="chevron-right" size={14}/></button>)}</div>
+      <div className="sc-related-edges">{nodeEdges.map(e=><button key={e.id} type="button" onClick={()=>setSelectedEdge(e.id)}><span className={`sc-small-mark sc-mark-${epistemic(e)}`}/><div><span>{e.from===node.id?"→ ":"← "}{RELATIONS[e.relation]??e.relation}{e.polarity==="negative"?" (부정)":e.polarity==="conditional"?" (조건부)":""}</span><strong>{nodeIndex.get(e.from===node.id?e.to:e.from)?.label}</strong></div><Icon name="chevron-right" size={14}/></button>)}</div>
+      <ImpactPanel nodeId={node.id}/>
       <IndustryMilestones nodeId={node.id} compact/>
       <NodeEvidencePanel nodeId={node.id}/>
       {historyRows.length>0&&<><h4>관련 키워드로 찾은 과거 자료 · 미검증</h4><div className="sc-history">{historyRows.map(x=><a key={x.id} href={x.url} target="_blank" rel="noreferrer"><small>{fmt(x.published_at)} · {x.source}</small><strong>{x.title}</strong></a>)}</div></>}

@@ -1,0 +1,389 @@
+{
+  "schema_version": "0.3",
+  "as_of": "2026-10-27",
+  "purpose": "seed_graph.json 이 따라야 하는 닫힌 어휘(closed vocabulary). 노드 종류·관계 술어의 정의역/치역·근거 등급·전파 방향을 한 곳에 둔다. 검증: python -m wsj.ecosystems.ontology --check",
+  "node_kinds": {
+    "ecosystem": {
+      "layer": 0,
+      "label_ko": "생태계",
+      "description": "분석 단위가 되는 기술 공급망 (3개)"
+    },
+    "product_generation": {
+      "layer": 0,
+      "label_ko": "제품 세대",
+      "description": "수요 측 세대 전환 (HBM3E→HBM4, 800G→1.6T, 54V→800VDC). 날짜 박힌 로드맵의 앵커"
+    },
+    "standard": {
+      "layer": 0,
+      "label_ko": "표준·사양",
+      "description": "JEDEC·IEEE·OCP 등 공식 규격. 요구사항의 출처이자 감시 대상"
+    },
+    "requirement": {
+      "layer": 1,
+      "label_ko": "기술 요구",
+      "description": "세대/표준이 강제하는 정량 요구 (I/O 수, lane rate, 버스 전압)"
+    },
+    "bottleneck": {
+      "layer": 2,
+      "label_ko": "병목",
+      "description": "요구를 만족시킬 때 생기는 물리·수율·비용 문제"
+    },
+    "technology": {
+      "layer": 3,
+      "label_ko": "기술 방식",
+      "description": "병목을 푸는 일반 기술 (하이브리드 본딩, CPO). 특정 회사 제품이 아님"
+    },
+    "process": {
+      "layer": 4,
+      "label_ko": "공정·검사",
+      "description": "제조·검사 공정 단계"
+    },
+    "component": {
+      "layer": 4,
+      "label_ko": "부품·모듈",
+      "description": "BOM 구성 요소"
+    },
+    "material": {
+      "layer": 4,
+      "label_ko": "소재",
+      "description": "소재·기판·웨이퍼"
+    },
+    "equipment": {
+      "layer": 4,
+      "label_ko": "장비 유형",
+      "description": "공정을 수행하는 장비의 일반 유형 (본더, 검사기)"
+    },
+    "product": {
+      "layer": 5,
+      "label_ko": "제품",
+      "description": "특정 회사의 판매 제품/제품군. technology 를 implements 하고 company 가 offers"
+    },
+    "company": {
+      "layer": 6,
+      "label_ko": "기업",
+      "description": "공급·수요 기업. role 필수: supplier | customer | both. 상장사는 listing 필수. 여러 생태계에 걸치면 also_in: [eco,...]"
+    }
+  },
+  "company_fields": {
+    "role": [
+      "supplier",
+      "customer",
+      "both"
+    ],
+    "listing": {
+      "ticker": "string|null",
+      "exchange": "string|null",
+      "cik": "int|null",
+      "filer_type": "10-K|20-F|40-F|non_sec_listed|private"
+    },
+    "in_universe": "core.companies.in_universe 와 동기화 (공개유동 $10M~1B, 10-K 필러). 수혜 후보 필터의 1차 기준",
+    "size_band": [
+      "micro",
+      "small",
+      "mid",
+      "large",
+      "mega",
+      "private"
+    ]
+  },
+  "predicates": {
+    "drives_requirement": {
+      "domain": [
+        "ecosystem",
+        "product_generation",
+        "standard",
+        "requirement"
+      ],
+      "range": [
+        "requirement"
+      ],
+      "direction": "demand_to_supply",
+      "label_ko": "요구를 만든다"
+    },
+    "specified_by": {
+      "domain": [
+        "requirement",
+        "product_generation"
+      ],
+      "range": [
+        "standard"
+      ],
+      "direction": "none",
+      "label_ko": "규격으로 정의됨"
+    },
+    "succeeds": {
+      "domain": [
+        "product_generation"
+      ],
+      "range": [
+        "product_generation"
+      ],
+      "direction": "none",
+      "label_ko": "다음 세대"
+    },
+    "creates_bottleneck": {
+      "domain": [
+        "requirement",
+        "technology",
+        "bottleneck"
+      ],
+      "range": [
+        "bottleneck"
+      ],
+      "direction": "demand_to_supply",
+      "label_ko": "병목을 만든다"
+    },
+    "mitigated_by": {
+      "domain": [
+        "bottleneck"
+      ],
+      "range": [
+        "technology",
+        "process",
+        "component",
+        "material",
+        "equipment"
+      ],
+      "direction": "demand_to_supply",
+      "label_ko": "완화 수단"
+    },
+    "requires": {
+      "domain": [
+        "technology",
+        "process",
+        "component",
+        "product",
+        "requirement"
+      ],
+      "range": [
+        "component",
+        "material",
+        "process",
+        "equipment"
+      ],
+      "direction": "demand_to_supply",
+      "label_ko": "필요로 한다"
+    },
+    "implements": {
+      "domain": [
+        "product"
+      ],
+      "range": [
+        "technology",
+        "process",
+        "component",
+        "equipment",
+        "material"
+      ],
+      "direction": "supply_to_demand",
+      "label_ko": "제품이 구현"
+    },
+    "offered_by": {
+      "domain": [
+        "product",
+        "product_generation",
+        "technology",
+        "component",
+        "material",
+        "equipment"
+      ],
+      "range": [
+        "company"
+      ],
+      "direction": "demand_to_supply",
+      "label_ko": "공급 가능 (판매 보유)"
+    },
+    "supplied_to": {
+      "domain": [
+        "company"
+      ],
+      "range": [
+        "company"
+      ],
+      "direction": "supply_to_demand",
+      "label_ko": "확인된 납품/거래",
+      "min_tier": "official_issuer"
+    },
+    "qualifying_with": {
+      "domain": [
+        "company"
+      ],
+      "range": [
+        "company"
+      ],
+      "direction": "supply_to_demand",
+      "label_ko": "고객 인증 진행 (샘플·qualification)",
+      "min_tier": "third_party_report"
+    },
+    "adopts": {
+      "domain": [
+        "company",
+        "product_generation"
+      ],
+      "range": [
+        "technology",
+        "process",
+        "component",
+        "material",
+        "product_generation"
+      ],
+      "direction": "demand_to_supply",
+      "label_ko": "채택 (시점·세대 명시)"
+    },
+    "defers": {
+      "domain": [
+        "company",
+        "product_generation"
+      ],
+      "range": [
+        "technology",
+        "process"
+      ],
+      "direction": "demand_to_supply",
+      "label_ko": "채택 연기·보류 (부정)",
+      "polarity_default": "negative"
+    },
+    "substitutes_for": {
+      "domain": [
+        "technology",
+        "component",
+        "product"
+      ],
+      "range": [
+        "technology",
+        "component",
+        "product"
+      ],
+      "direction": "none",
+      "label_ko": "대체 가능 (공존 가능)"
+    },
+    "displaces": {
+      "domain": [
+        "technology",
+        "component",
+        "product_generation"
+      ],
+      "range": [
+        "technology",
+        "component",
+        "process",
+        "equipment"
+      ],
+      "direction": "demand_to_supply",
+      "label_ko": "수요를 잠식 (부정)",
+      "polarity_default": "negative"
+    },
+    "competes_with": {
+      "domain": [
+        "company",
+        "product"
+      ],
+      "range": [
+        "company",
+        "product"
+      ],
+      "direction": "none",
+      "label_ko": "경쟁"
+    },
+    "invests_in": {
+      "domain": [
+        "company"
+      ],
+      "range": [
+        "company"
+      ],
+      "direction": "none",
+      "label_ko": "지분 투자·전략 제휴"
+    }
+  },
+  "evidence_tiers": {
+    "independent_measurement": {
+      "confidence": 0.95,
+      "label_ko": "독립 실측·논문",
+      "description": "이해관계 없는 제3자의 측정/표준 시험"
+    },
+    "standard_body": {
+      "confidence": 0.9,
+      "label_ko": "표준 기구 문서",
+      "description": "JEDEC/IEEE/OCP 공식 문서·PAR·발행본"
+    },
+    "official_issuer": {
+      "confidence": 0.8,
+      "label_ko": "당사자 공식 공시",
+      "description": "SEC 공시·공식 보도자료·기술 노트 (당사자가 자기 행위를 진술)"
+    },
+    "customer_statement": {
+      "confidence": 0.8,
+      "label_ko": "고객사 공식 진술",
+      "description": "수요 기업이 공급사/기술 채택을 명시 (NVIDIA 파트너 목록 등)"
+    },
+    "vendor_claim": {
+      "confidence": 0.55,
+      "label_ko": "공급사 성능 주장",
+      "description": "데이터시트·마케팅 수치. 독립 검증 없음"
+    },
+    "third_party_report": {
+      "confidence": 0.6,
+      "label_ko": "제3자 보도·리서치",
+      "description": "전문 매체·애널리스트 보도. 원문 인용 여부로 가중"
+    },
+    "technical_inference": {
+      "confidence": 0.4,
+      "label_ko": "기술적 추론",
+      "description": "물리·공정 상식에서 끌어낸 연결. 출처는 배경 자료"
+    },
+    "hypothesis": {
+      "confidence": 0.25,
+      "label_ko": "가설",
+      "description": "검증 전 시나리오"
+    }
+  },
+  "legacy_stage_to_tier": {
+    "established": "official_issuer",
+    "issuer_documented": "official_issuer",
+    "documented_architecture": "official_issuer",
+    "standard_draft": "standard_body",
+    "standardization_in_progress": "standard_body",
+    "vendor_claim": "vendor_claim",
+    "technology_option": "technical_inference",
+    "technical_inference": "technical_inference",
+    "scenario": "hypothesis",
+    "unverified_hypothesis": "hypothesis"
+  },
+  "polarity": [
+    "positive",
+    "negative",
+    "conditional"
+  ],
+  "edge_required_fields": [
+    "id",
+    "from",
+    "to",
+    "relation",
+    "evidence_tier",
+    "polarity",
+    "evidence"
+  ],
+  "evidence_required_fields": [
+    "url",
+    "source_type"
+  ],
+  "evidence_optional_fields": [
+    "published_at",
+    "date_precision",
+    "excerpt",
+    "note"
+  ],
+  "lint_rules": {
+    "max_edges_per_source_url": 12,
+    "company_needs_listing_or_private_flag": true,
+    "supplied_to_min_tier": "official_issuer",
+    "product_must_have_implements_and_offered_by": true,
+    "every_ecosystem_needs_customer": true
+  },
+  "edge_optional_fields": [
+    "note",
+    "about (기업↔기업 관계가 관한 기술/세대 노드 id — 영향 전파는 about 노드를 지난 경로에서만 이 관계를 탄다)",
+    "confidence (검증기가 계산)"
+  ]
+}

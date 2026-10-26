@@ -1,14 +1,14 @@
 {
-  "schema_version": "0.2",
-  "as_of": "2026-10-26",
+  "schema_version": "0.3",
+  "as_of": "2026-10-27",
   "type": "research_seed_not_prod_truth",
   "notes": [
-    "Graph relationships distinguish documented vs inferred and are not evidence of revenues",
-    "All events must preserve original publication date vs ingestion date and source-group independence",
-    "A direction from requirement to company indicates research relevance only, not verified supply contract",
-    "Unresolved technology-to-listed-company edges are intentionally omitted; no vendor is invented",
-    "Additional component/material/process nodes are ontology structure, not assertions of named supplier adoption",
-    "Expanded technical ontology models component/process relationships with official references. Generic components have no implied exclusive suppliers; named vendor edges document product offering, not customer revenue."
+    "v0.3: 닫힌 어휘(ontology.json). 노드 kind / 관계 relation / 근거 evidence_tier 는 정의된 값만. 검증: python -m wsj.ecosystems.ontology --check",
+    "product(특정 회사 제품)과 technology(일반 기술)를 분리. offered_by 는 판매 보유, supplied_to 는 확인된 거래, qualifying_with 는 인증·협업 단계",
+    "수요 측(product_generation·standard·customer 기업)을 명시해 '세대 전환 → 요구 → 병목 → 기술 → 제품 → 공급사' 와 '고객 채택/연기' 를 같은 그래프에서 읽는다",
+    "defers / displaces / substitutes_for 는 부정·조건부 극성. 영향 전파는 confidence(근거 등급) 와 polarity 를 곱한다",
+    "in_universe 는 core.companies 기준 (현재 공급사 전부 false — 유니버스 SIC 버킷이 장비·부품사를 포함하지 않음, BACKLOG 참조)",
+    "관계는 매출 증거가 아니다. 상장사 수혜는 supplied_to 이상 + 매출 노출 공시가 있을 때만"
   ],
   "nodes": [
     {
@@ -19,22 +19,26 @@
     {
       "id": "req:hbm_io",
       "kind": "requirement",
-      "label": "HBM4 2,048 I/O 확대"
+      "label": "HBM4 2,048 I/O 확대",
+      "ecosystem": "hbm"
     },
     {
       "id": "req:hbm_stack",
       "kind": "requirement",
-      "label": "고적층·미세 접합 확대"
+      "label": "고적층·미세 접합 확대",
+      "ecosystem": "hbm"
     },
     {
       "id": "bottleneck:hbm_overlay",
       "kind": "bottleneck",
-      "label": "미세범프·접합 오버레이/결함 검사"
+      "label": "미세범프·접합 오버레이/결함 검사",
+      "ecosystem": "hbm"
     },
     {
       "id": "bottleneck:hbm_thermal",
       "kind": "bottleneck",
-      "label": "적층 열·변형·뒤틀림 관리"
+      "label": "적층 열·변형·뒤틀림 관리",
+      "ecosystem": "hbm"
     },
     {
       "id": "tech:hybrid_bond",
@@ -44,22 +48,29 @@
         "bond_pitch_um",
         "overlay_nm",
         "bond_yield_percent"
-      ]
+      ],
+      "ecosystem": "hbm"
     },
     {
       "id": "tech:tcb",
       "kind": "technology",
-      "label": "열압착 본딩(TCB)"
-    },
-    {
-      "id": "tech:hawk",
-      "kind": "technology",
-      "label": "Camtek Hawk 검사·계측"
+      "label": "열압착 본딩(TCB)",
+      "ecosystem": "hbm"
     },
     {
       "id": "company:camt",
       "kind": "company",
-      "label": "Camtek (CAMT)"
+      "label": "Camtek (CAMT)",
+      "ecosystem": "hbm",
+      "role": "supplier",
+      "listing": {
+        "ticker": "CAMT",
+        "exchange": "Nasdaq",
+        "cik": 1109138,
+        "filer_type": "20-F"
+      },
+      "size_band": "mid",
+      "in_universe": false
     },
     {
       "id": "eco:optics",
@@ -73,32 +84,26 @@
       "measured_metrics": [
         "throughput_tbps",
         "lane_rate_gbps"
-      ]
+      ],
+      "ecosystem": "optics"
     },
     {
       "id": "bottleneck:optic_coupling",
       "kind": "bottleneck",
-      "label": "광학 소자 결합 손실·조립 정밀도"
+      "label": "광학 소자 결합 손실·조립 정밀도",
+      "ecosystem": "optics"
     },
     {
       "id": "bottleneck:optic_power",
       "kind": "bottleneck",
-      "label": "고대역폭 광연결의 전력·발열·밀도"
-    },
-    {
-      "id": "tech:poet_interposer",
-      "kind": "technology",
-      "label": "광학 인터포저 기반 통합 광엔진"
-    },
-    {
-      "id": "tech:lessengers_dow",
-      "kind": "technology",
-      "label": "Direct Optical Wiring (DOW)"
+      "label": "고대역폭 광연결의 전력·발열·밀도",
+      "ecosystem": "optics"
     },
     {
       "id": "tech:pluggable",
       "kind": "technology",
-      "label": "1.6T Pluggable transceiver"
+      "label": "1.6T Pluggable transceiver",
+      "ecosystem": "optics"
     },
     {
       "id": "tech:cpo",
@@ -108,17 +113,38 @@
         "throughput_tbps",
         "optical_power_mw",
         "power_efficiency_percent"
-      ]
+      ],
+      "ecosystem": "optics"
     },
     {
       "id": "company:poet",
       "kind": "company",
-      "label": "POET Technologies (POET)"
+      "label": "POET Technologies (POET)",
+      "ecosystem": "optics",
+      "role": "supplier",
+      "listing": {
+        "ticker": "POET",
+        "exchange": "Nasdaq",
+        "cik": 1437424,
+        "filer_type": "40-F"
+      },
+      "size_band": "small",
+      "in_universe": false
     },
     {
       "id": "company:lessengers",
       "kind": "company",
-      "label": "Lessengers (비상장·상장여부 별도 검증)"
+      "label": "Lessengers (비상장·상장여부 별도 검증)",
+      "ecosystem": "optics",
+      "role": "supplier",
+      "listing": {
+        "ticker": null,
+        "exchange": null,
+        "cik": null,
+        "filer_type": "private"
+      },
+      "size_band": "private",
+      "in_universe": false
     },
     {
       "id": "eco:power",
@@ -132,42 +158,50 @@
       "measured_metrics": [
         "dc_bus_voltage_v",
         "rack_power_kw"
-      ]
+      ],
+      "ecosystem": "power"
     },
     {
       "id": "req:highdensity",
       "kind": "requirement",
-      "label": "AI 랙당 전력 밀도 증가"
+      "label": "AI 랙당 전력 밀도 증가",
+      "ecosystem": "power"
     },
     {
       "id": "bottleneck:copper",
       "kind": "bottleneck",
-      "label": "낮은 전압에서 전류·구리 배선 부담"
+      "label": "낮은 전압에서 전류·구리 배선 부담",
+      "ecosystem": "power"
     },
     {
       "id": "bottleneck:dc_protection",
       "kind": "bottleneck",
-      "label": "HVDC 보호·차단·안전"
+      "label": "HVDC 보호·차단·안전",
+      "ecosystem": "power"
     },
     {
       "id": "bottleneck:conversion",
       "kind": "bottleneck",
-      "label": "전력변환 단계·효율·제어"
+      "label": "전력변환 단계·효율·제어",
+      "ecosystem": "power"
     },
     {
       "id": "tech:sidecar",
       "kind": "technology",
-      "label": "480VAC에서 ±400/800VDC로 전환하는 Side Power Rack"
+      "label": "480VAC에서 ±400/800VDC로 전환하는 Side Power Rack",
+      "ecosystem": "power"
     },
     {
       "id": "tech:directmv",
       "kind": "technology",
-      "label": "중전압 AC에서 800VDC 직접 전환"
+      "label": "중전압 AC에서 800VDC 직접 전환",
+      "ecosystem": "power"
     },
     {
       "id": "tech:busbar",
       "kind": "technology",
-      "label": "DC Busbar·고전압 커넥터·보호장치"
+      "label": "DC Busbar·고전압 커넥터·보호장치",
+      "ecosystem": "power"
     },
     {
       "id": "tech:sic",
@@ -177,22 +211,29 @@
         "breakdown_voltage_v",
         "switching_loss_w",
         "conversion_efficiency_percent"
-      ]
+      ],
+      "ecosystem": "power"
     },
     {
       "id": "bottleneck:sic_reliability",
       "kind": "bottleneck",
-      "label": "SiC 소자 신뢰성·번인 검사"
-    },
-    {
-      "id": "tech:aehr_fox",
-      "kind": "technology",
-      "label": "Aehr 웨이퍼 레벨 번인 검사"
+      "label": "SiC 소자 신뢰성·번인 검사",
+      "ecosystem": "power"
     },
     {
       "id": "company:aehr",
       "kind": "company",
-      "label": "Aehr Test Systems (AEHR)"
+      "label": "Aehr Test Systems (AEHR)",
+      "ecosystem": "power",
+      "role": "supplier",
+      "listing": {
+        "ticker": "AEHR",
+        "exchange": "Nasdaq",
+        "cik": 1040470,
+        "filer_type": "10-K"
+      },
+      "size_band": "small",
+      "in_universe": false
     },
     {
       "id": "bottleneck:hbm_kged",
@@ -202,7 +243,7 @@
         "die_yield_percent",
         "stack_yield_percent"
       ],
-      "disclosure_note": "Metrics require traceable conditions and source timestamps; no values inferred"
+      "ecosystem": "hbm"
     },
     {
       "id": "bottleneck:hbm_wafer_warpage",
@@ -212,7 +253,7 @@
         "warpage_um",
         "stack_height_um"
       ],
-      "disclosure_note": "Metrics require traceable conditions and source timestamps; no values inferred"
+      "ecosystem": "hbm"
     },
     {
       "id": "component:microbump",
@@ -222,7 +263,7 @@
         "bump_pitch_um",
         "resistance_mohm"
       ],
-      "disclosure_note": "Metrics require traceable conditions and source timestamps; no values inferred"
+      "ecosystem": "hbm"
     },
     {
       "id": "material:underfill",
@@ -232,7 +273,7 @@
         "cte_ppm_per_k",
         "thermal_conductivity_w_mk"
       ],
-      "disclosure_note": "Metrics require traceable conditions and source timestamps; no values inferred"
+      "ecosystem": "hbm"
     },
     {
       "id": "material:cu_cu",
@@ -242,7 +283,7 @@
         "overlay_nm",
         "void_fraction_percent"
       ],
-      "disclosure_note": "Metrics require traceable conditions and source timestamps; no values inferred"
+      "ecosystem": "hbm"
     },
     {
       "id": "process:microbump_metrology",
@@ -253,7 +294,7 @@
         "throughput_wph",
         "false_positive_rate"
       ],
-      "disclosure_note": "Metrics require traceable conditions and source timestamps; no values inferred"
+      "ecosystem": "hbm"
     },
     {
       "id": "process:hybrid_bond_qualification",
@@ -263,7 +304,7 @@
         "bond_yield_percent",
         "overlay_nm"
       ],
-      "disclosure_note": "Metrics require traceable conditions and source timestamps; no values inferred"
+      "ecosystem": "hbm"
     },
     {
       "id": "component:optical_laser",
@@ -274,7 +315,7 @@
         "wavelength_nm",
         "lifetime_hours"
       ],
-      "disclosure_note": "Metrics require traceable conditions and source timestamps; no values inferred"
+      "ecosystem": "optics"
     },
     {
       "id": "component:modulator",
@@ -284,7 +325,7 @@
         "extinction_ratio_db",
         "modulation_gbps"
       ],
-      "disclosure_note": "Metrics require traceable conditions and source timestamps; no values inferred"
+      "ecosystem": "optics"
     },
     {
       "id": "component:photodiode",
@@ -294,7 +335,7 @@
         "responsivity_a_w",
         "bandwidth_ghz"
       ],
-      "disclosure_note": "Metrics require traceable conditions and source timestamps; no values inferred"
+      "ecosystem": "optics"
     },
     {
       "id": "component:optical_dsp",
@@ -304,7 +345,7 @@
         "power_w_per_100g",
         "ber"
       ],
-      "disclosure_note": "Metrics require traceable conditions and source timestamps; no values inferred"
+      "ecosystem": "optics"
     },
     {
       "id": "process:optic_alignment",
@@ -315,7 +356,7 @@
         "coupling_loss_db",
         "assembly_yield_percent"
       ],
-      "disclosure_note": "Metrics require traceable conditions and source timestamps; no values inferred"
+      "ecosystem": "optics"
     },
     {
       "id": "bottleneck:optic_ber",
@@ -325,7 +366,7 @@
         "pre_fec_ber",
         "reach_m"
       ],
-      "disclosure_note": "Metrics require traceable conditions and source timestamps; no values inferred"
+      "ecosystem": "optics"
     },
     {
       "id": "component:fiber_connector",
@@ -335,7 +376,7 @@
         "insertion_loss_db",
         "port_density"
       ],
-      "disclosure_note": "Metrics require traceable conditions and source timestamps; no values inferred"
+      "ecosystem": "optics"
     },
     {
       "id": "component:dc_busbar",
@@ -346,7 +387,7 @@
         "copper_mass_kg",
         "temperature_rise_k"
       ],
-      "disclosure_note": "Metrics require traceable conditions and source timestamps; no values inferred"
+      "ecosystem": "power"
     },
     {
       "id": "component:dc_breaker",
@@ -356,7 +397,7 @@
         "break_rating_a",
         "fault_clear_ms"
       ],
-      "disclosure_note": "Metrics require traceable conditions and source timestamps; no values inferred"
+      "ecosystem": "power"
     },
     {
       "id": "component:power_converter",
@@ -368,7 +409,7 @@
         "conversion_efficiency_percent",
         "dc_bus_voltage_v"
       ],
-      "disclosure_note": "Metrics require traceable conditions and source timestamps; no values inferred"
+      "ecosystem": "power"
     },
     {
       "id": "component:sic_mosfet",
@@ -379,7 +420,7 @@
         "on_resistance_mohm",
         "switching_loss_w"
       ],
-      "disclosure_note": "Metrics require traceable conditions and source timestamps; no values inferred"
+      "ecosystem": "power"
     },
     {
       "id": "material:hv_insulation",
@@ -389,7 +430,7 @@
         "dielectric_strength_kv_mm",
         "heat_aging_hours"
       ],
-      "disclosure_note": "Metrics require traceable conditions and source timestamps; no values inferred"
+      "ecosystem": "power"
     },
     {
       "id": "bottleneck:liquidcool",
@@ -399,7 +440,7 @@
         "thermal_resistance_k_w",
         "flow_l_min"
       ],
-      "disclosure_note": "Metrics require traceable conditions and source timestamps; no values inferred"
+      "ecosystem": "power"
     },
     {
       "id": "tech:cdu",
@@ -409,7 +450,7 @@
         "cooling_kw",
         "pressure_drop_kpa"
       ],
-      "disclosure_note": "Metrics require traceable conditions and source timestamps; no values inferred"
+      "ecosystem": "power"
     },
     {
       "id": "req:coldplate",
@@ -418,7 +459,7 @@
       "measured_metrics": [
         "rack_heat_kw"
       ],
-      "disclosure_note": "Metrics require traceable conditions and source timestamps; no values inferred"
+      "ecosystem": "power"
     },
     {
       "id": "bottleneck:hbm_pitch_density",
@@ -427,7 +468,8 @@
       "measured_metrics": [
         "bond_pitch_um",
         "stack_height_um"
-      ]
+      ],
+      "ecosystem": "hbm"
     },
     {
       "id": "component:tsv",
@@ -437,8 +479,7 @@
       "measured_metrics": [
         "via_diameter_um",
         "via_resistance_mohm"
-      ],
-      "disclosure_note": "Technical subsystem/parameter; supplier adoption requires independent source"
+      ]
     },
     {
       "id": "process:tsv_plating",
@@ -448,8 +489,7 @@
       "measured_metrics": [
         "fill_void_percent",
         "plating_uniformity_percent"
-      ],
-      "disclosure_note": "Technical subsystem/parameter; supplier adoption requires independent source"
+      ]
     },
     {
       "id": "material:abf",
@@ -459,8 +499,7 @@
       "measured_metrics": [
         "dielectric_constant",
         "cte_ppm_k"
-      ],
-      "disclosure_note": "Technical subsystem/parameter; supplier adoption requires independent source"
+      ]
     },
     {
       "id": "component:package_substrate",
@@ -470,8 +509,7 @@
       "measured_metrics": [
         "interconnect_density",
         "warpage_um"
-      ],
-      "disclosure_note": "Technical subsystem/parameter; supplier adoption requires independent source"
+      ]
     },
     {
       "id": "process:surface_activation",
@@ -481,8 +519,7 @@
       "measured_metrics": [
         "roughness_nm",
         "particle_count"
-      ],
-      "disclosure_note": "Technical subsystem/parameter; supplier adoption requires independent source"
+      ]
     },
     {
       "id": "process:cmp",
@@ -492,8 +529,7 @@
       "measured_metrics": [
         "dishing_nm",
         "roughness_nm"
-      ],
-      "disclosure_note": "Technical subsystem/parameter; supplier adoption requires independent source"
+      ]
     },
     {
       "id": "material:oxide_bond",
@@ -503,8 +539,7 @@
       "measured_metrics": [
         "interface_void_percent",
         "bond_strength"
-      ],
-      "disclosure_note": "Technical subsystem/parameter; supplier adoption requires independent source"
+      ]
     },
     {
       "id": "bottleneck:bond_void",
@@ -514,8 +549,7 @@
       "measured_metrics": [
         "void_density",
         "bond_yield_percent"
-      ],
-      "disclosure_note": "Technical subsystem/parameter; supplier adoption requires independent source"
+      ]
     },
     {
       "id": "bottleneck:bond_particle",
@@ -525,27 +559,22 @@
       "measured_metrics": [
         "particle_size_nm",
         "surface_residue"
-      ],
-      "disclosure_note": "Technical subsystem/parameter; supplier adoption requires independent source"
-    },
-    {
-      "id": "tech:onto_g3",
-      "kind": "technology",
-      "label": "Onto Dragonfly G3 2D/3D 결함 검사",
-      "ecosystem": "hbm",
-      "measured_metrics": [
-        "defect_sensitivity_um",
-        "throughput_wph"
-      ],
-      "disclosure_note": "Technical subsystem/parameter; supplier adoption requires independent source"
+      ]
     },
     {
       "id": "company:onto",
       "kind": "company",
       "label": "Onto Innovation (ONTO)",
       "ecosystem": "hbm",
-      "measured_metrics": [],
-      "disclosure_note": "Technical subsystem/parameter; supplier adoption requires independent source"
+      "role": "supplier",
+      "listing": {
+        "ticker": "ONTO",
+        "exchange": "NYSE",
+        "cik": 704532,
+        "filer_type": "10-K"
+      },
+      "size_band": "mid",
+      "in_universe": false
     },
     {
       "id": "material:inp",
@@ -555,8 +584,7 @@
       "measured_metrics": [
         "laser_efficiency_percent",
         "wafer_defects"
-      ],
-      "disclosure_note": "Technical subsystem/parameter; supplier adoption requires independent source"
+      ]
     },
     {
       "id": "material:silicon_photonics",
@@ -566,8 +594,7 @@
       "measured_metrics": [
         "insertion_loss_db",
         "photonic_yield_percent"
-      ],
-      "disclosure_note": "Technical subsystem/parameter; supplier adoption requires independent source"
+      ]
     },
     {
       "id": "component:eml",
@@ -577,8 +604,7 @@
       "measured_metrics": [
         "gbps_per_lane",
         "extinction_ratio_db"
-      ],
-      "disclosure_note": "Technical subsystem/parameter; supplier adoption requires independent source"
+      ]
     },
     {
       "id": "component:vcsel",
@@ -588,8 +614,7 @@
       "measured_metrics": [
         "modulation_bandwidth_ghz",
         "optical_power_mw"
-      ],
-      "disclosure_note": "Technical subsystem/parameter; supplier adoption requires independent source"
+      ]
     },
     {
       "id": "component:pic",
@@ -600,8 +625,7 @@
         "coupling_loss_db",
         "modulation_density",
         "throughput_tbps"
-      ],
-      "disclosure_note": "Technical subsystem/parameter; supplier adoption requires independent source"
+      ]
     },
     {
       "id": "process:optical_test",
@@ -611,8 +635,7 @@
       "measured_metrics": [
         "ber",
         "unit_test_seconds"
-      ],
-      "disclosure_note": "Technical subsystem/parameter; supplier adoption requires independent source"
+      ]
     },
     {
       "id": "bottleneck:optic_thermal",
@@ -622,46 +645,37 @@
       "measured_metrics": [
         "temperature_c",
         "w_per_port"
-      ],
-      "disclosure_note": "Technical subsystem/parameter; supplier adoption requires independent source"
-    },
-    {
-      "id": "tech:lite_eml",
-      "kind": "technology",
-      "label": "Lumentum 200G PAM4 EML",
-      "ecosystem": "optics",
-      "measured_metrics": [
-        "gbps_per_lane",
-        "reach_km"
-      ],
-      "disclosure_note": "Technical subsystem/parameter; supplier adoption requires independent source"
+      ]
     },
     {
       "id": "company:lite",
       "kind": "company",
       "label": "Lumentum (LITE)",
       "ecosystem": "optics",
-      "measured_metrics": [],
-      "disclosure_note": "Technical subsystem/parameter; supplier adoption requires independent source"
-    },
-    {
-      "id": "tech:cohr_1p6t",
-      "kind": "technology",
-      "label": "Coherent 1.6T 광트랜시버 기술",
-      "ecosystem": "optics",
-      "measured_metrics": [
-        "throughput_tbps",
-        "w_per_tbps"
-      ],
-      "disclosure_note": "Technical subsystem/parameter; supplier adoption requires independent source"
+      "role": "supplier",
+      "listing": {
+        "ticker": "LITE",
+        "exchange": "Nasdaq",
+        "cik": 1633978,
+        "filer_type": "10-K"
+      },
+      "size_band": "large",
+      "in_universe": false
     },
     {
       "id": "company:cohr",
       "kind": "company",
       "label": "Coherent (COHR)",
       "ecosystem": "optics",
-      "measured_metrics": [],
-      "disclosure_note": "Technical subsystem/parameter; supplier adoption requires independent source"
+      "role": "supplier",
+      "listing": {
+        "ticker": "COHR",
+        "exchange": "NYSE",
+        "cik": 820318,
+        "filer_type": "10-K"
+      },
+      "size_band": "large",
+      "in_universe": false
     },
     {
       "id": "component:osfp",
@@ -671,8 +685,7 @@
       "measured_metrics": [
         "thermal_watts",
         "port_density"
-      ],
-      "disclosure_note": "Technical subsystem/parameter; supplier adoption requires independent source"
+      ]
     },
     {
       "id": "component:fiber_ferrule",
@@ -682,8 +695,7 @@
       "measured_metrics": [
         "coupling_loss_db",
         "alignment_tolerance_um"
-      ],
-      "disclosure_note": "Technical subsystem/parameter; supplier adoption requires independent source"
+      ]
     },
     {
       "id": "component:gate_driver",
@@ -693,8 +705,7 @@
       "measured_metrics": [
         "dv_dt_kv_us",
         "switching_loss_w"
-      ],
-      "disclosure_note": "Technical subsystem/parameter; supplier adoption requires independent source"
+      ]
     },
     {
       "id": "material:sic_wafer",
@@ -704,8 +715,7 @@
       "measured_metrics": [
         "micropipe_density_cm2",
         "wafer_diameter_mm"
-      ],
-      "disclosure_note": "Technical subsystem/parameter; supplier adoption requires independent source"
+      ]
     },
     {
       "id": "component:dc_contactor",
@@ -715,8 +725,7 @@
       "measured_metrics": [
         "switching_current_a",
         "interrupt_time_ms"
-      ],
-      "disclosure_note": "Technical subsystem/parameter; supplier adoption requires independent source"
+      ]
     },
     {
       "id": "component:planar_transformer",
@@ -726,8 +735,7 @@
       "measured_metrics": [
         "power_density_w_cm3",
         "core_loss_w"
-      ],
-      "disclosure_note": "Technical subsystem/parameter; supplier adoption requires independent source"
+      ]
     },
     {
       "id": "component:dc_capacitor",
@@ -737,8 +745,7 @@
       "measured_metrics": [
         "ripple_current_a",
         "lifetime_hours"
-      ],
-      "disclosure_note": "Technical subsystem/parameter; supplier adoption requires independent source"
+      ]
     },
     {
       "id": "process:hv_dielectric_test",
@@ -748,8 +755,7 @@
       "measured_metrics": [
         "breakdown_voltage_kv",
         "leakage_current_ua"
-      ],
-      "disclosure_note": "Technical subsystem/parameter; supplier adoption requires independent source"
+      ]
     },
     {
       "id": "bottleneck:arc_flash",
@@ -759,8 +765,7 @@
       "measured_metrics": [
         "arc_duration_ms",
         "clearance_mm"
-      ],
-      "disclosure_note": "Technical subsystem/parameter; supplier adoption requires independent source"
+      ]
     },
     {
       "id": "component:coldplate",
@@ -770,8 +775,7 @@
       "measured_metrics": [
         "thermal_resistance_k_w",
         "flow_l_min"
-      ],
-      "disclosure_note": "Technical subsystem/parameter; supplier adoption requires independent source"
+      ]
     },
     {
       "id": "process:cdu_pump",
@@ -781,27 +785,436 @@
       "measured_metrics": [
         "pump_efficiency_percent",
         "pressure_drop_kpa"
-      ],
-      "disclosure_note": "Technical subsystem/parameter; supplier adoption requires independent source"
-    },
-    {
-      "id": "tech:vertiv_800v",
-      "kind": "technology",
-      "label": "Vertiv 800VDC 전력·냉각 인프라 설계",
-      "ecosystem": "power",
-      "measured_metrics": [
-        "distribution_voltage_v",
-        "power_density_kw"
-      ],
-      "disclosure_note": "Technical subsystem/parameter; supplier adoption requires independent source"
+      ]
     },
     {
       "id": "company:vrt",
       "kind": "company",
       "label": "Vertiv (VRT)",
       "ecosystem": "power",
-      "measured_metrics": [],
-      "disclosure_note": "Technical subsystem/parameter; supplier adoption requires independent source"
+      "role": "supplier",
+      "listing": {
+        "ticker": "VRT",
+        "exchange": "NYSE",
+        "cik": 1674101,
+        "filer_type": "10-K"
+      },
+      "size_band": "large",
+      "in_universe": false
+    },
+    {
+      "id": "process:wafer_level_burn_in",
+      "kind": "process",
+      "label": "SiC 웨이퍼 레벨 번인·신뢰성 검사",
+      "measured_metrics": [
+        "burn_in_hours",
+        "early_failure_rate_ppm"
+      ],
+      "ecosystem": "power"
+    },
+    {
+      "id": "tech:optical_interposer",
+      "kind": "technology",
+      "label": "광학 인터포저 기반 통합 광엔진",
+      "ecosystem": "optics"
+    },
+    {
+      "id": "tech:dow",
+      "kind": "technology",
+      "label": "Direct Optical Wiring (광섬유 직접 배선)",
+      "ecosystem": "optics"
+    },
+    {
+      "id": "product:camt_hawk",
+      "kind": "product",
+      "label": "Camtek Hawk 2D/3D 범프 검사·계측기",
+      "ecosystem": "hbm",
+      "measured_metrics": []
+    },
+    {
+      "id": "product:onto_dragonfly_g3",
+      "kind": "product",
+      "label": "Onto Dragonfly G3 2D/3D 결함 검사기",
+      "ecosystem": "hbm",
+      "measured_metrics": [
+        "defect_sensitivity_um",
+        "throughput_wph"
+      ]
+    },
+    {
+      "id": "product:lite_eml_200g",
+      "kind": "product",
+      "label": "Lumentum 200G PAM4 EML",
+      "ecosystem": "optics",
+      "measured_metrics": [
+        "gbps_per_lane",
+        "reach_km"
+      ]
+    },
+    {
+      "id": "product:cohr_1p6t_transceiver",
+      "kind": "product",
+      "label": "Coherent 1.6T 광트랜시버",
+      "ecosystem": "optics",
+      "measured_metrics": [
+        "throughput_tbps",
+        "w_per_tbps"
+      ]
+    },
+    {
+      "id": "product:vrt_800vdc_portfolio",
+      "kind": "product",
+      "label": "Vertiv 800VDC 전력·냉각 인프라 제품군",
+      "ecosystem": "power",
+      "measured_metrics": [
+        "distribution_voltage_v",
+        "power_density_kw"
+      ]
+    },
+    {
+      "id": "product:aehr_fox_xp",
+      "kind": "product",
+      "label": "Aehr FOX-XP 웨이퍼 레벨 번인 시스템",
+      "ecosystem": "power",
+      "measured_metrics": []
+    },
+    {
+      "id": "product:poet_optical_interposer",
+      "kind": "product",
+      "label": "POET 광학 인터포저 광엔진",
+      "ecosystem": "optics",
+      "measured_metrics": []
+    },
+    {
+      "id": "product:lessengers_dow",
+      "kind": "product",
+      "label": "Lessengers DOW 광배선 모듈",
+      "ecosystem": "optics",
+      "measured_metrics": []
+    },
+    {
+      "id": "gen:hbm3e",
+      "kind": "product_generation",
+      "label": "HBM3E (1,024 I/O)",
+      "ecosystem": "hbm"
+    },
+    {
+      "id": "gen:hbm4",
+      "kind": "product_generation",
+      "label": "HBM4 (2,048 I/O, JESD270-4)",
+      "ecosystem": "hbm",
+      "measured_metrics": [
+        "io_count",
+        "gbps_per_pin",
+        "stack_height_um"
+      ]
+    },
+    {
+      "id": "gen:hbm4e",
+      "kind": "product_generation",
+      "label": "HBM4E (microbump 유지 전망)",
+      "ecosystem": "hbm"
+    },
+    {
+      "id": "gen:hbm5",
+      "kind": "product_generation",
+      "label": "HBM5 (하이브리드 본딩 후보 세대)",
+      "ecosystem": "hbm"
+    },
+    {
+      "id": "std:jesd270_4",
+      "kind": "standard",
+      "label": "JEDEC JESD270-4 HBM4 (2025-04)",
+      "ecosystem": "hbm",
+      "measured_metrics": [
+        "gbps_per_pin",
+        "io_count",
+        "stack_height_um"
+      ]
+    },
+    {
+      "id": "equipment:hybrid_bonder",
+      "kind": "equipment",
+      "label": "웨이퍼·다이 하이브리드 본더",
+      "ecosystem": "hbm",
+      "measured_metrics": [
+        "overlay_nm",
+        "uph"
+      ]
+    },
+    {
+      "id": "company:skhynix",
+      "kind": "company",
+      "label": "SK hynix (KRX 000660, 비SEC)",
+      "ecosystem": "hbm",
+      "role": "both",
+      "listing": {
+        "ticker": "000660",
+        "exchange": "KRX",
+        "cik": null,
+        "filer_type": "non_sec_listed"
+      },
+      "in_universe": false,
+      "size_band": "mega"
+    },
+    {
+      "id": "company:samsung",
+      "kind": "company",
+      "label": "Samsung Electronics (KRX 005930, 비SEC)",
+      "ecosystem": "hbm",
+      "role": "both",
+      "listing": {
+        "ticker": "005930",
+        "exchange": "KRX",
+        "cik": null,
+        "filer_type": "non_sec_listed"
+      },
+      "in_universe": false,
+      "size_band": "mega"
+    },
+    {
+      "id": "company:mu",
+      "kind": "company",
+      "label": "Micron (MU)",
+      "ecosystem": "hbm",
+      "role": "both",
+      "listing": {
+        "ticker": "MU",
+        "exchange": "Nasdaq",
+        "cik": 723125,
+        "filer_type": "10-K"
+      },
+      "in_universe": false,
+      "size_band": "mega"
+    },
+    {
+      "id": "company:nvda",
+      "kind": "company",
+      "label": "NVIDIA (NVDA) — HBM·광·전력 공통 수요처",
+      "ecosystem": "hbm",
+      "role": "customer",
+      "listing": {
+        "ticker": "NVDA",
+        "exchange": "Nasdaq",
+        "cik": 1045810,
+        "filer_type": "10-K"
+      },
+      "in_universe": false,
+      "size_band": "mega",
+      "also_in": [
+        "optics",
+        "power"
+      ]
+    },
+    {
+      "id": "company:besi",
+      "kind": "company",
+      "label": "BE Semiconductor Industries (Euronext BESI, 비SEC)",
+      "ecosystem": "hbm",
+      "role": "supplier",
+      "listing": {
+        "ticker": "BESI",
+        "exchange": "Euronext",
+        "cik": null,
+        "filer_type": "non_sec_listed"
+      },
+      "in_universe": false,
+      "size_band": "large"
+    },
+    {
+      "id": "company:amat",
+      "kind": "company",
+      "label": "Applied Materials (AMAT)",
+      "ecosystem": "hbm",
+      "role": "supplier",
+      "listing": {
+        "ticker": "AMAT",
+        "exchange": "Nasdaq",
+        "cik": 6951,
+        "filer_type": "10-K"
+      },
+      "in_universe": false,
+      "size_band": "mega"
+    },
+    {
+      "id": "company:klac",
+      "kind": "company",
+      "label": "KLA (KLAC)",
+      "ecosystem": "hbm",
+      "role": "supplier",
+      "listing": {
+        "ticker": "KLAC",
+        "exchange": "Nasdaq",
+        "cik": 319201,
+        "filer_type": "10-K"
+      },
+      "in_universe": false,
+      "size_band": "mega"
+    },
+    {
+      "id": "gen:800g",
+      "kind": "product_generation",
+      "label": "800G 광모듈 세대 (100G/lane)",
+      "ecosystem": "optics"
+    },
+    {
+      "id": "gen:1p6t",
+      "kind": "product_generation",
+      "label": "1.6T 광모듈 세대 (200G/lane)",
+      "ecosystem": "optics"
+    },
+    {
+      "id": "std:ieee_802_3dj",
+      "kind": "standard",
+      "label": "IEEE P802.3dj 1.6T (Draft, 2026-10 기준)",
+      "ecosystem": "optics",
+      "measured_metrics": [
+        "lane_rate_gbps",
+        "reach_m"
+      ]
+    },
+    {
+      "id": "product:credo_aec",
+      "kind": "product",
+      "label": "Credo HiWire 능동 전기 케이블(AEC)",
+      "ecosystem": "optics"
+    },
+    {
+      "id": "component:aec",
+      "kind": "component",
+      "label": "능동 전기 케이블(AEC) — 단거리 구리 링크",
+      "ecosystem": "optics",
+      "measured_metrics": [
+        "reach_m",
+        "power_w_per_port"
+      ]
+    },
+    {
+      "id": "company:crdo",
+      "kind": "company",
+      "label": "Credo (CRDO)",
+      "ecosystem": "optics",
+      "role": "supplier",
+      "listing": {
+        "ticker": "CRDO",
+        "exchange": "Nasdaq",
+        "cik": 1807794,
+        "filer_type": "10-K"
+      },
+      "in_universe": false,
+      "size_band": "large"
+    },
+    {
+      "id": "company:fn",
+      "kind": "company",
+      "label": "Fabrinet (FN)",
+      "ecosystem": "optics",
+      "role": "supplier",
+      "listing": {
+        "ticker": "FN",
+        "exchange": "NYSE",
+        "cik": 1408710,
+        "filer_type": "10-K"
+      },
+      "in_universe": false,
+      "size_band": "large"
+    },
+    {
+      "id": "gen:54vdc",
+      "kind": "product_generation",
+      "label": "54VDC 랙 내 배전 (현행)",
+      "ecosystem": "power"
+    },
+    {
+      "id": "gen:800vdc",
+      "kind": "product_generation",
+      "label": "800VDC 배전 아키텍처 (NVIDIA 2027 1MW 랙 목표)",
+      "ecosystem": "power",
+      "measured_metrics": [
+        "dc_bus_voltage_v",
+        "rack_power_kw"
+      ]
+    },
+    {
+      "id": "std:ocp_lvdc",
+      "kind": "standard",
+      "label": "OCP LVDC/800VDC White Paper v1.1 (2026-09)",
+      "ecosystem": "power"
+    },
+    {
+      "id": "company:nvts",
+      "kind": "company",
+      "label": "Navitas Semiconductor (NVTS)",
+      "ecosystem": "power",
+      "role": "supplier",
+      "listing": {
+        "ticker": "NVTS",
+        "exchange": "Nasdaq",
+        "cik": 1821769,
+        "filer_type": "10-K"
+      },
+      "in_universe": false,
+      "size_band": "small"
+    },
+    {
+      "id": "company:on",
+      "kind": "company",
+      "label": "onsemi (ON)",
+      "ecosystem": "power",
+      "role": "supplier",
+      "listing": {
+        "ticker": "ON",
+        "exchange": "Nasdaq",
+        "cik": 1097864,
+        "filer_type": "10-K"
+      },
+      "in_universe": false,
+      "size_band": "large"
+    },
+    {
+      "id": "company:mpwr",
+      "kind": "company",
+      "label": "Monolithic Power Systems (MPWR)",
+      "ecosystem": "power",
+      "role": "supplier",
+      "listing": {
+        "ticker": "MPWR",
+        "exchange": "Nasdaq",
+        "cik": 1280452,
+        "filer_type": "10-K"
+      },
+      "in_universe": false,
+      "size_band": "large"
+    },
+    {
+      "id": "company:txn",
+      "kind": "company",
+      "label": "Texas Instruments (TXN)",
+      "ecosystem": "power",
+      "role": "supplier",
+      "listing": {
+        "ticker": "TXN",
+        "exchange": "Nasdaq",
+        "cik": 97476,
+        "filer_type": "10-K"
+      },
+      "in_universe": false,
+      "size_band": "mega"
+    },
+    {
+      "id": "company:etn",
+      "kind": "company",
+      "label": "Eaton (ETN)",
+      "ecosystem": "power",
+      "role": "supplier",
+      "listing": {
+        "ticker": "ETN",
+        "exchange": "NYSE",
+        "cik": 1551182,
+        "filer_type": "10-K"
+      },
+      "in_universe": false,
+      "size_band": "mega"
     }
   ],
   "edges": [
@@ -810,1582 +1223,2611 @@
       "from": "eco:hbm",
       "to": "req:hbm_io",
       "relation": "drives_requirement",
-      "stage": "established",
       "polarity": "positive",
       "evidence": [
         {
           "url": "https://news.skhynix.com/en/tech-note-series-ep2/",
-          "source_quality": "official_issuer"
+          "source_type": "official_issuer"
         }
       ],
-      "note": ""
+      "note": "",
+      "evidence_tier": "official_issuer",
+      "confidence": 0.8
     },
     {
       "id": "e002",
       "from": "eco:hbm",
       "to": "req:hbm_stack",
       "relation": "drives_requirement",
-      "stage": "established",
       "polarity": "positive",
       "evidence": [
         {
           "url": "https://news.skhynix.com/en/tech-note-series-ep2/",
-          "source_quality": "official_issuer"
+          "source_type": "official_issuer"
         }
       ],
-      "note": ""
+      "note": "",
+      "evidence_tier": "official_issuer",
+      "confidence": 0.8
     },
     {
       "id": "e003",
       "from": "req:hbm_io",
       "to": "bottleneck:hbm_overlay",
       "relation": "creates_bottleneck",
-      "stage": "technical_inference",
       "polarity": "positive",
       "evidence": [
         {
           "url": "https://news.skhynix.com/en/tech-note-series-ep2/",
-          "source_quality": "official_issuer"
+          "source_type": "official_issuer"
         }
       ],
-      "note": ""
+      "note": "",
+      "evidence_tier": "technical_inference",
+      "confidence": 0.4
     },
     {
       "id": "e004",
       "from": "req:hbm_stack",
       "to": "bottleneck:hbm_overlay",
       "relation": "creates_bottleneck",
-      "stage": "technical_inference",
       "polarity": "positive",
       "evidence": [
         {
           "url": "https://news.skhynix.com/en/tech-note-series-ep2/",
-          "source_quality": "official_issuer"
+          "source_type": "official_issuer"
         }
       ],
-      "note": ""
+      "note": "",
+      "evidence_tier": "technical_inference",
+      "confidence": 0.4
     },
     {
       "id": "e005",
       "from": "req:hbm_stack",
       "to": "bottleneck:hbm_thermal",
       "relation": "creates_bottleneck",
-      "stage": "established",
       "polarity": "positive",
       "evidence": [
         {
           "url": "https://news.skhynix.com/en/tech-note-series-ep2/",
-          "source_quality": "official_issuer"
+          "source_type": "official_issuer"
         }
       ],
-      "note": ""
-    },
-    {
-      "id": "e006",
-      "from": "bottleneck:hbm_overlay",
-      "to": "tech:hawk",
-      "relation": "mitigated_by",
-      "stage": "vendor_claim",
-      "polarity": "positive",
-      "evidence": [
-        {
-          "url": "https://www.camtek.com/products/hawk/",
-          "source_quality": "official_issuer"
-        }
-      ],
-      "note": ""
+      "note": "",
+      "evidence_tier": "official_issuer",
+      "confidence": 0.8
     },
     {
       "id": "e008",
       "from": "bottleneck:hbm_thermal",
       "to": "tech:hybrid_bond",
       "relation": "mitigated_by",
-      "stage": "technology_option",
       "polarity": "positive",
       "evidence": [
         {
           "url": "https://news.skhynix.com/en/tech-note-series-ep2/",
-          "source_quality": "official_issuer"
+          "source_type": "official_issuer"
         }
       ],
-      "note": ""
+      "note": "",
+      "evidence_tier": "technical_inference",
+      "confidence": 0.4
     },
     {
       "id": "e009",
       "from": "tech:hybrid_bond",
       "to": "tech:tcb",
       "relation": "substitutes_for",
-      "stage": "scenario",
       "polarity": "negative",
       "evidence": [
         {
           "url": "https://news.skhynix.com/en/tech-note-series-ep2/",
-          "source_quality": "official_issuer"
+          "source_type": "official_issuer"
         }
       ],
-      "note": "HBM4 전체가 즉시 하이브리드 본딩으로 전환되는 것은 아님"
+      "note": "HBM4 전체가 즉시 하이브리드 본딩으로 전환되는 것은 아님",
+      "evidence_tier": "hypothesis",
+      "confidence": 0.25
     },
     {
       "id": "e010",
-      "from": "tech:hawk",
+      "from": "product:camt_hawk",
       "to": "company:camt",
       "relation": "offered_by",
-      "stage": "issuer_documented",
       "polarity": "positive",
       "evidence": [
         {
           "url": "https://www.camtek.com/products/hawk/",
-          "source_quality": "official_issuer"
+          "source_type": "official_issuer"
         }
       ],
-      "note": ""
+      "note": "",
+      "evidence_tier": "official_issuer",
+      "confidence": 0.8
     },
     {
       "id": "e011",
       "from": "eco:optics",
       "to": "req:1p6t",
       "relation": "drives_requirement",
-      "stage": "standard_draft",
       "polarity": "positive",
       "evidence": [
         {
           "url": "https://standards.ieee.org/ieee/802.3dj/11115/",
-          "source_quality": "independent_standard"
+          "source_type": "independent_standard"
         }
       ],
-      "note": ""
+      "note": "",
+      "evidence_tier": "standard_body",
+      "confidence": 0.9
     },
     {
       "id": "e012",
       "from": "req:1p6t",
       "to": "bottleneck:optic_coupling",
       "relation": "creates_bottleneck",
-      "stage": "technical_inference",
       "polarity": "positive",
       "evidence": [
         {
           "url": "https://www.poet-technologies.com/news/poet-technologies-and-lessengers-expand-partnership-to-deliver-1-6t-2xdr4-optical-transceivers-for-ai-network-connectivity",
-          "source_quality": "official_issuer"
+          "source_type": "official_issuer"
         }
       ],
-      "note": ""
+      "note": "",
+      "evidence_tier": "technical_inference",
+      "confidence": 0.4
     },
     {
       "id": "e013",
       "from": "req:1p6t",
       "to": "bottleneck:optic_power",
       "relation": "creates_bottleneck",
-      "stage": "technical_inference",
       "polarity": "positive",
       "evidence": [
         {
           "url": "https://www.poet-technologies.com/news/poet-technologies-and-lessengers-expand-partnership-to-deliver-1-6t-2xdr4-optical-transceivers-for-ai-network-connectivity",
-          "source_quality": "official_issuer"
+          "source_type": "official_issuer"
         }
       ],
-      "note": ""
+      "note": "",
+      "evidence_tier": "technical_inference",
+      "confidence": 0.4
     },
     {
       "id": "e014",
       "from": "bottleneck:optic_coupling",
-      "to": "tech:poet_interposer",
+      "to": "tech:optical_interposer",
       "relation": "mitigated_by",
-      "stage": "vendor_claim",
       "polarity": "positive",
       "evidence": [
         {
           "url": "https://www.poet-technologies.com/news/poet-technologies-and-lessengers-expand-partnership-to-deliver-1-6t-2xdr4-optical-transceivers-for-ai-network-connectivity",
-          "source_quality": "official_issuer"
+          "source_type": "official_issuer"
         }
       ],
-      "note": ""
+      "note": " [v0.3: tech:poet_interposer → tech:optical_interposer]",
+      "evidence_tier": "vendor_claim",
+      "confidence": 0.55
     },
     {
       "id": "e015",
       "from": "bottleneck:optic_coupling",
-      "to": "tech:lessengers_dow",
+      "to": "tech:dow",
       "relation": "mitigated_by",
-      "stage": "vendor_claim",
       "polarity": "positive",
       "evidence": [
         {
           "url": "https://www.poet-technologies.com/news/poet-technologies-and-lessengers-expand-partnership-to-deliver-1-6t-2xdr4-optical-transceivers-for-ai-network-connectivity",
-          "source_quality": "official_issuer"
+          "source_type": "official_issuer"
         }
       ],
-      "note": ""
+      "note": " [v0.3: tech:lessengers_dow → tech:dow]",
+      "evidence_tier": "vendor_claim",
+      "confidence": 0.55
     },
     {
       "id": "e016",
       "from": "bottleneck:optic_power",
       "to": "tech:cpo",
       "relation": "mitigated_by",
-      "stage": "technology_option",
       "polarity": "positive",
       "evidence": [
         {
           "url": "https://www.poet-technologies.com/news/poet-technologies-and-lessengers-expand-partnership-to-deliver-1-6t-2xdr4-optical-transceivers-for-ai-network-connectivity",
-          "source_quality": "official_issuer"
+          "source_type": "official_issuer"
         }
       ],
-      "note": ""
+      "note": "",
+      "evidence_tier": "technical_inference",
+      "confidence": 0.4
     },
     {
       "id": "e017",
       "from": "bottleneck:optic_power",
       "to": "tech:pluggable",
       "relation": "mitigated_by",
-      "stage": "technology_option",
       "polarity": "conditional",
       "evidence": [
         {
           "url": "https://www.poet-technologies.com/news/poet-technologies-and-lessengers-expand-partnership-to-deliver-1-6t-2xdr4-optical-transceivers-for-ai-network-connectivity",
-          "source_quality": "official_issuer"
+          "source_type": "official_issuer"
         }
       ],
-      "note": ""
+      "note": "",
+      "evidence_tier": "technical_inference",
+      "confidence": 0.32
     },
     {
       "id": "e018",
-      "from": "tech:poet_interposer",
+      "from": "product:poet_optical_interposer",
       "to": "company:poet",
       "relation": "offered_by",
-      "stage": "issuer_documented",
       "polarity": "positive",
       "evidence": [
         {
           "url": "https://www.poet-technologies.com/news/poet-technologies-and-lessengers-expand-partnership-to-deliver-1-6t-2xdr4-optical-transceivers-for-ai-network-connectivity",
-          "source_quality": "official_issuer"
+          "source_type": "official_issuer"
         }
       ],
-      "note": ""
+      "note": "",
+      "evidence_tier": "official_issuer",
+      "confidence": 0.8
     },
     {
       "id": "e019",
-      "from": "tech:lessengers_dow",
+      "from": "product:lessengers_dow",
       "to": "company:lessengers",
       "relation": "offered_by",
-      "stage": "issuer_documented",
       "polarity": "positive",
       "evidence": [
         {
           "url": "https://www.poet-technologies.com/news/poet-technologies-and-lessengers-expand-partnership-to-deliver-1-6t-2xdr4-optical-transceivers-for-ai-network-connectivity",
-          "source_quality": "official_issuer"
+          "source_type": "official_issuer"
         }
       ],
-      "note": ""
+      "note": "",
+      "evidence_tier": "official_issuer",
+      "confidence": 0.8
     },
     {
       "id": "e020",
       "from": "tech:cpo",
       "to": "tech:pluggable",
       "relation": "substitutes_for",
-      "stage": "scenario",
       "polarity": "negative",
       "evidence": [
         {
           "url": "https://www.poet-technologies.com/news/poet-technologies-and-lessengers-expand-partnership-to-deliver-1-6t-2xdr4-optical-transceivers-for-ai-network-connectivity",
-          "source_quality": "official_issuer"
+          "source_type": "official_issuer"
         }
       ],
-      "note": "배치에 따라 두 방식이 공존할 수 있어 보편적 대체가 아님"
+      "note": "배치에 따라 두 방식이 공존할 수 있어 보편적 대체가 아님",
+      "evidence_tier": "hypothesis",
+      "confidence": 0.25
     },
     {
       "id": "e021",
       "from": "eco:power",
       "to": "req:800v",
       "relation": "drives_requirement",
-      "stage": "standardization_in_progress",
       "polarity": "positive",
       "evidence": [
         {
           "url": "https://www.opencompute.org/news/powering-the-next-era-of-ai-how-google-microsoft-and-nvidia-are-standardizing-and-accelerating-the-industry-transition-to-lvdc/",
-          "source_quality": "official_issuer"
+          "source_type": "official_issuer"
         }
       ],
-      "note": ""
+      "note": "",
+      "evidence_tier": "standard_body",
+      "confidence": 0.9
     },
     {
       "id": "e022",
       "from": "eco:power",
       "to": "req:highdensity",
       "relation": "drives_requirement",
-      "stage": "established",
       "polarity": "positive",
       "evidence": [
         {
           "url": "https://www.opencompute.org/news/powering-the-next-era-of-ai-how-google-microsoft-and-nvidia-are-standardizing-and-accelerating-the-industry-transition-to-lvdc/",
-          "source_quality": "official_issuer"
+          "source_type": "official_issuer"
         }
       ],
-      "note": ""
+      "note": "",
+      "evidence_tier": "official_issuer",
+      "confidence": 0.8
     },
     {
       "id": "e023",
       "from": "req:highdensity",
       "to": "bottleneck:copper",
       "relation": "creates_bottleneck",
-      "stage": "established",
       "polarity": "positive",
       "evidence": [
         {
           "url": "https://www.opencompute.org/news/powering-the-next-era-of-ai-how-google-microsoft-and-nvidia-are-standardizing-and-accelerating-the-industry-transition-to-lvdc/",
-          "source_quality": "official_issuer"
+          "source_type": "official_issuer"
         }
       ],
-      "note": ""
+      "note": "",
+      "evidence_tier": "official_issuer",
+      "confidence": 0.8
     },
     {
       "id": "e024",
       "from": "req:800v",
       "to": "bottleneck:dc_protection",
       "relation": "creates_bottleneck",
-      "stage": "technical_inference",
       "polarity": "positive",
       "evidence": [
         {
           "url": "https://www.opencompute.org/projects/data-center-facility/power-distribution/",
-          "source_quality": "independent_standard"
+          "source_type": "independent_standard"
         }
       ],
-      "note": ""
+      "note": "",
+      "evidence_tier": "technical_inference",
+      "confidence": 0.4
     },
     {
       "id": "e025",
       "from": "req:800v",
       "to": "bottleneck:conversion",
       "relation": "creates_bottleneck",
-      "stage": "established",
       "polarity": "positive",
       "evidence": [
         {
           "url": "https://www.opencompute.org/news/powering-the-next-era-of-ai-how-google-microsoft-and-nvidia-are-standardizing-and-accelerating-the-industry-transition-to-lvdc/",
-          "source_quality": "official_issuer"
+          "source_type": "official_issuer"
         }
       ],
-      "note": ""
+      "note": "",
+      "evidence_tier": "official_issuer",
+      "confidence": 0.8
     },
     {
       "id": "e026",
       "from": "bottleneck:copper",
       "to": "tech:busbar",
       "relation": "mitigated_by",
-      "stage": "technology_option",
       "polarity": "positive",
       "evidence": [
         {
           "url": "https://www.opencompute.org/news/powering-the-next-era-of-ai-how-google-microsoft-and-nvidia-are-standardizing-and-accelerating-the-industry-transition-to-lvdc/",
-          "source_quality": "official_issuer"
+          "source_type": "official_issuer"
         }
       ],
-      "note": ""
+      "note": "",
+      "evidence_tier": "technical_inference",
+      "confidence": 0.4
     },
     {
       "id": "e027",
       "from": "bottleneck:dc_protection",
       "to": "tech:busbar",
       "relation": "mitigated_by",
-      "stage": "technology_option",
       "polarity": "positive",
       "evidence": [
         {
           "url": "https://www.opencompute.org/projects/data-center-facility/power-distribution/",
-          "source_quality": "independent_standard"
+          "source_type": "independent_standard"
         }
       ],
-      "note": ""
+      "note": "",
+      "evidence_tier": "technical_inference",
+      "confidence": 0.4
     },
     {
       "id": "e028",
       "from": "bottleneck:conversion",
       "to": "tech:sidecar",
       "relation": "mitigated_by",
-      "stage": "documented_architecture",
       "polarity": "positive",
       "evidence": [
         {
           "url": "https://www.opencompute.org/news/powering-the-next-era-of-ai-how-google-microsoft-and-nvidia-are-standardizing-and-accelerating-the-industry-transition-to-lvdc/",
-          "source_quality": "official_issuer"
+          "source_type": "official_issuer"
         }
       ],
-      "note": ""
+      "note": "",
+      "evidence_tier": "official_issuer",
+      "confidence": 0.8
     },
     {
       "id": "e029",
       "from": "bottleneck:conversion",
       "to": "tech:directmv",
       "relation": "mitigated_by",
-      "stage": "documented_architecture",
       "polarity": "positive",
       "evidence": [
         {
           "url": "https://www.opencompute.org/news/powering-the-next-era-of-ai-how-google-microsoft-and-nvidia-are-standardizing-and-accelerating-the-industry-transition-to-lvdc/",
-          "source_quality": "official_issuer"
+          "source_type": "official_issuer"
         }
       ],
-      "note": ""
+      "note": "",
+      "evidence_tier": "official_issuer",
+      "confidence": 0.8
     },
     {
       "id": "e030",
       "from": "tech:directmv",
       "to": "tech:sidecar",
       "relation": "substitutes_for",
-      "stage": "scenario",
       "polarity": "negative",
       "evidence": [
         {
           "url": "https://www.opencompute.org/news/powering-the-next-era-of-ai-how-google-microsoft-and-nvidia-are-standardizing-and-accelerating-the-industry-transition-to-lvdc/",
-          "source_quality": "official_issuer"
+          "source_type": "official_issuer"
         }
       ],
-      "note": "고객 인프라/시점에 따라 두 방식 공존 가능"
+      "note": "고객 인프라/시점에 따라 두 방식 공존 가능",
+      "evidence_tier": "hypothesis",
+      "confidence": 0.25
     },
     {
       "id": "e031",
       "from": "bottleneck:conversion",
       "to": "tech:sic",
       "relation": "mitigated_by",
-      "stage": "unverified_hypothesis",
       "polarity": "conditional",
       "evidence": [
         {
           "url": "https://www.opencompute.org/news/powering-the-next-era-of-ai-how-google-microsoft-and-nvidia-are-standardizing-and-accelerating-the-industry-transition-to-lvdc/",
-          "source_quality": "official_issuer"
+          "source_type": "official_issuer"
         }
       ],
-      "note": "800VDC 표준과 특정 SiC 소자 수요 증가는 추가 설계 검증 필요"
+      "note": "800VDC 표준과 특정 SiC 소자 수요 증가는 추가 설계 검증 필요",
+      "evidence_tier": "hypothesis",
+      "confidence": 0.2
     },
     {
       "id": "e032",
       "from": "tech:sic",
       "to": "bottleneck:sic_reliability",
       "relation": "creates_bottleneck",
-      "stage": "technical_inference",
       "polarity": "positive",
       "evidence": [
         {
           "url": "https://ir.aehr.com/",
-          "source_quality": "official_issuer"
+          "source_type": "official_issuer"
         }
       ],
-      "note": ""
+      "note": "",
+      "evidence_tier": "technical_inference",
+      "confidence": 0.4
     },
     {
       "id": "e033",
       "from": "bottleneck:sic_reliability",
-      "to": "tech:aehr_fox",
+      "to": "process:wafer_level_burn_in",
       "relation": "mitigated_by",
-      "stage": "vendor_claim",
       "polarity": "positive",
       "evidence": [
         {
           "url": "https://ir.aehr.com/",
-          "source_quality": "official_issuer"
+          "source_type": "official_issuer"
         }
       ],
-      "note": ""
+      "note": " [v0.3: tech:aehr_fox → process:wafer_level_burn_in]",
+      "evidence_tier": "vendor_claim",
+      "confidence": 0.55
     },
     {
       "id": "e034",
-      "from": "tech:aehr_fox",
+      "from": "product:aehr_fox_xp",
       "to": "company:aehr",
       "relation": "offered_by",
-      "stage": "issuer_documented",
       "polarity": "positive",
       "evidence": [
         {
           "url": "https://ir.aehr.com/",
-          "source_quality": "official_issuer"
+          "source_type": "official_issuer"
         }
       ],
-      "note": ""
+      "note": "",
+      "evidence_tier": "official_issuer",
+      "confidence": 0.8
     },
     {
       "id": "e035",
       "from": "req:hbm_stack",
       "to": "bottleneck:hbm_kged",
       "relation": "creates_bottleneck",
-      "stage": "technical_inference",
       "polarity": "positive",
       "evidence": [
         {
           "url": "https://news.skhynix.com/en/tech-note-series-ep2/",
-          "source_quality": "technical_source"
+          "source_type": "technical_source"
         }
       ],
-      "note": ""
+      "note": "",
+      "evidence_tier": "technical_inference",
+      "confidence": 0.4
     },
     {
       "id": "e036",
       "from": "req:hbm_stack",
       "to": "bottleneck:hbm_wafer_warpage",
       "relation": "creates_bottleneck",
-      "stage": "established",
       "polarity": "positive",
       "evidence": [
         {
           "url": "https://news.skhynix.com/en/tech-note-series-ep2/",
-          "source_quality": "technical_source"
+          "source_type": "technical_source"
         }
       ],
-      "note": ""
+      "note": "",
+      "evidence_tier": "official_issuer",
+      "confidence": 0.8
     },
     {
       "id": "e037",
       "from": "req:hbm_stack",
       "to": "component:microbump",
-      "relation": "requires_component_or_material",
-      "stage": "established",
+      "relation": "requires",
       "polarity": "positive",
       "evidence": [
         {
           "url": "https://news.skhynix.com/en/tech-note-series-ep2/",
-          "source_quality": "technical_source"
+          "source_type": "technical_source"
         }
       ],
-      "note": ""
+      "note": "",
+      "evidence_tier": "official_issuer",
+      "confidence": 0.8
     },
     {
       "id": "e038",
       "from": "req:hbm_stack",
       "to": "material:underfill",
-      "relation": "requires_component_or_material",
-      "stage": "technology_option",
+      "relation": "requires",
       "polarity": "positive",
       "evidence": [
         {
           "url": "https://news.skhynix.com/en/tech-note-series-ep2/",
-          "source_quality": "technical_source"
+          "source_type": "technical_source"
         }
       ],
-      "note": ""
+      "note": "",
+      "evidence_tier": "technical_inference",
+      "confidence": 0.4
     },
     {
       "id": "e039",
       "from": "bottleneck:hbm_overlay",
       "to": "process:microbump_metrology",
       "relation": "mitigated_by",
-      "stage": "vendor_claim",
       "polarity": "positive",
       "evidence": [
         {
           "url": "https://www.camtek.com/products/hawk/",
-          "source_quality": "technical_source"
+          "source_type": "technical_source"
         }
       ],
-      "note": ""
-    },
-    {
-      "id": "e040",
-      "from": "process:microbump_metrology",
-      "to": "tech:hawk",
-      "relation": "uses_component_or_equipment",
-      "stage": "vendor_claim",
-      "polarity": "positive",
-      "evidence": [
-        {
-          "url": "https://www.camtek.com/products/hawk/",
-          "source_quality": "technical_source"
-        }
-      ],
-      "note": ""
+      "note": "",
+      "evidence_tier": "vendor_claim",
+      "confidence": 0.55
     },
     {
       "id": "e041",
       "from": "bottleneck:hbm_wafer_warpage",
       "to": "process:hybrid_bond_qualification",
       "relation": "mitigated_by",
-      "stage": "technology_option",
       "polarity": "positive",
       "evidence": [
         {
           "url": "https://news.skhynix.com/en/tech-note-series-ep2/",
-          "source_quality": "technical_source"
+          "source_type": "technical_source"
         }
       ],
-      "note": ""
+      "note": "",
+      "evidence_tier": "technical_inference",
+      "confidence": 0.4
     },
     {
       "id": "e042",
       "from": "process:hybrid_bond_qualification",
       "to": "material:cu_cu",
-      "relation": "uses_component_or_equipment",
-      "stage": "documented_architecture",
+      "relation": "requires",
       "polarity": "positive",
       "evidence": [
         {
           "url": "https://news.skhynix.com/en/tech-note-series-ep2/",
-          "source_quality": "technical_source"
+          "source_type": "technical_source"
         }
       ],
-      "note": ""
+      "note": "",
+      "evidence_tier": "official_issuer",
+      "confidence": 0.8
     },
     {
       "id": "e043",
       "from": "req:1p6t",
       "to": "bottleneck:optic_ber",
       "relation": "creates_bottleneck",
-      "stage": "technical_inference",
       "polarity": "positive",
       "evidence": [
         {
           "url": "https://standards.ieee.org/ieee/802.3dj/11115/",
-          "source_quality": "independent_standard"
+          "source_type": "independent_standard"
         }
       ],
-      "note": ""
+      "note": "",
+      "evidence_tier": "technical_inference",
+      "confidence": 0.4
     },
     {
       "id": "e044",
       "from": "req:1p6t",
       "to": "component:optical_laser",
-      "relation": "requires_component_or_material",
-      "stage": "documented_architecture",
+      "relation": "requires",
       "polarity": "positive",
       "evidence": [
         {
           "url": "https://www.poet-technologies.com/news/poet-technologies-and-lessengers-expand-partnership-to-deliver-1-6t-2xdr4-optical-transceivers-for-ai-network-connectivity",
-          "source_quality": "technical_source"
+          "source_type": "technical_source"
         }
       ],
-      "note": ""
+      "note": "",
+      "evidence_tier": "official_issuer",
+      "confidence": 0.8
     },
     {
       "id": "e045",
       "from": "req:1p6t",
       "to": "component:modulator",
-      "relation": "requires_component_or_material",
-      "stage": "documented_architecture",
+      "relation": "requires",
       "polarity": "positive",
       "evidence": [
         {
           "url": "https://www.poet-technologies.com/news/poet-technologies-and-lessengers-expand-partnership-to-deliver-1-6t-2xdr4-optical-transceivers-for-ai-network-connectivity",
-          "source_quality": "technical_source"
+          "source_type": "technical_source"
         }
       ],
-      "note": ""
+      "note": "",
+      "evidence_tier": "official_issuer",
+      "confidence": 0.8
     },
     {
       "id": "e046",
       "from": "req:1p6t",
       "to": "component:photodiode",
-      "relation": "requires_component_or_material",
-      "stage": "documented_architecture",
+      "relation": "requires",
       "polarity": "positive",
       "evidence": [
         {
           "url": "https://www.poet-technologies.com/news/poet-technologies-and-lessengers-expand-partnership-to-deliver-1-6t-2xdr4-optical-transceivers-for-ai-network-connectivity",
-          "source_quality": "technical_source"
+          "source_type": "technical_source"
         }
       ],
-      "note": ""
+      "note": "",
+      "evidence_tier": "official_issuer",
+      "confidence": 0.8
     },
     {
       "id": "e047",
       "from": "req:1p6t",
       "to": "component:optical_dsp",
-      "relation": "requires_component_or_material",
-      "stage": "technical_inference",
+      "relation": "requires",
       "polarity": "positive",
       "evidence": [
         {
           "url": "https://standards.ieee.org/ieee/802.3dj/11115/",
-          "source_quality": "independent_standard"
+          "source_type": "independent_standard"
         }
       ],
-      "note": ""
+      "note": "",
+      "evidence_tier": "technical_inference",
+      "confidence": 0.4
     },
     {
       "id": "e048",
       "from": "bottleneck:optic_coupling",
       "to": "process:optic_alignment",
       "relation": "mitigated_by",
-      "stage": "documented_architecture",
       "polarity": "positive",
       "evidence": [
         {
           "url": "https://www.poet-technologies.com/news/poet-technologies-and-lessengers-expand-partnership-to-deliver-1-6t-2xdr4-optical-transceivers-for-ai-network-connectivity",
-          "source_quality": "technical_source"
+          "source_type": "technical_source"
         }
       ],
-      "note": ""
-    },
-    {
-      "id": "e049",
-      "from": "process:optic_alignment",
-      "to": "tech:poet_interposer",
-      "relation": "mitigated_by",
-      "stage": "vendor_claim",
-      "polarity": "positive",
-      "evidence": [
-        {
-          "url": "https://www.poet-technologies.com/news/poet-technologies-and-lessengers-expand-partnership-to-deliver-1-6t-2xdr4-optical-transceivers-for-ai-network-connectivity",
-          "source_quality": "technical_source"
-        }
-      ],
-      "note": ""
+      "note": "",
+      "evidence_tier": "official_issuer",
+      "confidence": 0.8
     },
     {
       "id": "e050",
       "from": "bottleneck:optic_ber",
       "to": "component:optical_dsp",
       "relation": "mitigated_by",
-      "stage": "technology_option",
       "polarity": "positive",
       "evidence": [
         {
           "url": "https://standards.ieee.org/ieee/802.3dj/11115/",
-          "source_quality": "independent_standard"
+          "source_type": "independent_standard"
         }
       ],
-      "note": ""
+      "note": "",
+      "evidence_tier": "technical_inference",
+      "confidence": 0.4
     },
     {
       "id": "e051",
       "from": "req:1p6t",
       "to": "component:fiber_connector",
-      "relation": "requires_component_or_material",
-      "stage": "documented_architecture",
+      "relation": "requires",
       "polarity": "positive",
       "evidence": [
         {
           "url": "https://www.poet-technologies.com/news/poet-technologies-and-lessengers-expand-partnership-to-deliver-1-6t-2xdr4-optical-transceivers-for-ai-network-connectivity",
-          "source_quality": "technical_source"
+          "source_type": "technical_source"
         }
       ],
-      "note": ""
+      "note": "",
+      "evidence_tier": "official_issuer",
+      "confidence": 0.8
     },
     {
       "id": "e052",
       "from": "req:800v",
       "to": "component:dc_busbar",
-      "relation": "requires_component_or_material",
-      "stage": "documented_architecture",
+      "relation": "requires",
       "polarity": "positive",
       "evidence": [
         {
           "url": "https://www.opencompute.org/news/powering-the-next-era-of-ai-how-google-microsoft-and-nvidia-are-standardizing-and-accelerating-the-industry-transition-to-lvdc/",
-          "source_quality": "technical_source"
+          "source_type": "technical_source"
         }
       ],
-      "note": ""
+      "note": "",
+      "evidence_tier": "official_issuer",
+      "confidence": 0.8
     },
     {
       "id": "e053",
       "from": "req:800v",
       "to": "component:dc_breaker",
-      "relation": "requires_component_or_material",
-      "stage": "documented_architecture",
+      "relation": "requires",
       "polarity": "positive",
       "evidence": [
         {
           "url": "https://www.opencompute.org/news/powering-the-next-era-of-ai-how-google-microsoft-and-nvidia-are-standardizing-and-accelerating-the-industry-transition-to-lvdc/",
-          "source_quality": "technical_source"
+          "source_type": "technical_source"
         }
       ],
-      "note": ""
+      "note": "",
+      "evidence_tier": "official_issuer",
+      "confidence": 0.8
     },
     {
       "id": "e054",
       "from": "req:800v",
       "to": "material:hv_insulation",
-      "relation": "requires_component_or_material",
-      "stage": "technical_inference",
+      "relation": "requires",
       "polarity": "positive",
       "evidence": [
         {
           "url": "https://www.opencompute.org/news/powering-the-next-era-of-ai-how-google-microsoft-and-nvidia-are-standardizing-and-accelerating-the-industry-transition-to-lvdc/",
-          "source_quality": "technical_source"
+          "source_type": "technical_source"
         }
       ],
-      "note": ""
+      "note": "",
+      "evidence_tier": "technical_inference",
+      "confidence": 0.4
     },
     {
       "id": "e055",
       "from": "bottleneck:conversion",
       "to": "component:power_converter",
       "relation": "mitigated_by",
-      "stage": "documented_architecture",
       "polarity": "positive",
       "evidence": [
         {
           "url": "https://www.opencompute.org/news/powering-the-next-era-of-ai-how-google-microsoft-and-nvidia-are-standardizing-and-accelerating-the-industry-transition-to-lvdc/",
-          "source_quality": "technical_source"
+          "source_type": "technical_source"
         }
       ],
-      "note": ""
+      "note": "",
+      "evidence_tier": "official_issuer",
+      "confidence": 0.8
     },
     {
       "id": "e056",
       "from": "bottleneck:conversion",
       "to": "component:sic_mosfet",
       "relation": "mitigated_by",
-      "stage": "unverified_hypothesis",
       "polarity": "conditional",
       "evidence": [
         {
           "url": "https://www.opencompute.org/news/powering-the-next-era-of-ai-how-google-microsoft-and-nvidia-are-standardizing-and-accelerating-the-industry-transition-to-lvdc/",
-          "source_quality": "technical_source"
+          "source_type": "technical_source"
         }
       ],
-      "note": "사용 여부는 실제 설계 BOM 필요"
+      "note": "사용 여부는 실제 설계 BOM 필요",
+      "evidence_tier": "hypothesis",
+      "confidence": 0.2
     },
     {
       "id": "e057",
       "from": "req:highdensity",
       "to": "req:coldplate",
-      "relation": "requires_component_or_material",
-      "stage": "established",
+      "relation": "drives_requirement",
       "polarity": "positive",
       "evidence": [
         {
           "url": "https://www.ashrae.org/technical-resources/topics-and-initiatives/ai-data-center/integrated-design-principles",
-          "source_quality": "technical_source"
+          "source_type": "technical_source"
         }
       ],
-      "note": ""
+      "note": "",
+      "evidence_tier": "official_issuer",
+      "confidence": 0.8
     },
     {
       "id": "e058",
       "from": "req:coldplate",
       "to": "bottleneck:liquidcool",
       "relation": "creates_bottleneck",
-      "stage": "established",
       "polarity": "positive",
       "evidence": [
         {
           "url": "https://www.ashrae.org/technical-resources/topics-and-initiatives/ai-data-center/integrated-design-principles",
-          "source_quality": "technical_source"
+          "source_type": "technical_source"
         }
       ],
-      "note": ""
+      "note": "",
+      "evidence_tier": "official_issuer",
+      "confidence": 0.8
     },
     {
       "id": "e059",
       "from": "bottleneck:liquidcool",
       "to": "tech:cdu",
       "relation": "mitigated_by",
-      "stage": "technology_option",
       "polarity": "positive",
       "evidence": [
         {
           "url": "https://www.ashrae.org/technical-resources/topics-and-initiatives/ai-data-center/integrated-design-principles",
-          "source_quality": "technical_source"
+          "source_type": "technical_source"
         }
       ],
-      "note": ""
+      "note": "",
+      "evidence_tier": "technical_inference",
+      "confidence": 0.4
     },
     {
       "id": "e060",
       "from": "req:hbm_stack",
       "to": "bottleneck:hbm_pitch_density",
       "relation": "creates_bottleneck",
-      "stage": "technical_inference",
       "polarity": "positive",
       "evidence": [
         {
           "url": "https://news.skhynix.com/en/tech-note-series-ep2/",
-          "source_quality": "manufacturer_technical_note"
+          "source_type": "manufacturer_technical_note"
         }
       ],
-      "note": "HBM4 전면 채택 주장이 아니라 세대별 기술 옵션"
+      "note": "HBM4 전면 채택 주장이 아니라 세대별 기술 옵션",
+      "evidence_tier": "technical_inference",
+      "confidence": 0.4
     },
     {
       "id": "e061",
       "from": "bottleneck:hbm_pitch_density",
       "to": "tech:hybrid_bond",
       "relation": "mitigated_by",
-      "stage": "technology_option",
       "polarity": "positive",
       "evidence": [
         {
           "url": "https://news.skhynix.com/en/tech-note-series-ep2/",
-          "source_quality": "manufacturer_technical_note"
+          "source_type": "manufacturer_technical_note"
         }
       ],
-      "note": "HBM4 전면 채택 주장이 아니라 세대별 기술 옵션"
+      "note": "HBM4 전면 채택 주장이 아니라 세대별 기술 옵션",
+      "evidence_tier": "technical_inference",
+      "confidence": 0.4
     },
     {
       "id": "e062",
       "from": "req:hbm_stack",
       "to": "component:tsv",
-      "relation": "requires_component_or_material",
-      "stage": "technical_inference",
+      "relation": "requires",
       "polarity": "positive",
       "evidence": [
         {
           "url": "https://news.skhynix.com/en/tech-note-series-ep2/",
-          "source_quality": "technical_source"
+          "source_type": "technical_source"
         }
       ],
-      "note": ""
+      "note": "",
+      "evidence_tier": "technical_inference",
+      "confidence": 0.4
     },
     {
       "id": "e063",
       "from": "component:tsv",
       "to": "process:tsv_plating",
-      "relation": "uses_component_or_equipment",
-      "stage": "technical_inference",
+      "relation": "requires",
       "polarity": "positive",
       "evidence": [
         {
           "url": "https://news.skhynix.com/en/tech-note-series-ep2/",
-          "source_quality": "technical_source"
+          "source_type": "technical_source"
         }
       ],
-      "note": ""
+      "note": "",
+      "evidence_tier": "technical_inference",
+      "confidence": 0.4
     },
     {
       "id": "e064",
       "from": "req:hbm_stack",
       "to": "component:package_substrate",
-      "relation": "requires_component_or_material",
-      "stage": "technical_inference",
+      "relation": "requires",
       "polarity": "positive",
       "evidence": [
         {
           "url": "https://news.skhynix.com/en/tech-note-series-ep2/",
-          "source_quality": "technical_source"
+          "source_type": "technical_source"
         }
       ],
-      "note": ""
+      "note": "",
+      "evidence_tier": "technical_inference",
+      "confidence": 0.4
     },
     {
       "id": "e065",
       "from": "component:package_substrate",
       "to": "material:abf",
-      "relation": "requires_component_or_material",
-      "stage": "technical_inference",
+      "relation": "requires",
       "polarity": "positive",
       "evidence": [
         {
           "url": "https://news.skhynix.com/en/tech-note-series-ep2/",
-          "source_quality": "technical_source"
+          "source_type": "technical_source"
         }
       ],
-      "note": ""
+      "note": "",
+      "evidence_tier": "technical_inference",
+      "confidence": 0.4
     },
     {
       "id": "e066",
       "from": "bottleneck:hbm_overlay",
       "to": "bottleneck:bond_void",
       "relation": "creates_bottleneck",
-      "stage": "technical_inference",
       "polarity": "positive",
       "evidence": [
         {
           "url": "https://news.skhynix.com/en/tech-note-series-ep2/",
-          "source_quality": "technical_source"
+          "source_type": "technical_source"
         }
       ],
-      "note": ""
+      "note": "",
+      "evidence_tier": "technical_inference",
+      "confidence": 0.4
     },
     {
       "id": "e067",
       "from": "bottleneck:hbm_overlay",
       "to": "bottleneck:bond_particle",
       "relation": "creates_bottleneck",
-      "stage": "technical_inference",
       "polarity": "positive",
       "evidence": [
         {
           "url": "https://news.skhynix.com/en/tech-note-series-ep2/",
-          "source_quality": "technical_source"
+          "source_type": "technical_source"
         }
       ],
-      "note": ""
+      "note": "",
+      "evidence_tier": "technical_inference",
+      "confidence": 0.4
     },
     {
       "id": "e068",
       "from": "bottleneck:bond_particle",
       "to": "process:surface_activation",
       "relation": "mitigated_by",
-      "stage": "technical_inference",
       "polarity": "positive",
       "evidence": [
         {
           "url": "https://ontoinnovation.com/products/dragonfly-g3/",
-          "source_quality": "technical_source"
+          "source_type": "technical_source"
         }
       ],
-      "note": ""
+      "note": "",
+      "evidence_tier": "technical_inference",
+      "confidence": 0.4
     },
     {
       "id": "e069",
       "from": "bottleneck:bond_void",
       "to": "process:cmp",
       "relation": "mitigated_by",
-      "stage": "technical_inference",
       "polarity": "positive",
       "evidence": [
         {
           "url": "https://ontoinnovation.com/products/dragonfly-g3/",
-          "source_quality": "technical_source"
+          "source_type": "technical_source"
         }
       ],
-      "note": ""
+      "note": "",
+      "evidence_tier": "technical_inference",
+      "confidence": 0.4
     },
     {
       "id": "e070",
       "from": "process:cmp",
       "to": "material:oxide_bond",
-      "relation": "requires_component_or_material",
-      "stage": "technical_inference",
+      "relation": "requires",
       "polarity": "positive",
       "evidence": [
         {
           "url": "https://ontoinnovation.com/products/dragonfly-g3/",
-          "source_quality": "technical_source"
+          "source_type": "technical_source"
         }
       ],
-      "note": ""
+      "note": "",
+      "evidence_tier": "technical_inference",
+      "confidence": 0.4
     },
     {
       "id": "e071",
       "from": "process:hybrid_bond_qualification",
       "to": "process:surface_activation",
-      "relation": "uses_component_or_equipment",
-      "stage": "technical_inference",
+      "relation": "requires",
       "polarity": "positive",
       "evidence": [
         {
           "url": "https://ontoinnovation.com/products/dragonfly-g3/",
-          "source_quality": "technical_source"
+          "source_type": "technical_source"
         }
       ],
-      "note": ""
+      "note": "",
+      "evidence_tier": "technical_inference",
+      "confidence": 0.4
     },
     {
       "id": "e072",
       "from": "process:hybrid_bond_qualification",
       "to": "process:cmp",
-      "relation": "uses_component_or_equipment",
-      "stage": "technical_inference",
+      "relation": "requires",
       "polarity": "positive",
       "evidence": [
         {
           "url": "https://ontoinnovation.com/products/dragonfly-g3/",
-          "source_quality": "technical_source"
+          "source_type": "technical_source"
         }
       ],
-      "note": ""
+      "note": "",
+      "evidence_tier": "technical_inference",
+      "confidence": 0.4
     },
     {
       "id": "e073",
       "from": "bottleneck:bond_particle",
-      "to": "tech:onto_g3",
+      "to": "process:microbump_metrology",
       "relation": "mitigated_by",
-      "stage": "vendor_claim",
       "polarity": "positive",
       "evidence": [
         {
           "url": "https://ontoinnovation.com/products/dragonfly-g3/",
-          "source_quality": "technical_source"
+          "source_type": "technical_source"
         }
       ],
-      "note": ""
-    },
-    {
-      "id": "e074",
-      "from": "bottleneck:hbm_overlay",
-      "to": "tech:onto_g3",
-      "relation": "mitigated_by",
-      "stage": "vendor_claim",
-      "polarity": "positive",
-      "evidence": [
-        {
-          "url": "https://ontoinnovation.com/products/dragonfly-g3/",
-          "source_quality": "technical_source"
-        }
-      ],
-      "note": ""
+      "note": " [v0.3: tech:onto_g3 → process:microbump_metrology]",
+      "evidence_tier": "vendor_claim",
+      "confidence": 0.55
     },
     {
       "id": "e075",
-      "from": "tech:onto_g3",
+      "from": "product:onto_dragonfly_g3",
       "to": "company:onto",
       "relation": "offered_by",
-      "stage": "issuer_documented",
       "polarity": "positive",
       "evidence": [
         {
           "url": "https://ontoinnovation.com/products/dragonfly-g3/",
-          "source_quality": "official_supplier_specification"
+          "source_type": "official_supplier_specification"
         }
       ],
-      "note": ""
+      "note": "",
+      "evidence_tier": "official_issuer",
+      "confidence": 0.8
     },
     {
       "id": "e076",
       "from": "req:1p6t",
       "to": "component:eml",
-      "relation": "requires_component_or_material",
-      "stage": "technical_inference",
+      "relation": "requires",
       "polarity": "positive",
       "evidence": [
         {
           "url": "https://www.lumentum.com/en/products/eml-200g-pam4-cwdm-laser",
-          "source_quality": "technical_source"
+          "source_type": "technical_source"
         }
       ],
-      "note": ""
+      "note": "",
+      "evidence_tier": "technical_inference",
+      "confidence": 0.4
     },
     {
       "id": "e077",
       "from": "component:eml",
       "to": "material:inp",
-      "relation": "requires_component_or_material",
-      "stage": "technical_inference",
+      "relation": "requires",
       "polarity": "positive",
       "evidence": [
         {
           "url": "https://www.lumentum.com/en/products/eml-200g-pam4-cwdm-laser",
-          "source_quality": "technical_source"
+          "source_type": "technical_source"
         }
       ],
-      "note": ""
+      "note": "",
+      "evidence_tier": "technical_inference",
+      "confidence": 0.4
     },
     {
       "id": "e078",
       "from": "bottleneck:optic_coupling",
       "to": "component:pic",
-      "relation": "requires_component_or_material",
-      "stage": "technical_inference",
+      "relation": "mitigated_by",
       "polarity": "positive",
       "evidence": [
         {
           "url": "https://www.coherent.com/news/press-releases/coherent-demonstrates-next-gen-pluggable-transceiver-ofc-2026",
-          "source_quality": "technical_source"
+          "source_type": "technical_source"
         }
       ],
-      "note": ""
+      "note": "",
+      "evidence_tier": "technical_inference",
+      "confidence": 0.4
     },
     {
       "id": "e079",
       "from": "component:pic",
       "to": "material:silicon_photonics",
-      "relation": "requires_component_or_material",
-      "stage": "technical_inference",
+      "relation": "requires",
       "polarity": "positive",
       "evidence": [
         {
           "url": "https://www.coherent.com/news/press-releases/coherent-demonstrates-next-gen-pluggable-transceiver-ofc-2026",
-          "source_quality": "technical_source"
+          "source_type": "technical_source"
         }
       ],
-      "note": ""
+      "note": "",
+      "evidence_tier": "technical_inference",
+      "confidence": 0.4
     },
     {
       "id": "e080",
       "from": "req:1p6t",
       "to": "component:vcsel",
-      "relation": "requires_component_or_material",
-      "stage": "technology_option",
+      "relation": "requires",
       "polarity": "positive",
       "evidence": [
         {
           "url": "https://www.coherent.com/news/press-releases/coherent-demonstrates-next-gen-pluggable-transceiver-ofc-2026",
-          "source_quality": "technical_source"
+          "source_type": "technical_source"
         }
       ],
-      "note": ""
+      "note": "",
+      "evidence_tier": "technical_inference",
+      "confidence": 0.4
     },
     {
       "id": "e081",
       "from": "req:1p6t",
       "to": "component:osfp",
-      "relation": "requires_component_or_material",
-      "stage": "technical_inference",
+      "relation": "requires",
       "polarity": "positive",
       "evidence": [
         {
           "url": "https://www.coherent.com/news/press-releases/coherent-demonstrates-next-gen-pluggable-transceiver-ofc-2026",
-          "source_quality": "technical_source"
+          "source_type": "technical_source"
         }
       ],
-      "note": ""
+      "note": "",
+      "evidence_tier": "technical_inference",
+      "confidence": 0.4
     },
     {
       "id": "e082",
       "from": "component:fiber_connector",
       "to": "component:fiber_ferrule",
-      "relation": "requires_component_or_material",
-      "stage": "technical_inference",
+      "relation": "requires",
       "polarity": "positive",
       "evidence": [
         {
           "url": "https://www.coherent.com/news/press-releases/coherent-demonstrates-next-gen-pluggable-transceiver-ofc-2026",
-          "source_quality": "technical_source"
+          "source_type": "technical_source"
         }
       ],
-      "note": ""
+      "note": "",
+      "evidence_tier": "technical_inference",
+      "confidence": 0.4
     },
     {
       "id": "e083",
       "from": "bottleneck:optic_ber",
       "to": "process:optical_test",
       "relation": "mitigated_by",
-      "stage": "technical_inference",
       "polarity": "positive",
       "evidence": [
         {
           "url": "https://www.coherent.com/news/press-releases/coherent-demonstrates-next-gen-pluggable-transceiver-ofc-2026",
-          "source_quality": "technical_source"
+          "source_type": "technical_source"
         }
       ],
-      "note": ""
+      "note": "",
+      "evidence_tier": "technical_inference",
+      "confidence": 0.4
     },
     {
       "id": "e084",
       "from": "bottleneck:optic_power",
       "to": "bottleneck:optic_thermal",
       "relation": "creates_bottleneck",
-      "stage": "technical_inference",
       "polarity": "positive",
       "evidence": [
         {
           "url": "https://www.coherent.com/news/press-releases/coherent-demonstrates-next-gen-pluggable-transceiver-ofc-2026",
-          "source_quality": "technical_source"
+          "source_type": "technical_source"
         }
       ],
-      "note": ""
+      "note": "",
+      "evidence_tier": "technical_inference",
+      "confidence": 0.4
     },
     {
       "id": "e085",
       "from": "bottleneck:optic_thermal",
       "to": "component:eml",
       "relation": "mitigated_by",
-      "stage": "technology_option",
       "polarity": "positive",
       "evidence": [
         {
           "url": "https://www.lumentum.com/en/products/eml-200g-pam4-cwdm-laser",
-          "source_quality": "technical_source"
+          "source_type": "technical_source"
         }
       ],
-      "note": ""
-    },
-    {
-      "id": "e086",
-      "from": "component:eml",
-      "to": "tech:lite_eml",
-      "relation": "uses_component_or_equipment",
-      "stage": "issuer_documented",
-      "polarity": "positive",
-      "evidence": [
-        {
-          "url": "https://www.lumentum.com/en/products/eml-200g-pam4-cwdm-laser",
-          "source_quality": "official_supplier_specification"
-        }
-      ],
-      "note": ""
+      "note": "",
+      "evidence_tier": "technical_inference",
+      "confidence": 0.4
     },
     {
       "id": "e087",
-      "from": "tech:lite_eml",
+      "from": "product:lite_eml_200g",
       "to": "company:lite",
       "relation": "offered_by",
-      "stage": "issuer_documented",
       "polarity": "positive",
       "evidence": [
         {
           "url": "https://www.lumentum.com/en/products/eml-200g-pam4-cwdm-laser",
-          "source_quality": "official_supplier_specification"
+          "source_type": "official_supplier_specification"
         }
       ],
-      "note": ""
-    },
-    {
-      "id": "e088",
-      "from": "tech:pluggable",
-      "to": "tech:cohr_1p6t",
-      "relation": "uses_component_or_equipment",
-      "stage": "issuer_documented",
-      "polarity": "positive",
-      "evidence": [
-        {
-          "url": "https://www.coherent.com/news/press-releases/coherent-demonstrates-next-gen-pluggable-transceiver-ofc-2026",
-          "source_quality": "official_supplier_specification"
-        }
-      ],
-      "note": ""
+      "note": "",
+      "evidence_tier": "official_issuer",
+      "confidence": 0.8
     },
     {
       "id": "e089",
-      "from": "tech:cohr_1p6t",
+      "from": "product:cohr_1p6t_transceiver",
       "to": "company:cohr",
       "relation": "offered_by",
-      "stage": "issuer_documented",
       "polarity": "positive",
       "evidence": [
         {
           "url": "https://www.coherent.com/news/press-releases/coherent-demonstrates-next-gen-pluggable-transceiver-ofc-2026",
-          "source_quality": "official_supplier_specification"
+          "source_type": "official_supplier_specification"
         }
       ],
-      "note": ""
+      "note": "",
+      "evidence_tier": "official_issuer",
+      "confidence": 0.8
     },
     {
       "id": "e090",
-      "from": "tech:cohr_1p6t",
+      "from": "product:cohr_1p6t_transceiver",
       "to": "component:pic",
-      "relation": "requires_component_or_material",
-      "stage": "issuer_documented",
+      "relation": "requires",
       "polarity": "positive",
       "evidence": [
         {
           "url": "https://www.coherent.com/news/press-releases/coherent-demonstrates-next-gen-pluggable-transceiver-ofc-2026",
-          "source_quality": "official_supplier_specification"
+          "source_type": "official_supplier_specification"
         }
       ],
-      "note": ""
+      "note": "",
+      "evidence_tier": "official_issuer",
+      "confidence": 0.8
     },
     {
       "id": "e091",
-      "from": "tech:cohr_1p6t",
+      "from": "product:cohr_1p6t_transceiver",
       "to": "component:osfp",
-      "relation": "requires_component_or_material",
-      "stage": "issuer_documented",
+      "relation": "requires",
       "polarity": "positive",
       "evidence": [
         {
           "url": "https://www.coherent.com/news/press-releases/coherent-demonstrates-next-gen-pluggable-transceiver-ofc-2026",
-          "source_quality": "official_supplier_specification"
+          "source_type": "official_supplier_specification"
         }
       ],
-      "note": ""
+      "note": "",
+      "evidence_tier": "official_issuer",
+      "confidence": 0.8
     },
     {
       "id": "e092",
       "from": "req:800v",
       "to": "component:dc_contactor",
-      "relation": "requires_component_or_material",
-      "stage": "technical_inference",
+      "relation": "requires",
       "polarity": "positive",
       "evidence": [
         {
           "url": "https://developer.nvidia.com/blog/?p=100571",
-          "source_quality": "technical_source"
+          "source_type": "technical_source"
         }
       ],
-      "note": ""
+      "note": "",
+      "evidence_tier": "technical_inference",
+      "confidence": 0.4
     },
     {
       "id": "e093",
       "from": "req:800v",
       "to": "component:dc_capacitor",
-      "relation": "requires_component_or_material",
-      "stage": "technical_inference",
+      "relation": "requires",
       "polarity": "positive",
       "evidence": [
         {
           "url": "https://developer.nvidia.com/blog/?p=100571",
-          "source_quality": "technical_source"
+          "source_type": "technical_source"
         }
       ],
-      "note": ""
+      "note": "",
+      "evidence_tier": "technical_inference",
+      "confidence": 0.4
     },
     {
       "id": "e094",
       "from": "bottleneck:conversion",
       "to": "component:gate_driver",
       "relation": "mitigated_by",
-      "stage": "technology_option",
       "polarity": "positive",
       "evidence": [
         {
           "url": "https://developer.nvidia.com/blog/?p=100571",
-          "source_quality": "technical_source"
+          "source_type": "technical_source"
         }
       ],
-      "note": ""
+      "note": "",
+      "evidence_tier": "technical_inference",
+      "confidence": 0.4
     },
     {
       "id": "e095",
       "from": "bottleneck:conversion",
       "to": "component:planar_transformer",
       "relation": "mitigated_by",
-      "stage": "technology_option",
       "polarity": "positive",
       "evidence": [
         {
           "url": "https://developer.nvidia.com/blog/?p=100571",
-          "source_quality": "technical_source"
+          "source_type": "technical_source"
         }
       ],
-      "note": ""
+      "note": "",
+      "evidence_tier": "technical_inference",
+      "confidence": 0.4
     },
     {
       "id": "e096",
       "from": "component:sic_mosfet",
       "to": "material:sic_wafer",
-      "relation": "requires_component_or_material",
-      "stage": "technical_inference",
+      "relation": "requires",
       "polarity": "positive",
       "evidence": [
         {
           "url": "https://developer.nvidia.com/blog/?p=100571",
-          "source_quality": "technical_source"
+          "source_type": "technical_source"
         }
       ],
-      "note": ""
+      "note": "",
+      "evidence_tier": "technical_inference",
+      "confidence": 0.4
     },
     {
       "id": "e097",
       "from": "component:sic_mosfet",
       "to": "component:gate_driver",
-      "relation": "requires_component_or_material",
-      "stage": "technical_inference",
+      "relation": "requires",
       "polarity": "positive",
       "evidence": [
         {
           "url": "https://developer.nvidia.com/blog/?p=100571",
-          "source_quality": "technical_source"
+          "source_type": "technical_source"
         }
       ],
-      "note": ""
+      "note": "",
+      "evidence_tier": "technical_inference",
+      "confidence": 0.4
     },
     {
       "id": "e098",
       "from": "bottleneck:dc_protection",
       "to": "bottleneck:arc_flash",
       "relation": "creates_bottleneck",
-      "stage": "technical_inference",
       "polarity": "positive",
       "evidence": [
         {
           "url": "https://developer.nvidia.com/blog/?p=100571",
-          "source_quality": "technical_source"
+          "source_type": "technical_source"
         }
       ],
-      "note": ""
+      "note": "",
+      "evidence_tier": "technical_inference",
+      "confidence": 0.4
     },
     {
       "id": "e099",
       "from": "bottleneck:arc_flash",
       "to": "component:dc_contactor",
       "relation": "mitigated_by",
-      "stage": "technology_option",
       "polarity": "positive",
       "evidence": [
         {
           "url": "https://developer.nvidia.com/blog/?p=100571",
-          "source_quality": "technical_source"
+          "source_type": "technical_source"
         }
       ],
-      "note": ""
+      "note": "",
+      "evidence_tier": "technical_inference",
+      "confidence": 0.4
     },
     {
       "id": "e100",
       "from": "bottleneck:dc_protection",
       "to": "process:hv_dielectric_test",
       "relation": "mitigated_by",
-      "stage": "technical_inference",
       "polarity": "positive",
       "evidence": [
         {
           "url": "https://developer.nvidia.com/blog/?p=100571",
-          "source_quality": "technical_source"
+          "source_type": "technical_source"
         }
       ],
-      "note": ""
+      "note": "",
+      "evidence_tier": "technical_inference",
+      "confidence": 0.4
     },
     {
       "id": "e101",
       "from": "req:coldplate",
       "to": "component:coldplate",
-      "relation": "requires_component_or_material",
-      "stage": "technical_inference",
+      "relation": "requires",
       "polarity": "positive",
       "evidence": [
         {
           "url": "https://developer.nvidia.com/blog/?p=100571",
-          "source_quality": "technical_source"
+          "source_type": "technical_source"
         }
       ],
-      "note": ""
+      "note": "",
+      "evidence_tier": "technical_inference",
+      "confidence": 0.4
     },
     {
       "id": "e102",
       "from": "bottleneck:liquidcool",
       "to": "process:cdu_pump",
       "relation": "mitigated_by",
-      "stage": "technical_inference",
       "polarity": "positive",
       "evidence": [
         {
           "url": "https://developer.nvidia.com/blog/?p=100571",
-          "source_quality": "technical_source"
+          "source_type": "technical_source"
         }
       ],
-      "note": ""
+      "note": "",
+      "evidence_tier": "technical_inference",
+      "confidence": 0.4
     },
     {
       "id": "e103",
       "from": "tech:cdu",
       "to": "process:cdu_pump",
-      "relation": "uses_component_or_equipment",
-      "stage": "technical_inference",
+      "relation": "requires",
       "polarity": "positive",
       "evidence": [
         {
           "url": "https://developer.nvidia.com/blog/?p=100571",
-          "source_quality": "technical_source"
+          "source_type": "technical_source"
         }
       ],
-      "note": ""
+      "note": "",
+      "evidence_tier": "technical_inference",
+      "confidence": 0.4
     },
     {
       "id": "e104",
-      "from": "tech:vertiv_800v",
+      "from": "product:vrt_800vdc_portfolio",
       "to": "company:vrt",
       "relation": "offered_by",
-      "stage": "issuer_documented",
       "polarity": "positive",
       "evidence": [
         {
           "url": "https://investors.vertiv.com/news/news-details/2025/Vertiv-Accelerates-AI-Infrastructure-Evolution-in-Alignment-with-NVIDIA-800-VDC-Power-Architecture-Announcement/default.aspx",
-          "source_quality": "official_supplier_specification"
+          "source_type": "official_supplier_specification"
         }
       ],
-      "note": ""
+      "note": "",
+      "evidence_tier": "official_issuer",
+      "confidence": 0.8
     },
     {
-      "id": "e105",
-      "from": "bottleneck:conversion",
-      "to": "tech:vertiv_800v",
-      "relation": "mitigated_by",
-      "stage": "vendor_claim",
+      "id": "p_camt_hawk",
+      "from": "product:camt_hawk",
+      "to": "process:microbump_metrology",
+      "relation": "implements",
+      "evidence_tier": "official_issuer",
       "polarity": "positive",
       "evidence": [
         {
-          "url": "https://investors.vertiv.com/news/news-details/2025/Vertiv-Accelerates-AI-Infrastructure-Evolution-in-Alignment-with-NVIDIA-800-VDC-Power-Architecture-Announcement/default.aspx",
-          "source_quality": "technical_source"
+          "url": "https://www.camtek.com/products/hawk/",
+          "source_type": "official_issuer"
         }
       ],
-      "note": ""
+      "note": "제품 ↔ 일반 기술 분리 (v0.3)",
+      "confidence": 0.8
     },
     {
-      "id": "e106",
-      "from": "tech:vertiv_800v",
+      "id": "p_onto_dragonfly_g3",
+      "from": "product:onto_dragonfly_g3",
+      "to": "process:microbump_metrology",
+      "relation": "implements",
+      "evidence_tier": "official_issuer",
+      "polarity": "positive",
+      "evidence": [
+        {
+          "url": "https://ontoinnovation.com/products/dragonfly-g3/",
+          "source_type": "official_issuer"
+        }
+      ],
+      "note": "제품 ↔ 일반 기술 분리 (v0.3)",
+      "confidence": 0.8
+    },
+    {
+      "id": "p_lite_eml_200g",
+      "from": "product:lite_eml_200g",
+      "to": "component:eml",
+      "relation": "implements",
+      "evidence_tier": "official_issuer",
+      "polarity": "positive",
+      "evidence": [
+        {
+          "url": "https://www.lumentum.com/en/products/eml-200g-pam4-cwdm-laser",
+          "source_type": "official_issuer"
+        }
+      ],
+      "note": "제품 ↔ 일반 기술 분리 (v0.3)",
+      "confidence": 0.8
+    },
+    {
+      "id": "p_cohr_1p6t_transceiver",
+      "from": "product:cohr_1p6t_transceiver",
+      "to": "tech:pluggable",
+      "relation": "implements",
+      "evidence_tier": "official_issuer",
+      "polarity": "positive",
+      "evidence": [
+        {
+          "url": "https://www.coherent.com/news/press-releases/coherent-demonstrates-next-gen-pluggable-transceiver-ofc-2026",
+          "source_type": "official_issuer"
+        }
+      ],
+      "note": "제품 ↔ 일반 기술 분리 (v0.3)",
+      "confidence": 0.8
+    },
+    {
+      "id": "p_vrt_800vdc_portfolio",
+      "from": "product:vrt_800vdc_portfolio",
       "to": "tech:sidecar",
-      "relation": "uses_component_or_equipment",
-      "stage": "technology_option",
+      "relation": "implements",
+      "evidence_tier": "official_issuer",
       "polarity": "positive",
       "evidence": [
         {
           "url": "https://investors.vertiv.com/news/news-details/2025/Vertiv-Accelerates-AI-Infrastructure-Evolution-in-Alignment-with-NVIDIA-800-VDC-Power-Architecture-Announcement/default.aspx",
-          "source_quality": "technical_source"
+          "source_type": "official_issuer"
         }
       ],
-      "note": ""
+      "note": "제품 ↔ 일반 기술 분리 (v0.3)",
+      "confidence": 0.8
+    },
+    {
+      "id": "p_aehr_fox_xp",
+      "from": "product:aehr_fox_xp",
+      "to": "process:wafer_level_burn_in",
+      "relation": "implements",
+      "evidence_tier": "official_issuer",
+      "polarity": "positive",
+      "evidence": [
+        {
+          "url": "https://ir.aehr.com/",
+          "source_type": "official_issuer"
+        }
+      ],
+      "note": "제품 ↔ 일반 기술 분리 (v0.3)",
+      "confidence": 0.8
+    },
+    {
+      "id": "p_poet_optical_interposer",
+      "from": "product:poet_optical_interposer",
+      "to": "tech:optical_interposer",
+      "relation": "implements",
+      "evidence_tier": "official_issuer",
+      "polarity": "positive",
+      "evidence": [
+        {
+          "url": "https://www.poet-technologies.com/news/poet-technologies-and-lessengers-expand-partnership-to-deliver-1-6t-2xdr4-optical-transceivers-for-ai-network-connectivity",
+          "source_type": "official_issuer"
+        }
+      ],
+      "note": "제품 ↔ 일반 기술 분리 (v0.3)",
+      "confidence": 0.8
+    },
+    {
+      "id": "p_lessengers_dow",
+      "from": "product:lessengers_dow",
+      "to": "tech:dow",
+      "relation": "implements",
+      "evidence_tier": "official_issuer",
+      "polarity": "positive",
+      "evidence": [
+        {
+          "url": "https://www.poet-technologies.com/news/poet-technologies-and-lessengers-expand-partnership-to-deliver-1-6t-2xdr4-optical-transceivers-for-ai-network-connectivity",
+          "source_type": "official_issuer"
+        }
+      ],
+      "note": "제품 ↔ 일반 기술 분리 (v0.3)",
+      "confidence": 0.8
+    },
+    {
+      "id": "n001",
+      "from": "gen:hbm3e",
+      "to": "gen:hbm4",
+      "relation": "succeeds",
+      "evidence_tier": "standard_body",
+      "polarity": "positive",
+      "evidence": [
+        {
+          "url": "https://www.storagenewsletter.com/2025/04/17/jedec-and-industry-leaders-collaborate-to-release-jesd270-4-hbm4-standard/",
+          "source_type": "standard_body_via_press",
+          "published_at": "2025-04-17",
+          "date_precision": "day",
+          "note": "JEDEC JESD270-4 발행 보도자료 전재. 원문 jedec.org 는 등록 필요"
+        }
+      ],
+      "note": "",
+      "confidence": 0.9
+    },
+    {
+      "id": "n002",
+      "from": "gen:hbm4",
+      "to": "gen:hbm4e",
+      "relation": "succeeds",
+      "evidence_tier": "third_party_report",
+      "polarity": "positive",
+      "evidence": [
+        {
+          "url": "https://bits-chips.com/article/besi-faces-longer-wait-as-sk-hynix-pushes-hybrid-bonding-to-hbm5/",
+          "source_type": "third_party_report",
+          "published_at": "2026-08-26",
+          "date_precision": "day",
+          "note": "Hot Chips 2026 SK hynix VP 발언 보도: HBM4·HBM4E 는 microbump 유지, 하이브리드 본딩은 HBM5. JEDEC 적층 높이 720→775µm"
+        }
+      ],
+      "note": "",
+      "confidence": 0.6
+    },
+    {
+      "id": "n003",
+      "from": "gen:hbm4e",
+      "to": "gen:hbm5",
+      "relation": "succeeds",
+      "evidence_tier": "third_party_report",
+      "polarity": "positive",
+      "evidence": [
+        {
+          "url": "https://bits-chips.com/article/besi-faces-longer-wait-as-sk-hynix-pushes-hybrid-bonding-to-hbm5/",
+          "source_type": "third_party_report",
+          "published_at": "2026-08-26",
+          "date_precision": "day",
+          "note": "Hot Chips 2026 SK hynix VP 발언 보도: HBM4·HBM4E 는 microbump 유지, 하이브리드 본딩은 HBM5. JEDEC 적층 높이 720→775µm"
+        }
+      ],
+      "note": "",
+      "confidence": 0.6
+    },
+    {
+      "id": "n004",
+      "from": "gen:hbm4",
+      "to": "std:jesd270_4",
+      "relation": "specified_by",
+      "evidence_tier": "standard_body",
+      "polarity": "positive",
+      "evidence": [
+        {
+          "url": "https://www.storagenewsletter.com/2025/04/17/jedec-and-industry-leaders-collaborate-to-release-jesd270-4-hbm4-standard/",
+          "source_type": "standard_body_via_press",
+          "published_at": "2025-04-17",
+          "date_precision": "day",
+          "note": "JEDEC JESD270-4 발행 보도자료 전재. 원문 jedec.org 는 등록 필요"
+        }
+      ],
+      "note": "8Gb/s/pin, 2048-bit, 32채널, 4~16-high, 최대 64GB",
+      "confidence": 0.9
+    },
+    {
+      "id": "n005",
+      "from": "std:jesd270_4",
+      "to": "req:hbm_io",
+      "relation": "drives_requirement",
+      "evidence_tier": "standard_body",
+      "polarity": "positive",
+      "evidence": [
+        {
+          "url": "https://www.storagenewsletter.com/2025/04/17/jedec-and-industry-leaders-collaborate-to-release-jesd270-4-hbm4-standard/",
+          "source_type": "standard_body_via_press",
+          "published_at": "2025-04-17",
+          "date_precision": "day",
+          "note": "JEDEC JESD270-4 발행 보도자료 전재. 원문 jedec.org 는 등록 필요"
+        }
+      ],
+      "note": "",
+      "confidence": 0.9
+    },
+    {
+      "id": "n006",
+      "from": "gen:hbm4",
+      "to": "req:hbm_stack",
+      "relation": "drives_requirement",
+      "evidence_tier": "standard_body",
+      "polarity": "positive",
+      "evidence": [
+        {
+          "url": "https://www.storagenewsletter.com/2025/04/17/jedec-and-industry-leaders-collaborate-to-release-jesd270-4-hbm4-standard/",
+          "source_type": "standard_body_via_press",
+          "published_at": "2025-04-17",
+          "date_precision": "day",
+          "note": "JEDEC JESD270-4 발행 보도자료 전재. 원문 jedec.org 는 등록 필요"
+        }
+      ],
+      "note": "16-high 까지 규격화",
+      "confidence": 0.9
+    },
+    {
+      "id": "n010",
+      "from": "gen:hbm4",
+      "to": "company:skhynix",
+      "relation": "offered_by",
+      "evidence_tier": "third_party_report",
+      "polarity": "positive",
+      "evidence": [
+        {
+          "url": "https://www.koreatimes.co.kr/amp/business/tech-science/20250912/sk-hynix-completes-hbm4-development-mass-production-ready",
+          "source_type": "third_party_report",
+          "published_at": "2025-09-12",
+          "date_precision": "day",
+          "note": "SK hynix 발표(2,048 I/O, 10Gbps, Advanced MR-MUF, 1b nm) 보도"
+        }
+      ],
+      "note": "2025-09 양산 준비 완료 발표",
+      "confidence": 0.6
+    },
+    {
+      "id": "n011",
+      "from": "gen:hbm4",
+      "to": "company:mu",
+      "relation": "offered_by",
+      "evidence_tier": "official_issuer",
+      "polarity": "positive",
+      "evidence": [
+        {
+          "url": "https://micron.gcs-web.com/node/48886",
+          "source_type": "official_issuer",
+          "published_at": "2025-06-10",
+          "date_precision": "day",
+          "note": "Micron HBM4 36GB 12-high 샘플 출하, 2026 램프"
+        }
+      ],
+      "note": "36GB 12-high 샘플 출하, 2026 램프",
+      "confidence": 0.8
+    },
+    {
+      "id": "n012",
+      "from": "gen:hbm4",
+      "to": "company:samsung",
+      "relation": "offered_by",
+      "evidence_tier": "third_party_report",
+      "polarity": "positive",
+      "evidence": [
+        {
+          "url": "https://www.koreatimes.co.kr/amp/business/tech-science/20250912/sk-hynix-completes-hbm4-development-mass-production-ready",
+          "source_type": "third_party_report",
+          "published_at": "2025-09-12",
+          "date_precision": "day",
+          "note": "SK hynix 발표(2,048 I/O, 10Gbps, Advanced MR-MUF, 1b nm) 보도"
+        }
+      ],
+      "note": "3사 모두 NVIDIA 인증 진행 보도",
+      "confidence": 0.6
+    },
+    {
+      "id": "n013",
+      "from": "company:skhynix",
+      "to": "company:nvda",
+      "relation": "qualifying_with",
+      "evidence_tier": "third_party_report",
+      "polarity": "positive",
+      "evidence": [
+        {
+          "url": "https://www.koreatimes.co.kr/amp/business/tech-science/20250912/sk-hynix-completes-hbm4-development-mass-production-ready",
+          "source_type": "third_party_report",
+          "published_at": "2025-09-12",
+          "date_precision": "day",
+          "note": "SK hynix 발표(2,048 I/O, 10Gbps, Advanced MR-MUF, 1b nm) 보도"
+        }
+      ],
+      "note": "Rubin 용 HBM4 인증 진행 (보도)",
+      "about": "gen:hbm4",
+      "confidence": 0.6
+    },
+    {
+      "id": "n014",
+      "from": "company:mu",
+      "to": "company:nvda",
+      "relation": "qualifying_with",
+      "evidence_tier": "third_party_report",
+      "polarity": "positive",
+      "evidence": [
+        {
+          "url": "https://www.koreatimes.co.kr/amp/business/tech-science/20250912/sk-hynix-completes-hbm4-development-mass-production-ready",
+          "source_type": "third_party_report",
+          "published_at": "2025-09-12",
+          "date_precision": "day",
+          "note": "SK hynix 발표(2,048 I/O, 10Gbps, Advanced MR-MUF, 1b nm) 보도"
+        }
+      ],
+      "note": "",
+      "about": "gen:hbm4",
+      "confidence": 0.6
+    },
+    {
+      "id": "n015",
+      "from": "company:samsung",
+      "to": "company:nvda",
+      "relation": "qualifying_with",
+      "evidence_tier": "third_party_report",
+      "polarity": "positive",
+      "evidence": [
+        {
+          "url": "https://www.koreatimes.co.kr/amp/business/tech-science/20250912/sk-hynix-completes-hbm4-development-mass-production-ready",
+          "source_type": "third_party_report",
+          "published_at": "2025-09-12",
+          "date_precision": "day",
+          "note": "SK hynix 발표(2,048 I/O, 10Gbps, Advanced MR-MUF, 1b nm) 보도"
+        }
+      ],
+      "note": "",
+      "about": "gen:hbm4",
+      "confidence": 0.6
+    },
+    {
+      "id": "n020",
+      "from": "company:skhynix",
+      "to": "tech:tcb",
+      "relation": "adopts",
+      "evidence_tier": "third_party_report",
+      "polarity": "positive",
+      "evidence": [
+        {
+          "url": "https://www.koreatimes.co.kr/amp/business/tech-science/20250912/sk-hynix-completes-hbm4-development-mass-production-ready",
+          "source_type": "third_party_report",
+          "published_at": "2025-09-12",
+          "date_precision": "day",
+          "note": "SK hynix 발표(2,048 I/O, 10Gbps, Advanced MR-MUF, 1b nm) 보도"
+        }
+      ],
+      "note": "HBM4 는 Advanced MR-MUF + 기존 접합 유지",
+      "confidence": 0.6
+    },
+    {
+      "id": "n021",
+      "from": "company:skhynix",
+      "to": "tech:hybrid_bond",
+      "relation": "defers",
+      "evidence_tier": "third_party_report",
+      "polarity": "negative",
+      "evidence": [
+        {
+          "url": "https://bits-chips.com/article/besi-faces-longer-wait-as-sk-hynix-pushes-hybrid-bonding-to-hbm5/",
+          "source_type": "third_party_report",
+          "published_at": "2026-08-26",
+          "date_precision": "day",
+          "note": "Hot Chips 2026 SK hynix VP 발언 보도: HBM4·HBM4E 는 microbump 유지, 하이브리드 본딩은 HBM5. JEDEC 적층 높이 720→775µm"
+        }
+      ],
+      "note": "HBM4·HBM4E 는 microbump, 하이브리드 본딩은 HBM5 (Hot Chips 2026)",
+      "confidence": 0.6
+    },
+    {
+      "id": "n022",
+      "from": "gen:hbm5",
+      "to": "tech:hybrid_bond",
+      "relation": "adopts",
+      "evidence_tier": "hypothesis",
+      "polarity": "conditional",
+      "evidence": [
+        {
+          "url": "https://bits-chips.com/article/besi-faces-longer-wait-as-sk-hynix-pushes-hybrid-bonding-to-hbm5/",
+          "source_type": "third_party_report",
+          "published_at": "2026-08-26",
+          "date_precision": "day",
+          "note": "Hot Chips 2026 SK hynix VP 발언 보도: HBM4·HBM4E 는 microbump 유지, 하이브리드 본딩은 HBM5. JEDEC 적층 높이 720→775µm"
+        }
+      ],
+      "note": "세대 미도래. 16~20단 Cu-Cu 수율이 선결",
+      "confidence": 0.2
+    },
+    {
+      "id": "n023",
+      "from": "tech:hybrid_bond",
+      "to": "component:microbump",
+      "relation": "displaces",
+      "evidence_tier": "technical_inference",
+      "polarity": "negative",
+      "evidence": [
+        {
+          "url": "https://bits-chips.com/article/besi-faces-longer-wait-as-sk-hynix-pushes-hybrid-bonding-to-hbm5/",
+          "source_type": "third_party_report",
+          "published_at": "2026-08-26",
+          "date_precision": "day",
+          "note": "Hot Chips 2026 SK hynix VP 발언 보도: HBM4·HBM4E 는 microbump 유지, 하이브리드 본딩은 HBM5. JEDEC 적층 높이 720→775µm"
+        }
+      ],
+      "note": "채택 시 범프 검사 수요 구조 변화 — 시점은 HBM5 이후",
+      "confidence": 0.4
+    },
+    {
+      "id": "n024",
+      "from": "equipment:hybrid_bonder",
+      "to": "company:besi",
+      "relation": "offered_by",
+      "evidence_tier": "official_issuer",
+      "polarity": "positive",
+      "evidence": [
+        {
+          "url": "https://www.sec.gov/Archives/edgar/data/6951/000119312525080269/d939298dex991.htm",
+          "source_type": "official_issuer",
+          "published_at": "2025-04-14",
+          "date_precision": "day",
+          "note": "Applied Materials 8-K EX-99.1: BESI 지분 9% 취득, Cu-Cu 하이브리드 본딩 장비 공동개발"
+        }
+      ],
+      "note": "",
+      "confidence": 0.8
+    },
+    {
+      "id": "n025",
+      "from": "company:amat",
+      "to": "company:besi",
+      "relation": "invests_in",
+      "evidence_tier": "official_issuer",
+      "polarity": "positive",
+      "evidence": [
+        {
+          "url": "https://www.sec.gov/Archives/edgar/data/6951/000119312525080269/d939298dex991.htm",
+          "source_type": "official_issuer",
+          "published_at": "2025-04-14",
+          "date_precision": "day",
+          "note": "Applied Materials 8-K EX-99.1: BESI 지분 9% 취득, Cu-Cu 하이브리드 본딩 장비 공동개발"
+        }
+      ],
+      "note": "9% 지분, 2020~ 공동개발",
+      "confidence": 0.8
+    },
+    {
+      "id": "n026",
+      "from": "bottleneck:bond_void",
+      "to": "equipment:hybrid_bonder",
+      "relation": "mitigated_by",
+      "evidence_tier": "technical_inference",
+      "polarity": "positive",
+      "evidence": [
+        {
+          "url": "https://www.sec.gov/Archives/edgar/data/6951/000119312525080269/d939298dex991.htm",
+          "source_type": "official_issuer",
+          "published_at": "2025-04-14",
+          "date_precision": "day",
+          "note": "Applied Materials 8-K EX-99.1: BESI 지분 9% 취득, Cu-Cu 하이브리드 본딩 장비 공동개발"
+        }
+      ],
+      "note": "",
+      "confidence": 0.4
+    },
+    {
+      "id": "n026b",
+      "from": "tech:hybrid_bond",
+      "to": "equipment:hybrid_bonder",
+      "relation": "requires",
+      "evidence_tier": "official_issuer",
+      "polarity": "positive",
+      "evidence": [
+        {
+          "url": "https://www.sec.gov/Archives/edgar/data/6951/000119312525080269/d939298dex991.htm",
+          "source_type": "official_issuer",
+          "published_at": "2025-04-14",
+          "date_precision": "day",
+          "note": "Applied Materials 8-K EX-99.1: BESI 지분 9% 취득, Cu-Cu 하이브리드 본딩 장비 공동개발"
+        }
+      ],
+      "note": "Cu-Cu 접합 장비 (AMAT·BESI 공동개발)",
+      "confidence": 0.8
+    },
+    {
+      "id": "n028",
+      "from": "company:camt",
+      "to": "company:onto",
+      "relation": "competes_with",
+      "evidence_tier": "technical_inference",
+      "polarity": "positive",
+      "evidence": [
+        {
+          "url": "https://www.storagenewsletter.com/2025/04/17/jedec-and-industry-leaders-collaborate-to-release-jesd270-4-hbm4-standard/",
+          "source_type": "standard_body_via_press",
+          "published_at": "2025-04-17",
+          "date_precision": "day",
+          "note": "JEDEC JESD270-4 발행 보도자료 전재. 원문 jedec.org 는 등록 필요"
+        }
+      ],
+      "note": "2D/3D 범프 검사 동일 공정",
+      "confidence": 0.4
+    },
+    {
+      "id": "n029",
+      "from": "company:camt",
+      "to": "company:klac",
+      "relation": "competes_with",
+      "evidence_tier": "technical_inference",
+      "polarity": "positive",
+      "evidence": [
+        {
+          "url": "https://www.storagenewsletter.com/2025/04/17/jedec-and-industry-leaders-collaborate-to-release-jesd270-4-hbm4-standard/",
+          "source_type": "standard_body_via_press",
+          "published_at": "2025-04-17",
+          "date_precision": "day",
+          "note": "JEDEC JESD270-4 발행 보도자료 전재. 원문 jedec.org 는 등록 필요"
+        }
+      ],
+      "note": "",
+      "confidence": 0.4
+    },
+    {
+      "id": "n030",
+      "from": "gen:800g",
+      "to": "gen:1p6t",
+      "relation": "succeeds",
+      "evidence_tier": "standard_body",
+      "polarity": "positive",
+      "evidence": [
+        {
+          "url": "https://standards.ieee.org/ieee/802.3dj/11115/",
+          "source_type": "standard_body",
+          "published_at": null,
+          "date_precision": "unknown",
+          "note": "P802.3dj 1.6T PAR 페이지"
+        }
+      ],
+      "note": "",
+      "confidence": 0.9
+    },
+    {
+      "id": "n031",
+      "from": "gen:1p6t",
+      "to": "std:ieee_802_3dj",
+      "relation": "specified_by",
+      "evidence_tier": "standard_body",
+      "polarity": "positive",
+      "evidence": [
+        {
+          "url": "https://standards.ieee.org/ieee/802.3dj/11115/",
+          "source_type": "standard_body",
+          "published_at": null,
+          "date_precision": "unknown",
+          "note": "P802.3dj 1.6T PAR 페이지"
+        }
+      ],
+      "note": "",
+      "confidence": 0.9
+    },
+    {
+      "id": "n032",
+      "from": "gen:1p6t",
+      "to": "req:1p6t",
+      "relation": "drives_requirement",
+      "evidence_tier": "standard_body",
+      "polarity": "positive",
+      "evidence": [
+        {
+          "url": "https://standards.ieee.org/ieee/802.3dj/11115/",
+          "source_type": "standard_body",
+          "published_at": null,
+          "date_precision": "unknown",
+          "note": "P802.3dj 1.6T PAR 페이지"
+        }
+      ],
+      "note": "",
+      "confidence": 0.9
+    },
+    {
+      "id": "n033",
+      "from": "company:nvda",
+      "to": "tech:cpo",
+      "relation": "adopts",
+      "evidence_tier": "official_issuer",
+      "polarity": "positive",
+      "evidence": [
+        {
+          "url": "https://investor.nvidia.com/news/press-release-details/2025/NVIDIA-Announces-Spectrum-X-Photonics-Co-Packaged-Optics-Networking-Switches-to-Scale-AI-Factories-to-Millions-of-GPUs/default.aspx",
+          "source_type": "official_issuer",
+          "published_at": "2025-03-18",
+          "date_precision": "day",
+          "note": "NVIDIA CPO 스위치 발표. 파트너 TSMC·Coherent·Lumentum·Fabrinet·Corning 등; pluggable 은 보완재로 명시"
+        }
+      ],
+      "note": "Quantum-X 2025, Spectrum-X 2026 출하 계획 — 당사 발표",
+      "confidence": 0.8
+    },
+    {
+      "id": "n034",
+      "from": "tech:cpo",
+      "to": "tech:pluggable",
+      "relation": "displaces",
+      "evidence_tier": "vendor_claim",
+      "polarity": "conditional",
+      "evidence": [
+        {
+          "url": "https://investor.nvidia.com/news/press-release-details/2025/NVIDIA-Announces-Spectrum-X-Photonics-Co-Packaged-Optics-Networking-Switches-to-Scale-AI-Factories-to-Millions-of-GPUs/default.aspx",
+          "source_type": "official_issuer",
+          "published_at": "2025-03-18",
+          "date_precision": "day",
+          "note": "NVIDIA CPO 스위치 발표. 파트너 TSMC·Coherent·Lumentum·Fabrinet·Corning 등; pluggable 은 보완재로 명시"
+        }
+      ],
+      "note": "NVIDIA 는 pluggable 을 보완재로 명시. 스케일아웃 일부 대체 가능성",
+      "confidence": 0.44
+    },
+    {
+      "id": "n035",
+      "from": "company:cohr",
+      "to": "company:nvda",
+      "relation": "qualifying_with",
+      "evidence_tier": "customer_statement",
+      "polarity": "positive",
+      "evidence": [
+        {
+          "url": "https://investor.nvidia.com/news/press-release-details/2025/NVIDIA-Announces-Spectrum-X-Photonics-Co-Packaged-Optics-Networking-Switches-to-Scale-AI-Factories-to-Millions-of-GPUs/default.aspx",
+          "source_type": "official_issuer",
+          "published_at": "2025-03-18",
+          "date_precision": "day",
+          "note": "NVIDIA CPO 스위치 발표. 파트너 TSMC·Coherent·Lumentum·Fabrinet·Corning 등; pluggable 은 보완재로 명시"
+        }
+      ],
+      "note": "CPO 생태계 파트너 명단",
+      "about": "tech:cpo",
+      "confidence": 0.8
+    },
+    {
+      "id": "n036",
+      "from": "company:lite",
+      "to": "company:nvda",
+      "relation": "qualifying_with",
+      "evidence_tier": "customer_statement",
+      "polarity": "positive",
+      "evidence": [
+        {
+          "url": "https://investor.nvidia.com/news/press-release-details/2025/NVIDIA-Announces-Spectrum-X-Photonics-Co-Packaged-Optics-Networking-Switches-to-Scale-AI-Factories-to-Millions-of-GPUs/default.aspx",
+          "source_type": "official_issuer",
+          "published_at": "2025-03-18",
+          "date_precision": "day",
+          "note": "NVIDIA CPO 스위치 발표. 파트너 TSMC·Coherent·Lumentum·Fabrinet·Corning 등; pluggable 은 보완재로 명시"
+        }
+      ],
+      "note": "",
+      "about": "tech:cpo",
+      "confidence": 0.8
+    },
+    {
+      "id": "n037",
+      "from": "company:fn",
+      "to": "company:nvda",
+      "relation": "qualifying_with",
+      "evidence_tier": "customer_statement",
+      "polarity": "positive",
+      "evidence": [
+        {
+          "url": "https://investor.nvidia.com/news/press-release-details/2025/NVIDIA-Announces-Spectrum-X-Photonics-Co-Packaged-Optics-Networking-Switches-to-Scale-AI-Factories-to-Millions-of-GPUs/default.aspx",
+          "source_type": "official_issuer",
+          "published_at": "2025-03-18",
+          "date_precision": "day",
+          "note": "NVIDIA CPO 스위치 발표. 파트너 TSMC·Coherent·Lumentum·Fabrinet·Corning 등; pluggable 은 보완재로 명시"
+        }
+      ],
+      "note": "",
+      "about": "tech:cpo",
+      "confidence": 0.8
+    },
+    {
+      "id": "n038",
+      "from": "product:credo_aec",
+      "to": "component:aec",
+      "relation": "implements",
+      "evidence_tier": "vendor_claim",
+      "polarity": "positive",
+      "evidence": [
+        {
+          "url": "https://credosemi.com/?p=21",
+          "source_type": "vendor_claim",
+          "published_at": null,
+          "date_precision": "unknown",
+          "note": "Credo HiWire AEC 제품 페이지: 단거리에서 광모듈 대체"
+        }
+      ],
+      "note": "",
+      "confidence": 0.55
+    },
+    {
+      "id": "n039",
+      "from": "product:credo_aec",
+      "to": "company:crdo",
+      "relation": "offered_by",
+      "evidence_tier": "vendor_claim",
+      "polarity": "positive",
+      "evidence": [
+        {
+          "url": "https://credosemi.com/?p=21",
+          "source_type": "vendor_claim",
+          "published_at": null,
+          "date_precision": "unknown",
+          "note": "Credo HiWire AEC 제품 페이지: 단거리에서 광모듈 대체"
+        }
+      ],
+      "note": "",
+      "confidence": 0.55
+    },
+    {
+      "id": "n040",
+      "from": "component:aec",
+      "to": "tech:pluggable",
+      "relation": "substitutes_for",
+      "evidence_tier": "vendor_claim",
+      "polarity": "conditional",
+      "evidence": [
+        {
+          "url": "https://credosemi.com/?p=21",
+          "source_type": "vendor_claim",
+          "published_at": null,
+          "date_precision": "unknown",
+          "note": "Credo HiWire AEC 제품 페이지: 단거리에서 광모듈 대체"
+        }
+      ],
+      "note": "단거리(랙 내·인접 랙)에서만",
+      "confidence": 0.44
+    },
+    {
+      "id": "n041",
+      "from": "company:cohr",
+      "to": "company:lite",
+      "relation": "competes_with",
+      "evidence_tier": "technical_inference",
+      "polarity": "positive",
+      "evidence": [
+        {
+          "url": "https://investor.nvidia.com/news/press-release-details/2025/NVIDIA-Announces-Spectrum-X-Photonics-Co-Packaged-Optics-Networking-Switches-to-Scale-AI-Factories-to-Millions-of-GPUs/default.aspx",
+          "source_type": "official_issuer",
+          "published_at": "2025-03-18",
+          "date_precision": "day",
+          "note": "NVIDIA CPO 스위치 발표. 파트너 TSMC·Coherent·Lumentum·Fabrinet·Corning 등; pluggable 은 보완재로 명시"
+        }
+      ],
+      "note": "",
+      "confidence": 0.4
+    },
+    {
+      "id": "n050",
+      "from": "gen:54vdc",
+      "to": "gen:800vdc",
+      "relation": "succeeds",
+      "evidence_tier": "customer_statement",
+      "polarity": "positive",
+      "evidence": [
+        {
+          "url": "https://developer.nvidia.com/blog/nvidia-800-v-hvdc-architecture-will-power-the-next-Generation-of-ai-factories",
+          "source_type": "customer_statement",
+          "published_at": "2025-05-20",
+          "date_precision": "day",
+          "note": "NVIDIA 800VDC 아키텍처·1MW 랙(2027)·구리 45% 절감. 파트너: ADI, Infineon, Innoscience, MPS, Navitas, onsemi, Renesas, ROHM, ST, TI / Delta, Flex, Lead Wealth, LiteOn, Megmeet / Eaton, Schneider, Vertiv"
+        }
+      ],
+      "note": "",
+      "confidence": 0.8
+    },
+    {
+      "id": "n051",
+      "from": "gen:800vdc",
+      "to": "std:ocp_lvdc",
+      "relation": "specified_by",
+      "evidence_tier": "standard_body",
+      "polarity": "positive",
+      "evidence": [
+        {
+          "url": "https://www.opencompute.org/projects/data-center-facility/power-distribution/",
+          "source_type": "standard_body",
+          "published_at": "2026-09",
+          "date_precision": "month",
+          "note": "OCP LVDC White Paper v1.1.0"
+        }
+      ],
+      "note": "",
+      "confidence": 0.9
+    },
+    {
+      "id": "n052",
+      "from": "gen:800vdc",
+      "to": "req:800v",
+      "relation": "drives_requirement",
+      "evidence_tier": "customer_statement",
+      "polarity": "positive",
+      "evidence": [
+        {
+          "url": "https://developer.nvidia.com/blog/nvidia-800-v-hvdc-architecture-will-power-the-next-Generation-of-ai-factories",
+          "source_type": "customer_statement",
+          "published_at": "2025-05-20",
+          "date_precision": "day",
+          "note": "NVIDIA 800VDC 아키텍처·1MW 랙(2027)·구리 45% 절감. 파트너: ADI, Infineon, Innoscience, MPS, Navitas, onsemi, Renesas, ROHM, ST, TI / Delta, Flex, Lead Wealth, LiteOn, Megmeet / Eaton, Schneider, Vertiv"
+        }
+      ],
+      "note": "1MW 랙 2027, 구리 최대 45% 절감 (NVIDIA 주장)",
+      "confidence": 0.8
+    },
+    {
+      "id": "n053",
+      "from": "company:nvda",
+      "to": "gen:800vdc",
+      "relation": "adopts",
+      "evidence_tier": "customer_statement",
+      "polarity": "positive",
+      "evidence": [
+        {
+          "url": "https://developer.nvidia.com/blog/nvidia-800-v-hvdc-architecture-will-power-the-next-Generation-of-ai-factories",
+          "source_type": "customer_statement",
+          "published_at": "2025-05-20",
+          "date_precision": "day",
+          "note": "NVIDIA 800VDC 아키텍처·1MW 랙(2027)·구리 45% 절감. 파트너: ADI, Infineon, Innoscience, MPS, Navitas, onsemi, Renesas, ROHM, ST, TI / Delta, Flex, Lead Wealth, LiteOn, Megmeet / Eaton, Schneider, Vertiv"
+        }
+      ],
+      "note": "",
+      "confidence": 0.8
+    },
+    {
+      "id": "n054",
+      "from": "company:nvts",
+      "to": "company:nvda",
+      "relation": "qualifying_with",
+      "evidence_tier": "official_issuer",
+      "polarity": "positive",
+      "evidence": [
+        {
+          "url": "https://ir.navitassemi.com/news-releases/news-release-details/nvidia-selects-navitas-collaborate-next-generation-800-v-hvdc",
+          "source_type": "official_issuer",
+          "published_at": "2025-05-21",
+          "date_precision": "day",
+          "note": "Navitas: GaN·SiC 가 NVIDIA 800V HVDC 지원에 선정 — 협업 단계, 수주·매출 언급 없음"
+        }
+      ],
+      "note": "협업 선정. 수주·매출 아님",
+      "about": "gen:800vdc",
+      "confidence": 0.8
+    },
+    {
+      "id": "n055",
+      "from": "company:on",
+      "to": "company:nvda",
+      "relation": "qualifying_with",
+      "evidence_tier": "customer_statement",
+      "polarity": "positive",
+      "evidence": [
+        {
+          "url": "https://developer.nvidia.com/blog/nvidia-800-v-hvdc-architecture-will-power-the-next-Generation-of-ai-factories",
+          "source_type": "customer_statement",
+          "published_at": "2025-05-20",
+          "date_precision": "day",
+          "note": "NVIDIA 800VDC 아키텍처·1MW 랙(2027)·구리 45% 절감. 파트너: ADI, Infineon, Innoscience, MPS, Navitas, onsemi, Renesas, ROHM, ST, TI / Delta, Flex, Lead Wealth, LiteOn, Megmeet / Eaton, Schneider, Vertiv"
+        }
+      ],
+      "note": "",
+      "about": "gen:800vdc",
+      "confidence": 0.8
+    },
+    {
+      "id": "n056",
+      "from": "company:mpwr",
+      "to": "company:nvda",
+      "relation": "qualifying_with",
+      "evidence_tier": "customer_statement",
+      "polarity": "positive",
+      "evidence": [
+        {
+          "url": "https://developer.nvidia.com/blog/nvidia-800-v-hvdc-architecture-will-power-the-next-Generation-of-ai-factories",
+          "source_type": "customer_statement",
+          "published_at": "2025-05-20",
+          "date_precision": "day",
+          "note": "NVIDIA 800VDC 아키텍처·1MW 랙(2027)·구리 45% 절감. 파트너: ADI, Infineon, Innoscience, MPS, Navitas, onsemi, Renesas, ROHM, ST, TI / Delta, Flex, Lead Wealth, LiteOn, Megmeet / Eaton, Schneider, Vertiv"
+        }
+      ],
+      "note": "",
+      "about": "gen:800vdc",
+      "confidence": 0.8
+    },
+    {
+      "id": "n057",
+      "from": "company:txn",
+      "to": "company:nvda",
+      "relation": "qualifying_with",
+      "evidence_tier": "customer_statement",
+      "polarity": "positive",
+      "evidence": [
+        {
+          "url": "https://developer.nvidia.com/blog/nvidia-800-v-hvdc-architecture-will-power-the-next-Generation-of-ai-factories",
+          "source_type": "customer_statement",
+          "published_at": "2025-05-20",
+          "date_precision": "day",
+          "note": "NVIDIA 800VDC 아키텍처·1MW 랙(2027)·구리 45% 절감. 파트너: ADI, Infineon, Innoscience, MPS, Navitas, onsemi, Renesas, ROHM, ST, TI / Delta, Flex, Lead Wealth, LiteOn, Megmeet / Eaton, Schneider, Vertiv"
+        }
+      ],
+      "note": "",
+      "about": "gen:800vdc",
+      "confidence": 0.8
+    },
+    {
+      "id": "n058",
+      "from": "company:etn",
+      "to": "company:nvda",
+      "relation": "qualifying_with",
+      "evidence_tier": "customer_statement",
+      "polarity": "positive",
+      "evidence": [
+        {
+          "url": "https://developer.nvidia.com/blog/nvidia-800-v-hvdc-architecture-will-power-the-next-Generation-of-ai-factories",
+          "source_type": "customer_statement",
+          "published_at": "2025-05-20",
+          "date_precision": "day",
+          "note": "NVIDIA 800VDC 아키텍처·1MW 랙(2027)·구리 45% 절감. 파트너: ADI, Infineon, Innoscience, MPS, Navitas, onsemi, Renesas, ROHM, ST, TI / Delta, Flex, Lead Wealth, LiteOn, Megmeet / Eaton, Schneider, Vertiv"
+        }
+      ],
+      "note": "",
+      "about": "gen:800vdc",
+      "confidence": 0.8
+    },
+    {
+      "id": "n059",
+      "from": "company:vrt",
+      "to": "company:nvda",
+      "relation": "qualifying_with",
+      "evidence_tier": "customer_statement",
+      "polarity": "positive",
+      "evidence": [
+        {
+          "url": "https://developer.nvidia.com/blog/nvidia-800-v-hvdc-architecture-will-power-the-next-Generation-of-ai-factories",
+          "source_type": "customer_statement",
+          "published_at": "2025-05-20",
+          "date_precision": "day",
+          "note": "NVIDIA 800VDC 아키텍처·1MW 랙(2027)·구리 45% 절감. 파트너: ADI, Infineon, Innoscience, MPS, Navitas, onsemi, Renesas, ROHM, ST, TI / Delta, Flex, Lead Wealth, LiteOn, Megmeet / Eaton, Schneider, Vertiv"
+        }
+      ],
+      "note": "",
+      "about": "gen:800vdc",
+      "confidence": 0.8
+    },
+    {
+      "id": "n060",
+      "from": "tech:sic",
+      "to": "company:nvts",
+      "relation": "offered_by",
+      "evidence_tier": "official_issuer",
+      "polarity": "positive",
+      "evidence": [
+        {
+          "url": "https://ir.navitassemi.com/news-releases/news-release-details/nvidia-selects-navitas-collaborate-next-generation-800-v-hvdc",
+          "source_type": "official_issuer",
+          "published_at": "2025-05-21",
+          "date_precision": "day",
+          "note": "Navitas: GaN·SiC 가 NVIDIA 800V HVDC 지원에 선정 — 협업 단계, 수주·매출 언급 없음"
+        }
+      ],
+      "note": "GeneSiC 650V~6.5kV",
+      "confidence": 0.8
+    },
+    {
+      "id": "n061",
+      "from": "tech:sic",
+      "to": "company:on",
+      "relation": "offered_by",
+      "evidence_tier": "customer_statement",
+      "polarity": "positive",
+      "evidence": [
+        {
+          "url": "https://developer.nvidia.com/blog/nvidia-800-v-hvdc-architecture-will-power-the-next-Generation-of-ai-factories",
+          "source_type": "customer_statement",
+          "published_at": "2025-05-20",
+          "date_precision": "day",
+          "note": "NVIDIA 800VDC 아키텍처·1MW 랙(2027)·구리 45% 절감. 파트너: ADI, Infineon, Innoscience, MPS, Navitas, onsemi, Renesas, ROHM, ST, TI / Delta, Flex, Lead Wealth, LiteOn, Megmeet / Eaton, Schneider, Vertiv"
+        }
+      ],
+      "note": "",
+      "confidence": 0.8
+    },
+    {
+      "id": "n062",
+      "from": "gen:800vdc",
+      "to": "component:dc_busbar",
+      "relation": "displaces",
+      "evidence_tier": "technical_inference",
+      "polarity": "negative",
+      "evidence": [
+        {
+          "url": "https://developer.nvidia.com/blog/nvidia-800-v-hvdc-architecture-will-power-the-next-Generation-of-ai-factories",
+          "source_type": "customer_statement",
+          "published_at": "2025-05-20",
+          "date_precision": "day",
+          "note": "NVIDIA 800VDC 아키텍처·1MW 랙(2027)·구리 45% 절감. 파트너: ADI, Infineon, Innoscience, MPS, Navitas, onsemi, Renesas, ROHM, ST, TI / Delta, Flex, Lead Wealth, LiteOn, Megmeet / Eaton, Schneider, Vertiv"
+        }
+      ],
+      "note": "구리 사용량 감소 — 부스바 물량 역효과 가능",
+      "confidence": 0.4
+    },
+    {
+      "id": "n063",
+      "from": "company:nvts",
+      "to": "company:on",
+      "relation": "competes_with",
+      "evidence_tier": "technical_inference",
+      "polarity": "positive",
+      "evidence": [
+        {
+          "url": "https://developer.nvidia.com/blog/nvidia-800-v-hvdc-architecture-will-power-the-next-Generation-of-ai-factories",
+          "source_type": "customer_statement",
+          "published_at": "2025-05-20",
+          "date_precision": "day",
+          "note": "NVIDIA 800VDC 아키텍처·1MW 랙(2027)·구리 45% 절감. 파트너: ADI, Infineon, Innoscience, MPS, Navitas, onsemi, Renesas, ROHM, ST, TI / Delta, Flex, Lead Wealth, LiteOn, Megmeet / Eaton, Schneider, Vertiv"
+        }
+      ],
+      "note": "",
+      "confidence": 0.4
     }
   ],
   "events": [
     {
       "id": "obs:camt_202411",
       "ecosystem": "eco:hbm",
-      "target_id": "tech:hawk",
+      "target_id": "product:camt_hawk",
       "type": "commercial_order",
       "source_id": "issuer_camtek",
       "published_at": "2024-11-27",
@@ -2401,7 +3843,7 @@
     {
       "id": "obs:camt_202606",
       "ecosystem": "eco:hbm",
-      "target_id": "tech:hawk",
+      "target_id": "product:camt_hawk",
       "type": "repeat_order",
       "source_id": "issuer_camtek",
       "published_at": "2026-06-02",
@@ -2418,7 +3860,7 @@
     {
       "id": "obs:poet_202603",
       "ecosystem": "eco:optics",
-      "target_id": "tech:poet_interposer",
+      "target_id": "product:poet_optical_interposer",
       "type": "joint_development",
       "source_id": "issuer_poet",
       "published_at": "2026-03-17",
@@ -2463,6 +3905,122 @@
       },
       "evidence_level": "independent_standard",
       "interpretation": "standardization momentum, not customer volume deployment"
+    },
+    {
+      "id": "obs:jedec_hbm4_202504",
+      "ecosystem": "eco:hbm",
+      "target_id": "std:jesd270_4",
+      "type": "standard_published",
+      "source_id": "jedec",
+      "published_at": "2025-04-17",
+      "date_precision": "day",
+      "source_url": "https://www.storagenewsletter.com/2025/04/17/jedec-and-industry-leaders-collaborate-to-release-jesd270-4-hbm4-standard/",
+      "summary": "JEDEC JESD270-4 HBM4 발행: 8Gb/s/pin, 2048-bit, 16-high",
+      "data": {
+        "gbps_per_pin": 8,
+        "io_count": 2048
+      },
+      "evidence_level": "standard_body",
+      "interpretation": "요구사항 확정 — 공급사 채택 시점은 별도"
+    },
+    {
+      "id": "obs:mu_hbm4_202506",
+      "ecosystem": "eco:hbm",
+      "target_id": "gen:hbm4",
+      "type": "sample_shipment",
+      "source_id": "issuer_micron",
+      "published_at": "2025-06-10",
+      "date_precision": "day",
+      "source_url": "https://micron.gcs-web.com/node/48886",
+      "summary": "Micron HBM4 36GB 12-high 샘플 출하, 2026 램프 계획",
+      "data": {
+        "capacity_gb": 36,
+        "stack": 12
+      },
+      "evidence_level": "issuer_claim",
+      "interpretation": "경쟁 3사 체제 유지"
+    },
+    {
+      "id": "obs:skh_hbm4_202509",
+      "ecosystem": "eco:hbm",
+      "target_id": "gen:hbm4",
+      "type": "mass_production_ready",
+      "source_id": "issuer_skhynix_via_press",
+      "published_at": "2025-09-12",
+      "date_precision": "day",
+      "source_url": "https://www.koreatimes.co.kr/amp/business/tech-science/20250912/sk-hynix-completes-hbm4-development-mass-production-ready",
+      "summary": "SK hynix HBM4 개발 완료·양산 체제, Advanced MR-MUF 유지",
+      "data": {
+        "io_count": 2048,
+        "gbps_per_pin": 10
+      },
+      "evidence_level": "third_party_report",
+      "interpretation": "하이브리드 본딩 없이 HBM4 — 기존 접합·검사 공급사 수요 지속"
+    },
+    {
+      "id": "obs:hotchips_hb_202608",
+      "ecosystem": "eco:hbm",
+      "target_id": "tech:hybrid_bond",
+      "type": "adoption_deferred",
+      "source_id": "press_bits_chips",
+      "published_at": "2026-08-26",
+      "date_precision": "day",
+      "source_url": "https://bits-chips.com/article/besi-faces-longer-wait-as-sk-hynix-pushes-hybrid-bonding-to-hbm5/",
+      "summary": "SK hynix: HBM4E 까지 microbump, 하이브리드 본딩은 HBM5 (Hot Chips 2026)",
+      "data": {
+        "hybrid_bond_generation": "HBM5",
+        "jedec_stack_height_um": 775
+      },
+      "evidence_level": "third_party_report",
+      "interpretation": "하이브리드 본딩 장비(BESI·AMAT) 논제 약화, 범프 검사(CAMT·ONTO) 수명 연장"
+    },
+    {
+      "id": "obs:nv_cpo_202503",
+      "ecosystem": "eco:optics",
+      "target_id": "tech:cpo",
+      "type": "customer_adoption",
+      "source_id": "issuer_nvidia",
+      "published_at": "2025-03-18",
+      "date_precision": "day",
+      "source_url": "https://investor.nvidia.com/news/press-release-details/2025/NVIDIA-Announces-Spectrum-X-Photonics-Co-Packaged-Optics-Networking-Switches-to-Scale-AI-Factories-to-Millions-of-GPUs/default.aspx",
+      "summary": "NVIDIA CPO 스위치 발표 (Quantum-X 2025, Spectrum-X 2026)",
+      "data": {
+        "power_efficiency_x": 3.5,
+        "lasers_fewer_x": 4
+      },
+      "evidence_level": "issuer_claim",
+      "interpretation": "pluggable 과 공존 선언 — 대체 비중은 미확정"
+    },
+    {
+      "id": "obs:nv_800v_202505",
+      "ecosystem": "eco:power",
+      "target_id": "gen:800vdc",
+      "type": "architecture_announcement",
+      "source_id": "issuer_nvidia",
+      "published_at": "2025-05-20",
+      "date_precision": "day",
+      "source_url": "https://developer.nvidia.com/blog/nvidia-800-v-hvdc-architecture-will-power-the-next-Generation-of-ai-factories",
+      "summary": "NVIDIA 800VDC 아키텍처·파트너 18사 공개, 1MW 랙 2027",
+      "data": {
+        "rack_power_kw": 1000,
+        "copper_reduction_pct": 45
+      },
+      "evidence_level": "customer_statement",
+      "interpretation": "수요처가 공급사 후보군을 명시 — 수주 아님"
+    },
+    {
+      "id": "obs:nvts_202505",
+      "ecosystem": "eco:power",
+      "target_id": "company:nvts",
+      "type": "partner_selection",
+      "source_id": "issuer_navitas",
+      "published_at": "2025-05-21",
+      "date_precision": "day",
+      "source_url": "https://ir.navitassemi.com/news-releases/news-release-details/nvidia-selects-navitas-collaborate-next-generation-800-v-hvdc",
+      "summary": "Navitas GaN·SiC, NVIDIA 800V HVDC 협업 선정",
+      "data": {},
+      "evidence_level": "issuer_claim",
+      "interpretation": "협업 ≠ 수주"
     }
   ],
   "watches": [
@@ -2484,7 +4042,7 @@
     {
       "id": "watch:hbm_orders",
       "ecosystem": "eco:hbm",
-      "target_id": "tech:hawk",
+      "target_id": "product:camt_hawk",
       "signal": "named_independent_customer_qual_or_repeat_orders",
       "condition": "First customer mass-production qualification, or new repeat order with identified delivery period",
       "source_urls": [
@@ -2527,7 +4085,7 @@
     {
       "id": "watch:optic_qual",
       "ecosystem": "eco:optics",
-      "target_id": "tech:poet_interposer",
+      "target_id": "product:poet_optical_interposer",
       "signal": "optical_module_customer_qualification",
       "condition": "Customer independently confirms completed 1.6T qualification or volume shipments with measured thermal/power budget",
       "source_urls": [
@@ -2594,6 +4152,64 @@
       "severity": "review",
       "confirmations_needed": "BOM-level component/supplier and unit content",
       "failure_mode": "Cannot infer a specific SiC company from 800V standard alone"
+    },
+    {
+      "id": "watch:hbm_bonding_roadmap",
+      "ecosystem": "eco:hbm",
+      "target_id": "tech:hybrid_bond",
+      "signal": "hybrid_bonding_adoption_generation",
+      "condition": "SK hynix·Samsung·Micron 이 하이브리드 본딩 적용 세대(HBM4E/HBM5)를 앞당기거나 미루는 공식 발언·공시",
+      "source_urls": [
+        "https://bits-chips.com/article/besi-faces-longer-wait-as-sk-hynix-pushes-hybrid-bonding-to-hbm5/",
+        "https://news.skhynix.com/"
+      ],
+      "cadence": "monthly",
+      "severity": "high",
+      "confirmations_needed": "제조사 공식 발언 + 장비사 수주 공시",
+      "failure_mode": "학회 발언을 로드맵 확정으로 오인"
+    },
+    {
+      "id": "watch:nvda_hbm4_qual",
+      "ecosystem": "eco:hbm",
+      "target_id": "company:nvda",
+      "signal": "hbm4_qualification_result",
+      "condition": "NVIDIA Rubin 용 HBM4 공급사 인증 결과·점유율 보도",
+      "source_urls": [
+        "https://www.koreatimes.co.kr/amp/business/tech-science/20250912/sk-hynix-completes-hbm4-development-mass-production-ready"
+      ],
+      "cadence": "monthly",
+      "severity": "review",
+      "confirmations_needed": "공급사 공시 또는 복수 독립 보도",
+      "failure_mode": "애널리스트 추정 점유율을 사실로 기록"
+    },
+    {
+      "id": "watch:cpo_vs_pluggable",
+      "ecosystem": "eco:optics",
+      "target_id": "tech:cpo",
+      "signal": "cpo_port_share",
+      "condition": "하이퍼스케일러 스위치 세대에서 CPO 포트 비중·pluggable 주문 변화 공개",
+      "source_urls": [
+        "https://investor.nvidia.com/news/press-release-details/2025/NVIDIA-Announces-Spectrum-X-Photonics-Co-Packaged-Optics-Networking-Switches-to-Scale-AI-Factories-to-Millions-of-GPUs/default.aspx"
+      ],
+      "cadence": "monthly",
+      "severity": "high",
+      "confirmations_needed": "고객 아키텍처 문서 + 광모듈사 매출 구성",
+      "failure_mode": "공급사 전망치를 채택률로 오인"
+    },
+    {
+      "id": "watch:800v_orders",
+      "ecosystem": "eco:power",
+      "target_id": "gen:800vdc",
+      "signal": "first_800vdc_site_or_order",
+      "condition": "800VDC 사이트 커미셔닝·부품 공급 계약 공시 (파트너 18사 중 누가 먼저 매출로 잇는가)",
+      "source_urls": [
+        "https://developer.nvidia.com/blog/nvidia-800-v-hvdc-architecture-will-power-the-next-Generation-of-ai-factories"
+      ],
+      "cadence": "weekly",
+      "severity": "high",
+      "confirmations_needed": "SEC 8-K 또는 고객 공식 발표",
+      "failure_mode": "파트너 명단 포함을 수주로 오인"
     }
-  ]
+  ],
+  "ontology": "research/ecosystems/ontology.json"
 }

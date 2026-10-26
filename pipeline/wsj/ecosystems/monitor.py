@@ -41,19 +41,19 @@ ALLOWED = frozenset({
 ECOSYSTEMS = {
     "hbm": {
         "id": "eco:hbm", "queries": ("high bandwidth memory hybrid bonding", "advanced packaging wafer inspection"),
-        "terms": ("hbm", "memory", "bump", "bond", "packag", "metrology", "inspection", "semiconductor", "wafer"),
+        "terms": ("hbm", "high bandwidth memory", "microbump", "hybrid bond", "advanced packag", "wafer metrology", "wafer inspection", "tsv", "known good die", "chiplet"),
         "federal_query": "semiconductor advanced packaging",
         "tickers": ("CAMT",),
     },
     "optics": {
         "id": "eco:optics", "queries": ("1.6T optical transceiver silicon photonics", "co packaged optics optical interposer"),
-        "terms": ("photonic", "optical", "1.6t", "800g", "ethernet", "transceiver", "laser", "co-packaged", "interposer"),
+        "terms": ("silicon photonic", "optical transceiver", "1.6t", "800g", "200g/lane", "co-packaged", "cpo", "optical interposer", "pluggable", "eml", "vcsel", "linear drive"),
         "federal_query": "photonics optical communication",
         "tickers": ("POET",),
     },
     "power": {
         "id": "eco:power", "queries": ("800VDC data center power distribution", "silicon carbide power converter data center"),
-        "terms": ("800v", "data center", "datacenter", "electric", "power", "cooling", "converter", "silicon carbide", "sic", "busbar"),
+        "terms": ("800v", "800 v", "hvdc", "data center power", "datacenter power", "liquid cooling", "cold plate", "silicon carbide", "sic mosfet", "gan", "busbar", "power supply unit", "rack power"),
         "federal_query": "data center power distribution",
         "tickers": ("AEHR",),
     },
@@ -113,14 +113,14 @@ def fetch_url(url: str, json_mode: bool = True, attempts: int = 2) -> Any:
 
 
 def relevant(text: str, ecosystem: str) -> bool:
-    words = ECOSYSTEMS[ecosystem]["terms"]
+    """단어 시작 경계 매칭 — 'sic' 가 'classic' 에 걸리지 않게 (접두 매칭은 허용: 'hybrid bond' → 'hybrid bonding')."""
     normalized = text.lower()
-    return any(word in normalized for word in words)
+    return any(re.search(r"(?<![a-z0-9])" + re.escape(word), normalized) for word in ECOSYSTEMS[ecosystem]["terms"])
 
 
 def extract_metric_mentions(text: str) -> list[str]:
     """Find quantity/unit mentions for follow-up. Comparison context must be verified."""
-    pattern = r"(?<!\\w)\\d+(?:[.,]\\d+)?\\s?(?:nm|µm|um|mm|Gbps|Tbps|W|kW|MW|dB|ppm|%)(?!\\w)"
+    pattern = r"(?<!\w)\d+(?:[.,]\d+)?\s?(?:nm|µm|um|mm|Gbps|Tbps|W|kW|MW|dB|ppm|%)(?!\w)"
     return list(dict.fromkeys(re.findall(pattern, text, flags=re.I)))[:18]
 
 
@@ -376,7 +376,7 @@ def generate_ai_review(events: list[dict], hypotheses: list[dict], key: str,
         repair_user="직전 내용을 변형하지 말고 유효한 JSON 객체로만 출력하라. 오류: {error}",
         max_tokens=3500, effort="low", minimize_thinking=True,
     )
-    valid_ids = {x["id"] for x in compact}
+    valid_ids = {x["event_id"] for x in compact}
     valid_items = [
         item for item in (output.get("hypotheses") or []) if isinstance(item, dict)
         and item.get("event_id") in valid_ids
@@ -467,7 +467,7 @@ def markdown_report(*, stage: str, now: str, new: list[dict],
     if ai_review:
         lines += ["## LLM 추가 조사 가설 (독립 검증 전)", "", f"모델: {ai_review.get('model')}. 사용 금액 추정(USD): {ai_review.get('usage', {}).get('cost_usd')}", ""]
         for row in ai_review.get("hypotheses", []):
-            lines += [f"- 이벤트 \`{row.get('event_id')}\`: {row.get('novel_angle')}; "
+            lines += [f"- 이벤트 `{row.get('event_id')}`: {row.get('novel_angle')}; "
                       f"검증 원천: {row.get('next_public_data_query')}; 반증: {row.get('falsifier')}"]
         lines.append("")
     lines += ["## 다음 단계", "", "기술 원문 및 독립 고객 자료로 재검증 후에만 상업화 가설을 승격합니다.", "",
