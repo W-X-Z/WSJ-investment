@@ -8,7 +8,7 @@
     "documents_with_ontology_matches": 1781,
     "ontology_nodes": 90,
     "nodes_with_at_least_one_match": 46,
-    "numeric_mentions_requiring_validation": 96,
+    "numeric_mentions_requiring_validation": 36,
     "co_mention_pairs_requiring_review": 38,
     "independent_factual_correlations_confirmed": 0,
     "new_confirmed_supply_edges": 0,
@@ -246,17 +246,7 @@
             "advanced packaging",
             "hybrid bonding"
           ],
-          "metric_candidates": [
-            {
-              "value": 1.0,
-              "unit": "um",
-              "literal": "1 μm",
-              "passage": "s many challenges with pitch scaling in advanced packaging. the ability to scale to <1 μm pitch while maintaining throughput comparable to the mass reflow flip chip process and providing im",
-              "passage_location": "indexed_abstract_or_title",
-              "verification": "unverified_numeric_mention",
-              "conditions_verified": false
-            }
-          ],
+          "metric_candidates": [],
           "verification_status": "index_match_only",
           "source_independence_verified": false,
           "historical_investor_observation_unverified": true
@@ -277,17 +267,7 @@
             "advanced packaging",
             "hybrid bonding"
           ],
-          "metric_candidates": [
-            {
-              "value": 1.0,
-              "unit": "um",
-              "literal": "1μm",
-              "passage": "many challenges with pitch scaling in advanced packaging. the ability to scale to <; 1μm pitch while maintaining throughput comparable to the mass reflow flip chip process and providing im",
-              "passage_location": "indexed_abstract_or_title",
-              "verification": "unverified_numeric_mention",
-              "conditions_verified": false
-            }
-          ],
+          "metric_candidates": [],
           "verification_status": "index_match_only",
           "source_independence_verified": false,
           "historical_investor_observation_unverified": true
@@ -434,17 +414,7 @@
           "matched_terms": [
             "hybrid bonding"
           ],
-          "metric_candidates": [
-            {
-              "value": 8.8,
-              "unit": "um",
-              "literal": "8.8um",
-              "passage": "e heavy capacitive load [4]. the computing performance improvements are ensured by a 8.8um and below pitch hybrid bonding (hb) wafer-level integration with memory [5]. our previous work [6] ",
-              "passage_location": "indexed_abstract_or_title",
-              "verification": "unverified_numeric_mention",
-              "conditions_verified": false
-            }
-          ],
+          "metric_candidates": [],
           "verification_status": "index_match_only",
           "source_independence_verified": false,
           "historical_investor_observation_unverified": true
@@ -490,44 +460,7 @@
           "historical_investor_observation_unverified": true
         }
       ],
-      "measurement_candidates": [
-        {
-          "source_id": "1766bddc23120bb29948727d",
-          "published_at": "2020-10-01",
-          "source_url": "https://api.openalex.org/works/W4416883609",
-          "value": 1.0,
-          "unit": "um",
-          "literal": "1 μm",
-          "passage": "s many challenges with pitch scaling in advanced packaging. the ability to scale to <1 μm pitch while maintaining throughput comparable to the mass reflow flip chip process and providing im",
-          "passage_location": "indexed_abstract_or_title",
-          "verification": "unverified_numeric_mention",
-          "conditions_verified": false
-        },
-        {
-          "source_id": "8c6ee518d9f737835834b0d9",
-          "published_at": "2020-10-13",
-          "source_url": "https://api.openalex.org/works/W3135989241",
-          "value": 1.0,
-          "unit": "um",
-          "literal": "1μm",
-          "passage": "many challenges with pitch scaling in advanced packaging. the ability to scale to <; 1μm pitch while maintaining throughput comparable to the mass reflow flip chip process and providing im",
-          "passage_location": "indexed_abstract_or_title",
-          "verification": "unverified_numeric_mention",
-          "conditions_verified": false
-        },
-        {
-          "source_id": "cfc4961a5fa3fd57e2e92083",
-          "published_at": "2021-11-07",
-          "source_url": "https://api.openalex.org/works/W4200550987",
-          "value": 8.8,
-          "unit": "um",
-          "literal": "8.8um",
-          "passage": "e heavy capacitive load [4]. the computing performance improvements are ensured by a 8.8um and below pitch hybrid bonding (hb) wafer-level integration with memory [5]. our previous work [6] ",
-          "passage_location": "indexed_abstract_or_title",
-          "verification": "unverified_numeric_mention",
-          "conditions_verified": false
-        }
-      ]
+      "measurement_candidates": []
     },
     "req:hbm_io": {
       "node_id": "req:hbm_io",
@@ -623,17 +556,7 @@
           "matched_terms": [
             "high bandwidth memory"
           ],
-          "metric_candidates": [
-            {
-              "value": 4.5,
-              "unit": "gb/s",
-              "literal": "4.5 gb/s",
-              "passage": "a 4.5 gb/s/pin transceiver with hybrid inter-symbol interference and far-end crosstalk equalization for next-g",
-              "passage_location": "indexed_abstract_or_title",
-              "verification": "unverified_numeric_mention",
-              "conditions_verified": false
-            }
-          ],
+          "metric_candidates": [],
           "verification_status": "index_match_only",
           "source_independence_verified": false,
           "historical_investor_observation_unverified": true
@@ -959,20 +882,7 @@
           "historical_investor_observation_unverified": true
         }
       ],
-      "measurement_candidates": [
-        {
-          "source_id": "65e84369fd75a89430d0a87d",
-          "published_at": "2022-04-20",
-          "source_url": "https://api.crossref.org/works/10.1049/ell2.12494",
-          "value": 4.5,
-          "unit": "gb/s",
-          "literal": "4.5 gb/s",
-          "passage": "a 4.5 gb/s/pin transceiver with hybrid inter-symbol interference and far-end crosstalk equalization for next-g",
-          "passage_location": "indexed_abstract_or_title",
-          "verification": "unverified_numeric_mention",
-          "conditions_verified": false
-        }
-      ]
+      "measurement_candidates": []
     },
     "req:hbm_stack": {
       "node_id": "req:hbm_stack",
@@ -1047,17 +957,7 @@
           "matched_terms": [
             "high bandwidth memory"
           ],
-          "metric_candidates": [
-            {
-              "value": 4.5,
-              "unit": "gb/s",
-              "literal": "4.5 gb/s",
-              "passage": "a 4.5 gb/s/pin transceiver with hybrid inter-symbol interference and far-end crosstalk equalization for next-g",
-              "passage_location": "indexed_abstract_or_title",
-              "verification": "unverified_numeric_mention",
-              "conditions_verified": false
-            }
-          ],
+          "metric_candidates": [],
           "verification_status": "index_match_only",
           "source_independence_verified": false,
           "historical_investor_observation_unverified": true
@@ -1423,20 +1323,7 @@
           "historical_investor_observation_unverified": true
         }
       ],
-      "measurement_candidates": [
-        {
-          "source_id": "65e84369fd75a89430d0a87d",
-          "published_at": "2022-04-20",
-          "source_url": "https://api.crossref.org/works/10.1049/ell2.12494",
-          "value": 4.5,
-          "unit": "gb/s",
-          "literal": "4.5 gb/s",
-          "passage": "a 4.5 gb/s/pin transceiver with hybrid inter-symbol interference and far-end crosstalk equalization for next-g",
-          "passage_location": "indexed_abstract_or_title",
-          "verification": "unverified_numeric_mention",
-          "conditions_verified": false
-        }
-      ]
+      "measurement_candidates": []
     },
     "bottleneck:hbm_overlay": {
       "node_id": "bottleneck:hbm_overlay",
@@ -1513,17 +1400,7 @@
           "matched_terms": [
             "hybrid bonding"
           ],
-          "metric_candidates": [
-            {
-              "value": 1.0,
-              "unit": "um",
-              "literal": "1 μm",
-              "passage": "s many challenges with pitch scaling in advanced packaging. the ability to scale to <1 μm pitch while maintaining throughput comparable to the mass reflow flip chip process and providing im",
-              "passage_location": "indexed_abstract_or_title",
-              "verification": "unverified_numeric_mention",
-              "conditions_verified": false
-            }
-          ],
+          "metric_candidates": [],
           "verification_status": "index_match_only",
           "source_independence_verified": false,
           "historical_investor_observation_unverified": true
@@ -1543,17 +1420,7 @@
           "matched_terms": [
             "hybrid bonding"
           ],
-          "metric_candidates": [
-            {
-              "value": 1.0,
-              "unit": "um",
-              "literal": "1μm",
-              "passage": "many challenges with pitch scaling in advanced packaging. the ability to scale to <; 1μm pitch while maintaining throughput comparable to the mass reflow flip chip process and providing im",
-              "passage_location": "indexed_abstract_or_title",
-              "verification": "unverified_numeric_mention",
-              "conditions_verified": false
-            }
-          ],
+          "metric_candidates": [],
           "verification_status": "index_match_only",
           "source_independence_verified": false,
           "historical_investor_observation_unverified": true
@@ -1573,17 +1440,7 @@
           "matched_terms": [
             "hybrid bonding"
           ],
-          "metric_candidates": [
-            {
-              "value": 34.0,
-              "unit": "gb/s",
-              "literal": "34gb/s",
-              "passage": "a stacked embedded dram array for lpddr4/4x using hybrid bonding 3d integration with 34gb/s/1gb 0.88pj/b logic-to-memory interface",
-              "passage_location": "indexed_abstract_or_title",
-              "verification": "unverified_numeric_mention",
-              "conditions_verified": false
-            }
-          ],
+          "metric_candidates": [],
           "verification_status": "index_match_only",
           "source_independence_verified": false,
           "historical_investor_observation_unverified": true
@@ -1663,17 +1520,7 @@
           "matched_terms": [
             "hybrid bonding"
           ],
-          "metric_candidates": [
-            {
-              "value": 8.8,
-              "unit": "um",
-              "literal": "8.8um",
-              "passage": "e heavy capacitive load [4]. the computing performance improvements are ensured by a 8.8um and below pitch hybrid bonding (hb) wafer-level integration with memory [5]. our previous work [6] ",
-              "passage_location": "indexed_abstract_or_title",
-              "verification": "unverified_numeric_mention",
-              "conditions_verified": false
-            }
-          ],
+          "metric_candidates": [],
           "verification_status": "index_match_only",
           "source_independence_verified": false,
           "historical_investor_observation_unverified": true
@@ -1713,17 +1560,7 @@
           "matched_terms": [
             "hybrid bonding"
           ],
-          "metric_candidates": [
-            {
-              "value": 78.0,
-              "unit": "%",
-              "literal": "78%",
-              "passage": "sio2 hybrid bonding. electroplating was employed to fabricate arrays of cu vias with 78% (111) surface grains. the bonding temperature can be lowered to 200 °c, and the pressure is as low ",
-              "passage_location": "indexed_abstract_or_title",
-              "verification": "unverified_numeric_mention",
-              "conditions_verified": false
-            }
-          ],
+          "metric_candidates": [],
           "verification_status": "index_match_only",
           "source_independence_verified": false,
           "historical_investor_observation_unverified": true
@@ -1823,17 +1660,7 @@
           "matched_terms": [
             "hybrid bonding"
           ],
-          "metric_candidates": [
-            {
-              "value": 34.0,
-              "unit": "gbps",
-              "literal": "34 gbps",
-              "passage": "am (sedram) using hybrid bonding 3d integration process, achieving high bandwidth of 34 gbps/gbit and high energy efficiency of 0.88 pj/bit. moreover, the criti",
-              "passage_location": "indexed_abstract_or_title",
-              "verification": "unverified_numeric_mention",
-              "conditions_verified": false
-            }
-          ],
+          "metric_candidates": [],
           "verification_status": "index_match_only",
           "source_independence_verified": false,
           "historical_investor_observation_unverified": true
@@ -1853,17 +1680,7 @@
           "matched_terms": [
             "hybrid bonding"
           ],
-          "metric_candidates": [
-            {
-              "value": 10.0,
-              "unit": "um",
-              "literal": "10µm",
-              "passage": "lling for fine interconnect where microbumps are hitting manufacturing limitation at 10µm pitch and beyond. hybrid bonding technology is a good candidate for high interconnect density and c",
-              "passage_location": "indexed_abstract_or_title",
-              "verification": "unverified_numeric_mention",
-              "conditions_verified": false
-            }
-          ],
+          "metric_candidates": [],
           "verification_status": "index_match_only",
           "source_independence_verified": false,
           "historical_investor_observation_unverified": true
@@ -1989,92 +1806,7 @@
           "historical_investor_observation_unverified": true
         }
       ],
-      "measurement_candidates": [
-        {
-          "source_id": "1766bddc23120bb29948727d",
-          "published_at": "2020-10-01",
-          "source_url": "https://api.openalex.org/works/W4416883609",
-          "value": 1.0,
-          "unit": "um",
-          "literal": "1 μm",
-          "passage": "s many challenges with pitch scaling in advanced packaging. the ability to scale to <1 μm pitch while maintaining throughput comparable to the mass reflow flip chip process and providing im",
-          "passage_location": "indexed_abstract_or_title",
-          "verification": "unverified_numeric_mention",
-          "conditions_verified": false
-        },
-        {
-          "source_id": "8c6ee518d9f737835834b0d9",
-          "published_at": "2020-10-13",
-          "source_url": "https://api.openalex.org/works/W3135989241",
-          "value": 1.0,
-          "unit": "um",
-          "literal": "1μm",
-          "passage": "many challenges with pitch scaling in advanced packaging. the ability to scale to <; 1μm pitch while maintaining throughput comparable to the mass reflow flip chip process and providing im",
-          "passage_location": "indexed_abstract_or_title",
-          "verification": "unverified_numeric_mention",
-          "conditions_verified": false
-        },
-        {
-          "source_id": "5835e769198a8796cdcfe2ab",
-          "published_at": "2020-12-12",
-          "source_url": "https://api.openalex.org/works/W3136346557",
-          "value": 34.0,
-          "unit": "gb/s",
-          "literal": "34gb/s",
-          "passage": "a stacked embedded dram array for lpddr4/4x using hybrid bonding 3d integration with 34gb/s/1gb 0.88pj/b logic-to-memory interface",
-          "passage_location": "indexed_abstract_or_title",
-          "verification": "unverified_numeric_mention",
-          "conditions_verified": false
-        },
-        {
-          "source_id": "cfc4961a5fa3fd57e2e92083",
-          "published_at": "2021-11-07",
-          "source_url": "https://api.openalex.org/works/W4200550987",
-          "value": 8.8,
-          "unit": "um",
-          "literal": "8.8um",
-          "passage": "e heavy capacitive load [4]. the computing performance improvements are ensured by a 8.8um and below pitch hybrid bonding (hb) wafer-level integration with memory [5]. our previous work [6] ",
-          "passage_location": "indexed_abstract_or_title",
-          "verification": "unverified_numeric_mention",
-          "conditions_verified": false
-        },
-        {
-          "source_id": "347bdc25e6bdd91514c2de29",
-          "published_at": "2022-03-03",
-          "source_url": "https://api.openalex.org/works/W4214944963",
-          "value": 78.0,
-          "unit": "%",
-          "literal": "78%",
-          "passage": "sio2 hybrid bonding. electroplating was employed to fabricate arrays of cu vias with 78% (111) surface grains. the bonding temperature can be lowered to 200 °c, and the pressure is as low ",
-          "passage_location": "indexed_abstract_or_title",
-          "verification": "unverified_numeric_mention",
-          "conditions_verified": false
-        },
-        {
-          "source_id": "31adfd2f95def9c8588cbe2f",
-          "published_at": "2023-02-21",
-          "source_url": "https://api.openalex.org/works/W4321499783",
-          "value": 34.0,
-          "unit": "gbps",
-          "literal": "34 gbps",
-          "passage": "am (sedram) using hybrid bonding 3d integration process, achieving high bandwidth of 34 gbps/gbit and high energy efficiency of 0.88 pj/bit. moreover, the criti",
-          "passage_location": "indexed_abstract_or_title",
-          "verification": "unverified_numeric_mention",
-          "conditions_verified": false
-        },
-        {
-          "source_id": "ed4da5dba12199a7d50d050f",
-          "published_at": "2023-12-22",
-          "source_url": "https://api.crossref.org/works/10.1149/ma2023-02171178mtgabs",
-          "value": 10.0,
-          "unit": "um",
-          "literal": "10µm",
-          "passage": "lling for fine interconnect where microbumps are hitting manufacturing limitation at 10µm pitch and beyond. hybrid bonding technology is a good candidate for high interconnect density and c",
-          "passage_location": "indexed_abstract_or_title",
-          "verification": "unverified_numeric_mention",
-          "conditions_verified": false
-        }
-      ]
+      "measurement_candidates": []
     },
     "bottleneck:hbm_thermal": {
       "node_id": "bottleneck:hbm_thermal",
@@ -2123,8 +1855,9 @@
             {
               "value": 1.0,
               "unit": "um",
-              "literal": "1 μm",
-              "passage": "s many challenges with pitch scaling in advanced packaging. the ability to scale to <1 μm pitch while maintaining throughput comparable to the mass reflow flip chip process and providing im",
+              "literal": "<1 μm",
+              "operator": "less_than",
+              "passage": "solves many challenges with pitch scaling in advanced packaging. the ability to scale to <1 μm pitch while maintaining throughput comparable to the mass reflow flip chip process and providing improved rel",
               "passage_location": "indexed_abstract_or_title",
               "verification": "unverified_numeric_mention",
               "conditions_verified": false
@@ -2154,7 +1887,8 @@
               "value": 1.0,
               "unit": "um",
               "literal": "1μm",
-              "passage": "many challenges with pitch scaling in advanced packaging. the ability to scale to <; 1μm pitch while maintaining throughput comparable to the mass reflow flip chip process and providing im",
+              "operator": "unspecified",
+              "passage": "lves many challenges with pitch scaling in advanced packaging. the ability to scale to <; 1μm pitch while maintaining throughput comparable to the mass reflow flip chip process and providing improved rel",
               "passage_location": "indexed_abstract_or_title",
               "verification": "unverified_numeric_mention",
               "conditions_verified": false
@@ -2179,17 +1913,7 @@
           "matched_terms": [
             "hybrid bonding"
           ],
-          "metric_candidates": [
-            {
-              "value": 34.0,
-              "unit": "gb/s",
-              "literal": "34gb/s",
-              "passage": "a stacked embedded dram array for lpddr4/4x using hybrid bonding 3d integration with 34gb/s/1gb 0.88pj/b logic-to-memory interface",
-              "passage_location": "indexed_abstract_or_title",
-              "verification": "unverified_numeric_mention",
-              "conditions_verified": false
-            }
-          ],
+          "metric_candidates": [],
           "verification_status": "index_match_only",
           "source_independence_verified": false,
           "historical_investor_observation_unverified": true
@@ -2294,7 +2018,8 @@
               "value": 8.8,
               "unit": "um",
               "literal": "8.8um",
-              "passage": "e heavy capacitive load [4]. the computing performance improvements are ensured by a 8.8um and below pitch hybrid bonding (hb) wafer-level integration with memory [5]. our previous work [6] ",
+              "operator": "unspecified",
+              "passage": "om the heavy capacitive load [4]. the computing performance improvements are ensured by a 8.8um and below pitch hybrid bonding (hb) wafer-level integration with memory [5]. our previous work [6] reported 4",
               "passage_location": "indexed_abstract_or_title",
               "verification": "unverified_numeric_mention",
               "conditions_verified": false
@@ -2344,7 +2069,8 @@
               "value": 78.0,
               "unit": "%",
               "literal": "78%",
-              "passage": "sio2 hybrid bonding. electroplating was employed to fabricate arrays of cu vias with 78% (111) surface grains. the bonding temperature can be lowered to 200 °c, and the pressure is as low ",
+              "operator": "unspecified",
+              "passage": "e cu/sio2 hybrid bonding. electroplating was employed to fabricate arrays of cu vias with 78% (111) surface grains. the bonding temperature can be lowered to 200 °c, and the pressure is as low as 1.06 mp",
               "passage_location": "indexed_abstract_or_title",
               "verification": "unverified_numeric_mention",
               "conditions_verified": false
@@ -2449,17 +2175,7 @@
           "matched_terms": [
             "hybrid bonding"
           ],
-          "metric_candidates": [
-            {
-              "value": 34.0,
-              "unit": "gbps",
-              "literal": "34 gbps",
-              "passage": "am (sedram) using hybrid bonding 3d integration process, achieving high bandwidth of 34 gbps/gbit and high energy efficiency of 0.88 pj/bit. moreover, the criti",
-              "passage_location": "indexed_abstract_or_title",
-              "verification": "unverified_numeric_mention",
-              "conditions_verified": false
-            }
-          ],
+          "metric_candidates": [],
           "verification_status": "index_match_only",
           "source_independence_verified": false,
           "historical_investor_observation_unverified": true
@@ -2504,7 +2220,8 @@
               "value": 10.0,
               "unit": "um",
               "literal": "10µm",
-              "passage": "lling for fine interconnect where microbumps are hitting manufacturing limitation at 10µm pitch and beyond. hybrid bonding technology is a good candidate for high interconnect density and c",
+              "operator": "unspecified",
+              "passage": "re calling for fine interconnect where microbumps are hitting manufacturing limitation at 10µm pitch and beyond. hybrid bonding technology is a good candidate for high interconnect density and connects di",
               "passage_location": "indexed_abstract_or_title",
               "verification": "unverified_numeric_mention",
               "conditions_verified": false
@@ -2634,7 +2351,8 @@
               "value": 140.0,
               "unit": "nm",
               "literal": "140 nm",
-              "passage": "a 140 nm pitch bonding test vehicle was created to evaluate &lt;150 nm fine pitch wafer-to-wafer hybrid bond",
+              "operator": "unspecified",
+              "passage": "a 140 nm pitch bonding test vehicle was created to evaluate &lt;150 nm fine pitch wafer-to-wafer hybrid bonding. void-",
               "passage_location": "indexed_abstract_or_title",
               "verification": "unverified_numeric_mention",
               "conditions_verified": false
@@ -2643,7 +2361,8 @@
               "value": 150.0,
               "unit": "nm",
               "literal": "150 nm",
-              "passage": "a 140 nm pitch bonding test vehicle was created to evaluate &lt;150 nm fine pitch wafer-to-wafer hybrid bonding. void-free hybrid bonding with cu grain growth across the ",
+              "operator": "unspecified",
+              "passage": "a 140 nm pitch bonding test vehicle was created to evaluate &lt;150 nm fine pitch wafer-to-wafer hybrid bonding. void-free hybrid bonding with cu grain growth across the bonding in",
               "passage_location": "indexed_abstract_or_title",
               "verification": "unverified_numeric_mention",
               "conditions_verified": false
@@ -2652,7 +2371,8 @@
               "value": 50.0,
               "unit": "nm",
               "literal": "50 nm",
-              "passage": " bonding with cu grain growth across the bonding interface was demonstrated with &lt;50 nm bonding residuals for a champion wafer. bonding residuals were &lt;40 nm for 99.5% of points tested",
+              "operator": "unspecified",
+              "passage": "ybrid bonding with cu grain growth across the bonding interface was demonstrated with &lt;50 nm bonding residuals for a champion wafer. bonding residuals were &lt;40 nm for 99.5% of points tested with thre",
               "passage_location": "indexed_abstract_or_title",
               "verification": "unverified_numeric_mention",
               "conditions_verified": false
@@ -2690,8 +2410,9 @@
           "source_url": "https://api.openalex.org/works/W4416883609",
           "value": 1.0,
           "unit": "um",
-          "literal": "1 μm",
-          "passage": "s many challenges with pitch scaling in advanced packaging. the ability to scale to <1 μm pitch while maintaining throughput comparable to the mass reflow flip chip process and providing im",
+          "literal": "<1 μm",
+          "operator": "less_than",
+          "passage": "solves many challenges with pitch scaling in advanced packaging. the ability to scale to <1 μm pitch while maintaining throughput comparable to the mass reflow flip chip process and providing improved rel",
           "passage_location": "indexed_abstract_or_title",
           "verification": "unverified_numeric_mention",
           "conditions_verified": false
@@ -2703,19 +2424,8 @@
           "value": 1.0,
           "unit": "um",
           "literal": "1μm",
-          "passage": "many challenges with pitch scaling in advanced packaging. the ability to scale to <; 1μm pitch while maintaining throughput comparable to the mass reflow flip chip process and providing im",
-          "passage_location": "indexed_abstract_or_title",
-          "verification": "unverified_numeric_mention",
-          "conditions_verified": false
-        },
-        {
-          "source_id": "5835e769198a8796cdcfe2ab",
-          "published_at": "2020-12-12",
-          "source_url": "https://api.openalex.org/works/W3136346557",
-          "value": 34.0,
-          "unit": "gb/s",
-          "literal": "34gb/s",
-          "passage": "a stacked embedded dram array for lpddr4/4x using hybrid bonding 3d integration with 34gb/s/1gb 0.88pj/b logic-to-memory interface",
+          "operator": "unspecified",
+          "passage": "lves many challenges with pitch scaling in advanced packaging. the ability to scale to <; 1μm pitch while maintaining throughput comparable to the mass reflow flip chip process and providing improved rel",
           "passage_location": "indexed_abstract_or_title",
           "verification": "unverified_numeric_mention",
           "conditions_verified": false
@@ -2727,7 +2437,8 @@
           "value": 8.8,
           "unit": "um",
           "literal": "8.8um",
-          "passage": "e heavy capacitive load [4]. the computing performance improvements are ensured by a 8.8um and below pitch hybrid bonding (hb) wafer-level integration with memory [5]. our previous work [6] ",
+          "operator": "unspecified",
+          "passage": "om the heavy capacitive load [4]. the computing performance improvements are ensured by a 8.8um and below pitch hybrid bonding (hb) wafer-level integration with memory [5]. our previous work [6] reported 4",
           "passage_location": "indexed_abstract_or_title",
           "verification": "unverified_numeric_mention",
           "conditions_verified": false
@@ -2739,19 +2450,8 @@
           "value": 78.0,
           "unit": "%",
           "literal": "78%",
-          "passage": "sio2 hybrid bonding. electroplating was employed to fabricate arrays of cu vias with 78% (111) surface grains. the bonding temperature can be lowered to 200 °c, and the pressure is as low ",
-          "passage_location": "indexed_abstract_or_title",
-          "verification": "unverified_numeric_mention",
-          "conditions_verified": false
-        },
-        {
-          "source_id": "31adfd2f95def9c8588cbe2f",
-          "published_at": "2023-02-21",
-          "source_url": "https://api.openalex.org/works/W4321499783",
-          "value": 34.0,
-          "unit": "gbps",
-          "literal": "34 gbps",
-          "passage": "am (sedram) using hybrid bonding 3d integration process, achieving high bandwidth of 34 gbps/gbit and high energy efficiency of 0.88 pj/bit. moreover, the criti",
+          "operator": "unspecified",
+          "passage": "e cu/sio2 hybrid bonding. electroplating was employed to fabricate arrays of cu vias with 78% (111) surface grains. the bonding temperature can be lowered to 200 °c, and the pressure is as low as 1.06 mp",
           "passage_location": "indexed_abstract_or_title",
           "verification": "unverified_numeric_mention",
           "conditions_verified": false
@@ -2763,7 +2463,8 @@
           "value": 10.0,
           "unit": "um",
           "literal": "10µm",
-          "passage": "lling for fine interconnect where microbumps are hitting manufacturing limitation at 10µm pitch and beyond. hybrid bonding technology is a good candidate for high interconnect density and c",
+          "operator": "unspecified",
+          "passage": "re calling for fine interconnect where microbumps are hitting manufacturing limitation at 10µm pitch and beyond. hybrid bonding technology is a good candidate for high interconnect density and connects di",
           "passage_location": "indexed_abstract_or_title",
           "verification": "unverified_numeric_mention",
           "conditions_verified": false
@@ -2775,7 +2476,8 @@
           "value": 140.0,
           "unit": "nm",
           "literal": "140 nm",
-          "passage": "a 140 nm pitch bonding test vehicle was created to evaluate &lt;150 nm fine pitch wafer-to-wafer hybrid bond",
+          "operator": "unspecified",
+          "passage": "a 140 nm pitch bonding test vehicle was created to evaluate &lt;150 nm fine pitch wafer-to-wafer hybrid bonding. void-",
           "passage_location": "indexed_abstract_or_title",
           "verification": "unverified_numeric_mention",
           "conditions_verified": false
@@ -2787,7 +2489,8 @@
           "value": 150.0,
           "unit": "nm",
           "literal": "150 nm",
-          "passage": "a 140 nm pitch bonding test vehicle was created to evaluate &lt;150 nm fine pitch wafer-to-wafer hybrid bonding. void-free hybrid bonding with cu grain growth across the ",
+          "operator": "unspecified",
+          "passage": "a 140 nm pitch bonding test vehicle was created to evaluate &lt;150 nm fine pitch wafer-to-wafer hybrid bonding. void-free hybrid bonding with cu grain growth across the bonding in",
           "passage_location": "indexed_abstract_or_title",
           "verification": "unverified_numeric_mention",
           "conditions_verified": false
@@ -2799,7 +2502,8 @@
           "value": 50.0,
           "unit": "nm",
           "literal": "50 nm",
-          "passage": " bonding with cu grain growth across the bonding interface was demonstrated with &lt;50 nm bonding residuals for a champion wafer. bonding residuals were &lt;40 nm for 99.5% of points tested",
+          "operator": "unspecified",
+          "passage": "ybrid bonding with cu grain growth across the bonding interface was demonstrated with &lt;50 nm bonding residuals for a champion wafer. bonding residuals were &lt;40 nm for 99.5% of points tested with thre",
           "passage_location": "indexed_abstract_or_title",
           "verification": "unverified_numeric_mention",
           "conditions_verified": false
@@ -3151,17 +2855,7 @@
             "co packaged optics",
             "silicon photonics"
           ],
-          "metric_candidates": [
-            {
-              "value": 1.6,
-              "unit": "tbps",
-              "literal": "1.6 tbps",
-              "passage": "a silicon-photonics optical transmitter for 12-port 1.6 tbps co-packaged optics modules",
-              "passage_location": "indexed_abstract_or_title",
-              "verification": "unverified_numeric_mention",
-              "conditions_verified": false
-            }
-          ],
+          "metric_candidates": [],
           "verification_status": "index_match_only",
           "source_independence_verified": false,
           "historical_investor_observation_unverified": true
@@ -3245,17 +2939,7 @@
             "co packaged optics",
             "silicon photonics"
           ],
-          "metric_candidates": [
-            {
-              "value": 112.0,
-              "unit": "gb/s",
-              "literal": "112 gb/s",
-              "passage": "a 4×112 gb/s ultra-compact polarization-insensitive silicon photonics wdm receiver with cmos tia for co-packaged",
-              "passage_location": "indexed_abstract_or_title",
-              "verification": "unverified_numeric_mention",
-              "conditions_verified": false
-            }
-          ],
+          "metric_candidates": [],
           "verification_status": "index_match_only",
           "source_independence_verified": false,
           "historical_investor_observation_unverified": true
@@ -3297,17 +2981,7 @@
             "co packaged optics",
             "silicon photonics"
           ],
-          "metric_candidates": [
-            {
-              "value": 94.0,
-              "unit": "gb/s",
-              "literal": "94gb/s",
-              "passage": ", and pluggable form factors, were demonstrated with a combined bandwidth density of 94gb/s/mm, energy efficiency of &lt;10pj/bit, and -5.4dbm oma sensitivity at the kp4 pre-fec-ber=2.4e-4.",
-              "passage_location": "indexed_abstract_or_title",
-              "verification": "unverified_numeric_mention",
-              "conditions_verified": false
-            }
-          ],
+          "metric_candidates": [],
           "verification_status": "index_match_only",
           "source_independence_verified": false,
           "historical_investor_observation_unverified": true
@@ -3373,44 +3047,7 @@
           "historical_investor_observation_unverified": true
         }
       ],
-      "measurement_candidates": [
-        {
-          "source_id": "8481a97efb1a56f5969e7134",
-          "published_at": "2023-03-08",
-          "source_url": "https://api.crossref.org/works/10.1117/12.2646280",
-          "value": 1.6,
-          "unit": "tbps",
-          "literal": "1.6 tbps",
-          "passage": "a silicon-photonics optical transmitter for 12-port 1.6 tbps co-packaged optics modules",
-          "passage_location": "indexed_abstract_or_title",
-          "verification": "unverified_numeric_mention",
-          "conditions_verified": false
-        },
-        {
-          "source_id": "46e826deebc1bb701a6dce70",
-          "published_at": "2024-09-01",
-          "source_url": "https://api.crossref.org/works/10.1109/jlt.2024.3402053",
-          "value": 112.0,
-          "unit": "gb/s",
-          "literal": "112 gb/s",
-          "passage": "a 4×112 gb/s ultra-compact polarization-insensitive silicon photonics wdm receiver with cmos tia for co-packaged",
-          "passage_location": "indexed_abstract_or_title",
-          "verification": "unverified_numeric_mention",
-          "conditions_verified": false
-        },
-        {
-          "source_id": "f4fb2d98e8d3460da518ca5d",
-          "published_at": "2020-01-01",
-          "source_url": "https://api.crossref.org/works/10.1364/ofc.2020.t3h.2",
-          "value": 94.0,
-          "unit": "gb/s",
-          "literal": "94gb/s",
-          "passage": ", and pluggable form factors, were demonstrated with a combined bandwidth density of 94gb/s/mm, energy efficiency of &lt;10pj/bit, and -5.4dbm oma sensitivity at the kp4 pre-fec-ber=2.4e-4.",
-          "passage_location": "indexed_abstract_or_title",
-          "verification": "unverified_numeric_mention",
-          "conditions_verified": false
-        }
-      ]
+      "measurement_candidates": []
     },
     "req:1p6t": {
       "node_id": "req:1p6t",
@@ -3446,18 +3083,20 @@
           "metric_candidates": [
             {
               "value": 1.6,
-              "unit": "tbps",
+              "unit": "tb/s",
               "literal": "1.6 tbps",
-              "passage": "a 1.6 tbps (8-channel 224 gbps/λ) silicon photonic engine, fabricated using advanced electronic-photonic fowlp",
+              "operator": "unspecified",
+              "passage": "a 1.6 tbps (8-channel 224 gbps/λ) silicon photonic engine, fabricated using advanced electronic-photonic fowlp, is succe",
               "passage_location": "indexed_abstract_or_title",
               "verification": "unverified_numeric_mention",
               "conditions_verified": false
             },
             {
               "value": 224.0,
-              "unit": "gbps",
+              "unit": "gb/s",
               "literal": "224 gbps",
-              "passage": "a 1.6 tbps (8-channel 224 gbps/λ) silicon photonic engine, fabricated using advanced electronic-photonic fowlp, is successfully de",
+              "operator": "unspecified",
+              "passage": "a 1.6 tbps (8-channel 224 gbps/λ) silicon photonic engine, fabricated using advanced electronic-photonic fowlp, is successfully demonstrated",
               "passage_location": "indexed_abstract_or_title",
               "verification": "unverified_numeric_mention",
               "conditions_verified": false
@@ -3505,8 +3144,9 @@
           "metric_candidates": [
             {
               "value": 1.6,
-              "unit": "tbps",
+              "unit": "tb/s",
               "literal": "1.6 tbps",
+              "operator": "unspecified",
               "passage": "a silicon-photonics optical transmitter for 12-port 1.6 tbps co-packaged optics modules",
               "passage_location": "indexed_abstract_or_title",
               "verification": "unverified_numeric_mention",
@@ -3532,17 +3172,7 @@
           "matched_terms": [
             "1.6t"
           ],
-          "metric_candidates": [
-            {
-              "value": 1331.0,
-              "unit": "nm",
-              "literal": "1331nm",
-              "passage": "(eml) for 800g and 1.6t optical transmission. four cwdm emls of 1271, 1291, 1311 and 1331nm in 800g fr4 optical transceivers show clear eye diagram after 2km. our 106gbaud emls show high band",
-              "passage_location": "indexed_abstract_or_title",
-              "verification": "unverified_numeric_mention",
-              "conditions_verified": false
-            }
-          ],
+          "metric_candidates": [],
           "verification_status": "index_match_only",
           "source_independence_verified": false,
           "historical_investor_observation_unverified": true
@@ -3585,8 +3215,9 @@
           "metric_candidates": [
             {
               "value": 1.6,
-              "unit": "tbps",
+              "unit": "tb/s",
               "literal": "1.6 tbps",
+              "operator": "unspecified",
               "passage": "co-design of photonic ic, electronic ic, and interposer for 1.6 tbps o/e converter in active optical package",
               "passage_location": "indexed_abstract_or_title",
               "verification": "unverified_numeric_mention",
@@ -3615,8 +3246,9 @@
           "metric_candidates": [
             {
               "value": 1.6,
-              "unit": "tbps",
+              "unit": "tb/s",
               "literal": "1.6 tbps",
+              "operator": "unspecified",
               "passage": "1.6 tbps fowlp-based silicon photonic engine for co-packaged optics",
               "passage_location": "indexed_abstract_or_title",
               "verification": "unverified_numeric_mention",
@@ -3694,9 +3326,10 @@
           "published_at": "2024-01-01",
           "source_url": "https://api.crossref.org/works/10.1364/ofc.2024.tu3a.2",
           "value": 1.6,
-          "unit": "tbps",
+          "unit": "tb/s",
           "literal": "1.6 tbps",
-          "passage": "a 1.6 tbps (8-channel 224 gbps/λ) silicon photonic engine, fabricated using advanced electronic-photonic fowlp",
+          "operator": "unspecified",
+          "passage": "a 1.6 tbps (8-channel 224 gbps/λ) silicon photonic engine, fabricated using advanced electronic-photonic fowlp, is succe",
           "passage_location": "indexed_abstract_or_title",
           "verification": "unverified_numeric_mention",
           "conditions_verified": false
@@ -3706,9 +3339,10 @@
           "published_at": "2024-01-01",
           "source_url": "https://api.crossref.org/works/10.1364/ofc.2024.tu3a.2",
           "value": 224.0,
-          "unit": "gbps",
+          "unit": "gb/s",
           "literal": "224 gbps",
-          "passage": "a 1.6 tbps (8-channel 224 gbps/λ) silicon photonic engine, fabricated using advanced electronic-photonic fowlp, is successfully de",
+          "operator": "unspecified",
+          "passage": "a 1.6 tbps (8-channel 224 gbps/λ) silicon photonic engine, fabricated using advanced electronic-photonic fowlp, is successfully demonstrated",
           "passage_location": "indexed_abstract_or_title",
           "verification": "unverified_numeric_mention",
           "conditions_verified": false
@@ -3718,21 +3352,10 @@
           "published_at": "2023-03-08",
           "source_url": "https://api.crossref.org/works/10.1117/12.2646280",
           "value": 1.6,
-          "unit": "tbps",
+          "unit": "tb/s",
           "literal": "1.6 tbps",
+          "operator": "unspecified",
           "passage": "a silicon-photonics optical transmitter for 12-port 1.6 tbps co-packaged optics modules",
-          "passage_location": "indexed_abstract_or_title",
-          "verification": "unverified_numeric_mention",
-          "conditions_verified": false
-        },
-        {
-          "source_id": "ab722909845fb79a8df3d1f3",
-          "published_at": "2023-11-01",
-          "source_url": "https://api.openalex.org/works/W4391073076",
-          "value": 1331.0,
-          "unit": "nm",
-          "literal": "1331nm",
-          "passage": "(eml) for 800g and 1.6t optical transmission. four cwdm emls of 1271, 1291, 1311 and 1331nm in 800g fr4 optical transceivers show clear eye diagram after 2km. our 106gbaud emls show high band",
           "passage_location": "indexed_abstract_or_title",
           "verification": "unverified_numeric_mention",
           "conditions_verified": false
@@ -3742,8 +3365,9 @@
           "published_at": "2024-11-13",
           "source_url": "https://api.crossref.org/works/10.1109/icsj62869.2024.10804735",
           "value": 1.6,
-          "unit": "tbps",
+          "unit": "tb/s",
           "literal": "1.6 tbps",
+          "operator": "unspecified",
           "passage": "co-design of photonic ic, electronic ic, and interposer for 1.6 tbps o/e converter in active optical package",
           "passage_location": "indexed_abstract_or_title",
           "verification": "unverified_numeric_mention",
@@ -3754,8 +3378,9 @@
           "published_at": "2025-02-15",
           "source_url": "https://api.crossref.org/works/10.1109/jlt.2024.3493855",
           "value": 1.6,
-          "unit": "tbps",
+          "unit": "tb/s",
           "literal": "1.6 tbps",
+          "operator": "unspecified",
           "passage": "1.6 tbps fowlp-based silicon photonic engine for co-packaged optics",
           "passage_location": "indexed_abstract_or_title",
           "verification": "unverified_numeric_mention",
@@ -4091,7 +3716,8 @@
               "value": 500.0,
               "unit": "mw",
               "literal": "500mw",
-              "passage": "sources (elss) used in co-packaged optics (cpo) applications is demonstrated at over 500mw ex-fiber, more than 10% efficiency.",
+              "operator": "unspecified",
+              "passage": "aser sources (elss) used in co-packaged optics (cpo) applications is demonstrated at over 500mw ex-fiber, more than 10% efficiency.",
               "passage_location": "indexed_abstract_or_title",
               "verification": "unverified_numeric_mention",
               "conditions_verified": false
@@ -4100,7 +3726,8 @@
               "value": 10.0,
               "unit": "%",
               "literal": "10%",
-              "passage": "packaged optics (cpo) applications is demonstrated at over 500mw ex-fiber, more than 10% efficiency.",
+              "operator": "unspecified",
+              "passage": "n co-packaged optics (cpo) applications is demonstrated at over 500mw ex-fiber, more than 10% efficiency.",
               "passage_location": "indexed_abstract_or_title",
               "verification": "unverified_numeric_mention",
               "conditions_verified": false
@@ -4236,7 +3863,8 @@
               "value": 40.0,
               "unit": "%",
               "literal": "40%",
-              "passage": "cality in data center networks. simulations show completion time reductions of up to 40% for an all-to-all communication pattern and a network stack latency of 1.25 μs.",
+              "operator": "unspecified",
+              "passage": "rk locality in data center networks. simulations show completion time reductions of up to 40% for an all-to-all communication pattern and a network stack latency of 1.25 μs.",
               "passage_location": "indexed_abstract_or_title",
               "verification": "unverified_numeric_mention",
               "conditions_verified": false
@@ -4265,9 +3893,10 @@
           "metric_candidates": [
             {
               "value": 1.92,
-              "unit": "tbps",
+              "unit": "tb/s",
               "literal": "1.92 tbps",
-              "passage": "ssfully achieved baud-rate sampled 40-gbaud dp-16qam self-homodyne transmission with 1.92 tbps aggregated capacity over 3.5-km mcf, yielding a promising solution for the dsp-free coherent co-pac",
+              "operator": "unspecified",
+              "passage": "successfully achieved baud-rate sampled 40-gbaud dp-16qam self-homodyne transmission with 1.92 tbps aggregated capacity over 3.5-km mcf, yielding a promising solution for the dsp-free coherent co-packaged opti",
               "passage_location": "indexed_abstract_or_title",
               "verification": "unverified_numeric_mention",
               "conditions_verified": false
@@ -4296,9 +3925,10 @@
           "metric_candidates": [
             {
               "value": 3.2,
-              "unit": "tbps",
+              "unit": "tb/s",
               "literal": "3.2tbps",
-              "passage": "we present a low-cost, scalable 3.2tbps heterogenous photonic integrated circuit chip assembled in a co-packaged optics configuration. the ",
+              "operator": "unspecified",
+              "passage": "we present a low-cost, scalable 3.2tbps heterogenous photonic integrated circuit chip assembled in a co-packaged optics configuration. the integratio",
               "passage_location": "indexed_abstract_or_title",
               "verification": "unverified_numeric_mention",
               "conditions_verified": false
@@ -4611,7 +4241,8 @@
           "value": 500.0,
           "unit": "mw",
           "literal": "500mw",
-          "passage": "sources (elss) used in co-packaged optics (cpo) applications is demonstrated at over 500mw ex-fiber, more than 10% efficiency.",
+          "operator": "unspecified",
+          "passage": "aser sources (elss) used in co-packaged optics (cpo) applications is demonstrated at over 500mw ex-fiber, more than 10% efficiency.",
           "passage_location": "indexed_abstract_or_title",
           "verification": "unverified_numeric_mention",
           "conditions_verified": false
@@ -4623,7 +4254,8 @@
           "value": 10.0,
           "unit": "%",
           "literal": "10%",
-          "passage": "packaged optics (cpo) applications is demonstrated at over 500mw ex-fiber, more than 10% efficiency.",
+          "operator": "unspecified",
+          "passage": "n co-packaged optics (cpo) applications is demonstrated at over 500mw ex-fiber, more than 10% efficiency.",
           "passage_location": "indexed_abstract_or_title",
           "verification": "unverified_numeric_mention",
           "conditions_verified": false
@@ -4635,7 +4267,8 @@
           "value": 40.0,
           "unit": "%",
           "literal": "40%",
-          "passage": "cality in data center networks. simulations show completion time reductions of up to 40% for an all-to-all communication pattern and a network stack latency of 1.25 μs.",
+          "operator": "unspecified",
+          "passage": "rk locality in data center networks. simulations show completion time reductions of up to 40% for an all-to-all communication pattern and a network stack latency of 1.25 μs.",
           "passage_location": "indexed_abstract_or_title",
           "verification": "unverified_numeric_mention",
           "conditions_verified": false
@@ -4645,9 +4278,10 @@
           "published_at": "2023-01-01",
           "source_url": "https://api.crossref.org/works/10.1364/ofc.2023.m3e.3",
           "value": 1.92,
-          "unit": "tbps",
+          "unit": "tb/s",
           "literal": "1.92 tbps",
-          "passage": "ssfully achieved baud-rate sampled 40-gbaud dp-16qam self-homodyne transmission with 1.92 tbps aggregated capacity over 3.5-km mcf, yielding a promising solution for the dsp-free coherent co-pac",
+          "operator": "unspecified",
+          "passage": "successfully achieved baud-rate sampled 40-gbaud dp-16qam self-homodyne transmission with 1.92 tbps aggregated capacity over 3.5-km mcf, yielding a promising solution for the dsp-free coherent co-packaged opti",
           "passage_location": "indexed_abstract_or_title",
           "verification": "unverified_numeric_mention",
           "conditions_verified": false
@@ -4657,9 +4291,10 @@
           "published_at": "2023-01-01",
           "source_url": "https://api.crossref.org/works/10.1364/ofc.2023.w3d.2",
           "value": 3.2,
-          "unit": "tbps",
+          "unit": "tb/s",
           "literal": "3.2tbps",
-          "passage": "we present a low-cost, scalable 3.2tbps heterogenous photonic integrated circuit chip assembled in a co-packaged optics configuration. the ",
+          "operator": "unspecified",
+          "passage": "we present a low-cost, scalable 3.2tbps heterogenous photonic integrated circuit chip assembled in a co-packaged optics configuration. the integratio",
           "passage_location": "indexed_abstract_or_title",
           "verification": "unverified_numeric_mention",
           "conditions_verified": false
@@ -4757,26 +4392,7 @@
           "matched_terms": [
             "800v dc"
           ],
-          "metric_candidates": [
-            {
-              "value": 400.0,
-              "unit": "v",
-              "literal": "400v",
-              "passage": "comparison of igbt and sic inverter loss for 400v and 800v dc bus electric vehicle drivetrains",
-              "passage_location": "indexed_abstract_or_title",
-              "verification": "unverified_numeric_mention",
-              "conditions_verified": false
-            },
-            {
-              "value": 800.0,
-              "unit": "v",
-              "literal": "800v",
-              "passage": "comparison of igbt and sic inverter loss for 400v and 800v dc bus electric vehicle drivetrains",
-              "passage_location": "indexed_abstract_or_title",
-              "verification": "unverified_numeric_mention",
-              "conditions_verified": false
-            }
-          ],
+          "metric_candidates": [],
           "verification_status": "index_match_only",
           "source_independence_verified": false,
           "historical_investor_observation_unverified": true
@@ -4796,17 +4412,7 @@
           "matched_terms": [
             "800v dc"
           ],
-          "metric_candidates": [
-            {
-              "value": 800.0,
-              "unit": "v",
-              "literal": "800v",
-              "passage": "comparative evaluation of 800v dc-link three-phase two/three-level sic inverter concepts for next-generation variable speed drives",
-              "passage_location": "indexed_abstract_or_title",
-              "verification": "unverified_numeric_mention",
-              "conditions_verified": false
-            }
-          ],
+          "metric_candidates": [],
           "verification_status": "index_match_only",
           "source_independence_verified": false,
           "historical_investor_observation_unverified": true
@@ -4846,17 +4452,7 @@
           "matched_terms": [
             "800v dc"
           ],
-          "metric_candidates": [
-            {
-              "value": 800.0,
-              "unit": "v",
-              "literal": "800v",
-              "passage": "stacked-bridge-based three-level dab converter in 800v dc micro-grids",
-              "passage_location": "indexed_abstract_or_title",
-              "verification": "unverified_numeric_mention",
-              "conditions_verified": false
-            }
-          ],
+          "metric_candidates": [],
           "verification_status": "index_match_only",
           "source_independence_verified": false,
           "historical_investor_observation_unverified": true
@@ -4876,17 +4472,7 @@
           "matched_terms": [
             "800v dc"
           ],
-          "metric_candidates": [
-            {
-              "value": 800.0,
-              "unit": "v",
-              "literal": "800v",
-              "passage": "on-demand battery reconfiguration for 800v dc fast charging in electric vehicles",
-              "passage_location": "indexed_abstract_or_title",
-              "verification": "unverified_numeric_mention",
-              "conditions_verified": false
-            }
-          ],
+          "metric_candidates": [],
           "verification_status": "index_match_only",
           "source_independence_verified": false,
           "historical_investor_observation_unverified": true
@@ -4906,26 +4492,7 @@
           "matched_terms": [
             "800v dc"
           ],
-          "metric_candidates": [
-            {
-              "value": 400.0,
-              "unit": "v",
-              "literal": "400v",
-              "passage": "analysis of the phase-shift full-bridge converter in 400v and 800v dc fast charging stations",
-              "passage_location": "indexed_abstract_or_title",
-              "verification": "unverified_numeric_mention",
-              "conditions_verified": false
-            },
-            {
-              "value": 800.0,
-              "unit": "v",
-              "literal": "800v",
-              "passage": "analysis of the phase-shift full-bridge converter in 400v and 800v dc fast charging stations",
-              "passage_location": "indexed_abstract_or_title",
-              "verification": "unverified_numeric_mention",
-              "conditions_verified": false
-            }
-          ],
+          "metric_candidates": [],
           "verification_status": "index_match_only",
           "source_independence_verified": false,
           "historical_investor_observation_unverified": true
@@ -4971,92 +4538,7 @@
           "historical_investor_observation_unverified": true
         }
       ],
-      "measurement_candidates": [
-        {
-          "source_id": "280cb997919201db5bd592d9",
-          "published_at": "2020-10-11",
-          "source_url": "https://api.crossref.org/works/10.1109/ecce44975.2020.9236202",
-          "value": 400.0,
-          "unit": "v",
-          "literal": "400v",
-          "passage": "comparison of igbt and sic inverter loss for 400v and 800v dc bus electric vehicle drivetrains",
-          "passage_location": "indexed_abstract_or_title",
-          "verification": "unverified_numeric_mention",
-          "conditions_verified": false
-        },
-        {
-          "source_id": "280cb997919201db5bd592d9",
-          "published_at": "2020-10-11",
-          "source_url": "https://api.crossref.org/works/10.1109/ecce44975.2020.9236202",
-          "value": 800.0,
-          "unit": "v",
-          "literal": "800v",
-          "passage": "comparison of igbt and sic inverter loss for 400v and 800v dc bus electric vehicle drivetrains",
-          "passage_location": "indexed_abstract_or_title",
-          "verification": "unverified_numeric_mention",
-          "conditions_verified": false
-        },
-        {
-          "source_id": "3e6043c99b5d610a4e573f12",
-          "published_at": "2020-11-24",
-          "source_url": "https://api.crossref.org/works/10.23919/icems50442.2020.9291123",
-          "value": 800.0,
-          "unit": "v",
-          "literal": "800v",
-          "passage": "comparative evaluation of 800v dc-link three-phase two/three-level sic inverter concepts for next-generation variable speed drives",
-          "passage_location": "indexed_abstract_or_title",
-          "verification": "unverified_numeric_mention",
-          "conditions_verified": false
-        },
-        {
-          "source_id": "629672672f626bb8da4974de",
-          "published_at": "2023-03-19",
-          "source_url": "https://api.crossref.org/works/10.1109/apec43580.2023.10131446",
-          "value": 800.0,
-          "unit": "v",
-          "literal": "800v",
-          "passage": "stacked-bridge-based three-level dab converter in 800v dc micro-grids",
-          "passage_location": "indexed_abstract_or_title",
-          "verification": "unverified_numeric_mention",
-          "conditions_verified": false
-        },
-        {
-          "source_id": "565ad7a3e0ecbe788369473f",
-          "published_at": "2023-10-29",
-          "source_url": "https://api.crossref.org/works/10.1109/ecce53617.2023.10362314",
-          "value": 800.0,
-          "unit": "v",
-          "literal": "800v",
-          "passage": "on-demand battery reconfiguration for 800v dc fast charging in electric vehicles",
-          "passage_location": "indexed_abstract_or_title",
-          "verification": "unverified_numeric_mention",
-          "conditions_verified": false
-        },
-        {
-          "source_id": "31e2bcff5ca6fbced7ecaa20",
-          "published_at": "2023-11-26",
-          "source_url": "https://api.crossref.org/works/10.1109/spec56436.2023.10408584",
-          "value": 400.0,
-          "unit": "v",
-          "literal": "400v",
-          "passage": "analysis of the phase-shift full-bridge converter in 400v and 800v dc fast charging stations",
-          "passage_location": "indexed_abstract_or_title",
-          "verification": "unverified_numeric_mention",
-          "conditions_verified": false
-        },
-        {
-          "source_id": "31e2bcff5ca6fbced7ecaa20",
-          "published_at": "2023-11-26",
-          "source_url": "https://api.crossref.org/works/10.1109/spec56436.2023.10408584",
-          "value": 800.0,
-          "unit": "v",
-          "literal": "800v",
-          "passage": "analysis of the phase-shift full-bridge converter in 400v and 800v dc fast charging stations",
-          "passage_location": "indexed_abstract_or_title",
-          "verification": "unverified_numeric_mention",
-          "conditions_verified": false
-        }
-      ]
+      "measurement_candidates": []
     },
     "req:800v": {
       "node_id": "req:800v",
@@ -5092,7 +4574,8 @@
               "value": 800.0,
               "unit": "vdc",
               "literal": "800 vdc",
-              "passage": "patible with dynamic ai power profiles. although solid-state transformers (ssts) and 800 vdc distribution architecture are widely discussed, implementable topology/control details, and long-ho",
+              "operator": "unspecified",
+              "passage": "s compatible with dynamic ai power profiles. although solid-state transformers (ssts) and 800 vdc distribution architecture are widely discussed, implementable topology/control details, and long-horizon",
               "passage_location": "indexed_abstract_or_title",
               "verification": "unverified_numeric_mention",
               "conditions_verified": false
@@ -5122,6 +4605,7 @@
               "value": 400.0,
               "unit": "v",
               "literal": "400v",
+              "operator": "unspecified",
               "passage": "comparison of igbt and sic inverter loss for 400v and 800v dc bus electric vehicle drivetrains",
               "passage_location": "indexed_abstract_or_title",
               "verification": "unverified_numeric_mention",
@@ -5131,6 +4615,7 @@
               "value": 800.0,
               "unit": "v",
               "literal": "800v",
+              "operator": "unspecified",
               "passage": "comparison of igbt and sic inverter loss for 400v and 800v dc bus electric vehicle drivetrains",
               "passage_location": "indexed_abstract_or_title",
               "verification": "unverified_numeric_mention",
@@ -5161,6 +4646,7 @@
               "value": 800.0,
               "unit": "v",
               "literal": "800v",
+              "operator": "unspecified",
               "passage": "comparative evaluation of 800v dc-link three-phase two/three-level sic inverter concepts for next-generation variable speed drives",
               "passage_location": "indexed_abstract_or_title",
               "verification": "unverified_numeric_mention",
@@ -5191,6 +4677,7 @@
               "value": 800.0,
               "unit": "v",
               "literal": "800v",
+              "operator": "unspecified",
               "passage": "stacked-bridge-based three-level dab converter in 800v dc micro-grids",
               "passage_location": "indexed_abstract_or_title",
               "verification": "unverified_numeric_mention",
@@ -5221,6 +4708,7 @@
               "value": 800.0,
               "unit": "v",
               "literal": "800v",
+              "operator": "unspecified",
               "passage": "on-demand battery reconfiguration for 800v dc fast charging in electric vehicles",
               "passage_location": "indexed_abstract_or_title",
               "verification": "unverified_numeric_mention",
@@ -5251,6 +4739,7 @@
               "value": 400.0,
               "unit": "v",
               "literal": "400v",
+              "operator": "unspecified",
               "passage": "analysis of the phase-shift full-bridge converter in 400v and 800v dc fast charging stations",
               "passage_location": "indexed_abstract_or_title",
               "verification": "unverified_numeric_mention",
@@ -5260,6 +4749,7 @@
               "value": 800.0,
               "unit": "v",
               "literal": "800v",
+              "operator": "unspecified",
               "passage": "analysis of the phase-shift full-bridge converter in 400v and 800v dc fast charging stations",
               "passage_location": "indexed_abstract_or_title",
               "verification": "unverified_numeric_mention",
@@ -5279,7 +4769,8 @@
           "value": 800.0,
           "unit": "vdc",
           "literal": "800 vdc",
-          "passage": "patible with dynamic ai power profiles. although solid-state transformers (ssts) and 800 vdc distribution architecture are widely discussed, implementable topology/control details, and long-ho",
+          "operator": "unspecified",
+          "passage": "s compatible with dynamic ai power profiles. although solid-state transformers (ssts) and 800 vdc distribution architecture are widely discussed, implementable topology/control details, and long-horizon",
           "passage_location": "indexed_abstract_or_title",
           "verification": "unverified_numeric_mention",
           "conditions_verified": false
@@ -5291,6 +4782,7 @@
           "value": 400.0,
           "unit": "v",
           "literal": "400v",
+          "operator": "unspecified",
           "passage": "comparison of igbt and sic inverter loss for 400v and 800v dc bus electric vehicle drivetrains",
           "passage_location": "indexed_abstract_or_title",
           "verification": "unverified_numeric_mention",
@@ -5303,6 +4795,7 @@
           "value": 800.0,
           "unit": "v",
           "literal": "800v",
+          "operator": "unspecified",
           "passage": "comparison of igbt and sic inverter loss for 400v and 800v dc bus electric vehicle drivetrains",
           "passage_location": "indexed_abstract_or_title",
           "verification": "unverified_numeric_mention",
@@ -5315,6 +4808,7 @@
           "value": 800.0,
           "unit": "v",
           "literal": "800v",
+          "operator": "unspecified",
           "passage": "comparative evaluation of 800v dc-link three-phase two/three-level sic inverter concepts for next-generation variable speed drives",
           "passage_location": "indexed_abstract_or_title",
           "verification": "unverified_numeric_mention",
@@ -5327,6 +4821,7 @@
           "value": 800.0,
           "unit": "v",
           "literal": "800v",
+          "operator": "unspecified",
           "passage": "stacked-bridge-based three-level dab converter in 800v dc micro-grids",
           "passage_location": "indexed_abstract_or_title",
           "verification": "unverified_numeric_mention",
@@ -5339,6 +4834,7 @@
           "value": 800.0,
           "unit": "v",
           "literal": "800v",
+          "operator": "unspecified",
           "passage": "on-demand battery reconfiguration for 800v dc fast charging in electric vehicles",
           "passage_location": "indexed_abstract_or_title",
           "verification": "unverified_numeric_mention",
@@ -5351,6 +4847,7 @@
           "value": 400.0,
           "unit": "v",
           "literal": "400v",
+          "operator": "unspecified",
           "passage": "analysis of the phase-shift full-bridge converter in 400v and 800v dc fast charging stations",
           "passage_location": "indexed_abstract_or_title",
           "verification": "unverified_numeric_mention",
@@ -5363,6 +4860,7 @@
           "value": 800.0,
           "unit": "v",
           "literal": "800v",
+          "operator": "unspecified",
           "passage": "analysis of the phase-shift full-bridge converter in 400v and 800v dc fast charging stations",
           "passage_location": "indexed_abstract_or_title",
           "verification": "unverified_numeric_mention",
@@ -6025,17 +5523,7 @@
           "matched_terms": [
             "silicon carbide"
           ],
-          "metric_candidates": [
-            {
-              "value": 2.0,
-              "unit": "mw",
-              "literal": "2 mw",
-              "passage": "impact of silicon carbide devices in 2 mw dfig based wind energy system",
-              "passage_location": "indexed_abstract_or_title",
-              "verification": "unverified_numeric_mention",
-              "conditions_verified": false
-            }
-          ],
+          "metric_candidates": [],
           "verification_status": "index_match_only",
           "source_independence_verified": false,
           "historical_investor_observation_unverified": true
@@ -6117,18 +5605,10 @@
           ],
           "metric_candidates": [
             {
-              "value": 15.0,
-              "unit": "kw",
-              "literal": "15 kw",
-              "passage": "3d commutation-loop design methodology for a silicon-carbide based 15 kw, 380:480 v matrix converter with pcb aluminum nitride cooling inlay",
-              "passage_location": "indexed_abstract_or_title",
-              "verification": "unverified_numeric_mention",
-              "conditions_verified": false
-            },
-            {
               "value": 480.0,
               "unit": "v",
               "literal": "480 v",
+              "operator": "unspecified",
               "passage": "3d commutation-loop design methodology for a silicon-carbide based 15 kw, 380:480 v matrix converter with pcb aluminum nitride cooling inlay",
               "passage_location": "indexed_abstract_or_title",
               "verification": "unverified_numeric_mention",
@@ -6422,36 +5902,13 @@
       ],
       "measurement_candidates": [
         {
-          "source_id": "a4b5fa07ac94c7eeb2086b97",
-          "published_at": "2020-09-01",
-          "source_url": "https://api.openalex.org/works/W3091999751",
-          "value": 2.0,
-          "unit": "mw",
-          "literal": "2 mw",
-          "passage": "impact of silicon carbide devices in 2 mw dfig based wind energy system",
-          "passage_location": "indexed_abstract_or_title",
-          "verification": "unverified_numeric_mention",
-          "conditions_verified": false
-        },
-        {
-          "source_id": "9a85b45c92b8dea24564af1f",
-          "published_at": "2020-10-11",
-          "source_url": "https://api.openalex.org/works/W3097388537",
-          "value": 15.0,
-          "unit": "kw",
-          "literal": "15 kw",
-          "passage": "3d commutation-loop design methodology for a silicon-carbide based 15 kw, 380:480 v matrix converter with pcb aluminum nitride cooling inlay",
-          "passage_location": "indexed_abstract_or_title",
-          "verification": "unverified_numeric_mention",
-          "conditions_verified": false
-        },
-        {
           "source_id": "9a85b45c92b8dea24564af1f",
           "published_at": "2020-10-11",
           "source_url": "https://api.openalex.org/works/W3097388537",
           "value": 480.0,
           "unit": "v",
           "literal": "480 v",
+          "operator": "unspecified",
           "passage": "3d commutation-loop design methodology for a silicon-carbide based 15 kw, 380:480 v matrix converter with pcb aluminum nitride cooling inlay",
           "passage_location": "indexed_abstract_or_title",
           "verification": "unverified_numeric_mention",
@@ -6797,8 +6254,9 @@
             {
               "value": 89.3,
               "unit": "nm",
-              "literal": "89.3 nm",
-              "passage": "ntitatively compared the void characteristics of electrodeposited nc-cu (grain size ~89.3 nm) and (111)-oriented nanotwinned cu (nt-cu, ~621.8 nm) bonded at 200 °c. plan-view stem-haadf analys",
+              "literal": "~89.3 nm",
+              "operator": "approximate",
+              "passage": "e quantitatively compared the void characteristics of electrodeposited nc-cu (grain size ~89.3 nm) and (111)-oriented nanotwinned cu (nt-cu, ~621.8 nm) bonded at 200 °c. plan-view stem-haadf analysis reveale",
               "passage_location": "indexed_abstract_or_title",
               "verification": "unverified_numeric_mention",
               "conditions_verified": false
@@ -6876,8 +6334,9 @@
           "source_url": "https://api.openalex.org/works/W4413248382",
           "value": 89.3,
           "unit": "nm",
-          "literal": "89.3 nm",
-          "passage": "ntitatively compared the void characteristics of electrodeposited nc-cu (grain size ~89.3 nm) and (111)-oriented nanotwinned cu (nt-cu, ~621.8 nm) bonded at 200 °c. plan-view stem-haadf analys",
+          "literal": "~89.3 nm",
+          "operator": "approximate",
+          "passage": "e quantitatively compared the void characteristics of electrodeposited nc-cu (grain size ~89.3 nm) and (111)-oriented nanotwinned cu (nt-cu, ~621.8 nm) bonded at 200 °c. plan-view stem-haadf analysis reveale",
           "passage_location": "indexed_abstract_or_title",
           "verification": "unverified_numeric_mention",
           "conditions_verified": false
@@ -6933,26 +6392,7 @@
           "matched_terms": [
             "laser source"
           ],
-          "metric_candidates": [
-            {
-              "value": 20.0,
-              "unit": "dbm",
-              "literal": "20 dbm",
-              "passage": "4 splitter and a single external laser source (els) with an extremely high power of +20 dbm per channel, potentially achieving a bandwidth of 3.2 tbps.",
-              "passage_location": "indexed_abstract_or_title",
-              "verification": "unverified_numeric_mention",
-              "conditions_verified": false
-            },
-            {
-              "value": 3.2,
-              "unit": "tbps",
-              "literal": "3.2 tbps",
-              "passage": "an extremely high power of +20 dbm per channel, potentially achieving a bandwidth of 3.2 tbps.",
-              "passage_location": "indexed_abstract_or_title",
-              "verification": "unverified_numeric_mention",
-              "conditions_verified": false
-            }
-          ],
+          "metric_candidates": [],
           "verification_status": "index_match_only",
           "source_independence_verified": false,
           "historical_investor_observation_unverified": true
@@ -7052,17 +6492,7 @@
           "matched_terms": [
             "dfb laser"
           ],
-          "metric_candidates": [
-            {
-              "value": 400.0,
-              "unit": "ghz",
-              "literal": "400 ghz",
-              "passage": "flip-chip bonded 8-channel dfb laser array with highly uniform 400 ghz spacing and high output power for optical i/o technology",
-              "passage_location": "indexed_abstract_or_title",
-              "verification": "unverified_numeric_mention",
-              "conditions_verified": false
-            }
-          ],
+          "metric_candidates": [],
           "verification_status": "index_match_only",
           "source_independence_verified": false,
           "historical_investor_observation_unverified": true
@@ -7108,44 +6538,7 @@
           "historical_investor_observation_unverified": true
         }
       ],
-      "measurement_candidates": [
-        {
-          "source_id": "2560edc2e5a2d8e46eb9f7b8",
-          "published_at": "2024-01-01",
-          "source_url": "https://api.crossref.org/works/10.1364/cleo_si.2024.sf3f.7",
-          "value": 20.0,
-          "unit": "dbm",
-          "literal": "20 dbm",
-          "passage": "4 splitter and a single external laser source (els) with an extremely high power of +20 dbm per channel, potentially achieving a bandwidth of 3.2 tbps.",
-          "passage_location": "indexed_abstract_or_title",
-          "verification": "unverified_numeric_mention",
-          "conditions_verified": false
-        },
-        {
-          "source_id": "2560edc2e5a2d8e46eb9f7b8",
-          "published_at": "2024-01-01",
-          "source_url": "https://api.crossref.org/works/10.1364/cleo_si.2024.sf3f.7",
-          "value": 3.2,
-          "unit": "tbps",
-          "literal": "3.2 tbps",
-          "passage": "an extremely high power of +20 dbm per channel, potentially achieving a bandwidth of 3.2 tbps.",
-          "passage_location": "indexed_abstract_or_title",
-          "verification": "unverified_numeric_mention",
-          "conditions_verified": false
-        },
-        {
-          "source_id": "3db9eeab0bd59a4ea8fd4365",
-          "published_at": "2025-01-01",
-          "source_url": "https://api.openalex.org/works/W4409371678",
-          "value": 400.0,
-          "unit": "ghz",
-          "literal": "400 ghz",
-          "passage": "flip-chip bonded 8-channel dfb laser array with highly uniform 400 ghz spacing and high output power for optical i/o technology",
-          "passage_location": "indexed_abstract_or_title",
-          "verification": "unverified_numeric_mention",
-          "conditions_verified": false
-        }
-      ]
+      "measurement_candidates": []
     },
     "component:modulator": {
       "node_id": "component:modulator",
@@ -7301,16 +6694,8 @@
               "value": 62.0,
               "unit": "ghz",
               "literal": "62ghz",
-              "passage": "-electronic front-ends. using a traveling-wave sige bicmos transimpedance amplifier (62ghz bandwidth, 6.9kohm gain) assembled with a silicon photonic ge photodetector, a 2.5pj/bit optical re",
-              "passage_location": "indexed_abstract_or_title",
-              "verification": "unverified_numeric_mention",
-              "conditions_verified": false
-            },
-            {
-              "value": 200.0,
-              "unit": "gbps",
-              "literal": "200gbps",
-              "passage": "ic ge photodetector, a 2.5pj/bit optical receiver is demonstrated at a gross rate of 200gbps pam-4 using 5 taps of equalization.",
+              "operator": "unspecified",
+              "passage": " opto-electronic front-ends. using a traveling-wave sige bicmos transimpedance amplifier (62ghz bandwidth, 6.9kohm gain) assembled with a silicon photonic ge photodetector, a 2.5pj/bit optical receiver is ",
               "passage_location": "indexed_abstract_or_title",
               "verification": "unverified_numeric_mention",
               "conditions_verified": false
@@ -7355,17 +6740,7 @@
           "matched_terms": [
             "optical receiver"
           ],
-          "metric_candidates": [
-            {
-              "value": 45.0,
-              "unit": "nm",
-              "literal": "45nm",
-              "passage": " here we report the demonstration of a monolithically integrated optical receiver in 45nm cmos, where efficient multi-layer optical demultiplexing with capacitive tuning, energy efficient e",
-              "passage_location": "indexed_abstract_or_title",
-              "verification": "unverified_numeric_mention",
-              "conditions_verified": false
-            }
-          ],
+          "metric_candidates": [],
           "verification_status": "index_match_only",
           "source_independence_verified": false,
           "historical_investor_observation_unverified": true
@@ -7439,31 +6814,8 @@
           "value": 62.0,
           "unit": "ghz",
           "literal": "62ghz",
-          "passage": "-electronic front-ends. using a traveling-wave sige bicmos transimpedance amplifier (62ghz bandwidth, 6.9kohm gain) assembled with a silicon photonic ge photodetector, a 2.5pj/bit optical re",
-          "passage_location": "indexed_abstract_or_title",
-          "verification": "unverified_numeric_mention",
-          "conditions_verified": false
-        },
-        {
-          "source_id": "f65cbc272d9c947a5e5935cb",
-          "published_at": "2023-11-13",
-          "source_url": "https://api.openalex.org/works/W4393174586",
-          "value": 200.0,
-          "unit": "gbps",
-          "literal": "200gbps",
-          "passage": "ic ge photodetector, a 2.5pj/bit optical receiver is demonstrated at a gross rate of 200gbps pam-4 using 5 taps of equalization.",
-          "passage_location": "indexed_abstract_or_title",
-          "verification": "unverified_numeric_mention",
-          "conditions_verified": false
-        },
-        {
-          "source_id": "aa238bc8a8f9c2b9fdc98115",
-          "published_at": "2026-01-12",
-          "source_url": "https://api.openalex.org/works/W7123396751",
-          "value": 45.0,
-          "unit": "nm",
-          "literal": "45nm",
-          "passage": " here we report the demonstration of a monolithically integrated optical receiver in 45nm cmos, where efficient multi-layer optical demultiplexing with capacitive tuning, energy efficient e",
+          "operator": "unspecified",
+          "passage": " opto-electronic front-ends. using a traveling-wave sige bicmos transimpedance amplifier (62ghz bandwidth, 6.9kohm gain) assembled with a silicon photonic ge photodetector, a 2.5pj/bit optical receiver is ",
           "passage_location": "indexed_abstract_or_title",
           "verification": "unverified_numeric_mention",
           "conditions_verified": false
@@ -7535,7 +6887,8 @@
               "value": 0.4,
               "unit": "db",
               "literal": "0.4 db",
-              "passage": "for co-packaged optics is developed. the connector demonstrates low insertion loss ≤ 0.4 db with small variation within ± 0.05 db in multiple cycles connections and 260 °c reflow-compatibilit",
+              "operator": "unspecified",
+              "passage": "ctor for co-packaged optics is developed. the connector demonstrates low insertion loss ≤ 0.4 db with small variation within ± 0.05 db in multiple cycles connections and 260 °c reflow-compatibility.",
               "passage_location": "indexed_abstract_or_title",
               "verification": "unverified_numeric_mention",
               "conditions_verified": false
@@ -7544,7 +6897,8 @@
               "value": 0.05,
               "unit": "db",
               "literal": "0.05 db",
-              "passage": "the connector demonstrates low insertion loss ≤ 0.4 db with small variation within ± 0.05 db in multiple cycles connections and 260 °c reflow-compatibility.",
+              "operator": "unspecified",
+              "passage": "ped. the connector demonstrates low insertion loss ≤ 0.4 db with small variation within ± 0.05 db in multiple cycles connections and 260 °c reflow-compatibility.",
               "passage_location": "indexed_abstract_or_title",
               "verification": "unverified_numeric_mention",
               "conditions_verified": false
@@ -7663,7 +7017,8 @@
           "value": 0.4,
           "unit": "db",
           "literal": "0.4 db",
-          "passage": "for co-packaged optics is developed. the connector demonstrates low insertion loss ≤ 0.4 db with small variation within ± 0.05 db in multiple cycles connections and 260 °c reflow-compatibilit",
+          "operator": "unspecified",
+          "passage": "ctor for co-packaged optics is developed. the connector demonstrates low insertion loss ≤ 0.4 db with small variation within ± 0.05 db in multiple cycles connections and 260 °c reflow-compatibility.",
           "passage_location": "indexed_abstract_or_title",
           "verification": "unverified_numeric_mention",
           "conditions_verified": false
@@ -7675,7 +7030,8 @@
           "value": 0.05,
           "unit": "db",
           "literal": "0.05 db",
-          "passage": "the connector demonstrates low insertion loss ≤ 0.4 db with small variation within ± 0.05 db in multiple cycles connections and 260 °c reflow-compatibility.",
+          "operator": "unspecified",
+          "passage": "ped. the connector demonstrates low insertion loss ≤ 0.4 db with small variation within ± 0.05 db in multiple cycles connections and 260 °c reflow-compatibility.",
           "passage_location": "indexed_abstract_or_title",
           "verification": "unverified_numeric_mention",
           "conditions_verified": false
@@ -7958,19 +7314,11 @@
           ],
           "metric_candidates": [
             {
-              "value": 57.0,
-              "unit": "w",
-              "literal": "57 w",
-              "passage": "stract this paper presents findings for active-clamped flyback (acf) dc-dc converter 57 w used as an auxiliary power-supply of a wireless inductive-charging system 800 v. measurements of ma",
-              "passage_location": "indexed_abstract_or_title",
-              "verification": "unverified_numeric_mention",
-              "conditions_verified": false
-            },
-            {
               "value": 800.0,
               "unit": "v",
               "literal": "800 v",
-              "passage": "erter 57 w used as an auxiliary power-supply of a wireless inductive-charging system 800 v. measurements of magnetizing and leakage inductances for three transformers demonstrated how big di",
+              "operator": "unspecified",
+              "passage": " converter 57 w used as an auxiliary power-supply of a wireless inductive-charging system 800 v. measurements of magnetizing and leakage inductances for three transformers demonstrated how big differences ",
               "passage_location": "indexed_abstract_or_title",
               "verification": "unverified_numeric_mention",
               "conditions_verified": false
@@ -8077,28 +7425,11 @@
           ],
           "metric_candidates": [
             {
-              "value": 5.0,
-              "unit": "kw",
-              "literal": "5 kw",
-              "passage": "ficiency and achieve superior power density. this paper demonstrates the design of a 5 kw gan dc-dc converter with a power density of 4.73 w/cm3. the converter features two pv inputs and a ",
-              "passage_location": "indexed_abstract_or_title",
-              "verification": "unverified_numeric_mention",
-              "conditions_verified": false
-            },
-            {
-              "value": 4.73,
-              "unit": "w",
-              "literal": "4.73 w",
-              "passage": " paper demonstrates the design of a 5 kw gan dc-dc converter with a power density of 4.73 w/cm3. the converter features two pv inputs and a single output connected to a 375 v dc bus, ut",
-              "passage_location": "indexed_abstract_or_title",
-              "verification": "unverified_numeric_mention",
-              "conditions_verified": false
-            },
-            {
               "value": 375.0,
               "unit": "v",
               "literal": "375 v",
-              "passage": " 4.73 w/cm3. the converter features two pv inputs and a single output connected to a 375 v dc bus, ut",
+              "operator": "unspecified",
+              "passage": "ty of 4.73 w/cm3. the converter features two pv inputs and a single output connected to a 375 v dc bus, ut",
               "passage_location": "indexed_abstract_or_title",
               "verification": "unverified_numeric_mention",
               "conditions_verified": false
@@ -8214,46 +7545,11 @@
           "source_id": "2725b88911043258255376b5",
           "published_at": "2022-08-01",
           "source_url": "https://api.crossref.org/works/10.2478/jee-2022-0032",
-          "value": 57.0,
-          "unit": "w",
-          "literal": "57 w",
-          "passage": "stract this paper presents findings for active-clamped flyback (acf) dc-dc converter 57 w used as an auxiliary power-supply of a wireless inductive-charging system 800 v. measurements of ma",
-          "passage_location": "indexed_abstract_or_title",
-          "verification": "unverified_numeric_mention",
-          "conditions_verified": false
-        },
-        {
-          "source_id": "2725b88911043258255376b5",
-          "published_at": "2022-08-01",
-          "source_url": "https://api.crossref.org/works/10.2478/jee-2022-0032",
           "value": 800.0,
           "unit": "v",
           "literal": "800 v",
-          "passage": "erter 57 w used as an auxiliary power-supply of a wireless inductive-charging system 800 v. measurements of magnetizing and leakage inductances for three transformers demonstrated how big di",
-          "passage_location": "indexed_abstract_or_title",
-          "verification": "unverified_numeric_mention",
-          "conditions_verified": false
-        },
-        {
-          "source_id": "8c6d16982719185aa6a9058a",
-          "published_at": "2024-12-02",
-          "source_url": "https://api.openalex.org/works/W4407951555",
-          "value": 5.0,
-          "unit": "kw",
-          "literal": "5 kw",
-          "passage": "ficiency and achieve superior power density. this paper demonstrates the design of a 5 kw gan dc-dc converter with a power density of 4.73 w/cm3. the converter features two pv inputs and a ",
-          "passage_location": "indexed_abstract_or_title",
-          "verification": "unverified_numeric_mention",
-          "conditions_verified": false
-        },
-        {
-          "source_id": "8c6d16982719185aa6a9058a",
-          "published_at": "2024-12-02",
-          "source_url": "https://api.openalex.org/works/W4407951555",
-          "value": 4.73,
-          "unit": "w",
-          "literal": "4.73 w",
-          "passage": " paper demonstrates the design of a 5 kw gan dc-dc converter with a power density of 4.73 w/cm3. the converter features two pv inputs and a single output connected to a 375 v dc bus, ut",
+          "operator": "unspecified",
+          "passage": " converter 57 w used as an auxiliary power-supply of a wireless inductive-charging system 800 v. measurements of magnetizing and leakage inductances for three transformers demonstrated how big differences ",
           "passage_location": "indexed_abstract_or_title",
           "verification": "unverified_numeric_mention",
           "conditions_verified": false
@@ -8265,7 +7561,8 @@
           "value": 375.0,
           "unit": "v",
           "literal": "375 v",
-          "passage": " 4.73 w/cm3. the converter features two pv inputs and a single output connected to a 375 v dc bus, ut",
+          "operator": "unspecified",
+          "passage": "ty of 4.73 w/cm3. the converter features two pv inputs and a single output connected to a 375 v dc bus, ut",
           "passage_location": "indexed_abstract_or_title",
           "verification": "unverified_numeric_mention",
           "conditions_verified": false
@@ -8431,37 +7728,11 @@
           ],
           "metric_candidates": [
             {
-              "value": 150.0,
-              "unit": "khz",
-              "literal": "150 khz",
-              "passage": " for half-bridge topologies. this research measured the conducted emission spectrum (150 khz - 30 mhz, per cispr 25) of a 1 200 v / 40 a sic mosfet half-bridge inverter at twenty combinations ",
-              "passage_location": "indexed_abstract_or_title",
-              "verification": "unverified_numeric_mention",
-              "conditions_verified": false
-            },
-            {
-              "value": 30.0,
-              "unit": "mhz",
-              "literal": "30 mhz",
-              "passage": "bridge topologies. this research measured the conducted emission spectrum (150 khz - 30 mhz, per cispr 25) of a 1 200 v / 40 a sic mosfet half-bridge inverter at twenty combinations of gate r",
-              "passage_location": "indexed_abstract_or_title",
-              "verification": "unverified_numeric_mention",
-              "conditions_verified": false
-            },
-            {
               "value": 200.0,
               "unit": "v",
               "literal": "200 v",
-              "passage": "rch measured the conducted emission spectrum (150 khz - 30 mhz, per cispr 25) of a 1 200 v / 40 a sic mosfet half-bridge inverter at twenty combinations of gate resistance (2.2, 4.7, 10, and",
-              "passage_location": "indexed_abstract_or_title",
-              "verification": "unverified_numeric_mention",
-              "conditions_verified": false
-            },
-            {
-              "value": 40.0,
-              "unit": "a",
-              "literal": "40 a",
-              "passage": "ured the conducted emission spectrum (150 khz - 30 mhz, per cispr 25) of a 1 200 v / 40 a sic mosfet half-bridge inverter at twenty combinations of gate resistance (2.2, 4.7, 10, and 22 ω) ",
+              "operator": "unspecified",
+              "passage": "research measured the conducted emission spectrum (150 khz - 30 mhz, per cispr 25) of a 1 200 v / 40 a sic mosfet half-bridge inverter at twenty combinations of gate resistance (2.2, 4.7, 10, and 22 ω) and",
               "passage_location": "indexed_abstract_or_title",
               "verification": "unverified_numeric_mention",
               "conditions_verified": false
@@ -8551,6 +7822,7 @@
               "value": 690.0,
               "unit": "v",
               "literal": "690 v",
+              "operator": "unspecified",
               "passage": "sic-mosfet or si-igbt: comparison of design and key characteristics of a 690 v grid-tied industrial two-level voltage source converter",
               "passage_location": "indexed_abstract_or_title",
               "verification": "unverified_numeric_mention",
@@ -8727,46 +7999,11 @@
           "source_id": "c9bbc0cc228e6505beb9330f",
           "published_at": "2026-07-01",
           "source_url": "https://api.openalex.org/works/W7212071192",
-          "value": 150.0,
-          "unit": "khz",
-          "literal": "150 khz",
-          "passage": " for half-bridge topologies. this research measured the conducted emission spectrum (150 khz - 30 mhz, per cispr 25) of a 1 200 v / 40 a sic mosfet half-bridge inverter at twenty combinations ",
-          "passage_location": "indexed_abstract_or_title",
-          "verification": "unverified_numeric_mention",
-          "conditions_verified": false
-        },
-        {
-          "source_id": "c9bbc0cc228e6505beb9330f",
-          "published_at": "2026-07-01",
-          "source_url": "https://api.openalex.org/works/W7212071192",
-          "value": 30.0,
-          "unit": "mhz",
-          "literal": "30 mhz",
-          "passage": "bridge topologies. this research measured the conducted emission spectrum (150 khz - 30 mhz, per cispr 25) of a 1 200 v / 40 a sic mosfet half-bridge inverter at twenty combinations of gate r",
-          "passage_location": "indexed_abstract_or_title",
-          "verification": "unverified_numeric_mention",
-          "conditions_verified": false
-        },
-        {
-          "source_id": "c9bbc0cc228e6505beb9330f",
-          "published_at": "2026-07-01",
-          "source_url": "https://api.openalex.org/works/W7212071192",
           "value": 200.0,
           "unit": "v",
           "literal": "200 v",
-          "passage": "rch measured the conducted emission spectrum (150 khz - 30 mhz, per cispr 25) of a 1 200 v / 40 a sic mosfet half-bridge inverter at twenty combinations of gate resistance (2.2, 4.7, 10, and",
-          "passage_location": "indexed_abstract_or_title",
-          "verification": "unverified_numeric_mention",
-          "conditions_verified": false
-        },
-        {
-          "source_id": "c9bbc0cc228e6505beb9330f",
-          "published_at": "2026-07-01",
-          "source_url": "https://api.openalex.org/works/W7212071192",
-          "value": 40.0,
-          "unit": "a",
-          "literal": "40 a",
-          "passage": "ured the conducted emission spectrum (150 khz - 30 mhz, per cispr 25) of a 1 200 v / 40 a sic mosfet half-bridge inverter at twenty combinations of gate resistance (2.2, 4.7, 10, and 22 ω) ",
+          "operator": "unspecified",
+          "passage": "research measured the conducted emission spectrum (150 khz - 30 mhz, per cispr 25) of a 1 200 v / 40 a sic mosfet half-bridge inverter at twenty combinations of gate resistance (2.2, 4.7, 10, and 22 ω) and",
           "passage_location": "indexed_abstract_or_title",
           "verification": "unverified_numeric_mention",
           "conditions_verified": false
@@ -8778,6 +8015,7 @@
           "value": 690.0,
           "unit": "v",
           "literal": "690 v",
+          "operator": "unspecified",
           "passage": "sic-mosfet or si-igbt: comparison of design and key characteristics of a 690 v grid-tied industrial two-level voltage source converter",
           "passage_location": "indexed_abstract_or_title",
           "verification": "unverified_numeric_mention",
@@ -9385,17 +8623,7 @@
           "matched_terms": [
             "through silicon via"
           ],
-          "metric_candidates": [
-            {
-              "value": 110.0,
-              "unit": "ghz",
-              "literal": "110ghz",
-              "passage": "110ghz through-silicon via’s integrated in silicon photonics interposers for next-generation optical modul",
-              "passage_location": "indexed_abstract_or_title",
-              "verification": "unverified_numeric_mention",
-              "conditions_verified": false
-            }
-          ],
+          "metric_candidates": [],
           "verification_status": "index_match_only",
           "source_independence_verified": false,
           "historical_investor_observation_unverified": true
@@ -9481,20 +8709,7 @@
           "historical_investor_observation_unverified": true
         }
       ],
-      "measurement_candidates": [
-        {
-          "source_id": "eb6689820530c69d8cf29067",
-          "published_at": "2021-09-13",
-          "source_url": "https://api.crossref.org/works/10.1109/ecoc52684.2021.9605927",
-          "value": 110.0,
-          "unit": "ghz",
-          "literal": "110ghz",
-          "passage": "110ghz through-silicon via’s integrated in silicon photonics interposers for next-generation optical modul",
-          "passage_location": "indexed_abstract_or_title",
-          "verification": "unverified_numeric_mention",
-          "conditions_verified": false
-        }
-      ]
+      "measurement_candidates": []
     },
     "process:tsv_plating": {
       "node_id": "process:tsv_plating",
@@ -9750,17 +8965,7 @@
           "matched_terms": [
             "cu-cu hybrid bonding"
           ],
-          "metric_candidates": [
-            {
-              "value": 1.0,
-              "unit": "um",
-              "literal": "1μm",
-              "passage": "impacts of misalignment on 1μm pitch cu-cu hybrid bonding",
-              "passage_location": "indexed_abstract_or_title",
-              "verification": "unverified_numeric_mention",
-              "conditions_verified": false
-            }
-          ],
+          "metric_candidates": [],
           "verification_status": "index_match_only",
           "source_independence_verified": false,
           "historical_investor_observation_unverified": true
@@ -9886,20 +9091,7 @@
           "historical_investor_observation_unverified": true
         }
       ],
-      "measurement_candidates": [
-        {
-          "source_id": "c78389864a5a73d36da7933c",
-          "published_at": "2020-10-05",
-          "source_url": "https://api.crossref.org/works/10.1109/iitc47697.2020.9515663",
-          "value": 1.0,
-          "unit": "um",
-          "literal": "1μm",
-          "passage": "impacts of misalignment on 1μm pitch cu-cu hybrid bonding",
-          "passage_location": "indexed_abstract_or_title",
-          "verification": "unverified_numeric_mention",
-          "conditions_verified": false
-        }
-      ]
+      "measurement_candidates": []
     },
     "bottleneck:bond_void": {
       "node_id": "bottleneck:bond_void",
@@ -10178,17 +9370,7 @@
             "photonic integrated",
             "silicon photonics"
           ],
-          "metric_candidates": [
-            {
-              "value": 300.0,
-              "unit": "mm",
-              "literal": "300 mm",
-              "passage": "onic integrated circuit design, interposer-based assembly, and design-for-test for a 300 mm cmos-compatible silicon-photonics foundry are presented.",
-              "passage_location": "indexed_abstract_or_title",
-              "verification": "unverified_numeric_mention",
-              "conditions_verified": false
-            }
-          ],
+          "metric_candidates": [],
           "verification_status": "index_match_only",
           "source_independence_verified": false,
           "historical_investor_observation_unverified": true
@@ -10313,17 +9495,7 @@
           "matched_terms": [
             "silicon photonics"
           ],
-          "metric_candidates": [
-            {
-              "value": 100.0,
-              "unit": "gbps",
-              "literal": "100 gbps",
-              "passage": "we report integrated four-channel 100 gbps silicon photonics transceiver chip based on cumec 200-mm monolithic csip180al technology platform, ",
-              "passage_location": "indexed_abstract_or_title",
-              "verification": "unverified_numeric_mention",
-              "conditions_verified": false
-            }
-          ],
+          "metric_candidates": [],
           "verification_status": "index_match_only",
           "source_independence_verified": false,
           "historical_investor_observation_unverified": true
@@ -10363,26 +9535,7 @@
           "matched_terms": [
             "silicon photonics"
           ],
-          "metric_candidates": [
-            {
-              "value": 54.0,
-              "unit": "ghz",
-              "literal": "54 ghz",
-              "passage": "s coherent optical subassembly, which has electro-optic/ optic-electro bandwidths of 54 ghz/52 ghz for a transmitter/receiver. we also demonstrate up to 96 gbaud polarization multiplexed 16qa",
-              "passage_location": "indexed_abstract_or_title",
-              "verification": "unverified_numeric_mention",
-              "conditions_verified": false
-            },
-            {
-              "value": 52.0,
-              "unit": "ghz",
-              "literal": "52 ghz",
-              "passage": "ent optical subassembly, which has electro-optic/ optic-electro bandwidths of 54 ghz/52 ghz for a transmitter/receiver. we also demonstrate up to 96 gbaud polarization multiplexed 16qam signa",
-              "passage_location": "indexed_abstract_or_title",
-              "verification": "unverified_numeric_mention",
-              "conditions_verified": false
-            }
-          ],
+          "metric_candidates": [],
           "verification_status": "index_match_only",
           "source_independence_verified": false,
           "historical_investor_observation_unverified": true
@@ -10442,26 +9595,7 @@
           "matched_terms": [
             "photonic integrated"
           ],
-          "metric_candidates": [
-            {
-              "value": 25.0,
-              "unit": "um",
-              "literal": "25 μm",
-              "passage": "report the results of high density multi-channel optical multiprobes with pitches of 25 μm and 50 μm that provide edge-coupling used for on-wafer parallel testing of photonic integrated circ",
-              "passage_location": "indexed_abstract_or_title",
-              "verification": "unverified_numeric_mention",
-              "conditions_verified": false
-            },
-            {
-              "value": 50.0,
-              "unit": "um",
-              "literal": "50 μm",
-              "passage": " results of high density multi-channel optical multiprobes with pitches of 25 μm and 50 μm that provide edge-coupling used for on-wafer parallel testing of photonic integrated circuits. the ",
-              "passage_location": "indexed_abstract_or_title",
-              "verification": "unverified_numeric_mention",
-              "conditions_verified": false
-            }
-          ],
+          "metric_candidates": [],
           "verification_status": "index_match_only",
           "source_independence_verified": false,
           "historical_investor_observation_unverified": true
@@ -10487,80 +9621,7 @@
           "historical_investor_observation_unverified": true
         }
       ],
-      "measurement_candidates": [
-        {
-          "source_id": "32f6c96a5f24d37ef03daf37",
-          "published_at": "2024-01-01",
-          "source_url": "https://api.crossref.org/works/10.1364/ofc.2024.m4a.1",
-          "value": 300.0,
-          "unit": "mm",
-          "literal": "300 mm",
-          "passage": "onic integrated circuit design, interposer-based assembly, and design-for-test for a 300 mm cmos-compatible silicon-photonics foundry are presented.",
-          "passage_location": "indexed_abstract_or_title",
-          "verification": "unverified_numeric_mention",
-          "conditions_verified": false
-        },
-        {
-          "source_id": "fe04f6fa159e5b95bf9994c4",
-          "published_at": "2020-01-01",
-          "source_url": "https://api.crossref.org/works/10.1364/acpc.2020.s3d.3",
-          "value": 100.0,
-          "unit": "gbps",
-          "literal": "100 gbps",
-          "passage": "we report integrated four-channel 100 gbps silicon photonics transceiver chip based on cumec 200-mm monolithic csip180al technology platform, ",
-          "passage_location": "indexed_abstract_or_title",
-          "verification": "unverified_numeric_mention",
-          "conditions_verified": false
-        },
-        {
-          "source_id": "f2c5748c1fb10b36570750b6",
-          "published_at": "2020-01-01",
-          "source_url": "https://api.crossref.org/works/10.1364/ofc.2020.th4a.4",
-          "value": 54.0,
-          "unit": "ghz",
-          "literal": "54 ghz",
-          "passage": "s coherent optical subassembly, which has electro-optic/ optic-electro bandwidths of 54 ghz/52 ghz for a transmitter/receiver. we also demonstrate up to 96 gbaud polarization multiplexed 16qa",
-          "passage_location": "indexed_abstract_or_title",
-          "verification": "unverified_numeric_mention",
-          "conditions_verified": false
-        },
-        {
-          "source_id": "f2c5748c1fb10b36570750b6",
-          "published_at": "2020-01-01",
-          "source_url": "https://api.crossref.org/works/10.1364/ofc.2020.th4a.4",
-          "value": 52.0,
-          "unit": "ghz",
-          "literal": "52 ghz",
-          "passage": "ent optical subassembly, which has electro-optic/ optic-electro bandwidths of 54 ghz/52 ghz for a transmitter/receiver. we also demonstrate up to 96 gbaud polarization multiplexed 16qam signa",
-          "passage_location": "indexed_abstract_or_title",
-          "verification": "unverified_numeric_mention",
-          "conditions_verified": false
-        },
-        {
-          "source_id": "7579f39114428444cbc6d2f9",
-          "published_at": "2020-12-17",
-          "source_url": "https://api.openalex.org/works/W3111019860",
-          "value": 25.0,
-          "unit": "um",
-          "literal": "25 μm",
-          "passage": "report the results of high density multi-channel optical multiprobes with pitches of 25 μm and 50 μm that provide edge-coupling used for on-wafer parallel testing of photonic integrated circ",
-          "passage_location": "indexed_abstract_or_title",
-          "verification": "unverified_numeric_mention",
-          "conditions_verified": false
-        },
-        {
-          "source_id": "7579f39114428444cbc6d2f9",
-          "published_at": "2020-12-17",
-          "source_url": "https://api.openalex.org/works/W3111019860",
-          "value": 50.0,
-          "unit": "um",
-          "literal": "50 μm",
-          "passage": " results of high density multi-channel optical multiprobes with pitches of 25 μm and 50 μm that provide edge-coupling used for on-wafer parallel testing of photonic integrated circuits. the ",
-          "passage_location": "indexed_abstract_or_title",
-          "verification": "unverified_numeric_mention",
-          "conditions_verified": false
-        }
-      ]
+      "measurement_candidates": []
     },
     "component:eml": {
       "node_id": "component:eml",
@@ -10672,17 +9733,7 @@
             "vcsel",
             "vertical cavity surface emitting"
           ],
-          "metric_candidates": [
-            {
-              "value": 850.0,
-              "unit": "nm",
-              "literal": "850nm",
-              "passage": "ymer-based micro-optic elements. custom-shaped cavities for gaas-based vcsel arrays (850nm) are formed via femtosecond laser irradiation and chemical etching. an electrical redistribution la",
-              "passage_location": "indexed_abstract_or_title",
-              "verification": "unverified_numeric_mention",
-              "conditions_verified": false
-            }
-          ],
+          "metric_candidates": [],
           "verification_status": "index_match_only",
           "source_independence_verified": false,
           "historical_investor_observation_unverified": true
@@ -10824,17 +9875,7 @@
           "matched_terms": [
             "vcsel"
           ],
-          "metric_candidates": [
-            {
-              "value": 1060.0,
-              "unit": "nm",
-              "literal": "1060nm",
-              "passage": "single-mode 1060nm bottom emitting metal aperture vcsel array for co-packaged optics",
-              "passage_location": "indexed_abstract_or_title",
-              "verification": "unverified_numeric_mention",
-              "conditions_verified": false
-            }
-          ],
+          "metric_candidates": [],
           "verification_status": "index_match_only",
           "source_independence_verified": false,
           "historical_investor_observation_unverified": true
@@ -10854,17 +9895,7 @@
           "matched_terms": [
             "vcsel"
           ],
-          "metric_candidates": [
-            {
-              "value": 1060.0,
-              "unit": "nm",
-              "literal": "1060nm",
-              "passage": "1060nm single-mode bottom emitting vcsel array with intra-cavity metal-aperture for multi-core fiber co-pa",
-              "passage_location": "indexed_abstract_or_title",
-              "verification": "unverified_numeric_mention",
-              "conditions_verified": false
-            }
-          ],
+          "metric_candidates": [],
           "verification_status": "index_match_only",
           "source_independence_verified": false,
           "historical_investor_observation_unverified": true
@@ -10984,17 +10015,7 @@
           "matched_terms": [
             "vcsel"
           ],
-          "metric_candidates": [
-            {
-              "value": 18.2,
-              "unit": "a",
-              "literal": "18.2 a",
-              "passage": "18.2 a 4x64gb/s nrz 1.3pj/b co-packaged and fiber-terminated 4-ch vcsel-based optical transmitter",
-              "passage_location": "indexed_abstract_or_title",
-              "verification": "unverified_numeric_mention",
-              "conditions_verified": false
-            }
-          ],
+          "metric_candidates": [],
           "verification_status": "index_match_only",
           "source_independence_verified": false,
           "historical_investor_observation_unverified": true
@@ -11034,84 +10055,13 @@
           "matched_terms": [
             "vcsel"
           ],
-          "metric_candidates": [
-            {
-              "value": 50.0,
-              "unit": "gb/s",
-              "literal": "50 gb/s",
-              "passage": "a 4 × 50 gb/s 2.9-pj/b nrz vcsel-based co-packaged optical link with fiber termination",
-              "passage_location": "indexed_abstract_or_title",
-              "verification": "unverified_numeric_mention",
-              "conditions_verified": false
-            }
-          ],
+          "metric_candidates": [],
           "verification_status": "index_match_only",
           "source_independence_verified": false,
           "historical_investor_observation_unverified": true
         }
       ],
-      "measurement_candidates": [
-        {
-          "source_id": "5ade90233966a2056d1c584d",
-          "published_at": "2025-03-20",
-          "source_url": "https://api.openalex.org/works/W4408664005",
-          "value": 850.0,
-          "unit": "nm",
-          "literal": "850nm",
-          "passage": "ymer-based micro-optic elements. custom-shaped cavities for gaas-based vcsel arrays (850nm) are formed via femtosecond laser irradiation and chemical etching. an electrical redistribution la",
-          "passage_location": "indexed_abstract_or_title",
-          "verification": "unverified_numeric_mention",
-          "conditions_verified": false
-        },
-        {
-          "source_id": "10bef5c5ac94d33708180128",
-          "published_at": "2022-01-01",
-          "source_url": "https://api.crossref.org/works/10.1364/cleo_si.2022.stu5e.6",
-          "value": 1060.0,
-          "unit": "nm",
-          "literal": "1060nm",
-          "passage": "single-mode 1060nm bottom emitting metal aperture vcsel array for co-packaged optics",
-          "passage_location": "indexed_abstract_or_title",
-          "verification": "unverified_numeric_mention",
-          "conditions_verified": false
-        },
-        {
-          "source_id": "b3788afd2c472d4fc245fb9f",
-          "published_at": "2022-09-28",
-          "source_url": "https://api.crossref.org/works/10.7567/ssdm.2022.a-6-01",
-          "value": 1060.0,
-          "unit": "nm",
-          "literal": "1060nm",
-          "passage": "1060nm single-mode bottom emitting vcsel array with intra-cavity metal-aperture for multi-core fiber co-pa",
-          "passage_location": "indexed_abstract_or_title",
-          "verification": "unverified_numeric_mention",
-          "conditions_verified": false
-        },
-        {
-          "source_id": "478cead64010d8bc83820c44",
-          "published_at": "2024-02-18",
-          "source_url": "https://api.crossref.org/works/10.1109/isscc49657.2024.10454455",
-          "value": 18.2,
-          "unit": "a",
-          "literal": "18.2 a",
-          "passage": "18.2 a 4x64gb/s nrz 1.3pj/b co-packaged and fiber-terminated 4-ch vcsel-based optical transmitter",
-          "passage_location": "indexed_abstract_or_title",
-          "verification": "unverified_numeric_mention",
-          "conditions_verified": false
-        },
-        {
-          "source_id": "4f47a526fe34524f00b94806",
-          "published_at": "2026-05-01",
-          "source_url": "https://api.crossref.org/works/10.1109/jssc.2025.3600662",
-          "value": 50.0,
-          "unit": "gb/s",
-          "literal": "50 gb/s",
-          "passage": "a 4 × 50 gb/s 2.9-pj/b nrz vcsel-based co-packaged optical link with fiber termination",
-          "passage_location": "indexed_abstract_or_title",
-          "verification": "unverified_numeric_mention",
-          "conditions_verified": false
-        }
-      ]
+      "measurement_candidates": []
     },
     "component:pic": {
       "node_id": "component:pic",
@@ -11147,17 +10097,7 @@
             "photonic integrated circuit",
             "silicon photonics"
           ],
-          "metric_candidates": [
-            {
-              "value": 300.0,
-              "unit": "mm",
-              "literal": "300 mm",
-              "passage": "onic integrated circuit design, interposer-based assembly, and design-for-test for a 300 mm cmos-compatible silicon-photonics foundry are presented.",
-              "passage_location": "indexed_abstract_or_title",
-              "verification": "unverified_numeric_mention",
-              "conditions_verified": false
-            }
-          ],
+          "metric_candidates": [],
           "verification_status": "index_match_only",
           "source_independence_verified": false,
           "historical_investor_observation_unverified": true
@@ -11177,17 +10117,7 @@
           "matched_terms": [
             "silicon photonics"
           ],
-          "metric_candidates": [
-            {
-              "value": 100.0,
-              "unit": "gbps",
-              "literal": "100 gbps",
-              "passage": "we report integrated four-channel 100 gbps silicon photonics transceiver chip based on cumec 200-mm monolithic csip180al technology platform, ",
-              "passage_location": "indexed_abstract_or_title",
-              "verification": "unverified_numeric_mention",
-              "conditions_verified": false
-            }
-          ],
+          "metric_candidates": [],
           "verification_status": "index_match_only",
           "source_independence_verified": false,
           "historical_investor_observation_unverified": true
@@ -11227,26 +10157,7 @@
           "matched_terms": [
             "silicon photonics"
           ],
-          "metric_candidates": [
-            {
-              "value": 54.0,
-              "unit": "ghz",
-              "literal": "54 ghz",
-              "passage": "s coherent optical subassembly, which has electro-optic/ optic-electro bandwidths of 54 ghz/52 ghz for a transmitter/receiver. we also demonstrate up to 96 gbaud polarization multiplexed 16qa",
-              "passage_location": "indexed_abstract_or_title",
-              "verification": "unverified_numeric_mention",
-              "conditions_verified": false
-            },
-            {
-              "value": 52.0,
-              "unit": "ghz",
-              "literal": "52 ghz",
-              "passage": "ent optical subassembly, which has electro-optic/ optic-electro bandwidths of 54 ghz/52 ghz for a transmitter/receiver. we also demonstrate up to 96 gbaud polarization multiplexed 16qam signa",
-              "passage_location": "indexed_abstract_or_title",
-              "verification": "unverified_numeric_mention",
-              "conditions_verified": false
-            }
-          ],
+          "metric_candidates": [],
           "verification_status": "index_match_only",
           "source_independence_verified": false,
           "historical_investor_observation_unverified": true
@@ -11350,18 +10261,10 @@
           "metric_candidates": [
             {
               "value": 1.6,
-              "unit": "tbps",
+              "unit": "tb/s",
               "literal": "1.6tbps",
-              "passage": "we demonstrate 1.6tbps silicon photonic integrated circuit (sipic) meeting co-packaged optics requirements for network swi",
-              "passage_location": "indexed_abstract_or_title",
-              "verification": "unverified_numeric_mention",
-              "conditions_verified": false
-            },
-            {
-              "value": 106.0,
-              "unit": "gbps",
-              "literal": "106gbps",
-              "passage": "-packaged optics requirements for network switch applications. the sipic has sixteen 106gbps pam4 optical channels, including lasers, modulators and v-grooves. post-fec error-free operation ov",
+              "operator": "unspecified",
+              "passage": "we demonstrate 1.6tbps silicon photonic integrated circuit (sipic) meeting co-packaged optics requirements for network switch applic",
               "passage_location": "indexed_abstract_or_title",
               "verification": "unverified_numeric_mention",
               "conditions_verified": false
@@ -11734,73 +10637,14 @@
       ],
       "measurement_candidates": [
         {
-          "source_id": "32f6c96a5f24d37ef03daf37",
-          "published_at": "2024-01-01",
-          "source_url": "https://api.crossref.org/works/10.1364/ofc.2024.m4a.1",
-          "value": 300.0,
-          "unit": "mm",
-          "literal": "300 mm",
-          "passage": "onic integrated circuit design, interposer-based assembly, and design-for-test for a 300 mm cmos-compatible silicon-photonics foundry are presented.",
-          "passage_location": "indexed_abstract_or_title",
-          "verification": "unverified_numeric_mention",
-          "conditions_verified": false
-        },
-        {
-          "source_id": "fe04f6fa159e5b95bf9994c4",
-          "published_at": "2020-01-01",
-          "source_url": "https://api.crossref.org/works/10.1364/acpc.2020.s3d.3",
-          "value": 100.0,
-          "unit": "gbps",
-          "literal": "100 gbps",
-          "passage": "we report integrated four-channel 100 gbps silicon photonics transceiver chip based on cumec 200-mm monolithic csip180al technology platform, ",
-          "passage_location": "indexed_abstract_or_title",
-          "verification": "unverified_numeric_mention",
-          "conditions_verified": false
-        },
-        {
-          "source_id": "f2c5748c1fb10b36570750b6",
-          "published_at": "2020-01-01",
-          "source_url": "https://api.crossref.org/works/10.1364/ofc.2020.th4a.4",
-          "value": 54.0,
-          "unit": "ghz",
-          "literal": "54 ghz",
-          "passage": "s coherent optical subassembly, which has electro-optic/ optic-electro bandwidths of 54 ghz/52 ghz for a transmitter/receiver. we also demonstrate up to 96 gbaud polarization multiplexed 16qa",
-          "passage_location": "indexed_abstract_or_title",
-          "verification": "unverified_numeric_mention",
-          "conditions_verified": false
-        },
-        {
-          "source_id": "f2c5748c1fb10b36570750b6",
-          "published_at": "2020-01-01",
-          "source_url": "https://api.crossref.org/works/10.1364/ofc.2020.th4a.4",
-          "value": 52.0,
-          "unit": "ghz",
-          "literal": "52 ghz",
-          "passage": "ent optical subassembly, which has electro-optic/ optic-electro bandwidths of 54 ghz/52 ghz for a transmitter/receiver. we also demonstrate up to 96 gbaud polarization multiplexed 16qam signa",
-          "passage_location": "indexed_abstract_or_title",
-          "verification": "unverified_numeric_mention",
-          "conditions_verified": false
-        },
-        {
           "source_id": "931ce18886aebe4824875a8c",
           "published_at": "2020-01-01",
           "source_url": "https://api.crossref.org/works/10.1364/ofc.2020.t3h.1",
           "value": 1.6,
-          "unit": "tbps",
+          "unit": "tb/s",
           "literal": "1.6tbps",
-          "passage": "we demonstrate 1.6tbps silicon photonic integrated circuit (sipic) meeting co-packaged optics requirements for network swi",
-          "passage_location": "indexed_abstract_or_title",
-          "verification": "unverified_numeric_mention",
-          "conditions_verified": false
-        },
-        {
-          "source_id": "931ce18886aebe4824875a8c",
-          "published_at": "2020-01-01",
-          "source_url": "https://api.crossref.org/works/10.1364/ofc.2020.t3h.1",
-          "value": 106.0,
-          "unit": "gbps",
-          "literal": "106gbps",
-          "passage": "-packaged optics requirements for network switch applications. the sipic has sixteen 106gbps pam4 optical channels, including lasers, modulators and v-grooves. post-fec error-free operation ov",
+          "operator": "unspecified",
+          "passage": "we demonstrate 1.6tbps silicon photonic integrated circuit (sipic) meeting co-packaged optics requirements for network switch applic",
           "passage_location": "indexed_abstract_or_title",
           "verification": "unverified_numeric_mention",
           "conditions_verified": false
@@ -11952,26 +10796,7 @@
           "matched_terms": [
             "coherent optical"
           ],
-          "metric_candidates": [
-            {
-              "value": 54.0,
-              "unit": "ghz",
-              "literal": "54 ghz",
-              "passage": "s coherent optical subassembly, which has electro-optic/ optic-electro bandwidths of 54 ghz/52 ghz for a transmitter/receiver. we also demonstrate up to 96 gbaud polarization multiplexed 16qa",
-              "passage_location": "indexed_abstract_or_title",
-              "verification": "unverified_numeric_mention",
-              "conditions_verified": false
-            },
-            {
-              "value": 52.0,
-              "unit": "ghz",
-              "literal": "52 ghz",
-              "passage": "ent optical subassembly, which has electro-optic/ optic-electro bandwidths of 54 ghz/52 ghz for a transmitter/receiver. we also demonstrate up to 96 gbaud polarization multiplexed 16qam signa",
-              "passage_location": "indexed_abstract_or_title",
-              "verification": "unverified_numeric_mention",
-              "conditions_verified": false
-            }
-          ],
+          "metric_candidates": [],
           "verification_status": "index_match_only",
           "source_independence_verified": false,
           "historical_investor_observation_unverified": true
@@ -12037,32 +10862,7 @@
           "historical_investor_observation_unverified": true
         }
       ],
-      "measurement_candidates": [
-        {
-          "source_id": "f2c5748c1fb10b36570750b6",
-          "published_at": "2020-01-01",
-          "source_url": "https://api.crossref.org/works/10.1364/ofc.2020.th4a.4",
-          "value": 54.0,
-          "unit": "ghz",
-          "literal": "54 ghz",
-          "passage": "s coherent optical subassembly, which has electro-optic/ optic-electro bandwidths of 54 ghz/52 ghz for a transmitter/receiver. we also demonstrate up to 96 gbaud polarization multiplexed 16qa",
-          "passage_location": "indexed_abstract_or_title",
-          "verification": "unverified_numeric_mention",
-          "conditions_verified": false
-        },
-        {
-          "source_id": "f2c5748c1fb10b36570750b6",
-          "published_at": "2020-01-01",
-          "source_url": "https://api.crossref.org/works/10.1364/ofc.2020.th4a.4",
-          "value": 52.0,
-          "unit": "ghz",
-          "literal": "52 ghz",
-          "passage": "ent optical subassembly, which has electro-optic/ optic-electro bandwidths of 54 ghz/52 ghz for a transmitter/receiver. we also demonstrate up to 96 gbaud polarization multiplexed 16qam signa",
-          "passage_location": "indexed_abstract_or_title",
-          "verification": "unverified_numeric_mention",
-          "conditions_verified": false
-        }
-      ]
+      "measurement_candidates": []
     },
     "component:osfp": {
       "node_id": "component:osfp",
@@ -12230,26 +11030,7 @@
           "matched_terms": [
             "gate driver"
           ],
-          "metric_candidates": [
-            {
-              "value": 13.56,
-              "unit": "mhz",
-              "literal": "13.56 mhz",
-              "passage": " that can effectively reduce the gate loss at high frequency with broad bandwidth. a 13.56 mhz prototype is demonstrated to achieve a 60% loss reduction for a sic mosfet gate.",
-              "passage_location": "indexed_abstract_or_title",
-              "verification": "unverified_numeric_mention",
-              "conditions_verified": false
-            },
-            {
-              "value": 60.0,
-              "unit": "%",
-              "literal": "60%",
-              "passage": "h frequency with broad bandwidth. a 13.56 mhz prototype is demonstrated to achieve a 60% loss reduction for a sic mosfet gate.",
-              "passage_location": "indexed_abstract_or_title",
-              "verification": "unverified_numeric_mention",
-              "conditions_verified": false
-            }
-          ],
+          "metric_candidates": [],
           "verification_status": "index_match_only",
           "source_independence_verified": false,
           "historical_investor_observation_unverified": true
@@ -12495,32 +11276,7 @@
           "historical_investor_observation_unverified": true
         }
       ],
-      "measurement_candidates": [
-        {
-          "source_id": "0b78832cf54dd0ff7bc4c2bc",
-          "published_at": "2021-11-02",
-          "source_url": "https://api.openalex.org/works/W4200354926",
-          "value": 13.56,
-          "unit": "mhz",
-          "literal": "13.56 mhz",
-          "passage": " that can effectively reduce the gate loss at high frequency with broad bandwidth. a 13.56 mhz prototype is demonstrated to achieve a 60% loss reduction for a sic mosfet gate.",
-          "passage_location": "indexed_abstract_or_title",
-          "verification": "unverified_numeric_mention",
-          "conditions_verified": false
-        },
-        {
-          "source_id": "0b78832cf54dd0ff7bc4c2bc",
-          "published_at": "2021-11-02",
-          "source_url": "https://api.openalex.org/works/W4200354926",
-          "value": 60.0,
-          "unit": "%",
-          "literal": "60%",
-          "passage": "h frequency with broad bandwidth. a 13.56 mhz prototype is demonstrated to achieve a 60% loss reduction for a sic mosfet gate.",
-          "passage_location": "indexed_abstract_or_title",
-          "verification": "unverified_numeric_mention",
-          "conditions_verified": false
-        }
-      ]
+      "measurement_candidates": []
     },
     "material:sic_wafer": {
       "node_id": "material:sic_wafer",

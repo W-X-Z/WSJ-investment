@@ -6,7 +6,7 @@
   "documents_with_ontology_matches": 1781,
   "ontology_nodes": 90,
   "nodes_with_at_least_one_match": 46,
-  "numeric_mentions_requiring_validation": 96,
+  "numeric_mentions_requiring_validation": 36,
   "co_mention_pairs_requiring_review": 38,
   "independent_factual_correlations_confirmed": 0,
   "new_confirmed_supply_edges": 0,
