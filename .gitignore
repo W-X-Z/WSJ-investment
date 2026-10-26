@@ -1,0 +1,29 @@
+# secrets
+.env
+.env.*
+!.env.example
+!.env.local.example
+
+# python
+__pycache__/
+*.pyc
+.venv/
+*.egg-info/
+.pytest_cache/
+.ruff_cache/
+pipeline/data/
+*.sqlite
+*.sqlite3
+*.db
+
+# node
+node_modules/
+.next/
+out/
+*.tsbuildinfo
+next-env.d.ts
+
+# os / editor
+.DS_Store
+.idea/
+.vscode/

@@ -1,0 +1,53 @@
+# 백로그
+
+우선순위: **P1** 지금 / **P2** 다음 / **P3** 나중 / **B** 백테스트·연구
+
+## 수집기
+
+| ID | 수집기 | 테이블 | 우선 | 상태 | 비고 |
+|---|---|---|---|---|---|
+| C-01 | `sec_universe` | `core.companies` | P1 | ✅ 구현 | 티커·SIC·거래소·공개유동 |
+| C-02 | `sec_form4` | `raw.sec_form4_filings`, `raw.sec_form4_transactions` | P1 | ✅ 구현 | EFTS → primary_doc.xml |
+| C-03 | `sec_filings` | `raw.sec_filings` | P1 | ✅ 구현 | 8-K(items), 10-K/Q, 13D 인덱스 |
+| C-04 | `finra` | `raw.finra_short_daily`, `raw.finra_short_interest`, `raw.finra_ats_weekly` | P1 | ✅ 구현 | 파티션 키 EQUAL |
+| C-05 | `clinicaltrials` | `raw.ct_studies`, `raw.ct_study_changes` | P1 | ✅ 구현 | 스냅샷 diff |
+| C-06 | `openfda` | `raw.fda_drug_applications`, `raw.fda_device_510k` | P1 | ✅ 구현 | |
+| C-07 | `usaspending` | `raw.gov_awards` | P1 | ✅ 구현 | 유니버스 수신자명 검색 |
+| C-08 | `sec_form4_backfill` | `raw.sec_form4_transactions` | P1 | 미구현 | DERA 분기 zip 2006~ (백테스트 전제) |
+| C-09 | `federal_register` | `raw.fedreg_documents` | P2 | 미구현 | public inspection 포함 |
+| C-10 | `war_gov_contracts` | `raw.dod_contract_announcements` | P2 | 미구현 | RSS 파싱 |
+| C-11 | `cms_partd` | `raw.cms_partd_quarterly` | P2 | 미구현 | 분기 |
+| C-12 | `gudid` | `raw.fda_gudid_devices` | P2 | 미구현 | 일별 델타 |
+| C-13 | `ats_jobs` | `raw.jobs_postings` | P2 | 미구현 | 보드 슬러그 수동 매핑 필요 |
+| C-14 | `uspto_trademarks_bulk` | `raw.uspto_trademark_apps` | P2 | 미구현 | ODP 키(ID.me) |
+| C-15 | `uspto_odp` | `raw.uspto_applications` | P2 | 미구현 | ODP 키 |
+| C-16 | `nih_nsf` | `raw.gov_grants` | P2 | 미구현 | |
+| C-17 | `eia_860m` | `raw.eia_planned_generators` | P3 | 미구현 | PUDL changelog |
+| C-18 | `fcc_eas` / `nist_cmvp` / `crtsh` | — | P3 | 미구현 | 스크래핑, 브라우저 필요 |
+| C-19 | `nhplug_quotes` | `raw.px_daily` | P2 | 미구현 | 백테스트 가격. 모의투자 도메인 |
+
+## 플랫폼
+
+| ID | 항목 | 우선 | 비고 |
+|---|---|---|---|
+| P-01 | GitHub Actions 스케줄 | P1 | ✅ `collect.yml` |
+| P-02 | 엔티티 매칭 `wsj entities resolve` | P1 | 정확·정규화 매칭 구현, 퍼지는 큐로 |
+| P-03 | 에이전트별 Postgres 롤·GRANT | P2 | ADR-0002 Phase 2 |
+| P-04 | 노션 단방향 동기화 | P3 | 사용자 보류 |
+| P-05 | 알림(수집 실패) | P2 | Actions 실패 알림으로 우선 대체 |
+| P-06 | 조회 화면 Vercel 배포 | P2 | |
+
+## 백테스트·연구
+
+| ID | 항목 | 우선 | 설계 요지 |
+|---|---|---|---|
+| B-1 | Form 4 × 촉매 교차 이벤트 스터디 | P1 | 이벤트: 공개유동 <$1B, 클러스터 매수(≥2인 or ≥$100k, 코드 P), 루틴 매수 제외(전년 동월 매수 이력), 같은 분기 내 독립 촉매(8-K 1.01 / 임상 상태 변경 / FDA / 정부계약) 교차. 측정: CAR(0,2) vs CAR(3,750/1250), 벤치마크 Russell 2000 또는 사이즈 매칭. 데이터: C-08 + C-19 |
+| B-2 | 13F 화이트리스트 기관 선정 | P2 | 소형주 전문·승률 기준 20~30개 |
+| B-3 | 기술 변화량 점수 (10-K 연도별 diff) | P3 | ADR-0007: 수준이 아닌 변화량 |
+
+## 알려진 제약 (2026-10)
+
+- SAM.gov 무료 키 10회/일 → 입찰 사전공고는 Grants.gov·DoD SBIR 토픽으로 대체.
+- PatentsView API 오프라인 → 벌크만.
+- RPO XBRL 태그 소형주 7% → 전문검색.
+- EPA TRI 10개월+ 지연 → 선행 불가.
