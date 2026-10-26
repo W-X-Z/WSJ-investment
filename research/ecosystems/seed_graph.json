@@ -6,7 +6,8 @@
     "Graph relationships distinguish documented vs inferred and are not evidence of revenues",
     "All events must preserve original publication date vs ingestion date and source-group independence",
     "A direction from requirement to company indicates research relevance only, not verified supply contract",
-    "Unresolved technology-to-listed-company edges are intentionally omitted; no vendor is invented"
+    "Unresolved technology-to-listed-company edges are intentionally omitted; no vendor is invented",
+    "Additional component/material/process nodes are ontology structure, not assertions of named supplier adoption"
   ],
   "nodes": [
     {
@@ -168,6 +169,230 @@
       "id": "company:aehr",
       "kind": "company",
       "label": "Aehr Test Systems (AEHR)"
+    },
+    {
+      "id": "bottleneck:hbm_kged",
+      "kind": "bottleneck",
+      "label": "적층 전 Known-Good-Die 수율 검사",
+      "measured_metrics": [
+        "die_yield_percent",
+        "stack_yield_percent"
+      ],
+      "disclosure_note": "Metrics require traceable conditions and source timestamps; no values inferred"
+    },
+    {
+      "id": "bottleneck:hbm_wafer_warpage",
+      "kind": "bottleneck",
+      "label": "적층 웨이퍼 휨(wafer warpage)",
+      "measured_metrics": [
+        "warpage_um",
+        "stack_height_um"
+      ],
+      "disclosure_note": "Metrics require traceable conditions and source timestamps; no values inferred"
+    },
+    {
+      "id": "component:microbump",
+      "kind": "component",
+      "label": "Cu 미세범프 상호연결",
+      "measured_metrics": [
+        "bump_pitch_um",
+        "resistance_mohm"
+      ],
+      "disclosure_note": "Metrics require traceable conditions and source timestamps; no values inferred"
+    },
+    {
+      "id": "material:underfill",
+      "kind": "material",
+      "label": "Underfill 몰딩·충진 소재",
+      "measured_metrics": [
+        "cte_ppm_per_k",
+        "thermal_conductivity_w_mk"
+      ],
+      "disclosure_note": "Metrics require traceable conditions and source timestamps; no values inferred"
+    },
+    {
+      "id": "material:cu_cu",
+      "kind": "material",
+      "label": "Cu-Cu 본딩 접합 계면",
+      "measured_metrics": [
+        "overlay_nm",
+        "void_fraction_percent"
+      ],
+      "disclosure_note": "Metrics require traceable conditions and source timestamps; no values inferred"
+    },
+    {
+      "id": "process:microbump_metrology",
+      "kind": "process",
+      "label": "미세범프 형상·높이 2D/3D 검사",
+      "measured_metrics": [
+        "defect_sensitivity_um",
+        "throughput_wph",
+        "false_positive_rate"
+      ],
+      "disclosure_note": "Metrics require traceable conditions and source timestamps; no values inferred"
+    },
+    {
+      "id": "process:hybrid_bond_qualification",
+      "kind": "process",
+      "label": "하이브리드 본딩 양산 적격성 검증",
+      "measured_metrics": [
+        "bond_yield_percent",
+        "overlay_nm"
+      ],
+      "disclosure_note": "Metrics require traceable conditions and source timestamps; no values inferred"
+    },
+    {
+      "id": "component:optical_laser",
+      "kind": "component",
+      "label": "광원 레이저",
+      "measured_metrics": [
+        "optical_output_mw",
+        "wavelength_nm",
+        "lifetime_hours"
+      ],
+      "disclosure_note": "Metrics require traceable conditions and source timestamps; no values inferred"
+    },
+    {
+      "id": "component:modulator",
+      "kind": "component",
+      "label": "고속 광변조기",
+      "measured_metrics": [
+        "extinction_ratio_db",
+        "modulation_gbps"
+      ],
+      "disclosure_note": "Metrics require traceable conditions and source timestamps; no values inferred"
+    },
+    {
+      "id": "component:photodiode",
+      "kind": "component",
+      "label": "광검출기",
+      "measured_metrics": [
+        "responsivity_a_w",
+        "bandwidth_ghz"
+      ],
+      "disclosure_note": "Metrics require traceable conditions and source timestamps; no values inferred"
+    },
+    {
+      "id": "component:optical_dsp",
+      "kind": "component",
+      "label": "고속 SerDes·DSP",
+      "measured_metrics": [
+        "power_w_per_100g",
+        "ber"
+      ],
+      "disclosure_note": "Metrics require traceable conditions and source timestamps; no values inferred"
+    },
+    {
+      "id": "process:optic_alignment",
+      "kind": "process",
+      "label": "광엔진 정렬·패키징 공정",
+      "measured_metrics": [
+        "alignment_tolerance_um",
+        "coupling_loss_db",
+        "assembly_yield_percent"
+      ],
+      "disclosure_note": "Metrics require traceable conditions and source timestamps; no values inferred"
+    },
+    {
+      "id": "bottleneck:optic_ber",
+      "kind": "bottleneck",
+      "label": "신호 무결성·비트오류율 BER",
+      "measured_metrics": [
+        "pre_fec_ber",
+        "reach_m"
+      ],
+      "disclosure_note": "Metrics require traceable conditions and source timestamps; no values inferred"
+    },
+    {
+      "id": "component:fiber_connector",
+      "kind": "component",
+      "label": "고밀도 광섬유 인터페이스",
+      "measured_metrics": [
+        "insertion_loss_db",
+        "port_density"
+      ],
+      "disclosure_note": "Metrics require traceable conditions and source timestamps; no values inferred"
+    },
+    {
+      "id": "component:dc_busbar",
+      "kind": "component",
+      "label": "DC Busbar 구리·절연재",
+      "measured_metrics": [
+        "current_rating_a",
+        "copper_mass_kg",
+        "temperature_rise_k"
+      ],
+      "disclosure_note": "Metrics require traceable conditions and source timestamps; no values inferred"
+    },
+    {
+      "id": "component:dc_breaker",
+      "kind": "component",
+      "label": "고전압 DC 차단·보호 장치",
+      "measured_metrics": [
+        "break_rating_a",
+        "fault_clear_ms"
+      ],
+      "disclosure_note": "Metrics require traceable conditions and source timestamps; no values inferred"
+    },
+    {
+      "id": "component:power_converter",
+      "kind": "component",
+      "label": "DC/DC 전력변환 모듈",
+      "measured_metrics": [
+        "efficiency_percent",
+        "power_density_w_cm3"
+      ],
+      "disclosure_note": "Metrics require traceable conditions and source timestamps; no values inferred"
+    },
+    {
+      "id": "component:sic_mosfet",
+      "kind": "component",
+      "label": "SiC MOSFET 소자",
+      "measured_metrics": [
+        "blocking_voltage_v",
+        "on_resistance_mohm",
+        "switching_loss_w"
+      ],
+      "disclosure_note": "Metrics require traceable conditions and source timestamps; no values inferred"
+    },
+    {
+      "id": "material:hv_insulation",
+      "kind": "material",
+      "label": "HVDC 케이블·커넥터 절연소재",
+      "measured_metrics": [
+        "dielectric_strength_kv_mm",
+        "heat_aging_hours"
+      ],
+      "disclosure_note": "Metrics require traceable conditions and source timestamps; no values inferred"
+    },
+    {
+      "id": "bottleneck:liquidcool",
+      "kind": "bottleneck",
+      "label": "고밀도 GPU 콜드플레이트 열저항",
+      "measured_metrics": [
+        "thermal_resistance_k_w",
+        "flow_l_min"
+      ],
+      "disclosure_note": "Metrics require traceable conditions and source timestamps; no values inferred"
+    },
+    {
+      "id": "tech:cdu",
+      "kind": "technology",
+      "label": "액체 냉각수 분배장치(CDU)",
+      "measured_metrics": [
+        "cooling_kw",
+        "pressure_drop_kpa"
+      ],
+      "disclosure_note": "Metrics require traceable conditions and source timestamps; no values inferred"
+    },
+    {
+      "id": "req:coldplate",
+      "kind": "requirement",
+      "label": "AI 고밀도 서버 direct-to-chip 냉각",
+      "measured_metrics": [
+        "rack_heat_kw"
+      ],
+      "disclosure_note": "Metrics require traceable conditions and source timestamps; no values inferred"
     }
   ],
   "edges": [
@@ -677,6 +902,381 @@
         {
           "url": "https://ir.aehr.com/",
           "source_quality": "official_issuer"
+        }
+      ],
+      "note": ""
+    },
+    {
+      "id": "e035",
+      "from": "req:hbm_stack",
+      "to": "bottleneck:hbm_kged",
+      "relation": "creates_bottleneck",
+      "stage": "technical_inference",
+      "polarity": "positive",
+      "evidence": [
+        {
+          "url": "https://news.skhynix.com/en/tech-note-series-ep2/",
+          "source_quality": "technical_source"
+        }
+      ],
+      "note": ""
+    },
+    {
+      "id": "e036",
+      "from": "req:hbm_stack",
+      "to": "bottleneck:hbm_wafer_warpage",
+      "relation": "creates_bottleneck",
+      "stage": "established",
+      "polarity": "positive",
+      "evidence": [
+        {
+          "url": "https://news.skhynix.com/en/tech-note-series-ep2/",
+          "source_quality": "technical_source"
+        }
+      ],
+      "note": ""
+    },
+    {
+      "id": "e037",
+      "from": "req:hbm_stack",
+      "to": "component:microbump",
+      "relation": "drives_requirement",
+      "stage": "established",
+      "polarity": "positive",
+      "evidence": [
+        {
+          "url": "https://news.skhynix.com/en/tech-note-series-ep2/",
+          "source_quality": "technical_source"
+        }
+      ],
+      "note": ""
+    },
+    {
+      "id": "e038",
+      "from": "req:hbm_stack",
+      "to": "material:underfill",
+      "relation": "drives_requirement",
+      "stage": "technology_option",
+      "polarity": "positive",
+      "evidence": [
+        {
+          "url": "https://news.skhynix.com/en/tech-note-series-ep2/",
+          "source_quality": "technical_source"
+        }
+      ],
+      "note": ""
+    },
+    {
+      "id": "e039",
+      "from": "bottleneck:hbm_overlay",
+      "to": "process:microbump_metrology",
+      "relation": "mitigated_by",
+      "stage": "vendor_claim",
+      "polarity": "positive",
+      "evidence": [
+        {
+          "url": "https://www.camtek.com/products/hawk/",
+          "source_quality": "technical_source"
+        }
+      ],
+      "note": ""
+    },
+    {
+      "id": "e040",
+      "from": "process:microbump_metrology",
+      "to": "tech:hawk",
+      "relation": "drives_requirement",
+      "stage": "vendor_claim",
+      "polarity": "positive",
+      "evidence": [
+        {
+          "url": "https://www.camtek.com/products/hawk/",
+          "source_quality": "technical_source"
+        }
+      ],
+      "note": ""
+    },
+    {
+      "id": "e041",
+      "from": "bottleneck:hbm_wafer_warpage",
+      "to": "process:hybrid_bond_qualification",
+      "relation": "mitigated_by",
+      "stage": "technology_option",
+      "polarity": "positive",
+      "evidence": [
+        {
+          "url": "https://news.skhynix.com/en/tech-note-series-ep2/",
+          "source_quality": "technical_source"
+        }
+      ],
+      "note": ""
+    },
+    {
+      "id": "e042",
+      "from": "process:hybrid_bond_qualification",
+      "to": "material:cu_cu",
+      "relation": "drives_requirement",
+      "stage": "documented_architecture",
+      "polarity": "positive",
+      "evidence": [
+        {
+          "url": "https://news.skhynix.com/en/tech-note-series-ep2/",
+          "source_quality": "technical_source"
+        }
+      ],
+      "note": ""
+    },
+    {
+      "id": "e043",
+      "from": "req:1p6t",
+      "to": "bottleneck:optic_ber",
+      "relation": "creates_bottleneck",
+      "stage": "technical_inference",
+      "polarity": "positive",
+      "evidence": [
+        {
+          "url": "https://standards.ieee.org/ieee/802.3dj/11115/",
+          "source_quality": "independent_standard"
+        }
+      ],
+      "note": ""
+    },
+    {
+      "id": "e044",
+      "from": "req:1p6t",
+      "to": "component:optical_laser",
+      "relation": "drives_requirement",
+      "stage": "documented_architecture",
+      "polarity": "positive",
+      "evidence": [
+        {
+          "url": "https://www.poet-technologies.com/news/poet-technologies-and-lessengers-expand-partnership-to-deliver-1-6t-2xdr4-optical-transceivers-for-ai-network-connectivity",
+          "source_quality": "technical_source"
+        }
+      ],
+      "note": ""
+    },
+    {
+      "id": "e045",
+      "from": "req:1p6t",
+      "to": "component:modulator",
+      "relation": "drives_requirement",
+      "stage": "documented_architecture",
+      "polarity": "positive",
+      "evidence": [
+        {
+          "url": "https://www.poet-technologies.com/news/poet-technologies-and-lessengers-expand-partnership-to-deliver-1-6t-2xdr4-optical-transceivers-for-ai-network-connectivity",
+          "source_quality": "technical_source"
+        }
+      ],
+      "note": ""
+    },
+    {
+      "id": "e046",
+      "from": "req:1p6t",
+      "to": "component:photodiode",
+      "relation": "drives_requirement",
+      "stage": "documented_architecture",
+      "polarity": "positive",
+      "evidence": [
+        {
+          "url": "https://www.poet-technologies.com/news/poet-technologies-and-lessengers-expand-partnership-to-deliver-1-6t-2xdr4-optical-transceivers-for-ai-network-connectivity",
+          "source_quality": "technical_source"
+        }
+      ],
+      "note": ""
+    },
+    {
+      "id": "e047",
+      "from": "req:1p6t",
+      "to": "component:optical_dsp",
+      "relation": "drives_requirement",
+      "stage": "technical_inference",
+      "polarity": "positive",
+      "evidence": [
+        {
+          "url": "https://standards.ieee.org/ieee/802.3dj/11115/",
+          "source_quality": "independent_standard"
+        }
+      ],
+      "note": ""
+    },
+    {
+      "id": "e048",
+      "from": "bottleneck:optic_coupling",
+      "to": "process:optic_alignment",
+      "relation": "mitigated_by",
+      "stage": "documented_architecture",
+      "polarity": "positive",
+      "evidence": [
+        {
+          "url": "https://www.poet-technologies.com/news/poet-technologies-and-lessengers-expand-partnership-to-deliver-1-6t-2xdr4-optical-transceivers-for-ai-network-connectivity",
+          "source_quality": "technical_source"
+        }
+      ],
+      "note": ""
+    },
+    {
+      "id": "e049",
+      "from": "process:optic_alignment",
+      "to": "tech:poet_interposer",
+      "relation": "mitigated_by",
+      "stage": "vendor_claim",
+      "polarity": "positive",
+      "evidence": [
+        {
+          "url": "https://www.poet-technologies.com/news/poet-technologies-and-lessengers-expand-partnership-to-deliver-1-6t-2xdr4-optical-transceivers-for-ai-network-connectivity",
+          "source_quality": "technical_source"
+        }
+      ],
+      "note": ""
+    },
+    {
+      "id": "e050",
+      "from": "bottleneck:optic_ber",
+      "to": "component:optical_dsp",
+      "relation": "mitigated_by",
+      "stage": "technology_option",
+      "polarity": "positive",
+      "evidence": [
+        {
+          "url": "https://standards.ieee.org/ieee/802.3dj/11115/",
+          "source_quality": "independent_standard"
+        }
+      ],
+      "note": ""
+    },
+    {
+      "id": "e051",
+      "from": "req:1p6t",
+      "to": "component:fiber_connector",
+      "relation": "drives_requirement",
+      "stage": "documented_architecture",
+      "polarity": "positive",
+      "evidence": [
+        {
+          "url": "https://www.poet-technologies.com/news/poet-technologies-and-lessengers-expand-partnership-to-deliver-1-6t-2xdr4-optical-transceivers-for-ai-network-connectivity",
+          "source_quality": "technical_source"
+        }
+      ],
+      "note": ""
+    },
+    {
+      "id": "e052",
+      "from": "req:800v",
+      "to": "component:dc_busbar",
+      "relation": "drives_requirement",
+      "stage": "documented_architecture",
+      "polarity": "positive",
+      "evidence": [
+        {
+          "url": "https://www.opencompute.org/news/powering-the-next-era-of-ai-how-google-microsoft-and-nvidia-are-standardizing-and-accelerating-the-industry-transition-to-lvdc/",
+          "source_quality": "technical_source"
+        }
+      ],
+      "note": ""
+    },
+    {
+      "id": "e053",
+      "from": "req:800v",
+      "to": "component:dc_breaker",
+      "relation": "drives_requirement",
+      "stage": "documented_architecture",
+      "polarity": "positive",
+      "evidence": [
+        {
+          "url": "https://www.opencompute.org/news/powering-the-next-era-of-ai-how-google-microsoft-and-nvidia-are-standardizing-and-accelerating-the-industry-transition-to-lvdc/",
+          "source_quality": "technical_source"
+        }
+      ],
+      "note": ""
+    },
+    {
+      "id": "e054",
+      "from": "req:800v",
+      "to": "material:hv_insulation",
+      "relation": "drives_requirement",
+      "stage": "technical_inference",
+      "polarity": "positive",
+      "evidence": [
+        {
+          "url": "https://www.opencompute.org/news/powering-the-next-era-of-ai-how-google-microsoft-and-nvidia-are-standardizing-and-accelerating-the-industry-transition-to-lvdc/",
+          "source_quality": "technical_source"
+        }
+      ],
+      "note": ""
+    },
+    {
+      "id": "e055",
+      "from": "bottleneck:conversion",
+      "to": "component:power_converter",
+      "relation": "mitigated_by",
+      "stage": "documented_architecture",
+      "polarity": "positive",
+      "evidence": [
+        {
+          "url": "https://www.opencompute.org/news/powering-the-next-era-of-ai-how-google-microsoft-and-nvidia-are-standardizing-and-accelerating-the-industry-transition-to-lvdc/",
+          "source_quality": "technical_source"
+        }
+      ],
+      "note": ""
+    },
+    {
+      "id": "e056",
+      "from": "bottleneck:conversion",
+      "to": "component:sic_mosfet",
+      "relation": "mitigated_by",
+      "stage": "unverified_hypothesis",
+      "polarity": "conditional",
+      "evidence": [
+        {
+          "url": "https://www.opencompute.org/news/powering-the-next-era-of-ai-how-google-microsoft-and-nvidia-are-standardizing-and-accelerating-the-industry-transition-to-lvdc/",
+          "source_quality": "technical_source"
+        }
+      ],
+      "note": "사용 여부는 실제 설계 BOM 필요"
+    },
+    {
+      "id": "e057",
+      "from": "req:highdensity",
+      "to": "req:coldplate",
+      "relation": "drives_requirement",
+      "stage": "established",
+      "polarity": "positive",
+      "evidence": [
+        {
+          "url": "https://www.ashrae.org/technical-resources/topics-and-initiatives/ai-data-center/integrated-design-principles",
+          "source_quality": "technical_source"
+        }
+      ],
+      "note": ""
+    },
+    {
+      "id": "e058",
+      "from": "req:coldplate",
+      "to": "bottleneck:liquidcool",
+      "relation": "creates_bottleneck",
+      "stage": "established",
+      "polarity": "positive",
+      "evidence": [
+        {
+          "url": "https://www.ashrae.org/technical-resources/topics-and-initiatives/ai-data-center/integrated-design-principles",
+          "source_quality": "technical_source"
+        }
+      ],
+      "note": ""
+    },
+    {
+      "id": "e059",
+      "from": "bottleneck:liquidcool",
+      "to": "tech:cdu",
+      "relation": "mitigated_by",
+      "stage": "technology_option",
+      "polarity": "positive",
+      "evidence": [
+        {
+          "url": "https://www.ashrae.org/technical-resources/topics-and-initiatives/ai-data-center/integrated-design-principles",
+          "source_quality": "technical_source"
         }
       ],
       "note": ""
