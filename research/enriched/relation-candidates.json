@@ -1,0 +1,1223 @@
+{
+  "summary": {
+    "relation_pairs": 38,
+    "status": "review_only"
+  },
+  "candidates": [
+    {
+      "left_node_id": "component:pic",
+      "right_node_id": "material:silicon_photonics",
+      "shared_source_count": 477,
+      "years": [
+        "2020",
+        "2021",
+        "2022",
+        "2023",
+        "2024",
+        "2025",
+        "2026"
+      ],
+      "example_documents": [
+        {
+          "source_id": "0174692980795e651ad52e16",
+          "url": "https://api.crossref.org/works/10.1201/9781003649519-1",
+          "title": "Integrated Silicon Photonics for Optical Logic",
+          "published_at": "2026-10-20"
+        },
+        {
+          "source_id": "472a8cdcf8e590f5703c43e9",
+          "url": "https://api.crossref.org/works/10.1109/lpt.2026.3692787",
+          "title": "8-Channel Silicon Photonics Transceiver Arrays for 896-Gb/s PAM-4 Transmission Over 2 km",
+          "published_at": "2026-10-15"
+        },
+        {
+          "source_id": "70a7b60183f4ee966b336511",
+          "url": "https://api.crossref.org/works/10.1117/12.3139732",
+          "title": "The curvy road to silicon photonics manufacturing (Erratum)",
+          "published_at": "2026-10-13"
+        }
+      ],
+      "status": "lexical_co_mention_not_supply_relation",
+      "should_create_graph_edge": false,
+      "review_prompt": "Does source text explicitly assert a causal relation? If not, keep separate from tech_edges."
+    },
+    {
+      "left_node_id": "bottleneck:hbm_overlay",
+      "right_node_id": "tech:hybrid_bond",
+      "shared_source_count": 209,
+      "years": [
+        "2020",
+        "2021",
+        "2022",
+        "2023",
+        "2024",
+        "2025",
+        "2026"
+      ],
+      "example_documents": [
+        {
+          "source_id": "6fb36b94a5c5cc732f6fe60c",
+          "url": "https://api.openalex.org/works/W7213558720",
+          "title": "Cu-Cu Hybrid Bonding for Chiplets Heterogeneous Integration",
+          "published_at": "2026-09-15"
+        },
+        {
+          "source_id": "a4a8b2a7472679ad44764cfe",
+          "url": "https://api.crossref.org/works/10.4071/001c.167735",
+          "title": "Reducing Wafer-to-Wafer Bonding Misalignment to Enable 140nm Pitch Hybrid Bonding",
+          "published_at": "2026-08-19"
+        },
+        {
+          "source_id": "8b2ace182a3d431d7fa23ce2",
+          "url": "https://api.openalex.org/works/W7223242782",
+          "title": "Late Breaking Results: Hybrid-Bonding Architecture with Stage-Aware Mapping for Masked Autoregressive Model Inference",
+          "published_at": "2026-07-26"
+        }
+      ],
+      "status": "lexical_co_mention_not_supply_relation",
+      "should_create_graph_edge": false,
+      "review_prompt": "Does source text explicitly assert a causal relation? If not, keep separate from tech_edges."
+    },
+    {
+      "left_node_id": "material:silicon_photonics",
+      "right_node_id": "tech:cpo",
+      "shared_source_count": 23,
+      "years": [
+        "2020",
+        "2022",
+        "2023",
+        "2024",
+        "2025",
+        "2026"
+      ],
+      "example_documents": [
+        {
+          "source_id": "681d87aa3adf219976f63ccf",
+          "url": "https://api.crossref.org/works/10.5104/jiep.29.376",
+          "title": "Transparent Optical Adhesives for Co-Packaged Optics (CPO) in Silicon Photonics",
+          "published_at": "2026-09-01"
+        },
+        {
+          "source_id": "ed98686e7e2d52fb66628679",
+          "url": "https://api.crossref.org/works/10.1002/admt.71266",
+          "title": "Silicon Photonics for Co‐Packaged Optics: A Review of Core PIC Components and Industry Strategies",
+          "published_at": "2026-08-20"
+        },
+        {
+          "source_id": "67372a9b3777e4d7904bc4bf",
+          "url": "https://api.crossref.org/works/10.3390/photonics13070621",
+          "title": "Design of Silicon Photonics Metasurface Enabling Optical Interfacing for Co-Packaged Optics",
+          "published_at": "2026-06-27"
+        }
+      ],
+      "status": "lexical_co_mention_not_supply_relation",
+      "should_create_graph_edge": false,
+      "review_prompt": "Does source text explicitly assert a causal relation? If not, keep separate from tech_edges."
+    },
+    {
+      "left_node_id": "component:pic",
+      "right_node_id": "tech:cpo",
+      "shared_source_count": 21,
+      "years": [
+        "2020",
+        "2022",
+        "2023",
+        "2024",
+        "2025",
+        "2026"
+      ],
+      "example_documents": [
+        {
+          "source_id": "681d87aa3adf219976f63ccf",
+          "url": "https://api.crossref.org/works/10.5104/jiep.29.376",
+          "title": "Transparent Optical Adhesives for Co-Packaged Optics (CPO) in Silicon Photonics",
+          "published_at": "2026-09-01"
+        },
+        {
+          "source_id": "ed98686e7e2d52fb66628679",
+          "url": "https://api.crossref.org/works/10.1002/admt.71266",
+          "title": "Silicon Photonics for Co‐Packaged Optics: A Review of Core PIC Components and Industry Strategies",
+          "published_at": "2026-08-20"
+        },
+        {
+          "source_id": "67372a9b3777e4d7904bc4bf",
+          "url": "https://api.crossref.org/works/10.3390/photonics13070621",
+          "title": "Design of Silicon Photonics Metasurface Enabling Optical Interfacing for Co-Packaged Optics",
+          "published_at": "2026-06-27"
+        }
+      ],
+      "status": "lexical_co_mention_not_supply_relation",
+      "should_create_graph_edge": false,
+      "review_prompt": "Does source text explicitly assert a causal relation? If not, keep separate from tech_edges."
+    },
+    {
+      "left_node_id": "component:vcsel",
+      "right_node_id": "tech:cpo",
+      "shared_source_count": 17,
+      "years": [
+        "2022",
+        "2023",
+        "2024",
+        "2025",
+        "2026"
+      ],
+      "example_documents": [
+        {
+          "source_id": "69c44463b144fc97a8ad562a",
+          "url": "https://api.openalex.org/works/W7118206949",
+          "title": "3D Heterogeneous Integration of Back-Emitting VCSEL Arrays via Flip-Chip Bonding for Co-Packaged Optics Systems",
+          "published_at": "2026-01-05"
+        },
+        {
+          "source_id": "d61998857c3a931aba9015c1",
+          "url": "https://api.crossref.org/works/10.1109/mcom.001.2600042",
+          "title": "VCSEL-Based Co-Packaged Optics for Scale-Up in A.I. Datacenter - Status and Perspectives",
+          "published_at": "2026-01-01"
+        },
+        {
+          "source_id": "b80e15cb4cad255b736a2bf3",
+          "url": "https://api.crossref.org/works/10.1109/jssc.2025.3607311",
+          "title": "A 108 Gb/s PAM-4 VCSEL-Based Direct-Drive Optical Engine for Co-Packaged Optics Applications",
+          "published_at": "2026-01-01"
+        }
+      ],
+      "status": "lexical_co_mention_not_supply_relation",
+      "should_create_graph_edge": false,
+      "review_prompt": "Does source text explicitly assert a causal relation? If not, keep separate from tech_edges."
+    },
+    {
+      "left_node_id": "component:sic_mosfet",
+      "right_node_id": "tech:sic",
+      "shared_source_count": 13,
+      "years": [
+        "2020",
+        "2021",
+        "2022",
+        "2023",
+        "2024",
+        "2025",
+        "2026"
+      ],
+      "example_documents": [
+        {
+          "source_id": "c9bbc0cc228e6505beb9330f",
+          "url": "https://api.openalex.org/works/W7212071192",
+          "title": "Conducted electromagnetic interference spectrum analysis of silicon carbide MOSFET half-bridge inverters at variable gate resistance and dead-time configurations",
+          "published_at": "2026-07-01"
+        },
+        {
+          "source_id": "8c6aeef4c9d684f723fc2bab",
+          "url": "https://api.openalex.org/works/W4413930627",
+          "title": "Development of Ultra Fast Gate Driver Board for Silicon Carbide MOSFET Applications",
+          "published_at": "2025-09-01"
+        },
+        {
+          "source_id": "88201bf769231932066a5fdd",
+          "url": "https://api.crossref.org/works/10.1088/1742-6596/3020/1/012013",
+          "title": "Silicon Carbide MOSFET based Inverter for Smart Power Switch",
+          "published_at": "2025-05-01"
+        }
+      ],
+      "status": "lexical_co_mention_not_supply_relation",
+      "should_create_graph_edge": false,
+      "review_prompt": "Does source text explicitly assert a causal relation? If not, keep separate from tech_edges."
+    },
+    {
+      "left_node_id": "bottleneck:hbm_overlay",
+      "right_node_id": "material:oxide_bond",
+      "shared_source_count": 12,
+      "years": [
+        "2020",
+        "2021",
+        "2022",
+        "2023",
+        "2024",
+        "2025",
+        "2026"
+      ],
+      "example_documents": [
+        {
+          "source_id": "6fb36b94a5c5cc732f6fe60c",
+          "url": "https://api.openalex.org/works/W7213558720",
+          "title": "Cu-Cu Hybrid Bonding for Chiplets Heterogeneous Integration",
+          "published_at": "2026-09-15"
+        },
+        {
+          "source_id": "26384e9175b172b8e168445b",
+          "url": "https://api.crossref.org/works/10.1007/978-981-95-6891-8_2",
+          "title": "Cu-Cu Hybrid Bonding",
+          "published_at": "2026-01-01"
+        },
+        {
+          "source_id": "f60cf3554df11646aeabd973",
+          "url": "https://api.openalex.org/works/W7115183638",
+          "title": "Cu–Cu hybrid bonding technology: from physical mechanisms to system integration for 3D ICs",
+          "published_at": "2025-12-15"
+        }
+      ],
+      "status": "lexical_co_mention_not_supply_relation",
+      "should_create_graph_edge": false,
+      "review_prompt": "Does source text explicitly assert a causal relation? If not, keep separate from tech_edges."
+    },
+    {
+      "left_node_id": "material:oxide_bond",
+      "right_node_id": "tech:hybrid_bond",
+      "shared_source_count": 12,
+      "years": [
+        "2020",
+        "2021",
+        "2022",
+        "2023",
+        "2024",
+        "2025",
+        "2026"
+      ],
+      "example_documents": [
+        {
+          "source_id": "6fb36b94a5c5cc732f6fe60c",
+          "url": "https://api.openalex.org/works/W7213558720",
+          "title": "Cu-Cu Hybrid Bonding for Chiplets Heterogeneous Integration",
+          "published_at": "2026-09-15"
+        },
+        {
+          "source_id": "26384e9175b172b8e168445b",
+          "url": "https://api.crossref.org/works/10.1007/978-981-95-6891-8_2",
+          "title": "Cu-Cu Hybrid Bonding",
+          "published_at": "2026-01-01"
+        },
+        {
+          "source_id": "f60cf3554df11646aeabd973",
+          "url": "https://api.openalex.org/works/W7115183638",
+          "title": "Cu–Cu hybrid bonding technology: from physical mechanisms to system integration for 3D ICs",
+          "published_at": "2025-12-15"
+        }
+      ],
+      "status": "lexical_co_mention_not_supply_relation",
+      "should_create_graph_edge": false,
+      "review_prompt": "Does source text explicitly assert a causal relation? If not, keep separate from tech_edges."
+    },
+    {
+      "left_node_id": "bottleneck:hbm_overlay",
+      "right_node_id": "material:hv_insulation",
+      "shared_source_count": 11,
+      "years": [
+        "2021",
+        "2022",
+        "2023",
+        "2024",
+        "2025",
+        "2026"
+      ],
+      "example_documents": [
+        {
+          "source_id": "832eb07eac32cff2a49c5066",
+          "url": "https://api.crossref.org/works/10.1109/ectc51846.2026.00024",
+          "title": "Reliable Low-Temperature (≤ 250 °C) Cu/Dielectric Hybrid Bonding for High-Bandwidth Memory (HBM) Stack Integration",
+          "published_at": "2026-05-26"
+        },
+        {
+          "source_id": "9c7ca82103eca8cfd12f48eb",
+          "url": "https://api.openalex.org/works/W7151737458",
+          "title": "Void-free Cu/dielectric hybrid bonding at low-temperature enabled by ultrathin metal passivation engineering for 3D-IC applications",
+          "published_at": "2026-04-08"
+        },
+        {
+          "source_id": "f51dc23a2bfb43493352468f",
+          "url": "https://api.crossref.org/works/10.1016/j.mssp.2025.109853",
+          "title": "Cu/dielectric hybrid bonding: Experimental and simulation perspectives",
+          "published_at": "2025-11-01"
+        }
+      ],
+      "status": "lexical_co_mention_not_supply_relation",
+      "should_create_graph_edge": false,
+      "review_prompt": "Does source text explicitly assert a causal relation? If not, keep separate from tech_edges."
+    },
+    {
+      "left_node_id": "material:hv_insulation",
+      "right_node_id": "tech:hybrid_bond",
+      "shared_source_count": 11,
+      "years": [
+        "2021",
+        "2022",
+        "2023",
+        "2024",
+        "2025",
+        "2026"
+      ],
+      "example_documents": [
+        {
+          "source_id": "832eb07eac32cff2a49c5066",
+          "url": "https://api.crossref.org/works/10.1109/ectc51846.2026.00024",
+          "title": "Reliable Low-Temperature (≤ 250 °C) Cu/Dielectric Hybrid Bonding for High-Bandwidth Memory (HBM) Stack Integration",
+          "published_at": "2026-05-26"
+        },
+        {
+          "source_id": "9c7ca82103eca8cfd12f48eb",
+          "url": "https://api.openalex.org/works/W7151737458",
+          "title": "Void-free Cu/dielectric hybrid bonding at low-temperature enabled by ultrathin metal passivation engineering for 3D-IC applications",
+          "published_at": "2026-04-08"
+        },
+        {
+          "source_id": "f51dc23a2bfb43493352468f",
+          "url": "https://api.crossref.org/works/10.1016/j.mssp.2025.109853",
+          "title": "Cu/dielectric hybrid bonding: Experimental and simulation perspectives",
+          "published_at": "2025-11-01"
+        }
+      ],
+      "status": "lexical_co_mention_not_supply_relation",
+      "should_create_graph_edge": false,
+      "review_prompt": "Does source text explicitly assert a causal relation? If not, keep separate from tech_edges."
+    },
+    {
+      "left_node_id": "bottleneck:hbm_overlay",
+      "right_node_id": "req:hbm_stack",
+      "shared_source_count": 8,
+      "years": [
+        "2022",
+        "2023",
+        "2025",
+        "2026"
+      ],
+      "example_documents": [
+        {
+          "source_id": "f0d691ce4ca85bf8d9359407",
+          "url": "https://api.crossref.org/works/10.3390/mi17070802",
+          "title": "A Super Memory Processing Unit Based on 3D Stacking and Hybrid Bonding for High-Efficiency AI Computing",
+          "published_at": "2026-06-30"
+        },
+        {
+          "source_id": "832eb07eac32cff2a49c5066",
+          "url": "https://api.crossref.org/works/10.1109/ectc51846.2026.00024",
+          "title": "Reliable Low-Temperature (≤ 250 °C) Cu/Dielectric Hybrid Bonding for High-Bandwidth Memory (HBM) Stack Integration",
+          "published_at": "2026-05-26"
+        },
+        {
+          "source_id": "d2337b0db6876c645375e991",
+          "url": "https://api.openalex.org/works/W7151908323",
+          "title": "eBeam process control for yield and reliability in advanced HBM hybrid bonding",
+          "published_at": "2026-04-08"
+        }
+      ],
+      "status": "lexical_co_mention_not_supply_relation",
+      "should_create_graph_edge": false,
+      "review_prompt": "Does source text explicitly assert a causal relation? If not, keep separate from tech_edges."
+    },
+    {
+      "left_node_id": "req:hbm_stack",
+      "right_node_id": "tech:hybrid_bond",
+      "shared_source_count": 8,
+      "years": [
+        "2022",
+        "2023",
+        "2025",
+        "2026"
+      ],
+      "example_documents": [
+        {
+          "source_id": "f0d691ce4ca85bf8d9359407",
+          "url": "https://api.crossref.org/works/10.3390/mi17070802",
+          "title": "A Super Memory Processing Unit Based on 3D Stacking and Hybrid Bonding for High-Efficiency AI Computing",
+          "published_at": "2026-06-30"
+        },
+        {
+          "source_id": "832eb07eac32cff2a49c5066",
+          "url": "https://api.crossref.org/works/10.1109/ectc51846.2026.00024",
+          "title": "Reliable Low-Temperature (≤ 250 °C) Cu/Dielectric Hybrid Bonding for High-Bandwidth Memory (HBM) Stack Integration",
+          "published_at": "2026-05-26"
+        },
+        {
+          "source_id": "d2337b0db6876c645375e991",
+          "url": "https://api.openalex.org/works/W7151908323",
+          "title": "eBeam process control for yield and reliability in advanced HBM hybrid bonding",
+          "published_at": "2026-04-08"
+        }
+      ],
+      "status": "lexical_co_mention_not_supply_relation",
+      "should_create_graph_edge": false,
+      "review_prompt": "Does source text explicitly assert a causal relation? If not, keep separate from tech_edges."
+    },
+    {
+      "left_node_id": "component:fiber_connector",
+      "right_node_id": "tech:cpo",
+      "shared_source_count": 7,
+      "years": [
+        "2023",
+        "2024",
+        "2025",
+        "2026"
+      ],
+      "example_documents": [
+        {
+          "source_id": "87d19ee22563cd503e03541c",
+          "url": "https://api.crossref.org/works/10.1109/ectc51846.2026.00112",
+          "title": "Integrated Assembly Process For Pluggable Fiber Connector For Co-Packaged Optics",
+          "published_at": "2026-05-26"
+        },
+        {
+          "source_id": "5ca9fc4eee40f87fb802c3e8",
+          "url": "https://api.crossref.org/works/10.1109/icsj66986.2025.11302643",
+          "title": "40-Channel Detachable Optical Connector Enabling Ultra-High Density Connectivity in Co-Packaged Optics",
+          "published_at": "2025-11-12"
+        },
+        {
+          "source_id": "becd44dd0058e4d3f6af6c1c",
+          "url": "https://api.crossref.org/works/10.1109/ecoc66593.2025.11263261",
+          "title": "Compact Detachable Optical Connector with Low Loss and High Stability for Co-Packaged Optics",
+          "published_at": "2025-09-28"
+        }
+      ],
+      "status": "lexical_co_mention_not_supply_relation",
+      "should_create_graph_edge": false,
+      "review_prompt": "Does source text explicitly assert a causal relation? If not, keep separate from tech_edges."
+    },
+    {
+      "left_node_id": "component:power_converter",
+      "right_node_id": "tech:sic",
+      "shared_source_count": 7,
+      "years": [
+        "2021",
+        "2022",
+        "2023",
+        "2025"
+      ],
+      "example_documents": [
+        {
+          "source_id": "85a997243d1ae884d2c8c555",
+          "url": "https://api.crossref.org/works/10.1007/978-3-031-99939-0_21",
+          "title": "Design and Feasibility Analysis of Silicon and Silicon Carbide Based Non-isolated High Gain DC-DC Converter",
+          "published_at": "2025-10-01"
+        },
+        {
+          "source_id": "e728e0f1326ef53ee2d42b94",
+          "url": "https://api.openalex.org/works/W4389318042",
+          "title": "Analytic Model of the Voltage Oscillation in a High-Power Converter With Silicon Carbide Devices",
+          "published_at": "2023-12-04"
+        },
+        {
+          "source_id": "23e515887f8977e330a6a54b",
+          "url": "https://api.crossref.org/works/10.1109/ecce53617.2023.10362446",
+          "title": "High-Density High-Power Converter using 3.3-kV All-Silicon Carbide Modules",
+          "published_at": "2023-10-29"
+        }
+      ],
+      "status": "lexical_co_mention_not_supply_relation",
+      "should_create_graph_edge": false,
+      "review_prompt": "Does source text explicitly assert a causal relation? If not, keep separate from tech_edges."
+    },
+    {
+      "left_node_id": "req:1p6t",
+      "right_node_id": "tech:cpo",
+      "shared_source_count": 7,
+      "years": [
+        "2023",
+        "2024",
+        "2025",
+        "2026"
+      ],
+      "example_documents": [
+        {
+          "source_id": "f6b583d84b9d40b6179be5a2",
+          "url": "https://api.crossref.org/works/10.2139/ssrn.6672598",
+          "title": "Non-Electric-Field Perturbation and Coherent Compensation Architecture for Photoelectric Conversion Nodes: A Substrate-Level Physical Compensation Framework for 1.6T/3.2T Co-Packaged Optics",
+          "published_at": "2026-01-01"
+        },
+        {
+          "source_id": "b9fdc252c222cf24cb28dd55",
+          "url": "https://api.openalex.org/works/W7106270531",
+          "title": "Investment Risk Assessment: Silicon Photonics for AI Datacenter Interconnects - 1.6T Transceivers and Co-Packaged Optics Transition Analysis",
+          "published_at": "2025-11-17"
+        },
+        {
+          "source_id": "3ba57eb80603012680ab468a",
+          "url": "https://api.openalex.org/works/W4408507877",
+          "title": "1.6T linear-drive optical engine for Chinese co-packaged optics standard",
+          "published_at": "2025-03-17"
+        }
+      ],
+      "status": "lexical_co_mention_not_supply_relation",
+      "should_create_graph_edge": false,
+      "review_prompt": "Does source text explicitly assert a causal relation? If not, keep separate from tech_edges."
+    },
+    {
+      "left_node_id": "component:optical_laser",
+      "right_node_id": "tech:cpo",
+      "shared_source_count": 6,
+      "years": [
+        "2023",
+        "2024",
+        "2025"
+      ],
+      "example_documents": [
+        {
+          "source_id": "ad62b163f322ab004bffab38",
+          "url": "https://api.crossref.org/works/10.1109/epeps63858.2025.11346585",
+          "title": "Optimization of Co-Packaged Optics (CPO) Layout with Integrated DFB Laser and EIC",
+          "published_at": "2025-10-19"
+        },
+        {
+          "source_id": "5bf0d25d10dfbaef3a4ea446",
+          "url": "https://api.crossref.org/works/10.1109/ecoc66593.2025.11263130",
+          "title": "Efficient Uncooled High-Power $1.31 \\ \\mu\\text{m}$ DFB Laser Diode for Co-Packaged Optics",
+          "published_at": "2025-09-28"
+        },
+        {
+          "source_id": "4d745c5649f21e4882b6944d",
+          "url": "https://api.crossref.org/works/10.1109/icsj62869.2024.10804708",
+          "title": "High-Bandwidth Optical Transmission with Single External Laser Source (ELS) and Polymer Splitters for Co-packaged Optics",
+          "published_at": "2024-11-13"
+        }
+      ],
+      "status": "lexical_co_mention_not_supply_relation",
+      "should_create_graph_edge": false,
+      "review_prompt": "Does source text explicitly assert a causal relation? If not, keep separate from tech_edges."
+    },
+    {
+      "left_node_id": "component:gate_driver",
+      "right_node_id": "tech:sic",
+      "shared_source_count": 5,
+      "years": [
+        "2020",
+        "2022",
+        "2023",
+        "2024",
+        "2025"
+      ],
+      "example_documents": [
+        {
+          "source_id": "8c6aeef4c9d684f723fc2bab",
+          "url": "https://api.openalex.org/works/W4413930627",
+          "title": "Development of Ultra Fast Gate Driver Board for Silicon Carbide MOSFET Applications",
+          "published_at": "2025-09-01"
+        },
+        {
+          "source_id": "659c84eb9856f3c31d53bca4",
+          "url": "https://api.crossref.org/works/10.1109/ipemc-ecceasia60879.2024.10567149",
+          "title": "Low Coupling Capacitance Gate Driver Power Supply for Series-Connected Silicon Carbide Intelligent Power Module",
+          "published_at": "2024-05-17"
+        },
+        {
+          "source_id": "20e47a6541cacaee7404d5e9",
+          "url": "https://api.openalex.org/works/W4392413448",
+          "title": "Study on switching behavior of silicon carbide MOSFET by gate driver",
+          "published_at": "2023-07-14"
+        }
+      ],
+      "status": "lexical_co_mention_not_supply_relation",
+      "should_create_graph_edge": false,
+      "review_prompt": "Does source text explicitly assert a causal relation? If not, keep separate from tech_edges."
+    },
+    {
+      "left_node_id": "bottleneck:hbm_overlay",
+      "right_node_id": "req:hbm_io",
+      "shared_source_count": 4,
+      "years": [
+        "2023",
+        "2025",
+        "2026"
+      ],
+      "example_documents": [
+        {
+          "source_id": "832eb07eac32cff2a49c5066",
+          "url": "https://api.crossref.org/works/10.1109/ectc51846.2026.00024",
+          "title": "Reliable Low-Temperature (≤ 250 °C) Cu/Dielectric Hybrid Bonding for High-Bandwidth Memory (HBM) Stack Integration",
+          "published_at": "2026-05-26"
+        },
+        {
+          "source_id": "cbc000210391d976864e8e78",
+          "url": "https://api.crossref.org/works/10.3390/electronics14132682",
+          "title": "Thermal Issues Related to Hybrid Bonding of 3D-Stacked High Bandwidth Memory: A Comprehensive Review",
+          "published_at": "2025-07-02"
+        },
+        {
+          "source_id": "54d1f6aafe86fcc21e6dda6a",
+          "url": "https://api.crossref.org/works/10.1007/s13391-025-00557-9",
+          "title": "3D Integrated Process and Hybrid Bonding of High Bandwidth Memory (HBM)",
+          "published_at": "2025-03-02"
+        }
+      ],
+      "status": "lexical_co_mention_not_supply_relation",
+      "should_create_graph_edge": false,
+      "review_prompt": "Does source text explicitly assert a causal relation? If not, keep separate from tech_edges."
+    },
+    {
+      "left_node_id": "bottleneck:optic_coupling",
+      "right_node_id": "tech:poet_interposer",
+      "shared_source_count": 4,
+      "years": [
+        "2020",
+        "2022",
+        "2024",
+        "2026"
+      ],
+      "example_documents": [
+        {
+          "source_id": "20f211a2ec0acd8f13619935",
+          "url": "https://api.crossref.org/works/10.1109/jlt.2026.3720907",
+          "title": "Laser Structured Optical Interposer for Ultra-Dense Surface Coupling of Multicore Fibers to Silicon Photonic Chip",
+          "published_at": "2026-09-01"
+        },
+        {
+          "source_id": "826203abfb00a9b347780ebe",
+          "url": "https://api.crossref.org/works/10.1109/piers62282.2024.10618259",
+          "title": "Photonic Chiplet Integration on Optical Interposer: Can Hybrid Bonding Realize Passive Optical Coupling?",
+          "published_at": "2024-04-21"
+        },
+        {
+          "source_id": "1b3173e5719be833702e9333",
+          "url": "https://api.crossref.org/works/10.1109/vlsitechnologyandcir46769.2022.9830432",
+          "title": "A Wafer Scale Hybrid Integration Platform for Co-packaged Photonics using a CMOS based Optical Interposer<sup>TM</sup>",
+          "published_at": "2022-06-12"
+        }
+      ],
+      "status": "lexical_co_mention_not_supply_relation",
+      "should_create_graph_edge": false,
+      "review_prompt": "Does source text explicitly assert a causal relation? If not, keep separate from tech_edges."
+    },
+    {
+      "left_node_id": "company:cohr",
+      "right_node_id": "component:pic",
+      "shared_source_count": 4,
+      "years": [
+        "2020",
+        "2021"
+      ],
+      "example_documents": [
+        {
+          "source_id": "8e07fc47a6a45daebaeb7698",
+          "url": "https://api.crossref.org/works/10.1117/12.2578173",
+          "title": "Recent advances in integrated silicon photonics engine for coherent optical communications",
+          "published_at": "2021-03-05"
+        },
+        {
+          "source_id": "b32db3b9c591939b2ae92001",
+          "url": "https://api.crossref.org/works/10.1364/ofc.2021.th5f.2",
+          "title": "Silicon Photonics Coherent Optical Subassembly for High-Data-Rate Signal Transmissions",
+          "published_at": "2021-01-01"
+        },
+        {
+          "source_id": "e3dfc4ebacf58d4c97f6266b",
+          "url": "https://api.crossref.org/works/10.53829/ntr202010fa2",
+          "title": "Ultracompact Silicon Photonics Coherent Optical Subassembly for Ultrahigh-capacity Optical Communication",
+          "published_at": "2020-10-01"
+        }
+      ],
+      "status": "lexical_co_mention_not_supply_relation",
+      "should_create_graph_edge": false,
+      "review_prompt": "Does source text explicitly assert a causal relation? If not, keep separate from tech_edges."
+    },
+    {
+      "left_node_id": "company:cohr",
+      "right_node_id": "material:silicon_photonics",
+      "shared_source_count": 4,
+      "years": [
+        "2020",
+        "2021"
+      ],
+      "example_documents": [
+        {
+          "source_id": "8e07fc47a6a45daebaeb7698",
+          "url": "https://api.crossref.org/works/10.1117/12.2578173",
+          "title": "Recent advances in integrated silicon photonics engine for coherent optical communications",
+          "published_at": "2021-03-05"
+        },
+        {
+          "source_id": "b32db3b9c591939b2ae92001",
+          "url": "https://api.crossref.org/works/10.1364/ofc.2021.th5f.2",
+          "title": "Silicon Photonics Coherent Optical Subassembly for High-Data-Rate Signal Transmissions",
+          "published_at": "2021-01-01"
+        },
+        {
+          "source_id": "e3dfc4ebacf58d4c97f6266b",
+          "url": "https://api.crossref.org/works/10.53829/ntr202010fa2",
+          "title": "Ultracompact Silicon Photonics Coherent Optical Subassembly for Ultrahigh-capacity Optical Communication",
+          "published_at": "2020-10-01"
+        }
+      ],
+      "status": "lexical_co_mention_not_supply_relation",
+      "should_create_graph_edge": false,
+      "review_prompt": "Does source text explicitly assert a causal relation? If not, keep separate from tech_edges."
+    },
+    {
+      "left_node_id": "component:tsv",
+      "right_node_id": "req:hbm_io",
+      "shared_source_count": 4,
+      "years": [
+        "2020",
+        "2021",
+        "2024"
+      ],
+      "example_documents": [
+        {
+          "source_id": "48c80154002af0ba7f779056",
+          "url": "https://api.crossref.org/works/10.1109/epeps61853.2024.10754321",
+          "title": "Eye-Diagram Edge Estimation (EEE) Network for Through Silicon via Design in Next-Generation High Bandwidth Memory",
+          "published_at": "2024-10-06"
+        },
+        {
+          "source_id": "ac524329d790759f55d47311",
+          "url": "https://api.crossref.org/works/10.1109/temc.2023.3343700",
+          "title": "Policy-Based Reinforcement Learning for Through Silicon Via Array Design in High-Bandwidth Memory Considering Signal Integrity",
+          "published_at": "2024-02-01"
+        },
+        {
+          "source_id": "050b5076c06f85ca26fc5a10",
+          "url": "https://api.crossref.org/works/10.1109/edaps53774.2021.9657033",
+          "title": "Signal Integrity Design and Analysis of a Spiral Through-Silicon Via (TSV) Array Channel for High Bandwidth Memory (HBM)",
+          "published_at": "2021-12-13"
+        }
+      ],
+      "status": "lexical_co_mention_not_supply_relation",
+      "should_create_graph_edge": false,
+      "review_prompt": "Does source text explicitly assert a causal relation? If not, keep separate from tech_edges."
+    },
+    {
+      "left_node_id": "component:tsv",
+      "right_node_id": "req:hbm_stack",
+      "shared_source_count": 4,
+      "years": [
+        "2020",
+        "2021",
+        "2024"
+      ],
+      "example_documents": [
+        {
+          "source_id": "48c80154002af0ba7f779056",
+          "url": "https://api.crossref.org/works/10.1109/epeps61853.2024.10754321",
+          "title": "Eye-Diagram Edge Estimation (EEE) Network for Through Silicon via Design in Next-Generation High Bandwidth Memory",
+          "published_at": "2024-10-06"
+        },
+        {
+          "source_id": "ac524329d790759f55d47311",
+          "url": "https://api.crossref.org/works/10.1109/temc.2023.3343700",
+          "title": "Policy-Based Reinforcement Learning for Through Silicon Via Array Design in High-Bandwidth Memory Considering Signal Integrity",
+          "published_at": "2024-02-01"
+        },
+        {
+          "source_id": "050b5076c06f85ca26fc5a10",
+          "url": "https://api.crossref.org/works/10.1109/edaps53774.2021.9657033",
+          "title": "Signal Integrity Design and Analysis of a Spiral Through-Silicon Via (TSV) Array Channel for High Bandwidth Memory (HBM)",
+          "published_at": "2021-12-13"
+        }
+      ],
+      "status": "lexical_co_mention_not_supply_relation",
+      "should_create_graph_edge": false,
+      "review_prompt": "Does source text explicitly assert a causal relation? If not, keep separate from tech_edges."
+    },
+    {
+      "left_node_id": "req:hbm_io",
+      "right_node_id": "tech:hybrid_bond",
+      "shared_source_count": 4,
+      "years": [
+        "2023",
+        "2025",
+        "2026"
+      ],
+      "example_documents": [
+        {
+          "source_id": "832eb07eac32cff2a49c5066",
+          "url": "https://api.crossref.org/works/10.1109/ectc51846.2026.00024",
+          "title": "Reliable Low-Temperature (≤ 250 °C) Cu/Dielectric Hybrid Bonding for High-Bandwidth Memory (HBM) Stack Integration",
+          "published_at": "2026-05-26"
+        },
+        {
+          "source_id": "cbc000210391d976864e8e78",
+          "url": "https://api.crossref.org/works/10.3390/electronics14132682",
+          "title": "Thermal Issues Related to Hybrid Bonding of 3D-Stacked High Bandwidth Memory: A Comprehensive Review",
+          "published_at": "2025-07-02"
+        },
+        {
+          "source_id": "54d1f6aafe86fcc21e6dda6a",
+          "url": "https://api.crossref.org/works/10.1007/s13391-025-00557-9",
+          "title": "3D Integrated Process and Hybrid Bonding of High Bandwidth Memory (HBM)",
+          "published_at": "2025-03-02"
+        }
+      ],
+      "status": "lexical_co_mention_not_supply_relation",
+      "should_create_graph_edge": false,
+      "review_prompt": "Does source text explicitly assert a causal relation? If not, keep separate from tech_edges."
+    },
+    {
+      "left_node_id": "bottleneck:conversion",
+      "right_node_id": "component:power_converter",
+      "shared_source_count": 3,
+      "years": [
+        "2021",
+        "2024",
+        "2025"
+      ],
+      "example_documents": [
+        {
+          "source_id": "5e53e7919e7d4b4f23b61061",
+          "url": "https://api.crossref.org/works/10.1109/icpeev67897.2025.11291317",
+          "title": "Enhancing Power Conversion Efficiency with Feedforward Controlled Triple Active Bridge DC-DC Converter",
+          "published_at": "2025-09-25"
+        },
+        {
+          "source_id": "5ad8a4ac4603280dcc608250",
+          "url": "https://api.crossref.org/works/10.1109/tcsii.2023.3324711",
+          "title": "Extended Power Dynamic Range and Enhanced Power Conversion Efficiency of a Switched-Capacitor DC–DC Converter: A Tutorial",
+          "published_at": "2024-03-01"
+        },
+        {
+          "source_id": "abbf5971017517c75a7113d8",
+          "url": "https://api.crossref.org/works/10.1109/ifeec53238.2021.9661889",
+          "title": "Relationship of Bifurcation and Power Conversion Efficiency in DC-DC Converter with TEM",
+          "published_at": "2021-11-16"
+        }
+      ],
+      "status": "lexical_co_mention_not_supply_relation",
+      "should_create_graph_edge": false,
+      "review_prompt": "Does source text explicitly assert a causal relation? If not, keep separate from tech_edges."
+    },
+    {
+      "left_node_id": "process:optical_test",
+      "right_node_id": "req:hbm_io",
+      "shared_source_count": 3,
+      "years": [
+        "2022",
+        "2023",
+        "2024"
+      ],
+      "example_documents": [
+        {
+          "source_id": "48c80154002af0ba7f779056",
+          "url": "https://api.crossref.org/works/10.1109/epeps61853.2024.10754321",
+          "title": "Eye-Diagram Edge Estimation (EEE) Network for Through Silicon via Design in Next-Generation High Bandwidth Memory",
+          "published_at": "2024-10-06"
+        },
+        {
+          "source_id": "4c9b14782bf706a63706784b",
+          "url": "https://api.crossref.org/works/10.23919/aces-china60289.2023.10249869",
+          "title": "Semi-supervised Regression Model for Eye Diagram Estimation of High Bandwidth Memory (HBM) Silicon Interposer",
+          "published_at": "2023-08-15"
+        },
+        {
+          "source_id": "2176a950041d73312463c80e",
+          "url": "https://api.crossref.org/works/10.1109/temc.2021.3081713",
+          "title": "Channel Characteristic-Based Deep Neural Network Models for Accurate Eye Diagram Estimation in High Bandwidth Memory (HBM) Silicon Interposer",
+          "published_at": "2022-02-01"
+        }
+      ],
+      "status": "lexical_co_mention_not_supply_relation",
+      "should_create_graph_edge": false,
+      "review_prompt": "Does source text explicitly assert a causal relation? If not, keep separate from tech_edges."
+    },
+    {
+      "left_node_id": "process:optical_test",
+      "right_node_id": "req:hbm_stack",
+      "shared_source_count": 3,
+      "years": [
+        "2022",
+        "2023",
+        "2024"
+      ],
+      "example_documents": [
+        {
+          "source_id": "48c80154002af0ba7f779056",
+          "url": "https://api.crossref.org/works/10.1109/epeps61853.2024.10754321",
+          "title": "Eye-Diagram Edge Estimation (EEE) Network for Through Silicon via Design in Next-Generation High Bandwidth Memory",
+          "published_at": "2024-10-06"
+        },
+        {
+          "source_id": "4c9b14782bf706a63706784b",
+          "url": "https://api.crossref.org/works/10.23919/aces-china60289.2023.10249869",
+          "title": "Semi-supervised Regression Model for Eye Diagram Estimation of High Bandwidth Memory (HBM) Silicon Interposer",
+          "published_at": "2023-08-15"
+        },
+        {
+          "source_id": "2176a950041d73312463c80e",
+          "url": "https://api.crossref.org/works/10.1109/temc.2021.3081713",
+          "title": "Channel Characteristic-Based Deep Neural Network Models for Accurate Eye Diagram Estimation in High Bandwidth Memory (HBM) Silicon Interposer",
+          "published_at": "2022-02-01"
+        }
+      ],
+      "status": "lexical_co_mention_not_supply_relation",
+      "should_create_graph_edge": false,
+      "review_prompt": "Does source text explicitly assert a causal relation? If not, keep separate from tech_edges."
+    },
+    {
+      "left_node_id": "bottleneck:hbm_overlay",
+      "right_node_id": "material:underfill",
+      "shared_source_count": 2,
+      "years": [
+        "2023"
+      ],
+      "example_documents": [
+        {
+          "source_id": "fe0633f3d3b3bfdefeac1f4e",
+          "url": "https://api.openalex.org/works/W4394968119",
+          "title": "Hybrid Bonding Technology Utilizing Molding Compound and Photo Imageable Dielectric Systems",
+          "published_at": "2023-06-15"
+        },
+        {
+          "source_id": "b4bb3f16ea7ace017ac12f08",
+          "url": "https://api.crossref.org/works/10.1109/ectc51909.2023.00280",
+          "title": "Hybrid Bonding Utilizing Molding Compound and Dielectric Systems",
+          "published_at": "2023-05-01"
+        }
+      ],
+      "status": "lexical_co_mention_not_supply_relation",
+      "should_create_graph_edge": false,
+      "review_prompt": "Does source text explicitly assert a causal relation? If not, keep separate from tech_edges."
+    },
+    {
+      "left_node_id": "bottleneck:hbm_wafer_warpage",
+      "right_node_id": "material:underfill",
+      "shared_source_count": 2,
+      "years": [
+        "2023",
+        "2024"
+      ],
+      "example_documents": [
+        {
+          "source_id": "ed3888995c93005a441b101e",
+          "url": "https://api.crossref.org/works/10.1109/ectc51529.2024.00137",
+          "title": "Novel sheet molding compound technology for wafer-level packaging to overcome wafer warpage issue",
+          "published_at": "2024-05-28"
+        },
+        {
+          "source_id": "1dbdc85d00deb0e0f72194e5",
+          "url": "https://api.crossref.org/works/10.3390/ma16093482",
+          "title": "Exploring the Influence of Material Properties of Epoxy Molding Compound on Wafer Warpage in Fan-Out Wafer-Level Packaging",
+          "published_at": "2023-04-30"
+        }
+      ],
+      "status": "lexical_co_mention_not_supply_relation",
+      "should_create_graph_edge": false,
+      "review_prompt": "Does source text explicitly assert a causal relation? If not, keep separate from tech_edges."
+    },
+    {
+      "left_node_id": "bottleneck:liquidcool",
+      "right_node_id": "tech:cpo",
+      "shared_source_count": 2,
+      "years": [
+        "2025",
+        "2026"
+      ],
+      "example_documents": [
+        {
+          "source_id": "43d800f6b85d26c8d3cdbf4f",
+          "url": "https://api.crossref.org/works/10.23919/semi-therm71268.2026.11573111",
+          "title": "Cold Plate Study for Liquid Cooling of Co-Packaged Optics (CPO)",
+          "published_at": "2026-03-09"
+        },
+        {
+          "source_id": "0fb87be39439b0a47865e7e6",
+          "url": "https://api.crossref.org/works/10.1007/s12200-025-00156-4",
+          "title": "Simulation and experimental investigation of liquid-cooling thermal management for high-bandwidth co-packaged optics",
+          "published_at": "2025-05-14"
+        }
+      ],
+      "status": "lexical_co_mention_not_supply_relation",
+      "should_create_graph_edge": false,
+      "review_prompt": "Does source text explicitly assert a causal relation? If not, keep separate from tech_edges."
+    },
+    {
+      "left_node_id": "component:fiber_ferrule",
+      "right_node_id": "tech:cpo",
+      "shared_source_count": 2,
+      "years": [
+        "2024",
+        "2025"
+      ],
+      "example_documents": [
+        {
+          "source_id": "bf63c467cbcf3b7835f68a88",
+          "url": "https://api.crossref.org/works/10.23919/moc65514.2025.11269232",
+          "title": "Optical pigtailing 64 channel silicon photonics grating couplers through a two-dimensional fiber array for co-packaged optics applications",
+          "published_at": "2025-10-12"
+        },
+        {
+          "source_id": "44452190f4f6fd8cc07be869",
+          "url": "https://api.crossref.org/works/10.1109/ectc51529.2024.00185",
+          "title": "Fiber array attach for co-packaged optics: high volume production process control and performance",
+          "published_at": "2024-05-28"
+        }
+      ],
+      "status": "lexical_co_mention_not_supply_relation",
+      "should_create_graph_edge": false,
+      "review_prompt": "Does source text explicitly assert a causal relation? If not, keep separate from tech_edges."
+    },
+    {
+      "left_node_id": "component:photodiode",
+      "right_node_id": "material:silicon_photonics",
+      "shared_source_count": 2,
+      "years": [
+        "2025",
+        "2026"
+      ],
+      "example_documents": [
+        {
+          "source_id": "c9d424a6b09ebf278c082897",
+          "url": "https://api.crossref.org/works/10.1109/jlt.2025.3615517",
+          "title": "Silicon Photonics Multi-Function Integrated Optical Circuit With Hybrid III–V Photodiode for Miniaturized Fiber Optic Gyroscope Applications",
+          "published_at": "2026-04-01"
+        },
+        {
+          "source_id": "4b47de209c88b2882c9c7565",
+          "url": "https://api.crossref.org/works/10.1364/ofc.2025.w2a.18",
+          "title": "Uniform Monolithically Integrated Silicon Photonics Optical Receiver Chip for CWDM4",
+          "published_at": "2025-01-01"
+        }
+      ],
+      "status": "lexical_co_mention_not_supply_relation",
+      "should_create_graph_edge": false,
+      "review_prompt": "Does source text explicitly assert a causal relation? If not, keep separate from tech_edges."
+    },
+    {
+      "left_node_id": "component:photodiode",
+      "right_node_id": "tech:cpo",
+      "shared_source_count": 2,
+      "years": [
+        "2022",
+        "2024"
+      ],
+      "example_documents": [
+        {
+          "source_id": "ef761db94c3ae9ed10d884c4",
+          "url": "https://api.crossref.org/works/10.1109/tcsii.2024.3376200",
+          "title": "A 16-Channel Optical Receiver Circuit for a Multicore Fiber-Based Co-Packaged Optics Module in a 65-nm CMOS Chip",
+          "published_at": "2024-05-01"
+        },
+        {
+          "source_id": "5db59e5cbb751288052c43d4",
+          "url": "https://api.crossref.org/works/10.1109/icta56932.2022.9963048",
+          "title": "A 0.58-pJ/bit 56-Gb/s PAM-4 Optical Receiver Frontend with an Envelope Tracker for Co-Packaged Optics in 40-nm CMOS",
+          "published_at": "2022-10-28"
+        }
+      ],
+      "status": "lexical_co_mention_not_supply_relation",
+      "should_create_graph_edge": false,
+      "review_prompt": "Does source text explicitly assert a causal relation? If not, keep separate from tech_edges."
+    },
+    {
+      "left_node_id": "component:pic",
+      "right_node_id": "req:1p6t",
+      "shared_source_count": 2,
+      "years": [
+        "2023",
+        "2025"
+      ],
+      "example_documents": [
+        {
+          "source_id": "b9fdc252c222cf24cb28dd55",
+          "url": "https://api.openalex.org/works/W7106270531",
+          "title": "Investment Risk Assessment: Silicon Photonics for AI Datacenter Interconnects - 1.6T Transceivers and Co-Packaged Optics Transition Analysis",
+          "published_at": "2025-11-17"
+        },
+        {
+          "source_id": "8481a97efb1a56f5969e7134",
+          "url": "https://api.crossref.org/works/10.1117/12.2646280",
+          "title": "A silicon-photonics optical transmitter for 12-port 1.6 Tbps co-packaged optics modules",
+          "published_at": "2023-03-08"
+        }
+      ],
+      "status": "lexical_co_mention_not_supply_relation",
+      "should_create_graph_edge": false,
+      "review_prompt": "Does source text explicitly assert a causal relation? If not, keep separate from tech_edges."
+    },
+    {
+      "left_node_id": "material:hv_insulation",
+      "right_node_id": "req:hbm_stack",
+      "shared_source_count": 2,
+      "years": [
+        "2023",
+        "2026"
+      ],
+      "example_documents": [
+        {
+          "source_id": "832eb07eac32cff2a49c5066",
+          "url": "https://api.crossref.org/works/10.1109/ectc51846.2026.00024",
+          "title": "Reliable Low-Temperature (≤ 250 °C) Cu/Dielectric Hybrid Bonding for High-Bandwidth Memory (HBM) Stack Integration",
+          "published_at": "2026-05-26"
+        },
+        {
+          "source_id": "f6141cbfe267bbbd0d593bfb",
+          "url": "https://api.openalex.org/works/W4392905108",
+          "title": "Evaluation of Low Temperature Inorganic Dielectric Materials for Hybrid Bonding Applications",
+          "published_at": "2023-12-05"
+        }
+      ],
+      "status": "lexical_co_mention_not_supply_relation",
+      "should_create_graph_edge": false,
+      "review_prompt": "Does source text explicitly assert a causal relation? If not, keep separate from tech_edges."
+    },
+    {
+      "left_node_id": "material:sic_wafer",
+      "right_node_id": "tech:sic",
+      "shared_source_count": 2,
+      "years": [
+        "2021",
+        "2024"
+      ],
+      "example_documents": [
+        {
+          "source_id": "66352a468f4d17f60243e4b4",
+          "url": "https://api.crossref.org/works/10.1109/sslchinaifws64644.2024.10835376",
+          "title": "Overview of Silicon Carbide Wafer Defect Types and Inspection Techniques",
+          "published_at": "2024-11-18"
+        },
+        {
+          "source_id": "ab42a525874eccfe7ad6a381",
+          "url": "https://api.crossref.org/works/10.12968/s0047-9624(22)60494-2",
+          "title": "Silicon Carbide Wafer Supply Agreement",
+          "published_at": "2021-08-24"
+        }
+      ],
+      "status": "lexical_co_mention_not_supply_relation",
+      "should_create_graph_edge": false,
+      "review_prompt": "Does source text explicitly assert a causal relation? If not, keep separate from tech_edges."
+    },
+    {
+      "left_node_id": "material:silicon_photonics",
+      "right_node_id": "req:1p6t",
+      "shared_source_count": 2,
+      "years": [
+        "2023",
+        "2025"
+      ],
+      "example_documents": [
+        {
+          "source_id": "b9fdc252c222cf24cb28dd55",
+          "url": "https://api.openalex.org/works/W7106270531",
+          "title": "Investment Risk Assessment: Silicon Photonics for AI Datacenter Interconnects - 1.6T Transceivers and Co-Packaged Optics Transition Analysis",
+          "published_at": "2025-11-17"
+        },
+        {
+          "source_id": "8481a97efb1a56f5969e7134",
+          "url": "https://api.crossref.org/works/10.1117/12.2646280",
+          "title": "A silicon-photonics optical transmitter for 12-port 1.6 Tbps co-packaged optics modules",
+          "published_at": "2023-03-08"
+        }
+      ],
+      "status": "lexical_co_mention_not_supply_relation",
+      "should_create_graph_edge": false,
+      "review_prompt": "Does source text explicitly assert a causal relation? If not, keep separate from tech_edges."
+    },
+    {
+      "left_node_id": "material:underfill",
+      "right_node_id": "tech:hybrid_bond",
+      "shared_source_count": 2,
+      "years": [
+        "2023"
+      ],
+      "example_documents": [
+        {
+          "source_id": "fe0633f3d3b3bfdefeac1f4e",
+          "url": "https://api.openalex.org/works/W4394968119",
+          "title": "Hybrid Bonding Technology Utilizing Molding Compound and Photo Imageable Dielectric Systems",
+          "published_at": "2023-06-15"
+        },
+        {
+          "source_id": "b4bb3f16ea7ace017ac12f08",
+          "url": "https://api.crossref.org/works/10.1109/ectc51909.2023.00280",
+          "title": "Hybrid Bonding Utilizing Molding Compound and Dielectric Systems",
+          "published_at": "2023-05-01"
+        }
+      ],
+      "status": "lexical_co_mention_not_supply_relation",
+      "should_create_graph_edge": false,
+      "review_prompt": "Does source text explicitly assert a causal relation? If not, keep separate from tech_edges."
+    }
+  ]
+}

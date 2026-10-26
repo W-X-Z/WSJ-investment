@@ -1,0 +1,46 @@
+{
+  "status": "completed_with_limits",
+  "collected_at": "2026-10-26T15:40:35+00:00",
+  "historical_period": [
+    2020,
+    2026
+  ],
+  "records": 5465,
+  "by_source": {
+    "sec": 1068,
+    "openalex": 1214,
+    "crossref": 3010,
+    "federalregister": 173
+  },
+  "by_ecosystem": {
+    "power": 1920,
+    "hbm": 1779,
+    "optics": 1766
+  },
+  "by_publication_year": {
+    "2020": 717,
+    "2021": 748,
+    "2022": 759,
+    "2023": 821,
+    "2024": 808,
+    "2025": 820,
+    "2026": 792
+  },
+  "failed_source_segments": [],
+  "interpretation": "Historical metadata sample (bounded pagination), not exhaustive corpus, real-time alerts, or point-in-time investment proof",
+  "limits": [
+    "Only a few bounded pages per year and search term; unreturned records may exist.",
+    "OpenAlex may need OPENALEX_API_KEY for sustained searching; failures must not be hidden.",
+    "Crossref and OpenAlex are bibliographic indexes, not independent validation of paper contents.",
+    "SEC submission archive availability and filing caps differ by issuer.",
+    "Original publication date != first_seen_at; historical index snapshots were NOT retained.",
+    "Imprecise year/month is normalized to Jan 1 with published_precision field, not an exact date.",
+    "Future-dated results are excluded relative to actual collector date.",
+    "API page ordering changes across runs: preserve all earlier valid documents, not only today's top-ranked results."
+  ],
+  "records_from_previous_archive": 5458,
+  "current_api_snapshot_records": 5447,
+  "newly_discovered_archive_records": 7,
+  "previously_observed_but_not_in_current_snapshot": 18,
+  "storage_mode": "cumulative_union_preserve_first_seen"
+}

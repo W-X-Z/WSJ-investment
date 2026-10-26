@@ -1,0 +1,368 @@
+{
+  "schema_version": 1,
+  "interpretation": "technical topical matching only; NEVER independently verified supply relationships",
+  "aliases": {
+    "eco:hbm": [
+      "high bandwidth memory",
+      "advanced packaging",
+      "hybrid bonding"
+    ],
+    "req:hbm_io": [
+      "hbm4",
+      "high bandwidth memory",
+      "2048 i/o"
+    ],
+    "req:hbm_stack": [
+      "3d stacking",
+      "stacked dram",
+      "high bandwidth memory"
+    ],
+    "bottleneck:hbm_overlay": [
+      "overlay metrology",
+      "microbump",
+      "bump inspection",
+      "hybrid bonding"
+    ],
+    "bottleneck:hbm_thermal": [
+      "stacked dram thermal",
+      "3d ic thermal",
+      "thermal warpage"
+    ],
+    "bottleneck:hbm_wafer_warpage": [
+      "wafer warpage",
+      "substrate warpage"
+    ],
+    "bottleneck:hbm_kged": [
+      "known good die",
+      "stack yield",
+      "die yield"
+    ],
+    "bottleneck:hbm_pitch_density": [
+      "hybrid bonding pitch",
+      "fine pitch bonding"
+    ],
+    "bottleneck:bond_void": [
+      "bonding void",
+      "hybrid bonding defect"
+    ],
+    "bottleneck:bond_particle": [
+      "particle contamination",
+      "copper bonding"
+    ],
+    "process:microbump_metrology": [
+      "bump metrology",
+      "micro bump inspection"
+    ],
+    "tech:hawk": [
+      "camtek hawk",
+      "semiconductor inspection"
+    ],
+    "tech:onto_g3": [
+      "dragonfly g3",
+      "onto innovation metrology"
+    ],
+    "component:tsv": [
+      "through silicon via",
+      "tsv"
+    ],
+    "process:tsv_plating": [
+      "via copper plating",
+      "tsv filling"
+    ],
+    "material:abf": [
+      "ajinomoto build-up film",
+      "abf substrate"
+    ],
+    "component:package_substrate": [
+      "semiconductor packaging substrate",
+      "advanced packaging substrate"
+    ],
+    "process:cmp": [
+      "chemical mechanical polishing",
+      "cmp planarization"
+    ],
+    "process:surface_activation": [
+      "surface activation bonding",
+      "wafer cleaning"
+    ],
+    "material:oxide_bond": [
+      "cu-cu hybrid bonding",
+      "oxide bonding"
+    ],
+    "material:cu_cu": [
+      "cu-cu bonding",
+      "copper hybrid bond"
+    ],
+    "material:underfill": [
+      "underfill",
+      "molding compound"
+    ],
+    "tech:hybrid_bond": [
+      "hybrid bonding",
+      "direct copper bonding"
+    ],
+    "tech:tcb": [
+      "thermo compression bonding",
+      "tcb"
+    ],
+    "company:camt": [
+      "camtek",
+      "hawk inspection"
+    ],
+    "company:onto": [
+      "onto innovation",
+      "dragonfly"
+    ],
+    "eco:optics": [
+      "silicon photonics",
+      "optical transceiver",
+      "co packaged optics"
+    ],
+    "req:1p6t": [
+      "1.6t",
+      "200g per lane",
+      "1.6 tbps"
+    ],
+    "bottleneck:optic_coupling": [
+      "optical coupling loss",
+      "fiber alignment",
+      "optical interposer"
+    ],
+    "bottleneck:optic_power": [
+      "optical power consumption",
+      "transceiver power"
+    ],
+    "bottleneck:optic_ber": [
+      "bit error rate",
+      "ber optical",
+      "fec"
+    ],
+    "bottleneck:optic_thermal": [
+      "optical module thermal",
+      "transceiver thermal"
+    ],
+    "tech:poet_interposer": [
+      "poet optical interposer",
+      "optical interposer"
+    ],
+    "tech:lessengers_dow": [
+      "direct optical wiring",
+      "lessengers"
+    ],
+    "tech:pluggable": [
+      "pluggable transceiver",
+      "osfp 1.6t"
+    ],
+    "tech:cpo": [
+      "co packaged optics",
+      "co-packaged optics",
+      "cpo"
+    ],
+    "tech:lite_eml": [
+      "200g eml",
+      "lumentum"
+    ],
+    "tech:cohr_1p6t": [
+      "coherent 1.6t",
+      "ofc 2026"
+    ],
+    "component:eml": [
+      "electro absorption modulated laser",
+      "200g eml",
+      "eml laser"
+    ],
+    "component:vcsel": [
+      "vcsel",
+      "vertical cavity surface emitting"
+    ],
+    "component:pic": [
+      "photonic integrated circuit",
+      "silicon photonics"
+    ],
+    "component:photodiode": [
+      "photodiode",
+      "optical receiver"
+    ],
+    "component:modulator": [
+      "electro optic modulator",
+      "optical modulator"
+    ],
+    "component:optical_laser": [
+      "dfb laser",
+      "laser source"
+    ],
+    "component:optical_dsp": [
+      "optical dsp",
+      "pam4 dsp",
+      "serdes"
+    ],
+    "component:osfp": [
+      "osfp",
+      "transceiver form factor"
+    ],
+    "component:fiber_ferrule": [
+      "fiber array",
+      "fiber ferrule"
+    ],
+    "component:fiber_connector": [
+      "optical connector",
+      "fiber connector"
+    ],
+    "process:optical_test": [
+      "optical transceiver testing",
+      "eye diagram",
+      "ber test"
+    ],
+    "process:optic_alignment": [
+      "optical alignment",
+      "coupling alignment"
+    ],
+    "material:inp": [
+      "indium phosphide",
+      "inp laser"
+    ],
+    "material:silicon_photonics": [
+      "silicon photonics",
+      "photonic integrated"
+    ],
+    "company:lite": [
+      "lumentum"
+    ],
+    "company:cohr": [
+      "coherent corp",
+      "coherent optical"
+    ],
+    "company:poet": [
+      "poet technologies"
+    ],
+    "company:lessengers": [
+      "lessengers"
+    ],
+    "eco:power": [
+      "data center 800v",
+      "800v dc",
+      "high voltage dc"
+    ],
+    "req:800v": [
+      "800vdc",
+      "800 vdc",
+      "800v dc"
+    ],
+    "req:highdensity": [
+      "megawatt rack",
+      "power density data center"
+    ],
+    "bottleneck:conversion": [
+      "dc dc power conversion",
+      "power conversion efficiency"
+    ],
+    "bottleneck:copper": [
+      "copper busbar",
+      "power busbar"
+    ],
+    "bottleneck:dc_protection": [
+      "dc circuit protection",
+      "high voltage dc breaker"
+    ],
+    "bottleneck:arc_flash": [
+      "dc arc",
+      "arc flash",
+      "dc fault"
+    ],
+    "bottleneck:liquidcool": [
+      "liquid cooling",
+      "cold plate"
+    ],
+    "bottleneck:sic_reliability": [
+      "sic reliability",
+      "sic burn in",
+      "wafer burn-in"
+    ],
+    "component:sic_mosfet": [
+      "sic mosfet",
+      "silicon carbide mosfet"
+    ],
+    "material:sic_wafer": [
+      "silicon carbide wafer",
+      "sic epi"
+    ],
+    "component:gate_driver": [
+      "gate driver",
+      "dv/dt"
+    ],
+    "component:dc_busbar": [
+      "dc busbar",
+      "power distribution busbar"
+    ],
+    "component:dc_breaker": [
+      "dc breaker",
+      "dc protection"
+    ],
+    "component:dc_contactor": [
+      "dc contactor",
+      "dc switching"
+    ],
+    "component:power_converter": [
+      "power converter",
+      "dc-dc converter"
+    ],
+    "component:planar_transformer": [
+      "planar transformer",
+      "high frequency transformer"
+    ],
+    "component:dc_capacitor": [
+      "dc link capacitor",
+      "high voltage capacitor"
+    ],
+    "component:coldplate": [
+      "cold plate",
+      "direct liquid cooling"
+    ],
+    "material:hv_insulation": [
+      "high voltage insulation",
+      "dielectric"
+    ],
+    "tech:directmv": [
+      "medium voltage dc conversion",
+      "mvac 800v"
+    ],
+    "tech:sidecar": [
+      "power sidecar",
+      "800v sidecar"
+    ],
+    "tech:busbar": [
+      "dc busbar",
+      "high voltage connector"
+    ],
+    "tech:sic": [
+      "silicon carbide",
+      "sic power device"
+    ],
+    "tech:aehr_fox": [
+      "aehr fox xp",
+      "wafer-level burn in"
+    ],
+    "tech:vertiv_800v": [
+      "vertiv 800vdc",
+      "vertiv nvidia"
+    ],
+    "tech:cdu": [
+      "coolant distribution unit",
+      "cdu cooling"
+    ],
+    "process:cdu_pump": [
+      "coolant pump",
+      "cooling loop"
+    ],
+    "process:hv_dielectric_test": [
+      "dielectric testing",
+      "high voltage insulation"
+    ],
+    "company:aehr": [
+      "aehr test"
+    ],
+    "company:vrt": [
+      "vertiv"
+    ]
+  }
+}

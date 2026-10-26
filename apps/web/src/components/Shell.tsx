@@ -7,12 +7,15 @@ import { Icon } from "@/components/Icon";
 
 const NAV = [
   { href:"/", label:"인사이트 홈", icon:"grid" },
-  { href:"/ecosystems", label:"기술 생태계", icon:"network" },
+  { href:"/map", label:"산업망 캔버스", icon:"network" },
+  { href:"/ecosystems", label:"기술 생태계", icon:"layers" },
   { href:"/feed", label:"이슈 피드", icon:"rss" },
   { href:"/ideas", label:"투자 가설", icon:"lightbulb" },
   { href:"/triggers", label:"트리거 추적", icon:"radar" },
 ] as const;
 const RESEARCH_ROUTES = [
+  { href:"/review", label:"기술 관계 검토 큐" },
+  { href:"/history", label:"기술 자료 백필 아카이브" },
   { href:"/data", label:"연구 데이터 개요" },
   { href:"/briefs", label:"기업 분석 브리프" },
   { href:"/candidates", label:"기존 후보 스크리너" },
@@ -26,7 +29,7 @@ const DEEP_ROUTES = [
   { href:"/entities", label:"기업명 매칭" },
 ] as const;
 const LABELS: Record<string,string> = {
-  "/":"Overview", "/ecosystems":"기술 생태계", "/feed":"이슈 피드",
+  "/":"Overview", "/map":"산업망 캔버스", "/history":"과거 기술 아카이브", "/review":"기술 관계 검토", "/ecosystems":"기술 생태계", "/feed":"이슈 피드",
   "/ideas":"투자 가설", "/triggers":"트리거", "/search":"통합 검색",
   "/data":"Research Data", "/briefs":"기업 브리프",
 };
@@ -66,7 +69,7 @@ export function Shell({ children }: { children: React.ReactNode }) {
   }
   const section = path === "/" ? "/" : NAV.find(item=>item.href!=="/" && path.startsWith(item.href))?.href ?? path;
   const currentLabel = LABELS[section] ?? (path.startsWith("/ecosystems/")?"기술 생태계":path.startsWith("/feed/")?"이슈 분석":"리서치");
-  const legacyOpen = ["/data","/candidates","/briefs","/signals","/companies","/filings","/finra","/fda","/trials","/awards","/entities","/insider"].some(p=>path.startsWith(p));
+  const legacyOpen = ["/review","/history","/data","/candidates","/briefs","/signals","/companies","/filings","/finra","/fda","/trials","/awards","/entities","/insider"].some(p=>path.startsWith(p));
   return (
     <div className="workspace">
       {mobileOpen && <button className="mobile-scrim" onClick={()=>setMobileOpen(false)} aria-label="메뉴 닫기"/>}
