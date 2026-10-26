@@ -112,11 +112,15 @@ export function trimText(value: string, length = 190) {
   return value.length > length ? value.slice(0, length).trim() + "…" : value;
 }
 
+export type IssueCompany = { company_id: string; label: string; ticker?: string|null; direction: "+"|"-"|"±"; size_band?: string|null; in_universe?: boolean; basis?: string };
+export type IssueSource = { url: string; title: string; publisher: string; published_at: string; source_type: string };
 export type FeedItem = {
   id: string; title: string; summary: string; date: string; datePrecision?: string;
-  ecoId: EcoId | "market"; type: string; source: string; sourceUrl?: string;
+  ecoId: EcoId | "market" | "cross"; type: string; source: string; sourceUrl?: string;
   status: "source" | "observed" | "verified" | "hypothesis"; significance: "high" | "medium" | "watch";
   target?: string; secondary?: string;
+  kind?: "issue" | "event" | "signal"; importance?: number; rationale?: string; why?: string;
+  companies?: IssueCompany[]; nodes?: string[]; sources?: IssueSource[]; publisherCount?: number;
 };
 export type Idea = {
   id: string; ticker: string; company: string; title: string; description: string;
@@ -174,41 +178,68 @@ export const CURATED_FEED: FeedItem[] = seed.events.map((e) => {
 
 type BriefRecord = { id: number; ticker?: string|null; name?: string; title?: string|null; created_at: string; as_of?: string; scores?: Record<string, unknown>; sector_bucket?: string };
 type SignalRecord = { id: number; ticker?: string|null; name?: string|null; family?: string; kind?: string; summary?: string; signal_date?: string; url?: string|null; direction?: number; };
+type IssueRecord = { issue_key: string; ecosystem: string|null; event_type: string|null; title: string; summary: string|null; why_it_matters: string|null;
+  importance: number; importance_rationale: string|null; nodes: string[]; companies: IssueCompany[]|null; sources: IssueSource[];
+  source_count: number; publisher_count: number; latest_published_at: string|null; first_seen: string; method: string };
 type CandidateRecord = { cik: number; ticker?: string|null; name?: string; score?: number; family_count?: number; sector_bucket?: string; as_of?: string; top_signals?: {summary: string; url?: string}[] };
 
-export type LiveData = { briefs: BriefRecord[]; signals: SignalRecord[]; candidates: CandidateRecord[]; online: boolean; lastError?: string };
+export type LiveData = { briefs: BriefRecord[]; signals: SignalRecord[]; candidates: CandidateRecord[]; issues: IssueRecord[]; online: boolean; lastError?: string };
 export async function loadLiveData(): Promise<LiveData> {
   if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.NEXT_PUBLIC_SUPABASE_KEY) {
-    return { briefs: [], signals: [], candidates: [], online: false, lastError: "Supabase 환경변수가 설정되지 않았습니다." };
+    return { briefs: [], signals: [], candidates: [], issues: [], online: false, lastError: "Supabase 환경변수가 설정되지 않았습니다." };
   }
   try {
     const client = db("public");
-    const [briefs, signals, candidates] = await Promise.all([
+    const since = new Date(Date.now() - 21 * 864e5).toISOString();
+    const [briefs, signals, candidates, issues] = await Promise.all([
       client.from("v_briefs").select("id,ticker,name,title,created_at,as_of,scores,sector_bucket").eq("status", "final").order("created_at", {ascending:false}).limit(12),
-      client.from("v_signals").select("id,ticker,name,family,kind,summary,signal_date,url,direction").order("signal_date", {ascending:false}).limit(20),
+      // 공급망 유니버스 기업의 신호만 (바이오 등 이전 유니버스 신호는 이 화면 대상이 아니다)
+      client.from("v_signals").select("id,ticker,name,family,kind,summary,signal_date,url,direction").eq("sector_bucket", "supply_chain").order("signal_date", {ascending:false}).limit(20),
       client.from("v_candidates").select("cik,ticker,name,score,family_count,sector_bucket,as_of,top_signals").order("score", {ascending:false}).limit(15),
+      client.from("v_supply_chain_issues").select("*").gte("latest_published_at", since).order("importance", {ascending:false}).order("latest_published_at", {ascending:false}).limit(60),
     ]);
-    const failures = [briefs.error,signals.error,candidates.error].filter(Boolean);
+    const failures = [briefs.error,signals.error,candidates.error,issues.error].filter(Boolean);
     return {
       briefs: (briefs.data ?? []) as BriefRecord[], signals: (signals.data ?? []) as SignalRecord[],
-      candidates: (candidates.data ?? []) as CandidateRecord[],
-      online: failures.length < 3, lastError: failures.map(x=>x?.message).join("; ") || undefined,
+      candidates: (candidates.data ?? []) as CandidateRecord[], issues: (issues.data ?? []) as IssueRecord[],
+      online: failures.length === 0, lastError: failures.map(x=>x?.message).join("; ") || undefined,
     };
   } catch (error) {
-    return { briefs:[],signals:[],candidates:[],online:false,lastError: error instanceof Error ? error.message : "연결 오류" };
+    return { briefs:[],signals:[],candidates:[],issues:[],online:false,lastError: error instanceof Error ? error.message : "연결 오류" };
   }
 }
 
+const EVENT_TYPE_KO: Record<string,string> = {
+  capacity:"생산능력", technology:"기술", standard:"표준", regulation:"규제", order:"수주·계약", earnings:"실적·가이던스",
+  m_and_a:"M&A·제휴", supply_disruption:"공급 차질", pricing:"가격", other:"이슈",
+};
+export function issueToFeed(r: IssueRecord): FeedItem {
+  const eco = (r.ecosystem === "hbm" || r.ecosystem === "optics" || r.ecosystem === "power") ? r.ecosystem : "cross";
+  const pubs = Array.from(new Set(r.sources.map(s => s.publisher))).slice(0, 2).join(", ");
+  return {
+    id: `issue-${r.issue_key}`, kind: "issue", title: r.title, summary: r.summary ?? r.sources[0]?.title ?? "",
+    date: (r.latest_published_at ?? r.first_seen).slice(0, 10), ecoId: eco,
+    type: EVENT_TYPE_KO[r.event_type ?? "other"] ?? "이슈",
+    source: r.publisher_count > 2 ? `${pubs} 외 ${r.publisher_count - 2}곳` : pubs,
+    sourceUrl: r.sources[0]?.url, status: "observed",
+    significance: r.importance >= 8 ? "high" : r.importance >= 5 ? "medium" : "watch",
+    importance: r.importance, rationale: r.importance_rationale ?? undefined, why: r.why_it_matters ?? undefined,
+    companies: r.companies ?? [], nodes: r.nodes ?? [], sources: r.sources, publisherCount: r.publisher_count,
+    target: (r.nodes ?? []).slice(0, 3).map(nodeName).join(" · ") || undefined,
+  };
+}
+
 export function mergeFeed(live: LiveData): FeedItem[] {
+  const issues = live.issues.map(issueToFeed);
   const signals: FeedItem[] = live.signals.map((s) => ({
     id: `signal-${s.id}`, title: s.ticker ? `${s.ticker} · ${s.kind ?? s.family ?? "신규 공시"}` : s.name ?? "기업 관련 신호",
     summary: s.summary ?? "원본 자료 확인 필요",
     date: s.signal_date ?? "2000-01-01", ecoId: "market",
     type: EVENT_LABEL[s.kind ?? ""] ?? (s.family === "contract" ? "계약" : "기업 신호"),
     source: "WSJ / SEC·공개 데이터", sourceUrl: s.url ?? undefined,
-    status: "observed", significance: s.direction === -1 ? "high" : "watch",
+    status: "observed", significance: "watch", kind: "signal" as const,
   }));
-  return [...CURATED_FEED, ...signals].sort((a,b) => b.date.localeCompare(a.date));
+  return [...issues, ...CURATED_FEED, ...signals].sort((a,b) => b.date.localeCompare(a.date) || (b.importance ?? 0) - (a.importance ?? 0));
 }
 
 export function mergeIdeas(live: LiveData): Idea[] {

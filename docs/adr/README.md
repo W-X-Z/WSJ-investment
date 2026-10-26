@@ -21,3 +21,4 @@
 | [0011](0011-historical-evidence-linkage.md) | 과거 1차 자료 ↔ 그래프 연결 (리뷰 전용 인덱싱) | implemented | 2026-10-26 |
 | [0012](0012-ontology-v03-closed-vocabulary.md) | 온톨로지 v0.3 — 닫힌 어휘, 수요 측 노드, 방향·근거 가중 영향 전파 | accepted | 2026-10-27 |
 | [0013](0013-discovery-and-moat-cards.md) | 발굴 → 승격 → 해자 카드: 온톨로지가 유니버스를 만든다 | accepted | 2026-10-27 |
+| [0014](0014-supply-chain-issue-feed.md) | 공급망 이슈 피드: 다출처 수집 → 온톨로지 태깅 → 선별 → DB | accepted | 2026-10-27 |

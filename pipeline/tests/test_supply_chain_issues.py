@@ -62,3 +62,15 @@ def test_ecosystem_vote_and_issue_key_stable():
     assert issues.ecosystem_of([], [], "power", g) == "power"
     m = [item("a", url="https://a"), item("b", url="https://b")]
     assert issues.issue_key(m) == issues.issue_key(list(reversed(m)))
+
+
+def test_sec_headline_and_boilerplate():
+    poet = ("EX-99.1 2 exh_991.htm PRESS RELEASE EdgarFiling EXHIBIT 99.1 POET Technologies to Report Third Quarter 2026 Financial Results "
+            "on November 16 TORONTO, Oct. 16, 2026 (GLOBE NEWSWIRE) -- POET will report. About POET Technologies Inc. POET's platform is the POET Optical Interposer.")
+    head, boiler = issues.sec_headline(poet, '"optical interposer"', "POET TECHNOLOGIES INC.")
+    assert head.startswith("POET Technologies to Report Third Quarter") and boiler
+    assert issues.NOISE.search(head)
+    mxl = ("EX-99.1 3 a.htm EX-99.1 Document Exhibit 99.1 FOR IMMEDIATE RELEASE MaxLinear, Inc. Announces Third Quarter 2026 Financial Results "
+           "• Q3 net revenue up 72% Carlsbad, Calif. – October 22, 2026 – volume ramp of our Keystone PAM4 DSP platform. About MaxLinear ...")
+    head, boiler = issues.sec_headline(mxl, '"PAM4 DSP"', "MAXLINEAR, INC")
+    assert head == "MaxLinear, Inc. Announces Third Quarter 2026 Financial Results" and not boiler

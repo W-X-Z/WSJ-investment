@@ -28,13 +28,14 @@ export function EventChip({kind}: {kind:FeedItem["significance"]}) {
   return <span className={`event-level event-level-${kind}`}>{kind==="high"?"핵심 변화":kind==="medium"?"기술 동향":"관찰 신호"}</span>;
 }
 export function FeedStory({item,featured=false}: {item:FeedItem;featured?:boolean}) {
-  const eco = item.ecoId==="market"?null:ECO_BY_ID[item.ecoId];
+  const eco = item.ecoId==="market"||item.ecoId==="cross"?null:ECO_BY_ID[item.ecoId];
   return <article className={`story ${featured?"story-featured":""}`}>
     <div className="story-glyph"><Icon name={item.ecoId==="hbm"?"cpu":item.ecoId==="optics"?"network":item.ecoId==="power"?"zap":"file"} size={19}/></div>
     <div className="story-copy">
-      <div className="story-meta"><span className="story-eco">{eco?.label??"기업 신호"}</span><span className="meta-sep">·</span><span>{item.type}</span><span className="meta-sep">·</span><span>{dateShort(item.date)}</span>{item.datePrecision==="unknown" && <span className="date-unknown">확인일 기준</span>}</div>
+      <div className="story-meta">{item.importance!==undefined&&<span className={`story-score story-score-${item.significance}`} title={item.rationale}>{item.importance}/10</span>}<span className="story-eco">{eco?.label??(item.ecoId==="cross"?"공급망 공통":"기업 신호")}</span><span className="meta-sep">·</span><span>{item.type}</span><span className="meta-sep">·</span><span>{dateShort(item.date)}</span>{item.datePrecision==="unknown" && <span className="date-unknown">확인일 기준</span>}</div>
       <Link href={`/feed/${encodeURIComponent(item.id)}`} className="story-title">{item.title}</Link>
       <p>{item.summary}</p>
+      {!!item.companies?.length&&<div className="story-companies">{item.companies.slice(0,6).map(c=><span key={c.company_id} className={`co-chip co-${c.direction==="+"?"pos":c.direction==="-"?"neg":"mix"}${c.size_band==="micro"||c.size_band==="small"?" co-small":""}`} title={c.basis}>{c.direction} {c.ticker??c.label}</span>)}</div>}
       <div className="story-foot"><EventChip kind={item.significance}/><span className="story-source">출처 · {item.source}</span></div>
     </div>
     <Link aria-label={`${item.title} 상세 보기`} className="story-go" href={`/feed/${encodeURIComponent(item.id)}`}><Icon name="arrow-up-right" size={18}/></Link>

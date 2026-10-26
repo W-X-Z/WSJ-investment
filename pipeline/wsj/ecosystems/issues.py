@@ -77,7 +77,11 @@ NOISE = re.compile(
     r"(shares|stock) (rise|rises|fall|falls|jump|jumps|drop|drops|gap|gaps|surge|surges|slide|slides|rebound|rebounds|soar|soars|sink|sinks)|"
     r"(rebounds|jumps|soars|slides|sinks|surges) \d+%|(buys|sells|acquires|trims|boosts|cuts) (shares|stake|position)|"
     r"stake in|holdings in|position in|(is|are) .{0,30}(buy|sell|hold)\b|motley fool|zacks rank|top .{0,20} stocks|should you buy|"
-    r"options (activity|trading)|unusual options|earnings preview|what to expect|ex-dividend",
+    r"options (activity|trading)|unusual options|earnings preview|what to expect|ex-dividend|estimates [–-]|"
+    r"investment (narrative|story)|undervalued|overvalued|shareholders got|holders bought|price prediction|live price|"
+    r"robinhood token|reports next week|wall street expects|form 4 |tdr overview|explained|investors are watching|"
+    r"skyrocket|(climbs|gains|falls|drops|sinks|tumbles|slips) \d+(\.\d+)?%|topping estimates|now covered by|analysts thinking|"
+    r"\bgf value\b|stock looks|stock is (up|down)|why .{0,40} stock",
     re.I,
 )
 
@@ -111,6 +115,13 @@ LEGACY_IDS = {
 }
 GENERIC = {"dielectric", "fec", "serdes", "laser source", "power converter", "tsv", "cpo", "tcb", "gate driver", "coherent optical",
            "semiconductor inspection", "wafer cleaning", "copper bonding", "particle contamination", "optical receiver", "photodiode"}
+GENERIC_WORDS = {"semiconductor", "power", "data center", "cable", "high-voltage", "transceiver", "wafer", "coolant", "sidecar", "busbar",
+                 "underfill", "vcsel", "eml", "800g", "1.6t", "hbm4", "silicon carbide", "wafer-level", "burn-in", "lumentum",
+                 "lessengers", "optical transceiver", "ofc 2026", "vertiv nvidia", "coherent 1.6t"}  # 너무 넓거나 다른 노드와 겹치는 단어
+PHRASE_OVERRIDES = {  # 세대 노드로 직접
+    "hbm4": "gen:hbm4", "hbm4e": "gen:hbm4e", "hbm5": "gen:hbm5", "hbm3e": "gen:hbm3e", "1.6t": "gen:1p6t", "800g": "gen:800g",
+    "silicon carbide": "tech:sic", "vcsel": "component:vcsel", "underfill": "material:underfill",
+}
 COMPANY_NAMES = {  # 기사에 실제로 쓰이는 이름 (법인명 접미사 없이)
     "company:camt": ["Camtek"], "company:poet": ["POET Technologies"], "company:aehr": ["Aehr Test", "Aehr"], "company:onto": ["Onto Innovation"],
     "company:lite": ["Lumentum"], "company:cohr": ["Coherent Corp", "Coherent"], "company:vrt": ["Vertiv"], "company:skhynix": ["SK hynix", "SK Hynix"],
@@ -128,14 +139,15 @@ COMPANY_NAMES = {  # 기사에 실제로 쓰이는 이름 (법인명 접미사 �
 
 def build_lexicon(graph: dict[str, Any]) -> tuple[list[tuple[re.Pattern, str]], list[tuple[re.Pattern, str]]]:
     ids = {n["id"] for n in graph["nodes"]}
-    phrases: dict[str, str] = {}
+    phrases: dict[str, str] = {k: v for k, v in PHRASE_OVERRIDES.items() if v in ids}
     # 발굴 구문(사람이 큐레이션)이 백필 별칭보다 우선 — 'hybrid bonding' 이 병목 노드로 가는 별칭 충돌 방지
     for nid, qs in DISCOVERY_QUERIES.items():
         for q in qs:
-            for w in re.findall(r'"([^"]+)"', q):
-                w = w.strip().lower()
-                if nid in ids and len(w) >= 4 and w not in GENERIC:
-                    phrases.setdefault(w, nid)
+            quoted = re.findall(r'"([^"]+)"', q)
+            # 질의의 첫 구문만 주제어다. 뒤의 구문("semiconductor", "power", "cable")은 EDGAR 검색을 좁히는 보조어라 태깅에 쓰면 오탐
+            w = quoted[0].strip().lower() if quoted else ""
+            if nid in ids and len(w) >= 4 and w not in GENERIC and w not in GENERIC_WORDS:
+                phrases.setdefault(w, nid)
     try:
         aliases = json.loads(ALIASES_PATH.read_text(encoding="utf-8"))["aliases"]
     except (OSError, KeyError, ValueError):
@@ -257,7 +269,53 @@ def collect_sec(http: HttpClient, start: date, end: date) -> list[Item]:
                 it = Item(url, title, d, f"SEC EDGAR ({name})", "sec", "", q)
                 it.nodes.add(nid)
                 out.append(it)
+    out = enrich_sec(http, out)
     log.info("sec items: %d", len(out))
+    return out
+
+
+_SEC_PREFIX = re.compile(r"^(?:\d+\s+\S+\.html?|EX-99\.\d+|Exhibit 99\.\d+|Document|PRESS RELEASE|News Release|EdgarFiling|FOR IMMEDIATE RELEASE|\d+)\s*", re.I)
+_DATELINE = re.compile(r"\s(?:[A-Z][A-Za-z.]+(?: [A-Z][A-Za-z.]+)*,\s*(?:[A-Z][A-Za-z.]+\s*)?[–—-]?\s*)?(?:Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)[a-z]*\.? \d{1,2},? 20\d\d|\s•\s")
+
+
+def sec_headline(text: str, phrase: str, company: str = "") -> tuple[str | None, bool]:
+    """공시 본문 → (첫 헤드라인, 구문이 'About 회사' 상용구 안에만 있는가)."""
+    t = re.sub(r"\s+", " ", html.unescape(re.sub(r"<[^>]+>", " ", text))).strip()
+    for _ in range(12):
+        t2 = _SEC_PREFIX.sub("", t, count=1)
+        if t2 == t:
+            break
+        t = t2
+    m = _DATELINE.search(t[:400])
+    head = (t[: m.start()] if m else t[:140]).strip(" -–—:")
+    if len(head) > 140:
+        head = head[:140].rsplit(" ", 1)[0] + "…"
+    low, p = t.lower(), phrase.strip('"').lower()
+    hits = [x.start() for x in re.finditer(re.escape(p), low)] if p else []
+    first = (company.split() or [""])[0].lower().strip(",.")
+    about = low.find(f"about {first}") if first else -1
+    boiler = bool(hits) and about >= 0 and min(hits) > about
+    return head or None, boiler
+
+
+def enrich_sec(http: HttpClient, items: list[Item], limit: int = 60) -> list[Item]:
+    """8-K/6-K 원문을 열어 제목을 실제 헤드라인으로 바꾸고, 구문이 회사 소개 상용구에만 있으면 버린다."""
+    out, seen = [], {}
+    for it in items:
+        name = it.publisher.removeprefix("SEC EDGAR (").rstrip(")")
+        if it.url not in seen and len(seen) < limit:
+            try:
+                seen[it.url] = sec_headline(http.get_text(it.url), it.query or "", name)
+            except Exception as exc:  # noqa: BLE001 - 원문 실패는 메타데이터 제목으로
+                log.warning("sec doc %s failed: %s", it.url, exc)
+                seen[it.url] = (None, False)
+        head, boiler = seen.get(it.url, (None, False))
+        if boiler:
+            continue
+        if head:
+            it.snippet = it.title  # 메타데이터(서식·항목·구문)는 스니펫으로
+            it.title = f"{name}: {head}"
+        out.append(it)
     return out
 
 
@@ -370,7 +428,9 @@ def score(members: list[Item], graph_nodes: dict[str, dict], now: datetime) -> d
     recency = 1.0 if age <= 3 else 0.7 if age <= 7 else 0.4
     w = max(SOURCE_WEIGHT.get(m.source_type, 1.0) for m in members)
     small = [c for c in companies if graph_nodes.get(c, {}).get("size_band") in ("micro", "small")]
-    graph_rel = min(3, len(nodes)) * 0.7 + (1.5 if small else 0) + 0.3 * min(2, len(companies) - len(small))
+    primary = any(m.source_type in ("sec", "regulator", "press_release") for m in members)
+    # 기술 노드에 닿아야 공급망 이슈다. 노드 없는 기업 기사는 1차 출처일 때만 소형사 가산
+    graph_rel = min(3, len(nodes)) * 0.9 + (1.2 if small and (nodes or primary) else 0) + 0.3 * min(2, len(companies) - len(small))
     raw = w + math.log2(1 + len(publishers)) * 1.3 + graph_rel  # 대략 1.5 ~ 10
     importance = max(1, min(10, round(raw * recency * 0.85)))
     return {"nodes": sorted(nodes), "companies": sorted(companies), "publishers": sorted(publishers), "latest": latest,
@@ -452,7 +512,8 @@ def llm_curate(cands: list[dict[str, Any]], graph: dict[str, Any], impact: dict[
 
 # ---------------------------------------------------------------------- 실행
 def run(http: HttpClient, store, days: int = 14, use_llm: bool = True, model: str = "sonnet", api_key: str | None = None,
-        max_candidates: int = 45, max_issues: int = 15, now: datetime | None = None) -> dict[str, Any]:
+        max_candidates: int = 60, max_issues: int = 15, now: datetime | None = None,
+        picks: dict[str, Any] | None = None, dump_candidates: bool = False, cache: Path | None = None) -> dict[str, Any]:
     now = now or datetime.now(UTC)
     since = now - timedelta(days=days)
     graph = load_graph()
@@ -463,11 +524,23 @@ def run(http: HttpClient, store, days: int = 14, use_llm: bool = True, model: st
     cik_to_node = {int(n["listing"]["cik"]): n["id"] for n in graph["nodes"] if n["kind"] == "company" and (n.get("listing") or {}).get("cik")}
 
     items: list[Item] = []
-    items += collect_news(http, days, company_queries)
-    items += collect_trade(http, since)
-    items += collect_sec(http, since.date(), now.date())
-    items += collect_fedreg(http, since.date())
-    items += collect_signals(store, since.date(), cik_to_node)
+    if cache and cache.exists():
+        import pickle
+
+        items = pickle.loads(cache.read_bytes())  # noqa: S301 - 이 프로그램이 만든 로컬 캐시만 읽는다
+        now = max((i.published_at for i in items), default=now)
+        since = now - timedelta(days=days)
+    else:
+        items += collect_news(http, days, company_queries)
+        items += collect_trade(http, since)
+        items += collect_sec(http, since.date(), now.date())
+        items += collect_fedreg(http, since.date())
+        items += collect_signals(store, since.date(), cik_to_node)
+        if cache:
+            import pickle
+
+            cache.parent.mkdir(parents=True, exist_ok=True)
+            cache.write_bytes(pickle.dumps(items))
     items = [i for i in items if (i.published_at >= since or (i.source_type == "regulator" and i.published_at >= now - timedelta(days=30))) and i.published_at <= now + timedelta(days=1)]
     tag(items, node_pats, comp_pats)
     # 관련성: 노드·기업 태그가 있거나, 1차 출처(sec/regulator)는 질의 자체가 주제어
@@ -494,25 +567,13 @@ def run(http: HttpClient, store, days: int = 14, use_llm: bool = True, model: st
     rows: list[dict[str, Any]] = []
     usage = None
     method = "rule"
-    if use_llm and api_key and cands:
+    if picks is not None and cands:
+        rows = rows_from_picks(picks.get("issues") or [], cands, gnodes, picks.get("model") or "external")
+        method, usage = "llm", {"source": "picks_file", "model": picks.get("model")}
+    elif use_llm and api_key and cands:
         try:
             picked, usage = llm_curate(cands, graph, impact, model, max_issues, api_key)
-            method = "llm"
-            for p in picked:
-                ids = [i for i in p.get("cluster_ids") or [] if isinstance(i, int) and 0 <= i < len(cands)]
-                if not ids:
-                    continue
-                members = [m for i in ids for m in cands[i]["members"]]
-                nodes = [n for n in p.get("nodes") or [] if n in gnodes]
-                comps = []
-                for c in p.get("companies") or []:
-                    cid = c.get("id") if isinstance(c, dict) else None
-                    if cid in gnodes and gnodes[cid]["kind"] == "company":
-                        comps.append(_company(gnodes[cid], c.get("direction") if c.get("direction") in ("+", "-", "±") else "±", c.get("basis")))
-                rows.append(_row(members, p.get("title") or members[0].title, p.get("summary"), p.get("why_it_matters"),
-                                 p.get("event_type") if p.get("event_type") in EVENT_TYPES else "other",
-                                 p.get("ecosystem") if p.get("ecosystem") in ("hbm", "optics", "power", "cross") else cands[ids[0]]["ecosystem"],
-                                 int(max(1, min(10, int(p.get("importance") or 1)))), p.get("importance_rationale"), nodes, comps, "llm", model))
+            rows, method = rows_from_picks(picked, cands, gnodes, model), "llm"
         except Exception as exc:  # noqa: BLE001 - LLM 실패 시 규칙 결과로
             log.warning("LLM curation failed, falling back to rules: %s", exc)
             rows, method = [], "rule"
@@ -523,7 +584,36 @@ def run(http: HttpClient, store, days: int = 14, use_llm: bool = True, model: st
             rows.append(_row(c["members"], lead.title, lead.snippet or None, None, "other", c["ecosystem"], c["rule_importance"],
                              f"규칙 점수: 출처 가중 {SOURCE_WEIGHT.get(lead.source_type, 1)}, 출판사 {len(c['publishers'])}곳, 노드 {len(c['nodes'])}개, 최근성 {c['recency']}",
                              c["nodes"], comps, "rule", None))
-    return {"as_of": now.isoformat(), "days": days, "method": method, "stats": stats, "usage": usage, "issues": rows}
+    return {"as_of": now.isoformat(), "days": days, "method": method, "stats": stats, "usage": usage, "issues": rows,
+            "candidates": [candidate_view(i, c) for i, c in enumerate(cands)] if dump_candidates else None}
+
+
+def candidate_view(i: int, c: dict[str, Any]) -> dict[str, Any]:
+    """LLM 입력과 같은 모양 — 파일로 떨어뜨려 사람(또는 다른 에이전트)이 선별할 수 있게."""
+    return {"cluster_id": i, "latest": c["latest"].date().isoformat(), "ecosystem": c["ecosystem"], "rule_importance": c["rule_importance"],
+            "publishers": c["publishers"][:6], "nodes": c["nodes"], "companies": c["companies"],
+            "items": [{"title": m.title, "publisher": m.publisher, "type": m.source_type, "url": m.url, "snippet": m.snippet[:240]} for m in c["members"][:6]]}
+
+
+def rows_from_picks(picked: list[dict[str, Any]], cands: list[dict[str, Any]], gnodes: dict[str, dict], model: str) -> list[dict[str, Any]]:
+    """LLM(또는 큐레이션 파일)의 선택을 행으로. 카탈로그 밖 노드·기업 id, 범위 밖 클러스터 번호는 버린다."""
+    rows = []
+    for p in picked:
+        ids = [i for i in p.get("cluster_ids") or [] if isinstance(i, int) and 0 <= i < len(cands)]
+        if not ids:
+            continue
+        members = [m for i in ids for m in cands[i]["members"]]
+        nodes = [n for n in p.get("nodes") or [] if n in gnodes]
+        comps = []
+        for c in p.get("companies") or []:
+            cid = c.get("id") if isinstance(c, dict) else None
+            if cid in gnodes and gnodes[cid]["kind"] == "company":
+                comps.append(_company(gnodes[cid], c.get("direction") if c.get("direction") in ("+", "-", "±") else "±", c.get("basis")))
+        rows.append(_row(members, p.get("title") or members[0].title, p.get("summary"), p.get("why_it_matters"),
+                         p.get("event_type") if p.get("event_type") in EVENT_TYPES else "other",
+                         p.get("ecosystem") if p.get("ecosystem") in ("hbm", "optics", "power", "cross") else cands[ids[0]]["ecosystem"],
+                         int(max(1, min(10, int(p.get("importance") or 1)))), p.get("importance_rationale"), nodes, comps, "llm", model))
+    return rows
 
 
 def _company(node: dict[str, Any], direction: str, basis: str | None) -> dict[str, Any]:
@@ -570,6 +660,9 @@ def main(argv: list[str] | None = None) -> int:
     ap.add_argument("--no-save", action="store_true")
     ap.add_argument("--out", type=Path)
     ap.add_argument("--store", choices=["postgrest", "sqlite"])
+    ap.add_argument("--dump-candidates", action="store_true", help="--out 에 후보 클러스터도 기록 (외부 큐레이션용)")
+    ap.add_argument("--picks", type=Path, help="LLM 대신 큐레이션 파일({model, issues:[...]}) 적용. 수집 결과가 같아야 cluster_id 가 맞다 → --cache 와 함께")
+    ap.add_argument("--cache", type=Path, help="수집 원자료(pickle) 저장/재사용 — 같은 후보로 picks 를 적용할 때")
     args = ap.parse_args(argv)
     from wsj.config import load_settings
     from wsj.db import make_store
@@ -582,7 +675,9 @@ def main(argv: list[str] | None = None) -> int:
     store = make_store(settings)
     http = HttpClient(user_agent=settings.sec_user_agent)
     try:
-        result = run(http, store, args.days, not args.no_llm, args.model, settings.anthropic_api_key or None, max_issues=args.max_issues)
+        picks = json.loads(args.picks.read_text(encoding="utf-8")) if args.picks else None
+        result = run(http, store, args.days, not args.no_llm, args.model, settings.anthropic_api_key or None, max_issues=args.max_issues,
+                     picks=picks, dump_candidates=args.dump_candidates, cache=args.cache)
         if not args.no_save:
             n = save(store, result["issues"], datetime.fromisoformat(result["as_of"]))
             log.info("saved %d issues", n)

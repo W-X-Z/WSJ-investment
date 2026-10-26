@@ -7,11 +7,11 @@ import { GraphExplorer } from "@/components/GraphExplorer";
 import { IndustryMilestones } from "@/components/IndustryMilestones";
 import { type EcoId } from "@/lib/research-client";
 
-type Story = {id:string;title:string;summary:string;date:string;ecoId:string;type:string;source:string;significance:string;status:string;sourceUrl?:string;target?:string};
+type Story = {id:string;title:string;summary:string;date:string;ecoId:string;type:string;source:string;significance:string;status:string;sourceUrl?:string;target?:string;importance?:number};
 type Thesis = {id:string;ticker:string;company:string;title:string;description:string;ecoId:string;state:string;trigger:string;risk:string;href?:string;live?:boolean};
 type Ecosystem = {id:EcoId;title:string;summary:string;bottleneck:string;trajectory:string;metric:string;metricLabel:string};
 const ORDER:EcoId[]=["hbm","optics","power"];
-const NAMES:Record<string,string>={hbm:"첨단 패키징",optics:"광통신·포토닉스",power:"전력·냉각",market:"기업 공시"};
+const NAMES:Record<string,string>={hbm:"첨단 패키징",optics:"광통신·포토닉스",power:"전력·냉각",cross:"공급망 공통",market:"기업 공시"};
 const STATUS:Record<string,string>={strengthened:"근거 강화",weakened:"근거 약화",watching:"검증 중",exploring:"초기 가설"};
 const fmt=(value:string)=>value.slice(0,10).replaceAll("-",".");
 export function CommandCenter({stories,ideas,ecosystems,sourceOnline,asOf}:{stories:Story[];ideas:Thesis[];ecosystems:Ecosystem[];sourceOnline:boolean;asOf:string}){
@@ -28,7 +28,7 @@ export function CommandCenter({stories,ideas,ecosystems,sourceOnline,asOf}:{stor
    .sort((a,b)=>a.priority-b.priority||(b.date||"").localeCompare(a.date||""));
  },[stories,ideas,eco,tab]);
  const selected=ecosystems.find(x=>x.id===focus)!;
- const headline=stories.find(x=>x.significance==="high")??stories[0];
+ const headline=[...stories].sort((a,b)=>(b.importance??0)-(a.importance??0)||b.date.localeCompare(a.date))[0];
  const topIdeas=ideas.filter(x=>x.state==="strengthened"||x.state==="watching").slice(0,3);
  return <div className="cc">
   <div className="cc-topline"><span><i className="cc-live-dot"/> SIGNAL ATLAS / RESEARCH INTELLIGENCE</span><span>연구 기준일 {fmt(asOf)} · {sourceOnline?"기업 데이터 연결":"기업 데이터 연결 미확인"}</span></div>
