@@ -75,6 +75,9 @@ def _log_strength(value: float, base: float, step: float = 2.0, floor: float = 1
 # --- insider ------------------------------------------------------------------------------------
 
 
+CLUSTER_MIN_VALUE = 25_000  # 이 금액 미만의 "클러스터" 는 상징적 매수 (NRXS $12K 사례) — 신호로 안 친다
+
+
 def insider_signals(filings: list[dict], transactions: list[dict], cluster_days: int = 14) -> list[Signal]:
     """Form 4 → 개별 공개매수(open_market_buy/holder_buy), 클러스터 매수, 클러스터 매도(-1).
 
@@ -144,8 +147,8 @@ def insider_signals(filings: list[dict], transactions: list[dict], cluster_days:
             start = items[i][0]
             window = [it for it in items if start <= it[0] <= start + timedelta(days=cluster_days)]
             owners = {it[1] for it in window}
-            if len(owners) >= 2:
-                value = sum(it[2] for it in window)
+            value = sum(it[2] for it in window)
+            if len(owners) >= 2 and value >= CLUSTER_MIN_VALUE:
                 last = max(it[0] for it in window)
                 out.append(
                     _sig(
@@ -156,7 +159,8 @@ def insider_signals(filings: list[dict], transactions: list[dict], cluster_days:
                         f"{len(owners)} insiders bought {_usd(value)} total between {start} and {last}",
                         "raw.sec_form4_filings",
                         f"{cik}:{start.isoformat()}",
-                        strength=min(10.0, 2.0 * len(owners) + _log_strength(value, 50_000) - 1),
+                        # 2명 $25K = 3, 2명 $1M = 7.3, 6명 $1.7M = 10
+                        strength=min(10.0, len(owners) + _log_strength(value, CLUSTER_MIN_VALUE)),
                         payload={
                             "owners": len(owners),
                             "value": value,
@@ -199,7 +203,13 @@ def insider_signals(filings: list[dict], transactions: list[dict], cluster_days:
 # --- filings: contract / dilution / activist ----------------------------------------------------
 
 _ITEM_RULES = {
-    "1.01": ("contract", "material_agreement", 1, 3.0, "8-K 1.01 중요 계약 체결"),
+    "1.01": (
+        "contract",
+        "material_agreement",
+        1,
+        2.0,
+        "8-K 1.01 중요 계약 체결",
+    ),  # 내용 미확인 → 브리프가 판독
     "2.01": ("contract", "asset_acquisition", 1, 2.0, "8-K 2.01 자산 인수/처분 완료"),
     "1.02": ("contract", "contract_termination", -1, 3.0, "8-K 1.02 중요 계약 종료"),
     "2.04": ("dilution", "acceleration", -1, 3.0, "8-K 2.04 채무 조기상환 트리거"),
@@ -225,7 +235,26 @@ def filing_signals(filings: list[dict]) -> list[Signal]:
         form = f.get("form") or ""
         names = ", ".join((f.get("display_names") or [])[:1])
         if form == "8-K":
-            for item in f.get("items") or []:
+            items = set(f.get("items") or [])
+            if "1.01" in items and items & {"3.02", "2.03"}:
+                # 계약 체결 + 미등록 증권 판매/채무 = 자금조달(ATM·전환사채·대출). 계약 신호가 아니라 희석 리스크.
+                out.append(
+                    _sig(
+                        cik,
+                        d,
+                        "dilution",
+                        "financing_agreement",
+                        f"8-K 1.01+{'/'.join(sorted(items & {'3.02', '2.03'}))} 자금조달 계약 — {names}",
+                        "raw.sec_filings",
+                        f["accession_no"],
+                        direction=-1,
+                        strength=3.0,
+                        url=f.get("file_url"),
+                        payload={"items": sorted(items)},
+                    )
+                )
+                items = items - {"1.01"}
+            for item in sorted(items):
                 rule = _ITEM_RULES.get(item)
                 if rule:
                     fam, kind, direction, strength, label = rule

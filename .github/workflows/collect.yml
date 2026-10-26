@@ -9,7 +9,7 @@ on:
   workflow_dispatch:
     inputs:
       collectors:
-        description: "실행할 수집기 (공백 구분). 비우면 일간 전체"
+        description: "실행할 수집기 (공백 구분). 비우면 일간 전체, none 이면 수집 없이 매칭·신호만"
         required: false
         default: ""
       since:
@@ -52,6 +52,7 @@ jobs:
             echo "names=sec_form4 sec_filings finra clinicaltrials openfda usaspending" >> "$GITHUB_OUTPUT"
           fi
       - name: Run collectors
+        if: steps.plan.outputs.names != 'none'
         working-directory: pipeline
         run: |
           SINCE=""

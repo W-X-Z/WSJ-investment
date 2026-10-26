@@ -46,6 +46,29 @@ def test_cluster_buy_requires_two_owners_within_window():
     assert cluster["source_key"] == "100:2026-10-01"
 
 
+def test_cluster_needs_minimum_value():
+    filings = [_filing("t1", 9, 1), _filing("t2", 9, 2)]
+    txs = [_tx("t1", "2026-10-01", "P", 500, 10), _tx("t2", "2026-10-02", "P", 600, 10)]  # $11K
+    assert not [s for s in rules.insider_signals(filings, txs) if s["kind"] == "cluster_buy"]
+
+
+def test_financing_8k_is_dilution_not_contract():
+    fl = [
+        {
+            "accession_no": "f1",
+            "cik": 1,
+            "form": "8-K",
+            "items": ["1.01", "3.02", "9.01"],
+            "file_date": "2026-10-02",
+            "display_names": ["A"],
+        }
+    ]
+    sigs = rules.filing_signals(fl)
+    assert [(s["family"], s["kind"], s["direction"]) for s in sigs] == [
+        ("dilution", "financing_agreement", -1)
+    ]
+
+
 def test_single_owner_is_not_a_cluster_and_holder_buy_is_weaker():
     filings = [_filing("h1", 7, 9, officer=False, director=False, title=None)]
     txs = [_tx("h1", "2026-10-01", "P", 100000, 10)]
