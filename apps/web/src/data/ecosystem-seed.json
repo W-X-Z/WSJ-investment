@@ -1,5 +1,5 @@
 {
-  "schema_version": "0.1",
+  "schema_version": "0.2",
   "as_of": "2026-10-26",
   "type": "research_seed_not_prod_truth",
   "notes": [
@@ -7,7 +7,8 @@
     "All events must preserve original publication date vs ingestion date and source-group independence",
     "A direction from requirement to company indicates research relevance only, not verified supply contract",
     "Unresolved technology-to-listed-company edges are intentionally omitted; no vendor is invented",
-    "Additional component/material/process nodes are ontology structure, not assertions of named supplier adoption"
+    "Additional component/material/process nodes are ontology structure, not assertions of named supplier adoption",
+    "Expanded technical ontology models component/process relationships with official references. Generic components have no implied exclusive suppliers; named vendor edges document product offering, not customer revenue."
   ],
   "nodes": [
     {
@@ -402,6 +403,379 @@
         "bond_pitch_um",
         "stack_height_um"
       ]
+    },
+    {
+      "id": "component:tsv",
+      "kind": "component",
+      "label": "실리콘 관통 전극 (TSV)",
+      "ecosystem": "hbm",
+      "measured_metrics": [
+        "via_diameter_um",
+        "via_resistance_mohm"
+      ],
+      "disclosure_note": "Technical subsystem/parameter; supplier adoption requires independent source"
+    },
+    {
+      "id": "process:tsv_plating",
+      "kind": "process",
+      "label": "TSV 구리 도금·충진 공정",
+      "ecosystem": "hbm",
+      "measured_metrics": [
+        "fill_void_percent",
+        "plating_uniformity_percent"
+      ],
+      "disclosure_note": "Technical subsystem/parameter; supplier adoption requires independent source"
+    },
+    {
+      "id": "material:abf",
+      "kind": "material",
+      "label": "미세 배선 패키지 절연·기판 소재",
+      "ecosystem": "hbm",
+      "measured_metrics": [
+        "dielectric_constant",
+        "cte_ppm_k"
+      ],
+      "disclosure_note": "Technical subsystem/parameter; supplier adoption requires independent source"
+    },
+    {
+      "id": "component:package_substrate",
+      "kind": "component",
+      "label": "고밀도 패키지 기판",
+      "ecosystem": "hbm",
+      "measured_metrics": [
+        "interconnect_density",
+        "warpage_um"
+      ],
+      "disclosure_note": "Technical subsystem/parameter; supplier adoption requires independent source"
+    },
+    {
+      "id": "process:surface_activation",
+      "kind": "process",
+      "label": "웨이퍼 본딩 전 표면 활성화·세정",
+      "ecosystem": "hbm",
+      "measured_metrics": [
+        "roughness_nm",
+        "particle_count"
+      ],
+      "disclosure_note": "Technical subsystem/parameter; supplier adoption requires independent source"
+    },
+    {
+      "id": "process:cmp",
+      "kind": "process",
+      "label": "Cu·절연체 CMP 평탄화",
+      "ecosystem": "hbm",
+      "measured_metrics": [
+        "dishing_nm",
+        "roughness_nm"
+      ],
+      "disclosure_note": "Technical subsystem/parameter; supplier adoption requires independent source"
+    },
+    {
+      "id": "material:oxide_bond",
+      "kind": "material",
+      "label": "Cu-Cu·산화막 접합 계면",
+      "ecosystem": "hbm",
+      "measured_metrics": [
+        "interface_void_percent",
+        "bond_strength"
+      ],
+      "disclosure_note": "Technical subsystem/parameter; supplier adoption requires independent source"
+    },
+    {
+      "id": "bottleneck:bond_void",
+      "kind": "bottleneck",
+      "label": "접합 계면 void·불량",
+      "ecosystem": "hbm",
+      "measured_metrics": [
+        "void_density",
+        "bond_yield_percent"
+      ],
+      "disclosure_note": "Technical subsystem/parameter; supplier adoption requires independent source"
+    },
+    {
+      "id": "bottleneck:bond_particle",
+      "kind": "bottleneck",
+      "label": "미세 접합 입자·잔류물 오염",
+      "ecosystem": "hbm",
+      "measured_metrics": [
+        "particle_size_nm",
+        "surface_residue"
+      ],
+      "disclosure_note": "Technical subsystem/parameter; supplier adoption requires independent source"
+    },
+    {
+      "id": "tech:onto_g3",
+      "kind": "technology",
+      "label": "Onto Dragonfly G3 2D/3D 결함 검사",
+      "ecosystem": "hbm",
+      "measured_metrics": [
+        "defect_sensitivity_um",
+        "throughput_wph"
+      ],
+      "disclosure_note": "Technical subsystem/parameter; supplier adoption requires independent source"
+    },
+    {
+      "id": "company:onto",
+      "kind": "company",
+      "label": "Onto Innovation (ONTO)",
+      "ecosystem": "hbm",
+      "measured_metrics": [],
+      "disclosure_note": "Technical subsystem/parameter; supplier adoption requires independent source"
+    },
+    {
+      "id": "material:inp",
+      "kind": "material",
+      "label": "인듐인(InP) 화합물 반도체",
+      "ecosystem": "optics",
+      "measured_metrics": [
+        "laser_efficiency_percent",
+        "wafer_defects"
+      ],
+      "disclosure_note": "Technical subsystem/parameter; supplier adoption requires independent source"
+    },
+    {
+      "id": "material:silicon_photonics",
+      "kind": "material",
+      "label": "실리콘 포토닉스 PIC 플랫폼",
+      "ecosystem": "optics",
+      "measured_metrics": [
+        "insertion_loss_db",
+        "photonic_yield_percent"
+      ],
+      "disclosure_note": "Technical subsystem/parameter; supplier adoption requires independent source"
+    },
+    {
+      "id": "component:eml",
+      "kind": "component",
+      "label": "200G EML 광변조 레이저",
+      "ecosystem": "optics",
+      "measured_metrics": [
+        "gbps_per_lane",
+        "extinction_ratio_db"
+      ],
+      "disclosure_note": "Technical subsystem/parameter; supplier adoption requires independent source"
+    },
+    {
+      "id": "component:vcsel",
+      "kind": "component",
+      "label": "VCSEL 레이저 광원",
+      "ecosystem": "optics",
+      "measured_metrics": [
+        "modulation_bandwidth_ghz",
+        "optical_power_mw"
+      ],
+      "disclosure_note": "Technical subsystem/parameter; supplier adoption requires independent source"
+    },
+    {
+      "id": "component:pic",
+      "kind": "component",
+      "label": "광집적회로(PIC)",
+      "ecosystem": "optics",
+      "measured_metrics": [
+        "coupling_loss_db",
+        "modulation_density"
+      ],
+      "disclosure_note": "Technical subsystem/parameter; supplier adoption requires independent source"
+    },
+    {
+      "id": "process:optical_test",
+      "kind": "process",
+      "label": "광모듈 생산·패키징 테스트",
+      "ecosystem": "optics",
+      "measured_metrics": [
+        "ber",
+        "unit_test_seconds"
+      ],
+      "disclosure_note": "Technical subsystem/parameter; supplier adoption requires independent source"
+    },
+    {
+      "id": "bottleneck:optic_thermal",
+      "kind": "bottleneck",
+      "label": "고속 광엔진 발열·온도 안정성",
+      "ecosystem": "optics",
+      "measured_metrics": [
+        "temperature_c",
+        "w_per_port"
+      ],
+      "disclosure_note": "Technical subsystem/parameter; supplier adoption requires independent source"
+    },
+    {
+      "id": "tech:lite_eml",
+      "kind": "technology",
+      "label": "Lumentum 200G PAM4 EML",
+      "ecosystem": "optics",
+      "measured_metrics": [
+        "gbps_per_lane",
+        "reach_km"
+      ],
+      "disclosure_note": "Technical subsystem/parameter; supplier adoption requires independent source"
+    },
+    {
+      "id": "company:lite",
+      "kind": "company",
+      "label": "Lumentum (LITE)",
+      "ecosystem": "optics",
+      "measured_metrics": [],
+      "disclosure_note": "Technical subsystem/parameter; supplier adoption requires independent source"
+    },
+    {
+      "id": "tech:cohr_1p6t",
+      "kind": "technology",
+      "label": "Coherent 1.6T 광트랜시버 기술",
+      "ecosystem": "optics",
+      "measured_metrics": [
+        "throughput_tbps",
+        "w_per_tbps"
+      ],
+      "disclosure_note": "Technical subsystem/parameter; supplier adoption requires independent source"
+    },
+    {
+      "id": "company:cohr",
+      "kind": "company",
+      "label": "Coherent (COHR)",
+      "ecosystem": "optics",
+      "measured_metrics": [],
+      "disclosure_note": "Technical subsystem/parameter; supplier adoption requires independent source"
+    },
+    {
+      "id": "component:osfp",
+      "kind": "component",
+      "label": "OSFP 차세대 광모듈 폼팩터",
+      "ecosystem": "optics",
+      "measured_metrics": [
+        "thermal_watts",
+        "port_density"
+      ],
+      "disclosure_note": "Technical subsystem/parameter; supplier adoption requires independent source"
+    },
+    {
+      "id": "component:fiber_ferrule",
+      "kind": "component",
+      "label": "고정밀 광섬유 ferrule·어레이",
+      "ecosystem": "optics",
+      "measured_metrics": [
+        "coupling_loss_db",
+        "alignment_tolerance_um"
+      ],
+      "disclosure_note": "Technical subsystem/parameter; supplier adoption requires independent source"
+    },
+    {
+      "id": "component:gate_driver",
+      "kind": "component",
+      "label": "SiC·GaN 전력반도체 게이트드라이버",
+      "ecosystem": "power",
+      "measured_metrics": [
+        "dv_dt_kv_us",
+        "switching_loss_w"
+      ],
+      "disclosure_note": "Technical subsystem/parameter; supplier adoption requires independent source"
+    },
+    {
+      "id": "material:sic_wafer",
+      "kind": "material",
+      "label": "SiC 결정 웨이퍼·에피층",
+      "ecosystem": "power",
+      "measured_metrics": [
+        "micropipe_density_cm2",
+        "wafer_diameter_mm"
+      ],
+      "disclosure_note": "Technical subsystem/parameter; supplier adoption requires independent source"
+    },
+    {
+      "id": "component:dc_contactor",
+      "kind": "component",
+      "label": "고전압 DC 컨택터",
+      "ecosystem": "power",
+      "measured_metrics": [
+        "switching_current_a",
+        "interrupt_time_ms"
+      ],
+      "disclosure_note": "Technical subsystem/parameter; supplier adoption requires independent source"
+    },
+    {
+      "id": "component:planar_transformer",
+      "kind": "component",
+      "label": "고밀도 절연형 전력변압부",
+      "ecosystem": "power",
+      "measured_metrics": [
+        "power_density_w_cm3",
+        "core_loss_w"
+      ],
+      "disclosure_note": "Technical subsystem/parameter; supplier adoption requires independent source"
+    },
+    {
+      "id": "component:dc_capacitor",
+      "kind": "component",
+      "label": "고전압 DC 링크 커패시터",
+      "ecosystem": "power",
+      "measured_metrics": [
+        "ripple_current_a",
+        "lifetime_hours"
+      ],
+      "disclosure_note": "Technical subsystem/parameter; supplier adoption requires independent source"
+    },
+    {
+      "id": "process:hv_dielectric_test",
+      "kind": "process",
+      "label": "HVDC 절연·내전압 시험",
+      "ecosystem": "power",
+      "measured_metrics": [
+        "breakdown_voltage_kv",
+        "leakage_current_ua"
+      ],
+      "disclosure_note": "Technical subsystem/parameter; supplier adoption requires independent source"
+    },
+    {
+      "id": "bottleneck:arc_flash",
+      "kind": "bottleneck",
+      "label": "DC 아크·고전압 차단 안전",
+      "ecosystem": "power",
+      "measured_metrics": [
+        "arc_duration_ms",
+        "clearance_mm"
+      ],
+      "disclosure_note": "Technical subsystem/parameter; supplier adoption requires independent source"
+    },
+    {
+      "id": "component:coldplate",
+      "kind": "component",
+      "label": "액체냉각 cold plate",
+      "ecosystem": "power",
+      "measured_metrics": [
+        "thermal_resistance_k_w",
+        "flow_l_min"
+      ],
+      "disclosure_note": "Technical subsystem/parameter; supplier adoption requires independent source"
+    },
+    {
+      "id": "process:cdu_pump",
+      "kind": "process",
+      "label": "CDU 냉각수 펌핑·유량 제어",
+      "ecosystem": "power",
+      "measured_metrics": [
+        "pump_efficiency_percent",
+        "pressure_drop_kpa"
+      ],
+      "disclosure_note": "Technical subsystem/parameter; supplier adoption requires independent source"
+    },
+    {
+      "id": "tech:vertiv_800v",
+      "kind": "technology",
+      "label": "Vertiv 800VDC 전력·냉각 인프라 설계",
+      "ecosystem": "power",
+      "measured_metrics": [
+        "distribution_voltage_v",
+        "power_density_kw"
+      ],
+      "disclosure_note": "Technical subsystem/parameter; supplier adoption requires independent source"
+    },
+    {
+      "id": "company:vrt",
+      "kind": "company",
+      "label": "Vertiv (VRT)",
+      "ecosystem": "power",
+      "measured_metrics": [],
+      "disclosure_note": "Technical subsystem/parameter; supplier adoption requires independent source"
     }
   ],
   "edges": [
@@ -1304,6 +1678,681 @@
         }
       ],
       "note": "HBM4 전면 채택 주장이 아니라 세대별 기술 옵션"
+    },
+    {
+      "id": "e062",
+      "from": "req:hbm_stack",
+      "to": "component:tsv",
+      "relation": "requires_component_or_material",
+      "stage": "technical_inference",
+      "polarity": "positive",
+      "evidence": [
+        {
+          "url": "https://news.skhynix.com/en/tech-note-series-ep2/",
+          "source_quality": "technical_source"
+        }
+      ],
+      "note": ""
+    },
+    {
+      "id": "e063",
+      "from": "component:tsv",
+      "to": "process:tsv_plating",
+      "relation": "uses_component_or_equipment",
+      "stage": "technical_inference",
+      "polarity": "positive",
+      "evidence": [
+        {
+          "url": "https://news.skhynix.com/en/tech-note-series-ep2/",
+          "source_quality": "technical_source"
+        }
+      ],
+      "note": ""
+    },
+    {
+      "id": "e064",
+      "from": "req:hbm_stack",
+      "to": "component:package_substrate",
+      "relation": "requires_component_or_material",
+      "stage": "technical_inference",
+      "polarity": "positive",
+      "evidence": [
+        {
+          "url": "https://news.skhynix.com/en/tech-note-series-ep2/",
+          "source_quality": "technical_source"
+        }
+      ],
+      "note": ""
+    },
+    {
+      "id": "e065",
+      "from": "component:package_substrate",
+      "to": "material:abf",
+      "relation": "requires_component_or_material",
+      "stage": "technical_inference",
+      "polarity": "positive",
+      "evidence": [
+        {
+          "url": "https://news.skhynix.com/en/tech-note-series-ep2/",
+          "source_quality": "technical_source"
+        }
+      ],
+      "note": ""
+    },
+    {
+      "id": "e066",
+      "from": "bottleneck:hbm_overlay",
+      "to": "bottleneck:bond_void",
+      "relation": "creates_bottleneck",
+      "stage": "technical_inference",
+      "polarity": "positive",
+      "evidence": [
+        {
+          "url": "https://news.skhynix.com/en/tech-note-series-ep2/",
+          "source_quality": "technical_source"
+        }
+      ],
+      "note": ""
+    },
+    {
+      "id": "e067",
+      "from": "bottleneck:hbm_overlay",
+      "to": "bottleneck:bond_particle",
+      "relation": "creates_bottleneck",
+      "stage": "technical_inference",
+      "polarity": "positive",
+      "evidence": [
+        {
+          "url": "https://news.skhynix.com/en/tech-note-series-ep2/",
+          "source_quality": "technical_source"
+        }
+      ],
+      "note": ""
+    },
+    {
+      "id": "e068",
+      "from": "bottleneck:bond_particle",
+      "to": "process:surface_activation",
+      "relation": "mitigated_by",
+      "stage": "technical_inference",
+      "polarity": "positive",
+      "evidence": [
+        {
+          "url": "https://ontoinnovation.com/products/dragonfly-g3/",
+          "source_quality": "technical_source"
+        }
+      ],
+      "note": ""
+    },
+    {
+      "id": "e069",
+      "from": "bottleneck:bond_void",
+      "to": "process:cmp",
+      "relation": "mitigated_by",
+      "stage": "technical_inference",
+      "polarity": "positive",
+      "evidence": [
+        {
+          "url": "https://ontoinnovation.com/products/dragonfly-g3/",
+          "source_quality": "technical_source"
+        }
+      ],
+      "note": ""
+    },
+    {
+      "id": "e070",
+      "from": "process:cmp",
+      "to": "material:oxide_bond",
+      "relation": "requires_component_or_material",
+      "stage": "technical_inference",
+      "polarity": "positive",
+      "evidence": [
+        {
+          "url": "https://ontoinnovation.com/products/dragonfly-g3/",
+          "source_quality": "technical_source"
+        }
+      ],
+      "note": ""
+    },
+    {
+      "id": "e071",
+      "from": "process:hybrid_bond_qualification",
+      "to": "process:surface_activation",
+      "relation": "uses_component_or_equipment",
+      "stage": "technical_inference",
+      "polarity": "positive",
+      "evidence": [
+        {
+          "url": "https://ontoinnovation.com/products/dragonfly-g3/",
+          "source_quality": "technical_source"
+        }
+      ],
+      "note": ""
+    },
+    {
+      "id": "e072",
+      "from": "process:hybrid_bond_qualification",
+      "to": "process:cmp",
+      "relation": "uses_component_or_equipment",
+      "stage": "technical_inference",
+      "polarity": "positive",
+      "evidence": [
+        {
+          "url": "https://ontoinnovation.com/products/dragonfly-g3/",
+          "source_quality": "technical_source"
+        }
+      ],
+      "note": ""
+    },
+    {
+      "id": "e073",
+      "from": "bottleneck:bond_particle",
+      "to": "tech:onto_g3",
+      "relation": "mitigated_by",
+      "stage": "vendor_claim",
+      "polarity": "positive",
+      "evidence": [
+        {
+          "url": "https://ontoinnovation.com/products/dragonfly-g3/",
+          "source_quality": "technical_source"
+        }
+      ],
+      "note": ""
+    },
+    {
+      "id": "e074",
+      "from": "bottleneck:hbm_overlay",
+      "to": "tech:onto_g3",
+      "relation": "mitigated_by",
+      "stage": "vendor_claim",
+      "polarity": "positive",
+      "evidence": [
+        {
+          "url": "https://ontoinnovation.com/products/dragonfly-g3/",
+          "source_quality": "technical_source"
+        }
+      ],
+      "note": ""
+    },
+    {
+      "id": "e075",
+      "from": "tech:onto_g3",
+      "to": "company:onto",
+      "relation": "offered_by",
+      "stage": "issuer_documented",
+      "polarity": "positive",
+      "evidence": [
+        {
+          "url": "https://ontoinnovation.com/products/dragonfly-g3/",
+          "source_quality": "official_supplier_specification"
+        }
+      ],
+      "note": ""
+    },
+    {
+      "id": "e076",
+      "from": "req:1p6t",
+      "to": "component:eml",
+      "relation": "requires_component_or_material",
+      "stage": "technical_inference",
+      "polarity": "positive",
+      "evidence": [
+        {
+          "url": "https://www.lumentum.com/en/products/eml-200g-pam4-cwdm-laser",
+          "source_quality": "technical_source"
+        }
+      ],
+      "note": ""
+    },
+    {
+      "id": "e077",
+      "from": "component:eml",
+      "to": "material:inp",
+      "relation": "requires_component_or_material",
+      "stage": "technical_inference",
+      "polarity": "positive",
+      "evidence": [
+        {
+          "url": "https://www.lumentum.com/en/products/eml-200g-pam4-cwdm-laser",
+          "source_quality": "technical_source"
+        }
+      ],
+      "note": ""
+    },
+    {
+      "id": "e078",
+      "from": "bottleneck:optic_coupling",
+      "to": "component:pic",
+      "relation": "requires_component_or_material",
+      "stage": "technical_inference",
+      "polarity": "positive",
+      "evidence": [
+        {
+          "url": "https://www.coherent.com/news/press-releases/coherent-demonstrates-next-gen-pluggable-transceiver-ofc-2026",
+          "source_quality": "technical_source"
+        }
+      ],
+      "note": ""
+    },
+    {
+      "id": "e079",
+      "from": "component:pic",
+      "to": "material:silicon_photonics",
+      "relation": "requires_component_or_material",
+      "stage": "technical_inference",
+      "polarity": "positive",
+      "evidence": [
+        {
+          "url": "https://www.coherent.com/news/press-releases/coherent-demonstrates-next-gen-pluggable-transceiver-ofc-2026",
+          "source_quality": "technical_source"
+        }
+      ],
+      "note": ""
+    },
+    {
+      "id": "e080",
+      "from": "req:1p6t",
+      "to": "component:vcsel",
+      "relation": "requires_component_or_material",
+      "stage": "technology_option",
+      "polarity": "positive",
+      "evidence": [
+        {
+          "url": "https://www.coherent.com/news/press-releases/coherent-demonstrates-next-gen-pluggable-transceiver-ofc-2026",
+          "source_quality": "technical_source"
+        }
+      ],
+      "note": ""
+    },
+    {
+      "id": "e081",
+      "from": "req:1p6t",
+      "to": "component:osfp",
+      "relation": "requires_component_or_material",
+      "stage": "technical_inference",
+      "polarity": "positive",
+      "evidence": [
+        {
+          "url": "https://www.coherent.com/news/press-releases/coherent-demonstrates-next-gen-pluggable-transceiver-ofc-2026",
+          "source_quality": "technical_source"
+        }
+      ],
+      "note": ""
+    },
+    {
+      "id": "e082",
+      "from": "component:fiber_connector",
+      "to": "component:fiber_ferrule",
+      "relation": "requires_component_or_material",
+      "stage": "technical_inference",
+      "polarity": "positive",
+      "evidence": [
+        {
+          "url": "https://www.coherent.com/news/press-releases/coherent-demonstrates-next-gen-pluggable-transceiver-ofc-2026",
+          "source_quality": "technical_source"
+        }
+      ],
+      "note": ""
+    },
+    {
+      "id": "e083",
+      "from": "bottleneck:optic_ber",
+      "to": "process:optical_test",
+      "relation": "mitigated_by",
+      "stage": "technical_inference",
+      "polarity": "positive",
+      "evidence": [
+        {
+          "url": "https://www.coherent.com/news/press-releases/coherent-demonstrates-next-gen-pluggable-transceiver-ofc-2026",
+          "source_quality": "technical_source"
+        }
+      ],
+      "note": ""
+    },
+    {
+      "id": "e084",
+      "from": "bottleneck:optic_power",
+      "to": "bottleneck:optic_thermal",
+      "relation": "creates_bottleneck",
+      "stage": "technical_inference",
+      "polarity": "positive",
+      "evidence": [
+        {
+          "url": "https://www.coherent.com/news/press-releases/coherent-demonstrates-next-gen-pluggable-transceiver-ofc-2026",
+          "source_quality": "technical_source"
+        }
+      ],
+      "note": ""
+    },
+    {
+      "id": "e085",
+      "from": "bottleneck:optic_thermal",
+      "to": "component:eml",
+      "relation": "mitigated_by",
+      "stage": "technology_option",
+      "polarity": "positive",
+      "evidence": [
+        {
+          "url": "https://www.lumentum.com/en/products/eml-200g-pam4-cwdm-laser",
+          "source_quality": "technical_source"
+        }
+      ],
+      "note": ""
+    },
+    {
+      "id": "e086",
+      "from": "component:eml",
+      "to": "tech:lite_eml",
+      "relation": "uses_component_or_equipment",
+      "stage": "issuer_documented",
+      "polarity": "positive",
+      "evidence": [
+        {
+          "url": "https://www.lumentum.com/en/products/eml-200g-pam4-cwdm-laser",
+          "source_quality": "official_supplier_specification"
+        }
+      ],
+      "note": ""
+    },
+    {
+      "id": "e087",
+      "from": "tech:lite_eml",
+      "to": "company:lite",
+      "relation": "offered_by",
+      "stage": "issuer_documented",
+      "polarity": "positive",
+      "evidence": [
+        {
+          "url": "https://www.lumentum.com/en/products/eml-200g-pam4-cwdm-laser",
+          "source_quality": "official_supplier_specification"
+        }
+      ],
+      "note": ""
+    },
+    {
+      "id": "e088",
+      "from": "tech:pluggable",
+      "to": "tech:cohr_1p6t",
+      "relation": "uses_component_or_equipment",
+      "stage": "issuer_documented",
+      "polarity": "positive",
+      "evidence": [
+        {
+          "url": "https://www.coherent.com/news/press-releases/coherent-demonstrates-next-gen-pluggable-transceiver-ofc-2026",
+          "source_quality": "official_supplier_specification"
+        }
+      ],
+      "note": ""
+    },
+    {
+      "id": "e089",
+      "from": "tech:cohr_1p6t",
+      "to": "company:cohr",
+      "relation": "offered_by",
+      "stage": "issuer_documented",
+      "polarity": "positive",
+      "evidence": [
+        {
+          "url": "https://www.coherent.com/news/press-releases/coherent-demonstrates-next-gen-pluggable-transceiver-ofc-2026",
+          "source_quality": "official_supplier_specification"
+        }
+      ],
+      "note": ""
+    },
+    {
+      "id": "e090",
+      "from": "tech:cohr_1p6t",
+      "to": "component:pic",
+      "relation": "requires_component_or_material",
+      "stage": "issuer_documented",
+      "polarity": "positive",
+      "evidence": [
+        {
+          "url": "https://www.coherent.com/news/press-releases/coherent-demonstrates-next-gen-pluggable-transceiver-ofc-2026",
+          "source_quality": "official_supplier_specification"
+        }
+      ],
+      "note": ""
+    },
+    {
+      "id": "e091",
+      "from": "tech:cohr_1p6t",
+      "to": "component:osfp",
+      "relation": "requires_component_or_material",
+      "stage": "issuer_documented",
+      "polarity": "positive",
+      "evidence": [
+        {
+          "url": "https://www.coherent.com/news/press-releases/coherent-demonstrates-next-gen-pluggable-transceiver-ofc-2026",
+          "source_quality": "official_supplier_specification"
+        }
+      ],
+      "note": ""
+    },
+    {
+      "id": "e092",
+      "from": "req:800v",
+      "to": "component:dc_contactor",
+      "relation": "requires_component_or_material",
+      "stage": "technical_inference",
+      "polarity": "positive",
+      "evidence": [
+        {
+          "url": "https://developer.nvidia.com/blog/?p=100571",
+          "source_quality": "technical_source"
+        }
+      ],
+      "note": ""
+    },
+    {
+      "id": "e093",
+      "from": "req:800v",
+      "to": "component:dc_capacitor",
+      "relation": "requires_component_or_material",
+      "stage": "technical_inference",
+      "polarity": "positive",
+      "evidence": [
+        {
+          "url": "https://developer.nvidia.com/blog/?p=100571",
+          "source_quality": "technical_source"
+        }
+      ],
+      "note": ""
+    },
+    {
+      "id": "e094",
+      "from": "bottleneck:conversion",
+      "to": "component:gate_driver",
+      "relation": "mitigated_by",
+      "stage": "technology_option",
+      "polarity": "positive",
+      "evidence": [
+        {
+          "url": "https://developer.nvidia.com/blog/?p=100571",
+          "source_quality": "technical_source"
+        }
+      ],
+      "note": ""
+    },
+    {
+      "id": "e095",
+      "from": "bottleneck:conversion",
+      "to": "component:planar_transformer",
+      "relation": "mitigated_by",
+      "stage": "technology_option",
+      "polarity": "positive",
+      "evidence": [
+        {
+          "url": "https://developer.nvidia.com/blog/?p=100571",
+          "source_quality": "technical_source"
+        }
+      ],
+      "note": ""
+    },
+    {
+      "id": "e096",
+      "from": "component:sic_mosfet",
+      "to": "material:sic_wafer",
+      "relation": "requires_component_or_material",
+      "stage": "technical_inference",
+      "polarity": "positive",
+      "evidence": [
+        {
+          "url": "https://developer.nvidia.com/blog/?p=100571",
+          "source_quality": "technical_source"
+        }
+      ],
+      "note": ""
+    },
+    {
+      "id": "e097",
+      "from": "component:sic_mosfet",
+      "to": "component:gate_driver",
+      "relation": "requires_component_or_material",
+      "stage": "technical_inference",
+      "polarity": "positive",
+      "evidence": [
+        {
+          "url": "https://developer.nvidia.com/blog/?p=100571",
+          "source_quality": "technical_source"
+        }
+      ],
+      "note": ""
+    },
+    {
+      "id": "e098",
+      "from": "bottleneck:dc_protection",
+      "to": "bottleneck:arc_flash",
+      "relation": "creates_bottleneck",
+      "stage": "technical_inference",
+      "polarity": "positive",
+      "evidence": [
+        {
+          "url": "https://developer.nvidia.com/blog/?p=100571",
+          "source_quality": "technical_source"
+        }
+      ],
+      "note": ""
+    },
+    {
+      "id": "e099",
+      "from": "bottleneck:arc_flash",
+      "to": "component:dc_contactor",
+      "relation": "mitigated_by",
+      "stage": "technology_option",
+      "polarity": "positive",
+      "evidence": [
+        {
+          "url": "https://developer.nvidia.com/blog/?p=100571",
+          "source_quality": "technical_source"
+        }
+      ],
+      "note": ""
+    },
+    {
+      "id": "e100",
+      "from": "bottleneck:dc_protection",
+      "to": "process:hv_dielectric_test",
+      "relation": "mitigated_by",
+      "stage": "technical_inference",
+      "polarity": "positive",
+      "evidence": [
+        {
+          "url": "https://developer.nvidia.com/blog/?p=100571",
+          "source_quality": "technical_source"
+        }
+      ],
+      "note": ""
+    },
+    {
+      "id": "e101",
+      "from": "req:coldplate",
+      "to": "component:coldplate",
+      "relation": "requires_component_or_material",
+      "stage": "technical_inference",
+      "polarity": "positive",
+      "evidence": [
+        {
+          "url": "https://developer.nvidia.com/blog/?p=100571",
+          "source_quality": "technical_source"
+        }
+      ],
+      "note": ""
+    },
+    {
+      "id": "e102",
+      "from": "bottleneck:liquidcool",
+      "to": "process:cdu_pump",
+      "relation": "mitigated_by",
+      "stage": "technical_inference",
+      "polarity": "positive",
+      "evidence": [
+        {
+          "url": "https://developer.nvidia.com/blog/?p=100571",
+          "source_quality": "technical_source"
+        }
+      ],
+      "note": ""
+    },
+    {
+      "id": "e103",
+      "from": "tech:cdu",
+      "to": "process:cdu_pump",
+      "relation": "uses_component_or_equipment",
+      "stage": "technical_inference",
+      "polarity": "positive",
+      "evidence": [
+        {
+          "url": "https://developer.nvidia.com/blog/?p=100571",
+          "source_quality": "technical_source"
+        }
+      ],
+      "note": ""
+    },
+    {
+      "id": "e104",
+      "from": "tech:vertiv_800v",
+      "to": "company:vrt",
+      "relation": "offered_by",
+      "stage": "issuer_documented",
+      "polarity": "positive",
+      "evidence": [
+        {
+          "url": "https://investors.vertiv.com/news/news-details/2025/Vertiv-Accelerates-AI-Infrastructure-Evolution-in-Alignment-with-NVIDIA-800-VDC-Power-Architecture-Announcement/default.aspx",
+          "source_quality": "official_supplier_specification"
+        }
+      ],
+      "note": ""
+    },
+    {
+      "id": "e105",
+      "from": "bottleneck:conversion",
+      "to": "tech:vertiv_800v",
+      "relation": "mitigated_by",
+      "stage": "vendor_claim",
+      "polarity": "positive",
+      "evidence": [
+        {
+          "url": "https://investors.vertiv.com/news/news-details/2025/Vertiv-Accelerates-AI-Infrastructure-Evolution-in-Alignment-with-NVIDIA-800-VDC-Power-Architecture-Announcement/default.aspx",
+          "source_quality": "technical_source"
+        }
+      ],
+      "note": ""
+    },
+    {
+      "id": "e106",
+      "from": "tech:vertiv_800v",
+      "to": "tech:sidecar",
+      "relation": "uses_component_or_equipment",
+      "stage": "technology_option",
+      "polarity": "positive",
+      "evidence": [
+        {
+          "url": "https://investors.vertiv.com/news/news-details/2025/Vertiv-Accelerates-AI-Infrastructure-Evolution-in-Alignment-with-NVIDIA-800-VDC-Power-Architecture-Announcement/default.aspx",
+          "source_quality": "technical_source"
+        }
+      ],
+      "note": ""
     }
   ],
   "events": [
