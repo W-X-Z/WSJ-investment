@@ -43,7 +43,7 @@ ECOSYSTEMS = {
         "id": "eco:hbm", "queries": ("high bandwidth memory hybrid bonding", "advanced packaging wafer inspection"),
         "terms": ("hbm", "memory", "bump", "bond", "packag", "metrology", "inspection", "semiconductor", "wafer"),
         "federal_query": "semiconductor advanced packaging",
-        "tickers": ("CAMT", "AEHR"),
+        "tickers": ("CAMT",),
     },
     "optics": {
         "id": "eco:optics", "queries": ("1.6T optical transceiver silicon photonics", "co packaged optics optical interposer"),
@@ -135,13 +135,23 @@ def public_event(*, origin: str, origin_id: str, ecosystem: str, kind: str,
     }
 
 
+def rebuild_abstract(inverted: dict[str, list[int]]) -> str:
+    """Reconstruct OpenAlex abstract from positional word indices."""
+    words = {}
+    for token, positions in inverted.items():
+        for position in positions:
+            if isinstance(position, int) and 0 <= position <= 2000:
+                words[position] = token
+    return " ".join(words[pos] for pos in sorted(words))
+
+
 def harvest_openalex(ecosystem: str, since: str) -> list[dict]:
     rows: list[dict] = []
     seen: set[str] = set()
     for query in ECOSYSTEMS[ecosystem]["queries"]:
         params = {
             "search": query, "filter": f"from_publication_date:{since}",
-            "select": "id,display_name,doi,publication_date,primary_location", "per-page": "14",
+            "select": "id,display_name,doi,publication_date,primary_location,abstract_inverted_index", "per-page": "14",
         }
         url = "https://api.openalex.org/works?" + urlencode(params)
         data = fetch_url(url)
@@ -153,13 +163,14 @@ def harvest_openalex(ecosystem: str, since: str) -> list[dict]:
                 continue
             seen.add(wid)
             doc = work.get("doi") or wid
+            abstract = rebuild_abstract(work.get("abstract_inverted_index") or {})[:550]
             # DOI is often an external host outside the fetch allowlist;
             # URL citation may be external, but the monitor never fetches it.
             rows.append(public_event(
                 origin="openalex", origin_id=wid, ecosystem=ecosystem, kind="paper",
-                published_at=when, url=wid if allowed_url(wid) else "https://api.openalex.org/works",
-                title=name, excerpt="Scholarly publication metadata, not peer-reviewed performance validation",
-                group="openalex_index", details={"doi": doc, "query": query},
+                published_at=when, url="https://api.openalex.org/works/" + wid.rsplit("/", 1)[-1],
+                title=name, excerpt=(abstract or "Abstract unavailable; title-level evidence only") + " [Publication metadata, not verified technical performance]",
+                group="openalex_index", details={"doi": doc, "query": query, "abstract_available": bool(abstract)},
             ))
     return rows
 
@@ -231,32 +242,27 @@ def page_highlights(text: str, terms: tuple[str, ...]) -> list[str]:
     return sorted(set(chunks))[:25]
 
 
-def harvest_pages(previous: dict, observed_at: str) -> tuple[list[dict], dict]:
-    state = dict(previous)
+def harvest_page(page: dict, old: dict | None, observed_at: str) -> tuple[list[dict], dict]:
+    """Get only relevant visible text; never silently count a changing website as a confirmed technical advance."""
+    raw = fetch_url(page["url"], json_mode=False)
+    highlights = page_highlights(strip_html(raw), page["terms"])
+    if not highlights:
+        raise RuntimeError(f"Cannot find meaningful text on official page {page['source_id']}")
+    digest = stable_hash(highlights)
+    snapshot = {"digest": digest, "last_observed_at": observed_at,
+                "url": page["url"], "sample_highlights": highlights[:6]}
     fresh = []
-    for page in SPEC_PAGES:
-        raw = fetch_url(page["url"], json_mode=False)
-        highlights = page_highlights(strip_html(raw), page["terms"])
-        if not highlights:
-            raise RuntimeError(f"Cannot find meaningful text on official page {page['source_id']}")
-        digest = stable_hash(highlights)
-        old = state.get(page["source_id"])
-        state[page["source_id"]] = {
-            "digest": digest, "last_observed_at": observed_at,
-            "url": page["url"], "sample_highlights": highlights[:6],
-        }
-        if old and old.get("digest") != digest:
-            # Publication date is unknown until independently established.
-            fresh.append(public_event(
-                origin="official_site_snapshot", origin_id=f"{page['source_id']}:{digest}",
-                ecosystem=page["ecosystem"], kind="technical_page_changed",
-                published_at=None, url=page["url"],
-                title=f"Official technical page changed: {page['source_id']}",
-                excerpt="Site text changed since last successful observation. Verify whether specifications changed, not site navigation.",
-                group=page["source_id"], details={"old_digest": old.get("digest"), "new_digest": digest,
-                "new_highlights": highlights[:8], "previous_highlights": old.get("sample_highlights", [])[:6]},
-            ))
-    return fresh, state
+    if old and old.get("digest") != digest:
+        fresh.append(public_event(
+            origin="official_site_snapshot", origin_id=f"{page['source_id']}:{digest}",
+            ecosystem=page["ecosystem"], kind="technical_page_changed",
+            published_at=None, url=page["url"],
+            title=f"Official technical page changed: {page['source_id']}",
+            excerpt="Site text changed since last successful observation. Verify whether specifications changed, not site navigation.",
+            group=page["source_id"], details={"old_digest": old.get("digest"), "new_digest": digest,
+            "new_highlights": highlights[:8], "previous_highlights": old.get("sample_highlights", [])[:6]},
+        ))
+    return fresh, snapshot
 
 
 def rank_event(event: dict) -> int:
@@ -456,13 +462,14 @@ def run(stage: str, *, state_path: Path, graph_path: Path, data_dir: Path,
                 continue
             gather(f"sec_{ticker}", lambda t=ticker, k=ecosystem: harvest_sec(t, k, since, tickers[t]))
 
-    try:
-        page_events, page_state = harvest_pages(state["page_snapshots"], now)
-        for event in page_events:
-            fetched[event["id"]] = event
-        state["page_snapshots"] = page_state
-    except Exception as exc:
-        failures.append({"source": "official_technical_pages", "error": str(exc)[:250]})
+    for page in SPEC_PAGES:
+        try:
+            page_events, snapshot = harvest_page(page, state["page_snapshots"].get(page["source_id"]), now)
+            for event in page_events:
+                fetched[event["id"]] = event
+            state["page_snapshots"][page["source_id"]] = snapshot
+        except Exception as exc:
+            failures.append({"source": "official_" + page["source_id"], "error": str(exc)[:250]})
 
     # A full outage on initial run should not establish a misleading baseline.
     if len(failures) >= 9 and not fetched:
