@@ -366,6 +366,7 @@ class DataPack:
                 "item_1a": "Item 1A. Risk Factors",
                 "item_7": "Item 7. MD&A",
                 "mdna": "Part I Item 2. MD&A (분기)",
+                "ex99": "EX-99.1 보도자료",
                 "full": "본문",
             }.get(d["section"], d["section"])
             parts.append(

@@ -23,7 +23,11 @@ SUBMISSIONS_URL = "https://data.sec.gov/submissions/CIK{cik:010d}.json"
 ARCHIVE_URL = "https://www.sec.gov/Archives/edgar/data/{cik}/{acc}/{doc}"
 INDEX_URL = "https://www.sec.gov/Archives/edgar/data/{cik}/{acc}/{acc_dash}-index.htm"
 
-TENK_CAPS = {"item_1": 25_000, "item_1a": 15_000, "item_7": 25_000}
+TENK_CAPS = {
+    "item_1": 32_000,
+    "item_1a": 15_000,
+    "item_7": 25_000,
+}  # Item 1 은 고객·경쟁 절이 뒤에 있어 넉넉히
 EIGHTK_CAP = 6_000
 TENQ_CAP = 12_000
 
@@ -231,6 +235,9 @@ def eightk_texts(
                     r["extracted_by"],
                 )
             )
+            ex = exhibit_99(store, http, cik, f, cap)
+            if ex:
+                out.append(ex)
             continue
         url = f.doc_url(cik)
         try:
@@ -246,7 +253,68 @@ def eightk_texts(
         )
         store.upsert("raw.sec_documents", [sec.row(cik)], ["accession_no", "section"])
         out.append(sec)
+        ex = exhibit_99(store, http, cik, f, cap)
+        if ex:
+            out.append(ex)
     return out
+
+
+EXHIBIT_CAP = 5_000
+_EX99 = ("ex99", "ex-99", "ex_99", "exhibit99", "exhibit-99")
+
+
+def exhibit_99(
+    store: Store, http: HttpClient, cik: int, f: Filing, cap: int = EXHIBIT_CAP
+) -> DocSection | None:
+    """8-K 의 EX-99.1(보도자료) 본문. 실적·가이던스·수주 수치는 대개 본문이 아니라 여기 있다. 캐시 우선."""
+    cached = _cached(store, f.accession_no, ["ex99"])
+    if "ex99" in cached:
+        r = cached["ex99"]
+        return DocSection(
+            f.accession_no,
+            f.form,
+            "ex99",
+            f.file_date,
+            f.report_date,
+            r["source_url"],
+            r["text"],
+            r["extracted_by"],
+        )
+    base = ARCHIVE_URL.format(cik=cik, acc=f.accession_no.replace("-", ""), doc="")
+    try:
+        idx = http.get_json(base + "index.json")
+    except Exception as exc:  # noqa: BLE001
+        log.warning("8-K index fetch failed %s: %s", base, exc)
+        return None
+    names = [i.get("name", "") for i in (idx.get("directory") or {}).get("item", [])]
+    cand = sorted(
+        (n for n in names if n.lower().endswith((".htm", ".html")) and any(k in n.lower() for k in _EX99)),
+        key=lambda n: ("99_1" in n or "991" in n or "99-1" in n, -len(n)),
+        reverse=True,
+    )
+    if not cand:
+        return None
+    url = base + cand[0]
+    try:
+        raw = http.get_text(url)
+    except Exception as exc:  # noqa: BLE001
+        log.warning("EX-99 fetch failed %s: %s", url, exc)
+        return None
+    text = html_to_text(raw)
+    truncated = len(text) > cap
+    sec = DocSection(
+        f.accession_no,
+        f.form,
+        "ex99",
+        f.file_date,
+        f.report_date,
+        url,
+        truncate_text(text, cap),
+        "full",
+        truncated,
+    )
+    store.upsert("raw.sec_documents", [sec.row(cik)], ["accession_no", "section"])
+    return sec
 
 
 def pick_documents(
