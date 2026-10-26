@@ -171,7 +171,7 @@ export function SupplyNetworkCanvas({initialEcosystem="all",compact=false}:{init
  const layout=useMemo(()=>arrange(graphIds,mode,scope,selected),[graphIds,mode,scope,selected]);
  const positions=useMemo(()=>new Map<string,Vec>(Array.from(layout).map(([id,pos]):[string,Vec]=>[id,overrides[id]??pos])),[layout,overrides]);
  const displayedEdges=useMemo(()=>seed.edges.filter(e=>positions.has(e.from)&&positions.has(e.to)&&
-   (trust==="all"||epistemic(e)==="documented")),[positions,trust]);
+   (trust==="all"||epistemic(e)!=="inferred")),[positions,trust]);
  const neighbors=useMemo(()=>selected?discover(selected,depth):new Set<string>(),[selected,depth]);
  const focusedEdge=selectedEdge?seed.edges.find(e=>e.id===selectedEdge):null;
  const hit=useMemo(()=>{
@@ -322,7 +322,7 @@ export function SupplyNetworkCanvas({initialEcosystem="all",compact=false}:{init
       {historyRows.length>0&&<><h4>연관 과거 공개자료 · 백필</h4><div className="sc-history">{historyRows.map(x=><a key={x.id} href={x.url} target="_blank" rel="noreferrer"><small>{fmt(x.published_at)} · {x.source}</small><strong>{x.title}</strong></a>)}</div></>}
       <div className="sc-inspector-actions"><button type="button" onClick={()=>{shiftMode("impact");setInspectorOpen(true)}}><Icon name="network" size={15}/> 이 노드 중심으로 펼치기</button><Link href={`/search?q=${encodeURIComponent(node.label)}`}><Icon name="search" size={15}/> 전체 근거 검색</Link></div>
       <div className="sc-caution">노드와 공개 문헌의 관련성은 실제 공급 실적이나 사업적 수혜의 확증이 아닙니다.</div>
-     </div>:<div className="sc-inspector-content sc-empty-inspector"><Icon name="network" size={28}/><h3>복잡한 공급망을 탐색하세요</h3><p>캔버스의 노드·연결선을 선택하면 검증된 내용, 추론 관계, 물리적 측정 항목과 원문을 확인할 수 있습니다.</p><div><span>55+ 기술 노드</span><span>공식 근거 / 기술 추론 분리</span><span>1–3단계 연결 강조</span></div></div>}
+     </div>:<div className="sc-inspector-content sc-empty-inspector"><Icon name="network" size={28}/><h3>복잡한 공급망을 탐색하세요</h3><p>캔버스의 노드·연결선을 선택하면 검증된 내용, 추론 관계, 물리적 측정 항목과 원문을 확인할 수 있습니다.</p><div><span>{seed.nodes.length}개 기술·기업 노드</span><span>공식 근거 / 기술 추론 분리</span><span>1–3단계 연결 강조</span></div></div>}
    </aside>}
    {!inspectorOpen&&compact&&<button type="button" className="sc-reopen-inspector" onClick={()=>setInspectorOpen(true)}><Icon name="panel-right" size={16}/> 근거 패널</button>}
   </div>
