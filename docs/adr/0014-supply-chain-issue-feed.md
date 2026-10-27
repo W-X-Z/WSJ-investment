@@ -37,7 +37,7 @@
   - Google News 질의에 표준(JEDEC·802.3dj·OCP·OIF)·가격(DRAM 계약가·광섬유·변압기 리드타임·CoWoS·ABF)·정책(232·CHIPS·FERC·수출규칙) 추가
 - **지표 `indicators.py` + 마이그레이션 0016** (`ideas.indicators`, `ideas.indicator_points`, 뷰 `v_indicators`·`v_indicator_points`):
   - 메모리 현물가 6종 (DRAMeXchange 홈페이지 표, 세션 평균만 저장)
-  - 미국 PPI·원자재 8종 (FRED fredgraph.csv: 반도체·변압기·커넥터·광섬유 케이블·PCB·개폐기 PPI, 구리·알루미늄)
+  - 미국 PPI 7종은 BLS 공개 API v1(무인증, 하루 25회): 반도체·변압기·커넥터·광섬유 케이블·PCB·개폐기·구리 압연. 구리·알루미늄 국제가격은 FRED CSV (Actions 에서 FRED 가 응답 없이 끊겨 재시도 없는 15초 시도로만)
   - 대만 공급사 월매출 17사 (TWSE·TPEx OpenAPI: TSMC·ASE·Unimicron·KYEC·WinWay·MPI·CHPT·Accton·LandMark·Luxnet·FOCI·Browave·Delta·Lite-On·BizLink·AVC·Auras) — 미국 실적보다 2~3개월 빠른 수요 신호
   - 임계치(현물 1주 ±8%, 월매출 YoY ≥60%·≤−15%·MoM ±25%, PPI 전월 ±1.5%·전년 ±10%)를 넘으면 `data` 후보 → LLM 이 기사와 묶거나 단독 이슈로
 - **후보 선정**: 규칙 점수 상위 + 유형별 최소치(논문 6·지표 8·리서치 기관 5·정책 4·관보 4·뉴스룸 4). 논문은 이슈 최대 3개(`event_type=research`).

@@ -80,3 +80,12 @@ def test_research_filter_requires_phrase_and_relevant_venue():
     offtopic = issues.Item("https://doi.org/3", "Hybrid bonding in timber", now, "Wood Science", "research", "", "hybrid bonding")
     assert issues.phrase_in(ok) and not issues.phrase_in(loose) and not issues.phrase_in(offtopic)
     assert not sources.INDUSTRY.search("State Key Laboratory for Advanced Metals") and sources.INDUSTRY.search("Samsung Electronics")
+
+
+def test_parse_bls_monthly_with_changes():
+    data = {"status": "REQUEST_SUCCEEDED", "Results": {"series": [{"seriesID": "PCU335311335311", "data": [
+        {"year": "2026", "period": "M09", "value": "220.0"}, {"year": "2026", "period": "M08", "value": "200.0"},
+        {"year": "2025", "period": "M09", "value": "176.0"}, {"year": "2025", "period": "M13", "value": "1"}]}]}}
+    pts = {p.as_of: p for p in indicators.parse_bls(data)}
+    p = pts[date(2026, 9, 1)]
+    assert p.indicator_id == "bls:PCU335311335311" and p.change_pct == 10.0 and p.yoy_pct == 25.0

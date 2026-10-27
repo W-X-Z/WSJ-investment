@@ -30,6 +30,7 @@ log = logging.getLogger("wsj.ecosystems.indicators")
 BROWSER_UA = {"User-Agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0 Safari/537.36"}
 DRAMX = "https://www.dramexchange.com/"
 FRED_CSV = "https://fred.stlouisfed.org/graph/fredgraph.csv?id={sid}"
+BLS_API = "https://api.bls.gov/publicAPI/v1/timeseries/data/"  # 무인증 v1: 하루 25회·요청당 25개 시리즈
 TWSE_REV = "https://openapi.twse.com.tw/v1/opendata/t187ap05_L"
 TPEX_REV = "https://www.tpex.org.tw/openapi/v1/mopsfin_t187ap05_O"
 
@@ -59,6 +60,10 @@ def _dx(slug: str, label: str, match: str, freq: str = "daily", nodes: list[str]
     return Indicator(f"dx:{slug}", label, "memory_spot", "USD", freq, "DRAMeXchange", DRAMX, "hbm", nodes or ["gen:hbm4"], MEM, note, match)
 
 
+def _bls(sid: str, label: str, eco: str, nodes: list[str], note: str | None = None) -> Indicator:
+    return Indicator(f"bls:{sid}", label, "ppi", "index", "monthly", "BLS", f"https://data.bls.gov/timeseries/{sid}", eco, nodes, [], note, sid)
+
+
 def _fred(sid: str, label: str, eco: str, nodes: list[str], unit: str = "index", cat: str = "ppi", note: str | None = None) -> Indicator:
     return Indicator(f"fred:{sid}", label, cat, unit, "monthly", "FRED", f"https://fred.stlouisfed.org/series/{sid}", eco, nodes, [], note, sid)
 
@@ -77,12 +82,13 @@ INDICATORS: list[Indicator] = [
     _dx("gddr6_8gb", "GDDR6 8Gb 현물", "GDDR6 8Gb", "weekly"),
     _dx("nand_512gb_tlc", "NAND 512Gb TLC 웨이퍼 현물", "512Gb TLC", "weekly", ["gen:hbm4"], "NAND 는 HBM 과 직접 관련은 없지만 메모리 사이클 확인용"),
     # 미국 PPI·원자재 — 부품 가격 압력
-    _fred("PCU334413334413", "미국 PPI: 반도체·관련 소자", "hbm", ["gen:hbm4"]),
-    _fred("PCU335311335311", "미국 PPI: 전력·배전 변압기", "power", ["component:planar_transformer", "tech:directmv"], note="데이터센터 전력 병목(변압기 리드타임)의 가격 쪽 신호"),
-    _fred("PCU334417334417", "미국 PPI: 전자 커넥터", "optics", ["component:fiber_connector", "component:osfp"]),
-    _fred("PCU335921335921", "미국 PPI: 광섬유 케이블", "optics", ["component:fiber_connector"]),
-    _fred("PCU334412334412", "미국 PPI: 인쇄회로기판(베어)", "hbm", ["component:package_substrate"]),
-    _fred("PCU335313335313", "미국 PPI: 개폐기·배전반", "power", ["component:dc_breaker", "bottleneck:dc_protection"]),
+    _bls("PCU334413334413", "미국 PPI: 반도체·관련 소자", "hbm", ["gen:hbm4"]),
+    _bls("PCU335311335311", "미국 PPI: 전력·배전 변압기", "power", ["component:planar_transformer", "tech:directmv"], note="데이터센터 전력 병목(변압기 리드타임)의 가격 쪽 신호"),
+    _bls("PCU334417334417", "미국 PPI: 전자 커넥터", "optics", ["component:fiber_connector", "component:osfp"]),
+    _bls("PCU335921335921", "미국 PPI: 광섬유 케이블", "optics", ["component:fiber_connector"]),
+    _bls("PCU334412334412", "미국 PPI: 인쇄회로기판(베어)", "hbm", ["component:package_substrate"]),
+    _bls("PCU335313335313", "미국 PPI: 개폐기·배전반", "power", ["component:dc_breaker", "bottleneck:dc_protection"]),
+    _bls("PCU331420331420", "미국 PPI: 구리 압연·인발", "power", ["bottleneck:copper", "component:dc_busbar"]),
     _fred("PCOPPUSDM", "구리 국제가격", "power", ["bottleneck:copper", "component:dc_busbar"], "USD/톤", "commodity"),
     _fred("PALUMUSDM", "알루미늄 국제가격", "power", ["component:dc_busbar"], "USD/톤", "commodity"),
     # 대만 공급사 월매출 — 매월 10일 전후 공시, 미국 실적보다 2~3개월 빠른 공급망 수요 신호
@@ -195,6 +201,8 @@ def parse_fred_csv(text: str, keep: int = 30) -> list[tuple[date, float]]:
 
 
 def fetch_fred(http: HttpClient) -> list[Point]:
+    """FRED 는 클라우드 IP 에서 응답 없이 끊기는 일이 잦다 — 재시도 없는 짧은 타임아웃 전용 클라이언트로 시도한다."""
+    http = HttpClient(user_agent=BROWSER_UA["User-Agent"], timeout=15.0, max_retries=0)
     pts: list[Point] = []
     fails = 0
     for ind in INDICATORS:
@@ -214,7 +222,42 @@ def fetch_fred(http: HttpClient) -> list[Point]:
             prev = series[i - 1][1] if i else None
             ly = by_date.get(date(d.year - 1, d.month, d.day))
             pts.append(Point(ind.indicator_id, d, v, round((v / prev - 1) * 100, 3) if prev else None, round((v / ly - 1) * 100, 3) if ly else None))
+    http.close()
     log.info("fred points: %d", len(pts))
+    return pts
+
+
+def parse_bls(data: dict[str, Any]) -> list[Point]:
+    pts: list[Point] = []
+    for s in (data.get("Results") or {}).get("series") or []:
+        sid = s.get("seriesID")
+        rows = []
+        for r in s.get("data") or []:
+            per, v = r.get("period", ""), _num(r.get("value"))
+            if per.startswith("M") and per != "M13" and v is not None:
+                rows.append((date(int(r["year"]), int(per[1:]), 1), v))
+        rows.sort()
+        by = dict(rows)
+        for i, (d, v) in enumerate(rows):
+            prev = rows[i - 1][1] if i else None
+            ly = by.get(date(d.year - 1, d.month, 1))
+            pts.append(Point(f"bls:{sid}", d, v, round((v / prev - 1) * 100, 3) if prev else None, round((v / ly - 1) * 100, 3) if ly else None))
+    return pts
+
+
+def fetch_bls(http: HttpClient, today: date) -> list[Point]:
+    ids = [i.match for i in INDICATORS if i.source == "BLS"]
+    if not ids:
+        return []
+    try:
+        data = http.post_json(BLS_API, {"seriesid": ids, "startyear": str(today.year - 2), "endyear": str(today.year)})
+    except Exception as exc:  # noqa: BLE001
+        log.warning("bls failed: %s", exc)
+        return []
+    if data.get("status") != "REQUEST_SUCCEEDED" or data.get("message"):
+        log.warning("bls status %s: %s", data.get("status"), "; ".join(data.get("message") or [])[:300])
+    pts = [p for p in parse_bls(data) if p.as_of >= date(today.year - 1, 1, 1)]
+    log.info("bls points: %d (%d series)", len(pts), len({p.indicator_id for p in pts}))
     return pts
 
 
@@ -322,7 +365,7 @@ def load_history(store, ids: list[str], since: date) -> dict[str, list[tuple[dat
 
 def run(http: HttpClient, store, today: date | None = None) -> dict[str, Any]:
     today = today or datetime.now(UTC).date()
-    points = fetch_dramexchange(http, today) + fetch_fred(http) + fetch_tw(http)
+    points = fetch_dramexchange(http, today) + fetch_bls(http, today) + fetch_fred(http) + fetch_tw(http)
     history = load_history(store, [i.indicator_id for i in INDICATORS], today - timedelta(days=60)) if store else {}
     for p in points:  # 이번 수집분도 이력에 (FRED 처럼 한 번에 여러 점이 오는 경우)
         history.setdefault(p.indicator_id, []).append((p.as_of, p.value))
