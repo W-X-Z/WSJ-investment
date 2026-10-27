@@ -15,6 +15,7 @@ from __future__ import annotations
 
 import html
 import logging
+import os
 import re
 import time
 import xml.etree.ElementTree as ET
@@ -200,16 +201,24 @@ def collect_openalex(http: HttpClient, queries: list[tuple[str, str]], since: da
     from wsj.ecosystems.issues import Item
 
     out: list[Item] = []
+    fails = 0
     for nid, phrase in queries:
         params: dict[str, Any] = {"search": f'"{phrase}"', "filter": f"from_publication_date:{since.date().isoformat()},type:article|proceedings-article|preprint",
                                   "sort": "publication_date:desc", "per_page": "10",
                                   "select": "id,doi,title,publication_date,primary_location,authorships,abstract_inverted_index"}
         if mailto:
             params["mailto"] = mailto
+        key = os.environ.get("OPENALEX_API_KEY", "").strip()
+        if key:
+            params["api_key"] = key
         try:
             data = http.get_json(OPENALEX, params=params)
         except Exception as exc:  # noqa: BLE001
             log.warning("openalex %r failed: %s", phrase, exc)
+            fails += 1
+            if fails >= 3:  # 일일 한도(429) — 나머지 질의는 건너뛴다
+                log.warning("openalex: too many failures, stopping")
+                break
             continue
         for w in data.get("results") or []:
             try:
