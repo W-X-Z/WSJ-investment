@@ -85,7 +85,6 @@ INDICATORS: list[Indicator] = [
     _bls("PCU334413334413", "미국 PPI: 반도체·관련 소자", "hbm", ["gen:hbm4"]),
     _bls("PCU335311335311", "미국 PPI: 전력·배전 변압기", "power", ["component:planar_transformer", "tech:directmv"], note="데이터센터 전력 병목(변압기 리드타임)의 가격 쪽 신호"),
     _bls("PCU334417334417", "미국 PPI: 전자 커넥터", "optics", ["component:fiber_connector", "component:osfp"]),
-    _bls("PCU335921335921", "미국 PPI: 광섬유 케이블", "optics", ["component:fiber_connector"]),
     _bls("PCU334412334412", "미국 PPI: 인쇄회로기판(베어)", "hbm", ["component:package_substrate"]),
     _bls("PCU335313335313", "미국 PPI: 개폐기·배전반", "power", ["component:dc_breaker", "bottleneck:dc_protection"]),
     _bls("PCU331420331420", "미국 PPI: 구리 압연·인발", "power", ["bottleneck:copper", "component:dc_busbar"]),
