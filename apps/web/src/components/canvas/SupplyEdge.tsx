@@ -5,7 +5,10 @@ import { EdgeLabelRenderer, Position, getBezierPath, useInternalNode, type Edge 
 import { RELATIONS, type Edge } from "@/lib/research-client";
 import { NODE_H, NODE_W } from "./graph-model";
 
-export type SupplyEdgeData = { edge: Edge; route: "layered" | "floating"; cls: string; active: boolean; dim: boolean };
+/** Floating route only — `bend`: −1…1 when several relations join the same pair of nodes;
+ *  `labelAt`: label position along the edge (0 = source), pushed away from a selected hub so
+ *  the labels of its relations fan out instead of piling up next to it. */
+export type SupplyEdgeData = { edge: Edge; route: "layered" | "floating"; cls: string; active: boolean; dim: boolean; bend?: number; labelAt?: number };
 export type SupplyFlowEdge = FlowEdge<SupplyEdgeData, "supply">;
 
 type Box = { x: number; y: number; w: number; h: number };
@@ -18,14 +21,24 @@ function border(a: Box, ox: number, oy: number): [number, number] {
   return Number.isFinite(s) ? [cx + dx * s, cy + dy * s] : [cx, cy];
 }
 
-/** Floating edges: path is derived from the live node boxes, so dragging a node only
+/** Floating edges (network / impact views): straight line between the borders closest to the
+ *  other node. Path is derived from the live node boxes, so dragging a node only
  *  re-renders the edges attached to it. Layered routing keeps arrows flowing left → right;
  *  same-column links arc out on the right, backward links leave from the left side. */
-function geometry(s: Box, t: Box, route: SupplyEdgeData["route"]): [string, number, number] {
+function geometry(s: Box, t: Box, route: SupplyEdgeData["route"], bend = 0, at = 0.5): [string, number, number] {
   const scx = s.x + s.w / 2, scy = s.y + s.h / 2, tcx = t.x + t.w / 2, tcy = t.y + t.h / 2;
   if (route === "floating") {
+    if (bend) {
+      // Parallel relations between the same pair arc to opposite sides (stable for A→B / B→A).
+      const flip = scx < tcx || (scx === tcx && scy < tcy) ? 1 : -1;
+      const dx = tcx - scx, dy = tcy - scy, len = Math.hypot(dx, dy) || 1, k = bend * flip * Math.min(70, len * 0.22);
+      const cx = (scx + tcx) / 2 - (dy / len) * k, cy = (scy + tcy) / 2 + (dx / len) * k;
+      const [x1, y1] = border(s, cx, cy), [x2, y2] = border(t, cx, cy);
+      const a = (1 - at) ** 2, b = 2 * at * (1 - at), c = at ** 2;
+      return [`M ${x1} ${y1} Q ${cx} ${cy} ${x2} ${y2}`, a * x1 + b * cx + c * x2, a * y1 + b * cy + c * y2];
+    }
     const [x1, y1] = border(s, tcx, tcy), [x2, y2] = border(t, scx, scy);
-    return [`M ${x1} ${y1} L ${x2} ${y2}`, (x1 + x2) / 2, (y1 + y2) / 2];
+    return [`M ${x1} ${y1} L ${x2} ${y2}`, x1 + (x2 - x1) * at, y1 + (y2 - y1) * at];
   }
   const reach = (s.w + t.w) / 2 - 1, dx = tcx - scx;
   if (dx > reach) {
@@ -44,7 +57,7 @@ function SupplyEdgeView({ source, target, markerEnd, data, selected }: EdgeProps
   const s = useInternalNode(source), t = useInternalNode(target);
   const [hover, setHover] = useState(false);
   if (!s || !t || !data) return null;
-  const [path, lx, ly] = geometry(box(s), box(t), data.route);
+  const [path, lx, ly] = geometry(box(s), box(t), data.route, data.bend, data.labelAt);
   const e = data.edge;
   const showLabel = hover || selected || data.active;
   return <>

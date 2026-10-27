@@ -1,14 +1,16 @@
 /** Pure graph model + deterministic layouts for the supply-chain canvas.
  *
- * Layout is a small Sugiyama-style layered placement: the layer (column) of every node is
- * fixed by its ontology kind, so only in-layer ordering (barycenter sweeps) and column
- * wrapping are computed. That keeps the result deterministic, synchronous (no layout jump,
- * no web worker) and dependency-free — elkjs would add ~1.5 MB for a ~140-node graph.
+ * - network (default): force-directed (see force-layout.ts) — position comes from the relations,
+ *   not from the node kind; ecosystems form loose regions in scope "all".
+ * - layers: Sugiyama-style columns fixed by ontology kind (secondary view).
+ * - impact: radial focus + context around the selected node, one ring per hop.
+ * All layouts are synchronous and deterministic (no layout jump, no web worker, no elkjs).
  */
 import { seed, type Edge, type EcoId, type GraphNode } from "@/lib/research-client";
+import { forceLayout } from "./force-layout";
 
 export type Scope = EcoId | "all";
-export type Mode = "layers" | "clusters" | "impact";
+export type Mode = "network" | "layers" | "impact";
 export type Trust = "all" | "documented";
 export type Epistemic = "documented" | "claimed" | "inferred";
 export type Vec = { x: number; y: number };
@@ -109,9 +111,9 @@ const SUB_GAP = 26;
 const LAYER_GAP = 96;
 const BAND_GAP = 110;
 
-/** Text guides drawn in flow coordinates; (x, y) is the bottom-left anchor of the label.
- *  `stacked` column headers sit one line above the first band's label. */
-export type Guide = { x: number; y: number; w: number; label: string; kind: "column" | "band"; color?: string; stacked?: boolean };
+/** Text guides drawn in flow coordinates; (x, y) is the bottom-left anchor of the label
+ *  (the centre for "region"). `stacked` column headers sit one line above the first band's label. */
+export type Guide = { x: number; y: number; w: number; label: string; kind: "column" | "band" | "region"; color?: string; stacked?: boolean };
 export type Layout = { positions: Map<string, Vec>; guides: Guide[] };
 export type Viewport = { w: number; h: number };
 
@@ -206,7 +208,66 @@ export function layeredLayout(nodes: GraphNode[], edges: Edge[], scope: Scope, v
   return placeColumns(filtered, vp, keep.map((x) => LAYER_NAME[x.i]), bands.map((id) => ({ label: ECO_NAME[id], color: ECOS.find((e) => e.id === id)?.color })));
 }
 
-/** Focus + context: selected node in the middle, upstream hops to the left, downstream to the right. */
+/** Viewport aspect, bucketed so small window differences give the identical drawing. */
+function aspectBucket(vp: Viewport): number {
+  const a = vp.w / vp.h;
+  return a >= 1.55 ? 1.8 : a >= 1.15 ? 1.35 : a >= 0.8 ? 1 : 0.7;
+}
+const isStrong = (e: Edge) => epistemic(e) === "documented";
+
+/** Network (default): force-directed, position independent of node kind. In scope "all" each
+ *  ecosystem gets a weak anchor so hbm / optics / power form loose regions; multi-ecosystem
+ *  nodes have no anchor and settle between them. */
+export function networkLayout(nodes: GraphNode[], edges: Edge[], scope: Scope, vp: Viewport): Layout {
+  const groupOf = (n: GraphNode) => (scope === "all" && !(n.also_in?.length) ? ecoOf(n) : null);
+  const positions = forceLayout(
+    nodes.map((n) => ({ id: n.id, group: groupOf(n) })),
+    edges.map((e) => ({ source: e.from, target: e.to, strong: isStrong(e) })),
+    { w: NODE_W, h: NODE_H, aspect: aspectBucket(vp), groups: ECOS.map((e) => e.id) },
+  );
+  return { positions, guides: scope === "all" ? regionLabels(nodes, positions, groupOf, vp) : [] };
+}
+
+/** Ecosystem names for the network view: for each region, the free spot nearest its centroid
+ *  (no card underneath, inside the drawing, and closer to its own cards than to any other
+ *  region's). Label size is estimated at the fit-to-view zoom, matching .sc-guide-region. */
+function regionLabels(nodes: GraphNode[], positions: Map<string, Vec>, groupOf: (n: GraphNode) => string | null, vp: Viewport): Guide[] {
+  const P = nodes.map((n) => ({ g: groupOf(n), p: positions.get(n.id)! }));
+  const x0 = Math.min(...P.map((q) => q.p.x)), y0 = Math.min(...P.map((q) => q.p.y));
+  const x1 = Math.max(...P.map((q) => q.p.x)) + NODE_W, y1 = Math.max(...P.map((q) => q.p.y)) + NODE_H;
+  const z = Math.min(1, Math.max(0.08, Math.min((vp.w - 86) / (x1 - x0), (vp.h - 110) / (y1 - y0))));
+  const font = Math.min(64, Math.max(14, 14 / z));
+  const taken: { x: number; y: number; w: number; h: number }[] = P.map((q) => ({ x: q.p.x - 10, y: q.p.y - 10, w: NODE_W + 20, h: NODE_H + 20 }));
+  const hit = (a: { x: number; y: number; w: number; h: number }) => taken.some((b) => a.x < b.x + b.w && b.x < a.x + a.w && a.y < b.y + b.h && b.y < a.y + a.h);
+  const guides: Guide[] = [];
+  for (const eco of ECOS) {
+    const own = P.filter((q) => q.g === eco.id);
+    if (!own.length) continue;
+    const cx = own.reduce((s, q) => s + q.p.x, 0) / own.length + NODE_W / 2, cy = own.reduce((s, q) => s + q.p.y, 0) / own.length + NODE_H / 2;
+    const lw = eco.name.length * font * 0.86, lh = font * 1.5;
+    let best: { x: number; y: number; d: number } | null = null;
+    for (let x = x0 + lw / 2; x <= x1 - lw / 2; x += font / 2) {
+      for (let y = y0 + lh / 2; y <= y1 - lh / 2; y += font / 2) {
+        const d = Math.hypot(x - cx, (y - cy) * 1.6);
+        if (best && d >= best.d) continue;
+        if (hit({ x: x - lw / 2, y: y - lh / 2, w: lw, h: lh })) continue;
+        let nearest = Infinity, mine = false;
+        for (const q of P) {
+          const dd = Math.hypot(q.p.x + NODE_W / 2 - x, q.p.y + NODE_H / 2 - y);
+          if (dd < nearest) { nearest = dd; mine = q.g === eco.id; }
+        }
+        if (mine) best = { x, y, d };
+      }
+    }
+    if (!best) continue;
+    taken.push({ x: best.x - lw / 2, y: best.y - lh / 2, w: lw, h: lh });
+    guides.push({ kind: "region", x: best.x, y: best.y, w: 0, label: eco.name, color: eco.color });
+  }
+  return guides;
+}
+
+/** Focus + context, radial: the selected node in the centre, one ring per hop. Upstream nodes
+ *  start on the left half and downstream on the right, then relax with the same forces. */
 export function impactLayout(focus: string, depth: number, nodes: GraphNode[], edges: Edge[], vp: Viewport): Layout {
   const ids = new Set(nodes.map((n) => n.id));
   const out = new Map<string, string[]>(), inc = new Map<string, string[]>();
@@ -225,76 +286,18 @@ export function impactLayout(focus: string, depth: number, nodes: GraphNode[], e
     return dist;
   };
   const down = walk(out), up = walk(inc);
-  const signed = new Map<string, number>();
-  for (const [id, d] of down) signed.set(id, d);
-  for (const [id, d] of up) if (!signed.has(id) || d < signed.get(id)!) signed.set(id, -d);
-  // Nodes connected only through mixed directions (e.g. sibling suppliers) join at their undirected hop.
-  const undirected = neighborhood(focus, depth, adjacency(edges));
-  for (const [id, d] of undirected) if (!signed.has(id)) signed.set(id, d);
-  const min = Math.min(...signed.values()), max = Math.max(...signed.values());
-  const cols: string[][][] = [];
-  const labels: string[] = [];
-  for (let c = min; c <= max; c++) {
-    const list = [...signed].filter(([, d]) => d === c).map(([id]) => id).sort((a, b) => (LAYER[nodeIndex.get(a)!.kind] ?? 4) - (LAYER[nodeIndex.get(b)!.kind] ?? 4) || byKindThenLabel(a, b));
-    if (!list.length) continue;
-    cols.push([list]);
-    labels.push(c === 0 ? "선택 노드" : c < 0 ? `상류 ${-c}단계` : `하류 ${c}단계`);
-  }
-  const sub = new Set(signed.keys());
-  orderColumns(cols, adjacency(edges.filter((e) => sub.has(e.from) && sub.has(e.to))));
-  return placeColumns(cols, vp, labels, null);
-}
-
-/** Ecosystem clusters: the ecosystem root in the centre, one elliptical ring per ontology layer
- *  around it (ellipses because nodes are ~3× wider than tall). Ring order follows the mean angle
- *  of inner-ring neighbours to limit crossings. Scope "all" stacks the clusters vertically. */
-export function clusterLayout(nodes: GraphNode[], edges: Edge[], scope: Scope): Layout {
-  const positions = new Map<string, Vec>();
-  const guides: Guide[] = [];
-  const adj = adjacency(edges);
-  const bands: EcoId[] = scope === "all" ? ECOS.map((e) => e.id) : [scope];
-  const RX = NODE_W + 44, RY = NODE_H + 34, SLOT = 250;
-  let top = 0;
-  bands.forEach((eco) => {
-    const members = nodes.filter((n) => (scope === "all" ? (ecoOf(n) ?? "hbm") === eco : true));
-    const rings = new Map<number, string[]>();
-    for (const n of members) {
-      const l = n.kind === "ecosystem" ? -1 : LAYER[n.kind] ?? 4;
-      (rings.get(l) ?? rings.set(l, []).get(l)!).push(n.id);
-    }
-    const angle = new Map<string, number>();
-    const placed: { list: string[]; rx: number; ry: number }[] = [];
-    let k = 0;
-    for (const l of [...rings.keys()].sort((a, b) => a - b)) {
-      const list = rings.get(l)!.sort(byKindThenLabel);
-      if (l === -1 && list.length === 1) { placed.push({ list, rx: 0, ry: 0 }); angle.set(list[0], -Math.PI / 2); continue; }
-      k++;
-      // Ring must be long enough for its nodes: ellipse perimeter ≈ 2π·sqrt((rx²+ry²)/2).
-      let rx = k * RX, ry = k * RY;
-      const need = (list.length * SLOT) / (2 * Math.PI);
-      const have = Math.sqrt((rx * rx + ry * ry) / 2);
-      if (have < need) { rx *= need / have; ry *= need / have; }
-      const key = new Map(list.map((id, i) => {
-        let sx = 0, sy = 0;
-        for (const nb of adj.get(id) ?? []) { const a = angle.get(nb); if (a !== undefined) { sx += Math.cos(a); sy += Math.sin(a); } }
-        return [id, sx || sy ? Math.atan2(sy, sx) : -Math.PI / 2 + (2 * Math.PI * i) / list.length] as const;
-      }));
-      list.sort((a, b) => ((key.get(a)! + 2.5 * Math.PI) % (2 * Math.PI)) - ((key.get(b)! + 2.5 * Math.PI) % (2 * Math.PI)));
-      list.forEach((id, i) => angle.set(id, -Math.PI / 2 + (2 * Math.PI * i) / list.length));
-      placed.push({ list, rx, ry });
-    }
-    const maxX = Math.max(NODE_W, ...placed.map((p) => p.rx)), maxY = Math.max(NODE_H, ...placed.map((p) => p.ry));
-    const cx = maxX + NODE_W / 2, cy = top + maxY + NODE_H / 2;
-    for (const { list, rx, ry } of placed) {
-      for (const id of list) {
-        const a = angle.get(id)!;
-        positions.set(id, { x: cx + Math.cos(a) * rx - NODE_W / 2, y: cy + Math.sin(a) * ry - NODE_H / 2 });
-      }
-    }
-    guides.push({ kind: "band", x: 0, y: top - 14, w: maxX * 2 + NODE_W, label: ECO_NAME[eco], color: ECOS.find((e) => e.id === eco)?.color });
-    top = cy + maxY + NODE_H / 2 + BAND_GAP + 40;
-  });
-  return { positions, guides };
+  const hop = neighborhood(focus, depth, adjacency(edges));
+  const side = new Map<string, number>();
+  for (const id of hop.keys()) side.set(id, up.has(id) && (!down.has(id) || up.get(id)! < down.get(id)!) ? -1 : down.has(id) ? 1 : 0);
+  const sub = [...hop.keys()];
+  const subSet = new Set(sub);
+  const positions = forceLayout(
+    sub.map((id) => ({ id })),
+    edges.filter((e) => subSet.has(e.from) && subSet.has(e.to)).map((e) => ({ source: e.from, target: e.to, strong: isStrong(e) })),
+    // The inspector column (≈340px) is always open in this view on wide screens.
+    { w: NODE_W, h: NODE_H, aspect: aspectBucket({ w: vp.w > 900 ? vp.w - 340 : vp.w, h: vp.h }), rings: hop, focus, side, ticks: 240 },
+  );
+  return { positions, guides: [] };
 }
 
 /** Only http(s) URLs become links; anything else is shown as text. */
