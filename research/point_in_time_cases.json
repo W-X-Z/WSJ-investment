@@ -1,0 +1,103 @@
+{
+  "version": "2026-10-26.1",
+  "study_type": "retrospective_sentinel_case_study",
+  "non_predictive": true,
+  "definition": "정보 공표 후 첫 확인 가능한 거래일의 조정종가 대비 사후 선정한 평가일 조정종가; 수익률은 배당·거래비용 제외. 매도 시점은 사후 선택으로 편향 있음",
+  "selection_bias_warning": "성공자 표본을 사후 선별했다. 통계적 적중률/실전 전략 성과가 아니다. 평가일을 사후 선택했기 때문에 미래 정보 누수를 초래하지 않도록 별도 통제 필요",
+  "cases": [
+    {
+      "ticker": "CELH",
+      "pattern": "distribution",
+      "public_signal_date": "2020-05-12",
+      "post_signal_entry_date": "2020-05-13",
+      "split_adjusted_entry_close_usd": 2,
+      "retrospective_evaluation_date": "2020-12-31",
+      "split_adjusted_evaluation_close_usd": 16.77,
+      "hypothesis": "대형 유통점 확대가 설탕 없는 에너지음료의 반복 구매를 키운다",
+      "evidence_available_at_signal": "Q1 2020 매출 +95%, 미국 +70%; Walmart 1,500여 매장 진출",
+      "primary_source": "https://ir.celsiusholdingsinc.com/news/news-details/2020/Celsius-Holdings-Delivers-Record-Quarterly-Revenue-of-28.2-Million-for-the-First-Quarter-Up-95/default.aspx",
+      "entry_price_source": "https://www.financecharts.com/stocks/CELH/summary/price-cagr",
+      "evaluation_price_source": "https://www.statmuse.com/money/ask/celh-2020"
+    },
+    {
+      "ticker": "SMCI",
+      "pattern": "physical_bottleneck",
+      "public_signal_date": "2022-08-09",
+      "post_signal_entry_date": "2022-08-12",
+      "split_adjusted_entry_close_usd": 6.53,
+      "retrospective_evaluation_date": "2024-03-13",
+      "split_adjusted_evaluation_close_usd": 118.81,
+      "hypothesis": "고성능 서버·클라우드 컴퓨팅·데이터센터 업그레이드 수요가 서버·랙 매출과 이익으로 연결된다",
+      "evidence_available_at_signal": "FY2022 매출 $5.20B(+46%), 순이익 $285M(+154%)",
+      "primary_source": "https://ir.supermicro.com/news/news-details/2022/Supermicro-Announces-Fourth-Quarter-and-Full-Year-Fiscal-Year-2022-Financial-Results/",
+      "entry_price_source": "https://www.financecharts.com/stocks/SMCI/summary/price",
+      "evaluation_price_source": "https://www.statmuse.com/money/ask/smci-returns-march-2024"
+    },
+    {
+      "ticker": "CVNA",
+      "pattern": "distress_reversal",
+      "public_signal_date": "2023-05-04",
+      "post_signal_entry_date": "2023-05-05",
+      "split_adjusted_entry_close_usd": 1.79,
+      "retrospective_evaluation_date": "2023-12-29",
+      "split_adjusted_evaluation_close_usd": 10.59,
+      "hypothesis": "차량당 이익과 비용 구조가 개선되면 파산 가능성이 줄어 재평가된다",
+      "evidence_available_at_signal": "Q1 총 GPU $4,303(+52%), 연환산 SG&A $1B 감축",
+      "primary_source": "https://investors.carvana.com/news-releases/2023/05-04-2023-211057697",
+      "entry_price_source": "https://www.financecharts.com/stocks/CVNA/summary/price",
+      "evaluation_price_source": "https://www.financecharts.com/stocks/CVNA/summary/price"
+    },
+    {
+      "ticker": "APP",
+      "pattern": "unit_economics",
+      "public_signal_date": "2023-08-09",
+      "post_signal_entry_date": "2023-08-10",
+      "split_adjusted_entry_close_usd": 37.2,
+      "retrospective_evaluation_date": "2024-12-31",
+      "split_adjusted_evaluation_close_usd": 323.83,
+      "hypothesis": "광고 AI 성능 개선이 광고 효율과 영업레버리지를 동시에 높인다",
+      "evidence_available_at_signal": "Q2 2023 AXON 2; 소프트웨어 매출 $406M(+14% QoQ), Adjusted EBITDA $273M(+25% QoQ), 마진 67%",
+      "primary_source": "https://www.sec.gov/Archives/edgar/data/1751008/000175100823000061/exhibit992-lettertoshare.htm",
+      "entry_price_source": "https://www.statmuse.com/money/ask/app-stock-aug-2023",
+      "evaluation_price_source": "https://www.statmuse.com/money/ask/applovin-stock-prices-dec-2024"
+    },
+    {
+      "ticker": "ASTS",
+      "pattern": "technical_derisking",
+      "public_signal_date": "2024-05-15",
+      "post_signal_entry_date": "2024-05-16",
+      "split_adjusted_entry_close_usd": 4.03,
+      "retrospective_evaluation_date": "2024-08-30",
+      "split_adjusted_evaluation_close_usd": 29.04,
+      "hypothesis": "일반 스마트폰과 위성의 직접 통신이 검증되면 통신사와 신규 커버리지 시장이 열린다",
+      "evidence_available_at_signal": "AT&T 2030년까지 확정 상용 계약, 발사 예정 상용 위성 5기",
+      "primary_source": "https://about.att.com/story/2024/ast-spacemobile-commercial-agreement.html",
+      "entry_price_source": "https://www.statmuse.com/money/ask/asts-stock-may-2024",
+      "evaluation_price_source": "https://www.statmuse.com/money/ask/asts-may-2024-through-august-2024"
+    }
+  ],
+  "negative_controls": [
+    {
+      "ticker": "WKHS",
+      "comparison_for": "ASTS",
+      "point_in_time_date": "2020-11-09",
+      "hypothesis": "전기 배송차량과 USPS 대형 계약 기대",
+      "red_flag": "2020 Q3 실제 매출 약 $0.565M, 매출총손실 약 $2.25M; 수주 기대와 사업 실적의 간극",
+      "primary_source": "https://www.sec.gov/Archives/edgar/data/1425287/000162828020016042/wkhs-20201109ex991earn.htm",
+      "subsequent_event_date": "2021-02-23",
+      "subsequent_event": "USPS 계약은 Oshkosh가 수주",
+      "subsequent_source": "https://about.usps.com/newsroom/national-releases/2021/0223-multi-billion-dollar-modernization-of-postal-delivery-vehicle-fleet.htm"
+    },
+    {
+      "ticker": "U",
+      "comparison_for": "APP",
+      "point_in_time_date": "2023-08",
+      "hypothesis": "게임 광고·수익화 플랫폼 기술 혁신",
+      "red_flag": "동일 업종처럼 보이지만 경쟁우위가 소프트웨어 매출과 마진으로 전환되는 속도가 달랐음; 2023 Q2 합병 효과로 매출 성장 착시 주의",
+      "primary_source": "https://www.sec.gov/Archives/edgar/data/1810806/000181080623000128/unity-20230630.htm",
+      "subsequent_event_date": "2024-12-31",
+      "subsequent_event": "2024년 전체 매출 감소, 광고 Grow Solutions 매출 감소",
+      "subsequent_source": "https://www.sec.gov/Archives/edgar/data/1810806/000181080625000026/unity-20241231.htm"
+    }
+  ]
+}
