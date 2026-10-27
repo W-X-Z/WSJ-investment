@@ -1032,7 +1032,7 @@
    "sic": "3674",
    "score": 2.838,
    "node_count": 9,
-   "promoted": false,
+   "promoted": true,
    "nodes": [
     {
      "id": "material:abf",
@@ -1198,7 +1198,7 @@
    "sic": "3674",
    "score": 2.302,
    "node_count": 9,
-   "promoted": false,
+   "promoted": true,
    "nodes": [
     {
      "id": "bottleneck:sic_reliability",
@@ -1456,7 +1456,7 @@
    "sic": "3674",
    "score": 1.856,
    "node_count": 6,
-   "promoted": false,
+   "promoted": true,
    "nodes": [
     {
      "id": "material:sic_wafer",
@@ -1516,7 +1516,7 @@
    "sic": "3674",
    "score": 1.725,
    "node_count": 5,
-   "promoted": false,
+   "promoted": true,
    "nodes": [
     {
      "id": "component:power_converter",
@@ -1675,7 +1675,7 @@
    "sic": "3674",
    "score": 1.471,
    "node_count": 5,
-   "promoted": false,
+   "promoted": true,
    "nodes": [
     {
      "id": "component:fiber_ferrule",
@@ -1727,7 +1727,7 @@
    "sic": "3674",
    "score": 1.405,
    "node_count": 6,
-   "promoted": false,
+   "promoted": true,
    "nodes": [
     {
      "id": "tech:pluggable",
@@ -1970,7 +1970,7 @@
    "sic": "3089",
    "score": 1.196,
    "node_count": 4,
-   "promoted": false,
+   "promoted": true,
    "nodes": [
     {
      "id": "process:cmp",
@@ -2016,7 +2016,7 @@
    "sic": "3674",
    "score": 1.181,
    "node_count": 5,
-   "promoted": false,
+   "promoted": true,
    "nodes": [
     {
      "id": "tech:hybrid_bond",
@@ -2243,7 +2243,7 @@
    "sic": "3674",
    "score": 0.979,
    "node_count": 4,
-   "promoted": false,
+   "promoted": true,
    "nodes": [
     {
      "id": "material:underfill",
@@ -2333,7 +2333,7 @@
    "sic": 3713,
    "score": 0.92,
    "node_count": 2,
-   "promoted": false,
+   "promoted": true,
    "nodes": [
     {
      "id": "gen:800vdc",
@@ -2364,7 +2364,7 @@
    "sic": "3585",
    "score": 0.901,
    "node_count": 2,
-   "promoted": false,
+   "promoted": true,
    "nodes": [
     {
      "id": "tech:cdu",
@@ -2440,7 +2440,7 @@
    "sic": "7372",
    "score": 0.764,
    "node_count": 2,
-   "promoted": false,
+   "promoted": true,
    "nodes": [
     {
      "id": "component:modulator",
@@ -2585,7 +2585,7 @@
    "sic": "3620",
    "score": 0.645,
    "node_count": 2,
-   "promoted": false,
+   "promoted": true,
    "nodes": [
     {
      "id": "gen:800vdc",
@@ -2702,7 +2702,7 @@
    "sic": "3590",
    "score": 0.602,
    "node_count": 2,
-   "promoted": false,
+   "promoted": true,
    "nodes": [
     {
      "id": "component:package_substrate",
@@ -2733,7 +2733,7 @@
    "sic": 6770,
    "score": 0.586,
    "node_count": 2,
-   "promoted": false,
+   "promoted": true,
    "nodes": [
     {
      "id": "bottleneck:liquidcool",
@@ -2934,7 +2934,7 @@
    "sic": "3663",
    "score": 0.503,
    "node_count": 2,
-   "promoted": false,
+   "promoted": true,
    "nodes": [
     {
      "id": "material:inp",
@@ -2989,7 +2989,7 @@
    "sic": "3826",
    "score": 0.461,
    "node_count": 2,
-   "promoted": false,
+   "promoted": true,
    "nodes": [
     {
      "id": "component:dc_busbar",
@@ -3075,7 +3075,7 @@
    "sic": "3674",
    "score": 0.431,
    "node_count": 1,
-   "promoted": false,
+   "promoted": true,
    "nodes": [
     {
      "id": "gen:hbm4",
@@ -3099,7 +3099,7 @@
    "sic": "3674",
    "score": 0.412,
    "node_count": 2,
-   "promoted": false,
+   "promoted": true,
    "nodes": [
     {
      "id": "tech:cpo",
@@ -3285,7 +3285,7 @@
    "sic": "3613",
    "score": 0.375,
    "node_count": 2,
-   "promoted": false,
+   "promoted": true,
    "nodes": [
     {
      "id": "material:sic_wafer",
@@ -3951,7 +3951,7 @@
    "sic": "3560",
    "score": 0.27,
    "node_count": 1,
-   "promoted": false,
+   "promoted": true,
    "nodes": [
     {
      "id": "process:cdu_pump",
@@ -3975,7 +3975,7 @@
    "sic": "3823",
    "score": 0.27,
    "node_count": 1,
-   "promoted": false,
+   "promoted": true,
    "nodes": [
     {
      "id": "process:optical_test",
@@ -3999,7 +3999,7 @@
    "sic": "3714",
    "score": 0.27,
    "node_count": 1,
-   "promoted": false,
+   "promoted": true,
    "nodes": [
     {
      "id": "process:cdu_pump",
@@ -4191,7 +4191,7 @@
    "sic": "3620",
    "score": 0.27,
    "node_count": 1,
-   "promoted": false,
+   "promoted": true,
    "nodes": [
     {
      "id": "component:dc_busbar",
@@ -4552,7 +4552,7 @@
    "sic": "2800",
    "score": 0.263,
    "node_count": 1,
-   "promoted": false,
+   "promoted": true,
    "nodes": [
     {
      "id": "tech:sidecar",
@@ -4936,7 +4936,7 @@
    "sic": "3674",
    "score": 0.224,
    "node_count": 1,
-   "promoted": false,
+   "promoted": true,
    "nodes": [
     {
      "id": "tech:cpo",
@@ -5368,7 +5368,7 @@
    "sic": "3823",
    "score": 0.188,
    "node_count": 1,
-   "promoted": false,
+   "promoted": true,
    "nodes": [
     {
      "id": "component:pic",
@@ -5392,7 +5392,7 @@
    "sic": "3674",
    "score": 0.188,
    "node_count": 1,
-   "promoted": false,
+   "promoted": true,
    "nodes": [
     {
      "id": "component:pic",

@@ -119,6 +119,14 @@ def influence_paths(
     adj = _adjacency(graph, onto)
     for e in graph["edges"]:
         e.setdefault("confidence", edge_confidence(e, onto))
+    start_node = nodes[start]
+    start_eco = start.removeprefix("eco:") if start_node["kind"] == "ecosystem" else start_node.get("ecosystem")
+
+    def same_program(company_id: str) -> bool:
+        """about 이 없는 기업↔기업 관계는 시작 노드와 같은 생태계의 기업으로만 탄다 (전력 공급사가 CPO 경로로 새지 않게)."""
+        c = nodes[company_id]
+        return not start_eco or start_eco in {c.get("ecosystem"), *(c.get("also_in") or [])}
+
     queue = deque([(start, [start], [], 1.0, 1)])
     found: list[dict[str, Any]] = []
     seen: set[tuple[str, ...]] = set()
@@ -131,9 +139,10 @@ def influence_paths(
             seen.add(key)
             # 고객 기업에서는 확인된 거래·인증 관계를 거꾸로 타고 공급사까지 한 번 더 간다
             for nxt, edge, hop in adj.get(cur, ()):
+                chained = edges[-1]["relation"] in ("supplied_to", "qualifying_with")
                 scoped = (
-                    edge.get("about") in visited if edge.get("about") else True
-                )  # 다른 프로그램의 공급사로 새지 않게
+                    edge.get("about") in visited if edge.get("about") else (not chained and same_program(nxt))
+                )  # 다른 프로그램의 공급사로 새지 않게 (about 없는 관계는 같은 생태계·한 번만)
                 if (
                     hop == "reverse"
                     and scoped

@@ -118,7 +118,8 @@ def test_customer_to_supplier_hop_is_scoped_by_program():
     assert {"company:nvda", "company:cohr", "company:lite", "company:fn"} <= cpo
     assert "company:nvts" not in cpo  # 800VDC 파트너는 CPO 경로로 닿지 않는다
     power = {c["company_id"] for c in impact_report(graph(), "gen:800vdc")["companies"]}
-    assert {"company:nvts", "company:vrt", "company:etn"} <= power and "company:cohr" not in power
+    # Coherent 는 SiC 기판 공급사로 800VDC 에도 닿는다 (2026-10-27 확장). 광 전용 기업은 닿지 않는다.
+    assert {"company:nvts", "company:vrt", "company:etn", "company:cohr"} <= power and "company:lite" not in power
 
 
 def test_paths_report_weakest_link_and_listing():

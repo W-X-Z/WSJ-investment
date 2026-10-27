@@ -105,7 +105,7 @@ def main(argv: list[str] | None = None) -> int:
     args = ap.parse_args(argv)
     graph, index = build(load_graph(GRAPH_PATH))
     seed_text = json.dumps(web_seed(graph), ensure_ascii=False, separators=(",", ":")) + "\n"
-    index_text = json.dumps(index, ensure_ascii=False, indent=1) + "\n"
+    index_text = json.dumps(index, ensure_ascii=False, separators=(",", ":")) + "\n"
     disc_text = json.dumps(trim_discovery(json.loads(DISCOVERY_IN.read_text(encoding="utf-8")), graph), ensure_ascii=False, indent=1) + "\n" if DISCOVERY_IN.exists() else None
     if args.check:
         ok = (

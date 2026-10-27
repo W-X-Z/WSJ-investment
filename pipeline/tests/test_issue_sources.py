@@ -104,7 +104,8 @@ def test_sync_rows_respect_db_contracts():
     assert all(n["entity_id"] in ent for n in rows["nodes"] if n["entity_id"])          # FK ontology_nodes.entity_id
     assert all(e["src"] in node_ids and e["dst"] in node_ids for e in rows["edges"])    # FK ontology_edges
     assert ent["company:samsung"]["local_code"] == "005930" and ent["company:samsung"]["ticker"] is None
-    assert ent["company:delta_electronics"]["source"] == "indicator" and not ent["company:delta_electronics"]["in_graph"]
+    assert ent["company:kyec"]["source"] == "indicator" and not ent["company:kyec"]["in_graph"]          # 그래프 밖 지표 기업
+    assert ent["company:delta_electronics"]["source"] == "ontology" and ent["company:delta_electronics"]["in_graph"]  # 그래프로 승격되면 그래프가 원본
     assert clean_name("NVIDIA (NVDA) — HBM·광·전력 공통 수요처") == "NVIDIA"
     # 이슈가 쓸 수 있는 기업 = 그래프 기업 + 그래프 밖 엔티티, 노드는 그래프 노드만
     extra = {n["id"] for n in issues.extra_company_nodes()}

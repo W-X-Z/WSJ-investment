@@ -363,6 +363,757 @@
     ],
     "company:vrt": [
       "vertiv"
+    ],
+    "material:inp_epi_wafer": [
+      "inp epi wafer"
+    ],
+    "material:gaas_substrate": [
+      "gaas substrate"
+    ],
+    "material:gaas_epi_wafer": [
+      "gaas epi wafer"
+    ],
+    "material:indium": [
+      "refined indium"
+    ],
+    "process:mocvd_epitaxy": [
+      "mocvd epitaxy"
+    ],
+    "equipment:mocvd_reactor": [
+      "mocvd reactor"
+    ],
+    "equipment:ion_beam_coater": [
+      "ibd facet coater"
+    ],
+    "process:compound_foundry": [
+      "compound foundry"
+    ],
+    "process:inp_6inch_transition": [
+      "6-inch inp fab"
+    ],
+    "bottleneck:inp_substrate_shortage": [
+      "inp substrate shortage"
+    ],
+    "bottleneck:china_inp_export_control": [
+      "china inp export control"
+    ],
+    "bottleneck:laser_chip_shortage": [
+      "inp laser chip shortage"
+    ],
+    "component:cw_laser": [
+      "cw laser"
+    ],
+    "component:dfb_laser_array": [
+      "cw-wdm laser array"
+    ],
+    "component:els": [
+      "elsfp"
+    ],
+    "component:eml_400g": [
+      "400g"
+    ],
+    "bottleneck:cpo_laser_reliability": [
+      "cpo laser reliability"
+    ],
+    "req:els_pluggable": [
+      "els front-panel"
+    ],
+    "std:oif_elsfp": [
+      "2023-08"
+    ],
+    "std:cw_wdm_msa": [
+      "cw-wdm msa"
+    ],
+    "tech:qd_laser": [
+      "quantum-dot laser"
+    ],
+    "tech:iii_v_on_si": [
+      "iii-v on si"
+    ],
+    "tech:microled_link": [
+      "microled link"
+    ],
+    "tech:optical_io_chiplet": [
+      "optical i",
+      "o chiplet"
+    ],
+    "tech:tfln_modulator": [
+      "tfln modulator"
+    ],
+    "material:lnoi_wafer": [
+      "lnoi",
+      "tfln wafer"
+    ],
+    "material:ln_crystal_wafer": [
+      "ln crystal wafer"
+    ],
+    "tech:eo_polymer_modulator": [
+      "eo polymer modulator"
+    ],
+    "tech:bto_modulator": [
+      "bto modulator"
+    ],
+    "component:si_modulator": [
+      "si mzm"
+    ],
+    "bottleneck:modulator_bw_400g": [
+      "modulator bandwidth",
+      "400g"
+    ],
+    "req:400g_lane": [
+      "3.2t",
+      "400g"
+    ],
+    "process:siph_foundry": [
+      "siph foundry"
+    ],
+    "material:soi_wafer": [
+      "photonics-soi"
+    ],
+    "component:ge_photodetector": [
+      "ge photodetector"
+    ],
+    "bottleneck:siph_capacity": [
+      "siph capacity"
+    ],
+    "product:tsmc_coupe": [
+      "compact universal photonic engine"
+    ],
+    "product:avgo_taurus": [
+      "broadcom taurus bcm83640 3nm 400g",
+      "lane pam4 dsp"
+    ],
+    "product:mrvl_ara": [
+      "marvell ara 3nm 1.6t pam4 dsp"
+    ],
+    "product:mxl_keystone": [
+      "maxlinear keystone 5nm 100g",
+      "lane pam4 dsp"
+    ],
+    "bottleneck:dsp_concentration": [
+      "broadcom"
+    ],
+    "component:modulator_driver": [
+      "driver"
+    ],
+    "std:lpo_msa": [
+      "2025-03",
+      "lpo msa 100g"
+    ],
+    "material:faraday_garnet": [
+      "faraday rotator"
+    ],
+    "component:optical_isolator": [
+      "optical isolator"
+    ],
+    "bottleneck:faraday_rotator_supply": [
+      "faraday rotator supply"
+    ],
+    "tech:on_chip_isolator": [
+      "on-chip isolator"
+    ],
+    "component:micro_optics": [
+      "micro-optics"
+    ],
+    "component:wdm_filter": [
+      "wdm filter"
+    ],
+    "std:ocp_mt_diablo": [
+      "2026-10"
+    ],
+    "gen:pm400vdc": [
+      "mt. diablo"
+    ],
+    "req:touch_safety": [
+      "no-touch",
+      "800v"
+    ],
+    "bottleneck:pdn_lateral_loss": [
+      "pdn loss"
+    ],
+    "bottleneck:mlcc_supply": [
+      "b 1.3"
+    ],
+    "component:psu_power_shelf": [
+      "orv3",
+      "dc psu"
+    ],
+    "component:ibc_800v_50v": [
+      "hv ibc"
+    ],
+    "component:ibc_800v_12v": [
+      "isop"
+    ],
+    "component:smart_power_stage": [
+      "smart power stage"
+    ],
+    "component:tlvr_inductor": [
+      "trans-inductor vr",
+      "tlvr"
+    ],
+    "component:li_ion_bbu_cell": [
+      "high-rate li-ion cell"
+    ],
+    "component:supercapacitor": [
+      "edlc"
+    ],
+    "tech:gpu_power_smoothing": [
+      "power smoothing"
+    ],
+    "component:efuse_hotswap": [
+      "800v",
+      "efuse"
+    ],
+    "component:sscb": [
+      "sscb",
+      "solid-state circuit breaker"
+    ],
+    "component:bidirectional_switch": [
+      "b-tran",
+      "bidirectional switch"
+    ],
+    "component:hv_power_connector": [
+      "hv power connector"
+    ],
+    "component:liquid_cooled_busbar": [
+      "liquid-cooled busbar"
+    ],
+    "component:current_sensor": [
+      "hall"
+    ],
+    "tech:gan_power": [
+      "gan power"
+    ],
+    "component:gan_hv_1200v": [
+      "1250v",
+      "1700v gan"
+    ],
+    "material:gan_on_si_wafer": [
+      "200mm"
+    ],
+    "process:gan_on_si_epitaxy": [
+      "mocvd"
+    ],
+    "process:gan_foundry": [
+      "200mm gan foundry"
+    ],
+    "equipment:sic_cvd_epi": [
+      "sic epi reactor"
+    ],
+    "process:sic_epitaxy": [
+      "sic epitaxy"
+    ],
+    "equipment:sic_pvt_furnace": [
+      "pvt furnace"
+    ],
+    "material:sic_growth_graphite": [
+      "isotropic graphite"
+    ],
+    "material:smartsic_substrate": [
+      "smartsic"
+    ],
+    "material:sic_200mm_substrate": [
+      "8-inch sic"
+    ],
+    "component:digital_controller_mcu": [
+      "digital power controller"
+    ],
+    "component:mlcc_ai": [
+      "high-cap mlcc"
+    ],
+    "component:polymer_cap": [
+      "polymer",
+      "hybrid cap"
+    ],
+    "tech:pcb_embedding": [
+      "embedded power"
+    ],
+    "bottleneck:tcb_supplier_concentration": [
+      "asmpt",
+      "semes"
+    ],
+    "bottleneck:hbm_probe_card_supply": [
+      "formfactor"
+    ],
+    "tech:fluxless_tcb": [
+      "fluxless tcb"
+    ],
+    "tech:ihbm_ice": [
+      "ihbm"
+    ],
+    "process:tsv_deep_etch": [
+      "drie"
+    ],
+    "process:tsv_reveal": [
+      "via reveal"
+    ],
+    "process:wafer_thinning": [
+      "thinning"
+    ],
+    "process:tbdb": [
+      "tbdb"
+    ],
+    "process:post_cmp_clean": [
+      "post-cmp clean"
+    ],
+    "process:warpage_metrology": [
+      "warpage"
+    ],
+    "process:xray_inspection": [
+      "3d x-ray"
+    ],
+    "process:stack_test_kgsd": [
+      "known-good-stack-die"
+    ],
+    "equipment:memory_ate": [
+      "hbm ate"
+    ],
+    "component:dram_probe_card": [
+      "mems",
+      "dram"
+    ],
+    "component:hbm_controller_ip": [
+      "hbm4",
+      "phy ip"
+    ],
+    "product:qnity_stackplane": [
+      "qnity stackplane hb"
+    ],
+    "gen:3p2t": [
+      "3.2t",
+      "400g",
+      "lane"
+    ],
+    "req:fiber_density": [
+      "fiber density"
+    ],
+    "bottleneck:copper_reach": [
+      "copper reach"
+    ],
+    "bottleneck:module_supply": [
+      "module capacity"
+    ],
+    "bottleneck:fiber_supply": [
+      "fiber"
+    ],
+    "bottleneck:vsff_ferrule_supply": [
+      "tmt ferrule"
+    ],
+    "bottleneck:cpo_test_throughput": [
+      "cpo test",
+      "cpo pic"
+    ],
+    "bottleneck:cpo_fiber_attach": [
+      "fiber attach"
+    ],
+    "bottleneck:cpo_engine_yield": [
+      "oe yield"
+    ],
+    "tech:coherent_dci": [
+      "400zr",
+      "800zr"
+    ],
+    "tech:coherent_lite": [
+      "coherent-lite"
+    ],
+    "tech:rf_waveguide_cable": [
+      "e-tube"
+    ],
+    "component:optical_engine": [
+      "optical engine",
+      "pic+eic"
+    ],
+    "component:fau": [
+      "siph"
+    ],
+    "component:cpo_detachable_connector": [
+      "detachable fiber-to-chip"
+    ],
+    "component:cpo_fiber_assembly": [
+      "faceplate-to-chip"
+    ],
+    "component:vsff_connector": [
+      "sn-mt",
+      "vsff"
+    ],
+    "component:hfc_cable": [
+      "high fiber count"
+    ],
+    "component:cable_assembly": [
+      "fiber cable assembly"
+    ],
+    "component:retimer": [
+      "pcie",
+      "ethernet retimer"
+    ],
+    "component:hs_copper_cable": [
+      "flyover"
+    ],
+    "component:switch_asic": [
+      "51.2t",
+      "102.4t"
+    ],
+    "component:ocs_mems": [
+      "mems mirror array"
+    ],
+    "material:optical_fiber": [
+      "g.652.d",
+      "g.657"
+    ],
+    "material:fiber_preform": [
+      "preform"
+    ],
+    "material:cpo_specialty_fiber": [
+      "specialty fiber"
+    ],
+    "process:fiber_attach": [
+      "fiber attach"
+    ],
+    "process:module_assembly": [
+      "module assembly"
+    ],
+    "process:siph_wafer_test": [
+      "owat"
+    ],
+    "process:kgoe_test": [
+      "known-good optical engine"
+    ],
+    "process:photonics_burn_in": [
+      "photonics burn-in"
+    ],
+    "process:cpo_packaging": [
+      "osat",
+      "coupe"
+    ],
+    "equipment:active_alignment": [
+      "active alignment",
+      "fau coupling"
+    ],
+    "equipment:photonics_die_bonder": [
+      "photonics die bonder"
+    ],
+    "equipment:photonics_wafer_prober": [
+      "photonic wafer prober"
+    ],
+    "equipment:photonics_ate": [
+      "photonics ate"
+    ],
+    "equipment:optical_probe_card": [
+      "optical probe card"
+    ],
+    "equipment:laser_burn_in": [
+      "burn-in system"
+    ],
+    "equipment:bert": [
+      "bert",
+      "224g pam4"
+    ],
+    "equipment:ethernet_traffic_test": [
+      "traffic tester"
+    ],
+    "product:lmtr_passage": [
+      "lightmatter passage l200",
+      "l200x 3d cpo"
+    ],
+    "product:mrvl_photonic_fabric": [
+      "celestial ai"
+    ],
+    "req:gw_campus_power": [
+      "grid + on-site"
+    ],
+    "component:distribution_transformer": [
+      "distribution",
+      "dry-type transformer"
+    ],
+    "material:goes": [
+      "goes"
+    ],
+    "component:mv_switchgear": [
+      "mv switchgear",
+      "switchboard"
+    ],
+    "component:hv_switchgear_breaker": [
+      "hv gis",
+      "circuit breaker"
+    ],
+    "bottleneck:interconnection_queue": [
+      "interconnection queue"
+    ],
+    "tech:btm_generation": [
+      "behind-the-meter on-site generation"
+    ],
+    "component:gas_turbine": [
+      "heavy-duty",
+      "aeroderivative",
+      "industrial gt"
+    ],
+    "component:recip_gas_engine": [
+      "reciprocating gas engine genset"
+    ],
+    "component:steam_turbine": [
+      "steam turbine generator set"
+    ],
+    "component:standby_genset": [
+      "standby genset"
+    ],
+    "component:fuel_cell": [
+      "sofc",
+      "mcfc stationary fuel cell"
+    ],
+    "component:sofc_hot_box": [
+      "hot box"
+    ],
+    "component:facility_bess": [
+      "facility bess"
+    ],
+    "tech:dlc_single_phase": [
+      "single-phase dlc"
+    ],
+    "tech:dlc_two_phase": [
+      "two-phase direct-to-chip"
+    ],
+    "component:cdu_inrow": [
+      "in-row liquid-to-liquid cdu"
+    ],
+    "component:l2a_sidecar": [
+      "liquid-to-air sidecar"
+    ],
+    "component:brazed_plate_hx": [
+      "brazed plate heat exchanger"
+    ],
+    "component:manifold": [
+      "rack manifold"
+    ],
+    "component:uqd": [
+      "uqdb quick disconnect"
+    ],
+    "component:leak_detection": [
+      "leak detection"
+    ],
+    "tech:negative_pressure_dlc": [
+      "negative-pressure dlc"
+    ],
+    "process:fluid_management": [
+      "coolant fluid management"
+    ],
+    "material:pg25": [
+      "pg25 tcs coolant"
+    ],
+    "material:immersion_oil": [
+      "hydrocarbon",
+      "bio dielectric oil"
+    ],
+    "tech:immersion_single": [
+      "single-phase immersion"
+    ],
+    "tech:immersion_two_phase": [
+      "two-phase immersion"
+    ],
+    "component:rdhx": [
+      "rear-door heat exchanger",
+      "rdhx"
+    ],
+    "component:dc_cooling_units": [
+      "crah",
+      "fan wall"
+    ],
+    "component:dry_cooler": [
+      "dry cooler"
+    ],
+    "component:cooling_tower": [
+      "evaporative cooling tower"
+    ],
+    "tech:warm_water_cooling": [
+      "warm-water",
+      "chiller-less"
+    ],
+    "tech:dc_chiller": [
+      "dc-powered chiller"
+    ],
+    "component:vapor_chamber": [
+      "3d vapor chamber"
+    ],
+    "tech:microfluidic_in_chip": [
+      "in-chip microfluidic cooling"
+    ],
+    "bottleneck:in_chip_channel_reliability": [
+      "in-chip channel reliability"
+    ],
+    "bottleneck:cowos_capacity": [
+      "cowos capacity"
+    ],
+    "bottleneck:interposer_reticle": [
+      "reticle limit"
+    ],
+    "bottleneck:package_warpage": [
+      "package",
+      "substrate warpage"
+    ],
+    "bottleneck:substrate_capacity": [
+      "substrate capacity"
+    ],
+    "bottleneck:tglass_shortage": [
+      "t-glass shortage"
+    ],
+    "bottleneck:abf_single_source": [
+      "abf single source"
+    ],
+    "bottleneck:carrier_foil_single_source": [
+      "carrier cu foil"
+    ],
+    "bottleneck:glass_crack": [
+      "seware"
+    ],
+    "bottleneck:glass_metal_adhesion": [
+      "glass metallization"
+    ],
+    "bottleneck:msb_supply": [
+      "micro solder ball"
+    ],
+    "tech:cowos_s": [
+      "cowos-s"
+    ],
+    "tech:cowos_l": [
+      "cowos-l"
+    ],
+    "tech:cowos_r": [
+      "cowos-r"
+    ],
+    "tech:soic": [
+      "soic"
+    ],
+    "tech:emib": [
+      "emib"
+    ],
+    "tech:emib_t": [
+      "emib-t"
+    ],
+    "tech:copos": [
+      "copos"
+    ],
+    "tech:foplp": [
+      "foplp"
+    ],
+    "tech:cowop": [
+      "cowop"
+    ],
+    "tech:glass_core_substrate": [
+      "glass core substrate"
+    ],
+    "tech:panel_organic_interposer": [
+      "panel organic interposer"
+    ],
+    "component:silicon_interposer": [
+      "si interposer"
+    ],
+    "component:rdl_interposer": [
+      "rdl interposer"
+    ],
+    "component:lsi_bridge": [
+      "si bridge"
+    ],
+    "component:glass_interposer": [
+      "glass interposer"
+    ],
+    "component:lid_stiffener": [
+      "stiffener"
+    ],
+    "material:t_glass_cloth": [
+      "t-glass",
+      "low-cte cloth"
+    ],
+    "material:low_dk_glass_cloth": [
+      "low-dk ne",
+      "ner glass cloth"
+    ],
+    "material:glass_fiber_yarn": [
+      "ner glass yarn"
+    ],
+    "material:carrier_cu_foil": [
+      "carrier ultra-thin cu foil"
+    ],
+    "material:bt_laminate": [
+      "bt laminate"
+    ],
+    "material:solder_resist": [
+      "solder resist"
+    ],
+    "material:rdl_dielectric": [
+      "pspi"
+    ],
+    "material:ap_photoresist": [
+      "thick pr"
+    ],
+    "material:granular_emc": [
+      "granular emc"
+    ],
+    "material:tim_metal": [
+      "solder",
+      "liquid-metal tim"
+    ],
+    "material:low_cte_glass": [
+      "low-cte glass"
+    ],
+    "material:plating_chemistry": [
+      "plating chemistry"
+    ],
+    "process:cow_bonding": [
+      "chip-on-wafer"
+    ],
+    "process:substrate_sap": [
+      "msap"
+    ],
+    "process:laser_via_drilling": [
+      "laser via drilling"
+    ],
+    "process:substrate_inspection": [
+      "substrate inspection"
+    ],
+    "process:laser_modification_etch": [
+      "lide",
+      "lmce"
+    ],
+    "process:glass_metallization": [
+      "glass metallization"
+    ],
+    "equipment:ap_stepper": [
+      "ap stepper"
+    ],
+    "equipment:ldi": [
+      "maskless"
+    ],
+    "equipment:laser_via_driller": [
+      "laser driller"
+    ],
+    "equipment:ecd_plater": [
+      "ecd plater"
+    ],
+    "equipment:c2s_tc_bonder": [
+      "c2s tcb"
+    ],
+    "equipment:package_dicing_saw": [
+      "package dicer"
+    ],
+    "equipment:tgv_laser": [
+      "tgv laser"
+    ],
+    "equipment:substrate_aoi": [
+      "substrate aoi"
+    ],
+    "equipment:vacuum_cure_oven": [
+      "vacuum cure"
+    ],
+    "equipment:panel_wet_process": [
+      "wet process"
+    ],
+    "equipment:descum_plasma": [
+      "descum"
+    ],
+    "equipment:panel_handling": [
+      "panel handling"
+    ],
+    "product:powertech_pifo": [
+      "chip middle"
     ]
   }
 }
