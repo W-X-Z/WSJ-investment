@@ -12,7 +12,7 @@ on:
       - "pipeline/wsj/ecosystems/issues.py"
       - "pipeline/wsj/ecosystems/sources.py"
       - "pipeline/wsj/ecosystems/indicators.py"
-      - "pipeline/wsj/ecosystems/sync_db.py"
+      - "pipeline/wsj/ecosystems/ideas.py"
       - "research/ecosystems/seed_graph.json"
       - ".github/workflows/issues.yml"
   workflow_dispatch:
@@ -29,6 +29,10 @@ on:
         description: "true 면 규칙 점수만"
         required: false
         default: "false"
+      ideas_model:
+        description: "투자 아이디어 모델: sonnet | opus"
+        required: false
+        default: "sonnet"
 
 concurrency:
   group: issues
@@ -55,9 +59,6 @@ jobs:
       - name: Install
         working-directory: pipeline
         run: pip install -e .
-      - name: Sync ontology and entities (git → DB)
-        working-directory: pipeline
-        run: python -m wsj.ecosystems.sync_db
       - name: Collect, curate and save issues
         working-directory: pipeline
         env:
@@ -69,6 +70,15 @@ jobs:
           args=(run --days "$IN_DAYS" --model "$IN_MODEL" --out data/issues/latest.json)
           [[ "$IN_NO_LLM" == "true" ]] && args+=(--no-llm)
           python -m wsj.ecosystems.issues "${args[@]}" | tee -a "$GITHUB_STEP_SUMMARY"
+      # 투자 아이디어 (ADR-0016): 방금 저장한 이슈 + 지표 + 그래프 → 후보 사슬 → LLM → 검증 → ideas.investment_ideas (1회 ≈ $0.2)
+      - name: Write investment ideas
+        if: ${{ inputs.no_llm != 'true' }}
+        working-directory: pipeline
+        env:
+          IN_IDEAS_MODEL: ${{ inputs.ideas_model || 'sonnet' }}
+        run: |
+          set -euo pipefail
+          python -m wsj.ecosystems.ideas --model "$IN_IDEAS_MODEL" --out data/issues/ideas.json | tee -a "$GITHUB_STEP_SUMMARY"
       - name: Upload output
         if: always()
         uses: actions/upload-artifact@v4

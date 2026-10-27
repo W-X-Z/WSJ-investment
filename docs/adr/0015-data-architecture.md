@@ -75,3 +75,26 @@ ideas.issue_revisions (이력), core.signals·raw.* (SEC·FINRA·연방 수주, 
 - 그래프 노드 이름(id)을 바꾸려면 새 id 추가 → 참조 이전 → 옛 id 비활성 순서가 필요하다 (FK 가 깨진 참조를 막는다).
 - 웹의 캔버스는 여전히 정적 JSON(`ecosystem-seed.json`)을 번들한다 — 같은 git 원본이라 불일치는 없다. 노드 패널에 최근 이슈·지표를 붙일 때는 `v_node_activity` 를 읽는다.
 - 마이그레이션 기록: 0011~0013 설계안은 `supabase/migrations/_unapplied/` 로 옮긴다. 0014 는 적용됐지만 기록이 없었다 → 0017 에서 기록을 보정한다.
+
+## 개정 1 (2026-10-27 저녁): AI 중심으로 단순화 — [ADR-0016](0016-investment-idea-feed.md)
+
+사용자가 데이터는 AI 의 추론 재료이고, 사람은 **투자 아이디어 피드와 근거**만 본다고 정했다. 그래서 사람이 그래프·기업을 탐색하려고 설계했던 부분을 뺐다 (모두 미적용 상태였다).
+
+- **뺀 것:**
+  - `core.entities`·`core.ontology_nodes/edges` (git → DB 미러)와 `sync_db`
+  - 연결 테이블(`issue_nodes`·`issue_entities`·`indicator_*`·`brief_nodes`)과 유지 트리거
+  - `v_entities`·`v_node_activity`·`v_entity_issues`·`v_node_issues`
+  - 기술 전환 전용 테이블(`tech_evidence`·`tech_transitions`·`transition_exposures`)과 뷰
+- **이유:**
+  - AI 엔진은 파이프라인 안에서 git 의 그래프 JSON 을 직접 읽는다.
+  - 화면은 아이디어 행에 담긴 기업·근거 스냅숏만 읽으므로 조인이 필요 없다.
+  - 기술 전환은 아이디어의 한 유형(`transition`)으로 흡수했다 — 그래프의 `develops`·`holds_ip`·`displaces`·성숙도를 엔진이 후보 사슬에 넣는다.
+- **남긴 것 (0017·0018):**
+  - 아이디어 테이블·이력·읽기 모델
+  - 이슈 잠금·이력·병합·★ 파생 열
+  - `v_brief_detail`
+  - 정리 작업: 옛 지표 정의 삭제, 피벗 전 유니버스 은퇴, 세션 큐레이션 잠금·중복 병합·복원
+- **원칙 1~6 은 유지한다.**
+  - 원본은 하나 — 그래프는 git, 사실은 DB.
+  - 사람 판단 보호, 목적 밖 데이터 수집 금지, 실행 기록 한 곳.
+  - 원칙 2(연결 테이블로 무결성)는 파이프라인 검증(그래프 id 만 저장)으로 대신한다.

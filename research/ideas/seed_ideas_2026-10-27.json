@@ -1,0 +1,1356 @@
+[
+ {
+  "idea_key": "78355d199455",
+  "status": "active",
+  "trend": "new",
+  "type": "bottleneck",
+  "title": "AI 기판이 모자랄수록 기판 소재 독점 기업이 먼저 웃는다 — 미쓰이금속",
+  "thesis": "AI 칩용 패키지 기판 업체의 매출과 미국 기판 생산자물가가 함께 뛰며 기판 공급이 빠듯하다는 사실이 확인됐다. 기판 한 장에 꼭 들어가는 극박 동박·솔더레지스트·ABF 는 각각 한 회사가 대부분을 공급해, 기판 증설이 곧 이들 소재사의 물량이 된다.",
+  "stars": 3,
+  "stars_reason": "기판 업체 매출·물가로 병목이 확인됐고, 소재 공급이 사실상 1사에 집중돼 있으며, 점유율은 회사 공식 자료다.",
+  "primary_company": "company:mitsui_kinzoku",
+  "companies": [
+   {
+    "id": "company:mitsui_kinzoku",
+    "name": "Mitsui Mining & Smelting / Mitsui Kinzoku",
+    "ticker": "5706",
+    "exchange": "TSE",
+    "size_band": "mid",
+    "role": "primary",
+    "why": "캐리어 부착 극박 동박 세계 점유율 95% 이상 (회사 자료)"
+   },
+   {
+    "id": "company:taiyo_hd",
+    "name": "Taiyo Holdings",
+    "ticker": "4626",
+    "exchange": "TSE",
+    "size_band": "mid",
+    "role": "peer",
+    "why": "패키지 기판 솔더레지스트 세계 1위권"
+   },
+   {
+    "id": "company:ajinomoto",
+    "name": "Ajinomoto",
+    "ticker": "2802",
+    "exchange": "TSE",
+    "size_band": "large",
+    "role": "peer",
+    "why": "ABF 절연필름 점유율 95% 이상"
+   },
+   {
+    "id": "company:mgc",
+    "name": "Mitsubishi Gas Chemical",
+    "ticker": "4182",
+    "exchange": "TSE",
+    "size_band": "mid",
+    "role": "peer",
+    "why": "BT 레진 기판 코어 적층재 원천 기술"
+   },
+   {
+    "id": "company:unimicron",
+    "name": "Unimicron Technology",
+    "ticker": "3037",
+    "exchange": "TWSE",
+    "size_band": "large",
+    "role": "customer",
+    "why": "ABF 기판 업체, 9월 매출 +65%"
+   }
+  ],
+  "chain": [
+   {
+    "claim": "AI 칩용 ABF 기판을 만드는 Unimicron 의 9월 매출이 전년 대비 65% 늘었고, 미국 베어 PCB 생산자물가는 전년 대비 46% 올랐다.",
+    "evidence": [
+     {
+      "id": "S16",
+      "url": "https://mops.twse.com.tw/mops/#/web/t146sb05?companyId=3037#tw:3037-2026-09",
+      "title": "Unimicron 월매출 2026-09: 18,650,679 NT$ 천 (YoY +64.7%)",
+      "publisher": "TWSE",
+      "date": "2026-10-27",
+      "tier": "official_issuer",
+      "tier_ko": "당사자 공시"
+     },
+     {
+      "id": "S13",
+      "url": "https://data.bls.gov/timeseries/PCU334412334412#bls:PCU334412334412-2026-09",
+      "title": "미국 PPI: 인쇄회로기판(베어) 2026-09: 194.47 index (전년 +45.8%)",
+      "publisher": "BLS",
+      "date": "2026-10-27",
+      "tier": "official_issuer",
+      "tier_ko": "당사자 공시"
+     }
+    ]
+   },
+   {
+    "claim": "삼성전기도 NVIDIA 용 ABF 기판 설비를 늘리는 것으로 보도됐다 — 기판 증설이 이어지고 있다.",
+    "evidence": [
+     {
+      "id": "S22",
+      "url": "https://news.google.com/rss/articles/CBMizgFBVV95cUxOdjRfMkFOeFk4N2NBT3EtR2ppdUNGRGZCZC1VUjZ2X3ZhWUtZekFLcGhjM0I1Ym9DYXVhekZzbTNMeGdWeHp1SDlnc1c3NFpuY015YlQ1MzRvelNYNXV5S2dhekMzQ1ZkUFJlZzlVdzRCUW5MWTNpd3VPalFISHVCWURHUUp4Um9ZcDFQX3pVaDJzcklWekVyeW1BT1c5R0VYcWRMYzZaeDcyMUQ2QklaWkRlRV9xNlUtMElsYl8xcGc3eGFZZXk4cUlzaGd3Zw?oc=5",
+      "title": "Samsung Electro-Mechanics and NVIDIA to expand ABF substrate facilities in South Korea",
+      "publisher": "Global Sources",
+      "date": "2026-10-26",
+      "tier": "third_party_report",
+      "tier_ko": "보도·리서치"
+     }
+    ]
+   },
+   {
+    "claim": "고밀도 패키지 기판은 미세 배선을 위해 캐리어 극박 동박과 솔더레지스트, ABF 절연필름을 반드시 쓴다.",
+    "evidence": [
+     {
+      "id": "G162",
+      "url": "https://em.mitsui-kinzoku.com/en/copper-foil/products/microthin-copper-foil/",
+      "title": "고밀도 패키지 기판 → 캐리어 부착 극박 동박 (Carrier ultra-thin Cu foil) (requires)",
+      "publisher": null,
+      "date": null,
+      "tier": "official_issuer",
+      "tier_ko": "당사자 공시"
+     },
+     {
+      "id": "G156",
+      "url": "https://www.taiyo-hd.co.jp/en/about/group",
+      "title": "고밀도 패키지 기판 → 패키지 기판 솔더 레지스트 (Solder resist) (requires)",
+      "publisher": null,
+      "date": null,
+      "tier": "official_issuer",
+      "tier_ko": "당사자 공시"
+     },
+     {
+      "id": "G80",
+      "url": "https://www.ajinomoto.com/stories/the-ajinomoto-groups-unexpected-role-in-semiconductor-manufacturing-the-insulating-film-abf-born-from-aminoscience",
+      "title": "기판 세미애디티브 배선 (SAP/mSAP) → 미세 배선 패키지 절연·기판 소재 (requires)",
+      "publisher": null,
+      "date": null,
+      "tier": "official_issuer",
+      "tier_ko": "당사자 공시"
+     }
+    ]
+   },
+   {
+    "claim": "이 소재들은 사실상 한 회사씩이 공급한다: 극박 동박은 미쓰이금속 95% 이상, ABF 는 아지노모토 95% 이상, 솔더레지스트는 다이요가 세계 1위권.",
+    "evidence": [
+     {
+      "id": "G163",
+      "url": "https://em.mitsui-kinzoku.com/en/copper-foil/products/microthin-copper-foil/",
+      "title": "캐리어 부착 극박 동박 (Carrier ultra-thin Cu foil) → Mitsui Mining & Smelting / Mitsui Kinzoku (TSE 5706, 비SEC) (offered_by)",
+      "publisher": null,
+      "date": null,
+      "tier": "official_issuer",
+      "tier_ko": "당사자 공시"
+     },
+     {
+      "id": "G78",
+      "url": "https://www.ajinomoto.com/stories/the-ajinomoto-groups-unexpected-role-in-semiconductor-manufacturing-the-insulating-film-abf-born-from-aminoscience",
+      "title": "미세 배선 패키지 절연·기판 소재 → Ajinomoto (TSE 2802, 비SEC) (offered_by)",
+      "publisher": null,
+      "date": null,
+      "tier": "official_issuer",
+      "tier_ko": "당사자 공시"
+     },
+     {
+      "id": "G157",
+      "url": "https://www.taiyo-hd.co.jp/en/about/group",
+      "title": "패키지 기판 솔더 레지스트 (Solder resist) → Taiyo Holdings (TSE 4626, 비SEC) (offered_by)",
+      "publisher": null,
+      "date": null,
+      "tier": "official_issuer",
+      "tier_ko": "당사자 공시"
+     }
+    ]
+   }
+  ],
+  "risks": [
+   {
+    "claim": "유리 코어 기판이 기존 유기 코어를 대체하는 샘플이 나오고 있어, 장기적으로 소재 구성이 바뀔 수 있다.",
+    "evidence": [
+     {
+      "id": "G84",
+      "url": "https://www.trendforce.com/news/2026/04/08/news-apple-reportedly-sources-glass-substrate-samples-directly-signaling-further-in-house-ai-server-chip-push/",
+      "title": "글라스 코어 패키지 기판 (Glass core substrate) → 고밀도 패키지 기판 (substitutes_for)",
+      "publisher": null,
+      "date": "2026-04-08",
+      "tier": "third_party_report",
+      "tier_ko": "보도·리서치"
+     }
+    ]
+   },
+   {
+    "claim": "NVIDIA 가 기판을 없애는 CoWoP 를 개발 중이라는 보도가 있다 (초기 단계).",
+    "evidence": [
+     {
+      "id": "G83",
+      "url": "https://www.trendforce.com/news/2025/12/08/news-tsmcs-cowos-l-s-reportedly-fully-booked-osat-partners-step-up-with-ases-cowop-in-focus",
+      "title": "기판 없는 칩-온-웨이퍼-온-PCB (CoWoP) → 고밀도 패키지 기판 (displaces)",
+      "publisher": null,
+      "date": "2025-12-08",
+      "tier": "third_party_report",
+      "tier_ko": "보도·리서치"
+     }
+    ]
+   }
+  ],
+  "watch": [
+   "Unimicron·Kinsus 10월 월매출 전년 대비 증가율",
+   "미쓰이금속 분기 실적의 극박 동박 판매량·증설 발표",
+   "미국 베어 PCB 생산자물가 10월치"
+  ],
+  "what_changed": null,
+  "nodes": [
+   "bottleneck:copper",
+   "bottleneck:dc_protection",
+   "component:dc_breaker",
+   "component:dc_busbar",
+   "component:eml",
+   "component:optical_laser",
+   "component:package_substrate",
+   "component:photodiode",
+   "gen:1p6t",
+   "gen:800g",
+   "material:abf",
+   "material:inp"
+  ],
+  "ecosystems": [
+   "hbm"
+  ],
+  "signal_refs": [
+   "61cbe101b26518a0fcc4",
+   "ab0a55a93976d9344d9a",
+   "d8951aa75db5f1c156fe"
+  ],
+  "evidence_count": 9,
+  "last_signal_at": "2026-10-27",
+  "updated_at": "2026-10-27T08:03:39.570894+00:00",
+  "model": "claude-opus-5-5 (session)",
+  "method": "session",
+  "usage": null
+ },
+ {
+  "idea_key": "d499818aa147",
+  "status": "active",
+  "trend": "new",
+  "type": "bottleneck",
+  "title": "HBM 을 쌓기 전 '좋은 칩 고르기'가 병목 — 번인 장비 유니테스트",
+  "thesis": "대만 칩 테스트 소모품 업체들의 9월 매출이 80% 넘게 늘며 AI·HBM 테스트 수요가 숫자로 확인됐다. 유니테스트는 SK하이닉스 HBM4 번인 테스터의 양산 인증을 마치고 이 장비로 흑자 전환한 초소형주다.",
+  "stars": 2,
+  "stars_reason": "테스트 수요와 기업 노출은 확인됐지만, 번인 장비 자체의 최근 주문은 아직 확인되지 않았다.",
+  "primary_company": "company:unitest",
+  "companies": [
+   {
+    "id": "company:unitest",
+    "name": "UniTest",
+    "ticker": "086390",
+    "exchange": "KOSDAQ",
+    "size_band": "micro",
+    "role": "primary",
+    "why": "SK하이닉스 HBM4 번인 테스터 양산 인증, 2분기 흑자 전환"
+   },
+   {
+    "id": "company:skhynix",
+    "name": "SK hynix",
+    "ticker": "000660",
+    "exchange": "KRX",
+    "size_band": "mega",
+    "role": "customer",
+    "why": "HBM 최대 공급사, 번인 테스터 고객"
+   },
+   {
+    "id": "company:advantest",
+    "name": "Advantest",
+    "ticker": "6857",
+    "exchange": "TSE",
+    "size_band": "large",
+    "role": "competitor",
+    "why": "메모리 테스터 최대 공급사"
+   },
+   {
+    "id": "company:mpi",
+    "name": "MPI Corporation",
+    "ticker": "6223",
+    "exchange": "TPEx",
+    "size_band": "large",
+    "role": "peer",
+    "why": "프로브카드, 9월 매출 +82%"
+   }
+  ],
+  "chain": [
+   {
+    "claim": "칩 테스트용 소켓·프로브카드를 만드는 WinWay 와 MPI 의 9월 매출이 각각 전년 대비 88%, 82% 늘었다.",
+    "evidence": [
+     {
+      "id": "S20",
+      "url": "https://mops.twse.com.tw/mops/#/web/t146sb05?companyId=6515#tw:6515-2026-09",
+      "title": "WinWay 월매출 2026-09: 1,250,373 NT$ 천 (YoY +87.7%, MoM -26.7%)",
+      "publisher": "TWSE",
+      "date": "2026-10-27",
+      "tier": "official_issuer",
+      "tier_ko": "당사자 공시"
+     },
+     {
+      "id": "S21",
+      "url": "https://mops.twse.com.tw/mops/#/web/t146sb05?companyId=6223#tw:6223-2026-09",
+      "title": "MPI 월매출 2026-09: 2,047,814 NT$ 천 (YoY +82.2%)",
+      "publisher": "TPEx",
+      "date": "2026-10-27",
+      "tier": "official_issuer",
+      "tier_ko": "당사자 공시"
+     }
+    ]
+   },
+   {
+    "claim": "HBM 은 여러 장을 쌓기 때문에 불량 칩 하나가 스택 전체를 버리게 만들어, 적층 전 검사 비용과 중요도가 함께 커진다 (추론).",
+    "evidence": [
+     {
+      "id": "G100",
+      "url": "https://www.storagenewsletter.com/2025/04/17/jedec-and-industry-leaders-collaborate-to-release-jesd270-4-hbm4-standard/",
+      "title": "적층 전 Known-Good-Die 수율 검사 → 적층 전 KGD 웨이퍼 테스트 (프로브·핸들러) (mitigated_by)",
+      "publisher": null,
+      "date": null,
+      "tier": "technical_inference",
+      "tier_ko": "기술 추론"
+     }
+    ]
+   },
+   {
+    "claim": "적층 전 칩을 걸러내는 방법 중 하나가 번인 검사이고, 유니테스트는 SK하이닉스 HBM4 용 번인 테스터의 양산 인증을 마쳤다.",
+    "evidence": [
+     {
+      "id": "G3",
+      "url": "https://www.uni-test.com/kr/ir/ir_notice.php?bgu=view&idx=142",
+      "title": "적층 전 Known-Good-Die 수율 검사 → HBM 번인 (웨이퍼·스택 레벨) (mitigated_by)",
+      "publisher": null,
+      "date": "2026-03-05",
+      "tier": "official_issuer",
+      "tier_ko": "당사자 공시"
+     }
+    ]
+   },
+   {
+    "claim": "유니테스트는 HBM 번인 테스터 덕분에 2분기 흑자로 돌아섰다고 보도됐다.",
+    "evidence": [
+     {
+      "id": "G4",
+      "url": "https://www.uni-test.com/kr/ir/ir_notice.php?bgu=view&idx=148",
+      "title": "HBM 번인 (웨이퍼·스택 레벨) → UniTest (KOSDAQ 086390, 비SEC) (offered_by)",
+      "publisher": null,
+      "date": "2026-08-14",
+      "tier": "official_issuer",
+      "tier_ko": "당사자 공시"
+     }
+    ]
+   }
+  ],
+  "risks": [
+   {
+    "claim": "NVIDIA 의 HBM4 사양 하향과 8단 전환 보도처럼, 고적층 속도가 늦어지면 검사 장비 수요도 늦춰질 수 있다.",
+    "evidence": [
+     {
+      "id": "S5",
+      "url": "https://www.digitimes.com/news/a20261023PD235/tsmc-3nm-demand-samsung-hbm.html",
+      "title": "Podcast highlights: TSMC's 3nm demand story, Samsung HBM shift, and A14 ramp",
+      "publisher": "DigiTimes",
+      "date": "2026-10-26",
+      "tier": "third_party_report",
+      "tier_ko": "보도·리서치"
+     }
+    ]
+   },
+   {
+    "claim": "메모리 테스터는 Advantest 등 대형사가 과점하고 있어 고객이 공급사를 바꾸면 영향이 크다.",
+    "evidence": [
+     {
+      "id": "G1",
+      "url": "https://www.advantest.com/en/products/semiconductor-test-system/memory/t5503hs2/",
+      "title": "적층 전 KGD 웨이퍼 테스트 (프로브·핸들러) → 메모리 테스터 (HBM ATE) (requires)",
+      "publisher": null,
+      "date": null,
+      "tier": "official_issuer",
+      "tier_ko": "당사자 공시"
+     }
+    ]
+   }
+  ],
+  "watch": [
+   "SK하이닉스 HBM4 12단·16단 양산 확대 공식 발표",
+   "유니테스트 3분기 실적의 번인 장비 매출",
+   "MPI·WinWay 10월 월매출"
+  ],
+  "what_changed": null,
+  "nodes": [
+   "bottleneck:hbm_kged",
+   "process:kgd_test"
+  ],
+  "ecosystems": [
+   "hbm"
+  ],
+  "signal_refs": [
+   "ce9f9a31e3d51a8eec95"
+  ],
+  "evidence_count": 5,
+  "last_signal_at": "2026-10-27",
+  "updated_at": "2026-10-27T08:03:39.570894+00:00",
+  "model": "claude-opus-5-5 (session)",
+  "method": "session",
+  "usage": null
+ },
+ {
+  "idea_key": "069c3493e9ad",
+  "status": "active",
+  "trend": "new",
+  "type": "confirmation",
+  "title": "대만 프로브카드가 +82% — HBM 테스트 붐은 일본 프로브카드로도 번진다 (JEM)",
+  "thesis": "대만 프로브카드 업체 MPI 의 9월 매출이 82% 늘었고, FormFactor 는 HBM 프로브카드 사업이 50% 넘게 컸다고 밝혔다. DRAM·HBM 용 프로브카드를 만드는 곳은 몇 곳뿐이라 같은 층의 소형사 일본전자재료(JEM)도 같은 수요에 노출돼 있다.",
+  "stars": 2,
+  "stars_reason": "동종사 매출로 수요는 확인됐지만, JEM 자신의 HBM 매출 비중은 공개 근거가 없다.",
+  "primary_company": "company:jem",
+  "companies": [
+   {
+    "id": "company:jem",
+    "name": "Japan Electronic Materials",
+    "ticker": "6855",
+    "exchange": "TSE",
+    "size_band": "small",
+    "role": "primary",
+    "why": "DRAM 용 MEMS 프로브카드 공급 (회사 제품 자료)"
+   },
+   {
+    "id": "company:form",
+    "name": "Formfactor Inc",
+    "ticker": "FORM",
+    "exchange": "Nasdaq",
+    "size_band": "mid",
+    "role": "peer",
+    "why": "HBM 프로브카드 사업 +50% 이상"
+   },
+   {
+    "id": "company:mjc",
+    "name": "Micronics Japan",
+    "ticker": "6871",
+    "exchange": "TSE",
+    "size_band": "mid",
+    "role": "peer",
+    "why": "메모리 프로브카드 대형 공급사"
+   },
+   {
+    "id": "company:mpi",
+    "name": "MPI Corporation",
+    "ticker": "6223",
+    "exchange": "TPEx",
+    "size_band": "large",
+    "role": "peer",
+    "why": "9월 매출 +82%"
+   }
+  ],
+  "chain": [
+   {
+    "claim": "대만 프로브카드 업체 MPI 의 9월 매출이 전년 대비 82% 늘었다.",
+    "evidence": [
+     {
+      "id": "S21",
+      "url": "https://mops.twse.com.tw/mops/#/web/t146sb05?companyId=6223#tw:6223-2026-09",
+      "title": "MPI 월매출 2026-09: 2,047,814 NT$ 천 (YoY +82.2%)",
+      "publisher": "TPEx",
+      "date": "2026-10-27",
+      "tier": "official_issuer",
+      "tier_ko": "당사자 공시"
+     }
+    ]
+   },
+   {
+    "claim": "HBM 은 여러 스택을 HBM4 속도로 한 번에 시험하는 전용 프로브카드가 필요하다.",
+    "evidence": [
+     {
+      "id": "G93",
+      "url": "https://www.fool.com/earnings/call-transcripts/2026/04/29/formfactor-form-q1-2026-earnings-transcript/",
+      "title": "적층 전 KGD 웨이퍼 테스트 (프로브·핸들러) → DRAM·HBM용 프로브카드 (MEMS) (requires)",
+      "publisher": null,
+      "date": "2026-04-29",
+      "tier": "official_issuer",
+      "tier_ko": "당사자 공시"
+     }
+    ]
+   },
+   {
+    "claim": "적층을 마친 뒤의 스택 검사(KGSD)도 프로브카드를 쓴다 — 검사 횟수가 늘어난다.",
+    "evidence": [
+     {
+      "id": "G96",
+      "url": "https://www.businesswire.com/news/home/20250804458862/en/teradyne-unveils-magnum-7h---the-next-generation-memory-tester-for-high-bandwidth-memory-devices",
+      "title": "적층 후 KGSD 테스트 (Known-Good-Stack-Die) → DRAM·HBM용 프로브카드 (MEMS) (requires)",
+      "publisher": null,
+      "date": "2025-08-04",
+      "tier": "official_issuer",
+      "tier_ko": "당사자 공시"
+     }
+    ]
+   },
+   {
+    "claim": "FormFactor 는 HBM 프로브카드 사업이 50% 넘게 성장했다고 밝혔고, JEM 은 DRAM 전용 MEMS 프로브카드를 판다.",
+    "evidence": [
+     {
+      "id": "G94",
+      "url": "https://www.fool.com/earnings/call-transcripts/2026/04/29/formfactor-form-q1-2026-earnings-transcript/",
+      "title": "DRAM·HBM용 프로브카드 (MEMS) → Formfactor Inc (FORM) (offered_by)",
+      "publisher": null,
+      "date": "2026-04-29",
+      "tier": "official_issuer",
+      "tier_ko": "당사자 공시"
+     },
+     {
+      "id": "G98",
+      "url": "https://www.jem-net.co.jp/en/products/probe",
+      "title": "DRAM·HBM용 프로브카드 (MEMS) → Japan Electronic Materials (TSE 6855, 비SEC) (offered_by)",
+      "publisher": null,
+      "date": null,
+      "tier": "official_issuer",
+      "tier_ko": "당사자 공시"
+     }
+    ]
+   }
+  ],
+  "risks": [
+   {
+    "claim": "공급사가 6곳 안팎으로, 중국 업체까지 들어오면 가격 경쟁이 생길 수 있다.",
+    "evidence": []
+   },
+   {
+    "claim": "JEM 의 HBM 고객·매출 비중은 확인되지 않았다.",
+    "evidence": []
+   }
+  ],
+  "watch": [
+   "MPI·WinWay 10월 월매출",
+   "FormFactor 다음 분기 HBM 프로브카드 매출",
+   "JEM 분기 실적의 메모리 프로브카드 매출"
+  ],
+  "what_changed": null,
+  "nodes": [
+   "bottleneck:hbm_kged",
+   "process:kgd_test"
+  ],
+  "ecosystems": [
+   "hbm"
+  ],
+  "signal_refs": [
+   "ce9f9a31e3d51a8eec95"
+  ],
+  "evidence_count": 5,
+  "last_signal_at": "2026-10-27",
+  "updated_at": "2026-10-27T08:03:39.570894+00:00",
+  "model": "claude-opus-5-5 (session)",
+  "method": "session",
+  "usage": null
+ },
+ {
+  "idea_key": "7848707b5fed",
+  "status": "active",
+  "trend": "new",
+  "type": "confirmation",
+  "title": "대만 InP 에피 업체가 +190% — 같은 일을 하는 영국 IQE",
+  "thesis": "AI 광모듈용 레이저·수광 소자의 원판(InP 에피 웨이퍼)을 만드는 대만 LandMark 의 9월 매출이 190% 늘었다. 같은 InP 에피를 만드는 IQE 는 InP 수요로 기존 설비를 InP 로 돌리고 있다고 밝혀, 같은 수요의 다음 수혜 후보다.",
+  "stars": 2,
+  "stars_reason": "동종사 매출로 수요가 강하게 확인되고 IQE 의 노출도 회사 발표지만, 공급사가 5곳이라 병목 정도는 중간이다.",
+  "primary_company": "company:iqe",
+  "companies": [
+   {
+    "id": "company:iqe",
+    "name": "IQE",
+    "ticker": "IQE",
+    "exchange": "LSE",
+    "size_band": "small",
+    "role": "primary",
+    "why": "InP 수요로 설비를 InP 로 전환 중 (회사 발표)"
+   },
+   {
+    "id": "company:landmark_optoelectronics",
+    "name": "LandMark Optoelectronics",
+    "ticker": "3081",
+    "exchange": "TPEx",
+    "size_band": "mid",
+    "role": "peer",
+    "why": "InP 에피·CW 레이저, 9월 매출 +190%"
+   },
+   {
+    "id": "company:intelliepi",
+    "name": "IntelliEPI",
+    "ticker": "4971",
+    "exchange": "TPEx",
+    "size_band": "small",
+    "role": "peer",
+    "why": "InP 200G PIN 이 주력 매출"
+   }
+  ],
+  "chain": [
+   {
+    "claim": "InP 에피·레이저 업체 LandMark 의 9월 매출이 전년 대비 190%, 광소자 업체 Luxnet 은 98% 늘었다.",
+    "evidence": [
+     {
+      "id": "S18",
+      "url": "https://mops.twse.com.tw/mops/#/web/t146sb05?companyId=3081#tw:3081-2026-09",
+      "title": "LandMark Optoelectronics 월매출 2026-09: 540,492 NT$ 천 (YoY +190.2%)",
+      "publisher": "TPEx",
+      "date": "2026-10-27",
+      "tier": "official_issuer",
+      "tier_ko": "당사자 공시"
+     },
+     {
+      "id": "S19",
+      "url": "https://mops.twse.com.tw/mops/#/web/t146sb05?companyId=4979#tw:4979-2026-09",
+      "title": "Luxnet 월매출 2026-09: 574,774 NT$ 천 (YoY +97.8%)",
+      "publisher": "TPEx",
+      "date": "2026-10-27",
+      "tier": "official_issuer",
+      "tier_ko": "당사자 공시"
+     }
+    ]
+   },
+   {
+    "claim": "800G→1.6T(레인당 200G) 전환에 쓰이는 광검출기는 InP 에피 웨이퍼로 만든다.",
+    "evidence": [
+     {
+      "id": "G104",
+      "url": "https://www.poet-technologies.com/news/poet-technologies-and-lessengers-expand-partnership-to-deliver-1-6t-2xdr4-optical-transceivers-for-ai-network-connectivity",
+      "title": "1.6 Tb/s Ethernet 및 200 Gb/s/lane 전환 → 광검출기 (requires)",
+      "publisher": null,
+      "date": null,
+      "tier": "official_issuer",
+      "tier_ko": "당사자 공시"
+     },
+     {
+      "id": "G39",
+      "url": "https://www.digitimes.com/news/a20260313PD206.html",
+      "title": "광검출기 → InP 에피택시 웨이퍼 (InP epi wafer) (requires)",
+      "publisher": null,
+      "date": "2026-03-13",
+      "tier": "third_party_report",
+      "tier_ko": "보도·리서치"
+     }
+    ]
+   },
+   {
+    "claim": "공동패키징 광학(CPO)은 외부 광원에 기존보다 출력이 훨씬 높은 CW 레이저를 요구해, InP 레이저 수요를 한 번 더 키운다.",
+    "evidence": [
+     {
+      "id": "G42",
+      "url": "https://www.businesswire.com/news/home/20230808055417/en/OIF-Announces-External-Laser-Small-Form-Factor-Pluggable-ELSFP-Implementation-Agreement-Paving-the-Way-for-Advancements-in-Co-Packaged-Optics-Applications",
+      "title": "CPO 광원 열·신뢰성·현장 교체성 (CPO laser reliability) → CPO 외부 레이저 광원 모듈 (ELS/ELSFP) (mitigated_by)",
+      "publisher": null,
+      "date": "2023-08-08",
+      "tier": "standard_body",
+      "tier_ko": "표준 문서"
+     },
+     {
+      "id": "G43",
+      "url": "https://eu.36kr.com/en/p/4023641956355972",
+      "title": "CPO 외부 레이저 광원 모듈 (ELS/ELSFP) → 고출력 CW DFB 레이저 — 실리콘 포토닉스 광원 (CW laser) (requires)",
+      "publisher": null,
+      "date": null,
+      "tier": "third_party_report",
+      "tier_ko": "보도·리서치"
+     }
+    ]
+   },
+   {
+    "claim": "IQE 는 강한 InP 수요로 기존 장비를 InP 생산으로 바꿔 하반기 생산능력을 늘린다고 밝혔다.",
+    "evidence": [
+     {
+      "id": "G123",
+      "url": "https://www.iqep.com/media/press-releases/2026/2026-interim-results/",
+      "title": "InP 에피택시 웨이퍼 (InP epi wafer) → IQE (LSE AIM IQE, 비SEC) (offered_by)",
+      "publisher": null,
+      "date": null,
+      "tier": "official_issuer",
+      "tier_ko": "당사자 공시"
+     }
+    ]
+   }
+  ],
+  "risks": [
+   {
+    "claim": "InP 에피 공급사가 5곳 이상이라 한 곳이 독점적 가격을 받기는 어렵다.",
+    "evidence": []
+   },
+   {
+    "claim": "CPO 의 레이저 출력 요구는 아직 표준·양산 전 단계다.",
+    "evidence": [
+     {
+      "id": "G41",
+      "url": "https://www.businesswire.com/news/home/20230808055417/en/OIF-Announces-External-Laser-Small-Form-Factor-Pluggable-ELSFP-Implementation-Agreement-Paving-the-Way-for-Advancements-in-Co-Packaged-Optics-Applications",
+      "title": "Co-Packaged Optics (CPO) → CPO 광원 열·신뢰성·현장 교체성 (CPO laser reliability) (creates_bottleneck)",
+      "publisher": null,
+      "date": "2023-08-08",
+      "tier": "standard_body",
+      "tier_ko": "표준 문서"
+     }
+    ]
+   }
+  ],
+  "watch": [
+   "IQE 하반기 실적의 InP 매출과 설비 전환 진척",
+   "LandMark·IntelliEPI·VPEC 10월 월매출",
+   "1.6T 광모듈 출하 발표"
+  ],
+  "what_changed": null,
+  "nodes": [
+   "component:eml",
+   "component:optical_laser",
+   "component:package_substrate",
+   "component:photodiode",
+   "gen:1p6t",
+   "gen:800g",
+   "material:abf",
+   "material:inp"
+  ],
+  "ecosystems": [
+   "optics"
+  ],
+  "signal_refs": [
+   "61cbe101b26518a0fcc4"
+  ],
+  "evidence_count": 7,
+  "last_signal_at": "2026-10-27",
+  "updated_at": "2026-10-27T08:03:39.570894+00:00",
+  "model": "claude-opus-5-5 (session)",
+  "method": "session",
+  "usage": null
+ },
+ {
+  "idea_key": "f91a69364823",
+  "status": "active",
+  "trend": "new",
+  "type": "transition",
+  "title": "CPO 가 오면 실리콘 포토닉스 웨이퍼가 먼저 팔린다 — Soitec",
+  "thesis": "NVIDIA 가 광엔진을 인터포저에 올린 CPO 시제품을 공개했고, 업계는 CPO 대량 시험 비용을 줄이는 방법을 찾고 있다 — 양산 준비 단계라는 뜻이다. 실리콘 포토닉스 칩은 전용 SOI 웨이퍼 위에 만들고, Soitec 은 이 웨이퍼 매출이 1억 달러를 넘었다고 밝혔다.",
+  "stars": 2,
+  "stars_reason": "기업 노출은 회사 공식 수치이고 공급도 집중돼 있지만, CPO 양산 자체는 아직 확인 전이다.",
+  "primary_company": "company:soitec",
+  "companies": [
+   {
+    "id": "company:soitec",
+    "name": "Soitec",
+    "ticker": "SOI",
+    "exchange": "Euronext",
+    "size_band": "small",
+    "role": "primary",
+    "why": "Photonics-SOI 매출 FY26 1억 달러 돌파, CPO 인증 물량 증가"
+   },
+   {
+    "id": "company:nvda",
+    "name": "NVIDIA",
+    "ticker": "NVDA",
+    "exchange": "Nasdaq",
+    "size_band": "mega",
+    "role": "customer",
+    "why": "CPO 채택·시제품 공개"
+   }
+  ],
+  "chain": [
+   {
+    "claim": "NVIDIA 가 SEMICON West 2026 에서 광엔진을 실리콘 인터포저에 올리는 CPO 시제품을 공개했다.",
+    "evidence": [
+     {
+      "id": "S47",
+      "url": "https://www.digitimes.com/news/a20261023PD240/nvidia-cpo-interposer-technology-2026.html",
+      "title": "Nvidia unveils OOI CPO prototype for post-2028 AI needs",
+      "publisher": "DigiTimes",
+      "date": "2026-10-25",
+      "tier": "third_party_report",
+      "tier_ko": "보도·리서치"
+     }
+    ]
+   },
+   {
+    "claim": "CPO 는 광 테스트 비용이 제조비에 육박할 만큼 대량 시험이 과제다 — 업계가 양산을 준비하고 있다.",
+    "evidence": [
+     {
+      "id": "S40",
+      "url": "https://news.google.com/rss/articles/CBMirAFBVV95cUxOMmZmMDdsRXRpMHhISkdDQkR6Nnp0LWdPMUJOWnJfUGNDbEVGOW5QSFpfWkpiWE4yb3BoNEFNTEtJUG5ua2tRVU8ySnRSbEhwOF9wcVJRenczZXE4elBGMXdYRWd4MWNhaGJGU2VmRUJZOVhjVV9Vem9mU3g5eUhtRkd6REFNTndwLVd4Tk0tUklGRE9sc3lsWWhodGtNd0R0Wm5JYmJWWW80WVd3?oc=5",
+      "title": "Optical Test Costs Near Manufacturing Expenses in Co-Packaged Optics - News and Statistics",
+      "publisher": "IndexBox",
+      "date": "2026-10-26",
+      "tier": "third_party_report",
+      "tier_ko": "보도·리서치"
+     }
+    ]
+   },
+   {
+    "claim": "광집적회로는 실리콘 포토닉스용 SOI 웨이퍼 위에 만들며, Soitec 의 이 제품 매출은 FY26 에 1억 달러를 넘었고 CPO 인증용 물량이 늘고 있다.",
+    "evidence": [
+     {
+      "id": "G112",
+      "url": "https://www.soitec.com/home/group/newsroom/press-releases/content/2026/05/27/soitec-reports-fiscal-2026-full-year-results",
+      "title": "광집적회로(PIC) → 실리콘 포토닉스용 SOI 웨이퍼 (Photonics-SOI) (requires)",
+      "publisher": null,
+      "date": "2026-05-27",
+      "tier": "official_issuer",
+      "tier_ko": "당사자 공시"
+     },
+     {
+      "id": "G113",
+      "url": "https://www.soitec.com/home/group/newsroom/press-releases/content/2026/05/27/soitec-reports-fiscal-2026-full-year-results",
+      "title": "실리콘 포토닉스용 SOI 웨이퍼 (Photonics-SOI) → Soitec (Euronext SOI, 비SEC) (offered_by)",
+      "publisher": null,
+      "date": "2026-05-27",
+      "tier": "official_issuer",
+      "tier_ko": "당사자 공시"
+     }
+    ]
+   },
+   {
+    "claim": "Soitec 은 차세대 박막 리튬나이오베이트(TFLN) 변조기용 LNOI 웨이퍼도 상용화를 준비한다.",
+    "evidence": [
+     {
+      "id": "G117",
+      "url": "https://semiconductor-today.com/news_items/2025/jun/elena-250625.shtml",
+      "title": "Soitec (Euronext SOI, 비SEC) → 박막 LN 온 인슐레이터 웨이퍼 (LNOI/TFLN wafer) (develops)",
+      "publisher": null,
+      "date": "2025-06-25",
+      "tier": "third_party_report",
+      "tier_ko": "보도·리서치"
+     }
+    ]
+   }
+  ],
+  "risks": [
+   {
+    "claim": "NVIDIA 의 인터포저형 CPO 는 2028년 이후 수요를 겨냥한다 — 매출 본격화까지 시간이 걸릴 수 있다.",
+    "evidence": [
+     {
+      "id": "S47",
+      "url": "https://www.digitimes.com/news/a20261023PD240/nvidia-cpo-interposer-technology-2026.html",
+      "title": "Nvidia unveils OOI CPO prototype for post-2028 AI needs",
+      "publisher": "DigiTimes",
+      "date": "2026-10-25",
+      "tier": "third_party_report",
+      "tier_ko": "보도·리서치"
+     }
+    ]
+   },
+   {
+    "claim": "Intel 은 300mm InP 실리콘 포토닉스를 자체 생산한다고 주장해, 일부 수요가 다른 플랫폼으로 갈 수 있다.",
+    "evidence": [
+     {
+      "id": "S57",
+      "url": "https://news.google.com/rss/articles/CBMiYkFVX3lxTE93TWJEcWsxVTNEeUtrWGdzRE5HZXdqYzdPMEJvdHRRdzE3cHhIOUFrUGF4aEZ0OE5fUERmTXcyemp2VGRrQkQ5LVlqUlUwVTlacHZYSUVNcnp0bGthUU5aQWl3?oc=5",
+      "title": "[News] Intel Claims Industry’s Only High-Volume 300mm InP Silicon Photonics Capability as CPO Gains Momentum",
+      "publisher": "LEDinside",
+      "date": "2026-10-21",
+      "tier": "third_party_report",
+      "tier_ko": "보도·리서치"
+     }
+    ]
+   }
+  ],
+  "watch": [
+   "Soitec 분기 실적의 Photonics-SOI 매출",
+   "NVIDIA·Broadcom CPO 스위치 양산 출하 발표",
+   "TSMC COUPE 양산 일정"
+  ],
+  "what_changed": null,
+  "nodes": [
+   "component:pic",
+   "process:optical_test",
+   "tech:cpo"
+  ],
+  "ecosystems": [
+   "optics",
+   "power"
+  ],
+  "signal_refs": [
+   "3bca5f3a905a7c3981e5",
+   "9aa3f1d9e29ef71491ae"
+  ],
+  "evidence_count": 5,
+  "last_signal_at": "2026-10-26",
+  "updated_at": "2026-10-27T08:03:39.570894+00:00",
+  "model": "claude-opus-5-5 (session)",
+  "method": "session",
+  "usage": null
+ },
+ {
+  "idea_key": "edffc8103fb7",
+  "status": "active",
+  "trend": "new",
+  "type": "transition",
+  "title": "800VDC 데이터센터는 기계식 대신 반도체 차단기가 필요하다 — Ideal Power",
+  "thesis": "OCP 에서 800VDC 데이터센터 계약·공급망 발표가 이어지며 800VDC 가 시연에서 계약 단계로 넘어가고 있다. Ideal Power 의 양방향 반도체 스위치(B-TRAN)는 Power Integrations 와 함께 만든 800VDC 용 상시형 반도체 차단기의 핵심 소자다.",
+  "stars": 2,
+  "stars_reason": "800VDC 전환은 최근 사실로 확인되지만, 이 차단기는 아직 시제품 단계(매출 전)이다.",
+  "primary_company": "company:ipwr",
+  "companies": [
+   {
+    "id": "company:ipwr",
+    "name": "Ideal Power Inc.",
+    "ticker": "IPWR",
+    "exchange": "Nasdaq",
+    "size_band": "micro",
+    "role": "primary",
+    "why": "B-TRAN 양방향 스위치로 800VDC 반도체 차단기 공동 개발"
+   },
+   {
+    "id": "company:powi",
+    "name": "Power Integrations",
+    "ticker": "POWI",
+    "exchange": "Nasdaq",
+    "size_band": "mid",
+    "role": "peer",
+    "why": "공동 개발 상대, 1700V 전원 IC"
+   },
+   {
+    "id": "company:sedg",
+    "name": "SolarEdge Technologies",
+    "ticker": "SEDG",
+    "exchange": "Nasdaq",
+    "size_band": "small",
+    "role": "competitor",
+    "why": "Infineon 과 800VDC 용 반도체 차단기 개발"
+   }
+  ],
+  "chain": [
+   {
+    "claim": "OCP 전후로 Delta·BizLink·LITEON 등의 800VDC 발표와 기가와트 규모 800VDC 계약이 이어졌다.",
+    "evidence": [
+     {
+      "id": "S27",
+      "url": "https://news.google.com/rss/articles/CBMihgJBVV95cUxNZnpqSGhxVmhUZDZkelZXNFlTLUFFaF9iZDBzVXZfODNCTUJGVFg2bzctb1g1eldZaVMtUF9kY0YzS05xYldocHU1SHF5UGxqUFBrVjl4RTkwa21GdktpU3Y1MktHUlNfVVZ6WVo0blF3VElwZlRtZ2pvVTBkQ1U4R1N5TVFQY05IUjcwUlRGVU9paVc4cmRrcEotS183d0t3clVDbzQ4N1VWRnUtZElRMURYM2dyVHd5X0ZTS2VmbW0zMEVtX0FuX20zNzhYOURrQXdEdkxGYU44cWtXd1VrMjZDN2lfZnM0T1ZidzVrTHBOODAzRWlSbERaenZMS1dCbWtyV3F3?oc=5",
+      "title": "Vantage and Heron Power Electronics Announce Gigawatt-Scale 800 VDC Agreement to Accelerate AI Infrastructure Delivery",
+      "publisher": "Business Wire",
+      "date": "2026-10-21",
+      "tier": "third_party_report",
+      "tier_ko": "보도·리서치"
+     },
+     {
+      "id": "S28",
+      "url": "https://news.google.com/rss/articles/CBMia0FVX3lxTE9memNVN1I5dlc5OUZUaS1kaEl4SjJCa1BFZ1I3T05SVmhWcmh6S3ZPRExOSXpsT0FVbW0ta29IOWRVSW8xOTVkQXd4OEd6dEZhd2E2VzQtWXlJOFJocE5tUms1enhRWjBhc013?oc=5",
+      "title": "SolarEdge displays MVAC-to-800 VDC solid-state transformer technology for AI data centers at OCP Global Summit",
+      "publisher": "Energies Media",
+      "date": "2026-10-24",
+      "tier": "third_party_report",
+      "tier_ko": "보도·리서치"
+     }
+    ]
+   },
+   {
+    "claim": "Power Integrations 와 Ideal Power 가 800VDC AI 데이터센터용 상시형 반도체 차단기(SSCB)를 함께 개발한다고 발표했다.",
+    "evidence": [
+     {
+      "id": "S55",
+      "url": "https://semiconductor-today.com/news_items/2026/oct/powerintegrations-161026.shtml",
+      "title": "Power Integrations and Ideal Power collaborate on efficient, always-on solid-state circuit breakers",
+      "publisher": "Semiconductor Today",
+      "date": "2026-10-16",
+      "tier": "third_party_report",
+      "tier_ko": "보도·리서치"
+     },
+     {
+      "id": "S56",
+      "url": "https://news.google.com/rss/articles/CBMiygFBVV95cUxNR3M5SnhTQnR6UmNhVUVxeXZLNHhoZHZPZ1hkcWdNOHdQa08yekVYUFZLbmJWOEZNNVhZVUMyMDAzNTFMNE0yNUJCa2VVNHkzaERzZ3FhdkVOTjlORTY5NF9iSFdESHJKT3NRdEpyYWhjX3VkMkF2NVJpcmU0blZiSEJ5TXhsUmZLNWJjMzZYWl9CVVlpN1BGZHdIMGNfaGdxZHhaU0tCbDBNMHNKM0dKei1TZ3BjZThRUHhPcVF0Ym44aWZSUzl1YUtn?oc=5",
+      "title": "Power Integrations and Ideal Power partner on solid-state circuit breaker technology",
+      "publisher": "New Electronics",
+      "date": "2026-10-22",
+      "tier": "third_party_report",
+      "tier_ko": "보도·리서치"
+     }
+    ]
+   },
+   {
+    "claim": "이 차단기의 핵심은 Ideal Power 의 B-TRAN 양방향 스위치이며, 두 회사는 작동하는 시제품을 시연하고 레퍼런스 디자인을 만들고 있다.",
+    "evidence": [
+     {
+      "id": "G33",
+      "url": "https://s25.q4cdn.com/829851629/files/doc_news/Power-Integrations-and-Ideal-Power-Collaborate-on-Efficient-Always-On-Solid-State-Circuit-Breakers-for-800-VDC-AI-Data-Centers-2026.pdf",
+      "title": "Ideal Power Inc. (IPWR) → 양방향 전력 스위치 (B-TRAN·Bidirectional switch) (develops)",
+      "publisher": null,
+      "date": "2026-10-12",
+      "tier": "official_issuer",
+      "tier_ko": "당사자 공시"
+     },
+     {
+      "id": "G34",
+      "url": "https://s25.q4cdn.com/829851629/files/doc_news/Power-Integrations-and-Ideal-Power-Collaborate-on-Efficient-Always-On-Solid-State-Circuit-Breakers-for-800-VDC-AI-Data-Centers-2026.pdf",
+      "title": "Ideal Power Inc. (IPWR) → 반도체 차단기 (SSCB, Solid-State Circuit Breaker) (develops)",
+      "publisher": null,
+      "date": "2026-10-12",
+      "tier": "official_issuer",
+      "tier_ko": "당사자 공시"
+     }
+    ]
+   }
+  ],
+  "risks": [
+   {
+    "claim": "아직 시제품·레퍼런스 디자인 단계라 매출은 확인되지 않았다.",
+    "evidence": [
+     {
+      "id": "G34",
+      "url": "https://s25.q4cdn.com/829851629/files/doc_news/Power-Integrations-and-Ideal-Power-Collaborate-on-Efficient-Always-On-Solid-State-Circuit-Breakers-for-800-VDC-AI-Data-Centers-2026.pdf",
+      "title": "Ideal Power Inc. (IPWR) → 반도체 차단기 (SSCB, Solid-State Circuit Breaker) (develops)",
+      "publisher": null,
+      "date": "2026-10-12",
+      "tier": "official_issuer",
+      "tier_ko": "당사자 공시"
+     }
+    ]
+   },
+   {
+    "claim": "SolarEdge·Infineon 등 대형사도 800VDC 용 반도체 차단기를 개발하고 있다.",
+    "evidence": [
+     {
+      "id": "G36",
+      "url": "https://www.eenewseurope.com/en/infineon-and-solaredge-bring-solid-state-protection-to-800-vdc-ai-data-centers/",
+      "title": "SolarEdge Technologies (SEDG) → 반도체 차단기 (SSCB, Solid-State Circuit Breaker) (develops)",
+      "publisher": null,
+      "date": "2026-09-10",
+      "tier": "third_party_report",
+      "tier_ko": "보도·리서치"
+     }
+    ]
+   }
+  ],
+  "watch": [
+   "SSCB 레퍼런스 디자인 출시와 첫 고객 채택 발표",
+   "NVIDIA 800VDC 파트너 목록에 반도체 차단기 공급사 포함 여부",
+   "Ideal Power 분기 실적의 디자인윈 수"
+  ],
+  "what_changed": null,
+  "nodes": [
+   "component:bidirectional_switch",
+   "component:dc_breaker",
+   "component:planar_transformer",
+   "component:sscb",
+   "gen:1p6t",
+   "gen:800vdc",
+   "req:800v",
+   "tech:directmv"
+  ],
+  "ecosystems": [
+   "power"
+  ],
+  "signal_refs": [
+   "5242a52ae2e0b769ad2d",
+   "e11140a34dd0a5d74fac"
+  ],
+  "evidence_count": 6,
+  "last_signal_at": "2026-10-24",
+  "updated_at": "2026-10-27T08:03:39.570894+00:00",
+  "model": "claude-opus-5-5 (session)",
+  "method": "session",
+  "usage": null
+ },
+ {
+  "idea_key": "b855b23548c3",
+  "status": "active",
+  "trend": "new",
+  "type": "bottleneck",
+  "title": "AI 랙 전력이 커질수록 버스바 매출이 는다 — Methode, 단 800VDC 는 구리를 줄인다",
+  "thesis": "AI 랙에 전력을 나르는 구리 버스바 수요로 Methode 의 데이터센터 버스바 매출이 연 8천만 달러에서 1억 2천만 달러 수준으로 커질 것으로 회사가 제시했다. 다만 800VDC 로 전압이 오르면 같은 전력에 구리가 덜 들어가므로, 성장 폭은 전환 속도에 달려 있다.",
+  "stars": 1,
+  "stars_reason": "기업 노출은 보도로 확인되나, 최근 신호는 구리 물가뿐이고 800VDC 가 오히려 물량을 줄일 수 있다(추론).",
+  "primary_company": "company:mei",
+  "companies": [
+   {
+    "id": "company:mei",
+    "name": "Methode Electronics",
+    "ticker": "MEI",
+    "exchange": "NYSE",
+    "size_band": "small",
+    "role": "primary",
+    "why": "데이터센터 버스바 매출 FY26 8천만 달러, FY27 1억 2천만 달러 수준 제시"
+   },
+   {
+    "id": "company:mersen",
+    "name": "Mersen",
+    "ticker": "MRN",
+    "exchange": "Euronext",
+    "size_band": "small",
+    "role": "peer",
+    "why": "DC 버스바 공급"
+   },
+   {
+    "id": "company:rog",
+    "name": "Rogers Corporation",
+    "ticker": "ROG",
+    "exchange": "NYSE",
+    "size_band": "mid",
+    "role": "peer",
+    "why": "버스바 공급"
+   }
+  ],
+  "chain": [
+   {
+    "claim": "미국 구리 압연·인발 생산자물가가 전년 대비 30% 올랐다 — 버스바 원가와 판가가 함께 오른다.",
+    "evidence": [
+     {
+      "id": "S15",
+      "url": "https://data.bls.gov/timeseries/PCU331420331420#bls:PCU331420331420-2026-09",
+      "title": "미국 PPI: 구리 압연·인발 2026-09: 187.723 index (전년 +30.3%)",
+      "publisher": "BLS",
+      "date": "2026-10-27",
+      "tier": "official_issuer",
+      "tier_ko": "당사자 공시"
+     }
+    ]
+   },
+   {
+    "claim": "800VDC 배전에서도 랙 안 전력 분배에는 DC 버스바가 필요하다.",
+    "evidence": [
+     {
+      "id": "G71",
+      "url": "https://www.opencompute.org/news/powering-the-next-era-of-ai-how-google-microsoft-and-nvidia-are-standardizing-and-accelerating-the-industry-transition-to-lvdc/",
+      "title": "차세대 800VDC 배전 아키텍처 → DC Busbar 구리·절연재 (requires)",
+      "publisher": null,
+      "date": null,
+      "tier": "official_issuer",
+      "tier_ko": "당사자 공시"
+     }
+    ]
+   },
+   {
+    "claim": "Methode 는 데이터센터 버스바 매출이 FY2026 8천만 달러에서 FY2027 1억 2천만 달러 수준으로 늘 것이라고 제시했다.",
+    "evidence": [
+     {
+      "id": "G102",
+      "url": "https://mscliffnotes.substack.com/p/research-pipeline-session-20-a-mispriced",
+      "title": "DC Busbar 구리·절연재 → Methode Electronics (MEI) (offered_by)",
+      "publisher": null,
+      "date": "2026-06-03",
+      "tier": "third_party_report",
+      "tier_ko": "보도·리서치"
+     }
+    ]
+   }
+  ],
+  "risks": [
+   {
+    "claim": "800VDC 는 전류를 낮춰 구리 사용량을 줄일 수 있다 (추론).",
+    "evidence": [
+     {
+      "id": "G21",
+      "url": "https://developer.nvidia.com/blog/nvidia-800-v-hvdc-architecture-will-power-the-next-Generation-of-ai-factories",
+      "title": "800VDC 배전 아키텍처 (NVIDIA 2027 1MW 랙 목표) → DC Busbar 구리·절연재 (displaces)",
+      "publisher": null,
+      "date": "2025-05-20",
+      "tier": "technical_inference",
+      "tier_ko": "기술 추론"
+     }
+    ]
+   },
+   {
+    "claim": "버스바 공급사가 여럿(Mersen·Rogers 등)이라 가격 결정력은 제한적이다.",
+    "evidence": [
+     {
+      "id": "G70",
+      "url": "https://us.mersen.com/en",
+      "title": "DC Busbar 구리·절연재 → Mersen (Euronext MRN, 비SEC) (offered_by)",
+      "publisher": null,
+      "date": null,
+      "tier": "official_issuer",
+      "tier_ko": "당사자 공시"
+     }
+    ]
+   }
+  ],
+  "watch": [
+   "Methode 분기 실적의 데이터센터 버스바 매출",
+   "NVIDIA 800VDC 랙의 버스바 사양 공개",
+   "구리 생산자물가 추이"
+  ],
+  "what_changed": null,
+  "nodes": [
+   "bottleneck:copper",
+   "bottleneck:dc_protection",
+   "component:dc_breaker",
+   "component:dc_busbar",
+   "component:package_substrate"
+  ],
+  "ecosystems": [
+   "power"
+  ],
+  "signal_refs": [
+   "d8951aa75db5f1c156fe"
+  ],
+  "evidence_count": 3,
+  "last_signal_at": "2026-10-27",
+  "updated_at": "2026-10-27T08:03:39.570894+00:00",
+  "model": "claude-opus-5-5 (session)",
+  "method": "session",
+  "usage": null
+ },
+ {
+  "idea_key": "c5203d63e154",
+  "status": "active",
+  "trend": "new",
+  "type": "transition",
+  "title": "하이브리드 본딩 장비, BESI 독주에 도전자가 몰린다 — 다만 HBM 적용은 HBM5 부터",
+  "thesis": "AMAT 이 BESI 지분을 늘리는 사이 ASML 특허와 중국 장비사의 진입 소식이 나와, BESI 가 사실상 쥐고 있던 하이브리드 본더 시장에 경쟁이 붙고 있다. SUSS 도 HBM 용 하이브리드 본더로 들어왔지만, SK하이닉스는 HBM4·4E 에 기존 범프 방식을 쓰고 하이브리드 본딩은 HBM5 로 미뤘다.",
+  "stars": 1,
+  "stars_reason": "경쟁 구도 변화는 확인되지만 HBM 적용 시점이 멀고 도전자들의 수주는 확인 전이다.",
+  "primary_company": "company:suss",
+  "companies": [
+   {
+    "id": "company:suss",
+    "name": "SUSS MicroTec",
+    "ticker": "SMHN",
+    "exchange": "Xetra",
+    "size_band": "small",
+    "role": "primary",
+    "why": "HBM·첨단 로직용 하이브리드 본더(D2W·W2W) 진입"
+   },
+   {
+    "id": "company:besi",
+    "name": "BE Semiconductor Industries",
+    "ticker": "BESI",
+    "exchange": "Euronext",
+    "size_band": "large",
+    "role": "displaced",
+    "why": "하이브리드 본더 선두, 경쟁 심화 시 점유율 압박"
+   },
+   {
+    "id": "company:amat",
+    "name": "Applied Materials",
+    "ticker": "AMAT",
+    "exchange": "Nasdaq",
+    "size_band": "mega",
+    "role": "peer",
+    "why": "BESI 전략 지분 확대"
+   },
+   {
+    "id": "company:skhynix",
+    "name": "SK hynix",
+    "ticker": "000660",
+    "exchange": "KRX",
+    "size_band": "mega",
+    "role": "customer",
+    "why": "하이브리드 본딩은 HBM5 부터"
+   }
+  ],
+  "chain": [
+   {
+    "claim": "Applied Materials 가 BESI 전략 투자를 늘린다고 8-K 로 공시했고, BESI 는 하이브리드 본딩 수요의 탄력이 커진다고 밝혔다.",
+    "evidence": [
+     {
+      "id": "S26",
+      "url": "https://www.sec.gov/Archives/edgar/data/6951/000162828026067303/ex991prforprojectbasil.htm",
+      "title": "APPLIED MATERIALS INC /DE: Applied Materials to Increase its Strategic Investment in BE Semiconductor Industries Applied enters into agreement to increase its…",
+      "publisher": "SEC EDGAR (APPLIED MATERIALS INC /DE)",
+      "date": "2026-10-26",
+      "tier": "official_issuer",
+      "tier_ko": "당사자 공시"
+     },
+     {
+      "id": "S30",
+      "url": "https://news.google.com/rss/articles/CBMihwFBVV95cUxNRlNlWXVHSzRxUkY5bjlqQ0RwREFOTEpqWlNjVWswWExVdVlScUt2VkFfTFU1ajlSYTc1N0dHdDl6UmEwWlp3VUtPekNjUmtLc1VlYTRuYkdpOUlUTDlsQ0VMcWZSVW9yV2FrTDJweXhJNXNBb3BuSkJxVFI2MUdJM204cjVEenc?oc=5",
+      "title": "Besi sees increasing momentum for hybrid bonding",
+      "publisher": "Bits&Chips",
+      "date": "2026-10-23",
+      "tier": "third_party_report",
+      "tier_ko": "보도·리서치"
+     }
+    ]
+   },
+   {
+    "claim": "같은 주 ASML 의 하이브리드 본딩 장비 특허와 NAURA·Piotech·AMEC 등 중국 장비사의 진입 소식이 나왔다.",
+    "evidence": [
+     {
+      "id": "S31",
+      "url": "https://news.google.com/rss/articles/CBMiW0FVX3lxTE1xSFpDQ1Z1OUJWQzdMSElZOS1NWWxPZ3dlM3h3V2ppTUJpTmpUS0daV1dfZ2MzbDd6dzF3cWJ0WmJNZ2lub2ZCOF9mYUYwN2sxZkR0aWY0bjQ4Q0E?oc=5",
+      "title": "ASML's Hybrid Bonding Patents Reveal a Carousel Design Aimed at BESI's Turf",
+      "publisher": "BigGo Finance",
+      "date": "2026-10-23",
+      "tier": "third_party_report",
+      "tier_ko": "보도·리서치"
+     },
+     {
+      "id": "S32",
+      "url": "https://news.google.com/rss/articles/CBMiZkFVX3lxTE01N3ZaZmxaSTdUdjhXMllLRjlJZVhiMlROWkdDSHRORE9iaDZFdS1VNVFiejhvSktobEluaTQyc0kzMGhSRUJRZEcwNi1xdE82TVpFXzdaVHJFX05PYjRaZDZZU1FDdw?oc=5",
+      "title": "Chinese Semiconductor Equipment Manufacturers to Strengthen Hybrid Bonding: NAURA, Piotech, and AMEC Launch Offensive in 3D Integration",
+      "publisher": "note",
+      "date": "2026-10-24",
+      "tier": "third_party_report",
+      "tier_ko": "보도·리서치"
+     }
+    ]
+   },
+   {
+    "claim": "SUSS MicroTec 은 HBM·첨단 로직용 하이브리드 본더(D2W·W2W)로 시장에 들어왔다.",
+    "evidence": [
+     {
+      "id": "G153",
+      "url": "https://www.suss.com/ko/content/download/3341/file/2026_05_SUSS_Investor%20Presentation_May%202026.pdf",
+      "title": "SUSS MicroTec (Xetra SMHN, 비SEC) → 웨이퍼·다이 하이브리드 본더 (develops)",
+      "publisher": null,
+      "date": null,
+      "tier": "official_issuer",
+      "tier_ko": "당사자 공시"
+     }
+    ]
+   },
+   {
+    "claim": "그러나 SK하이닉스는 HBM4·HBM4E 에 마이크로범프를 유지하고 하이브리드 본딩은 HBM5 로 미뤘다.",
+    "evidence": [
+     {
+      "id": "G9",
+      "url": "https://bits-chips.com/article/besi-faces-longer-wait-as-sk-hynix-pushes-hybrid-bonding-to-hbm5/",
+      "title": "SK hynix (KRX 000660, 비SEC) → 하이브리드 본딩 (defers)",
+      "publisher": null,
+      "date": "2026-08-26",
+      "tier": "third_party_report",
+      "tier_ko": "보도·리서치"
+     }
+    ]
+   }
+  ],
+  "risks": [
+   {
+    "claim": "HBM 의 하이브리드 본딩 전환은 16~20단 수율이 먼저 풀려야 한다는 가설 단계다.",
+    "evidence": [
+     {
+      "id": "G144",
+      "url": "https://bits-chips.com/article/besi-faces-longer-wait-as-sk-hynix-pushes-hybrid-bonding-to-hbm5/",
+      "title": "HBM5 (하이브리드 본딩 후보 세대) → 하이브리드 본딩 (adopts)",
+      "publisher": null,
+      "date": "2026-08-26",
+      "tier": "hypothesis",
+      "tier_ko": "가설"
+     }
+    ]
+   },
+   {
+    "claim": "AMAT 과 BESI 의 공동 개발로 선두 구도가 오히려 굳어질 수 있다.",
+    "evidence": [
+     {
+      "id": "G142",
+      "url": "https://www.sec.gov/Archives/edgar/data/6951/000119312525080269/d939298dex991.htm",
+      "title": "하이브리드 본딩 → 웨이퍼·다이 하이브리드 본더 (requires)",
+      "publisher": null,
+      "date": "2025-04-14",
+      "tier": "official_issuer",
+      "tier_ko": "당사자 공시"
+     }
+    ]
+   }
+  ],
+  "watch": [
+   "삼성·SK하이닉스의 HBM5 하이브리드 본딩 채택 발표",
+   "SUSS 하이브리드 본더 고객 수주",
+   "BESI 하이브리드 본딩 수주잔고"
+  ],
+  "what_changed": null,
+  "nodes": [
+   "equipment:hybrid_bonder",
+   "tech:hybrid_bond"
+  ],
+  "ecosystems": [
+   "hbm"
+  ],
+  "signal_refs": [
+   "4311d1bf307460ca96eb",
+   "ab03a143c844b699ea70"
+  ],
+  "evidence_count": 6,
+  "last_signal_at": "2026-10-26",
+  "updated_at": "2026-10-27T08:03:39.570894+00:00",
+  "model": "claude-opus-5-5 (session)",
+  "method": "session",
+  "usage": null
+ }
+]

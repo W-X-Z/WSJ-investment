@@ -94,19 +94,15 @@ def test_parse_bls_monthly_with_changes():
     assert p.indicator_id == "bls:PCU335311335311" and p.change_pct == 10.0 and p.yoy_pct == 25.0
 
 
-def test_sync_rows_respect_db_contracts():
-    from wsj.ecosystems.sync_db import build_rows, clean_name
+def test_company_names_and_extra_companies():
+    from wsj.ecosystems.ontology import clean_name
 
-    g = load_graph()
-    rows = build_rows(g, indicators.TW_ENTITIES, None)
-    ent = {e["entity_id"]: e for e in rows["entities"]}
-    node_ids = {n["node_id"] for n in rows["nodes"]}
-    assert all(n["entity_id"] in ent for n in rows["nodes"] if n["entity_id"])          # FK ontology_nodes.entity_id
-    assert all(e["src"] in node_ids and e["dst"] in node_ids for e in rows["edges"])    # FK ontology_edges
-    assert ent["company:samsung"]["local_code"] == "005930" and ent["company:samsung"]["ticker"] is None
-    assert ent["company:kyec"]["source"] == "indicator" and not ent["company:kyec"]["in_graph"]          # 그래프 밖 지표 기업
-    assert ent["company:delta_electronics"]["source"] == "ontology" and ent["company:delta_electronics"]["in_graph"]  # 그래프로 승격되면 그래프가 원본
     assert clean_name("NVIDIA (NVDA) — HBM·광·전력 공통 수요처") == "NVIDIA"
-    # 이슈가 쓸 수 있는 기업 = 그래프 기업 + 그래프 밖 엔티티, 노드는 그래프 노드만
+    assert clean_name("Samsung Electronics (KRX 005930, 비SEC)") == "Samsung Electronics"
+    g = load_graph()
+    node_ids = {n["id"] for n in g["nodes"]}
+    # 대만 지표 기업 중 그래프에 이미 있는 곳은 그래프가 원본 → extra 에서 빠진다
     extra = {n["id"] for n in issues.extra_company_nodes()}
-    assert extra <= set(ent) and not (extra & node_ids)
+    assert "company:kyec" in extra and "company:delta_electronics" not in extra and not (extra & node_ids)
+    names = issues.graph_company_names(g["nodes"])
+    assert names.get("company:unitest") == ["UniTest"]

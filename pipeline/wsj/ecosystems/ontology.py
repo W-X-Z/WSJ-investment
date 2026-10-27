@@ -22,6 +22,14 @@ ONTOLOGY_PATH = RESEARCH_DIR / "ontology.json"
 GRAPH_PATH = RESEARCH_DIR / "seed_graph.json"
 
 
+def clean_name(label: str) -> str:
+    """'NVIDIA (NVDA) — HBM·광·전력 공통 수요처' → 'NVIDIA', 'Samsung Electronics (KRX 005930, 비SEC)' → 'Samsung Electronics'."""
+    import re
+
+    s = re.split(r"\s+[—–-]\s+", label, maxsplit=1)[0]
+    return re.sub(r"\s*\(.*\)\s*$", "", s).strip() or label
+
+
 def load_ontology(path: Path = ONTOLOGY_PATH) -> dict[str, Any]:
     return json.loads(path.read_text(encoding="utf-8"))
 

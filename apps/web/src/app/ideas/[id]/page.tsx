@@ -1,41 +1,62 @@
 import Link from "next/link";
-import { notFound, redirect } from "next/navigation";
+import { notFound } from "next/navigation";
 import { Icon } from "@/components/Icon";
-import { dateShort, ECO_BY_ID, nodeName, seed, seedIdeas } from "@/lib/research";
+import { CompanyChip, EvidenceLinks } from "@/components/IdeaCard";
+import { Stars } from "@/components/Stars";
+import { ECO_KO, IDEA_TYPE, ROLE_KO, SIZE_KO, ago, loadIdea } from "@/lib/ideas";
 
-export const metadata={title:"투자 가설 상세"};
-export default async function IdeaDetail({params}:{params:Promise<{id:string}>}){
- const {id}=await params;
- if(id.startsWith("brief-") && /^brief-\d+$/.test(id))redirect(`/briefs/${id.slice(6)}`);
- const idea=seedIdeas.find(x=>x.id===id); if(!idea)notFound();
- const eco=idea.ecoId==="market"?null:ECO_BY_ID[idea.ecoId];
- const targetEdges=idea.relatedNode?seed.edges.filter(e=>e.from===idea.relatedNode||e.to===idea.relatedNode):[];
- const watches=eco?seed.watches.filter(w=>w.ecosystem===`eco:${eco.id}`):[];
- return <div>
-  <div className="breadcrumb"><Link href="/ideas">투자 가설</Link><Icon name="chevron-right" size={13}/><span>{idea.ticker}</span></div>
-  <div className="page-head"><div><div className="page-kicker">TECHNOLOGY INVESTMENT THESIS / {idea.ticker}</div><h1>{idea.title}</h1><p>{idea.company} · {eco?.title??"기업 리서치"} · 연구 기준 {dateShort(idea.asOf)}</p></div><Link className="outline-button" href={`/ecosystems/${idea.ecoId}`}><Icon name="network" size={16}/> 생태계 지도</Link></div>
-  <div className="detail-layout">
-   <article className="detail-card">
-    <div className="detail-label">INVESTMENT HYPOTHESIS</div>
-    <div className="detail-content-quote">{idea.description}</div>
-    <h2>기술적 가치가 달라지는 경로</h2>
-    <p>고객사의 기술 요구 변화가 어떤 소재·부품·공정의 중요도를 높이는지, 해당 기술의 공급기업이 새로운 고객을 확보할 수 있는지 확인하는 가설입니다. 산업 성장과 특정 상장기업의 경제적 이익을 직접 동일시하지 않습니다.</p>
-    <div style={{marginTop:18}} className="research-note"><strong>아직 입증되지 않은 사항</strong>{idea.risk}</div>
-    <h3>기술 그래프 내 인접 관계</h3>
-    <div className="related-list">{targetEdges.map(edge=><div key={edge.id} style={{padding:"12px 0",borderBottom:"1px solid #eaeef5"}}><div className="story-meta"><span>{edge.relation.replaceAll("_"," ")}</span><span className="meta-sep">·</span><span>{edge.evidence_tier.replaceAll("_"," ")}</span></div><strong style={{display:"block",marginTop:5,fontSize:12,color:"#3d5370"}}>{nodeName(edge.from)} → {nodeName(edge.to)}</strong></div>)}</div>
-    <h3>다음에 확인할 결정적 사실</h3>
-    <div className="detail-content-quote" style={{borderColor:"#49bba7",background:"#f2faf7"}}>{idea.trigger}</div>
-    <h3>독립 검증과 추적</h3>
-    <p>고객사의 직접 발표·공식 표준·양산 인증·납품 이후의 경제성을 별도의 출처 그룹으로 수집해야 합니다. 동일한 회사 보도자료를 재인용한 기사 여러 개는 독립 증거로 세지 않습니다.</p>
-   </article>
-   <aside>
-    <div className="detail-card" style={{padding:20,marginBottom:15}}><div className="detail-label">THESIS STATUS</div><div className="idea-card-top"><span className="ticker-badge">{idea.ticker}</span><span className="detail-status"><i/>{idea.state==="strengthened"?"근거 강화":idea.state==="watching"?"검증 중":"초기 가설"}</span></div><dl style={{marginTop:14}}>
-     <div className="detail-key-value"><dt>기술 생태계</dt><dd>{eco?.name}</dd></div>
-     <div className="detail-key-value"><dt>근거 분류</dt><dd>{idea.evidenceType}</dd></div>
-     <div className="detail-key-value"><dt>연구 기준</dt><dd>{dateShort(idea.asOf)}</dd></div>
-    </dl><a href={idea.evidenceUrl} target="_blank" rel="noreferrer" className="blue-button" style={{width:"100%",justifyContent:"center",marginTop:18}}>대표 원문 열기 <Icon name="external" size={15}/></a></div>
-    <div className="surface aside-panel"><h3>연결된 감시 규칙</h3><p>기술 변경이 고객 매출로 이어지는 과정에서 다음 사건을 확인합니다.</p><div className="aside-links">{watches.slice(0,3).map(w=><Link href={`/triggers?eco=${idea.ecoId}`} key={w.id}><Icon name="radar" size={15}/>{nodeName(w.target_id).slice(0,24)}<Icon name="arrow-right" size={14}/></Link>)}</div></div>
-   </aside>
-  </div>
- </div>;
+export const dynamic = "force-dynamic";
+
+export async function generateMetadata({ params }: { params: Promise<{ id: string }> }) {
+  const idea = await loadIdea((await params).id);
+  return { title: idea?.title ?? "투자 아이디어" };
+}
+
+/** 아이디어 상세: 결론 → 논리 단계(단계마다 출처) → 반대 근거 → 지켜볼 신호 → 관련 기업. */
+export default async function IdeaDetail({ params }: { params: Promise<{ id: string }> }) {
+  const idea = await loadIdea((await params).id);
+  if (!idea) notFound();
+  const type = IDEA_TYPE[idea.type] ?? { label: idea.type, tone: "bottleneck" };
+  return <div className="idetail">
+    <div className="breadcrumb"><Link href="/">투자 아이디어</Link><Icon name="chevron-right" size={13}/><span>{idea.title}</span></div>
+    <section className={`idetail-verdict ic-${type.tone}`}>
+      <div className="ic-top">
+        <Stars n={idea.stars} label/>
+        <span className={`ic-type ic-type-${type.tone}`}>{type.label}</span>
+        {idea.ecosystems.map((e) => <span key={e} className="ic-eco">{ECO_KO[e] ?? e}</span>)}
+        <small className="ic-when">갱신 {ago(idea.updated_at)}</small>
+      </div>
+      <h1>{idea.title}</h1>
+      <p>{idea.thesis}</p>
+      {idea.stars_reason ? <div className="idetail-why-stars">★ {idea.stars_reason}</div> : null}
+      {idea.what_changed ? <div className="idetail-changed">이번에 바뀐 점 · {idea.what_changed}</div> : null}
+    </section>
+
+    <div className="idetail-grid">
+      <div>
+        <h2>논리</h2>
+        <ol className="idetail-chain">{idea.chain.map((s, i) => <li key={i}><div className="idetail-claim">{s.claim}</div><EvidenceLinks items={s.evidence}/></li>)}</ol>
+
+        <h2>반대 근거</h2>
+        <ul className="idetail-risks">{idea.risks.length ? idea.risks.map((r, i) => <li key={i}><div>{r.claim}</div>{r.evidence.length ? <EvidenceLinks items={r.evidence}/> : null}</li>) : <li>기록된 반대 근거 없음</li>}</ul>
+
+        <h2>지켜볼 신호</h2>
+        <ul className="idetail-watch">{idea.watch.map((w, i) => <li key={i}><Icon name="target" size={14}/>{w}</li>)}</ul>
+      </div>
+      <aside>
+        <h2>관련 기업</h2>
+        <div className="idetail-companies">{idea.companies.map((c) => <div key={c.id} className="idetail-company">
+          <div className="idetail-company-top"><CompanyChip c={c} strong={c.id === idea.primary_company}/><span className="idetail-role">{ROLE_KO[c.role] ?? c.role}</span></div>
+          {c.why ? <p>{c.why}</p> : null}
+          <small>{[c.exchange, c.ticker, c.size_band ? SIZE_KO[c.size_band] : null].filter(Boolean).join(" · ")} · <Link href={`/map?focus=${encodeURIComponent(c.id)}`}>공급망에서 보기</Link></small>
+        </div>)}</div>
+        <div className="idetail-meta">
+          {idea.first_seen ? <div>처음 등장 {idea.first_seen.slice(0, 10)}</div> : null}
+          {idea.revision ? <div>개정 {idea.revision}회</div> : null}
+          <div>{idea.method === "session" ? "세션 분석" : "자동 분석"}{idea.model ? ` · ${idea.model}` : ""}</div>
+          <div>근거 {idea.evidence_count}건 · 투자 권유 아님</div>
+        </div>
+      </aside>
+    </div>
+  </div>;
 }

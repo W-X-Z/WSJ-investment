@@ -5,17 +5,18 @@ import { usePathname, useRouter } from "next/navigation";
 import { FormEvent, useEffect, useRef, useState } from "react";
 import { Icon } from "@/components/Icon";
 
+// 홈 = AI 투자 아이디어 피드. 나머지는 AI 가 아이디어를 만들 때 쓰는 근거 데이터 (ADR-0016).
 const NAV = [
-  { href:"/", label:"인사이트 홈", icon:"grid" },
-  { href:"/map", label:"산업망 캔버스", icon:"network" },
-  { href:"/ecosystems", label:"기술 생태계", icon:"layers" },
-  { href:"/feed", label:"이슈 피드", icon:"rss" },
-  { href:"/indicators", label:"가격·실적 지표", icon:"activity" },
-  { href:"/discovery", label:"공급사 발굴", icon:"search" },
-  { href:"/ideas", label:"투자 가설", icon:"lightbulb" },
-  { href:"/triggers", label:"트리거 추적", icon:"radar" },
+  { href:"/", label:"투자 아이디어", icon:"lightbulb" },
+  { href:"/feed", label:"근거 · 이슈", icon:"rss" },
+  { href:"/indicators", label:"근거 · 가격·실적", icon:"activity" },
+  { href:"/map", label:"근거 · 공급망 그래프", icon:"network" },
+  { href:"/discovery", label:"근거 · 공급사 발굴", icon:"search" },
+  { href:"/briefs?kind=moat", label:"근거 · 해자 카드", icon:"layers" },
 ] as const;
 const RESEARCH_ROUTES = [
+  { href:"/ecosystems", label:"기술 생태계 (이전 화면)" },
+  { href:"/triggers", label:"트리거 추적 (이전 화면)" },
   { href:"/review", label:"기술 관계 검토 큐" },
   { href:"/history", label:"기술 자료 백필 아카이브" },
   { href:"/data", label:"연구 데이터 개요" },
@@ -31,8 +32,8 @@ const DEEP_ROUTES = [
   { href:"/entities", label:"기업명 매칭" },
 ] as const;
 const LABELS: Record<string,string> = {
-  "/":"Overview", "/map":"산업망 캔버스", "/history":"과거 기술 아카이브", "/review":"기술 관계 검토", "/ecosystems":"기술 생태계", "/feed":"이슈 피드",
-  "/ideas":"투자 가설", "/discovery":"공급사 발굴", "/indicators":"가격·실적 지표", "/triggers":"트리거", "/search":"통합 검색",
+  "/":"투자 아이디어", "/map":"공급망 그래프", "/history":"과거 기술 아카이브", "/review":"기술 관계 검토", "/ecosystems":"기술 생태계", "/feed":"이슈 피드",
+  "/ideas":"투자 아이디어", "/discovery":"공급사 발굴", "/indicators":"가격·실적 지표", "/triggers":"트리거", "/search":"통합 검색",
   "/data":"Research Data", "/briefs":"기업 브리프",
 };
 function Brand() {
@@ -70,7 +71,7 @@ export function Shell({ children }: { children: React.ReactNode }) {
     router.push(term ? `/search?q=${encodeURIComponent(term)}` : "/search");
   }
   const section = path === "/" ? "/" : NAV.find(item=>item.href!=="/" && path.startsWith(item.href))?.href ?? path;
-  const currentLabel = LABELS[section] ?? (path.startsWith("/ecosystems/")?"기술 생태계":path.startsWith("/feed/")?"이슈 분석":"리서치");
+  const currentLabel = LABELS[section] ?? (path.startsWith("/ideas")?"투자 아이디어":path.startsWith("/ecosystems/")?"기술 생태계":path.startsWith("/feed/")?"이슈 분석":"리서치");
   const legacyOpen = ["/review","/history","/data","/candidates","/briefs","/signals","/companies","/filings","/finra","/fda","/trials","/awards","/entities","/insider"].some(p=>path.startsWith(p));
   return (
     <div className="workspace">

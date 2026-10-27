@@ -1,17 +1,18 @@
 import Link from "next/link";
 import { Icon } from "@/components/Icon";
 import { EmptyState } from "@/components/ResearchCards";
-import { ECOSYSTEMS, EVENT_LABEL, CURATED_FEED, ECO_BY_ID, loadLiveData, mergeFeed, mergeIdeas, seed, type EcoId } from "@/lib/research";
+import { ECOSYSTEMS, loadLiveData, mergeFeed, seed, type EcoId } from "@/lib/research";
+import { loadIdeas } from "@/lib/ideas";
 
 export const dynamic="force-dynamic";
 export const metadata={title:"통합 검색"};
 type SP={q?:string};
 export default async function Search({searchParams}:{searchParams:Promise<SP>}){
  const sp=await searchParams;const q=(sp.q??"").trim();const term=q.toLocaleLowerCase("ko-KR");
- const live=await loadLiveData(); const events=mergeFeed(live); const ideas=mergeIdeas(live);
+ const live=await loadLiveData(); const events=mergeFeed(live); const {ideas}=await loadIdeas();
  const nodes=term?seed.nodes.filter(x=>[x.id,x.label,x.kind,...(x.measured_metrics??[])].join(" ").toLocaleLowerCase("ko-KR").includes(term)).slice(0,24):[];
  const foundEvents=term?events.filter(x=>[x.title,x.summary,x.type,x.target??"",x.source].join(" ").toLocaleLowerCase("ko-KR").includes(term)).slice(0,20):[];
- const foundIdeas=term?ideas.filter(x=>[x.ticker,x.company,x.title,x.description,x.trigger,x.risk].join(" ").toLocaleLowerCase("ko-KR").includes(term)).slice(0,16):[];
+ const foundIdeas=term?ideas.filter(x=>[x.title,x.thesis,...x.companies.flatMap(c=>[c.name,c.ticker??""]),...x.chain.map(c=>c.claim)].join(" ").toLocaleLowerCase("ko-KR").includes(term)).slice(0,16):[];
  const ecosystems=term?ECOSYSTEMS.filter(x=>[x.title,x.name,x.bottleneck,x.trajectory,x.summary].join(" ").toLocaleLowerCase("ko-KR").includes(term)):[];
  const total=nodes.length+foundEvents.length+foundIdeas.length+ecosystems.length;
  function guessEco(nodeId:string):EcoId {
@@ -30,7 +31,7 @@ export default async function Search({searchParams}:{searchParams:Promise<SP>}){
    {ecosystems.length>0&&<section><h2 className="section-heading" style={{fontSize:17,fontWeight:750}}>기술 생태계 <span className="soft-text">{ecosystems.length}</span></h2><div className="data-links-grid">{ecosystems.map(e=><Link key={e.id} className="data-link" href={`/ecosystems/${e.id}`}><Icon name={e.glyph as "cpu"|"network"|"zap"} size={18}/>{e.title}<Icon name="arrow-right" size={15}/></Link>)}</div></section>}
    {nodes.length>0&&<section><div className="section-heading"><h2>기술·소재·공정 그래프 <span className="soft-text">{nodes.length}</span></h2></div><div className="surface" style={{padding:"8px 20px"}}><div className="related-list">{nodes.map(n=><Link href={`/ecosystems/${guessEco(n.id)}`} key={n.id}><span style={{display:"flex",flexDirection:"column",gap:3}}><strong>{n.label}</strong><span style={{fontSize:10,color:"#95a1b0"}}>{n.kind} · {n.measured_metrics?.join(" · ")??"관계 그래프에서 상세 확인"}</span></span><Icon name="chevron-right" size={16}/></Link>)}</div></div></section>}
    {foundEvents.length>0&&<section><div className="section-heading"><h2>연결된 이슈 <span className="soft-text">{foundEvents.length}</span></h2></div><div className="surface"><div className="related-list" style={{padding:"4px 20px"}}>{foundEvents.map(e=><Link href={`/feed/${encodeURIComponent(e.id)}`} key={e.id}><span style={{display:"flex",flexDirection:"column",gap:3}}><strong>{e.title}</strong><span style={{fontSize:10,color:"#95a1b0"}}>{e.date} · {e.type} · {e.source}</span></span><Icon name="chevron-right" size={16}/></Link>)}</div></div></section>}
-   {foundIdeas.length>0&&<section><div className="section-heading"><h2>투자 가설 <span className="soft-text">{foundIdeas.length}</span></h2></div><div className="surface"><div className="related-list" style={{padding:"4px 20px"}}>{foundIdeas.map(x=><Link href={x.href??`/ideas/${x.id}`} key={x.id}><span style={{display:"flex",flexDirection:"column",gap:3}}><strong>{x.ticker} · {x.title}</strong><span style={{fontSize:10,color:"#95a1b0"}}>{x.company} · {x.state}</span></span><Icon name="chevron-right" size={16}/></Link>)}</div></div></section>}
+   {foundIdeas.length>0&&<section><div className="section-heading"><h2>투자 아이디어 <span className="soft-text">{foundIdeas.length}</span></h2></div><div className="surface"><div className="related-list" style={{padding:"4px 20px"}}>{foundIdeas.map(x=><Link href={`/ideas/${x.idea_key}`} key={x.idea_key}><span style={{display:"flex",flexDirection:"column",gap:3}}><strong>{"★".repeat(x.stars)} {x.title}</strong><span style={{fontSize:10,color:"#95a1b0"}}>{x.companies.map(c=>c.name).slice(0,3).join(" · ")}</span></span><Icon name="chevron-right" size={16}/></Link>)}</div></div></section>}
   </div>}
  </div>;
 }
