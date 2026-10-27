@@ -634,6 +634,7 @@ def main(argv: list[str] | None = None) -> int:
     ap.add_argument("--no-news", action="store_true")
     ap.add_argument("--only", help="쉼표로 구분한 기업 id 만 (점검용)")
     ap.add_argument("--out")
+    ap.add_argument("--save", action="store_true", help="ideas.company_events 에 쌓는다 (LLM 없이 수집만 하는 실행용)")
     args = ap.parse_args(argv)
     logging.basicConfig(level=logging.INFO, format="%(levelname)-7s %(name)s: %(message)s")
     logging.getLogger("httpx").setLevel(logging.WARNING)
@@ -645,11 +646,25 @@ def main(argv: list[str] | None = None) -> int:
     if args.only:
         keep = set(args.only.split(","))
         graph = {**graph, "nodes": [n for n in graph["nodes"] if n["kind"] != "company" or n["id"] in keep]}
+    store, focus = None, set()
+    if args.save:
+        from wsj.db import make_store
+
+        store = make_store(settings)
+        try:  # 대형사 뉴스는 기존 아이디어에 든 기업만 본다
+            for x in store.select("ideas.investment_ideas", ["primary_company", "companies"], {"status": "active"}):
+                focus |= {x.get("primary_company")} | {c.get("id") for c in x.get("companies") or []}
+        except Exception as exc:  # noqa: BLE001
+            log.warning("기존 아이디어를 읽을 수 없음: %s", exc)
     http = HttpClient(settings.sec_user_agent, timeout=25, max_retries=2)
     try:
-        events, stats = collect(http, graph, args.days, set(), settings.dart_api_key or None, not args.no_news)
+        events, stats = collect(http, graph, args.days, {f for f in focus if f}, settings.dart_api_key or None, not args.no_news)
+        if store is not None:
+            stats["saved"] = save_events(store, events)
     finally:
         http.close()
+        if store is not None:
+            store.close()
     if args.out:
         with open(args.out, "w", encoding="utf-8") as f:
             json.dump([e.public() for e in events], f, ensure_ascii=False, indent=1)

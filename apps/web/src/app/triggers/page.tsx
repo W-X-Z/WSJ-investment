@@ -30,6 +30,6 @@ export default async function Triggers({searchParams}:{searchParams:Promise<SP>}
   <div className="insight-cols">
    {[["01","수집·스냅샷","공시·표준·논문 원문을 주기적으로 확인하고 이전 버전과 비교합니다."],["02","가설 영향 분석","변화가 기술적 요구·병목·대체 기술·기업 노출에 어떻게 연결되는지 분석합니다."],["03","인간 검증 및 추적","독립 원천과 실제 고객 채택을 확인한 뒤 중요한 변화만 투자 리서치에 반영합니다."]].map(x=><div className="insight-box" key={x[0]}><div className="eyebrow">{x[0]} / WORKFLOW</div><h3>{x[1]}</h3><p>{x[2]}</p></div>)}
   </div>
-  <p className="soft-text"><a href="https://github.com/W-X-Z/WSJ-investment/actions/workflows/technology-intelligence-monitor.yml" target="_blank" rel="noreferrer">6시간 모니터 실행 로그 ↗</a></p>
+  <p className="soft-text"><a href="https://github.com/W-X-Z/WSJ-investment/actions/workflows/issues.yml" target="_blank" rel="noreferrer">이슈·아이디어 자동 실행 로그 ↗</a></p>
  </div>;
 }

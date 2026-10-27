@@ -7,7 +7,6 @@ on:
       - "research/ecosystems/**"
       - "apps/web/src/data/ecosystem-seed.json"
       - "apps/web/src/data/impact-index.json"
-      - ".github/workflows/briefs.yml"
       - ".github/workflows/pipeline-tests.yml"
 
 concurrency:

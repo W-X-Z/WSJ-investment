@@ -1,25 +1,15 @@
 # 공급망 이슈 피드 (ADR-0014) + 투자 아이디어 (ADR-0016). 시크릿: SUPABASE_URL, SUPABASE_SECRET_KEY, ANTHROPIC_API_KEY,
 # 선택: DART_API_KEY (한국 공시), OPENALEX_API_KEY
-# 하루 두 번 — 06:47 KST (21:47 UTC, 미국 장 마감 뒤) · 18:47 KST (09:47 UTC, 아시아 장 마감·공시 뒤):
-# 뉴스·업계지·뉴스룸·SEC 8-K·관보·정책·TrendForce·논문·지표 → 이슈 선별(Sonnet) → ideas.supply_chain_issues
-# → 기업별 최신 소식(SEC·TWSE/TPEx·TDnet·cninfo·DART 공시, 월매출, 기업명 뉴스) → ideas.company_events
-# → 투자 아이디어(Sonnet) → ideas.investment_ideas. 한 번에 ≈ $0.4
+# 06:47 KST (21:47 UTC, 미국 장 마감 뒤) — 전체: 뉴스·업계지·뉴스룸·SEC 8-K·관보·정책·TrendForce·논문·지표 → 이슈 선별(Sonnet)
+#   → 기업별 최신 소식(SEC·TWSE/TPEx·TDnet·cninfo·DART 공시, 월매출, 기업명 뉴스) → 투자 아이디어(Sonnet). 1회 ≈ $0.4
+# 18:47 KST (09:47 UTC, 아시아 장 마감·공시 뒤) — 기업 소식 수집·저장만 (LLM 없음). 대만 중대공시처럼 당일분만 주는 출처를 놓치지 않게.
+# 코드 병합(push)으로는 돌지 않는다 — 병합할 때마다 LLM 비용이 나가지 않게. 바로 확인하려면 Actions 에서 Run workflow.
 name: issues
 
 on:
   schedule:
     - cron: "47 21 * * *"
     - cron: "47 9 * * *"
-  push:  # 수집·선별 코드가 바뀌면 바로 검증 실행 (public 레포라 표준 러너 무료)
-    branches: [main]
-    paths:
-      - "pipeline/wsj/ecosystems/issues.py"
-      - "pipeline/wsj/ecosystems/sources.py"
-      - "pipeline/wsj/ecosystems/indicators.py"
-      - "pipeline/wsj/ecosystems/ideas.py"
-      - "pipeline/wsj/ecosystems/company_feed.py"
-      - "research/ecosystems/seed_graph.json"
-      - ".github/workflows/issues.yml"
   workflow_dispatch:
     inputs:
       days:
@@ -65,7 +55,16 @@ jobs:
       - name: Install
         working-directory: pipeline
         run: pip install -e .
+      # 저녁 실행: 기업 소식만 쌓는다 (최근 3일, LLM 없음) → 다음 날 아침 아이디어가 14일 누적분을 함께 본다
+      - name: Collect company events only (evening)
+        if: ${{ github.event.schedule == '47 9 * * *' }}
+        working-directory: pipeline
+        run: |
+          set -euo pipefail
+          mkdir -p data/issues
+          python -m wsj.ecosystems.company_feed --days 3 --save --out data/issues/company_events.json | tee -a "$GITHUB_STEP_SUMMARY"
       - name: Collect, curate and save issues
+        if: ${{ github.event.schedule != '47 9 * * *' }}
         working-directory: pipeline
         env:
           IN_DAYS: ${{ inputs.days || '14' }}
@@ -79,7 +78,7 @@ jobs:
       # 투자 아이디어 (ADR-0016): 방금 저장한 이슈 + 지표 + 기업별 최신 소식(지금 수집 + 최근 14일 누적) + 그래프
       # → 후보 사슬 → LLM → 검증(14일 안 근거 필수) → ideas.investment_ideas (1회 ≈ $0.3)
       - name: Write investment ideas
-        if: ${{ inputs.no_llm != 'true' }}
+        if: ${{ github.event.schedule != '47 9 * * *' && inputs.no_llm != 'true' }}
         working-directory: pipeline
         env:
           IN_IDEAS_MODEL: ${{ inputs.ideas_model || 'sonnet' }}
@@ -94,4 +93,4 @@ jobs:
           name: issues-${{ github.run_id }}
           path: pipeline/data/issues
           if-no-files-found: ignore
-          retention-days: 14
+          retention-days: 7
