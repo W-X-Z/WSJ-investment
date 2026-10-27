@@ -80,3 +80,29 @@ def test_update_keeps_key_and_close_touches_only_status():
     rows, _ = ideas.validate([upd, close], reg, g, signals, existing, NOW, "m", "llm")
     assert rows[0]["idea_key"] == "abc" and rows[0]["trend"] == "strengthened"
     assert set(rows[1]) == {"idea_key", "status", "trend", "close_reason", "updated_at"} and rows[1]["status"] == "closed"
+
+
+def test_session_mode_pins_snapshot_time_and_writes_guarded_sql(tmp_path):
+    """예약작업 경로: 같은 스냅샷으로 프롬프트와 검증을 따로 돌려도 근거 id 가 같고, 검증된 행은 put_ideas SQL 로 나온다."""
+    import json
+
+    snap = tmp_path / "snap"
+    ideas.write_snapshot(snap, {"issues": [ISSUE], "indicators": [INDICATOR], "existing": [], "events": []}, NOW)
+    p1, p2 = tmp_path / "p1.json", tmp_path / "p2.json"
+    assert ideas.main(["--snapshot", str(snap), "--emit-prompt", str(p1), "--emit-research", str(tmp_path / "r.json")]) == 0
+    assert ideas.main(["--snapshot", str(snap), "--emit-prompt", str(p2)]) == 0
+    a, b = json.loads(p1.read_text())["payload"], json.loads(p2.read_text())["payload"]
+    assert a["today"] == "2026-10-27" and [e["id"] for e in a["evidence"]] == [e["id"] for e in b["evidence"]]
+    s_ev = a["signals"][0]["evidence"][0]
+    raw = tmp_path / "raw.json"
+    raw.write_text(json.dumps({"model": "claude-opus-5-5", "ideas": [
+        {"action": "new", "type": "bottleneck", "title": "HBM 테스트 붐 — JEM", "thesis": "a. b.", "stars": 2,
+         "companies": [{"id": "company:jem", "role": "primary"}], "chain": [{"claim": "c", "evidence": [s_ev]}, {"claim": "d", "evidence": [s_ev]}]}]}))
+    out_sql = tmp_path / "sql"
+    assert ideas.main(["--snapshot", str(snap), "--from-llm-json", str(raw), "--method", "session", "--emit-sql", str(out_sql)]) == 0
+    files = sorted(out_sql.glob("*.sql"))
+    assert len(files) == 1
+    sql = files[0].read_text()
+    assert sql.startswith("select ideas.put_ideas($wsj$[") and sql.rstrip().endswith("$wsj$::jsonb);")
+    row = json.loads(sql[len("select ideas.put_ideas($wsj$"):sql.rindex("$wsj$")])[0]
+    assert row["method"] == "session" and row["model"] == "claude-opus-5-5" and row["last_signal_at"] == "2026-10-26"

@@ -107,7 +107,8 @@ cd apps/web && cp .env.local.example .env.local && npm install && npm run dev
 
   | 워크플로 | 주기 | LLM |
   |---|---|---|
-  | issues (전체: 이슈 → 기업 소식 → 아이디어) | 매일 06:47 KST | Sonnet 2회 ≈ $0.4 |
+  | issues (이슈 선별 + 기업 소식 수집) | 매일 06:47 KST | Sonnet 1회 ≈ $0.1 |
+  | 투자 아이디어 (Claude 예약작업, ADR-0016 개정 2) | 매일 07:30 KST | 요금제 안 (API 비용 없음) |
   | issues (기업 소식 수집·저장만) | 매일 18:47 KST | 없음 |
   | collect (유니버스 + 공시·내부자·공매도·정부 수주) | 토 20:41 KST | 없음 |
   | moat (해자 카드, 같은 기준일 카드는 건너뜀) | 화 22:41 KST | Sonnet, 새 카드만 |

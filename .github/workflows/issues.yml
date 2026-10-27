@@ -1,9 +1,11 @@
-# 공급망 이슈 피드 (ADR-0014) + 투자 아이디어 (ADR-0016). 시크릿: SUPABASE_URL, SUPABASE_SECRET_KEY, ANTHROPIC_API_KEY,
+# 공급망 이슈 피드 (ADR-0014) + 투자 아이디어 입력 (ADR-0016). 시크릿: SUPABASE_URL, SUPABASE_SECRET_KEY, ANTHROPIC_API_KEY,
 # 선택: DART_API_KEY (한국 공시), OPENALEX_API_KEY
-# 06:47 KST (21:47 UTC, 미국 장 마감 뒤) — 전체: 뉴스·업계지·뉴스룸·SEC 8-K·관보·정책·TrendForce·논문·지표 → 이슈 선별(Sonnet)
-#   → 기업별 최신 소식(SEC·TWSE/TPEx·TDnet·cninfo·DART 공시, 월매출, 기업명 뉴스) → 투자 아이디어(Sonnet). 1회 ≈ $0.4
-# 18:47 KST (09:47 UTC, 아시아 장 마감·공시 뒤) — 기업 소식 수집·저장만 (LLM 없음). 대만 중대공시처럼 당일분만 주는 출처를 놓치지 않게.
-# 코드 병합(push)으로는 돌지 않는다 — 병합할 때마다 LLM 비용이 나가지 않게. 바로 확인하려면 Actions 에서 Run workflow.
+# 06:47 KST (21:47 UTC, 미국 장 마감 뒤): 뉴스·업계지·뉴스룸·SEC 8-K·관보·정책·TrendForce·논문·지표 → 이슈 선별(Sonnet ≈ $0.1)
+#   → 기업별 최신 소식(SEC·TWSE/TPEx·TDnet·cninfo·DART 공시, 월매출, 기업명 뉴스) → ideas.company_events
+# 18:47 KST (09:47 UTC, 아시아 장 마감·공시 뒤): 기업 소식 수집·저장만 (LLM 없음)
+# 투자 아이디어는 07:30 KST Claude 예약작업이 쓴다 (ADR-0016 개정 2): 공개 뷰로 입력을 읽고, 원문을 확인하고,
+#   엔진 검증을 통과한 행만 ideas.put_ideas 로 저장. API 로 쓰려면 Run workflow 에서 ideas_api=true (대체 경로).
+# 코드 병합(push)으로는 돌지 않는다.
 name: issues
 
 on:
@@ -24,8 +26,16 @@ on:
         description: "true 면 규칙 점수만"
         required: false
         default: "false"
+      feed_days:
+        description: "기업 소식 수집 창(일). 첫 실행·누락 보충은 14"
+        required: false
+        default: "7"
+      ideas_api:
+        description: "true 면 투자 아이디어를 API LLM 으로도 쓴다 (예약작업이 못 돌 때 대체 경로)"
+        required: false
+        default: "false"
       ideas_model:
-        description: "투자 아이디어 모델: sonnet | opus"
+        description: "ideas_api=true 일 때 모델: sonnet | opus"
         required: false
         default: "sonnet"
 
@@ -55,14 +65,6 @@ jobs:
       - name: Install
         working-directory: pipeline
         run: pip install -e .
-      # 저녁 실행: 기업 소식만 쌓는다 (최근 3일, LLM 없음) → 다음 날 아침 아이디어가 14일 누적분을 함께 본다
-      - name: Collect company events only (evening)
-        if: ${{ github.event.schedule == '47 9 * * *' }}
-        working-directory: pipeline
-        run: |
-          set -euo pipefail
-          mkdir -p data/issues
-          python -m wsj.ecosystems.company_feed --days 3 --save --out data/issues/company_events.json | tee -a "$GITHUB_STEP_SUMMARY"
       - name: Collect, curate and save issues
         if: ${{ github.event.schedule != '47 9 * * *' }}
         working-directory: pipeline
@@ -75,17 +77,24 @@ jobs:
           args=(run --days "$IN_DAYS" --model "$IN_MODEL" --out data/issues/latest.json)
           [[ "$IN_NO_LLM" == "true" ]] && args+=(--no-llm)
           python -m wsj.ecosystems.issues "${args[@]}" | tee -a "$GITHUB_STEP_SUMMARY"
-      # 투자 아이디어 (ADR-0016): 방금 저장한 이슈 + 지표 + 기업별 최신 소식(지금 수집 + 최근 14일 누적) + 그래프
-      # → 후보 사슬 → LLM → 검증(14일 안 근거 필수) → ideas.investment_ideas (1회 ≈ $0.3)
-      - name: Write investment ideas
-        if: ${{ github.event.schedule != '47 9 * * *' && inputs.no_llm != 'true' }}
+      # 기업별 최신 소식 → ideas.company_events (아침 7일, 저녁 3일. 아이디어는 DB 에 쌓인 14일을 본다)
+      - name: Collect company events
+        working-directory: pipeline
+        env:
+          IN_FEED_DAYS: ${{ github.event.schedule == '47 9 * * *' && '3' || inputs.feed_days || '7' }}
+        run: |
+          set -euo pipefail
+          mkdir -p data/issues
+          python -m wsj.ecosystems.company_feed --days "$IN_FEED_DAYS" --save --out data/issues/company_events.json | tee -a "$GITHUB_STEP_SUMMARY"
+      # 대체 경로: API LLM 으로 아이디어 쓰기 (수동 실행에서 ideas_api=true 일 때만, 1회 ≈ $0.3)
+      - name: Write investment ideas (API fallback)
+        if: ${{ inputs.ideas_api == 'true' && inputs.no_llm != 'true' }}
         working-directory: pipeline
         env:
           IN_IDEAS_MODEL: ${{ inputs.ideas_model || 'sonnet' }}
         run: |
           set -euo pipefail
-          python -m wsj.ecosystems.ideas --model "$IN_IDEAS_MODEL" --out data/issues/ideas.json --events-out data/issues/company_events.json \
-            | tee -a "$GITHUB_STEP_SUMMARY"
+          python -m wsj.ecosystems.ideas --no-feed --model "$IN_IDEAS_MODEL" --out data/issues/ideas.json | tee -a "$GITHUB_STEP_SUMMARY"
       - name: Upload output
         if: always()
         uses: actions/upload-artifact@v4
