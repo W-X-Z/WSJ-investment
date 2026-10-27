@@ -3,7 +3,9 @@ import seedIdeas from "@/data/ideas-seed.json";
 import { db } from "@/lib/supabase";
 
 /** AI 투자 아이디어 (ideas.investment_ideas → public.v_investment_ideas). ADR-0016. */
-export type IdeaEvidence = { id: string; url: string; title: string; publisher?: string | null; date?: string | null; tier?: string | null; tier_ko?: string | null };
+export type IdeaEvidence = { id: string; url: string; title: string; publisher?: string | null; date?: string | null; tier?: string | null; tier_ko?: string | null;
+  rel?: string | null;    // 엔진이 붙인 층: direct(기업 직접) | related | industry | background
+  note?: string | null }; // 확인된 사실·발췌
 export type IdeaStep = { claim: string; evidence: IdeaEvidence[] };
 export type IdeaCompany = { id: string; name: string; ticker?: string | null; exchange?: string | null; size_band?: string | null; role: string; why?: string };
 export type InvestmentIdea = {
@@ -23,7 +25,7 @@ export const IDEA_TYPE: Record<string, { label: string; tone: string }> = {
 export const SIZE_KO: Record<string, string> = { micro: "초소형", small: "소형", mid: "중형", large: "대형", mega: "초대형", private: "비상장" };
 export const ROLE_KO: Record<string, string> = { primary: "핵심", peer: "동종", customer: "고객", competitor: "경쟁", displaced: "피해 가능" };
 export const ECO_KO: Record<string, string> = { hbm: "HBM·패키징", optics: "광통신", power: "전력·냉각" };
-export const TREND_KO: Record<string, string> = { new: "새 아이디어", strengthened: "근거 강화", weakened: "근거 약화" };
+export const TREND_KO: Record<string, string> = { new: "새 아이디어", strengthened: "기업 근거로 강화", weakened: "근거 약화", industry: "업계 근거 갱신" };
 
 /** 정렬: ★ → 최신 근거 날짜 → 갱신 시각. 같은 ★ 이면 근거가 새로운 아이디어가 위로. */
 const order = (a: InvestmentIdea, b: InvestmentIdea) =>
@@ -58,19 +60,21 @@ export function ageDays(iso?: string | null): number | null {
 export const isBackground = (e: IdeaEvidence) => e.id.startsWith("G");
 export const FRESH_DAYS = 14;
 
-export type CompanyEvent = { event_id: string; company_id: string; kind: string; published_at: string; title: string; url: string; publisher?: string | null; importance: number };
+export type CompanyEvent = { event_id: string; company_id: string; kind: string; published_at: string; title: string; url: string; publisher?: string | null; importance: number;
+  text?: string | null; verified?: boolean | null };
 export const EVENT_KIND_KO: Record<string, string> = { filing: "공시", disclosure: "공시", revenue: "월매출", news: "뉴스" };
 
 /** 아이디어 기업들의 최근 소식 (public.v_company_events, 0019). 뷰가 없으면 빈 배열. */
 export async function loadCompanyEvents(ids: string[], limit = 24): Promise<CompanyEvent[]> {
   if (!ids.length || !process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.NEXT_PUBLIC_SUPABASE_KEY) return [];
   try {
-    const { data, error } = await db("public").from("v_company_events").select("event_id,company_id,kind,published_at,title,url,publisher,importance")
+    const { data, error } = await db("public").from("v_company_events").select("event_id,company_id,kind,published_at,title,url,publisher,importance,text,verified")
       .in("company_id", ids).order("published_at", { ascending: false }).limit(120);
     if (error || !data) return [];
-    // 중요도 2 이상을 먼저, 기업마다 최대 4건
+    // 원문 확인됐거나 중요도 2 이상만 — 확인된 것 먼저, 기업마다 최대 4건
     const per = new Map<string, number>();
-    return (data as CompanyEvent[]).sort((a, b) => b.importance - a.importance || b.published_at.localeCompare(a.published_at))
+    return (data as CompanyEvent[]).filter((e) => (e.verified || e.importance >= 2) && !e.text?.startsWith("관련 없음"))
+      .sort((a, b) => Number(!!b.verified) - Number(!!a.verified) || b.importance - a.importance || b.published_at.localeCompare(a.published_at))
       .filter((e) => { const n = per.get(e.company_id) ?? 0; per.set(e.company_id, n + 1); return n < 4; })
       .slice(0, limit).sort((a, b) => b.published_at.localeCompare(a.published_at));
   } catch {
