@@ -124,3 +124,10 @@ cd pipeline
 python -m wsj.ecosystems.impact --as-of 2026-10-26 --out ../research/ecosystems/impact_preview.json
 pytest -q tests/test_ecosystem_impact.py
 ```
+
+## G. 2026-10-27 확장 (141 → 852 노드)
+- 방법: 3개 공급망 × 2구간(HBM 적층·테스트 / 인터포저·기판·OSAT, 광 부품·소재 / 모듈·CPO·케이블·테스트, 랙 전력·반도체 / 설비 전력·냉각)을 리서치 에이전트가 조사한 패치를 병합. 모든 새 관계는 실제로 열어 본 https 출처 1개 이상(근거 등급 표기), 닫힌 어휘 검증 통과.
+- 결과: 노드 852 (기업 395 — 소형 74·초소형 20·비상장 56, 비SEC 상장 215), 관계 1,578 (official_issuer 573, third_party_report 695, technical_inference 197). 신기술 78개에 3단계 성숙도(early/near/commercial).
+- 병합 규칙: 같은 기업은 (시장, 티커) → 정규화 이름 순으로 하나의 id 로 (대만 지표 기업 id 우선). 의미가 같은 노드는 병합 스크립트의 별칭표로 정리(SST, 디본더, 리플로우, 유리 캐리어, AI 부하 급변, 패키지 리드). SEC 필러 87곳은 core.companies 에서 cik·공개유동을 채우고 유니버스(공개유동 $10M~$1B)를 계산.
+- 알려진 공백: 조사 중 검색 한도로 근거를 못 찾은 기업은 넣지 않았다 — PSK·ISC·EO Technics·Intekplus(일부)·DI·YIK(HBM), Hamamatsu·Fujikura(일부)·Santec·Source Photonics(광), TDK·Vishay·Fuji Electric·Siemens AG·Rolls-Royce·Asetek(전력). 비미국 기업 규모(size_band)는 대부분 추정치(`size_note`). 언론 보도만 있는 공급 관계는 `qualifying_with` 로 낮춰 기록했다(`supplied_to` 는 공식 출처 필요).
+- 영향 전파: `about` 이 없는 기업↔기업 관계는 시작 노드와 같은 생태계 기업으로 한 번만 탄다 (impact.py) — 확장으로 생긴 생태계 간 누수 방지.

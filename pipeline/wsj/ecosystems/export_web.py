@@ -40,6 +40,12 @@ def trim_discovery(d: dict[str, Any], graph: dict[str, Any]) -> dict[str, Any]:
     return {"as_of": d["as_of"], "window_start": d["window_start"], "summary": d["summary"], "nodes": {k: {**v, "label": labels.get(k, v.get("label"))} for k, v in d["nodes"].items()}, "companies": companies}
 
 
+def web_seed(graph: dict[str, Any]) -> dict[str, Any]:
+    """브라우저 번들용: 근거 발췌문(excerpt)은 빼고(화면에서 쓰지 않음) 공백 없이 — 그래프가 커져도 캔버스 청크를 작게."""
+    edges = [{**e, "evidence": [{k: v for k, v in ev.items() if k != "excerpt"} for ev in e.get("evidence", [])]} for e in graph["edges"]]
+    return {**graph, "edges": edges}
+
+
 def build(graph: dict[str, Any]) -> tuple[dict[str, Any], dict[str, Any]]:
     onto = load_ontology()
     for e in graph["edges"]:
@@ -98,8 +104,8 @@ def main(argv: list[str] | None = None) -> int:
     ap.add_argument("--check", action="store_true")
     args = ap.parse_args(argv)
     graph, index = build(load_graph(GRAPH_PATH))
-    seed_text = json.dumps(graph, ensure_ascii=False, indent=2) + "\n"
-    index_text = json.dumps(index, ensure_ascii=False, indent=1) + "\n"
+    seed_text = json.dumps(web_seed(graph), ensure_ascii=False, separators=(",", ":")) + "\n"
+    index_text = json.dumps(index, ensure_ascii=False, separators=(",", ":")) + "\n"
     disc_text = json.dumps(trim_discovery(json.loads(DISCOVERY_IN.read_text(encoding="utf-8")), graph), ensure_ascii=False, indent=1) + "\n" if DISCOVERY_IN.exists() else None
     if args.check:
         ok = (

@@ -166,12 +166,33 @@ COMPANY_NAMES = {  # 기사에 실제로 쓰이는 이름 (법인명 접미사 �
 
 
 def extra_company_nodes() -> list[dict[str, Any]]:
-    """그래프 밖 기업(core.entities 에 source=indicator 로 등록)을 그래프 기업 노드와 같은 모양으로. 노드 목록(nodes)에는 쓰지 않는다."""
+    """그래프 밖 기업(core.entities 에 source=indicator 로 등록)을 그래프 기업 노드와 같은 모양으로. 노드 목록(nodes)에는 쓰지 않는다.
+    그래프로 승격된 기업(같은 id)은 그래프 노드가 원본이므로 빠진다."""
     from wsj.ecosystems.indicators import TW_ENTITIES
 
+    in_graph = {n["id"] for n in load_graph()["nodes"]}
     return [{"id": eid, "kind": "company", "label": f"{e['name']} ({e['exchange']} {e['local_code']}, 비SEC)", "ecosystem": (e.get("ecosystems") or [None])[0],
              "listing": {"ticker": e["local_code"], "exchange": e["exchange"], "cik": None, "filer_type": "non_sec_listed"},
-             "size_band": e.get("size_band"), "in_universe": False, "_extra": True} for eid, e in TW_ENTITIES.items()]
+             "size_band": e.get("size_band"), "in_universe": False, "_extra": True} for eid, e in TW_ENTITIES.items() if eid not in in_graph]
+
+
+_CORP_SUFFIX = re.compile(r",?\s+(Inc\.?|Corp\.?|Corporation|Co\.,?\s*Ltd\.?|Co\.?|Ltd\.?|Limited|Holdings?|Group|plc|AG|SE|N\.V\.|S\.A\.|S\.p\.A\.|GmbH|K\.K\.)$", re.I)
+
+
+def graph_company_names(nodes: list[dict[str, Any]]) -> dict[str, list[str]]:
+    """그래프 기업 중 COMPANY_NAMES 에 없는 곳의 기사용 이름 (라벨에서 티커·법인 접미사 제거). 태깅 전용 — 뉴스 질의는 COMPANY_NAMES 만."""
+    from wsj.ecosystems.sync_db import clean_name
+
+    out: dict[str, list[str]] = {}
+    for n in nodes:
+        if n.get("kind") != "company" or n["id"] in COMPANY_NAMES:
+            continue
+        name = clean_name(n["label"])
+        for _ in range(2):
+            name = _CORP_SUFFIX.sub("", name).strip()
+        if len(name) >= 5 or (name.isupper() and len(name) >= 3):
+            out[n["id"]] = [name]
+    return out
 
 
 def build_lexicon(graph: dict[str, Any]) -> tuple[list[tuple[re.Pattern, str]], list[tuple[re.Pattern, str]]]:
@@ -200,7 +221,7 @@ def build_lexicon(graph: dict[str, Any]) -> tuple[list[tuple[re.Pattern, str]], 
                 phrases.setdefault(w, nid)
     node_pats = [(re.compile(r"(?<![a-z0-9])" + re.escape(p).replace(r"\ ", r"[\s-]") + r"(?![a-z])", re.I), nid) for p, nid in sorted(phrases.items(), key=lambda kv: -len(kv[0]))]
     comp_pats: list[tuple[re.Pattern, str]] = []
-    for cid, names in COMPANY_NAMES.items():
+    for cid, names in {**graph_company_names(graph["nodes"]), **COMPANY_NAMES}.items():
         if cid not in company_ids:
             continue
         for nm in names:
@@ -530,9 +551,17 @@ def llm_curate(cands: list[dict[str, Any]], graph: dict[str, Any], impact: dict[
     nodes = {n["id"]: n for n in graph["nodes"]}
     used_nodes = sorted({n for c in cands for n in c["nodes"]})
     node_catalog = [{"id": n, "label": nodes[n]["label"], "kind": nodes[n]["kind"], "ecosystem": nodes[n].get("ecosystem")} for n in used_nodes if n in nodes]
+    # 기업 목록은 후보에 태깅된 기업 + 후보 노드에 직접 연결된 기업만 (그래프가 커져도 프롬프트가 커지지 않게)
+    used_set = set(used_nodes)
+    relevant = {co for c in cands for co in c["companies"]}
+    for e in graph["edges"]:
+        if e["from"] in used_set and nodes.get(e["to"], {}).get("kind") == "company":
+            relevant.add(e["to"])
+        if e["to"] in used_set and nodes.get(e["from"], {}).get("kind") == "company":
+            relevant.add(e["from"])
     company_catalog = [
         {"id": n["id"], "label": n["label"], "size_band": n.get("size_band"), "ecosystem": n.get("ecosystem")}
-        for n in [*graph["nodes"], *extra_company_nodes()] if n["kind"] == "company"
+        for n in [*graph["nodes"], *extra_company_nodes()] if n["kind"] == "company" and n["id"] in relevant
     ]
     hints = {
         n: [f"{c['company']} {c['direction']} {c['confidence']}" for c in impact.get("nodes", {}).get(n, {}).get("companies", [])[:5]]

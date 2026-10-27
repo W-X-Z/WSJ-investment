@@ -37,6 +37,13 @@
 .sc-type-legend span{display:flex;align-items:center;gap:5px;color:#8c9ab0;font-size:10px}
 .sc-type-legend .sc-legend-small{color:#a8650c;font-weight:750;background:#fff3dc;border:1px solid #f0cf8f;border-radius:5px;padding:2px 6px}
 .sc-trust-toggle{gap:1px;background:#f2f5f9;padding:3px;border-radius:7px}
+.sc-depth{display:flex;align-items:center;gap:1px;background:#f2f5f9;padding:3px;border-radius:7px;flex-wrap:wrap}
+.sc-depth-label{font-size:10px;color:#6f819b;font-weight:800;padding:0 7px 0 5px}
+.sc-depth button{border:0;background:transparent;border-radius:5px;padding:5px 9px;font-size:10px;color:#a1adbd}
+.sc-depth button.within{color:#3f5f96;font-weight:700}
+.sc-depth button.active{background:#fff;box-shadow:0 1px 4px #29436310;color:#4663a7;font-weight:750}
+.sc-depth-hint{font-size:10px;color:#a3afbf;padding:0 6px}
+@media (max-width:760px){.sc-depth-hint{display:none}}
 .sc-trust-toggle button{border:0;background:transparent;border-radius:5px;padding:5px 9px;font-size:10px;color:#96a3b4}
 .sc-trust-toggle button.active{background:#fff;box-shadow:0 1px 4px #29436310;color:#4663a7;font-weight:750}
 
@@ -88,7 +95,7 @@
 .sc-guide-band{color:var(--guide,#56709a);border-bottom:2px solid color-mix(in srgb,var(--guide,#56709a) 45%,transparent)}
 /* network view: faint ecosystem name in a free spot of each loose region (centre anchor) */
 .sc-guide-region{translate:-50% -50%;padding:0;color:color-mix(in srgb,var(--guide,#56709a) 78%,#1d2f4a);opacity:.62;letter-spacing:.03em;
-  font-size:clamp(14px,calc(14px / var(--sc-z)),64px);text-shadow:0 0 .35em #fff,0 0 .35em #fff}
+  font-size:clamp(14px,calc(15px / var(--sc-z)),600px);text-shadow:0 0 .35em #fff,0 0 .35em #fff}
 
 /* ---------- nodes ---------- */
 .snode{box-sizing:border-box;width:100%;height:100%;display:flex;flex-direction:column;justify-content:center;gap:5px;padding:7px 11px;border-radius:11px;border:1.4px solid #cdd8e6;border-left-width:4px;background:#fff;color:#1f334e;box-shadow:0 4px 14px #173d631a;overflow:hidden;transition:opacity .18s,box-shadow .14s,border-color .14s;cursor:pointer}
@@ -124,12 +131,21 @@
 .snode.hop-3{opacity:.8}
 .snode.is-match{box-shadow:0 0 0 5px #3fb3c766,0 12px 30px #294e9330}
 
-/* semantic zoom: at overview zoom the label grows so it stays ~11px on screen */
-.sc-lod .snode{gap:3px;padding:6px 10px}
+/* hidden neighbours badge (level of detail, canvas/lod.ts) */
+.snode{position:relative}
+.snode.has-more .snode-label{padding-right:22px}
+.snode-more{position:absolute;top:5px;right:6px;font-size:9.5px;font-weight:800;color:#5470a6;background:#eef3fc;border:1px solid #d9e4f6;border-radius:999px;padding:0 6px;line-height:1.5}
+.snode-ecosystem .snode-more{background:#ffffff26;color:#e6eefb;border-color:#ffffff40}
+
+/* semantic zoom: below PILL_ZOOM (0.66) a card keeps the screen size it had at that zoom — a pill
+   with the label only — and lod.ts hides pills that would overlap (map-style declutter). */
+.sc-lod .snode{transform:scale(calc(.66 / var(--sc-z)));transform-origin:50% 50%;gap:2px;padding:6px 12px}
 .sc-lod .snode-kind,.sc-lod .snode-chips{display:none}
-.sc-lod .snode-label{font-size:clamp(12.5px,calc(11.5px / var(--sc-z)),22px);line-height:1.12}
+.sc-lod .snode-label{font-size:17.5px;line-height:1.14;-webkit-line-clamp:2}
 .sc-lod .snode-company .snode-label{-webkit-line-clamp:2}
 .sc-lod .snode-smallcap .snode-label::before{content:"★ ";color:#c46f00}
+.sc-lod .snode-more{font-size:12px;top:3px;right:4px}
+.sc-lod .snode.has-more .snode-label{padding-right:30px}
 
 /* ---------- edges ---------- */
 .sedge{stroke:#7d91b3;stroke-width:1.5;opacity:.85;transition:opacity .18s}

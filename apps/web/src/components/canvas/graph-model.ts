@@ -236,7 +236,7 @@ function regionLabels(nodes: GraphNode[], positions: Map<string, Vec>, groupOf: 
   const x0 = Math.min(...P.map((q) => q.p.x)), y0 = Math.min(...P.map((q) => q.p.y));
   const x1 = Math.max(...P.map((q) => q.p.x)) + NODE_W, y1 = Math.max(...P.map((q) => q.p.y)) + NODE_H;
   const z = Math.min(1, Math.max(0.08, Math.min((vp.w - 86) / (x1 - x0), (vp.h - 110) / (y1 - y0))));
-  const font = Math.min(64, Math.max(14, 14 / z));
+  const font = Math.max(14, 15 / z); // matches .sc-guide-region
   const taken: { x: number; y: number; w: number; h: number }[] = P.map((q) => ({ x: q.p.x - 10, y: q.p.y - 10, w: NODE_W + 20, h: NODE_H + 20 }));
   const hit = (a: { x: number; y: number; w: number; h: number }) => taken.some((b) => a.x < b.x + b.w && b.x < a.x + a.w && a.y < b.y + b.h && b.y < a.y + a.h);
   const guides: Guide[] = [];
