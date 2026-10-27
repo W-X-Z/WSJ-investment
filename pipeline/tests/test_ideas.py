@@ -1,0 +1,82 @@
+"""투자 아이디어 엔진의 결정적 부분: 신호 → 후보 사슬 → 검증. LLM 은 부르지 않는다. ADR-0016."""
+
+from datetime import UTC, datetime
+
+from wsj.ecosystems import ideas
+from wsj.ecosystems.ontology import load_graph
+
+NOW = datetime(2026, 10, 27, tzinfo=UTC)
+ISSUE = {
+    "issue_key": "k1", "status": "active", "title": "AI 칩 테스트 공급사 9월 매출 급증", "summary": "프로브카드 수요", "why_it_matters": None,
+    "importance": 7, "nodes": ["process:kgd_test"], "companies": [{"company_id": "company:form", "direction": "+"}],
+    "sources": [{"url": "https://example.com/a", "title": "HBM probe card demand surges", "publisher": "X", "published_at": "2026-10-26T00:00:00Z",
+                 "source_type": "trade"}],
+    "latest_published_at": "2026-10-26T00:00:00+00:00",
+}
+INDICATOR = {"indicator_id": "tw:6223", "label": "MPI 월매출", "category": "tw_revenue", "source_url": "https://mops.twse.com.tw/x",
+             "nodes": ["process:kgd_test"], "companies": [], "as_of": "2026-09-01", "yoy_pct": 82.2}
+
+
+def _prepare():
+    g = load_graph()
+    reg, signals, cands, payload = ideas.prepare([ISSUE], [INDICATOR], g, NOW, 21, [], 8, 20)
+    return g, reg, signals, cands, payload
+
+
+def test_signals_keep_sources_and_map_tw_company():
+    _, reg, signals, _, _ = _prepare()
+    issue = next(s for s in signals if s["kind"] == "issue")
+    assert issue["evidence"] and all(e in reg.items for e in issue["evidence"])
+    assert "company:form" in issue["companies"]
+    mpi = next(s for s in signals if s["kind"] == "indicator")
+    assert "company:mpi" in mpi["companies"] and mpi["stars"] == 3  # +82% YoY
+
+
+def test_old_and_one_star_issues_are_not_signals():
+    g = load_graph()
+    reg = ideas.Registry()
+    old = {**ISSUE, "issue_key": "old", "latest_published_at": "2026-08-01T00:00:00+00:00"}
+    weak = {**ISSUE, "issue_key": "weak", "importance": 3}
+    assert ideas.load_signals([old, weak], [], g, reg, NOW, 21) == []
+
+
+def test_candidates_reach_probe_card_suppliers_with_evidence():
+    _, reg, _, cands, payload = _prepare()
+    ids = [c["company_id"] for c in cands]
+    assert "company:jem" in ids or "company:form" in ids
+    for c in cands:
+        assert c["size_band"] != "private"
+        for ch in c["chains"]:
+            assert all(st["ev"] is None or st["ev"] in reg.items for st in ch["steps"])
+    cited = {e["id"] for e in payload["evidence"]}
+    assert all(e in cited for s in payload["signals"] for e in s["evidence"])
+
+
+def test_validate_drops_invented_evidence_unknown_company_and_signal_free_ideas():
+    g, reg, signals, _, _ = _prepare()
+    s_ev = signals[0]["evidence"][0]
+    g_ev = next(e for e in reg.items if e.startswith("G"))
+    good = {"action": "new", "type": "bottleneck", "title": "HBM 테스트 붐 — JEM", "thesis": "a. b.", "stars": 2,
+            "companies": [{"id": "company:jem", "role": "primary", "why": "x"}],
+            "chain": [{"claim": "c1", "evidence": [s_ev]}, {"claim": "c2", "evidence": [g_ev, "G9999"]}], "risks": [], "watch": ["w"]}
+    invented = {**good, "title": "가짜", "chain": [{"claim": "c1", "evidence": ["S999"]}, {"claim": "c2", "evidence": ["G9999"]}]}
+    unknown = {**good, "title": "없는 회사", "companies": [{"id": "company:nope", "role": "primary"}]}
+    no_signal = {**good, "title": "신호 없음", "chain": [{"claim": "c1", "evidence": [g_ev]}, {"claim": "c2", "evidence": [g_ev]}]}
+    rows, rejects = ideas.validate([good, invented, unknown, no_signal], reg, g, signals, {}, NOW, "m", "llm")
+    assert [r["title"] for r in rows] == ["HBM 테스트 붐 — JEM"] and len(rejects) == 3
+    r = rows[0]
+    assert r["primary_company"] == "company:jem" and r["trend"] == "new" and r["companies"][0]["ticker"] == "6855"
+    assert all(e["url"].startswith("https://") for st in r["chain"] for e in st["evidence"])
+    assert {e["id"] for e in r["chain"][1]["evidence"]} == {g_ev}  # 없는 id 는 빠진다
+
+
+def test_update_keeps_key_and_close_touches_only_status():
+    g, reg, signals, _, _ = _prepare()
+    s_ev = signals[0]["evidence"][0]
+    existing = {"abc": {"idea_key": "abc", "stars": 1}}
+    upd = {"action": "update", "idea_key": "abc", "type": "bottleneck", "title": "t", "thesis": "a. b.", "stars": 2,
+           "companies": [{"id": "company:jem", "role": "primary"}], "chain": [{"claim": "c", "evidence": [s_ev]}, {"claim": "d", "evidence": [s_ev]}]}
+    close = {"action": "close", "idea_key": "abc", "reason": "반증"}
+    rows, _ = ideas.validate([upd, close], reg, g, signals, existing, NOW, "m", "llm")
+    assert rows[0]["idea_key"] == "abc" and rows[0]["trend"] == "strengthened"
+    assert set(rows[1]) == {"idea_key", "status", "trend", "close_reason", "updated_at"} and rows[1]["status"] == "closed"

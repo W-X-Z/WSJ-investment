@@ -181,7 +181,7 @@ _CORP_SUFFIX = re.compile(r",?\s+(Inc\.?|Corp\.?|Corporation|Co\.,?\s*Ltd\.?|Co\
 
 def graph_company_names(nodes: list[dict[str, Any]]) -> dict[str, list[str]]:
     """그래프 기업 중 COMPANY_NAMES 에 없는 곳의 기사용 이름 (라벨에서 티커·법인 접미사 제거). 태깅 전용 — 뉴스 질의는 COMPANY_NAMES 만."""
-    from wsj.ecosystems.sync_db import clean_name
+    from wsj.ecosystems.ontology import clean_name
 
     out: dict[str, list[str]] = {}
     for n in nodes:

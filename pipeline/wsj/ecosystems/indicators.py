@@ -69,7 +69,7 @@ def _fred(sid: str, label: str, eco: str, nodes: list[str], unit: str = "index",
     return Indicator(f"fred:{sid}", label, cat, unit, "monthly", "FRED", f"https://fred.stlouisfed.org/series/{sid}", eco, nodes, [], note, sid)
 
 
-# 그래프 밖 기업(대만 공급사) — core.entities 에 source='indicator' 로 등록된다 (sync_db). 그래프에 올릴 때도 이 id 를 쓴다.
+# 대만 월매출 공시 기업 — 지표의 companies 와 이슈 태깅에 쓴다. 그래프에 같은 id 의 기업 노드가 있으면 그래프가 원본.
 TW_ENTITIES: dict[str, dict[str, Any]] = {}
 
 
