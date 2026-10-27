@@ -72,6 +72,15 @@ def validate(graph: dict[str, Any], onto: dict[str, Any]) -> Report:
             rep.errors.append(f"node {n['id']}: missing label")
         if n.get("kind") not in ("ecosystem",) and not n.get("ecosystem"):
             rep.warnings.append(f"node {n['id']}: no ecosystem membership")
+        mat = n.get("maturity")
+        if mat is not None:
+            mf = onto.get("maturity_field", {})
+            if n.get("kind") not in mf.get("applies_to", []):
+                rep.errors.append(f"node {n['id']}: maturity not allowed on kind {n.get('kind')}")
+            elif mat.get("stage") not in onto.get("maturity_stages", {}):
+                rep.errors.append(f"node {n['id']}: unknown maturity stage {mat.get('stage')!r}")
+            elif not str(mat.get("evidence_url", "")).startswith("https://") or not mat.get("as_of"):
+                rep.errors.append(f"node {n['id']}: maturity needs as_of and https evidence_url")
         if n.get("kind") == "company":
             if n.get("role") not in onto["company_fields"]["role"]:
                 rep.errors.append(f"company {n['id']}: role must be one of {onto['company_fields']['role']}")

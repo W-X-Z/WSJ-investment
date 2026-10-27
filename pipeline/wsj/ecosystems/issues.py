@@ -155,11 +155,28 @@ COMPANY_NAMES = {  # 기사에 실제로 쓰이는 이름 (법인명 접미사 �
     "company:aaoi": ["Applied Optoelectronics"], "company:belfa": ["Bel Fuse"], "company:aosl": ["Alpha and Omega Semiconductor", "Alpha & Omega Semiconductor"],
     "company:ipwr": ["Ideal Power"], "company:asys": ["Amtech Systems"], "company:wolf": ["Wolfspeed"], "company:cvv": ["CVD Equipment"],
     "company:intt": ["inTEST"], "company:lessengers": ["Lessengers"],
+    # 그래프 밖 대만 공급사 (core.entities, source=indicator) — TSMC·ASE 는 너무 자주 나와 태깅하지 않는다
+    "company:unimicron": ["Unimicron"], "company:kyec": ["King Yuan Electronics", "KYEC"], "company:winway": ["WinWay"],
+    "company:mpi": ["MPI Corp", "MPI Corporation"], "company:chunghwa_precision_test": ["Chunghwa Precision Test", "CHPT"],
+    "company:accton": ["Accton"], "company:landmark_optoelectronics": ["LandMark Optoelectronics", "LandMark Opto"],
+    "company:luxnet": ["Luxnet", "LuxNet"], "company:foci": ["FOCI Fiber Optic", "FOCI"], "company:browave": ["Browave"],
+    "company:delta_electronics": ["Delta Electronics"], "company:lite_on": ["Lite-On", "LITEON", "Liteon"], "company:bizlink": ["BizLink"],
+    "company:asia_vital_components": ["Asia Vital Components", "AVC"], "company:auras": ["Auras Technology", "Auras"],
 }
+
+
+def extra_company_nodes() -> list[dict[str, Any]]:
+    """그래프 밖 기업(core.entities 에 source=indicator 로 등록)을 그래프 기업 노드와 같은 모양으로. 노드 목록(nodes)에는 쓰지 않는다."""
+    from wsj.ecosystems.indicators import TW_ENTITIES
+
+    return [{"id": eid, "kind": "company", "label": f"{e['name']} ({e['exchange']} {e['local_code']}, 비SEC)", "ecosystem": (e.get("ecosystems") or [None])[0],
+             "listing": {"ticker": e["local_code"], "exchange": e["exchange"], "cik": None, "filer_type": "non_sec_listed"},
+             "size_band": e.get("size_band"), "in_universe": False, "_extra": True} for eid, e in TW_ENTITIES.items()]
 
 
 def build_lexicon(graph: dict[str, Any]) -> tuple[list[tuple[re.Pattern, str]], list[tuple[re.Pattern, str]]]:
     ids = {n["id"] for n in graph["nodes"]}
+    company_ids = ids | {n["id"] for n in extra_company_nodes()}
     phrases: dict[str, str] = {k: v for k, v in PHRASE_OVERRIDES.items() if v in ids}
     # 발굴 구문(사람이 큐레이션)이 백필 별칭보다 우선 — 'hybrid bonding' 이 병목 노드로 가는 별칭 충돌 방지
     for nid, qs in DISCOVERY_QUERIES.items():
@@ -184,7 +201,7 @@ def build_lexicon(graph: dict[str, Any]) -> tuple[list[tuple[re.Pattern, str]], 
     node_pats = [(re.compile(r"(?<![a-z0-9])" + re.escape(p).replace(r"\ ", r"[\s-]") + r"(?![a-z])", re.I), nid) for p, nid in sorted(phrases.items(), key=lambda kv: -len(kv[0]))]
     comp_pats: list[tuple[re.Pattern, str]] = []
     for cid, names in COMPANY_NAMES.items():
-        if cid not in ids:
+        if cid not in company_ids:
             continue
         for nm in names:
             flags = 0 if nm.isupper() or len(nm) <= 4 else re.I  # 'KLA', 'AXT', 'K&S' 는 대소문자 구분
@@ -515,7 +532,7 @@ def llm_curate(cands: list[dict[str, Any]], graph: dict[str, Any], impact: dict[
     node_catalog = [{"id": n, "label": nodes[n]["label"], "kind": nodes[n]["kind"], "ecosystem": nodes[n].get("ecosystem")} for n in used_nodes if n in nodes]
     company_catalog = [
         {"id": n["id"], "label": n["label"], "size_band": n.get("size_band"), "ecosystem": n.get("ecosystem")}
-        for n in graph["nodes"] if n["kind"] == "company"
+        for n in [*graph["nodes"], *extra_company_nodes()] if n["kind"] == "company"
     ]
     hints = {
         n: [f"{c['company']} {c['direction']} {c['confidence']}" for c in impact.get("nodes", {}).get(n, {}).get("companies", [])[:5]]
@@ -615,7 +632,7 @@ def run(http: HttpClient, store, days: int = 14, use_llm: bool = True, model: st
     now = now or datetime.now(UTC)
     since = now - timedelta(days=days)
     graph = load_graph()
-    gnodes = {n["id"]: n for n in graph["nodes"]}
+    gnodes = {n["id"]: n for n in graph["nodes"]} | {n["id"]: n for n in extra_company_nodes()}
     node_pats, comp_pats = build_lexicon(graph)
     company_queries = [(f'"{COMPANY_NAMES[n["id"]][0]}"', "company") for n in graph["nodes"]
                        if n["kind"] == "company" and n.get("size_band") in ("micro", "small", "unknown", "mid") and n["id"] in COMPANY_NAMES]
@@ -706,7 +723,7 @@ def rows_from_picks(picked: list[dict[str, Any]], cands: list[dict[str, Any]], g
         if not ids:
             continue
         members = [m for i in ids for m in cands[i]["members"]]
-        nodes = [n for n in p.get("nodes") or [] if n in gnodes]
+        nodes = [n for n in p.get("nodes") or [] if n in gnodes and not gnodes[n].get("_extra")]
         comps = []
         for c in p.get("companies") or []:
             cid = c.get("id") if isinstance(c, dict) else None
@@ -737,13 +754,15 @@ def _row(members: list[Item], title: str, summary, why, event_type, ecosystem, i
 
 def save(store, rows: list[dict[str, Any]], now: datetime) -> int:
     """issue_key 로 upsert. 기존 이슈와 출처 URL 이 겹치면 그 키·first_seen 을 이어 쓴다."""
-    recent = store.select("ideas.supply_chain_issues", ["issue_key", "sources", "first_seen"], {"latest_published_at": ("gte", (now - timedelta(days=30)).isoformat())})
+    recent = store.select("ideas.supply_chain_issues", ["issue_key", "sources", "first_seen", "status", "merged_into"],
+                          {"latest_published_at": ("gte", (now - timedelta(days=30)).isoformat())})
     url_to_key = {}
     first_seen = {}
     for r in recent:
         first_seen[r["issue_key"]] = r["first_seen"]
+        target = r.get("merged_into") if r.get("status") == "merged" and r.get("merged_into") else r["issue_key"]  # 병합된 이슈는 대표로
         for s in r.get("sources") or []:
-            url_to_key[s.get("url")] = r["issue_key"]
+            url_to_key[s.get("url")] = target
     out = []
     for row in rows:
         k = next((url_to_key[s["url"]] for s in row["sources"] if s["url"] in url_to_key), row["issue_key"])
@@ -777,17 +796,24 @@ def main(argv: list[str] | None = None) -> int:
     logging.getLogger("httpx").setLevel(logging.WARNING)
     store = make_store(settings)
     http = HttpClient(user_agent=settings.sec_user_agent)
+    from wsj.runlog import logged_run
+
     try:
         picks = json.loads(args.picks.read_text(encoding="utf-8")) if args.picks else None
-        result = run(http, store, args.days, not args.no_llm, args.model, settings.anthropic_api_key or None, max_issues=args.max_issues,
-                     picks=picks, dump_candidates=args.dump_candidates, cache=args.cache)
-        if not args.no_save:
-            n = save(store, result["issues"], datetime.fromisoformat(result["as_of"]))
-            log.info("saved %d issues", n)
-            if result["indicator_points"]:
-                from wsj.ecosystems import indicators
+        with logged_run(None if args.no_save else store, "issues", {"days": args.days, "model": args.model, "llm": not args.no_llm}) as rl:
+            result = run(http, store, args.days, not args.no_llm, args.model, settings.anthropic_api_key or None, max_issues=args.max_issues,
+                         picks=picks, dump_candidates=args.dump_candidates, cache=args.cache)
+            if not args.no_save:
+                n = save(store, result["issues"], datetime.fromisoformat(result["as_of"]))
+                log.info("saved %d issues", n)
+                rl["rows"] = n
+                if result["indicator_points"]:
+                    from wsj.ecosystems import indicators
 
-                log.info("saved %d indicator points", indicators.save(store, result["indicator_points"]))
+                    m = indicators.save(store, result["indicator_points"])
+                    log.info("saved %d indicator points", m)
+                    rl["rows"] += m
+            rl["notes"] = json.dumps({"method": result["method"], **result["stats"]}, ensure_ascii=False, default=str)[:3900]
     finally:
         http.close()
         store.close()

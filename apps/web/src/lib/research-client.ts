@@ -26,3 +26,7 @@ export const ECO_BY_ID = {
   optics:{name:"Optics & Photonics",color:"cyan"},
   power:{name:"Power & Cooling",color:"amber"},
 } as const;
+
+/** 화면 표시용 별점 (DB ideas.supply_chain_issues.stars 와 같은 규칙): ≥8 ★3, ≥5 ★2, 그 밖 ★1 */
+export const starsOf = (importance?: number|null) => importance == null ? 0 : importance >= 8 ? 3 : importance >= 5 ? 2 : 1;
+export const STAR_LABEL: Record<number,string> = { 3: "지금 주목", 2: "지켜볼 것", 1: "참고" };

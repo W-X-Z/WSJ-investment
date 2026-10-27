@@ -12,6 +12,8 @@ on:
       - "pipeline/wsj/ecosystems/issues.py"
       - "pipeline/wsj/ecosystems/sources.py"
       - "pipeline/wsj/ecosystems/indicators.py"
+      - "pipeline/wsj/ecosystems/sync_db.py"
+      - "research/ecosystems/seed_graph.json"
       - ".github/workflows/issues.yml"
   workflow_dispatch:
     inputs:
@@ -53,6 +55,9 @@ jobs:
       - name: Install
         working-directory: pipeline
         run: pip install -e .
+      - name: Sync ontology and entities (git → DB)
+        working-directory: pipeline
+        run: python -m wsj.ecosystems.sync_db
       - name: Collect, curate and save issues
         working-directory: pipeline
         env:

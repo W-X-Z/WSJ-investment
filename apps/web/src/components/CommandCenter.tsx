@@ -6,9 +6,10 @@ import Link from "next/link";
 import { Icon } from "@/components/Icon";
 import { GraphExplorer } from "@/components/GraphExplorer";
 import { IndustryMilestones } from "@/components/IndustryMilestones";
-import { type EcoId } from "@/lib/research-client";
+import { type EcoId, starsOf } from "@/lib/research-client";
+import { Stars } from "@/components/Stars";
 
-type Story = {id:string;title:string;summary:string;date:string;ecoId:string;type:string;source:string;significance:string;status:string;sourceUrl?:string;target?:string;importance?:number};
+type Story = {id:string;title:string;summary:string;why?:string;rationale?:string;date:string;ecoId:string;type:string;source:string;significance:string;status:string;sourceUrl?:string;target?:string;importance?:number};
 type Thesis = {id:string;ticker:string;company:string;title:string;description:string;ecoId:string;state:string;trigger:string;risk:string;href?:string;live?:boolean};
 type Ecosystem = {id:EcoId;title:string;summary:string;bottleneck:string;trajectory:string;metric:string;metricLabel:string};
 const ORDER:EcoId[]=["hbm","optics","power"];
@@ -45,7 +46,7 @@ export function CommandCenter({stories,ideas,ecosystems,sourceOnline,asOf,indica
    <div className="cc-priority-aside"><div className="cc-eyebrow">02 / ACTIVE THESES</div><h2>검증할 투자 가설</h2>{topIdeas.length?topIdeas.map(x=><Link key={x.id} href={x.href??`/ideas/${x.id}`} className="cc-mini-idea"><div><strong>{x.ticker}</strong><span>{STATUS[x.state]??"조사 중"}</span></div><p>{x.title}</p><Icon name="arrow-up-right" size={16}/></Link>):<p>현재 검증할 가설이 없습니다.</p>}<Link className="cc-aside-link" href="/ideas">모든 투자 가설 <Icon name="arrow-right" size={15}/></Link></div>
   </div>
   {!!issues.length&&<><div className="cc-section-heading"><div><div className="cc-eyebrow">SUPPLY CHAIN ISSUES</div><h2>최근 공급망 이슈</h2></div><Link href="/feed">전체 피드 <Icon name="arrow-up-right" size={15}/></Link></div>
-  <div className="cc-issue-grid">{issues.map(x=><Link key={x.id} href={`/feed/${encodeURIComponent(x.id)}`} className="cc-issue"><div className="cc-issue-top"><span className="story-score">{x.importance}/10</span><span>{NAMES[x.ecoId]??"공급망"}</span><small>{fmt(x.date)}</small></div><strong>{x.title}</strong><p>{x.summary}</p></Link>)}</div></>}
+  <div className="cc-issue-grid">{issues.map(x=><Link key={x.id} href={`/feed/${encodeURIComponent(x.id)}`} className="cc-issue"><div className="cc-issue-top"><Stars n={starsOf(x.importance)} why={x.rationale}/><span>{NAMES[x.ecoId]??"공급망"}</span><small>{fmt(x.date)}</small></div><strong>{x.title}</strong><p>{x.why??x.summary}</p></Link>)}</div></>}
   {indicators&&<><div className="cc-section-heading"><div><div className="cc-eyebrow">INDICATORS</div><h2>가격·실적 지표 변화</h2></div><Link href="/indicators">전체 지표 <Icon name="arrow-up-right" size={15}/></Link></div>{indicators}</>}
   <IndustryMilestones compact/>
   <div className="cc-section-heading"><div><div className="cc-eyebrow">03 / TECHNOLOGY SYSTEMS</div><h2>산업망의 주요 흐름</h2></div><Link href="/ecosystems">전체 산업망 <Icon name="arrow-up-right" size={15}/></Link></div>

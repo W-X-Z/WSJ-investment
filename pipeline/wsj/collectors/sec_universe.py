@@ -52,6 +52,9 @@ SECTOR_SIC: dict[str, set[int]] = {
 }
 
 
+ACTIVE_SIC_BUCKETS: set[str] = set()
+
+
 def sector_for(sic: int | None) -> str:
     if sic is None:
         return "other"
@@ -192,7 +195,9 @@ class SecUniverseCollector(Collector):
                     row["exchange"] = s["exchanges"][0]
             sic_val = row.get("sic")
             bucket = sector_for(sic_val)
-            in_universe = cik in cand_set and bucket != "other"
+            # ADR-0015: 피벗 전 SIC 버킷(바이오·의료기기·AI SW·에너지·반도체 일반·정부조달)은 더 이상 유니버스가 아니다.
+            # sector_bucket 은 마스터 정보로 기록만 하고, 유니버스는 온톨로지 승격(universe sync)만 만든다.
+            in_universe = cik in cand_set and bucket in ACTIVE_SIC_BUCKETS
             if str(row.get("universe_reason") or "").startswith("ontology"):
                 # 온톨로지(공급망 그래프)로 승격된 회사는 SIC 버킷과 무관하게 유지한다 (ADR-0013)
                 row.update({"sector_bucket": row.get("sector_bucket") or "supply_chain", "updated_at": now})
