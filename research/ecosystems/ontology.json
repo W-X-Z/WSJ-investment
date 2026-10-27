@@ -417,15 +417,9 @@
     "confidence (검증기가 계산)"
   ],
   "maturity_stages": {
-    "research": "학술·사내 연구 (논문·학회)",
-    "lab_demo": "실험실 시연 (성능 수치 공개)",
-    "prototype": "시제품 공개 (학회·전시)",
-    "sampling": "고객 샘플 출하",
-    "qualification": "고객 인증 진행",
-    "pilot": "소량 양산·초기 매출",
-    "volume": "양산 (복수 고객 또는 주력 플랫폼 채택)",
-    "mainstream": "표준·지배적 방식",
-    "declining": "대체되는 중"
+    "early": "연구·시연·시제품",
+    "near": "고객 샘플·인증",
+    "commercial": "양산·채택"
   },
   "maturity_field": {
     "applies_to": [
@@ -444,6 +438,6 @@
       "evidence_tier": "evidence_tiers 의 키",
       "note": "string|null"
     },
-    "rule": "현재 단계 1개만. 단계 이력은 DB ideas.tech_milestones (ADR-0015 §기술 전환)"
+    "rule": "현재 단계 1개만, 3단계로 거칠게. 근거 사실은 DB ideas.tech_evidence (ADR-0015 §3-1)"
   }
 }
