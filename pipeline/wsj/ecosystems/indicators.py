@@ -242,7 +242,7 @@ def parse_tw_revenue(rows: list[dict[str, Any]], codes: set[str]) -> list[Point]
             continue
         pts.append(Point(f"tw:{code}", d, v, _num(r.get("營業收入-上月比較增減(%)")), _num(r.get("營業收入-去年同月增減(%)")),
                          {"name": r.get("公司名稱"), "ytd": _num(r.get("累計營業收入-當月累計營收")), "ytd_yoy": _num(r.get("累計營業收入-前期比較增減(%)")),
-                          "note": (r.get("備註") or "").strip() or None}))
+                          "note": (r.get("備註") or "").strip().strip("-") or None}))
     return pts
 
 
@@ -298,8 +298,9 @@ def notable(points: list[Point], history: dict[str, list[tuple[date, float]]]) -
         value = f"{p.value:,.0f}" if ind.category == "tw_revenue" else f"{p.value:,.3f}".rstrip("0").rstrip(".")
         title = f"{ind.label} {period}: {value} {ind.unit} ({', '.join(reasons)})"
         snippet = f"{ind.note or ''} 출처 {ind.source}. 연결 노드: {', '.join(ind.nodes)}".strip()
-        out.append({"indicator_id": iid, "title": title, "snippet": snippet, "url": ind.source_url + ("" if ind.category != "memory_spot" else f"#{iid}-{p.as_of}"),
-                    "as_of": p.as_of, "publisher": ind.source, "ecosystem": ind.ecosystem, "nodes": ind.nodes, "companies": ind.companies})
+        out.append({"indicator_id": iid, "title": title, "snippet": snippet, "url": f"{ind.source_url}#{iid}-{period}",
+                    "as_of": p.as_of, "monthly": ind.frequency == "monthly", "publisher": ind.source, "ecosystem": ind.ecosystem,
+                    "nodes": ind.nodes, "companies": ind.companies})
     return out
 
 

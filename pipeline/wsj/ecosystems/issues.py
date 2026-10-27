@@ -555,7 +555,9 @@ def collect_extra(http: HttpClient, store, now: datetime, since: datetime, indic
         return out
     indicator_points.extend(ind["points"])
     for n in ind["notable"]:
-        it = Item(n["url"], n["title"], datetime.combine(n["as_of"], datetime.min.time(), UTC) + timedelta(hours=12), n["publisher"], "data",
+        # 월간 지표는 기준월 1일이 아니라 발표(관측) 시점이 사건 날짜다
+        when = now if n.get("monthly") else datetime.combine(n["as_of"], datetime.min.time(), UTC) + timedelta(hours=12)
+        it = Item(n["url"], n["title"], when, n["publisher"], "data",
                   n["snippet"], n["indicator_id"], n["ecosystem"])
         it.nodes.update(n["nodes"])
         it.companies.update(n["companies"])
@@ -563,9 +565,24 @@ def collect_extra(http: HttpClient, store, now: datetime, since: datetime, indic
     return out
 
 
+ADMIN_NOISE = re.compile(r"^(agency information collection|sunshine act|privacy act of 1974|notice of (public )?meeting)|information collection activities", re.I)
+
+
+def phrase_in(it: Item) -> bool:
+    return bool(it.query) and it.query.lower() in f"{it.title} {it.snippet}".lower()
+
+
+def _research_rank(c: dict[str, Any]) -> tuple:
+    m = c["members"][0]
+    return (0 if "[산업체:" in m.snippet else 1, -m.published_at.timestamp())
+
+
 def select_candidates(cands: list[dict[str, Any]], limit: int) -> list[dict[str, Any]]:
-    """규칙 점수 상위 + 유형별 최소치(논문·지표·리서치 기관·정책은 점수 구조상 밀리기 쉽다)."""
-    ranked = sorted(cands, key=lambda c: (-c["rule_importance"], -c["raw"]))
+    """규칙 점수 상위 + 유형별 최소치. 논문만으로 된 클러스터는 최소치로만 들어온다 (산업체 저자 우선)."""
+    only_research = [c for c in cands if all(m.source_type == "research" for m in c["members"])]
+    research_ids = {id(c) for c in only_research}
+    ranked = sorted((c for c in cands if id(c) not in research_ids), key=lambda c: (-c["rule_importance"], -c["raw"]))
+    ranked += sorted(only_research, key=_research_rank)
     chosen = ranked[: max(0, limit - sum(QUOTA.values()) // 2)]
     have = {id(c) for c in chosen}
     for st, k in QUOTA.items():
@@ -576,7 +593,7 @@ def select_candidates(cands: list[dict[str, Any]], limit: int) -> list[dict[str,
     for c in ranked:
         if len(chosen) >= limit + sum(QUOTA.values()) // 2:
             break
-        if id(c) not in have:
+        if id(c) not in have and id(c) not in research_ids:
             chosen.append(c)
             have.add(id(c))
     return sorted(chosen, key=lambda c: (-c["rule_importance"], -c["raw"]))
@@ -623,6 +640,8 @@ def run(http: HttpClient, store, days: int = 14, use_llm: bool = True, model: st
         i for i in items
         if not NOISE.search(i.title)
         and (i.nodes or i.companies or i.source_type in ALWAYS_RELEVANT)  # 관보·정책·리서치 기관·지표는 출처 단계 필터를 이미 통과
+        and not ADMIN_NOISE.search(i.title)
+        and (i.source_type != "research" or phrase_in(i))  # 학술 검색은 느슨하다 — 구문이 제목·초록에 실제로 있어야
     ]
     relevant = dedupe(relevant)
     clusters = cluster(relevant)
