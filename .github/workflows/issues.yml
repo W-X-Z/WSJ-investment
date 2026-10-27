@@ -6,6 +6,13 @@ name: issues
 on:
   schedule:
     - cron: "47 21 * * *"
+  push:  # 수집·선별 코드가 바뀌면 바로 검증 실행 (public 레포라 표준 러너 무료)
+    branches: [main]
+    paths:
+      - "pipeline/wsj/ecosystems/issues.py"
+      - "pipeline/wsj/ecosystems/sources.py"
+      - "pipeline/wsj/ecosystems/indicators.py"
+      - ".github/workflows/issues.yml"
   workflow_dispatch:
     inputs:
       days:
