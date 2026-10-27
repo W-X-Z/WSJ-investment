@@ -75,9 +75,10 @@ TRENDFORCE_FILTER = re.compile(
     r"power|SiC|GaN|liquid cool|data cent|CSP|capex|substrate|ABF|test", re.I)
 ARXIV = "https://export.arxiv.org/api/query"
 OPENALEX = "https://api.openalex.org/works"
-INDUSTRY = re.compile(r"TSMC|Taiwan Semiconductor|Samsung|SK hynix|SK Hynix|Micron|Intel|NVIDIA|Nvidia|AMD|Broadcom|Marvell|Applied Materials|"
-                      r"Lam Research|KLA|ASML|imec|IMEC|Infineon|Wolfspeed|onsemi|Texas Instruments|Coherent|Lumentum|Cisco|Google|Meta|"
-                      r"Microsoft|Amazon|IBM|Huawei|ASE|Amkor|Kioxia|Besi|Tokyo Electron|Hitachi|Corning|Ayar|Lightmatter|Celestial", re.I)
+INDUSTRY = re.compile(  # 저자 소속의 산업체 — 대소문자 구분·단어 경계 (ASE 가 phase 에 걸리지 않게)
+    r"\b(TSMC|Taiwan Semiconductor|Samsung|SK hynix|SK Hynix|Micron|Intel|NVIDIA|Nvidia|AMD|Broadcom|Marvell|Applied Materials|"
+    r"Lam Research|KLA|ASML|imec|IMEC|Infineon|Wolfspeed|onsemi|Texas Instruments|Coherent|Lumentum|Cisco|Google|Meta Platforms|"
+    r"Microsoft|Amazon|IBM|Huawei|ASE Technology|Amkor|Kioxia|BE Semiconductor|Tokyo Electron|Hitachi|Corning|Ayar Labs|Lightmatter|Celestial AI)\b")
 
 
 def _strip(s: str | None) -> str:

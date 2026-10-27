@@ -568,8 +568,18 @@ def collect_extra(http: HttpClient, store, now: datetime, since: datetime, indic
 ADMIN_NOISE = re.compile(r"^(agency information collection|sunshine act|privacy act of 1974|notice of (public )?meeting)|information collection activities", re.I)
 
 
+RESEARCH_VENUE = re.compile(
+    r"arXiv|IEEE|Optica|Optics|Photonic|Lightwave|Electron Dev|Electronic Comp|Packaging|Semiconductor|Microelectronic|Solid[- ]State|"
+    r"Power Electronics|Applied Physics|Nature Electronics|Nature Communications|Nature Photonics|ECTC|OFC|VLSI|IEDM|ISSCC|"
+    r"Thermal Management|Electronics Packaging|Materials Science in Semiconductor|Journal of Electronic", re.I)
+
+
 def phrase_in(it: Item) -> bool:
-    return bool(it.query) and it.query.lower() in f"{it.title} {it.snippet}".lower()
+    """arXiv 는 구문 검색이 정확해 제목·초록, OpenAlex 는 검색이 느슨해 제목에 구문이 있어야 한다."""
+    if not it.query:
+        return False
+    text = f"{it.title} {it.snippet}" if it.publisher == "arXiv" else it.title
+    return it.query.lower() in text.lower() and bool(RESEARCH_VENUE.search(it.publisher))  # 반도체·광·전력전자 학회·저널만
 
 
 def _research_rank(c: dict[str, Any]) -> tuple:

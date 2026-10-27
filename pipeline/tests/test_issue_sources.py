@@ -71,3 +71,12 @@ def test_select_candidates_keeps_quota_types():
     types = {m.source_type for c in out for m in c["members"]}
     assert {"research", "data"} <= types
     assert len(out) <= 40 + sum(issues.QUOTA.values()) // 2
+
+
+def test_research_filter_requires_phrase_and_relevant_venue():
+    now = datetime(2026, 10, 27, tzinfo=UTC)
+    ok = issues.Item("https://arxiv.org/abs/1", "Hybrid bonding yield", now, "arXiv", "research", "Cu-Cu hybrid bonding pitch", "hybrid bonding")
+    loose = issues.Item("https://doi.org/2", "Battery cathodes", now, "IEEE Access", "research", "uses hybrid bonding once", "hybrid bonding")
+    offtopic = issues.Item("https://doi.org/3", "Hybrid bonding in timber", now, "Wood Science", "research", "", "hybrid bonding")
+    assert issues.phrase_in(ok) and not issues.phrase_in(loose) and not issues.phrase_in(offtopic)
+    assert not sources.INDUSTRY.search("State Key Laboratory for Advanced Metals") and sources.INDUSTRY.search("Samsung Electronics")
