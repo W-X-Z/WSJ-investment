@@ -105,12 +105,59 @@ create table if not exists ideas.issue_revisions (
 );
 create index if not exists issue_revisions_key_idx on ideas.issue_revisions (issue_key, revision desc);
 
+-- 기술 전환 (ADR-0015 §1·§5): 신기술이 상용화되면 누가 해자를 얻고 누가 대체되며 어떤 새 병목이 생기나
+-- 단계 이력: 근거가 있는 사건만 (논문·시제품·샘플·인증·양산 공시). 현재 단계는 최신 행.
+create table if not exists ideas.tech_milestones (
+  id            bigint generated always as identity primary key,
+  node_id       text not null references core.ontology_nodes (node_id),
+  stage         text not null check (stage in ('research','lab_demo','prototype','sampling','qualification','pilot','volume','mainstream','declining')),
+  achieved_at   date not null,
+  entity_id     text references core.entities (entity_id),          -- 누가 달성했나 (업계 전체면 null)
+  claim         text not null,                                      -- 출처에 있는 사실 한 줄 (수치 포함)
+  evidence_url  text not null,
+  evidence_tier text,
+  issue_key     text references ideas.supply_chain_issues (issue_key),
+  source        text not null default 'curated',                    -- curated | issue | paper | filing
+  created_at    timestamptz not null default now(),
+  unique (node_id, stage, evidence_url)
+);
+create index if not exists tech_milestones_node_idx on ideas.tech_milestones (node_id, achieved_at desc);
+
+-- 전환 카드: 기술 1개에 대한 AI 판정 (버전 이력). 주가 전망 없이 메커니즘·근거·관찰 신호만.
+create table if not exists ideas.tech_transitions (
+  id                  bigint generated always as identity primary key,
+  node_id             text not null references core.ontology_nodes (node_id),
+  as_of               date not null,
+  version             integer not null default 1,
+  stage               text,
+  readiness           smallint check (readiness between 1 and 10),  -- 상용화 준비도 1~10 (근거 문장 필수)
+  readiness_rationale text,
+  card                jsonb not null,  -- stage_evidence, conditions, signposts, winners, losers, new_bottlenecks, if_delayed, data_gaps
+  model               text,
+  usage               jsonb,
+  status              text not null default 'final' check (status in ('draft','final','superseded')),
+  created_at          timestamptz not null default now()
+);
+create index if not exists tech_transitions_node_idx on ideas.tech_transitions (node_id, created_at desc);
+
+-- 카드가 판정한 기업별 노출 (질의용 정규화): "이 기업을 위협/수혜하는 신기술은?"
+create table if not exists ideas.transition_exposures (
+  transition_id bigint not null references ideas.tech_transitions (id) on delete cascade,
+  entity_id     text not null references core.entities (entity_id),
+  role          text not null check (role in ('developer','ip_holder','enabler','new_bottleneck_supplier','displaced_incumbent','adopter')),
+  effect        text not null check (effect in ('+','-','±')),
+  mechanism     text,
+  primary key (transition_id, entity_id, role)
+);
+create index if not exists transition_exposures_entity_idx on ideas.transition_exposures (entity_id);
+
 -- 읽기 권한 (쓰기는 service_role 만)
 do $$
 declare t text;
 begin
   foreach t in array array['core.entities','core.ontology_nodes','core.ontology_edges','ideas.issue_nodes','ideas.issue_entities',
-                           'ideas.indicator_nodes','ideas.indicator_entities','ideas.brief_nodes','ideas.issue_revisions'] loop
+                           'ideas.indicator_nodes','ideas.indicator_entities','ideas.brief_nodes','ideas.issue_revisions',
+                           'ideas.tech_milestones','ideas.tech_transitions','ideas.transition_exposures'] loop
     execute format('alter table %s enable row level security', t);
     execute format('drop policy if exists "read all" on %s', t);
     execute format('create policy "read all" on %s for select to anon, authenticated using (true)', t);

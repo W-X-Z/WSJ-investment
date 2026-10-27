@@ -1,5 +1,5 @@
 {
-  "schema_version": "0.3",
+  "schema_version": "0.4",
   "as_of": "2026-10-27",
   "purpose": "seed_graph.json 이 따라야 하는 닫힌 어휘(closed vocabulary). 노드 종류·관계 술어의 정의역/치역·근거 등급·전파 방향을 한 곳에 둔다. 검증: python -m wsj.ecosystems.ontology --check",
   "node_kinds": {
@@ -295,6 +295,35 @@
       ],
       "direction": "none",
       "label_ko": "지분 투자·전략 제휴"
+    },
+    "develops": {
+      "domain": [
+        "company"
+      ],
+      "range": [
+        "technology",
+        "process",
+        "material",
+        "component",
+        "equipment",
+        "product"
+      ],
+      "direction": "supply_to_demand",
+      "label_ko": "개발 중 (연구·시제품·샘플 — 판매 전)",
+      "note": "offered_by 와 구분: 매출로 확인되기 전 단계. 근거는 논문·특허·샘플 출하·로드맵 발표. 상용화되면 offered_by 로 승격"
+    },
+    "holds_ip": {
+      "domain": [
+        "company"
+      ],
+      "range": [
+        "technology",
+        "process",
+        "material"
+      ],
+      "direction": "supply_to_demand",
+      "label_ko": "핵심 특허·라이선스 보유",
+      "note": "기술이 상용화되면 로열티·소송으로 해자가 될 수 있는 위치 (예: 하이브리드 본딩 IP)"
     }
   },
   "evidence_tiers": {
@@ -386,5 +415,35 @@
     "note",
     "about (기업↔기업 관계가 관한 기술/세대 노드 id — 영향 전파는 about 노드를 지난 경로에서만 이 관계를 탄다)",
     "confidence (검증기가 계산)"
-  ]
+  ],
+  "maturity_stages": {
+    "research": "학술·사내 연구 (논문·학회)",
+    "lab_demo": "실험실 시연 (성능 수치 공개)",
+    "prototype": "시제품 공개 (학회·전시)",
+    "sampling": "고객 샘플 출하",
+    "qualification": "고객 인증 진행",
+    "pilot": "소량 양산·초기 매출",
+    "volume": "양산 (복수 고객 또는 주력 플랫폼 채택)",
+    "mainstream": "표준·지배적 방식",
+    "declining": "대체되는 중"
+  },
+  "maturity_field": {
+    "applies_to": [
+      "technology",
+      "process",
+      "material",
+      "component",
+      "equipment",
+      "product",
+      "product_generation"
+    ],
+    "shape": {
+      "stage": "maturity_stages 의 키",
+      "as_of": "YYYY-MM-DD",
+      "evidence_url": "https://...",
+      "evidence_tier": "evidence_tiers 의 키",
+      "note": "string|null"
+    },
+    "rule": "현재 단계 1개만. 단계 이력은 DB ideas.tech_milestones (ADR-0015 §기술 전환)"
+  }
 }

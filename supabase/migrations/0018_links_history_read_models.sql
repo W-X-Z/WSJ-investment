@@ -194,3 +194,30 @@ from ideas.briefs b
 join core.companies co on co.cik = b.cik
 left join core.entities e on e.cik = b.cik;
 grant select on public.v_brief_detail to anon, authenticated;
+
+-- 기술 전환: 기술별 현재 단계(최신 마일스톤) + 최신 카드
+create or replace view public.v_tech_transitions
+with (security_invoker = true) as
+select n.node_id, n.kind, n.label, n.ecosystem,
+       coalesce(ms.stage, n.attrs->'maturity'->>'stage') as stage,
+       coalesce(ms.achieved_at::text, n.attrs->'maturity'->>'as_of') as stage_as_of,
+       ms.claim as stage_claim, ms.evidence_url as stage_evidence_url,
+       t.id as transition_id, t.as_of as card_as_of, t.readiness, t.readiness_rationale, t.card,
+       (select count(*) from ideas.tech_milestones m where m.node_id = n.node_id) as milestone_count
+from core.ontology_nodes n
+left join lateral (select m.stage, m.achieved_at, m.claim, m.evidence_url from ideas.tech_milestones m
+                   where m.node_id = n.node_id order by m.achieved_at desc, m.id desc limit 1) ms on true
+left join lateral (select t.* from ideas.tech_transitions t where t.node_id = n.node_id and t.status = 'final'
+                   order by t.created_at desc limit 1) t on true
+where n.active and (ms.stage is not null or t.id is not null or n.attrs ? 'maturity');
+grant select on public.v_tech_transitions to anon, authenticated;
+
+-- 기업별 기술 전환 노출: 이 기업을 위협하거나 키우는 신기술 (최신 카드 기준)
+create or replace view public.v_entity_transitions
+with (security_invoker = true) as
+select x.entity_id, t.node_id, n.label as technology, t.readiness, x.role, x.effect, x.mechanism, t.as_of
+from ideas.transition_exposures x
+join ideas.tech_transitions t on t.id = x.transition_id and t.status = 'final'
+join core.ontology_nodes n on n.node_id = t.node_id
+where t.id = (select t2.id from ideas.tech_transitions t2 where t2.node_id = t.node_id and t2.status = 'final' order by t2.created_at desc limit 1);
+grant select on public.v_entity_transitions to anon, authenticated;
