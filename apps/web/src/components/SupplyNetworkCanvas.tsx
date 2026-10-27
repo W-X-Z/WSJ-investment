@@ -24,7 +24,8 @@ import {
   edgeIndex, neighborhood, nodeIndex, scopeNodes, visibleEdges,
   type Guide, type Layout, type Mode, type Scope, type Trust, type Viewport,
 } from "@/components/canvas/graph-model";
-import { HighlightContext, SupplyNode, type Highlight, type SupplyFlowNode } from "@/components/canvas/SupplyNode";
+import { HiddenContext, HighlightContext, SupplyNode, type Highlight, type SupplyFlowNode } from "@/components/canvas/SupplyNode";
+import { DEPTHS, MAX_LEVEL, PILL_ZOOM, autoLevel, declutter, hiddenNeighbours, lodIndex, quantizeZoom, zoomOfStep } from "@/components/canvas/lod";
 import { SupplyEdge, type SupplyFlowEdge } from "@/components/canvas/SupplyEdge";
 import { Inspector } from "@/components/canvas/Inspector";
 import "./SupplyNetworkCanvas.css";
@@ -39,10 +40,10 @@ type Props = {
 
 const nodeTypes: NodeTypes = { supply: SupplyNode };
 const edgeTypes: EdgeTypes = { supply: SupplyEdge };
-const MIN_ZOOM = 0.08;
+const MIN_ZOOM = 0.04;
 const FOCUS_ZOOM = 1;
-/** Below this zoom node labels switch to the enlarged overview style (semantic zoom). */
-const OVERVIEW_ZOOM = 0.62;
+/** Below this zoom cards become constant-size pills and are decluttered (canvas/lod.ts). */
+const OVERVIEW_ZOOM = PILL_ZOOM;
 /** Fit leaves room for the column headers + hint (top) and the zoom controls (left), in screen px. */
 const FIT = { padding: { top: "84px", right: "28px", bottom: "26px", left: "58px" }, minZoom: MIN_ZOOM } as const;
 /** Network / impact views have no column headers; phones need every pixel (controls overlay). */
@@ -79,6 +80,10 @@ function CanvasInner({ initialEcosystem = "all", initialFocus = null, compact = 
   const mode: Mode = impactOn ? "impact" : base;
   const [trust, setTrust] = useState<Trust>("all");
   const [depth, setDepth] = useState(2);
+  /** Level of detail: "auto" = depth follows the zoom; a number pins the depth (1 골격 … 4 기업). */
+  const [depthMode, setDepthMode] = useState<"auto" | number>("auto");
+  const zoomStep = useStore((s) => quantizeZoom(s.transform[2]));
+  const [cameraReady, setCameraReady] = useState(false);
   const [query, setQuery] = useState("");
   const [selected, setSelected] = useState<string | null>(validFocus);
   const [selectedEdge, setSelectedEdge] = useState<string | null>(null);
@@ -140,10 +145,40 @@ function CanvasInner({ initialEcosystem = "all", initialFocus = null, compact = 
   }, [query]);
   const highlight = useMemo<Highlight>(() => ({ selected, near, matches: new Set(hits.map((n) => n.id)) }), [selected, near, hits]);
 
+  // ----- level of detail -----
+  const lod = useMemo(() => lodIndex(scoped, scopeEdges), [scoped, scopeEdges]);
+  /** Until the first fit, React Flow's zoom is 1: estimate the fit zoom so the first paint is already decluttered. */
+  const fitZoom = useMemo(() => {
+    if (!layout || !vp) return 1;
+    const P = [...layout.positions.values()];
+    if (!P.length) return 1;
+    const bw = Math.max(...P.map((p) => p.x)) - Math.min(...P.map((p) => p.x)) + NODE_W;
+    const bh = Math.max(...P.map((p) => p.y)) - Math.min(...P.map((p) => p.y)) + NODE_H;
+    return Math.min(1, (vp.w - 90) / bw, (vp.h - 100) / bh);
+  }, [layout, vp]);
+  const lodZoom = cameraReady ? zoomOfStep(zoomStep) : fitZoom;
+  const cumulative = useMemo(() => {
+    const c = Array(MAX_LEVEL + 1).fill(0);
+    if (layout) for (const id of layout.positions.keys()) c[lod.level.get(id) ?? MAX_LEVEL]++;
+    for (let L = 1; L <= MAX_LEVEL; L++) c[L] += c[L - 1];
+    return c;
+  }, [layout, lod]);
+  const autoDepth = vp ? autoLevel(cumulative, fitZoom, lodZoom, vp) : MAX_LEVEL;
+  const maxLevel = mode === "impact" ? MAX_LEVEL : depthMode === "auto" ? autoDepth : depthMode;
+  const visible = useMemo(() => {
+    if (!layout) return null;
+    const forced = new Set<string>();
+    const priority: string[] = [];
+    if (near) for (const [id, hop] of near) (hop <= 1 ? forced.add(id) : priority.push(id));
+    for (const n of hits) forced.add(n.id);
+    return declutter(lod.order, lod.level, layout.positions, lodZoom, maxLevel, forced, priority);
+  }, [layout, lod, lodZoom, maxLevel, near, hits]);
+  const hiddenCounts = useMemo(() => visible && layout ? hiddenNeighbours(visible, adj, (id) => layout.positions.has(id)) : new Map<string, number>(), [visible, adj, layout]);
+
   const flowEdges = useMemo<SupplyFlowEdge[]>(() => {
     if (!layout) return [];
     const route = floating ? "floating" : "layered";
-    const drawn = shownEdges.filter((e) => layout.positions.has(e.from) && layout.positions.has(e.to));
+    const drawn = shownEdges.filter((e) => layout.positions.has(e.from) && layout.positions.has(e.to) && (!visible || (visible.has(e.from) && visible.has(e.to))));
     // Several relations between the same pair: fan them out so they don't draw on top of each other.
     const pairs = new Map<string, string[]>();
     for (const e of drawn) { const k = e.from < e.to ? `${e.from}|${e.to}` : `${e.to}|${e.from}`; (pairs.get(k) ?? pairs.set(k, []).get(k)!).push(e.id); }
@@ -164,7 +199,7 @@ function CanvasInner({ initialEcosystem = "all", initialFocus = null, compact = 
           labelAt: floating && active ? (e.from === selected ? 0.74 : 0.26) : 0.5 },
       };
     });
-  }, [layout, floating, shownEdges, selected, selectedEdge, near]);
+  }, [layout, floating, shownEdges, selected, selectedEdge, near, visible]);
 
   // ----- camera -----
   useEffect(() => {
@@ -175,6 +210,7 @@ function CanvasInner({ initialEcosystem = "all", initialFocus = null, compact = 
       const id = pendingCenter.current;
       const duration = firstView.current ? 0 : 380;
       firstView.current = false;
+      setCameraReady(true);
       if (id && layout.positions.has(id)) {
         pendingCenter.current = null;
         const z = Math.max(FOCUS_ZOOM, rf.getZoom());
@@ -283,7 +319,7 @@ function CanvasInner({ initialEcosystem = "all", initialFocus = null, compact = 
   return <section ref={shellRef} className={`sc-shell ${compact ? "sc-compact" : ""}`} aria-label="기술 산업망 그래프 캔버스" onKeyDown={onKeyDown}>
     <div className="sc-heading">
       <div><div className="sc-kicker"><i/> TECHNOLOGY DEPENDENCY GRAPH</div><h2>{compact ? "산업망 탐색 캔버스" : "기술·소재·공정 연결망"}</h2><p>{mode === "layers" ? "왼쪽 요구·병목 → 오른쪽 공급 기업" : mode === "impact" ? "선택 노드 중심 · 바깥 고리일수록 먼 연결" : "연결된 노드끼리 가까이 모입니다"} · 노드를 선택하면 근거를 봅니다.</p></div>
-      <div className="sc-heading-actions">{compact && <Link href={selected ? `/map?focus=${encodeURIComponent(selected)}` : "/map"}>전체 화면에서 탐색 <Icon name="arrow-up-right" size={16}/></Link>}<span>{layout?.positions.size ?? ids.size} NODES <b>·</b> {flowEdges.length} LINKS</span></div>
+      <div className="sc-heading-actions">{compact && <Link href={selected ? `/map?focus=${encodeURIComponent(selected)}` : "/map"}>전체 화면에서 탐색 <Icon name="arrow-up-right" size={16}/></Link>}<span>{visible && layout && visible.size < layout.positions.size ? <>{visible.size} / </> : null}{layout?.positions.size ?? ids.size} NODES <b>·</b> {flowEdges.length} LINKS</span></div>
     </div>
     <div className="sc-toolbar">
       <div className="sc-scope-tabs" role="group" aria-label="산업망 범위">
@@ -309,15 +345,22 @@ function CanvasInner({ initialEcosystem = "all", initialFocus = null, compact = 
     </div>
     <div className="sc-context">
       <div className="sc-type-legend"><span><i className="sc-kind-dot sc-dot-requirement"/>기술 요구</span><span><i className="sc-kind-dot sc-dot-bottleneck"/>병목</span><span><i className="sc-kind-dot sc-dot-technology"/>기술</span><span><i className="sc-kind-dot sc-dot-component"/>소재·부품·공정</span><span><i className="sc-kind-dot sc-dot-product"/>제품</span><span><i className="sc-kind-dot sc-dot-company"/>기업</span><span><i className="sc-kind-dot sc-dot-standard"/>세대·표준</span><span className="sc-legend-small">★ 소형·초소형주</span></div>
+      <div className="sc-depth" role="group" aria-label="상세도 (최대 깊이)">
+        <span className="sc-depth-label">깊이</span>
+        <button type="button" aria-pressed={depthMode === "auto"} className={depthMode === "auto" ? "active" : ""} onClick={() => setDepthMode("auto")} title="확대할수록 더 깊은 층이 나타납니다">자동</button>
+        {DEPTHS.map((d) => <button key={d.level} type="button" title={d.hint} aria-pressed={depthMode === d.level}
+          className={depthMode === d.level ? "active" : maxLevel >= d.level ? "within" : ""} onClick={() => setDepthMode(d.level)}>{d.name}</button>)}
+        {depthMode === "auto" && <span className="sc-depth-hint">현재 {DEPTHS[maxLevel - 1].name}까지 · 확대하면 더 깊이</span>}
+      </div>
       <div className="sc-trust-toggle" role="group" aria-label="근거 필터"><button type="button" aria-pressed={trust === "all"} className={trust === "all" ? "active" : ""} onClick={() => setTrust("all")}>전체 관계</button><button type="button" aria-pressed={trust === "documented"} className={trust === "documented" ? "active" : ""} onClick={() => setTrust("documented")}>추론 제외</button></div>
     </div>
     <div className={`sc-body ${showInspector ? "has-inspector" : ""}`}>
       <div ref={flowRef} className="sc-flow" onWheel={onWheel}>
-        <HighlightContext.Provider value={highlight}>
-          <FlowArea layoutNodes={layoutNodes} layoutKey={layoutKey} fit={fitFor(!floating)} edges={flowEdges} selected={selected} selectedEdge={selectedEdge}
+        <HighlightContext.Provider value={highlight}><HiddenContext.Provider value={hiddenCounts}>
+          <FlowArea layoutNodes={layoutNodes} layoutKey={layoutKey} visible={visible} fit={fitFor(!floating)} edges={flowEdges} selected={selected} selectedEdge={selectedEdge}
             onSelectNode={selectNode} onSelectEdge={selectEdge} zoomKey={zoomKey} wrapperRef={flowRef}
             guides={layout?.guides ?? null} showMinimap={showMinimap} onToggleMinimap={() => setShowMinimap((v) => !v)}/>
-        </HighlightContext.Provider>
+        </HiddenContext.Provider></HighlightContext.Provider>
         <div className="sc-overlay-top">
           {selectedNode ? <div className="sc-selection-hint">
             <span className="sc-selection-name">{selectedNode.label}</span>
@@ -349,6 +392,8 @@ function CanvasInner({ initialEcosystem = "all", initialFocus = null, compact = 
 type FlowAreaProps = {
   layoutNodes: SupplyFlowNode[];
   layoutKey: string;
+  /** Level of detail: ids to draw (null = all). */
+  visible: Set<string> | null;
   fit: Fit;
   edges: SupplyFlowEdge[];
   selected: string | null;
@@ -364,12 +409,14 @@ type FlowAreaProps = {
 
 /** Owns the controlled node state, so drag frames re-render only this subtree (and React Flow
  *  only re-renders the dragged node + its edges), never the toolbar or inspector. */
-const FlowArea = memo(function FlowArea({ layoutNodes, layoutKey, fit, edges, selected, selectedEdge, onSelectNode, onSelectEdge, zoomKey, wrapperRef, guides, showMinimap, onToggleMinimap }: FlowAreaProps) {
+const FlowArea = memo(function FlowArea({ layoutNodes, layoutKey, visible, fit, edges, selected, selectedEdge, onSelectNode, onSelectEdge, zoomKey, wrapperRef, guides, showMinimap, onToggleMinimap }: FlowAreaProps) {
   const [nodes, setNodes, applyNodes] = useNodesState<SupplyFlowNode>([]);
   const selectedRef = useRef(selected);
   selectedRef.current = selected;
   const edgeRef = useRef(selectedEdge);
   edgeRef.current = selectedEdge;
+  const visibleRef = useRef(visible);
+  visibleRef.current = visible;
 
   /** Positions the user dragged, per drawing; kept for the lifetime of the page. */
   const drags = useRef(new Map<string, Map<string, XYPosition>>());
@@ -378,11 +425,18 @@ const FlowArea = memo(function FlowArea({ layoutNodes, layoutKey, fit, edges, se
 
   useEffect(() => {
     const moved = drags.current.get(layoutKey);
+    const vis = visibleRef.current;
     setNodes(layoutNodes.map((n) => {
-      const p = moved?.get(n.id);
-      return p || n.id === selectedRef.current ? { ...n, ...(p ? { position: p } : null), selected: n.id === selectedRef.current } : n;
+      const p = moved?.get(n.id), hidden = !!vis && !vis.has(n.id);
+      return p || hidden || n.id === selectedRef.current ? { ...n, ...(p ? { position: p } : null), selected: n.id === selectedRef.current, hidden } : n;
     }));
   }, [layoutNodes, layoutKey, setNodes]);
+  useEffect(() => {
+    setNodes((ns) => ns.map((n) => {
+      const hidden = !!visible && !visible.has(n.id);
+      return !!n.hidden === hidden ? n : { ...n, hidden };
+    }));
+  }, [visible, setNodes]);
   useEffect(() => {
     setNodes((ns) => ns.map((n) => ((n.id === selected) === !!n.selected ? n : { ...n, selected: n.id === selected })));
   }, [selected, setNodes]);
@@ -417,7 +471,7 @@ const FlowArea = memo(function FlowArea({ layoutNodes, layoutKey, fit, edges, se
     minZoom={MIN_ZOOM} maxZoom={2.2}
     zoomOnScroll={false} preventScrolling={zoomKey} zoomOnPinch zoomOnDoubleClick
     nodesConnectable={false} selectNodesOnDrag={false} deleteKeyCode={null} selectionKeyCode={null} multiSelectionKeyCode={null}
-    elevateEdgesOnSelect ariaLabelConfig={ARIA} proOptions={{ hideAttribution: true }}>
+    elevateEdgesOnSelect onlyRenderVisibleElements ariaLabelConfig={ARIA} proOptions={{ hideAttribution: true }}>
     <Background variant={BackgroundVariant.Dots} gap={22} size={1.1} color="#c3d2e2"/>
     {guides && <ViewportPortal>{guides.map((g, i) => <div key={i} className={`sc-guide sc-guide-${g.kind}${g.stacked ? " sc-guide-stacked" : ""}`} style={{ transform: `translate(${g.x}px, ${g.y}px)`, minWidth: g.w, ...(g.color ? { ["--guide" as string]: g.color } : {}) }}>{g.label}</div>)}</ViewportPortal>}
     <Controls position="bottom-left" showInteractive={false} fitViewOptions={{ ...fit, duration: 300 }}>
@@ -435,6 +489,7 @@ function AutoMiniMap() {
     const [tx, ty, z] = s.transform;
     if (!s.width || !s.height) return false;
     for (const n of s.nodeLookup.values()) {
+      if (n.hidden) continue;
       const p = n.internals.positionAbsolute, x = p.x * z + tx, y = p.y * z + ty;
       if (x < 0 || y < 0 || x + NODE_W * z > s.width || y + NODE_H * z > s.height) return true;
     }
@@ -453,5 +508,5 @@ function ZoomWatcher({ wrapperRef }: { wrapperRef: React.RefObject<HTMLDivElemen
     el.style.setProperty("--sc-z", String(zoom));
     el.classList.toggle("sc-lod", zoom < OVERVIEW_ZOOM);
   }, [zoom, wrapperRef]);
-  return <Panel position="bottom-left" className="sc-zoom-label">{Math.round(zoom * 100)}%{zoom < OVERVIEW_ZOOM ? " · 개요" : ""}</Panel>;
+  return <Panel position="bottom-left" className="sc-zoom-label">{Math.round(zoom * 100)}%{zoom < OVERVIEW_ZOOM ? " · 개요 (확대하면 더 보임)" : ""}</Panel>;
 }

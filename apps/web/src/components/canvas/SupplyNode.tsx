@@ -12,15 +12,18 @@ export type SupplyFlowNode = Node<SupplyNodeData, "supply">;
  *  when the user selects something: only this context value does. */
 export type Highlight = { selected: string | null; near: Map<string, number> | null; matches: Set<string> };
 export const HighlightContext = createContext<Highlight>({ selected: null, near: null, matches: new Set() });
+/** Level of detail: per shown node, how many neighbours are currently hidden (see canvas/lod.ts). */
+export const HiddenContext = createContext<Map<string, number>>(new Map());
 
 function SupplyNodeView({ id, data }: NodeProps<SupplyFlowNode>) {
   const hl = useContext(HighlightContext);
+  const more = useContext(HiddenContext).get(id);
   const n = data.node;
   const hop = hl.near?.get(id);
   const state = !hl.near ? "" : hl.selected === id ? "is-focus" : hop !== undefined ? `is-near hop-${hop}` : "is-dim";
   const company = n.kind === "company";
   const small = company && isSmallCap(n);
-  return <div className={`snode snode-${n.kind} ${state} ${small ? "snode-smallcap" : ""} ${hl.matches.has(id) ? "is-match" : ""}`} title={n.label}>
+  return <div className={`snode snode-${n.kind} ${state} ${small ? "snode-smallcap" : ""} ${hl.matches.has(id) ? "is-match" : ""} ${more ? "has-more" : ""}`} title={n.label}>
     <Handle type="target" position={Position.Left} isConnectable={false} className="snode-handle"/>
     {company ? <>
       <strong className="snode-label">{displayLabel(n)}</strong>
@@ -33,6 +36,7 @@ function SupplyNodeView({ id, data }: NodeProps<SupplyFlowNode>) {
       <span className="snode-kind"><i className={`sc-kind-dot sc-dot-${n.kind}`}/>{KINDS[n.kind] ?? n.kind}</span>
       <strong className="snode-label">{n.label}</strong>
     </>}
+    {more ? <span className="snode-more" title={`숨겨진 연결 ${more}개 — 확대하거나 선택하면 보입니다`}>+{more}</span> : null}
     <Handle type="source" position={Position.Right} isConnectable={false} className="snode-handle"/>
   </div>;
 }
