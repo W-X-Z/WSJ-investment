@@ -212,7 +212,7 @@ export async function loadLiveData(): Promise<LiveData> {
 
 const EVENT_TYPE_KO: Record<string,string> = {
   capacity:"생산능력", technology:"기술", standard:"표준", regulation:"규제", order:"수주·계약", earnings:"실적·가이던스",
-  m_and_a:"M&A·제휴", supply_disruption:"공급 차질", pricing:"가격", other:"이슈",
+  m_and_a:"M&A·제휴", supply_disruption:"공급 차질", pricing:"가격", research:"연구", other:"이슈",
 };
 export function issueToFeed(r: IssueRecord): FeedItem {
   const eco = (r.ecosystem === "hbm" || r.ecosystem === "optics" || r.ecosystem === "power") ? r.ecosystem : "cross";
@@ -264,4 +264,44 @@ export function ecoNodes(id: EcoId): GraphNode[] {
   }
   // Link only nodes reachable from the ecosystem, including shared components.
   return seed.nodes.filter(n=>result.has(n.id));
+}
+
+// ---------------------------------------------------------------- 가격·실적 지표 (ADR-0014 개정, 0016)
+export type IndicatorRecord = {
+  indicator_id: string; label: string; category: "memory_spot"|"ppi"|"commodity"|"tw_revenue"|string; unit: string|null; frequency: string;
+  source: string; source_url: string|null; ecosystem: string|null; nodes: string[]; companies: string[]; note: string|null;
+  as_of: string; value: number; change_pct: number|null; yoy_pct: number|null; meta: Record<string, unknown>|null; value_1w: number|null; value_1m: number|null;
+};
+export type IndicatorPoint = { indicator_id: string; as_of: string; value: number };
+export const INDICATOR_GROUPS: { id: string; title: string; cats: string[] }[] = [
+  { id: "memory", title: "메모리 현물가", cats: ["memory_spot"] },
+  { id: "tw", title: "대만 공급사 월매출", cats: ["tw_revenue"] },
+  { id: "ppi", title: "미국 PPI·원자재", cats: ["ppi", "commodity"] },
+];
+/** 지표의 대표 변화: 현물가는 1주(이력 없으면 출처 일간), 월간 지표는 YoY → 전월. */
+export function indicatorMove(r: IndicatorRecord): { pct: number|null; label: string } {
+  if (r.category === "memory_spot") {
+    if (r.value_1w) return { pct: (r.value / r.value_1w - 1) * 100, label: "1주" };
+    return { pct: r.change_pct, label: r.frequency === "daily" ? "전일" : "전주" };
+  }
+  if (r.yoy_pct != null) return { pct: r.yoy_pct, label: "YoY" };
+  return { pct: r.change_pct, label: "전월" };
+}
+export async function loadIndicators(): Promise<{ indicators: IndicatorRecord[]; points: Record<string, IndicatorPoint[]>; error?: string }> {
+  if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.NEXT_PUBLIC_SUPABASE_KEY) return { indicators: [], points: {}, error: "Supabase 환경변수 없음" };
+  try {
+    const client = db("public");
+    const [ind, pts] = await Promise.all([
+      client.from("v_indicators").select("*").order("category").order("label"),
+      client.from("v_indicator_points").select("indicator_id,as_of,value").order("as_of", { ascending: true }).limit(5000),
+    ]);
+    const points: Record<string, IndicatorPoint[]> = {};
+    for (const p of (pts.data ?? []) as IndicatorPoint[]) (points[p.indicator_id] ??= []).push({ ...p, value: Number(p.value) });
+    const indicators = ((ind.data ?? []) as IndicatorRecord[]).map((r) => ({ ...r, value: Number(r.value),
+      change_pct: r.change_pct == null ? null : Number(r.change_pct), yoy_pct: r.yoy_pct == null ? null : Number(r.yoy_pct),
+      value_1w: r.value_1w == null ? null : Number(r.value_1w), value_1m: r.value_1m == null ? null : Number(r.value_1m) }));
+    return { indicators, points, error: ind.error?.message ?? pts.error?.message };
+  } catch (error) {
+    return { indicators: [], points: {}, error: error instanceof Error ? error.message : "연결 오류" };
+  }
 }

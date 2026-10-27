@@ -3,10 +3,15 @@
     python -m wsj.ecosystems.issues run [--days 14] [--no-llm] [--model sonnet] [--out data/issues/latest.json]
 
 출처 (모두 무료·무인증):
-  news      Google News RSS 검색 (생태계 주제 + 그래프 기업명, when:Nd)
-  trade     업계지 RSS (Semiconductor Today) — 온톨로지 어휘에 걸리는 것만
-  sec       EDGAR 전문검색 8-K/6-K (온톨로지 구문)
-  regulator Federal Register API (반도체 수출통제·핵심광물·데이터센터 에너지)
+  news      Google News RSS 검색 (생태계 주제·표준·가격·정책 질의 + 그래프 기업명, when:Nd)
+  trade     업계지 RSS (Semiconductor Today, EE Times, SemiEngineering, DCD 등 — sources.FEEDS) — 어휘에 걸리는 것만
+  newsroom  회사 뉴스룸·IR (Samsung, SK hynix, NVIDIA, PR Newswire 반도체)
+  sec       EDGAR 전문검색 8-K/6-K (온톨로지 구문, 원문 EX-99 헤드라인)
+  regulator Federal Register API (BIS·투자안보실·ITC·DOE·상무부 232·USTR·FERC·NIST)
+  policy    백악관 대통령 조치·NIST 뉴스 (반도체·관세·핵심광물·데이터센터 필터)
+  analyst   TrendForce 보도자료 (메모리·광·전력 가격·출하 전망)
+  research  논문 — arXiv, OpenAlex (학회·저널; 노드 구문 검색, 최근 30일)
+  data      지표 변화 — 메모리 현물가, 미국 PPI·원자재, 대만 공급사 월매출 (indicators.py)
   signals   core.signals (공급망 유니버스 기업의 내부자·공시 신호)
 
 흐름: 수집 → 정규화·중복 제거 → 어휘 태깅(노드·기업) → 클러스터링 → 규칙 점수 → (선택) LLM 선별·한국어 요약·영향 판정 → upsert.
@@ -47,7 +52,15 @@ NEWS_TOPICS: dict[str, list[str]] = {
                "EML laser supply", "indium phosphide substrate", "optical DSP 200G lane"],
     "power": ["800 VDC data center", "800V HVDC NVIDIA", "silicon carbide data center power", "GaN data center power supply",
               "liquid cooling data center supply chain", "solid-state transformer data center", "megawatt rack power"],
-    "cross": ["AI data center supply chain bottleneck", "semiconductor export controls", "gallium germanium export"],
+    "cross": ["AI data center supply chain bottleneck", "semiconductor export controls", "gallium germanium export",
+              # 표준
+              "JEDEC HBM standard", "IEEE 802.3dj", "OCP 800 VDC specification", "OIF 1.6T",
+              # 가격·리드타임
+              "DRAM contract prices", "HBM price negotiation", "optical fiber price shortage", "transformer lead times data center",
+              "CoWoS price increase", "ABF substrate shortage",
+              # 정책
+              "Section 232 semiconductor tariffs", "CHIPS Act award", "FERC large load interconnection", "AI chip export rule China",
+              "Korea semiconductor policy HBM", "Taiwan export controls semiconductor"],
 }
 # (기관 slug, 제목 필터 정규식 또는 None=전부). 전문 검색은 무관 문서가 너무 많아 기관 단위로 받는다.
 FEDREG_AGENCIES: list[tuple[str, str | None]] = [
@@ -55,6 +68,10 @@ FEDREG_AGENCIES: list[tuple[str, str | None]] = [
     ("investment-security-office", None),
     ("international-trade-commission", r"semiconductor|integrated circuit|memory|optical|photonic|laser|transceiver|wafer|silicon|power (supply|module|converter)|connector|gallium|germanium"),
     ("energy-department", r"data cent|large load|co-located load|transformer"),
+    ("commerce-department", r"section 232|semiconductor|polysilicon|critical mineral|copper|integrated circuit|wafer"),
+    ("trade-representative-office-of-united-states", r"semiconductor|section 301|legacy chip|integrated circuit"),
+    ("federal-energy-regulatory-commission", r"large load|co-locat|data cent|interconnection"),
+    ("national-institute-of-standards-and-technology", r"CHIPS|semiconductor|advanced packaging"),
 ]
 TRADE_RSS = ["https://www.semiconductor-today.com/rss/news.xml"]
 SEC_PHRASES_PER_NODE = 1  # 노드당 첫 구문만 8-K 검색 (호출 수 제한)
@@ -62,9 +79,13 @@ GOOGLE_NEWS = "https://news.google.com/rss/search?q={q}&hl=en-US&gl=US&ceid=US:e
 FEDREG = "https://www.federalregister.gov/api/v1/documents.json"
 EFTS = "https://efts.sec.gov/LATEST/search-index"
 
-SOURCE_WEIGHT = {"sec": 3.0, "regulator": 3.0, "press_release": 2.5, "trade": 2.0, "news": 1.5, "signal": 2.0}
+SOURCE_WEIGHT = {"sec": 3.0, "regulator": 3.0, "policy": 3.0, "press_release": 2.5, "newsroom": 2.5, "analyst": 2.5, "data": 2.5,
+                 "trade": 2.0, "signal": 2.0, "research": 1.5, "news": 1.5}
+ALWAYS_RELEVANT = {"regulator", "policy", "analyst", "data"}  # 출처 단계에서 이미 주제 필터를 통과
+QUOTA = {"research": 6, "data": 8, "analyst": 5, "policy": 4, "regulator": 4, "newsroom": 4}  # 규칙 점수와 무관하게 후보에 넣는 유형별 최소치
+RESEARCH_DAYS = 30
 PRESS_WIRES = ("business wire", "businesswire", "globe newswire", "globenewswire", "pr newswire", "prnewswire", "accesswire")
-EVENT_TYPES = ("capacity", "technology", "standard", "regulation", "order", "earnings", "m_and_a", "supply_disruption", "pricing", "other")
+EVENT_TYPES = ("capacity", "technology", "standard", "regulation", "order", "earnings", "m_and_a", "supply_disruption", "pricing", "research", "other")
 BROWSER_UA = {"User-Agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0 Safari/537.36"}
 STOP = set(("the a an of for and to in on with by from at as is are be its this that new ai into how why what will over says said "
              "stock stocks shares price prices forecast forecasts analyst analysts predictions today results result quarter third second "
@@ -428,7 +449,7 @@ def score(members: list[Item], graph_nodes: dict[str, dict], now: datetime) -> d
     recency = 1.0 if age <= 3 else 0.7 if age <= 7 else 0.4
     w = max(SOURCE_WEIGHT.get(m.source_type, 1.0) for m in members)
     small = [c for c in companies if graph_nodes.get(c, {}).get("size_band") in ("micro", "small")]
-    primary = any(m.source_type in ("sec", "regulator", "press_release") for m in members)
+    primary = any(m.source_type in ("sec", "regulator", "press_release", "newsroom", "policy", "data") for m in members)
     # 기술 노드에 닿아야 공급망 이슈다. 노드 없는 기업 기사는 1차 출처일 때만 소형사 가산
     graph_rel = min(3, len(nodes)) * 0.9 + (1.2 if small and (nodes or primary) else 0) + 0.3 * min(2, len(companies) - len(small))
     raw = w + math.log2(1 + len(publishers)) * 1.3 + graph_rel  # 대략 1.5 ~ 10
@@ -466,6 +487,12 @@ LLM_SYSTEM = """\
 - 같은 사건을 여러 독립 출판사·1차 출처(SEC·관보·회사 보도자료)가 다룰수록 가산
 - 마케팅성 기사, 일반 시장 전망, 주가 기사, 공급망과 무관한 기사는 제외
 
+출처 유형(type)별 처리:
+- data (지표 변화: 메모리 현물가·PPI·원자재·대만 공급사 월매출): 제목의 수치를 그대로 쓴다. 같은 방향의 기사가 있으면 묶고, 없으면 단독 이슈로 써도 된다 (event_type pricing 또는 earnings).
+- analyst (TrendForce 등): 가격·출하·캐파 전망은 '전망'임을 명시한다.
+- research (논문): 병목을 직접 푸는 결과(산업체 저자, 기록 성능, 양산 공정)만 골라 최대 3개, event_type research. 학술 일반론은 제외.
+- policy·regulator: 세 공급망에 닿는 조항이 있을 때만. 관세·수출통제·전력망 규정은 대상 품목을 적는다.
+
 규칙:
 - nodes 는 입력의 node_catalog id 만, companies 는 입력의 company_catalog id 만 쓴다. 근거 없는 연결은 쓰지 않는다.
 - direction: + (수혜), - (피해), ± (혼재). 근거가 기사에 있을 때만 +/-, 아니면 ±.
@@ -498,7 +525,7 @@ def llm_curate(cands: list[dict[str, Any]], graph: dict[str, Any], impact: dict[
         "clusters": [
             {"cluster_id": i, "latest": c["latest"].date().isoformat(), "publishers": c["publishers"][:6], "rule_importance": c["rule_importance"],
              "nodes": c["nodes"], "companies": c["companies"],
-             "items": [{"title": m.title, "publisher": m.publisher, "type": m.source_type, "snippet": m.snippet[:240]} for m in c["members"][:5]]}
+             "items": [{"title": m.title, "publisher": m.publisher, "type": m.source_type, "date": m.published_at.date().isoformat(), "snippet": m.snippet[:300]} for m in c["members"][:5]]}
             for i, c in enumerate(cands)
         ],
         "node_catalog": node_catalog, "company_catalog": company_catalog, "impact_hints": hints,
@@ -511,8 +538,52 @@ def llm_curate(cands: list[dict[str, Any]], graph: dict[str, Any], impact: dict[
 
 
 # ---------------------------------------------------------------------- 실행
+def collect_extra(http: HttpClient, store, now: datetime, since: datetime, indicator_points: list[Any]) -> list[Item]:
+    """출처 레지스트리(sources.py)와 지표(indicators.py). 지표 점은 indicator_points 로 돌려줘 main 이 저장한다."""
+    from wsj.ecosystems import indicators, sources
+
+    out: list[Item] = []
+    out += sources.collect_feeds(http, since)
+    out += sources.collect_trendforce(http, now - timedelta(days=30))
+    rq = sources.research_queries(DISCOVERY_QUERIES)
+    out += sources.collect_arxiv(http, rq, now - timedelta(days=RESEARCH_DAYS))
+    out += sources.collect_openalex(http, rq, now - timedelta(days=RESEARCH_DAYS))
+    try:
+        ind = indicators.run(http, store, now.date())
+    except Exception as exc:  # noqa: BLE001 - 지표 실패가 이슈 피드를 막지 않게
+        log.warning("indicators failed: %s", exc)
+        return out
+    indicator_points.extend(ind["points"])
+    for n in ind["notable"]:
+        it = Item(n["url"], n["title"], datetime.combine(n["as_of"], datetime.min.time(), UTC) + timedelta(hours=12), n["publisher"], "data",
+                  n["snippet"], n["indicator_id"], n["ecosystem"])
+        it.nodes.update(n["nodes"])
+        it.companies.update(n["companies"])
+        out.append(it)
+    return out
+
+
+def select_candidates(cands: list[dict[str, Any]], limit: int) -> list[dict[str, Any]]:
+    """규칙 점수 상위 + 유형별 최소치(논문·지표·리서치 기관·정책은 점수 구조상 밀리기 쉽다)."""
+    ranked = sorted(cands, key=lambda c: (-c["rule_importance"], -c["raw"]))
+    chosen = ranked[: max(0, limit - sum(QUOTA.values()) // 2)]
+    have = {id(c) for c in chosen}
+    for st, k in QUOTA.items():
+        pool = [c for c in ranked if id(c) not in have and any(m.source_type == st for m in c["members"])]
+        for c in pool[:k]:
+            chosen.append(c)
+            have.add(id(c))
+    for c in ranked:
+        if len(chosen) >= limit + sum(QUOTA.values()) // 2:
+            break
+        if id(c) not in have:
+            chosen.append(c)
+            have.add(id(c))
+    return sorted(chosen, key=lambda c: (-c["rule_importance"], -c["raw"]))
+
+
 def run(http: HttpClient, store, days: int = 14, use_llm: bool = True, model: str = "sonnet", api_key: str | None = None,
-        max_candidates: int = 60, max_issues: int = 15, now: datetime | None = None,
+        max_candidates: int = 70, max_issues: int = 15, now: datetime | None = None,
         picks: dict[str, Any] | None = None, dump_candidates: bool = False, cache: Path | None = None) -> dict[str, Any]:
     now = now or datetime.now(UTC)
     since = now - timedelta(days=days)
@@ -524,6 +595,7 @@ def run(http: HttpClient, store, days: int = 14, use_llm: bool = True, model: st
     cik_to_node = {int(n["listing"]["cik"]): n["id"] for n in graph["nodes"] if n["kind"] == "company" and (n.get("listing") or {}).get("cik")}
 
     items: list[Item] = []
+    indicator_points: list[Any] = []
     if cache and cache.exists():
         import pickle
 
@@ -536,18 +608,21 @@ def run(http: HttpClient, store, days: int = 14, use_llm: bool = True, model: st
         items += collect_sec(http, since.date(), now.date())
         items += collect_fedreg(http, since.date())
         items += collect_signals(store, since.date(), cik_to_node)
+        items += collect_extra(http, store, now, since, indicator_points)
         if cache:
             import pickle
 
             cache.parent.mkdir(parents=True, exist_ok=True)
             cache.write_bytes(pickle.dumps(items))
-    items = [i for i in items if (i.published_at >= since or (i.source_type == "regulator" and i.published_at >= now - timedelta(days=30))) and i.published_at <= now + timedelta(days=1)]
+    long_window = {"regulator": 30, "research": RESEARCH_DAYS, "data": 45}  # 관보·논문·월간 지표는 빈도가 낮아 창을 넓힌다
+    items = [i for i in items if (i.published_at >= since or i.published_at >= now - timedelta(days=long_window.get(i.source_type, days)))
+             and i.published_at <= now + timedelta(days=1)]
     tag(items, node_pats, comp_pats)
     # 관련성: 노드·기업 태그가 있거나, 1차 출처(sec/regulator)는 질의 자체가 주제어
     relevant = [
         i for i in items
         if not NOISE.search(i.title)
-        and (i.nodes or i.companies or i.source_type == "regulator")  # 관보는 기관·제목 필터를 이미 통과
+        and (i.nodes or i.companies or i.source_type in ALWAYS_RELEVANT)  # 관보·정책·리서치 기관·지표는 출처 단계 필터를 이미 통과
     ]
     relevant = dedupe(relevant)
     clusters = cluster(relevant)
@@ -557,9 +632,8 @@ def run(http: HttpClient, store, days: int = 14, use_llm: bool = True, model: st
         hint = next((m.ecosystem_hint for m in members if m.ecosystem_hint), None)
         cands.append({**sc, "members": sorted(members, key=lambda m: (-SOURCE_WEIGHT.get(m.source_type, 1), m.published_at)),
                       "ecosystem": ecosystem_of(sc["nodes"], sc["companies"], hint, gnodes)})
-    cands.sort(key=lambda c: (-c["rule_importance"], -c["raw"]))
-    cands = cands[:max_candidates]
-    stats = {"items": len(items), "relevant": len(relevant), "clusters": len(clusters), "candidates": len(cands),
+    cands = select_candidates(cands, max_candidates)
+    stats = {"items": len(items), "relevant": len(relevant), "clusters": len(clusters), "candidates": len(cands), "indicator_points": len(indicator_points),
              "by_source": dict(sorted({t: sum(1 for i in relevant if i.source_type == t) for t in SOURCE_WEIGHT}.items()))}
     log.info("issues stats %s", stats)
 
@@ -584,7 +658,7 @@ def run(http: HttpClient, store, days: int = 14, use_llm: bool = True, model: st
             rows.append(_row(c["members"], lead.title, lead.snippet or None, None, "other", c["ecosystem"], c["rule_importance"],
                              f"규칙 점수: 출처 가중 {SOURCE_WEIGHT.get(lead.source_type, 1)}, 출판사 {len(c['publishers'])}곳, 노드 {len(c['nodes'])}개, 최근성 {c['recency']}",
                              c["nodes"], comps, "rule", None))
-    return {"as_of": now.isoformat(), "days": days, "method": method, "stats": stats, "usage": usage, "issues": rows,
+    return {"as_of": now.isoformat(), "days": days, "method": method, "stats": stats, "usage": usage, "issues": rows, "indicator_points": indicator_points,
             "candidates": [candidate_view(i, c) for i, c in enumerate(cands)] if dump_candidates else None}
 
 
@@ -681,12 +755,17 @@ def main(argv: list[str] | None = None) -> int:
         if not args.no_save:
             n = save(store, result["issues"], datetime.fromisoformat(result["as_of"]))
             log.info("saved %d issues", n)
+            if result["indicator_points"]:
+                from wsj.ecosystems import indicators
+
+                log.info("saved %d indicator points", indicators.save(store, result["indicator_points"]))
     finally:
         http.close()
         store.close()
     if args.out:
         args.out.parent.mkdir(parents=True, exist_ok=True)
-        args.out.write_text(json.dumps(result, ensure_ascii=False, indent=1, default=str), encoding="utf-8")
+        dump = {**result, "indicator_points": [p.row() for p in result["indicator_points"]]}
+        args.out.write_text(json.dumps(dump, ensure_ascii=False, indent=1, default=str), encoding="utf-8")
     print(json.dumps({"method": result["method"], "stats": result["stats"], "usage": result["usage"], "issues": len(result["issues"])}, ensure_ascii=False))
     for r in result["issues"]:
         print(f"[{r['importance']:>2}] {r['ecosystem']:<6} {r['title'][:90]}  ({r['publisher_count']} pubs, nodes={len(r['nodes'])}, cos={[c['ticker'] for c in r['companies']][:5]})")

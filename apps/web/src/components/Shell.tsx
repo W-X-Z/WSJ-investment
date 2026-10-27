@@ -10,6 +10,7 @@ const NAV = [
   { href:"/map", label:"산업망 캔버스", icon:"network" },
   { href:"/ecosystems", label:"기술 생태계", icon:"layers" },
   { href:"/feed", label:"이슈 피드", icon:"rss" },
+  { href:"/indicators", label:"가격·실적 지표", icon:"activity" },
   { href:"/discovery", label:"공급사 발굴", icon:"search" },
   { href:"/ideas", label:"투자 가설", icon:"lightbulb" },
   { href:"/triggers", label:"트리거 추적", icon:"radar" },
@@ -31,7 +32,7 @@ const DEEP_ROUTES = [
 ] as const;
 const LABELS: Record<string,string> = {
   "/":"Overview", "/map":"산업망 캔버스", "/history":"과거 기술 아카이브", "/review":"기술 관계 검토", "/ecosystems":"기술 생태계", "/feed":"이슈 피드",
-  "/ideas":"투자 가설", "/discovery":"공급사 발굴", "/triggers":"트리거", "/search":"통합 검색",
+  "/ideas":"투자 가설", "/discovery":"공급사 발굴", "/indicators":"가격·실적 지표", "/triggers":"트리거", "/search":"통합 검색",
   "/data":"Research Data", "/briefs":"기업 브리프",
 };
 function Brand() {

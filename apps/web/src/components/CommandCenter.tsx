@@ -1,4 +1,5 @@
 "use client";
+import type React from "react";
 
 import { useMemo, useState } from "react";
 import Link from "next/link";
@@ -14,7 +15,7 @@ const ORDER:EcoId[]=["hbm","optics","power"];
 const NAMES:Record<string,string>={hbm:"첨단 패키징",optics:"광통신·포토닉스",power:"전력·냉각",cross:"공급망 공통",market:"기업 공시"};
 const STATUS:Record<string,string>={strengthened:"근거 강화",weakened:"근거 약화",watching:"검증 중",exploring:"초기 가설"};
 const fmt=(value:string)=>value.slice(0,10).replaceAll("-",".");
-export function CommandCenter({stories,ideas,ecosystems,sourceOnline,asOf}:{stories:Story[];ideas:Thesis[];ecosystems:Ecosystem[];sourceOnline:boolean;asOf:string}){
+export function CommandCenter({stories,ideas,ecosystems,sourceOnline,asOf,indicators}:{stories:Story[];ideas:Thesis[];ecosystems:Ecosystem[];sourceOnline:boolean;asOf:string;indicators?:React.ReactNode}){
  const [eco,setEco]=useState<"all"|EcoId>("all");
  const [tab,setTab]=useState<"all"|"high"|"ideas">("all");
  const [focus,setFocus]=useState<EcoId>("hbm");
@@ -45,6 +46,7 @@ export function CommandCenter({stories,ideas,ecosystems,sourceOnline,asOf}:{stor
   </div>
   {!!issues.length&&<><div className="cc-section-heading"><div><div className="cc-eyebrow">SUPPLY CHAIN ISSUES</div><h2>최근 공급망 이슈</h2></div><Link href="/feed">전체 피드 <Icon name="arrow-up-right" size={15}/></Link></div>
   <div className="cc-issue-grid">{issues.map(x=><Link key={x.id} href={`/feed/${encodeURIComponent(x.id)}`} className="cc-issue"><div className="cc-issue-top"><span className="story-score">{x.importance}/10</span><span>{NAMES[x.ecoId]??"공급망"}</span><small>{fmt(x.date)}</small></div><strong>{x.title}</strong><p>{x.summary}</p></Link>)}</div></>}
+  {indicators&&<><div className="cc-section-heading"><div><div className="cc-eyebrow">INDICATORS</div><h2>가격·실적 지표 변화</h2></div><Link href="/indicators">전체 지표 <Icon name="arrow-up-right" size={15}/></Link></div>{indicators}</>}
   <IndustryMilestones compact/>
   <div className="cc-section-heading"><div><div className="cc-eyebrow">03 / TECHNOLOGY SYSTEMS</div><h2>산업망의 주요 흐름</h2></div><Link href="/ecosystems">전체 산업망 <Icon name="arrow-up-right" size={15}/></Link></div>
   <div className="cc-system-tabs" role="group" aria-label="기술 생태계 선택">{ecosystems.map((x,i)=><button key={x.id} type="button" className={focus===x.id?"cc-system-tab cc-system-tab-active":"cc-system-tab"} onClick={()=>setFocus(x.id)} aria-pressed={focus===x.id}><span>0{i+1} / {NAMES[x.id]}</span><strong>{x.title}</strong><small>{x.trajectory}</small></button>)}</div>

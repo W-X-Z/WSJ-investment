@@ -1,5 +1,6 @@
 # 공급망 이슈 피드 (ADR-0014). 시크릿: SUPABASE_URL, SUPABASE_SECRET_KEY, ANTHROPIC_API_KEY
-# 매일 06:47 KST (21:47 UTC): 뉴스 RSS·SEC 8-K·Federal Register·업계지·DB 신호 → 선별·요약(Sonnet, 1회 ≈ $0.05~0.1) → ideas.supply_chain_issues
+# 매일 06:47 KST (21:47 UTC): 뉴스·업계지·뉴스룸·SEC 8-K·관보·정책·TrendForce·논문(arXiv·OpenAlex)·지표(메모리 현물가·PPI·대만 월매출)
+# → 선별·요약(Sonnet, 1회 ≈ $0.1) → ideas.supply_chain_issues, ideas.indicator_points
 name: issues
 
 on:
@@ -27,7 +28,7 @@ concurrency:
 jobs:
   issues:
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    timeout-minutes: 35
     env:
       WSJ_STORE: postgrest
       SUPABASE_URL: ${{ secrets.SUPABASE_URL }}

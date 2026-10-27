@@ -24,6 +24,26 @@
 
 946건 → 관련 403 → 클러스터 310 → 후보 60 → 이슈 16. Actions 가 결제 문제로 시작되지 않아 세션에서 직접 선별(`--picks`)하고 DB 에 적재했다. 상위: AMAT 의 Besi 지분 20% 확대(8), MaxLinear Q3 +72%·AEC 진출(8), Wolfspeed–Infineon 200mm SiC(7), NVIDIA HBM4 사양 하향 보도(7).
 
+## 개정 1 (2026-10-27 오후) — 출처 확장·지표
+
+사용자: *"출처를 더 늘리고 싶어 — 논문·기술연구, 반도체 가격, 부품 가격, 기업 IR, 관련 정책 등."*
+
+- **출처 레지스트리 `sources.py`** — 한 줄 추가로 늘릴 수 있는 RSS/Atom 공통 파서.
+  - 업계지: EE Times, Semiconductor Engineering, eeNews Europe, Power Electronics News, DCD, ServeTheHome, Tom's Hardware, DigiTimes
+  - 회사 뉴스룸·IR(`newsroom`): Samsung, SK hynix, NVIDIA, PR Newswire 반도체 (미국 상장사는 SEC 8-K EX-99 로 이미 들어온다)
+  - 정책(`policy`): 백악관 대통령 조치·NIST(CHIPS) — 반도체·관세·232·핵심광물·데이터센터 제목 필터. Federal Register 기관에 상무부(232)·USTR(301)·FERC(대형 부하)·NIST 추가
+  - 리서치 기관(`analyst`): TrendForce 보도자료 (메모리 계약가·광섬유 현물가·CPO 테스트 등)
+  - 논문(`research`): arXiv API(3초 1회), OpenAlex(IEEE 학회 포함) — 발굴 구문의 첫 인용구로 노드별 검색, 최근 30일. 저자 소속에 산업체가 있으면 표시
+  - Google News 질의에 표준(JEDEC·802.3dj·OCP·OIF)·가격(DRAM 계약가·광섬유·변압기 리드타임·CoWoS·ABF)·정책(232·CHIPS·FERC·수출규칙) 추가
+- **지표 `indicators.py` + 마이그레이션 0016** (`ideas.indicators`, `ideas.indicator_points`, 뷰 `v_indicators`·`v_indicator_points`):
+  - 메모리 현물가 6종 (DRAMeXchange 홈페이지 표, 세션 평균만 저장)
+  - 미국 PPI·원자재 8종 (FRED fredgraph.csv: 반도체·변압기·커넥터·광섬유 케이블·PCB·개폐기 PPI, 구리·알루미늄)
+  - 대만 공급사 월매출 17사 (TWSE·TPEx OpenAPI: TSMC·ASE·Unimicron·KYEC·WinWay·MPI·CHPT·Accton·LandMark·Luxnet·FOCI·Browave·Delta·Lite-On·BizLink·AVC·Auras) — 미국 실적보다 2~3개월 빠른 수요 신호
+  - 임계치(현물 1주 ±8%, 월매출 YoY ≥60%·≤−15%·MoM ±25%, PPI 전월 ±1.5%·전년 ±10%)를 넘으면 `data` 후보 → LLM 이 기사와 묶거나 단독 이슈로
+- **후보 선정**: 규칙 점수 상위 + 유형별 최소치(논문 6·지표 8·리서치 기관 5·정책 4·관보 4·뉴스룸 4). 논문은 이슈 최대 3개(`event_type=research`).
+- **화면**: `/indicators` (그룹별 표·스파크라인·연결 노드), 홈 "가격·실적 지표 변화" 상위 6.
+- 보류: 한국 DART(키 필요), 일본 TDnet, 특허(PatentsView 키 필요), JEDEC·Micron IR(봇 차단), FRED API(키 없이 CSV 사용).
+
 ## 한계
 
 - Google News 링크는 리다이렉트 URL 이라 본문 스니펫이 비어 있다. 요약은 제목·업계지 본문·공시 원문에 기댄다.
