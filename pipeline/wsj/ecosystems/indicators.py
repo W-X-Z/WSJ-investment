@@ -57,7 +57,8 @@ class Indicator:
 
 
 def _dx(slug: str, label: str, match: str, freq: str = "daily", nodes: list[str] | None = None, note: str | None = None) -> Indicator:
-    return Indicator(f"dx:{slug}", label, "memory_spot", "USD", freq, "DRAMeXchange", DRAMX, "hbm", nodes or ["gen:hbm4"], MEM, note, match)
+    # 범용 메모리 현물가는 특정 병목 노드가 아니라 메모리 3사(HBM 캐파 배분 압력)의 맥락 지표다 — 노드 없이 기업에만 잇는다
+    return Indicator(f"dx:{slug}", label, "memory_spot", "USD", freq, "DRAMeXchange", DRAMX, "hbm", nodes or [], MEM, note, match)
 
 
 def _bls(sid: str, label: str, eco: str, nodes: list[str], note: str | None = None) -> Indicator:
@@ -68,9 +69,16 @@ def _fred(sid: str, label: str, eco: str, nodes: list[str], unit: str = "index",
     return Indicator(f"fred:{sid}", label, cat, unit, "monthly", "FRED", f"https://fred.stlouisfed.org/series/{sid}", eco, nodes, [], note, sid)
 
 
-def _tw(code: str, name: str, eco: str, nodes: list[str], role: str, market: str = "TWSE") -> Indicator:
+# 그래프 밖 기업(대만 공급사) — core.entities 에 source='indicator' 로 등록된다 (sync_db). 그래프에 올릴 때도 이 id 를 쓴다.
+TW_ENTITIES: dict[str, dict[str, Any]] = {}
+
+
+def _tw(code: str, name: str, eco: str, nodes: list[str], role: str, market: str = "TWSE", entity: str | None = None) -> Indicator:
+    eid = entity or "company:" + re.sub(r"[^a-z0-9]+", "_", name.lower()).strip("_")
+    TW_ENTITIES[eid] = {"entity_id": eid, "name": name, "exchange": market, "local_code": code, "listing": "non_sec_listed",
+                        "ecosystems": [eco], "role": "supplier", "attrs": {"role_note": role, "country": "TW"}}
     return Indicator(f"tw:{code}", f"{name} 월매출", "tw_revenue", "NT$ 천", "monthly", market,
-                     f"https://mops.twse.com.tw/mops/#/web/t146sb05?companyId={code}", eco, nodes, [], role, code)
+                     f"https://mops.twse.com.tw/mops/#/web/t146sb05?companyId={code}", eco, nodes, [eid], role, code)
 
 
 INDICATORS: list[Indicator] = [
@@ -80,7 +88,7 @@ INDICATORS: list[Indicator] = [
     _dx("ddr4_8gb", "DDR4 8Gb 현물 (3200)", "DDR4 8Gb (1Gx8) 3200"),
     _dx("ddr5_rdimm_32gb", "DDR5 RDIMM 32GB 현물 (서버)", "DDR5 RDIMM 32GB 4800/5600", "weekly"),
     _dx("gddr6_8gb", "GDDR6 8Gb 현물", "GDDR6 8Gb", "weekly"),
-    _dx("nand_512gb_tlc", "NAND 512Gb TLC 웨이퍼 현물", "512Gb TLC", "weekly", ["gen:hbm4"], "NAND 는 HBM 과 직접 관련은 없지만 메모리 사이클 확인용"),
+    _dx("nand_512gb_tlc", "NAND 512Gb TLC 웨이퍼 현물", "512Gb TLC", "weekly", None, "메모리 사이클 확인용"),
     # 미국 PPI·원자재 — 부품 가격 압력
     _bls("PCU334413334413", "미국 PPI: 반도체·관련 소자", "hbm", ["gen:hbm4"]),
     _bls("PCU335311335311", "미국 PPI: 전력·배전 변압기", "power", ["component:planar_transformer", "tech:directmv"], note="데이터센터 전력 병목(변압기 리드타임)의 가격 쪽 신호"),
@@ -92,7 +100,7 @@ INDICATORS: list[Indicator] = [
     _fred("PALUMUSDM", "알루미늄 국제가격", "power", ["component:dc_busbar"], "USD/톤", "commodity"),
     # 대만 공급사 월매출 — 매월 10일 전후 공시, 미국 실적보다 2~3개월 빠른 공급망 수요 신호
     _tw("2330", "TSMC", "hbm", ["req:hbm_io"], "CoWoS·HBM 베이스 다이 파운드리"),
-    _tw("3711", "ASE 홀딩스", "hbm", ["tech:tcb", "component:microbump"], "OSAT·첨단 패키징"),
+    _tw("3711", "ASE Technology", "hbm", ["tech:tcb", "component:microbump"], "OSAT·첨단 패키징"),
     _tw("3037", "Unimicron", "hbm", ["component:package_substrate", "material:abf"], "ABF 기판"),
     _tw("2449", "KYEC", "hbm", ["process:kgd_test", "bottleneck:hbm_kged"], "AI 칩 최종 테스트"),
     _tw("6515", "WinWay", "hbm", ["process:kgd_test"], "테스트 소켓"),

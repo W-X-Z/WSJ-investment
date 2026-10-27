@@ -4,7 +4,7 @@ on:
   pull_request:
     paths:
       - "apps/web/**"
-      - "supabase/migrations/0011_technology_intelligence.sql"
+      - "supabase/migrations/_unapplied/0011_technology_intelligence.sql"
       - ".github/workflows/web-quality.yml"
   workflow_dispatch:
 

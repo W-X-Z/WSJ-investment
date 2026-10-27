@@ -49,7 +49,7 @@ jobs:
           elif [ "${{ github.event.schedule }}" = "41 11 * * 6" ]; then
             echo "names=sec_universe" >> "$GITHUB_OUTPUT"
           else
-            echo "names=sec_form4 sec_filings finra clinicaltrials openfda usaspending" >> "$GITHUB_OUTPUT"
+            echo "names=sec_form4 sec_filings finra usaspending" >> "$GITHUB_OUTPUT"  # ADR-0015: 임상·FDA 수집 종료 (원자료 보존)
           fi
       - name: Run collectors
         if: steps.plan.outputs.names != 'none'

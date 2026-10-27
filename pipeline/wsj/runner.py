@@ -251,15 +251,20 @@ def cmd_moat(args: argparse.Namespace) -> int:
             else (settings.wsj_data_dir / "moat" if args.dry_run else None),
             force=args.force,
         )
-        results = build(
-            store,
-            http,
-            settings.anthropic_api_key or None,
-            parse_date(args.as_of) if args.as_of else None,
-            ciks,
-            args.all,
-            opt,
-        )
+        from wsj.runlog import logged_run
+
+        with logged_run(None if args.dry_run else store, "moat", {"ciks": ciks, "all": bool(args.all), "model": opt.model}) as run:
+            results = build(
+                store,
+                http,
+                settings.anthropic_api_key or None,
+                parse_date(args.as_of) if args.as_of else None,
+                ciks,
+                args.all,
+                opt,
+            )
+            run["rows"] = sum(1 for r in results if r.get("status") not in ("failed", "skipped"))
+            run["notes"] = f"cards={len(results)} failed={sum(1 for r in results if r.get('status') == 'failed')}"
         for r in results:
             print(_json.dumps(r, ensure_ascii=False, default=str))
         return 1 if any(r.get("status") == "failed" for r in results) else 0

@@ -39,7 +39,7 @@ This is complemented by a **curated, dated primary-source milestone ledger**:
 ## Repository vs proposed normalized DB
 
 - Implemented: versioned research files + GitHub Actions automated offline read projection.
-- Planned schema: `supabase/migrations/0013_technology_evidence_match_review.sql`, adds unreviewed source-node match, numeric mention candidate, relationship review queue; enforces protected access and reviewer-gated promotion.
+- Planned schema: `supabase/migrations/_unapplied/0013_technology_evidence_match_review.sql (미적용, ADR-0015 로 대체)`, adds unreviewed source-node match, numeric mention candidate, relationship review queue; enforces protected access and reviewer-gated promotion.
 - **Production Supabase DB not yet modified.** Migrations 0011–0013 depend on a decision on authentication, RLS, and server-side publishing API. Service role credentials must stay server-side only.
 
 ## Agent review sequence for a high-value quantitative change

@@ -1,4 +1,8 @@
-"""usaspending — 정부조달 유니버스 기업의 계약 awards (USAspending API v2).
+"""usaspending — 공급망 유니버스 기업의 연방 계약·연구비 awards (USAspending API v2). ADR-0015 로 재조준.
+
+대상: sector_bucket='supply_chain' (온톨로지 소형 공급사). 매출 전 소형사(Aeluma·POET·Lightwave Logic 등)에는
+SBIR·DOE·NIST CHIPS R&D 수주가 비희석 자금이자 기술 검증 신호다. 계약(A~D)과 보조금·협력협약(02~05)을 모두 본다.
+(이전: SIC 기반 '정부조달' 방산 버킷 — 테마 무관 2,021건, 2026-10-27 종료)
 
 recipient_search_text 로 회사명(정규화)을 검색하고 last_modified_date 창으로 증분.
 옵션 행사·수정(modification)이 신규 수주보다 강한 신호라 '마지막 수정일' 기준으로 본다.
@@ -32,8 +36,13 @@ FIELDS = [
     "Contract Award Type",
     "def_codes",
     "generated_internal_id",
+    "Award Type",
 ]
 CONTRACT_TYPES = ["A", "B", "C", "D"]  # BPA call, purchase order, delivery order, definitive contract
+GRANT_TYPES = ["02", "03", "04", "05"]  # block/formula/project grant, cooperative agreement (SBIR·DOE·NIST 연구비)
+TARGET_BUCKET = "supply_chain"
+# 정규화한 이름이 너무 짧거나 흔한 경우의 검색어 (수신자명 부분 일치라 'NOVA' 는 무관한 수천 건을 끌어온다)
+QUERY_OVERRIDES = {"AXT": "AXT, INC", "NOVA": "NOVA MEASURING", "COHU": "COHU, INC"}
 PAGE = 100
 
 
@@ -53,24 +62,26 @@ class UsaSpendingCollector(Collector):
     def run(self, ctx: RunContext) -> RunResult:
         res = RunResult()
         http, store, log = ctx.http, ctx.store, ctx.log
-        companies = [c for c in self.universe(ctx) if c.get("sector_bucket") == "gov_procurement"]
+        companies = [c for c in self.universe(ctx) if c.get("sector_bucket") == TARGET_BUCKET]
         if ctx.limit:
             companies = companies[: ctx.limit]
-        start = self.start_date(ctx, "last_modified", default_lookback_days=90)
+        # 대상이 바뀌었으니 새 워터마크 키 — 첫 실행은 3년치
+        start = self.start_date(ctx, "last_modified_supply_chain", default_lookback_days=3 * 365)
         end = ctx.today()
         log.info("usaspending companies=%d window %s..%s", len(companies), start, end)
 
         rows: dict[str, dict] = {}
         capped_oldest: list[str] = []  # 페이지 상한에 걸린 회사의 가장 오래된 수정일
-        for c in companies:
+        for c, award_types in ((c, t) for c in companies for t in (CONTRACT_TYPES, GRANT_TYPES)):
             q = normalize_name(c["name"])
+            q = QUERY_OVERRIDES.get(q, q)
             if len(q) < 4:
                 continue
             page = 1
             while True:
                 body = {
                     "filters": {
-                        "award_type_codes": CONTRACT_TYPES,
+                        "award_type_codes": award_types,
                         "recipient_search_text": [q],
                         "time_period": [
                             {
@@ -110,7 +121,7 @@ class UsaSpendingCollector(Collector):
                         "naics_description": naics.get("description"),
                         "psc_code": psc.get("code"),
                         "psc_description": psc.get("description"),
-                        "contract_award_type": a.get("Contract Award Type"),
+                        "contract_award_type": a.get("Contract Award Type") or a.get("Award Type"),
                         "def_codes": a.get("def_codes") or [],
                         "search_text": q,
                         "payload": {"internal_id": a.get("internal_id"), "agency_slug": a.get("agency_slug")},
@@ -134,5 +145,5 @@ class UsaSpendingCollector(Collector):
         wm_date = (end - timedelta(days=7)).isoformat()
         if capped_oldest:
             wm_date = min(wm_date, min(capped_oldest))
-        res.watermark = {"last_modified": wm_date}
+        res.watermark = {"last_modified_supply_chain": wm_date}
         return res

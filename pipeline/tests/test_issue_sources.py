@@ -16,8 +16,11 @@ DX_PAGE = """
 
 def test_all_indicator_nodes_exist_in_graph():
     ids = {n["id"] for n in load_graph()["nodes"]}
-    assert not [(i.indicator_id, n) for i in indicators.INDICATORS for n in i.nodes + i.companies if n not in ids]
+    # 노드는 그래프에만, 기업은 그래프 기업 또는 그래프 밖 엔티티(TW_ENTITIES) — DB FK 와 같은 규칙
+    assert not [(i.indicator_id, n) for i in indicators.INDICATORS for n in i.nodes if n not in ids]
+    assert not [(i.indicator_id, c) for i in indicators.INDICATORS for c in i.companies if c not in ids and c not in indicators.TW_ENTITIES]
     assert len({i.indicator_id for i in indicators.INDICATORS}) == len(indicators.INDICATORS)
+    assert all(i.companies for i in indicators.INDICATORS if i.category == "tw_revenue")
 
 
 def test_parse_dramexchange_attaches_table_dates():
@@ -89,3 +92,20 @@ def test_parse_bls_monthly_with_changes():
     pts = {p.as_of: p for p in indicators.parse_bls(data)}
     p = pts[date(2026, 9, 1)]
     assert p.indicator_id == "bls:PCU335311335311" and p.change_pct == 10.0 and p.yoy_pct == 25.0
+
+
+def test_sync_rows_respect_db_contracts():
+    from wsj.ecosystems.sync_db import build_rows, clean_name
+
+    g = load_graph()
+    rows = build_rows(g, indicators.TW_ENTITIES, None)
+    ent = {e["entity_id"]: e for e in rows["entities"]}
+    node_ids = {n["node_id"] for n in rows["nodes"]}
+    assert all(n["entity_id"] in ent for n in rows["nodes"] if n["entity_id"])          # FK ontology_nodes.entity_id
+    assert all(e["src"] in node_ids and e["dst"] in node_ids for e in rows["edges"])    # FK ontology_edges
+    assert ent["company:samsung"]["local_code"] == "005930" and ent["company:samsung"]["ticker"] is None
+    assert ent["company:delta_electronics"]["source"] == "indicator" and not ent["company:delta_electronics"]["in_graph"]
+    assert clean_name("NVIDIA (NVDA) — HBM·광·전력 공통 수요처") == "NVIDIA"
+    # 이슈가 쓸 수 있는 기업 = 그래프 기업 + 그래프 밖 엔티티, 노드는 그래프 노드만
+    extra = {n["id"] for n in issues.extra_company_nodes()}
+    assert extra <= set(ent) and not (extra & node_ids)
