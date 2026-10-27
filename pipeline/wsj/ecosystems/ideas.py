@@ -85,8 +85,11 @@ class Evidence:
     excerpt: str | None = None
 
     def public(self) -> dict[str, Any]:
-        return {"id": self.eid, "url": self.url, "title": self.title, "publisher": self.publisher, "date": self.date,
-                "tier": self.tier, "tier_ko": TIER_KO.get(self.tier or "", None)}
+        d = {"id": self.eid, "url": self.url, "title": self.title, "publisher": self.publisher, "date": self.date,
+             "tier": self.tier, "tier_ko": TIER_KO.get(self.tier or "", None)}
+        if self.excerpt and self.eid.startswith("S"):  # 확인된 사실(원문 확인 소식의 요약)·공시 본문 발췌 — 화면의 '확인된 사실'
+            d["note"] = self.excerpt[:280]
+        return d
 
 
 @dataclass
@@ -443,6 +446,12 @@ LLM_SYSTEM = """너는 AI 공급망(HBM·첨단 패키징 / 800G·1.6T 광통신
 - G 근거는 '왜 그 변화가 이 기업에 닿는가'의 구조 설명에만 쓴다. 현재 상황(수요·부족·점유율)을 G 근거만으로 주장하지 않는다.
 - E 신호(기업 자체의 공시·월매출·실적)는 노출을 직접 확인해 준다. 업계 이슈(I)와 기업 소식(E)이 같은 방향이면 강한 아이디어다.
 - 시세 기사(주가 등락)는 근거로 쓰지 않는다.
+- 근거는 세 층이다. 기업 직접 = primary 기업 자신의 공시·실적·수주·제품·월매출 (E 의 주어가 그 기업, 또는 이슈에 그 기업이 이름으로 나옴).
+  관련 = 고객·경쟁사·동종 기업의 소식. 업계 = 산업 뉴스·가격·지표. G = 구조 설명.
+- 기존 아이디어 update 는 primary 기업의 직접 근거가 새로 나왔을 때만 '강화'다. 업계·관련 소식만 새로 나왔으면 keep 한다.
+  꼭 고쳐야 하면(사슬의 사실이 바뀜) update 하되 ★를 올리지 말고 what_changed 를 "업계: …" 로 쓴다 — 검증기도 그렇게 바꾼다.
+- 업계 소식만으로 만든 새 아이디어는 thesis 둘째 문장에 "아직 이 기업 자신의 확인(공시·실적)은 없다" 는 사실을 밝힌다.
+- existing 의 company_signal_at 은 그 아이디어의 기업 직접 근거 최신 날짜다. 이보다 새 직접 근거가 없으면 '강화'가 아니다.
 
 아이디어를 만드는 법
 - 한 아이디어 = 하나의 논리: "무엇이 바뀌었나(최근 사실) → 그래서 어떤 병목/전환이 조여지나 → 공급이 왜 소수에게 몰리나 → 그래서 이 기업".
@@ -452,6 +461,7 @@ LLM_SYSTEM = """너는 AI 공급망(HBM·첨단 패키징 / 800G·1.6T 광통신
 - primary 는 상장 소형·중형 공급사를 우선한다. 대형·초대형은 논리가 압도적일 때만 primary, 보통은 수요처·경쟁 맥락으로 companies 에 넣는다.
 - chain: 3~5 단계. 각 단계 claim 은 한 문장, evidence 에 근거 id 1개 이상. 기술 추론(technical_inference) 근거만 있는 단계는 claim 끝에 "(추론)".
 - stars: 3 = 최근 사실이 병목·전환을 직접 확인하고 + 공급이 소수에 집중되고 + 기업 노출이 최근 공식 근거(공시·실적)로 확인. 2 = 셋 중 둘. 1 = 하나 또는 추론 의존.
+  ★3 은 primary 기업의 최근 30일 직접 근거가 있어야 한다 (없으면 검증기가 ★2 로 내린다).
 - risks: 1~3개. 반대 근거·대체 경로·이미 알려진 정도(대형 고객 집중, 중국 경쟁 등). 근거 id 가 있으면 붙이고 없으면 빈 배열.
 - watch: 2~3개. 다음에 무엇이 확인되면 강화/약화되는지 구체적으로 (예: "11월 10일 전후 TPEx 10월 월매출 YoY", "SK hynix 16단 양산 공식 발표").
 - 숫자·날짜는 입력에 있는 것만 쓴다. 주가·목표가·매수/매도 권유·시점 예측 금지.
@@ -511,7 +521,7 @@ def build_payload(signals: list[dict[str, Any]], candidates: list[dict[str, Any]
         "candidates": candidates,
         "evidence": evidence,
         "existing": [{k: x.get(k) for k in ("idea_key", "type", "title", "thesis", "stars", "primary_company", "last_signal_at", "updated_at")}
-                     | {"companies": [c.get("id") for c in x.get("companies") or []]} for x in existing],
+                     | {"companies": [c.get("id") for c in x.get("companies") or []], "company_signal_at": company_signal_date(x)} for x in existing],
     }
 
 
@@ -519,6 +529,44 @@ def build_payload(signals: list[dict[str, Any]], candidates: list[dict[str, Any]
 def make_key(kind: str, primary: str, title: str) -> str:
     slug = re.sub(r"\W+", "", title)[:24]
     return hashlib.sha1(f"{kind}|{primary}|{slug}".encode()).hexdigest()[:12]
+
+
+REL_KO = {"direct": "기업 직접", "related": "관련 기업", "industry": "업계", "background": "그래프 배경"}
+DIRECT_STAR3_DAYS = 30  # ★3 은 primary 기업의 이 기간 안 직접 근거가 있어야 한다
+
+
+def evidence_rel(eid: str, sig: dict[str, Any] | None, primary: str, idea_cos: set[str]) -> str:
+    """근거가 이 아이디어의 주 기업에 대해 무엇인가 — 기업 직접 / 관련 기업 / 업계 / 그래프 배경.
+    기업 소식(E)은 주어(subject)가 기준이고, 이슈·지표는 그 안에 이름이 나온 기업이 기준이다."""
+    if eid.startswith("G"):
+        return "background"
+    if not sig:
+        return "industry"
+    cos = set(sig.get("companies") or [])
+    subject = sig.get("subject")
+    if subject:
+        if subject == primary:
+            return "direct"
+        return "related" if subject in idea_cos or primary in cos else "industry"
+    if primary in cos:
+        return "direct"
+    return "related" if cos & idea_cos else "industry"
+
+
+def company_signal_date(idea: dict[str, Any]) -> str | None:
+    """기존 아이디어의 '기업 직접 근거' 최신 날짜. rel 이 없던 예전 행은 근거 제목에 주 기업 이름이 있는지로 본다."""
+    primary = idea.get("primary_company")
+    pc = next((c for c in idea.get("companies") or [] if c.get("id") == primary), None)
+    names = [x.lower() for x in [(pc or {}).get("name"), (pc or {}).get("ticker")] if x and len(str(x)) >= 3]
+    dates = []
+    for st in idea.get("chain") or []:
+        for e in st.get("evidence") or []:
+            if not str(e.get("id", "")).startswith("S") or not e.get("date"):
+                continue
+            rel = e.get("rel")
+            if rel == "direct" or (rel is None and any(n in str(e.get("title") or "").lower() for n in names)):
+                dates.append(str(e["date"])[:10])
+    return max(dates) if dates else None
 
 
 def validate(raw: list[dict[str, Any]], reg: Registry, graph: dict[str, Any], signals: list[dict[str, Any]],
@@ -559,9 +607,14 @@ def validate(raw: list[dict[str, Any]], reg: Registry, graph: dict[str, Any], si
         if not primary:
             rejects.append(f"#{i} no valid company: {title[:40]}")
             continue
+        idea_cos = {c["id"] for c in comps}
+
+        def ev_rows(ids: list[str], pid: str = primary["id"], cos: set[str] = idea_cos) -> list[dict[str, Any]]:
+            return [reg.items[e].public() | {"rel": evidence_rel(e, sig_by_ev.get(e), pid, cos)} for e in ids if e in reg.items]
+
         chain = []
         for st in it.get("chain") or []:
-            evs = [reg.items[e].public() for e in st.get("evidence") or [] if e in reg.items]
+            evs = ev_rows(st.get("evidence") or [])
             if st.get("claim") and evs:
                 chain.append({"claim": st["claim"].strip(), "evidence": evs})
         has_signal = any(e["id"] in sig_by_ev for st in chain for e in st["evidence"])
@@ -573,7 +626,7 @@ def validate(raw: list[dict[str, Any]], reg: Registry, graph: dict[str, Any], si
         if not fresh and (not key or action == "update"):
             rejects.append(f"#{i} {action} without evidence from the last {FRESH_DAYS} days (newest {s_dates[-1] if s_dates else None}): {title[:40]}")
             continue
-        risks = [{"claim": r["claim"].strip(), "evidence": [reg.items[e].public() for e in r.get("evidence") or [] if e in reg.items]}
+        risks = [{"claim": r["claim"].strip(), "evidence": ev_rows(r.get("evidence") or [])}
                  for r in it.get("risks") or [] if isinstance(r, dict) and r.get("claim")]
         sig_refs = sorted({sig_by_ev[e["id"]]["ref"] for st in chain for e in st["evidence"] if e["id"] in sig_by_ev})
         # 마지막 최신 근거 날짜 = 인용한 S 근거 중 가장 최근 (신호 묶음 날짜가 아니라 근거 자체의 날짜)
@@ -582,18 +635,54 @@ def validate(raw: list[dict[str, Any]], reg: Registry, graph: dict[str, Any], si
         pn = nodes[primary["id"]]
         ecos = sorted({x for x in [pn.get("ecosystem"), *(pn.get("also_in") or [])] if x})
         prev = existing.get(key) if key else None
+        direct_dates = sorted({e["date"][:10] for st in chain for e in st["evidence"] if e.get("rel") == "direct" and e.get("date")})
+        prev_direct = company_signal_date(prev) if prev else None
+        new_direct = bool(direct_dates) and direct_dates[-1] >= fresh_cut and (not prev_direct or direct_dates[-1] > prev_direct)
+        stars_note = ""
+        # ★3 = 주 기업 자신의 최근 근거가 있어야 한다 (업계 소식만으로는 ★2 까지)
+        star3_cut = (now - timedelta(days=DIRECT_STAR3_DAYS)).date().isoformat()
+        if stars == 3 and not (direct_dates and direct_dates[-1] >= star3_cut):
+            stars, stars_note = 2, f" (기업 직접 근거가 최근 {DIRECT_STAR3_DAYS}일 안에 없어 ★2)"
+        what_changed = (it.get("what_changed") or "").strip() or None
+        if prev and action != "weaken" and not new_direct:
+            # 업계 소식만 새로 나왔다 → '강화' 가 아니다. ★를 올리지 않고, 바뀐 점은 업계 근거로 표시
+            if stars > (prev.get("stars") or 0):
+                stars, stars_note = int(prev.get("stars") or stars), " (새 기업 직접 근거 없음 → ★ 유지)"
+            if what_changed and not what_changed.startswith("업계"):
+                what_changed = "업계: " + what_changed
         trend = "new" if not prev else ("weakened" if action == "weaken" or stars < (prev.get("stars") or 0)
-                                        else "strengthened" if stars > (prev.get("stars") or 0) or action == "update" else "unchanged")
+                                        else "strengthened" if new_direct and (stars > (prev.get("stars") or 0) or action == "update")
+                                        else "unchanged")
         rows.append({
             "idea_key": key or make_key(kind, primary["id"], title), "status": "active", "trend": trend, "type": kind,
-            "title": title[:120], "thesis": thesis[:600], "stars": stars, "stars_reason": (it.get("stars_reason") or "")[:300],
+            "title": title[:120], "thesis": thesis[:600], "stars": stars, "stars_reason": ((it.get("stars_reason") or "") + stars_note)[:300],
             "primary_company": primary["id"], "companies": comps, "chain": chain, "risks": risks,
-            "watch": [str(w)[:200] for w in (it.get("watch") or [])][:4], "what_changed": (it.get("what_changed") or None),
+            "watch": [str(w)[:200] for w in (it.get("watch") or [])][:4], "what_changed": what_changed,
             "nodes": theme[:12], "ecosystems": ecos, "signal_refs": sig_refs,
             "evidence_count": len({e["id"] for st in chain for e in st["evidence"]}),
             "last_signal_at": last_sig, "updated_at": now.isoformat(), "model": model, "method": method,
         })
+    rows += star3_audit(existing, {r["idea_key"] for r in rows}, now, model, method)
     return rows, rejects
+
+
+def star3_audit(existing: dict[str, dict[str, Any]], touched: set[str], now: datetime, model: str, method: str) -> list[dict[str, Any]]:
+    """손대지 않은(keep) ★3 아이디어도 주 기업 직접 근거가 30일 넘게 없으면 ★2 로 내린다 — ★3 규칙은 매일 다시 본다."""
+    cut = (now - timedelta(days=DIRECT_STAR3_DAYS)).date().isoformat()
+    out = []
+    for key, x in existing.items():
+        if key in touched or int(x.get("stars") or 0) != 3 or not x.get("last_signal_at"):
+            continue
+        at = company_signal_date(x)
+        if at and at >= cut:
+            continue
+        keep = ("type", "title", "thesis", "primary_company", "companies", "chain", "risks", "watch", "nodes", "ecosystems", "signal_refs",
+                "evidence_count", "last_signal_at")
+        out.append({"idea_key": key, "status": "active", "trend": "weakened", **{k: x.get(k) for k in keep}, "stars": 2,
+                    "stars_reason": ((x.get("stars_reason") or "") + f" (기업 직접 근거가 {DIRECT_STAR3_DAYS}일 넘게 없어 ★2)")[:300],
+                    "what_changed": f"주 기업 자신의 최근 {DIRECT_STAR3_DAYS}일 근거가 없어 ★3→★2 (마지막 기업 직접 근거: {at or '없음'})",
+                    "last_signal_at": str(x.get("last_signal_at"))[:10], "updated_at": now.isoformat(), "model": model, "method": method})
+    return out
 
 
 # ---------------------------------------------------------------- orchestration
