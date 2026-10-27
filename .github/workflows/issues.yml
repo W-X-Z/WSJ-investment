@@ -1,11 +1,15 @@
-# 공급망 이슈 피드 (ADR-0014). 시크릿: SUPABASE_URL, SUPABASE_SECRET_KEY, ANTHROPIC_API_KEY
-# 매일 06:47 KST (21:47 UTC): 뉴스·업계지·뉴스룸·SEC 8-K·관보·정책·TrendForce·논문(arXiv·OpenAlex)·지표(메모리 현물가·PPI·대만 월매출)
-# → 선별·요약(Sonnet, 1회 ≈ $0.1) → ideas.supply_chain_issues, ideas.indicator_points
+# 공급망 이슈 피드 (ADR-0014) + 투자 아이디어 (ADR-0016). 시크릿: SUPABASE_URL, SUPABASE_SECRET_KEY, ANTHROPIC_API_KEY,
+# 선택: DART_API_KEY (한국 공시), OPENALEX_API_KEY
+# 하루 두 번 — 06:47 KST (21:47 UTC, 미국 장 마감 뒤) · 18:47 KST (09:47 UTC, 아시아 장 마감·공시 뒤):
+# 뉴스·업계지·뉴스룸·SEC 8-K·관보·정책·TrendForce·논문·지표 → 이슈 선별(Sonnet) → ideas.supply_chain_issues
+# → 기업별 최신 소식(SEC·TWSE/TPEx·TDnet·cninfo·DART 공시, 월매출, 기업명 뉴스) → ideas.company_events
+# → 투자 아이디어(Sonnet) → ideas.investment_ideas. 한 번에 ≈ $0.4
 name: issues
 
 on:
   schedule:
     - cron: "47 21 * * *"
+    - cron: "47 9 * * *"
   push:  # 수집·선별 코드가 바뀌면 바로 검증 실행 (public 레포라 표준 러너 무료)
     branches: [main]
     paths:
@@ -13,6 +17,7 @@ on:
       - "pipeline/wsj/ecosystems/sources.py"
       - "pipeline/wsj/ecosystems/indicators.py"
       - "pipeline/wsj/ecosystems/ideas.py"
+      - "pipeline/wsj/ecosystems/company_feed.py"
       - "research/ecosystems/seed_graph.json"
       - ".github/workflows/issues.yml"
   workflow_dispatch:
@@ -41,13 +46,14 @@ concurrency:
 jobs:
   issues:
     runs-on: ubuntu-latest
-    timeout-minutes: 35
+    timeout-minutes: 45
     env:
       WSJ_STORE: postgrest
       SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
       SUPABASE_SECRET_KEY: ${{ secrets.SUPABASE_SECRET_KEY }}
       ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
       OPENALEX_API_KEY: ${{ secrets.OPENALEX_API_KEY }}
+      DART_API_KEY: ${{ secrets.DART_API_KEY }}
       SEC_USER_AGENT: "WSJ-investment research dnltmdwhd@gmail.com"
     steps:
       - uses: actions/checkout@v4
@@ -70,7 +76,8 @@ jobs:
           args=(run --days "$IN_DAYS" --model "$IN_MODEL" --out data/issues/latest.json)
           [[ "$IN_NO_LLM" == "true" ]] && args+=(--no-llm)
           python -m wsj.ecosystems.issues "${args[@]}" | tee -a "$GITHUB_STEP_SUMMARY"
-      # 투자 아이디어 (ADR-0016): 방금 저장한 이슈 + 지표 + 그래프 → 후보 사슬 → LLM → 검증 → ideas.investment_ideas (1회 ≈ $0.2)
+      # 투자 아이디어 (ADR-0016): 방금 저장한 이슈 + 지표 + 기업별 최신 소식(지금 수집 + 최근 14일 누적) + 그래프
+      # → 후보 사슬 → LLM → 검증(14일 안 근거 필수) → ideas.investment_ideas (1회 ≈ $0.3)
       - name: Write investment ideas
         if: ${{ inputs.no_llm != 'true' }}
         working-directory: pipeline
@@ -78,7 +85,8 @@ jobs:
           IN_IDEAS_MODEL: ${{ inputs.ideas_model || 'sonnet' }}
         run: |
           set -euo pipefail
-          python -m wsj.ecosystems.ideas --model "$IN_IDEAS_MODEL" --out data/issues/ideas.json | tee -a "$GITHUB_STEP_SUMMARY"
+          python -m wsj.ecosystems.ideas --model "$IN_IDEAS_MODEL" --out data/issues/ideas.json --events-out data/issues/company_events.json \
+            | tee -a "$GITHUB_STEP_SUMMARY"
       - name: Upload output
         if: always()
         uses: actions/upload-artifact@v4

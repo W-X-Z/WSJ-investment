@@ -1,9 +1,9 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Icon } from "@/components/Icon";
-import { CompanyChip, EvidenceLinks } from "@/components/IdeaCard";
+import { CompanyChip, EvidenceLinks, Freshness } from "@/components/IdeaCard";
 import { Stars } from "@/components/Stars";
-import { ECO_KO, IDEA_TYPE, ROLE_KO, SIZE_KO, ago, loadIdea } from "@/lib/ideas";
+import { ECO_KO, EVENT_KIND_KO, IDEA_TYPE, ROLE_KO, SIZE_KO, ago, loadCompanyEvents, loadIdea } from "@/lib/ideas";
 
 export const dynamic = "force-dynamic";
 
@@ -16,6 +16,8 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
 export default async function IdeaDetail({ params }: { params: Promise<{ id: string }> }) {
   const idea = await loadIdea((await params).id);
   if (!idea) notFound();
+  const events = await loadCompanyEvents(idea.companies.filter((c) => c.role !== "customer").map((c) => c.id));
+  const nameOf = new Map(idea.companies.map((c) => [c.id, c.name]));
   const type = IDEA_TYPE[idea.type] ?? { label: idea.type, tone: "bottleneck" };
   return <div className="idetail">
     <div className="breadcrumb"><Link href="/">투자 아이디어</Link><Icon name="chevron-right" size={13}/><span>{idea.title}</span></div>
@@ -24,7 +26,7 @@ export default async function IdeaDetail({ params }: { params: Promise<{ id: str
         <Stars n={idea.stars} label/>
         <span className={`ic-type ic-type-${type.tone}`}>{type.label}</span>
         {idea.ecosystems.map((e) => <span key={e} className="ic-eco">{ECO_KO[e] ?? e}</span>)}
-        <small className="ic-when">갱신 {ago(idea.updated_at)}</small>
+        <small className="ic-when"><Freshness date={idea.last_signal_at}/> · 갱신 {ago(idea.updated_at)}</small>
       </div>
       <h1>{idea.title}</h1>
       <p>{idea.thesis}</p>
@@ -42,6 +44,16 @@ export default async function IdeaDetail({ params }: { params: Promise<{ id: str
 
         <h2>지켜볼 신호</h2>
         <ul className="idetail-watch">{idea.watch.map((w, i) => <li key={i}><Icon name="target" size={14}/>{w}</li>)}</ul>
+
+        {events.length ? <>
+          <h2>관련 기업 최근 소식 <small className="idetail-sub">공시·월매출·뉴스, 최근 30일</small></h2>
+          <ul className="idetail-events">{events.map((e) => <li key={e.event_id} className={e.importance >= 2 ? "ev-imp" : ""}>
+            <span className="idetail-ev-date">{e.published_at.slice(5, 10).replace("-", "/")}</span>
+            <span className="idetail-ev-kind">{EVENT_KIND_KO[e.kind] ?? e.kind}</span>
+            <a href={e.url} target="_blank" rel="noreferrer">{e.title}</a>
+            <small>{nameOf.get(e.company_id)} · {e.publisher}</small>
+          </li>)}</ul>
+        </> : null}
       </div>
       <aside>
         <h2>관련 기업</h2>
