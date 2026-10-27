@@ -152,12 +152,15 @@ class CompanyEvent:
     @classmethod
     def from_public(cls, d: dict[str, Any]) -> CompanyEvent:
         keep = {k: d.get(k) for k in ("company_id", "kind", "title", "url", "publisher", "tier", "importance", "text", "lang", "extra")}
+        extra = dict(d.get("extra") or {})
+        if d.get("event_id"):  # DB 에서 읽은 행은 저장된 id 를 그대로 (Claude 가 더한 소식은 id 규칙이 다르다)
+            extra["event_id"] = d["event_id"]
         return cls(**{**keep, "published_at": datetime.fromisoformat(str(d["published_at"]).replace("Z", "+00:00")),
-                      "text": d.get("text") or "", "lang": d.get("lang") or "en", "extra": d.get("extra") or {}})
+                      "text": d.get("text") or "", "lang": d.get("lang") or "en", "extra": extra})
 
     @property
     def event_id(self) -> str:
-        return hashlib.sha1(f"{self.company_id}|{self.url}|{self.title[:120]}".encode()).hexdigest()[:20]
+        return (self.extra or {}).get("event_id") or hashlib.sha1(f"{self.company_id}|{self.url}|{self.title[:120]}".encode()).hexdigest()[:20]
 
     def row(self) -> dict[str, Any]:
         return {"event_id": self.event_id, **self.public(), "text": self.text or None, "extra": self.extra or None}
@@ -658,9 +661,16 @@ def main(argv: list[str] | None = None) -> int:
             log.warning("기존 아이디어를 읽을 수 없음: %s", exc)
     http = HttpClient(settings.sec_user_agent, timeout=25, max_retries=2)
     try:
-        events, stats = collect(http, graph, args.days, {f for f in focus if f}, settings.dart_api_key or None, not args.no_news)
-        if store is not None:
-            stats["saved"] = save_events(store, events)
+        if store is not None:  # 실행 기록 → 아이디어 예약작업이 "오늘 수집이 끝났나" 를 ops.collector_runs 로 확인한다
+            from wsj.runlog import logged_run
+
+            with logged_run(store, "company_feed", {"days": args.days, "news": not args.no_news}) as run:
+                events, stats = collect(http, graph, args.days, {f for f in focus if f}, settings.dart_api_key or None, not args.no_news)
+                stats["saved"] = save_events(store, events)
+                run["rows"] = stats["saved"]
+                run["notes"] = json.dumps({k: v for k, v in stats.items() if k in ("events", "with_events", "saved")})
+        else:
+            events, stats = collect(http, graph, args.days, {f for f in focus if f}, settings.dart_api_key or None, not args.no_news)
     finally:
         http.close()
         if store is not None:

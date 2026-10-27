@@ -225,13 +225,17 @@ def company_signals(events: list[Any], graph: dict[str, Any], reg: Registry, now
     out = []
     for _score, cid, evs, tagged_nodes, tagged_cos, newest in scored[:max_signals]:
         picked = sorted(evs[:per_company], key=lambda e: e.published_at, reverse=True)
-        items, eids = [], []
+        items, eids, used_events = [], [], []
         for e in picked:
             d = e.published_at.date().isoformat()
             eid = reg.add("S", e.url, e.title, publisher=e.publisher, date=d, tier=e.tier, excerpt=(e.text or None))
             if eid:
                 eids.append(eid)
-                items.append({"date": d, "kind": e.kind, "importance": e.importance, "title": e.title[:180], "ev": eid})
+                it = {"date": d, "kind": e.kind, "importance": e.importance, "title": e.title[:180], "ev": eid}
+                if (e.extra or {}).get("verified_by"):
+                    it["verified"] = True  # 원문을 열어 숫자·날짜를 확인한 소식 (excerpt 에 확인 내용)
+                items.append(it)
+                used_events.append(e)
         if not eids:
             continue
         label = re.split(r"\s+\(", nodes[cid]["label"])[0]
@@ -240,7 +244,7 @@ def company_signals(events: list[Any], graph: dict[str, Any], reg: Registry, now
                     "supplies": supplies,
                     "stars": max(1, min(3, evs[0].importance)), "date": newest, "what": None, "why": None,
                     "nodes": sorted(tagged_nodes)[:8], "companies": [cid, *sorted(tagged_cos - {cid})[:4]], "evidence": eids,
-                    "ecosystem": nodes[cid].get("ecosystem"), "items": items})
+                    "ecosystem": nodes[cid].get("ecosystem"), "items": items, "_events": used_events})
     return out
 
 
@@ -425,6 +429,7 @@ LLM_SYSTEM = """너는 AI 공급망(HBM·첨단 패키징 / 800G·1.6T 광통신
 입력
 - signals: 최근 변화. I=업계 이슈, M=가격·실적 지표, E=기업별 최신 소식(공시·월매출·실적 발표·수주·기업명 뉴스; items 에 날짜·종류·중요도,
   supplies 는 그 기업이 그래프에서 공급하는 부품·소재). E 의 기업이 candidates 에 없어도 E 근거만으로 아이디어를 만들 수 있다.
+  verified=true 인 항목은 원문을 열어 확인한 소식이고, 확인한 숫자·날짜는 evidence 의 excerpt 에 있다 — 숫자는 여기서 가져온다.
   각 신호와 항목에 근거 id. date 가 최근일수록 중요하다.
 - candidates: 그래프가 계산한 '변화 → 병목·기술 → 공급 → 기업' 경로 후보. score 는 신호 강도×최근성×소형 가중×공급 집중.
   chains.steps 는 관계 사슬(근거 id 'ev'), peers 는 같은 부품·공정의 다른 공급사, transitions 는 대체·개발·IP 관계(성숙도 stage),
@@ -635,8 +640,11 @@ def gather_events(args, settings, store, graph: dict[str, Any], existing: list[d
     path = args.events or (args.snapshot / "events.json" if args.snapshot and (args.snapshot / "events.json").exists() else None)
     if path:
         return [CompanyEvent.from_public(d) for d in json.loads(path.read_text(encoding="utf-8"))], {"source": str(path)}
-    if args.snapshot or args.no_feed or store is None:
+    if args.snapshot or store is None:
         return [], {"source": "none"}
+    if args.no_feed:  # 수집은 워크플로가 이미 했다 → DB 에 쌓인 최근 소식만
+        stored = load_events(store, args.feed_days)
+        return stored, {"source": "db", "stored": len(stored)}
     from wsj.http import HttpClient
 
     http = HttpClient(settings.sec_user_agent, timeout=25, max_retries=2)
@@ -648,6 +656,75 @@ def gather_events(args, settings, store, graph: dict[str, Any], existing: list[d
     stored = load_events(store, args.feed_days)
     stats["stored"] = len(stored)
     return merge_events(fresh, stored), stats
+
+
+# ---------------------------------------------------------------- session mode (Claude 예약작업이 LLM 단계를 맡을 때)
+PUBLIC_VIEWS = {"issues": "v_supply_chain_issues", "indicators": "v_indicators", "existing": "v_investment_ideas", "events": "v_company_events"}
+
+
+def load_public_inputs(url: str, key: str, feed_days: int = FRESH_DAYS) -> dict[str, list[dict[str, Any]]]:
+    """공개 읽기 뷰(publishable 키, RLS 읽기 전용)에서 엔진 입력을 읽는다. 쓰기 권한이 필요 없다."""
+    from wsj.http import HttpClient
+
+    headers = {"apikey": key, "Authorization": f"Bearer {key}"}
+    since = (datetime.now(UTC) - timedelta(days=feed_days + 1)).isoformat()
+    out: dict[str, list[dict[str, Any]]] = {}
+    http = HttpClient("WSJ-investment ideas session", timeout=30, max_retries=2)
+    try:
+        for name, view in PUBLIC_VIEWS.items():
+            rows: list[dict[str, Any]] = []
+            params: dict[str, str] = {"select": "*"}
+            if name == "events":
+                params |= {"published_at": f"gte.{since}", "order": "published_at.desc"}
+            while True:
+                page = http.get_json(f"{url.rstrip('/')}/rest/v1/{view}", params={**params, "limit": "1000", "offset": str(len(rows))},
+                                     headers=headers)
+                rows += page
+                if len(page) < 1000:
+                    break
+            out[name] = rows
+    finally:
+        http.close()
+    for r in out["events"]:  # 뷰의 verified 열 → CompanyEvent.extra
+        r["extra"] = {"verified_by": "claude"} if r.get("verified") else {}
+    log.info("public inputs: %s", {k: len(v) for k, v in out.items()})
+    return out
+
+
+def write_snapshot(d: Path, inputs: dict[str, list[dict[str, Any]]], now: datetime) -> None:
+    """같은 입력·같은 시각으로 프롬프트와 검증을 두 번 돌려도 근거 id 가 같도록 입력을 고정한다."""
+    d.mkdir(parents=True, exist_ok=True)
+    for name in PUBLIC_VIEWS:
+        (d / f"{name}.json").write_text(json.dumps(inputs[name], ensure_ascii=False), encoding="utf-8")
+    (d / "meta.json").write_text(json.dumps({"now": now.isoformat()}), encoding="utf-8")
+
+
+def research_targets(signals: list[dict[str, Any]], limit: int = 40) -> list[dict[str, Any]]:
+    """원문 확인 후보: 기업 소식 중 ★2+ 이면서 아직 확인되지 않은 것 (신호 순서 = 중요도 순)."""
+    out = []
+    for s in signals:
+        if s["kind"] != "company":
+            continue
+        for e in s.get("_events") or []:
+            if e.importance >= 2 and not (e.extra or {}).get("verified_by"):
+                out.append({"event_id": e.event_id, "sid": s["sid"], "company_id": e.company_id, "kind": e.kind,
+                            "date": e.published_at.date().isoformat(), "importance": e.importance, "title": e.title, "url": e.url,
+                            "publisher": e.publisher, "has_text": bool(e.text)})
+    return out[:limit]
+
+
+def write_sql(rows: list[dict[str, Any]], d: Path) -> list[Path]:
+    """검증된 행 → 행마다 `select ideas.put_ideas(...)` 한 문장 (Supabase MCP execute_sql 로 실행)."""
+    d.mkdir(parents=True, exist_ok=True)
+    paths = []
+    for i, r in enumerate(rows, 1):
+        body = json.dumps([r], ensure_ascii=False)
+        if "$wsj$" in body:
+            raise ValueError("행에 $wsj$ 가 있어 SQL 로 감쌀 수 없다")
+        p = d / f"{i:02d}_{r['idea_key']}.sql"
+        p.write_text(f"select ideas.put_ideas($wsj${body}$wsj$::jsonb);\n", encoding="utf-8")
+        paths.append(p)
+    return paths
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -663,10 +740,15 @@ def main(argv: list[str] | None = None) -> int:
     ap.add_argument("--out", type=Path)
     ap.add_argument("--load", type=Path, help="검증된 아이디어 행(JSON 배열)을 DB 에 적재")
     ap.add_argument("--dry-run", action="store_true")
-    ap.add_argument("--no-feed", action="store_true", help="기업별 최신 소식(company_feed)을 모으지 않는다")
+    ap.add_argument("--no-feed", action="store_true", help="기업 소식을 새로 모으지 않고 DB 에 쌓인 것만 쓴다")
     ap.add_argument("--feed-days", type=int, default=FRESH_DAYS)
     ap.add_argument("--events", type=Path, help="company_feed 결과 JSON (오프라인 실행용; --snapshot 의 events.json 도 읽는다)")
     ap.add_argument("--events-out", type=Path, help="이번 실행에 쓴 기업 소식을 JSON 으로 남긴다")
+    # session mode: Claude 예약작업이 LLM 단계를 맡는다 (ADR-0016 개정 2). 쓰기 키 없이 공개 뷰만 읽는다.
+    ap.add_argument("--from-public", action="store_true", help="공개 읽기 뷰에서 입력을 읽는다 (SUPABASE_URL·SUPABASE_PUBLISHABLE_KEY)")
+    ap.add_argument("--snapshot-out", type=Path, help="--from-public 입력과 기준 시각을 이 폴더에 고정한다 (이후 --snapshot 으로 검증)")
+    ap.add_argument("--emit-research", type=Path, help="원문 확인 후보(기업 소식 ★2+, 미확인) 목록을 JSON 으로 쓴다")
+    ap.add_argument("--emit-sql", type=Path, help="검증된 행을 ideas.put_ideas 호출 SQL 파일로 쓴다 (DB 에는 쓰지 않음)")
     args = ap.parse_args(argv)
     logging.basicConfig(level=logging.INFO, format="%(levelname)-7s %(name)s: %(message)s")
     logging.getLogger("httpx").setLevel(logging.WARNING)
@@ -675,7 +757,7 @@ def main(argv: list[str] | None = None) -> int:
 
     settings = load_settings()
     store = None
-    if args.load or not args.snapshot:
+    if args.load or not (args.snapshot or args.from_public):
         from wsj.db import make_store
 
         store = make_store(settings)
@@ -685,11 +767,30 @@ def main(argv: list[str] | None = None) -> int:
             print(json.dumps({"loaded": save(store, rows)}))
             return 0
         now = datetime.now(UTC)
+        if args.from_public:
+            import os
+
+            url = os.environ.get("SUPABASE_URL") or os.environ.get("NEXT_PUBLIC_SUPABASE_URL") or settings.supabase_url
+            key = os.environ.get("SUPABASE_PUBLISHABLE_KEY") or os.environ.get("NEXT_PUBLIC_SUPABASE_KEY")
+            if not (url and key):
+                raise SystemExit("SUPABASE_URL · SUPABASE_PUBLISHABLE_KEY 가 필요하다 (공개 읽기 키)")
+            inputs = load_public_inputs(url, key, args.feed_days)
+            if args.snapshot_out:
+                write_snapshot(args.snapshot_out, inputs, now)
+                args.snapshot = args.snapshot_out
+            else:
+                tmp = Path(".ideas_public_snapshot")
+                write_snapshot(tmp, inputs, now)
+                args.snapshot = tmp
+            args.dry_run = True
         if args.snapshot:
             issues = json.loads((args.snapshot / "issues.json").read_text(encoding="utf-8"))
             indicators = json.loads((args.snapshot / "indicators.json").read_text(encoding="utf-8"))
             ex_path = args.snapshot / "existing.json"
             existing = json.loads(ex_path.read_text(encoding="utf-8")) if ex_path.exists() else []
+            meta = args.snapshot / "meta.json"
+            if meta.exists():  # 프롬프트를 만든 시각으로 고정 — 최근성 가중·후보 순서·근거 id 가 같아야 검증이 맞는다
+                now = datetime.fromisoformat(json.loads(meta.read_text(encoding="utf-8"))["now"])
         else:
             issues, indicators, maybe = load_store_inputs(store, args.days)
             if maybe is None:
@@ -703,8 +804,15 @@ def main(argv: list[str] | None = None) -> int:
         reg, signals, candidates, payload = prepare(issues, indicators, graph, now, args.days, existing, args.max_ideas, args.top, events)
         log.info("feed %s", json.dumps(feed_stats, ensure_ascii=False))
         log.info("signals %d, candidates %d, evidence %d", len(signals), len(candidates), len(payload["evidence"]))
+        if args.emit_research:
+            targets = research_targets(signals)
+            args.emit_research.write_text(json.dumps(targets, ensure_ascii=False, indent=1), encoding="utf-8")
+            log.info("research targets: %d", len(targets))
         if args.emit_prompt:
             args.emit_prompt.write_text(json.dumps({"system": system_prompt(now), "payload": payload}, ensure_ascii=False, indent=1), encoding="utf-8")
+            # 예약작업이 읽기 쉽게: 규칙은 마크다운으로, 입력은 payload 만 따로
+            args.emit_prompt.with_suffix(".system.md").write_text(system_prompt(now), encoding="utf-8")
+            args.emit_prompt.with_suffix(".payload.json").write_text(json.dumps(payload, ensure_ascii=False, indent=1), encoding="utf-8")
             print(json.dumps({"signals": len(signals), "candidates": len(candidates), "evidence": len(payload["evidence"]),
                               "chars": len(json.dumps(payload, ensure_ascii=False))}))
             return 0
@@ -730,6 +838,9 @@ def main(argv: list[str] | None = None) -> int:
             log.warning("rejected: %s", x)
         if args.out:
             args.out.write_text(json.dumps(rows, ensure_ascii=False, indent=1), encoding="utf-8")
+        if args.emit_sql:
+            for x in write_sql(rows, args.emit_sql):
+                log.info("sql: %s", x)
         n = 0
         if not args.dry_run and store is not None:
             from wsj.runlog import logged_run
