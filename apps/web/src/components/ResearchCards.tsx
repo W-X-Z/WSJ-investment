@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { Icon } from "@/components/Icon";
-import { ECO_BY_ID, chipName, dateShort, type Ecosystem, type FeedItem, type Idea } from "@/lib/research";
+import { ECO_BY_ID, chipName, dateShort, starsOf, type Ecosystem, type FeedItem, type Idea } from "@/lib/research";
+import { Stars } from "@/components/Stars";
 
 export function SectionHeading({ eyebrow, title, subtitle, href, action = "전체 보기" }: {
   eyebrow?: string;title:string;subtitle?:string;href?:string;action?:string
@@ -32,9 +33,9 @@ export function FeedStory({item,featured=false}: {item:FeedItem;featured?:boolea
   return <article className={`story ${featured?"story-featured":""}`}>
     <div className="story-glyph"><Icon name={item.ecoId==="hbm"?"cpu":item.ecoId==="optics"?"network":item.ecoId==="power"?"zap":"file"} size={19}/></div>
     <div className="story-copy">
-      <div className="story-meta">{item.importance!==undefined&&<span className={`story-score story-score-${item.significance}`} title={item.rationale}>{item.importance}/10</span>}<span className="story-eco">{eco?.label??(item.ecoId==="cross"?"공급망 공통":"기업 신호")}</span><span className="meta-sep">·</span><span>{item.type}</span><span className="meta-sep">·</span><span>{dateShort(item.date)}</span>{item.datePrecision==="unknown" && <span className="date-unknown">확인일 기준</span>}</div>
+      <div className="story-meta">{item.importance!==undefined&&<Stars n={starsOf(item.importance)} why={item.rationale}/>}<span className="story-eco">{eco?.label??(item.ecoId==="cross"?"공급망 공통":"기업 신호")}</span><span className="meta-sep">·</span><span>{item.type}</span><span className="meta-sep">·</span><span>{dateShort(item.date)}</span>{item.datePrecision==="unknown" && <span className="date-unknown">확인일 기준</span>}</div>
       <Link href={`/feed/${encodeURIComponent(item.id)}`} className="story-title">{item.title}</Link>
-      <p>{item.summary}</p>
+      <p>{item.why??item.summary}</p>
       {!!item.companies?.length&&<div className="story-companies">{item.companies.slice(0,6).map(c=><span key={c.company_id} className={`co-chip co-${c.direction==="+"?"pos":c.direction==="-"?"neg":"mix"}${c.size_band==="micro"||c.size_band==="small"?" co-small":""}`} title={c.basis}>{c.direction} {chipName(c)}</span>)}</div>}
       <div className="story-foot"><EventChip kind={item.significance}/><span className="story-source">출처 · {item.source}</span></div>
     </div>

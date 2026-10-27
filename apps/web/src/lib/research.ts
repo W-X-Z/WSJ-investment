@@ -112,6 +112,8 @@ export function trimText(value: string, length = 190) {
   return value.length > length ? value.slice(0, length).trim() + "…" : value;
 }
 
+export { starsOf, STAR_LABEL } from "@/lib/research-client";
+
 export type IssueCompany = { company_id: string; label: string; ticker?: string|null; direction: "+"|"-"|"±"; size_band?: string|null; in_universe?: boolean; basis?: string };
 export const chipName = (c: IssueCompany) => (c.ticker && /[A-Za-z]/.test(c.ticker) ? c.ticker : c.label.split(" (")[0].replace(/ Electronics$/, ""));
 export type IssueSource = { url: string; title: string; publisher: string; published_at: string; source_type: string };

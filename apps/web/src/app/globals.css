@@ -553,3 +553,14 @@ tr:hover td{background:#f8faff}
 @media (max-width:1200px){.ind-movers{grid-template-columns:repeat(3,minmax(0,1fr))}}
 @media (max-width:860px){.ind-row{grid-template-columns:1fr 1fr;row-gap:6px}.ind-head{display:none}.ind-nodes{grid-column:1/-1}}
 @media (max-width:560px){.ind-movers{grid-template-columns:repeat(2,minmax(0,1fr))}}
+
+/* ★1~3 (ADR-0015 원칙 7: 결론 먼저, 단순하게) */
+.stars{display:inline-flex;align-items:center;gap:6px;margin-right:8px;font-size:12px;letter-spacing:1px;color:#d49a12;line-height:1;white-space:nowrap}
+.stars i{font-style:normal;color:#d9dee7}
+.stars em{font-style:normal;font-size:11px;font-weight:700;letter-spacing:0;color:#4a5a70}
+.stars-3 em{color:#1f3557}
+.verdict{border:1px solid #e3e8f0;border-left:4px solid #1f3557;border-radius:10px;padding:16px 18px;margin:0 0 18px;background:#fbfcfe}
+.verdict-top{display:flex;align-items:center;gap:8px;margin-bottom:8px}
+.verdict p{margin:0;font-size:15px;line-height:1.7;color:#1f2d40;font-weight:600}
+.verdict small{display:block;margin-top:8px;font-size:11.5px;color:#7a8597;line-height:1.6}
+.evidence-h{font-size:12px;font-weight:750;color:#4a5a70;margin:22px 0 8px;letter-spacing:.2px}
