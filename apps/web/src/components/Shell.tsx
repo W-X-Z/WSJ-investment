@@ -5,9 +5,9 @@ import { usePathname, useRouter } from "next/navigation";
 import { FormEvent, useEffect, useRef, useState } from "react";
 import { Icon } from "@/components/Icon";
 
-// 홈 = AI 투자 아이디어 피드. 나머지는 AI 가 아이디어를 만들 때 쓰는 근거 데이터 (ADR-0016).
+// 홈 = 오늘의 피드 (아이디어 + 업계 이슈 + 확인된 기업 소식). 나머지는 AI 가 아이디어를 만들 때 쓰는 근거 데이터 (ADR-0016).
 const NAV = [
-  { href:"/", label:"투자 아이디어", icon:"lightbulb" },
+  { href:"/", label:"오늘의 피드", icon:"lightbulb" },
   { href:"/feed", label:"근거 · 이슈", icon:"rss" },
   { href:"/indicators", label:"근거 · 가격·실적", icon:"activity" },
   { href:"/map", label:"근거 · 공급망 그래프", icon:"network" },
@@ -32,7 +32,7 @@ const DEEP_ROUTES = [
   { href:"/entities", label:"기업명 매칭" },
 ] as const;
 const LABELS: Record<string,string> = {
-  "/":"투자 아이디어", "/map":"공급망 그래프", "/history":"과거 기술 아카이브", "/review":"기술 관계 검토", "/ecosystems":"기술 생태계", "/feed":"이슈 피드",
+  "/":"오늘의 피드", "/map":"공급망 그래프", "/history":"과거 기술 아카이브", "/review":"기술 관계 검토", "/ecosystems":"기술 생태계", "/feed":"이슈 피드",
   "/ideas":"투자 아이디어", "/discovery":"공급사 발굴", "/indicators":"가격·실적 지표", "/triggers":"트리거", "/search":"통합 검색",
   "/data":"Research Data", "/briefs":"기업 브리프",
 };

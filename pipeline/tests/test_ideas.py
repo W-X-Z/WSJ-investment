@@ -72,14 +72,33 @@ def test_validate_drops_invented_evidence_unknown_company_and_signal_free_ideas(
 
 def test_update_keeps_key_and_close_touches_only_status():
     g, reg, signals, _, _ = _prepare()
-    s_ev = signals[0]["evidence"][0]
+    s_ev = signals[0]["evidence"][0]  # 이슈: company:form 이 이름으로 나온다
     existing = {"abc": {"idea_key": "abc", "stars": 1}}
     upd = {"action": "update", "idea_key": "abc", "type": "bottleneck", "title": "t", "thesis": "a. b.", "stars": 2,
-           "companies": [{"id": "company:jem", "role": "primary"}], "chain": [{"claim": "c", "evidence": [s_ev]}, {"claim": "d", "evidence": [s_ev]}]}
+           "companies": [{"id": "company:form", "role": "primary"}], "chain": [{"claim": "c", "evidence": [s_ev]}, {"claim": "d", "evidence": [s_ev]}]}
     close = {"action": "close", "idea_key": "abc", "reason": "반증"}
     rows, _ = ideas.validate([upd, close], reg, g, signals, existing, NOW, "m", "llm")
-    assert rows[0]["idea_key"] == "abc" and rows[0]["trend"] == "strengthened"
+    assert rows[0]["idea_key"] == "abc" and rows[0]["trend"] == "strengthened" and rows[0]["stars"] == 2
+    assert rows[0]["chain"][0]["evidence"][0]["rel"] == "direct"
     assert set(rows[1]) == {"idea_key", "status", "trend", "close_reason", "updated_at"} and rows[1]["status"] == "closed"
+
+
+def test_industry_news_alone_does_not_strengthen_or_earn_three_stars():
+    """주 기업 이야기가 아닌 업계 소식으로는 '강화'·★ 상향·★3 이 안 된다 (미쓰이금속 사례)."""
+    g, reg, signals, _, _ = _prepare()
+    s_ev = signals[0]["evidence"][0]  # FormFactor 를 말하는 이슈 → JEM 에게는 업계 근거
+    g_ev = next(e for e in reg.items if e.startswith("G"))
+    existing = {"abc": {"idea_key": "abc", "stars": 1, "primary_company": "company:jem", "companies": [{"id": "company:jem", "name": "Japan Electronic Materials"}],
+                        "chain": [{"claim": "x", "evidence": [{"id": "S1", "date": "2026-09-01", "title": "Japan Electronic Materials orders"}]}]}}
+    base = {"type": "bottleneck", "title": "t", "thesis": "a. b.", "companies": [{"id": "company:jem", "role": "primary"}],
+            "chain": [{"claim": "c", "evidence": [s_ev]}, {"claim": "d", "evidence": [g_ev]}]}
+    upd = {**base, "action": "update", "idea_key": "abc", "stars": 2, "what_changed": "프로브카드 수요 급증"}
+    new3 = {**base, "action": "new", "title": "새 아이디어", "stars": 3}
+    rows, _ = ideas.validate([upd, new3], reg, g, signals, existing, NOW, "m", "llm")
+    assert rows[0]["trend"] == "unchanged" and rows[0]["stars"] == 1 and rows[0]["what_changed"].startswith("업계:")
+    assert [e["rel"] for e in rows[0]["chain"][0]["evidence"]] == ["industry"] and rows[0]["chain"][1]["evidence"][0]["rel"] == "background"
+    assert rows[1]["stars"] == 2 and "★2" in rows[1]["stars_reason"]
+    assert ideas.company_signal_date(existing["abc"]) == "2026-09-01"
 
 
 def test_session_mode_pins_snapshot_time_and_writes_guarded_sql(tmp_path):
@@ -106,3 +125,16 @@ def test_session_mode_pins_snapshot_time_and_writes_guarded_sql(tmp_path):
     assert sql.startswith("select ideas.put_ideas($wsj$[") and sql.rstrip().endswith("$wsj$::jsonb);")
     row = json.loads(sql[len("select ideas.put_ideas($wsj$"):sql.rindex("$wsj$")])[0]
     assert row["method"] == "session" and row["model"] == "claude-opus-5-5" and row["last_signal_at"] == "2026-10-26"
+
+
+def test_kept_three_star_idea_without_company_evidence_drops_to_two():
+    g, reg, signals, _, _ = _prepare()
+    ex = {"k3": {"idea_key": "k3", "stars": 3, "type": "bottleneck", "title": "기판 소재 독점", "thesis": "a. b.", "primary_company": "company:mitsui_kinzoku",
+                 "companies": [{"id": "company:mitsui_kinzoku", "name": "Mitsui Mining & Smelting"}], "last_signal_at": "2026-10-27",
+                 "chain": [{"claim": "업계", "evidence": [{"id": "S1", "date": "2026-10-27", "title": "Unimicron September revenue +64.7%", "url": "https://x"}]}]},
+          "ok3": {"idea_key": "ok3", "stars": 3, "primary_company": "company:jem", "companies": [{"id": "company:jem", "name": "Japan Electronic Materials"}],
+                  "last_signal_at": "2026-10-20", "chain": [{"claim": "c", "evidence": [{"id": "S2", "date": "2026-10-20", "title": "Japan Electronic Materials orders", "url": "https://y", "rel": "direct"}]}]}}
+    rows, _ = ideas.validate([{"action": "keep", "idea_key": "k3"}], reg, g, signals, ex, NOW, "m", "session")
+    assert [r["idea_key"] for r in rows] == ["k3"]
+    r = rows[0]
+    assert r["stars"] == 2 and r["trend"] == "weakened" and "★3→★2" in r["what_changed"] and r["chain"] == ex["k3"]["chain"]
