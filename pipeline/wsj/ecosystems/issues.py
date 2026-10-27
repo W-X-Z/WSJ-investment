@@ -601,8 +601,10 @@ def collect_extra(http: HttpClient, store, now: datetime, since: datetime, indic
         return out
     indicator_points.extend(ind["points"])
     for n in ind["notable"]:
-        # 월간 지표는 기준월 1일이 아니라 발표(관측) 시점이 사건 날짜다
-        when = now if n.get("monthly") else datetime.combine(n["as_of"], datetime.min.time(), UTC) + timedelta(hours=12)
+        # 월간 지표는 기준월 1일이 아니라 발표 시점이 사건 날짜다. 실행 시각(now)을 쓰면 같은 9월 매출이 매일 '오늘 소식'이 되므로
+        # 대략의 발표일(기준월 1일 + 40일: 대만 월매출 마감 10일, 미국 PPI 중순)로 둔다
+        base = datetime.combine(n["as_of"], datetime.min.time(), UTC)
+        when = min(now, base + timedelta(days=40)) if n.get("monthly") else base + timedelta(hours=12)
         it = Item(n["url"], n["title"], when, n["publisher"], "data",
                   n["snippet"], n["indicator_id"], n["ecosystem"])
         it.nodes.update(n["nodes"])

@@ -3,8 +3,7 @@
 name: briefs
 
 on:
-  schedule:
-    - cron: "23 12 * * 1"   # 월 12:23 UTC = 서울 21:23 — 주간 수집 뒤 후보 상위 N 브리프
+  # 정기 실행 종료 (2026-10-27): 기존 후보 스크리너용 브리프는 아카이브 기능이고, 투자 아이디어 피드가 대체했다. 수동 실행만.
   workflow_dispatch:
     inputs:
       ciks:

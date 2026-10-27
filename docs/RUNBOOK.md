@@ -24,12 +24,12 @@ python -m wsj list
 
 ## 2. 일상 운영
 
-- 스케줄: 평일 10:17 UTC 일간 수집기 6개, 토요일 유니버스 재구축 (`.github/workflows/collect.yml`).
+- 스케줄: 토 11:41 UTC 주 1회 — 유니버스 재구축 + 일간 수집기(`.github/workflows/collect.yml`). 수집기는 워터마크로 지난 실행 이후분을 이어 받는다.
 - 수동 실행: Actions → collect → Run workflow. `collectors` 에 이름을 공백으로 나눠 넣고, `since` 로 재수집 시작일 지정.
 - 상태 확인: 조회 화면 `/` (수집기별 마지막 실행·에러) 또는 `select * from public.v_collector_overview`.
 
 ### 브리프 (ADR-0009)
-- 스케줄: 월 12:23 UTC 후보 상위 5건 (`.github/workflows/briefs.yml`). 수동: Actions → briefs → `ciks` 또는 `top`, `model`(sonnet/opus/fable), `dry_run`.
+- 정기 실행 없음 (2026-10-27부터, 아카이브 기능). 수동: Actions → briefs → `ciks` 또는 `top`, `model`(sonnet/opus/fable), `dry_run`.
 - 로컬:
   ```bash
   python -m wsj briefs build --cik 2012593 --dry-run        # LLM 없이 data/briefs/<티커>_<날짜>/ 에 데이터팩·프롬프트
@@ -95,7 +95,19 @@ cd apps/web && cp .env.local.example .env.local && npm install && npm run dev
 
 ## 9. 사용량 한도 (2026-10-27)
 
-- 레포는 **private** → GitHub Actions 무료 분(월 2,000분, Linux) 차감. 2026-10-26 하루에 PR 6개 워크플로 중복 실행·6시간 모니터로 약 900분(벽시계 기준) 소모.
-- Vercel Hobby 는 배포 일일 한도가 있어 커밋마다 배포하면 "Deployment rate limited — retry in 24 hours" 실패 상태가 남고 메일이 온다.
-- 조치: `apps/web/vercel.json` `ignoreCommand` — `apps/web` 변경이 없는 커밋은 빌드 생략. 모니터는 하루 1회(20:30 KST daily). `canvas-web-build`·`canvas-visual-preview`·`ecosystem-impact-preview`·`technology-evidence-graph-enrichment`·`technology-historical-backfill` 은 수동 실행만. PR 워크플로(`web-quality`·`pipeline-tests`)는 같은 브랜치의 이전 실행을 취소.
-- 정기 실행 예상: collect 평일 1회 + 토 1회, monitor 일 1회, briefs 월 1회, moat 화 1회 → 월 약 700~900분.
+- 10/26 까지 레포가 **private** 이라 GitHub Actions 무료 분(월 2,000분, Linux)을 차감했다. 10/26~27 이틀에 479회·약 1,560분(벽시계), 그중 69% 가 PR 마다 7개씩 돌던 중복·이전 기능 워크플로였다 → 그 달 할당량 초과.
+- 지금은 **public** → 표준 GitHub 호스팅 러너(ubuntu-latest) 사용은 무료이고 할당량과 무관하게 돈다. 다시 private 로 바꾸면 아래 정기 실행이 월 약 1,000분을 쓴다.
+- Vercel Hobby 는 배포 일일 한도가 있다 → `apps/web/vercel.json` `ignoreCommand` 로 `apps/web` 변경이 없는 커밋은 빌드 생략.
+- 정리 (2026-10-27):
+  - 삭제: `technology-intelligence-monitor`(issues.yml 이 대체, ADR-0014), `canvas-web-build`(web-quality 와 중복), `canvas-visual-preview`·`ecosystem-impact-preview`(개발용 미리보기).
+  - 수동 실행만: `briefs`(아카이브 기능), `technology-evidence-graph-enrichment`·`technology-historical-backfill`(일회성 데이터 생성).
+  - PR 워크플로(`web-quality`·`pipeline-tests`)는 경로가 바뀔 때만, 같은 브랜치의 이전 실행은 취소.
+  - `issues` 는 코드 병합(push)으로 돌지 않는다 — 병합마다 LLM 비용이 나가지 않게. 바로 확인하려면 Actions → issues → Run workflow.
+- 정기 실행:
+
+  | 워크플로 | 주기 | LLM |
+  |---|---|---|
+  | issues (전체: 이슈 → 기업 소식 → 아이디어) | 매일 06:47 KST | Sonnet 2회 ≈ $0.4 |
+  | issues (기업 소식 수집·저장만) | 매일 18:47 KST | 없음 |
+  | collect (유니버스 + 공시·내부자·공매도·정부 수주) | 토 20:41 KST | 없음 |
+  | moat (해자 카드, 같은 기준일 카드는 건너뜀) | 화 22:41 KST | Sonnet, 새 카드만 |

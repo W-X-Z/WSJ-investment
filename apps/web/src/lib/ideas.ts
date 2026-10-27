@@ -25,7 +25,9 @@ export const ROLE_KO: Record<string, string> = { primary: "핵심", peer: "동�
 export const ECO_KO: Record<string, string> = { hbm: "HBM·패키징", optics: "광통신", power: "전력·냉각" };
 export const TREND_KO: Record<string, string> = { new: "새 아이디어", strengthened: "근거 강화", weakened: "근거 약화" };
 
-const order = (a: InvestmentIdea, b: InvestmentIdea) => b.stars - a.stars || b.updated_at.localeCompare(a.updated_at);
+/** 정렬: ★ → 최신 근거 날짜 → 갱신 시각. 같은 ★ 이면 근거가 새로운 아이디어가 위로. */
+const order = (a: InvestmentIdea, b: InvestmentIdea) =>
+  b.stars - a.stars || (b.last_signal_at ?? "").localeCompare(a.last_signal_at ?? "") || b.updated_at.localeCompare(a.updated_at);
 
 /** DB 의 활성 아이디어. 테이블이 아직 없거나(마이그레이션 전) 비어 있으면 리포에 묶인 시드를 쓴다. */
 export async function loadIdeas(): Promise<{ ideas: InvestmentIdea[]; source: "db" | "seed"; error?: string }> {
@@ -43,6 +45,37 @@ export async function loadIdeas(): Promise<{ ideas: InvestmentIdea[]; source: "d
 export async function loadIdea(key: string): Promise<InvestmentIdea | null> {
   const { ideas } = await loadIdeas();
   return ideas.find((x) => x.idea_key === key) ?? null;
+}
+
+/** 근거 날짜 → 며칠 전 (UTC 날짜 기준). 날짜 없으면 null. */
+export function ageDays(iso?: string | null): number | null {
+  if (!iso) return null;
+  const t = new Date(iso.length <= 10 ? `${iso}T00:00:00Z` : iso).getTime();
+  return Number.isNaN(t) ? null : Math.max(0, Math.floor((Date.now() - t) / 864e5));
+}
+
+/** 근거가 최근 사실(S…)인가, 그래프 배경(G…)인가. */
+export const isBackground = (e: IdeaEvidence) => e.id.startsWith("G");
+export const FRESH_DAYS = 14;
+
+export type CompanyEvent = { event_id: string; company_id: string; kind: string; published_at: string; title: string; url: string; publisher?: string | null; importance: number };
+export const EVENT_KIND_KO: Record<string, string> = { filing: "공시", disclosure: "공시", revenue: "월매출", news: "뉴스" };
+
+/** 아이디어 기업들의 최근 소식 (public.v_company_events, 0019). 뷰가 없으면 빈 배열. */
+export async function loadCompanyEvents(ids: string[], limit = 24): Promise<CompanyEvent[]> {
+  if (!ids.length || !process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.NEXT_PUBLIC_SUPABASE_KEY) return [];
+  try {
+    const { data, error } = await db("public").from("v_company_events").select("event_id,company_id,kind,published_at,title,url,publisher,importance")
+      .in("company_id", ids).order("published_at", { ascending: false }).limit(120);
+    if (error || !data) return [];
+    // 중요도 2 이상을 먼저, 기업마다 최대 4건
+    const per = new Map<string, number>();
+    return (data as CompanyEvent[]).sort((a, b) => b.importance - a.importance || b.published_at.localeCompare(a.published_at))
+      .filter((e) => { const n = per.get(e.company_id) ?? 0; per.set(e.company_id, n + 1); return n < 4; })
+      .slice(0, limit).sort((a, b) => b.published_at.localeCompare(a.published_at));
+  } catch {
+    return [];
+  }
 }
 
 export function ago(iso?: string | null): string {

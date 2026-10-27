@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { Icon } from "@/components/Icon";
 import { Stars } from "@/components/Stars";
-import { ECO_KO, IDEA_TYPE, ROLE_KO, SIZE_KO, TREND_KO, ago, type IdeaCompany, type IdeaEvidence, type InvestmentIdea } from "@/lib/ideas";
+import { ECO_KO, FRESH_DAYS, IDEA_TYPE, ROLE_KO, SIZE_KO, TREND_KO, ageDays, isBackground, type IdeaCompany, type IdeaEvidence, type InvestmentIdea } from "@/lib/ideas";
 
 const SMALL = new Set(["micro", "small"]);
 
@@ -12,10 +12,27 @@ export function CompanyChip({ c, strong = false }: { c: IdeaCompany; strong?: bo
   </span>;
 }
 
+/** 근거 링크: 최근 사실은 날짜를 앞에, 그래프 배경 근거는 '배경' 표시 (최신성과 구조 설명을 구분). */
 export function EvidenceLinks({ items }: { items: IdeaEvidence[] }) {
-  return <span className="ic-ev">{items.map((e) => <a key={e.id + e.url} href={e.url} target="_blank" rel="noreferrer" title={e.title}>
-    {e.publisher ?? hostOf(e.url)}{e.tier_ko ? <i>{e.tier_ko}</i> : null}<Icon name="external" size={11}/>
-  </a>)}</span>;
+  return <span className="ic-ev">{items.map((e) => {
+    const bg = isBackground(e);
+    const age = ageDays(e.date);
+    const fresh = !bg && age !== null && age <= FRESH_DAYS;
+    return <a key={e.id + e.url} href={e.url} target="_blank" rel="noreferrer" title={e.title} className={bg ? "ev-bg" : fresh ? "ev-fresh" : ""}>
+      {bg ? <b>배경</b> : e.date ? <b>{shortDate(e.date)}</b> : null}
+      {e.publisher ?? hostOf(e.url)}{e.tier_ko ? <i>{e.tier_ko}</i> : null}<Icon name="external" size={11}/>
+    </a>;
+  })}</span>;
+}
+
+const shortDate = (d: string) => { const [, m, day] = d.slice(0, 10).split("-"); return m && day ? `${Number(m)}/${Number(day)}` : d; };
+
+/** '최신 근거 3일 전' — 아이디어를 받치는 가장 최근 사실의 나이. */
+export function Freshness({ date }: { date?: string | null }) {
+  const a = ageDays(date);
+  if (a === null) return null;
+  const label = a === 0 ? "오늘" : a === 1 ? "어제" : `${a}일 전`;
+  return <span className={`ic-fresh ${a <= 3 ? "ic-fresh-hot" : a > 21 ? "ic-fresh-old" : ""}`} title={`가장 최근 근거 ${date?.slice(0, 10)}`}>최신 근거 {label}</span>;
 }
 
 const hostOf = (u: string) => { try { return new URL(u).hostname.replace(/^www\./, ""); } catch { return "출처"; } };
@@ -32,7 +49,7 @@ export function IdeaCard({ idea, rank }: { idea: InvestmentIdea; rank?: number }
       <span className={`ic-type ic-type-${type.tone}`}>{type.label}</span>
       {idea.ecosystems.map((e) => <span key={e} className="ic-eco">{ECO_KO[e] ?? e}</span>)}
       {idea.trend && TREND_KO[idea.trend] ? <span className={`ic-trend ic-trend-${idea.trend}`}>{TREND_KO[idea.trend]}</span> : null}
-      <small className="ic-when">{ago(idea.updated_at)} · 근거 {idea.evidence_count}</small>
+      <small className="ic-when"><Freshness date={idea.last_signal_at}/> · 근거 {idea.evidence_count}</small>
     </div>
     <Link href={`/ideas/${idea.idea_key}`} className="ic-title">{idea.title}</Link>
     <p className="ic-thesis">{idea.thesis}</p>

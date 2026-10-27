@@ -3,9 +3,11 @@
 name: collect
 
 on:
+  # 주 1회 (토 11:41 UTC = 서울 20:41): 유니버스 재구축 + 공시·내부자·공매도·정부 수주 수집 → 신호.
+  # 이 데이터는 해자 카드(화 22:41 KST)와 아카이브 화면만 쓴다. 투자 아이디어는 company_feed 가 매일 SEC 공시를 직접 본다.
+  # (2026-10-27 평일 매일 → 주 1회. 수집기는 워터마크로 지난 실행 이후분을 이어 받는다)
   schedule:
-    - cron: "17 10 * * 1-5"   # 평일 10:17 UTC = 미 동부 06:17 / 서울 19:17 — 일간 수집기
-    - cron: "41 11 * * 6"     # 토 11:41 UTC — 유니버스 재구축
+    - cron: "41 11 * * 6"
   workflow_dispatch:
     inputs:
       collectors:
@@ -47,7 +49,7 @@ jobs:
           if [ -n "${{ github.event.inputs.collectors }}" ]; then
             echo "names=${{ github.event.inputs.collectors }}" >> "$GITHUB_OUTPUT"
           elif [ "${{ github.event.schedule }}" = "41 11 * * 6" ]; then
-            echo "names=sec_universe" >> "$GITHUB_OUTPUT"
+            echo "names=sec_universe sec_form4 sec_filings finra usaspending" >> "$GITHUB_OUTPUT"
           else
             echo "names=sec_form4 sec_filings finra usaspending" >> "$GITHUB_OUTPUT"  # ADR-0015: 임상·FDA 수집 종료 (원자료 보존)
           fi
