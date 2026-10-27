@@ -1,0 +1,178 @@
+{
+  "version": "2026-10-26.1",
+  "status": "hypotheses_to_test_not_investment_recommendations",
+  "definitions": {
+    "as_of": "Only information public at end of this date belongs in the decision record",
+    "observed_at": "Time our collector actually observed the URL (2026); not historical availability",
+    "original_published_at": "Publication timestamp asserted by originating source, when available",
+    "source_first_seen_at": "Only known when a contemporary crawl or immutable historical archive proves it",
+    "time_leakage": "A modern API can expose historic dates plus facts updated after the as-of date; mark and quarantine",
+    "negative_results": "A failed query / empty result / no public disclosure is NOT technical failure"
+  },
+  "hypotheses": [
+    {
+      "id": "H01",
+      "ticker": "TMDX",
+      "as_of": "2022-06-30",
+      "thesis": "FDA indication expansion removes the clinical adoption bottleneck",
+      "measurable": "FDA PMA approvals and supplements with decision dates",
+      "sources": [
+        "fda_pma",
+        "clinicaltrials"
+      ],
+      "falsifier": "approval narrower than addressable DCD cases; contraindications or safety setbacks",
+      "limitations": "a current PMA record can include supplements entered after the cutoff"
+    },
+    {
+      "id": "H02",
+      "ticker": "TMDX",
+      "as_of": "2022-06-30",
+      "thesis": "independent transplant evidence validates superiority over cold storage",
+      "measurable": "dated peer-reviewed trial results and registered endpoints",
+      "sources": [
+        "europepmc",
+        "openalex",
+        "clinicaltrials"
+      ],
+      "falsifier": "no clinical outcome improvement, low external replication or weak trial design",
+      "limitations": "modern citation counts leak future knowledge; paper publication date != article first online date"
+    },
+    {
+      "id": "H03",
+      "ticker": "TMDX",
+      "as_of": "2022-11-15",
+      "thesis": "the product becomes a procedure-level recurring-revenue platform rather than equipment-only sales",
+      "measurable": "2022 Q3 per-organ revenue in SEC financial statements + hospitals + utilization",
+      "sources": [
+        "sec_filings",
+        "optn_data"
+      ],
+      "falsifier": "growth only due to acquisitions / consumables not recurring / poor organ utilization",
+      "limitations": "OPTN aggregate volume does not prove company market share; SEC source should use exact filing receipt time"
+    },
+    {
+      "id": "H04",
+      "ticker": "ASTS",
+      "as_of": "2023-09-30",
+      "thesis": "technical uncertainty falls as ordinary phones achieve voice then 4G then 5G with increasing throughput",
+      "measurable": "test dated milestones, spectral efficiency, unmodified handset, throughput",
+      "sources": [
+        "sec_filings",
+        "fcc"
+      ],
+      "falsifier": "non-repeatable controlled demos; insufficient spectral efficiency or unusable coverage",
+      "limitations": "reported speeds primarily issuer claims until independently validated"
+    },
+    {
+      "id": "H05",
+      "ticker": "ASTS",
+      "as_of": "2024-05-20",
+      "thesis": "carriers will commit resources once interoperability succeeds",
+      "measurable": "named commercial agreements and payment commitments, not just memoranda",
+      "sources": [
+        "sec_filings",
+        "carrier_press",
+        "fcc"
+      ],
+      "falsifier": "nonbinding MOU, no minimum payments, spectrum/licensing unavailable",
+      "limitations": "contract signing alone is not equivalent to launch revenue"
+    },
+    {
+      "id": "H06",
+      "ticker": "ASTS",
+      "as_of": "2023-09-30",
+      "thesis": "regulatory path converges as spectrum experimental authority permits field tests",
+      "measurable": "experimental radio authorizations, conditions, filing dates",
+      "sources": [
+        "fcc",
+        "federalregister"
+      ],
+      "falsifier": "limited/suspended experimental licenses, interference or coordination failures",
+      "limitations": "official FCC ELS/IBFS may lack reliable unauthenticated API; documents must be joined by FRN/filing no."
+    },
+    {
+      "id": "H07",
+      "ticker": "RKLB",
+      "as_of": "2023-12-22",
+      "thesis": "commercial launch supplier is now trusted as a satellite prime contractor",
+      "measurable": "2023-12-21 SEC 8-K 18-satellite US government $515M contract",
+      "sources": [
+        "sec_filings",
+        "usaspending",
+        "sda_releases"
+      ],
+      "falsifier": "nonrecurring one-off award, low gross margin or contract milestones delayed",
+      "limitations": "SDA external identification announced Jan 2024; at 2023-12-22 the 8-K named a US customer, not SDA"
+    },
+    {
+      "id": "H08",
+      "ticker": "RKLB",
+      "as_of": "2023-12-31",
+      "thesis": "launches are increasingly reliable, lowering operational risk",
+      "measurable": "per-mission launch outcome, turnaround, customer payload, not generic press count",
+      "sources": [
+        "rocketlab_launch_logs",
+        "faa",
+        "nasa"
+      ],
+      "falsifier": "mission failures, repeated scrubs or deteriorating unit economics",
+      "limitations": "historical launch database backfills may change after cutoff"
+    },
+    {
+      "id": "H09",
+      "ticker": "RKLB",
+      "as_of": "2024-06-30",
+      "thesis": "a second growth curve is satellite hardware and systems rather than rocket launches only",
+      "measurable": "2024 Q2 segment backlog and customers + government contracts",
+      "sources": [
+        "sec_filings",
+        "usaspending"
+      ],
+      "falsifier": "backlog contains options/cancelable programs, cash burn or revenue recognition delays",
+      "limitations": "a June 30 period-end amount was not public until Q2 filing date; event date must be filing publication date"
+    },
+    {
+      "id": "H10",
+      "ticker": "IONQ",
+      "as_of": "2023-07-01",
+      "thesis": "quantum hardware utility increases as benchmark performance improves",
+      "measurable": "independent gate fidelity, circuit depth, two-qubit error, benchmark reproducibility",
+      "sources": [
+        "peer_review",
+        "openalex",
+        "company_technical"
+      ],
+      "falsifier": "company-specific AQ score fails third-party benchmark or economically relevant task",
+      "limitations": "#AQ is company-selected benchmark; not directly comparable to error-corrected logical qubits"
+    },
+    {
+      "id": "H11",
+      "ticker": "IONQ",
+      "as_of": "2023-12-31",
+      "thesis": "quantum capability is being adopted by independent developers",
+      "measurable": "dated third-party SDK repositories, release history, reproducible experiments",
+      "sources": [
+        "github",
+        "arxiv",
+        "cloud_marketplaces"
+      ],
+      "falsifier": "repos are company authored, education demos, or usage is negligible",
+      "limitations": "current stars and fork counts are hindsight; API repository creation date is not adoption history"
+    },
+    {
+      "id": "H12",
+      "ticker": "SERV",
+      "as_of": "2024-06-30",
+      "thesis": "autonomous delivery robots cross from demo to positive unit economics",
+      "measurable": "paid deliveries per robot, utilization, cost per delivery, human intervention rate",
+      "sources": [
+        "sec_filings",
+        "municipal_permits",
+        "hiring",
+        "customer_footprint"
+      ],
+      "falsifier": "pilot fleets do not convert to scaled, low-intervention profitable deliveries",
+      "limitations": "public disclosure may be too sparse to calculate unit economics; report unavailable not zero"
+    }
+  ]
+}

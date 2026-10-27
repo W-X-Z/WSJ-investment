@@ -1,0 +1,57 @@
+name: historical-tech-evidence-probe
+
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - "pipeline/wsj/studies/technology_evidence.py"
+      - "pipeline/tests/test_technology_evidence.py"
+      - "research/technology_hypotheses.json"
+      - ".github/workflows/historical-tech-evidence-probe.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  inspect-free-sources:
+    runs-on: ubuntu-latest
+    timeout-minutes: 6
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Free public API evidence checks, no application secrets
+        working-directory: pipeline
+        env:
+          PYTHONPATH: .
+        run: |
+          python -m wsj.studies.technology_evidence --out ../research/probe_sample.json
+      - name: Show results in job summary
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          report = json.loads(Path("research/probe_sample.json").read_text())
+          lines = [
+            "### Historical technology API probe (not a historical snapshot)",
+            "",
+            "| Source probe | As-of | Status | Records | Caveat |",
+            "|---|---|---|---:|---|",
+          ]
+          for p in report["probes"]:
+            caveat = p["note"].replace("|", "/").replace("\n", " ")[:100]
+            lines.append(f"| {p['id']} | {p['as_of']} | {p['status']} | {p['count']} | {caveat} |")
+          lines.append("")
+          lines.append("Dates from current APIs do NOT prove the same records were historically visible. Some sources have publication lag.")
+          Path("/tmp/research-summary.md").write_text("\n".join(lines) + "\n")
+          with open(__import__("os").environ["GITHUB_STEP_SUMMARY"], "a") as f:
+              f.write(Path("/tmp/research-summary.md").read_text())
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: tech-evidence-public-sample
+          path: research/probe_sample.json
+          retention-days: 7
