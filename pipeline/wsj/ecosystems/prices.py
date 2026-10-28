@@ -277,24 +277,34 @@ def parse_yahoo_jp(html: str, key: str) -> list[dict[str, Any]]:
 
 def _paged(fetch_page, start: date, pages: int) -> list[dict[str, Any]]:
     out: list[dict[str, Any]] = []
+    seen: set[str] = set()
     for page in range(1, pages + 1):
         rows = fetch_page(page)
-        out += rows
-        if not rows or min(r["trade_date"] for r in rows) <= start.isoformat():
-            break
+        new = [r for r in rows if r["trade_date"] not in seen]
+        out += new
+        seen |= {r["trade_date"] for r in new}
+        if not new or min(r["trade_date"] for r in new) <= start.isoformat():
+            break  # 쪽 번호를 무시하고 같은 쪽을 돌려주는 출처면 여기서 멈춘다
     return [r for r in out if r["trade_date"] >= start.isoformat()]
 
 
+
+_KABUTAN_BLOCKED: list[str] = []
+
+
 def fetch_jp(http: HttpClient, x: Listing, start: date, end: date) -> list[dict[str, Any]]:
-    """일본: kabutan 먼저, 막히면(GitHub Actions 러너는 405) Yahoo!ファイナンス."""
-    try:
-        return _paged(lambda pg: parse_kabutan(http.get_text("https://kabutan.jp/stock/kabuka", params={"code": x.ticker, "ashi": "day", "page": str(pg)},
-                                                             headers=UA), x.key), start, 10)
-    except Exception as exc:  # noqa: BLE001
-        log.info("kabutan %s failed (%s) → yahoo jp", x.key, str(exc)[:60])
-    return _paged(lambda pg: parse_yahoo_jp(http.get_text(f"https://finance.yahoo.co.jp/quote/{x.ticker}.T/history",
-                                                          params={"from": start.strftime("%Y%m%d"), "to": end.strftime("%Y%m%d"), "timeFrame": "d", "page": str(pg)},
-                                                          headers=UA), x.key), start, 14)
+    """일본: kabutan 먼저(1년 이력), 막히면(GitHub Actions 러너는 405) Yahoo!ファイナンス. 한 번 막히면 그 실행에서는 kabutan 을 건너뛴다."""
+    if not _KABUTAN_BLOCKED:
+        try:
+            return _paged(lambda pg: parse_kabutan(http.get_text("https://kabutan.jp/stock/kabuka", params={"code": x.ticker, "ashi": "day", "page": str(pg)},
+                                                                 headers=UA), x.key), start, 10)
+        except Exception as exc:  # noqa: BLE001
+            _KABUTAN_BLOCKED.append(str(exc)[:80])
+            log.info("kabutan blocked (%s) → yahoo jp for this run", str(exc)[:60])
+    # Yahoo!ファイナンス 는 서버에서 최근 약 12거래일만 그린다 (기간·쪽 지정은 무시되는 경우가 많다, 2026-10-28 확인).
+    # 그래서 러너에서는 일본 종목의 1년 이력을 한 번에 채우지 못하고, 매일 증분으로 쌓는다.
+    rows = parse_yahoo_jp(http.get_text(f"https://finance.yahoo.co.jp/quote/{x.ticker}.T/history", headers=UA), x.key)
+    return [r for r in rows if r["trade_date"] >= start.isoformat()]
 
 
 FETCH = {"us": fetch_us, "twse": fetch_twse, "tpex": fetch_tpex, "kr": fetch_kr, "cn": fetch_cn, "hk": fetch_cn, "jp": fetch_jp}
