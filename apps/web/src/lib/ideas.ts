@@ -46,6 +46,21 @@ export const ANT_PART_KO: Record<string, string> = { path: "변화 → 기업 �
 export const PRICED_KO: Record<string, string> = { none: "시장 미반영", partial: "일부 반영", full: "이미 반영" };
 export const watchItems = (x: Pick<InvestmentIdea, "watch">): WatchItem[] =>
   (x.watch ?? []).map((w) => (typeof w === "string" ? { what: w, status: "pending" } : { status: "pending", ...w }));
+/** 검증 기록 (ADR-0022): 예측(strengthen)의 적중·빗나감, 반증 조건(weaken)의 성립, 대기. 엔진이 같은 셈으로 ★ 를 움직인다. */
+export function verification(x: Pick<InvestmentIdea, "watch">): { hits: number; misses: number; falsified: number; pending: number } {
+  const v = { hits: 0, misses: 0, falsified: 0, pending: 0 };
+  for (const w of watchItems(x)) {
+    const weaken = w.direction === "weaken";
+    if (w.status === "pending") v.pending++;
+    else if (w.status === "hit" && weaken) v.falsified++;
+    else if (w.status === "hit") v.hits++;
+    else if (w.status === "miss" && !weaken) v.misses++;
+  }
+  return v;
+}
+export const verificationText = (v: { hits: number; misses: number; falsified: number; pending: number }): string =>
+  [v.hits ? `적중 ${v.hits}` : null, v.misses ? `빗나감 ${v.misses}` : null, v.falsified ? `반증 ${v.falsified}` : null, v.pending ? `대기 ${v.pending}` : null]
+    .filter(Boolean).join(" · ") || "채점 전";
 /** 가장 가까운 확인 일정 (기한 있는 것 먼저). */
 export function nextWatch(x: Pick<InvestmentIdea, "watch">): WatchItem | null {
   const ws = watchItems(x).filter((w) => (w.status ?? "pending") === "pending");

@@ -27,3 +27,4 @@
 | [0019](0019-valuation-as-the-result.md) | 결과는 가치평가, 점수는 계산기 — 이슈 → 영향 → 시나리오별 내재 주가와 기댓값, 재무 수집 | accepted | 2026-10-28 |
 | [0020](0020-hypothesis-first.md) | 가설 우선 — 추론은 요구, 근거는 시험 도구, ★ = 검증 단계, watch = 예측 | accepted | 2026-10-29 |
 | [0021](0021-market-scope-us-kr.md) | 시장 범위 — 주 기업은 미국·한국 상장사, 다른 시장은 신호·맥락으로만 | accepted | 2026-10-29 |
+| [0022](0022-hypothesis-verification-loop.md) | 가설 검증 루프 — 2단계 생성(후보 → 선택·조사 → 작성)과 예측 채점이 움직이는 ★ | accepted | 2026-10-29 |

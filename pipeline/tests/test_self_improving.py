@@ -489,3 +489,97 @@ def test_validate_rejects_out_of_scope_primary_and_retires_existing():
     closed = [r for r in rows2 if r.get("status") == "closed"]
     assert len(closed) == 1 and closed[0]["idea_key"] == "k1" and "ADR-0021" in closed[0]["close_reason"]
     assert any(r.get("idea_key") == "k2" and r.get("primary_company") == "company:p" for r in rows2)
+
+
+# ------------------------------------------------------------------ 가설 검증 루프 (ADR-0022)
+def test_verification_summary_and_star_decisions():
+    from wsj.ecosystems import verification as V
+
+    w = [{"what": "a", "status": "hit", "direction": "strengthen"}, {"what": "b", "status": "pending"},
+         {"what": "c", "status": "miss", "direction": "strengthen"}, {"what": "d", "status": "void"}]
+    s = V.summarize(w)
+    assert (s["hits"], s["misses"], s["pending"], s["falsified"], s["stage"]) == (1, 1, 1, 0, 2)
+    assert V.decide(1, s, 3, False) == ("promote", 2, "예측 1건 적중 → ★2")
+    assert V.decide(2, s, 3, False)[0] == "keep"
+    two = V.summarize([{"what": "a", "status": "hit"}, {"what": "b", "status": "hit", "direction": "strengthen"}])
+    kind, new, note = V.decide(1, two, 4, False)
+    assert (kind, new) == ("promote", 2) and "★3 은" in note          # 문턱 미달 → ★2 까지
+    assert V.decide(2, two, 8, True) == ("promote", 3, "예측 2건 적중 → ★3")
+    bad = V.summarize([{"what": "x", "status": "miss"}, {"what": "y", "status": "miss"}])
+    assert V.decide(2, bad, 6, True) == ("demote", 1, "예측 2건 빗나감 → ★1") and V.decide(1, bad, 6, True)[0] == "keep"
+    fals = V.summarize([{"what": "11월 월매출 YoY < 0", "status": "hit", "direction": "weaken", "grade_note": "-12%"}])
+    kind, _, note = V.decide(3, fals, 9, True)
+    assert kind == "close" and "반증 조건 성립" in note and "-12%" in note
+
+
+def test_verification_audit_promotes_untouched_and_closes_falsified():
+    from wsj.ecosystems import verification as V
+    from wsj.ecosystems.ideas import _KEEP
+
+    now = datetime(2026, 11, 20, tzinfo=UTC)
+    ex = {"k1": {"idea_key": "k1", "status": "active", "stars": 1, "type": "bottleneck", "title": "t", "thesis": "a. b.", "primary_company": "company:p",
+                 "companies": [{"id": "company:p"}], "chain": [], "last_signal_at": "2026-10-20", "stars_reason": "가설"},
+          "k2": {"idea_key": "k2", "status": "active", "stars": 2, "type": "bottleneck", "title": "t2", "thesis": "a. b.", "primary_company": "company:q",
+                 "companies": [{"id": "company:q"}], "chain": [], "last_signal_at": "2026-10-20"}}
+    refresh = [{"idea_key": "k1", "assessment": {"score": 3}, "watch": [{"what": "a", "status": "hit", "direction": "strengthen", "evidence_url": "https://e"}]},
+               {"idea_key": "k2", "assessment": {"score": 6}, "watch": [{"what": "f", "status": "hit", "direction": "weaken", "grade_note": "YoY -5%"}]}]
+    extra, notes = V.audit(ex, [], refresh, now, "m", "session", _KEEP)
+    assert refresh[0]["assessment"]["verification"]["hits"] == 1 and refresh[1]["assessment"]["verification"]["falsified"] == 1
+    k1 = next(r for r in extra if r["idea_key"] == "k1")
+    assert k1["stars"] == 2 and k1["trend"] == "strengthened" and k1["watch"][0]["status"] == "hit" and "★2" in k1["what_changed"]
+    k2 = next(r for r in extra if r["idea_key"] == "k2")
+    assert k2["status"] == "closed" and "반증 조건 성립" in k2["close_reason"] and "YoY -5%" in k2["close_reason"]
+    # 같은 실행에서 고쳐 쓴 행은 버리지 않고 ★1 로
+    row = {"idea_key": "k2", "status": "active", "stars": 2, "assessment": {"score": 6}, "chain": [], "watch": refresh[1]["watch"], "what_changed": "업계: x"}
+    extra2, _ = V.audit(ex, [row], refresh, now, "m", "session", _KEEP)
+    assert not [r for r in extra2 if r["idea_key"] == "k2"] and row["stars"] == 1 and "반증" in row["what_changed"]
+
+
+def test_hypotheses_validate_score_select_and_plan():
+    from wsj.ecosystems import hypotheses as H
+    from wsj.ecosystems.ideas import Registry
+
+    g = _graph_tw()
+    reg = Registry()
+    s1 = reg.add("S", "https://x/s1", "10/27 병목 B 심화", publisher="P", date="2026-10-27", tier="third_party_report")
+    g1 = reg.add("G", "https://x/g1", "구조", publisher=None, date=None, tier="third_party_report")
+    signals = [{"sid": "sig1", "ref": "issue:1", "kind": "issue", "title": "t", "stars": 3, "date": "2026-10-27", "evidence": [s1], "nodes": ["bottleneck:b"], "companies": []},
+               {"sid": "sig2", "ref": "events:company:q", "kind": "company", "subject": "company:q", "title": "Q 수주", "stars": 2, "date": "2026-10-26", "evidence": [s1],
+                "nodes": ["component:x"], "companies": ["company:q"], "items": [{"title": "Q 수주 공시", "ev": s1}]}]
+    prices = {"P": {"close": 10, "r1m": 2, "from_low": 20, "market_cap_usd": 3e8, "as_of": "2026-10-27"}, "Q": {"close": 5, "r1m": 45, "from_low": 300, "as_of": "2026-10-27"}}
+    raw = {"candidates": [
+        {"id": "H1", "trigger": s1, "change": "10/27 병목 B 심화", "path": ["bottleneck:b", "component:x", "company:p"], "company": "company:p",
+         "claim": "병목 B 가 부품 X 수요를 2배로 늘려 P 매출을 2분기 뒤 +40% 바꾼다 (추론)", "effect_pct": 40, "lead_quarters": 2,
+         "why_unpriced": "주가 조용, 자기 소식 없음", "falsifier": "2026-12-10 11월 월매출 YoY < +10% 면 폐기", "research": ["P 의 3Q IR 에서 X 매출 비중"], "extends": None},
+        {"id": "H2", "trigger": s1, "change": "같은 변화", "path": ["bottleneck:b", "company:q"], "company": "company:q",
+         "claim": "병목 B 가 Q 매출을 늘린다", "effect_pct": None, "lead_quarters": None, "why_unpriced": "", "falsifier": "실적이 나쁘면 폐기", "research": [], "extends": None},
+        {"id": "H3", "trigger": s1, "change": "x", "path": ["bottleneck:b", "component:x", "company:t"], "company": "company:t", "claim": "대만 기업 T 가 수혜를 본다 — 범위 밖", "falsifier": "x"},
+        {"id": "H4", "trigger": g1, "change": "x", "path": ["company:p"], "company": "company:p", "claim": "G 근거를 변화로 쓴 잘못된 후보 — 거부", "falsifier": "x"}]}
+    cands, rejects = H.validate_candidates(raw, g, reg, signals, [], prices, NOW)
+    assert [c["id"] for c in cands] == ["H1", "H2"] and len(rejects) == 2 and any("out of scope" in r for r in rejects) and any("trigger" in r for r in rejects)
+    h1, h2 = cands
+    assert h1["score"] == 11 and h1["criteria"] == {"specific": 3, "bold": 3, "falsifiable": 3, "explanatory": 2} and not h1["flags"]
+    assert h2["score"] < 6 and h2["criteria"]["bold"] == 0 and any("이미 움직임" in f for f in h2["flags"])  # 가격이 뛰었고 자기 소식도 있다
+    sel = H.select(cands, k=3)
+    assert [c["id"] for c in sel] == ["H1"] and sel[0]["rank"] == 1
+    plan = H.research_plan(sel, g, signals)
+    assert plan[0]["company"] == "Primary" and plan[0]["ticker"] == "P" and plan[0]["confirm"] == ["P 의 3Q IR 에서 X 매출 비중"]
+    reg2 = Registry()
+    s1b = reg2.add("S", "https://x/s1", "같은 출처, 새 레지스트리", publisher="P", date="2026-10-27", tier="third_party_report")
+    v = H.stage2_view(sel, reg2)
+    assert v[0]["trigger"] == s1b and v[0]["id"] == "H1"
+
+
+def test_validate_records_hypothesis_provenance():
+    from wsj.ecosystems.ideas import Registry, validate
+
+    g = _graph()
+    reg = Registry()
+    eid = reg.add("S", "https://x/s1", "10/27 병목 B 심화", publisher="P", date="2026-10-27", tier="third_party_report")
+    signals = [{"sid": "sig1", "ref": "issue:1", "kind": "issue", "title": "t", "stars": 2, "date": "2026-10-27", "evidence": [eid], "nodes": ["bottleneck:b"], "companies": []}]
+    raw = [{"action": "new", "hypothesis": "H1", "type": "bottleneck", "title": "병목이 조여진다", "thesis": "변화. 기업.", "stars": 1,
+            "companies": [{"id": "company:p", "role": "primary"}],
+            "chain": [{"claim": "10/27 병목 B 가 심해졌다", "evidence": [eid]}, {"claim": "그래서 P 의 매출이 는다 (추론)", "evidence": []}]}]
+    ctx = {"hypotheses": {"H1": {"id": "H1", "rank": 1, "score": 11, "criteria": {"specific": 3}, "claim": "c", "falsifier": "f"}}}
+    rows, rejects = validate(raw, reg, g, signals, {}, datetime(2026, 10, 28, tzinfo=UTC), "m", "session", ctx)
+    assert not rejects and rows[0]["assessment"]["hypothesis"] == {"id": "H1", "rank": 1, "score": 11, "criteria": {"specific": 3}, "claim": "c", "falsifier": "f"}

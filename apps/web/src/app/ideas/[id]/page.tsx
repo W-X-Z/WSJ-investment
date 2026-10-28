@@ -2,7 +2,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Icon } from "@/components/Icon";
 import { Cites, Freshness, MetaLine, PriceLine, References, ValueLine } from "@/components/feed/Feed";
-import { EVENT_KIND_KO, ROLE_KO, SCENARIO_KO, SIZE_KO, WATCH_STATUS_KO, liveUpside, loadCompanyEvents, loadFacts, loadIdea, loadIdeaNote, loadValuationHistory, loadValuations, money, pct, usdB, watchItems, type CompanyFacts, type IdeaEvidence, type IdeaNote, type Valuation } from "@/lib/ideas";
+import { EVENT_KIND_KO, ROLE_KO, SCENARIO_KO, SIZE_KO, WATCH_STATUS_KO, liveUpside, loadCompanyEvents, loadFacts, loadIdea, loadIdeaNote, loadValuationHistory, loadValuations, money, pct, usdB, verification, verificationText, watchItems, type CompanyFacts, type IdeaEvidence, type IdeaNote, type Valuation } from "@/lib/ideas";
 import { REL_KO, rel, relOf, viewIdea, type IdeaView } from "@/lib/feed";
 
 export const dynamic = "force-dynamic";
@@ -81,9 +81,9 @@ export default async function IdeaDetail({ params }: { params: Promise<{ id: str
         </section>
 
         {idea.watch.length ? <section className="fd-dsec">
-          <h2>예측<small>가설이 맞으면 이 날짜에 이 숫자가 나온다 — 다음 실행이 채점합니다</small></h2>
+          <h2>예측<small>가설이 맞으면 이 날짜에 이 숫자가 나온다 — 다음 실행이 채점하고, 적중 1건이면 ★2 · 2건이면 ★3 · 반증이 성립하면 가설을 버립니다 · {verificationText(verification(idea))}</small></h2>
           <ul className="fd-watch">{watchItems(idea).map((w, i) => <li key={i} className={`fd-w-${w.status ?? "pending"}`}>
-            <span className="fd-w-status">{WATCH_STATUS_KO[w.status ?? "pending"] ?? w.status}</span>
+            <span className="fd-w-status">{w.status === "hit" && w.direction === "weaken" ? "반증 성립" : w.status === "hit" ? "적중" : WATCH_STATUS_KO[w.status ?? "pending"] ?? w.status}</span>
             <div>
               <p>{w.due ? <span className="fd-date">{w.due}</span> : null}{w.what}
                 {w.threshold ? <em> — {w.metric ? `${w.metric} ` : ""}{w.threshold}</em> : null}
