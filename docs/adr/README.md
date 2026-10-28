@@ -23,3 +23,4 @@
 | [0013](0013-discovery-and-moat-cards.md) | 발굴 → 승격 → 해자 카드: 온톨로지가 유니버스를 만든다 | accepted | 2026-10-27 |
 | [0014](0014-supply-chain-issue-feed.md) | 공급망 이슈 피드: 다출처 수집 → 온톨로지 태깅 → 선별 → DB | accepted | 2026-10-27 |
 | [0017](0017-self-improving-research-system.md) | 스스로 판단하고 개선하는 리서치 시스템 — 가격·관측치·10점 근거 점수·채점·주간 개선 고리 | accepted | 2026-10-28 |
+| [0018](0018-monitor-registry.md) | 모니터 레지스트리 — 품목 가격·R&D·IR·회의록·계통 데이터 트리거 (제안) | 제안 | 2026-10-28 |
