@@ -251,6 +251,7 @@ def test_facts_parsers():
     assert F.parse_tencent("v_sh603256=\"1~宏和科技~603256~" + "~".join(["86.73"] + ["0"] * 40) + "~784.55~784.55~x\";") == (86.73, 784.55)
     html = '<span>発行済株式数</span><div class="tip"><a>用語</a></div><span class="n">3,175,762,284</span><span>株</span>'
     assert F.parse_yahoo_jp_shares(html) == 3175762284.0
+    assert F.parse_krw_won("2,557억") == 2.557e11 and F.parse_krw_won("6조 3,105억") == 6.3105e12 and F.parse_krw_won("N/A") is None
 
 
 def test_merge_facts_adds_market_cap_to_price_rows():

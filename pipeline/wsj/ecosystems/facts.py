@@ -10,7 +10,7 @@
            30일 지난 것부터.
   대만 상장 openapi.twse.com.tw t187ap03_L 已發行普通股數 (일괄)
   대만 상계 www.tpex.org.tw openapi tpex_mainboard_quotes Capitals = 주식수 (일괄)
-  한국     api.finance.naver.com itemSummary marketSum(억원) ÷ 종가 → 주식수 (Actions 러너에서 열림)
+  한국     m.stock.naver.com 모바일 API 시총('2,557억') ÷ 종가 → 주식수
   중국·홍콩 qt.gtimg.cn 總市值(億) ÷ 종가 → 주식수
   일본     finance.yahoo.co.jp 종목 페이지의 発行済株式数
   환율     FRED DEX* (USD 기준) → ref.fx_rates
@@ -29,7 +29,7 @@ from wsj.ecosystems.prices import UA, Listing, listings
 from wsj.http import HOST_RPS, HttpClient
 
 log = logging.getLogger(__name__)
-HOST_RPS.update({"data.sec.gov": 4.0, "qt.gtimg.cn": 0.5, "finance.yahoo.co.jp": 0.5, "api.finance.naver.com": 2.0})
+HOST_RPS.update({"data.sec.gov": 4.0, "qt.gtimg.cn": 0.5, "finance.yahoo.co.jp": 0.5, "m.stock.naver.com": 1.0})
 
 CURRENCY = {"us": "USD", "twse": "TWD", "tpex": "TWD", "kr": "KRW", "cn": "CNY", "hk": "HKD", "jp": "JPY"}
 # FRED 환율 계열: (계열, 'USD 당 외화' 인지)
@@ -90,14 +90,26 @@ def fetch_tpex(http: HttpClient, xs: list[Listing]) -> list[dict[str, Any]]:
     return [_row(x, shares[x.ticker], today, "tpex_quotes") for x in xs if shares.get(x.ticker)]
 
 
+def parse_krw_won(s: str) -> float | None:
+    """'2,557억' · '6조 3,105억' · '1조' → 원."""
+    s = str(s).replace(",", "").replace(" ", "")
+    m = re.fullmatch(r"(?:(\d+)조)?(?:(\d+)억)?", s)
+    if not m or not (m.group(1) or m.group(2)):
+        return None
+    return float(m.group(1) or 0) * 1e12 + float(m.group(2) or 0) * 1e8
+
+
 def fetch_kr(http: HttpClient, xs: list[Listing]) -> list[dict[str, Any]]:
+    """네이버 모바일 API: integration.totalInfos[marketValue] = '2,557억', basic.closePrice = '12,100' → 주식수 = 시총 ÷ 종가."""
     out = []
     for x in xs:
         try:
-            d = http.get_json(f"https://api.finance.naver.com/service/itemSummary.nhn?itemcode={x.ticker}", headers=UA)
-            mcap, now = _num(d.get("marketSum")), _num(d.get("now"))
-            if mcap and now:
-                out.append(_row(x, mcap * 1e8 / now, date.today().isoformat(), "naver_summary"))
+            d = http.get_json(f"https://m.stock.naver.com/api/stock/{x.ticker}/integration", headers=UA)
+            mv = next((i.get("value") for i in d.get("totalInfos") or [] if i.get("code") == "marketValue"), None)
+            b = http.get_json(f"https://m.stock.naver.com/api/stock/{x.ticker}/basic", headers=UA)
+            mcap, close = parse_krw_won(mv or ""), _num(b.get("closePrice"))
+            if mcap and close:
+                out.append(_row(x, mcap / close, date.today().isoformat(), "naver_mobile"))
         except Exception as exc:  # noqa: BLE001
             log.warning("naver %s: %s", x.key, str(exc)[:100])
     return out
