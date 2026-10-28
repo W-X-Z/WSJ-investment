@@ -1,0 +1,1383 @@
+{
+ "as_of": "2026-10-28T15:18:22+00:00",
+ "company_leads": [
+  {
+   "company_id": "company:sanil_electric",
+   "company": "Sanil Electric 산일전기",
+   "size_band": "mid",
+   "events": 6,
+   "latest": "2026-10-27",
+   "title": "산일전기 16만500원 강보합…변압기 수주와 생산능력 확대 주목",
+   "text": null,
+   "url": "https://news.google.com/rss/articles/CBMickFVX3lxTE5QRzByWWprOEhUQUluc0hJWTRpRW4zZUNqc2Y2a2lMVmh6eThJWWY2Zk1oTzlkYTdKaDJfU3U2Q2V5R24zdHpILUhCOFA4N18xLVJuQzhhTHA1RmNFTk9Vb1JveGxLZWdQVWVCY05KVm5md9IBckFVX3lxTE5QRzByWWprOEhUQUluc0hJWTRpRW4zZUNqc2Y2a2lMVmh6eThJWWY2Zk1oTzlkYTdKaDJfU3U2Q2V5R24zdHpILUhCOFA4N18xLVJuQzhhTHA1RmNFTk9Vb1JveGxLZWdQVWVCY05KVm5mdw?oc=5",
+   "bottlenecks": [
+    "전력변압기 공급부족·리드타임"
+   ],
+   "price": {
+    "close": 165700.0,
+    "r1m": null,
+    "r3m": null,
+    "r12m": null,
+    "from_high": null,
+    "from_low": null,
+    "vol_ratio": null,
+    "market_cap_usd": null,
+    "key": "KRX:062040",
+    "as_of": "2026-10-28",
+    "points": 3,
+    "flags": [],
+    "tenbagger": {
+     "candidate": null,
+     "reason": "시가총액 미확인"
+    }
+   }
+  },
+  {
+   "company_id": "company:largan",
+   "company": "Largan Precision",
+   "size_band": "mid",
+   "events": 6,
+   "latest": "2026-10-27",
+   "title": "Largan Precision 중대공시: 公告本公司115年第3季合併財務報告",
+   "text": "1.提報董事會或經董事會決議日期:115/10/27 2.審計委員會通過日期:115/10/27 3.財務報告或年度自結財務資訊報導期間 起訖日期(XXX/XX/XX~XXX/XX/XX):(115/01/01~115/09/30) 4.1月1日累計至本期止營業收入(仟元):44,859,658 5.1月1日累計至本期止營業毛利(毛損) (仟元):21,039,356 6.1月1日累計至本期止營業",
+   "url": "https://mops.twse.com.tw/mops/#/web/t05st01?companyId=3008&date=20261027",
+   "bottlenecks": [
+    "CPO 광섬유-칩 결합 수율·정렬",
+    "CPO 광원 열·신뢰성·현장 교체성"
+   ],
+   "price": null
+  },
+  {
+   "company_id": "company:unimicron",
+   "company": "Unimicron Technology",
+   "size_band": "large",
+   "events": 6,
+   "latest": "2026-10-27",
+   "title": "Unimicron Technology 중대공시: 公告本公司一一五年第三季財務報告",
+   "text": "1.提報董事會或經董事會決議日期:115/10/27 2.審計委員會通過日期:115/10/27 3.財務報告或年度自結財務資訊報導期間 起訖日期(XXX/XX/XX~XXX/XX/XX):115/01/01~115/09/30 4.1月1日累計至本期止營業收入(仟元):132,986,108 5.1月1日累計至本期止營業毛利(毛損) (仟元):32,553,648 6.1月1日累計至本期止營業利",
+   "url": "https://mops.twse.com.tw/mops/#/web/t05st01?companyId=3037&date=20261027",
+   "bottlenecks": [
+    "AI용 대면적·고다층 패키지 기판 공급 부족"
+   ],
+   "price": null
+  },
+  {
+   "company_id": "company:daeduck",
+   "company": "Daeduck Electronics",
+   "size_band": "mid",
+   "events": 5,
+   "latest": "2026-10-23",
+   "title": "대덕전자, 6150억 시설투자…증설 로드맵 2030년까지 늘렸다",
+   "text": null,
+   "url": "https://news.google.com/rss/articles/CBMiW0FVX3lxTE5wNWxFOTlDZFNRdkFneEw1RmxJdG1KSmd1c0EyVDVBTkNiZlZ6Zmp2Tk40UThGUjdIRVVtMkJJZTdONHg1UGdlWGlETi1XU3J4ZVRFY3dSTUJFQ2s?oc=5",
+   "bottlenecks": [
+    "AI용 대면적·고다층 패키지 기판 공급 부족"
+   ],
+   "price": {
+    "close": 140200.0,
+    "r1m": null,
+    "r3m": null,
+    "r12m": null,
+    "from_high": null,
+    "from_low": null,
+    "vol_ratio": null,
+    "market_cap_usd": 5228939241.0,
+    "key": "KRX:353200",
+    "as_of": "2026-10-28",
+    "points": 3,
+    "flags": [],
+    "tenbagger": {
+     "candidate": false,
+     "reason": "시총 $5.2B > $3B"
+    }
+   }
+  },
+  {
+   "company_id": "company:fortune_electric",
+   "company": "Fortune Electric 華城",
+   "size_band": "mid",
+   "events": 4,
+   "latest": "2026-10-28",
+   "title": "華城、士電訂單排到2030年！009831鎖定AI電網、核能與供電商機",
+   "text": null,
+   "url": "https://news.google.com/rss/articles/CBMiU0FVX3lxTFBfQmFYcnJvZmlHVFJBZUlQRkNnUjNzYzZ5clN0emsyUzY0REItRGt1Mm0zeGt3N3FZbWt0LWVjb2pTRk80U2ZJV1FWZHZraTFuYjRJ0gFYQVVfeXFMT2N2LXQ1dGNDLXE4d2VxUW9XaVl1S2cybVhMUE5PVkk3SmRoLV9OYzVUU0VqZVhaR1duNlRvdGVIZjlpbm4tamJ6V3RZazJTN2dkN1lBQ0pGSg?oc=5",
+   "bottlenecks": [
+    "개폐장치·고압차단기 리드타임",
+    "전력변압기 공급부족·리드타임"
+   ],
+   "price": {
+    "close": 592.0,
+    "r1m": null,
+    "r3m": null,
+    "r12m": null,
+    "from_high": null,
+    "from_low": null,
+    "vol_ratio": null,
+    "market_cap_usd": 6321500391.0,
+    "key": "TWSE:1519",
+    "as_of": "2026-10-28",
+    "points": 3,
+    "flags": [],
+    "tenbagger": {
+     "candidate": false,
+     "reason": "시총 $6.3B > $3B"
+    }
+   }
+  },
+  {
+   "company_id": "company:aixtron",
+   "company": "AIXTRON",
+   "size_band": "mid",
+   "events": 4,
+   "latest": "2026-10-28",
+   "title": "Why did AIXTRON (AIXXF) pre-announce a 122% jump in orders?",
+   "text": null,
+   "url": "https://news.google.com/rss/articles/CBMiogFBVV95cUxOQ0RMejBSNVlLMmhwRUM3RXBaY3hxNzJQS0VvcGFMTVhfVm9IVlJLcV9yX3NGZF9VRHRob0RBRy1Ub2xTUFpFVWszZHp5M2E1NGV1Zm1LaTRkTVdZM1dJRk01UjFpdVdxNXFCOE8zLUN0b0FFZmZoeXhzMmFmSEtWVzRwVFo2U2ZSdC04WERmMlZHQkY3Z3JIdHBtTGNNQnRIMUE?oc=5",
+   "bottlenecks": [
+    "EML·고출력 CW 레이저 칩 공급 부족"
+   ],
+   "price": null
+  },
+  {
+   "company_id": "company:enablence",
+   "company": "Enablence Technologies",
+   "size_band": "micro",
+   "events": 3,
+   "latest": "2026-10-23",
+   "title": "GUIDANCE: (ENA.V) Enablence Technologies Expects Q1 Revenue Approx. $4.0M",
+   "text": null,
+   "url": "https://news.google.com/rss/articles/CBMisAFBVV95cUxQclBocThNYy1pcE9tZk52WDk1dGp5dFpwVUVPa0RhU1ctb05SaEt6dk93Y0ZtSmxwdzZZX0t0U2hkUmV3OHluSXBjTHRCaktkY0FIOHpIYV80N3YtY1NQWGZSaTd2LUw1WFc4bU9NLVpLRWJkQjhyRmJZYS1qel9EaWU2a1Q0Qm9uTkNrNmduSFh3dDJ6cDNla3A2czFmSzI2c1NMZnJMSmpnWVhBNkh2aw?oc=5",
+   "bottlenecks": [
+    "CPO 광원 열·신뢰성·현장 교체성"
+   ],
+   "price": null
+  },
+  {
+   "company_id": "company:fcel",
+   "company": "FuelCell Energy",
+   "size_band": "small",
+   "events": 3,
+   "latest": "2026-10-23",
+   "title": "FuelCell Energy Earns Strong PJM Capacity Rating Amid Power Demand",
+   "text": null,
+   "url": "https://news.google.com/rss/articles/CBMikwFBVV95cUxORW9TOEN6azFMX2V0eHRka3BqU2ZCV2l3eVhHSC1jU19kRzFRUTB6SEtlNkhIck9KTnhDQjVNWFYtQ1lWbXZfRzJRWkQ4TkxGdUs1WnFRZy01RnRQRko4R3ZtYkdaX0N2SDlscHdjOFB1TzJuSWlhYUF5Z25nQ3paVnNaYk55cWhtNEJOc2NwaWh0d1k?oc=5",
+   "bottlenecks": [
+    "가스터빈·대형 가스엔진 생산 슬롯 부족",
+    "계통연계 대기열·전력 인입 지연"
+   ],
+   "price": {
+    "close": 12.18,
+    "r1m": -24.5,
+    "r3m": -32.6,
+    "r12m": 36.1,
+    "from_high": -66.2,
+    "from_low": 103.0,
+    "vol_ratio": 1.08,
+    "market_cap_usd": 973842107.0,
+    "key": "FCEL",
+    "as_of": "2026-10-27",
+    "points": 275,
+    "flags": [],
+    "tenbagger": {
+     "candidate": true,
+     "reason": "시총 $0.97B · 저점 대비 +103%"
+    }
+   }
+  },
+  {
+   "company_id": "company:st",
+   "company": "Sensata Technologies",
+   "size_band": "mid",
+   "events": 3,
+   "latest": "2026-10-27",
+   "title": "Sensata Technologies Holdplc (NYSE:ST) Q3 EPS Beat Tempered by Soft Q4 Sales Guidance",
+   "text": null,
+   "url": "https://news.google.com/rss/articles/CBMizAFBVV95cUxQSWZ1WGJaRzhuQW9VeWVwLXI2YlNTaEJ6bW5yOVMxeDVQQTFLRE1icjhib3oxYVliQTc2N1Rpc2ItLXR2M0ZXNDFLd3R6R2VaUzJSMkQ0a2VRajFSWUFUWTQ4TFgwc2RBRkJUbENQUHpWQUJpdlJhZTdXQzNJTWw3ODlWbkVZNHozVzcyUUd5MXpSYTdhTmJ6VnVNQkQxVHUtX2FGZ3cwZzRhcmMyaUgwOExvQ2d6N28xSUIya01MelFmNEJxZFF3QnVldVU?oc=5",
+   "bottlenecks": [
+    "DC 아크·고전압 차단 안전"
+   ],
+   "price": null
+  },
+  {
+   "company_id": "company:sols",
+   "company": "Solstice Advanced Materials",
+   "size_band": "mid",
+   "events": 3,
+   "latest": "2026-10-26",
+   "title": "Solstice Advanced Materials plans to expand research and development facility in New York",
+   "text": null,
+   "url": "https://news.google.com/rss/articles/CBMi4AFBVV95cUxNY3UtdTh3UE5VSWthWC1TWUpTQjc0Z1p6cXRueHBmN1lOSFVMWEdZMlB0U0tfakkzT3FRakNqZmpzQ3hxbUFudkh0VnI2d0dtc0h4cnVVb3UzY0xOM1VXSUF2azZkZU1SMzNnSEFMejJiZGJOeDBHMFJDN3RDaGljblphQmlMbFl1dkhQUTN1NDFiN28wMG50R0NtbjU0UkMybGRkU0o1LU5WY3BMdXZrQkZWUkw4bFZ1MDFGTmstZHdfZnh0NnpOeHZ2VnpwakdGVzZ4MWRoQlo5YW43Sm80UQ?oc=5",
+   "bottlenecks": [
+    "PFAS 규제·3M Novec 철수에 따른 2상 유체 공급 공백"
+   ],
+   "price": null
+  },
+  {
+   "company_id": "company:accelink",
+   "company": "Accelink Technologies 光迅科技",
+   "size_band": "mid",
+   "events": 3,
+   "latest": "2026-10-23",
+   "title": "光迅科技：生产交付秩序正常 在手订单储备充足",
+   "text": null,
+   "url": "https://news.google.com/rss/articles/CBMid0FVX3lxTE5XaF8yOWU2X0RRTDRXT0pVZG1peFVKR1Y0ekFFSlItTGxMRC1JZVRhM0F4SVBuWFVTUXdlVF9kRzBoMnNqSzlYa0VJREhXbTFnal96cXhTdlBTOXdOcXBCcVZxOW10ZkhuVVJYTDJVZDc0SjdfaHBN?oc=5",
+   "bottlenecks": [
+    "고대역폭 광연결의 전력·발열·밀도"
+   ],
+   "price": null
+  },
+  {
+   "company_id": "company:intekplus",
+   "company": "Intekplus 인텍플러스",
+   "size_band": "small",
+   "events": 2,
+   "latest": "2026-10-27",
+   "title": "인텍플러스, 수주잔고 급증 및 기판·패키징 장비 호조-유안타 By 인포스탁데일리",
+   "text": null,
+   "url": "https://news.google.com/rss/articles/CBMicEFVX3lxTE5DbGE1bWVZQnBhTmU4X0FlTTdlUEhTai1KR1daU2haU3VySXNfcDQ2ekFKd2FmR0FITkx2ZlJuSWpBMzBIME1ZR1d0dlZoeFl3ZlJIVG9VTXc4aW9aVzUxSk4wTnpJVEpjY3ZkWU1Cam0?oc=5",
+   "bottlenecks": [
+    "유리 코어 미세 크랙·박리"
+   ],
+   "price": {
+    "close": 64700.0,
+    "r1m": null,
+    "r3m": null,
+    "r12m": null,
+    "from_high": null,
+    "from_low": null,
+    "vol_ratio": null,
+    "market_cap_usd": null,
+    "key": "KOSDAQ:064290",
+    "as_of": "2026-10-28",
+    "points": 3,
+    "flags": [],
+    "tenbagger": {
+     "candidate": null,
+     "reason": "시가총액 미확인"
+    }
+   }
+  }
+ ],
+ "bottlenecks": [
+  {
+   "bottleneck": "bottleneck:conversion",
+   "label": "전력변환 단계·효율·제어",
+   "ecosystem": "power",
+   "activity": 35,
+   "issues": [
+    {
+     "title": "Infineon-Wolfspeed, 200mm SiC 웨이퍼 공급계약 확대",
+     "date": "2026-10-23",
+     "importance": 7
+    },
+    {
+     "title": "Infineon-Nvidia, 800VDC용 GaN 전력변환 협력 확대",
+     "date": "2026-10-26",
+     "importance": 6
+    },
+    {
+     "title": "OCP 에서 800VDC 공급망 발표 잇따라",
+     "date": "2026-10-24",
+     "importance": 6
+    }
+   ],
+   "states": [],
+   "suppliers": [
+    "Actron Technology",
+    "Alpha & Omega Semiconductor Ltd",
+    "Delta Electronics",
+    "Flex",
+    "Infineon Technologies",
+    "Ideal Power Inc.",
+    "Lite-On Technology",
+    "Shenzhen Megmeet Electrical",
+    "Navitas Semiconductor",
+    "onsemi"
+   ],
+   "uncovered": [
+    {
+     "company_id": "company:actron",
+     "company": "Actron Technology",
+     "size_band": "small"
+    },
+    {
+     "company_id": "company:aosl",
+     "company": "Alpha & Omega Semiconductor Ltd",
+     "size_band": "small"
+    },
+    {
+     "company_id": "company:delta_electronics",
+     "company": "Delta Electronics",
+     "size_band": "large"
+    },
+    {
+     "company_id": "company:flex",
+     "company": "Flex",
+     "size_band": "large"
+    },
+    {
+     "company_id": "company:lite_on",
+     "company": "Lite-On Technology",
+     "size_band": "large"
+    },
+    {
+     "company_id": "company:megmeet",
+     "company": "Shenzhen Megmeet Electrical",
+     "size_band": "mid"
+    },
+    {
+     "company_id": "company:nvts",
+     "company": "Navitas Semiconductor",
+     "size_band": "small"
+    },
+    {
+     "company_id": "company:on",
+     "company": "onsemi",
+     "size_band": "large"
+    }
+   ]
+  },
+  {
+   "bottleneck": "bottleneck:substrate_capacity",
+   "label": "AI용 대면적·고다층 패키지 기판 공급 부족",
+   "ecosystem": "hbm",
+   "activity": 31,
+   "issues": [
+    {
+     "title": "Nvidia, 기판·CPO·패키징 캐파 선점 투자",
+     "date": "2026-10-27",
+     "importance": 7
+    },
+    {
+     "title": "Unimicron, AI 기판 장비 NT$509억 발주",
+     "date": "2026-10-28",
+     "importance": 7
+    },
+    {
+     "title": "삼성전기, NVIDIA용 ABF 기판 증설",
+     "date": "2026-10-26",
+     "importance": 6
+    }
+   ],
+   "states": [
+    {
+     "label": "群翊(Group Up) 수주잔고",
+     "value": 60,
+     "unit": "억 대만달러",
+     "as_of": "2026-10-21"
+    },
+    {
+     "label": "Unimicron 장기 리드타임 장비 선주문 추가액",
+     "value": 509,
+     "unit": "억 대만달러",
+     "as_of": "2026-10-27"
+    }
+   ],
+   "suppliers": [
+    "AT&S Austria Technologie & Systemtechnik",
+    "C Sun 志聖",
+    "Daeduck Electronics",
+    "Group Up 群翊",
+    "Ibiden",
+    "Kinsus Interconnect Technology",
+    "Nan Ya Printed Circuit Board",
+    "Samsung Electro-Mechanics",
+    "Unimicron Technology"
+   ],
+   "uncovered": [
+    {
+     "company_id": "company:ats",
+     "company": "AT&S Austria Technologie & Systemtechnik",
+     "size_band": "mid"
+    },
+    {
+     "company_id": "company:csun",
+     "company": "C Sun 志聖",
+     "size_band": "mid"
+    },
+    {
+     "company_id": "company:daeduck",
+     "company": "Daeduck Electronics",
+     "size_band": "mid"
+    },
+    {
+     "company_id": "company:group_up",
+     "company": "Group Up 群翊",
+     "size_band": "small"
+    },
+    {
+     "company_id": "company:ibiden",
+     "company": "Ibiden",
+     "size_band": "large"
+    },
+    {
+     "company_id": "company:kinsus",
+     "company": "Kinsus Interconnect Technology",
+     "size_band": "large"
+    },
+    {
+     "company_id": "company:nanya_pcb",
+     "company": "Nan Ya Printed Circuit Board",
+     "size_band": "large"
+    },
+    {
+     "company_id": "company:unimicron",
+     "company": "Unimicron Technology",
+     "size_band": "large"
+    }
+   ]
+  },
+  {
+   "bottleneck": "bottleneck:optic_power",
+   "label": "고대역폭 광연결의 전력·발열·밀도",
+   "ecosystem": "optics",
+   "activity": 22,
+   "issues": [
+    {
+     "title": "Nvidia, 기판·CPO·패키징 캐파 선점 투자",
+     "date": "2026-10-27",
+     "importance": 7
+    },
+    {
+     "title": "Intel, 300mm InP 실리콘 포토닉스 양산 역량 주장",
+     "date": "2026-10-21",
+     "importance": 5
+    },
+    {
+     "title": "NVIDIA, Optics-on-Interposer CPO 프로토타입 공개",
+     "date": "2026-10-25",
+     "importance": 5
+    }
+   ],
+   "states": [],
+   "suppliers": [
+    "Applied Optoelectronics, Inc.",
+    "Accelink Technologies 光迅科技",
+    "Cambridge Industries Group",
+    "Eoptolink Technology 新易盛",
+    "HG Tech/Huagong Tech",
+    "Zhongji Innolight 中际旭创",
+    "Marvell Technology",
+    "Semtech"
+   ],
+   "uncovered": [
+    {
+     "company_id": "company:aaoi",
+     "company": "Applied Optoelectronics, Inc.",
+     "size_band": "mid"
+    },
+    {
+     "company_id": "company:accelink",
+     "company": "Accelink Technologies 光迅科技",
+     "size_band": "mid"
+    },
+    {
+     "company_id": "company:cig",
+     "company": "Cambridge Industries Group",
+     "size_band": "mid"
+    },
+    {
+     "company_id": "company:eoptolink",
+     "company": "Eoptolink Technology 新易盛",
+     "size_band": "large"
+    },
+    {
+     "company_id": "company:hgtech",
+     "company": "HG Tech/Huagong Tech",
+     "size_band": "mid"
+    },
+    {
+     "company_id": "company:innolight",
+     "company": "Zhongji Innolight 中际旭创",
+     "size_band": "large"
+    },
+    {
+     "company_id": "company:mrvl",
+     "company": "Marvell Technology",
+     "size_band": "large"
+    },
+    {
+     "company_id": "company:smtc",
+     "company": "Semtech",
+     "size_band": "mid"
+    }
+   ]
+  },
+  {
+   "bottleneck": "bottleneck:hbm_thermal",
+   "label": "적층 열·변형·뒤틀림 관리",
+   "ecosystem": "hbm",
+   "activity": 13,
+   "issues": [
+    {
+     "title": "Applied Materials, BESI 지분 20%로 확대",
+     "date": "2026-10-27",
+     "importance": 7
+    },
+    {
+     "title": "하이브리드 본더 경쟁: ASML 특허·중국 장비사 진입",
+     "date": "2026-10-24",
+     "importance": 6
+    }
+   ],
+   "states": [],
+   "suppliers": [
+    "Adeia Inc.",
+    "Jentech Precision 健策",
+    "Kulicke & Soffa Industries Inc"
+   ],
+   "uncovered": [
+    {
+     "company_id": "company:adea",
+     "company": "Adeia Inc.",
+     "size_band": "small"
+    },
+    {
+     "company_id": "company:jentech",
+     "company": "Jentech Precision 健策",
+     "size_band": "large"
+    },
+    {
+     "company_id": "company:klic",
+     "company": "Kulicke & Soffa Industries Inc",
+     "size_band": "mid"
+    }
+   ]
+  },
+  {
+   "bottleneck": "bottleneck:optic_ber",
+   "label": "신호 무결성·비트오류율 BER",
+   "ecosystem": "optics",
+   "activity": 13,
+   "issues": [
+    {
+     "title": "MaxLinear 3분기 매출 +72%, 1.6T·AEC 로 확장",
+     "date": "2026-10-24",
+     "importance": 8
+    },
+    {
+     "title": "CPO 광 테스트 비용이 제조비에 육박",
+     "date": "2026-10-26",
+     "importance": 5
+    }
+   ],
+   "states": [],
+   "suppliers": [
+    "Maxlinear, Inc"
+   ],
+   "uncovered": []
+  },
+  {
+   "bottleneck": "bottleneck:hbm_pitch_density",
+   "label": "고밀도 인터커넥트의 미세 피치 한계",
+   "ecosystem": "hbm",
+   "activity": 13,
+   "issues": [
+    {
+     "title": "Applied Materials, BESI 지분 20%로 확대",
+     "date": "2026-10-27",
+     "importance": 7
+    },
+    {
+     "title": "하이브리드 본더 경쟁: ASML 특허·중국 장비사 진입",
+     "date": "2026-10-24",
+     "importance": 6
+    }
+   ],
+   "states": [],
+   "suppliers": [
+    "Adeia Inc.",
+    "Kulicke & Soffa Industries Inc"
+   ],
+   "uncovered": [
+    {
+     "company_id": "company:adea",
+     "company": "Adeia Inc.",
+     "size_band": "small"
+    },
+    {
+     "company_id": "company:klic",
+     "company": "Kulicke & Soffa Industries Inc",
+     "size_band": "mid"
+    }
+   ]
+  },
+  {
+   "bottleneck": "bottleneck:tsv_pad_yield",
+   "label": "TSV·패드 정렬 수율",
+   "ecosystem": "hbm",
+   "activity": 13,
+   "issues": [
+    {
+     "title": "Applied Materials, BESI 지분 20%로 확대",
+     "date": "2026-10-27",
+     "importance": 7
+    },
+    {
+     "title": "하이브리드 본더 경쟁: ASML 특허·중국 장비사 진입",
+     "date": "2026-10-24",
+     "importance": 6
+    }
+   ],
+   "states": [],
+   "suppliers": [
+    "Adeia Inc.",
+    "Auros Technology",
+    "Kulicke & Soffa Industries Inc"
+   ],
+   "uncovered": [
+    {
+     "company_id": "company:adea",
+     "company": "Adeia Inc.",
+     "size_band": "small"
+    },
+    {
+     "company_id": "company:auros",
+     "company": "Auros Technology",
+     "size_band": "micro"
+    },
+    {
+     "company_id": "company:klic",
+     "company": "Kulicke & Soffa Industries Inc",
+     "size_band": "mid"
+    }
+   ]
+  },
+  {
+   "bottleneck": "bottleneck:abf_single_source",
+   "label": "ABF 빌드업 절연필름 단일 공급 집중",
+   "ecosystem": "hbm",
+   "activity": 13,
+   "issues": [
+    {
+     "title": "Unimicron, AI 기판 장비 NT$509억 발주",
+     "date": "2026-10-28",
+     "importance": 7
+    },
+    {
+     "title": "삼성전기, NVIDIA용 ABF 기판 증설",
+     "date": "2026-10-26",
+     "importance": 6
+    }
+   ],
+   "states": [],
+   "suppliers": [
+    "Ajinomoto"
+   ],
+   "uncovered": []
+  },
+  {
+   "bottleneck": "bottleneck:fiber_supply",
+   "label": "광섬유·프리폼 공급 부족",
+   "ecosystem": "optics",
+   "activity": 12,
+   "issues": [],
+   "states": [
+    {
+     "label": "Corning 광통신 매출 YoY",
+     "value": 44,
+     "unit": "% YoY",
+     "as_of": "2026-09-30"
+    },
+    {
+     "label": "데이터센터용 굽힘강화(BIF) 광섬유 현물가 — 2025 대비 배수",
+     "value": 5,
+     "unit": "배",
+     "as_of": "2026-10-19"
+    },
+    {
+     "label": "세계 광섬유 생산 가동률",
+     "value": 92,
+     "unit": "%",
+     "as_of": "2026-10-19"
+    }
+   ],
+   "suppliers": [
+    "Fujikura",
+    "Furukawa Electric",
+    "Corning",
+    "Shin-Etsu Chemical",
+    "Sterlite Technologies",
+    "Sumitomo Electric Industries",
+    "Taihan Fiberoptics 대한광통신",
+    "Yangtze Optical Fibre and Cable"
+   ],
+   "uncovered": [
+    {
+     "company_id": "company:fujikura",
+     "company": "Fujikura",
+     "size_band": "large"
+    },
+    {
+     "company_id": "company:furukawa_electric",
+     "company": "Furukawa Electric",
+     "size_band": "mid"
+    },
+    {
+     "company_id": "company:glw",
+     "company": "Corning",
+     "size_band": "large"
+    },
+    {
+     "company_id": "company:shin_etsu",
+     "company": "Shin-Etsu Chemical",
+     "size_band": "large"
+    },
+    {
+     "company_id": "company:sterlite_tech",
+     "company": "Sterlite Technologies",
+     "size_band": "small"
+    },
+    {
+     "company_id": "company:sumitomo_electric",
+     "company": "Sumitomo Electric Industries",
+     "size_band": "large"
+    },
+    {
+     "company_id": "company:taihan_fiberoptics",
+     "company": "Taihan Fiberoptics 대한광통신",
+     "size_band": "small"
+    },
+    {
+     "company_id": "company:yofc",
+     "company": "Yangtze Optical Fibre and Cable",
+     "size_band": "large"
+    }
+   ]
+  },
+  {
+   "bottleneck": "bottleneck:hbm_kged",
+   "label": "적층 전 Known-Good-Die 수율 검사",
+   "ecosystem": "hbm",
+   "activity": 11,
+   "issues": [
+    {
+     "title": "AI 칩 테스트 공급사 9월 매출: WinWay +88%, MPI +82%",
+     "date": "2026-10-27",
+     "importance": 6
+    },
+    {
+     "title": "Goke, KGD 패키징 가격 11월 재인상",
+     "date": "2026-10-28",
+     "importance": 5
+    }
+   ],
+   "states": [],
+   "suppliers": [
+    "Cohu Inc",
+    "Formfactor Inc",
+    "Seichi Technologies",
+    "UniTest"
+   ],
+   "uncovered": [
+    {
+     "company_id": "company:cohu",
+     "company": "Cohu Inc",
+     "size_band": "small"
+    }
+   ]
+  },
+  {
+   "bottleneck": "bottleneck:optic_coupling",
+   "label": "광학 소자 결합 손실·조립 정밀도",
+   "ecosystem": "optics",
+   "activity": 10,
+   "issues": [
+    {
+     "title": "Intel, 300mm InP 실리콘 포토닉스 양산 역량 주장",
+     "date": "2026-10-21",
+     "importance": 5
+    },
+    {
+     "title": "CPO 광 테스트 비용이 제조비에 육박",
+     "date": "2026-10-26",
+     "importance": 5
+    }
+   ],
+   "states": [],
+   "suppliers": [
+    "All Ring Tech",
+    "FitTech",
+    "RoboTechnik/ficonTEC"
+   ],
+   "uncovered": [
+    {
+     "company_id": "company:all_ring",
+     "company": "All Ring Tech",
+     "size_band": "mid"
+    },
+    {
+     "company_id": "company:fittech",
+     "company": "FitTech",
+     "size_band": "small"
+    },
+    {
+     "company_id": "company:robotechnik",
+     "company": "RoboTechnik/ficonTEC",
+     "size_band": "mid"
+    }
+   ]
+  },
+  {
+   "bottleneck": "bottleneck:copper_reach",
+   "label": "고속 구리 링크 도달거리·손실 한계",
+   "ecosystem": "optics",
+   "activity": 8,
+   "issues": [
+    {
+     "title": "MaxLinear 3분기 매출 +72%, 1.6T·AEC 로 확장",
+     "date": "2026-10-24",
+     "importance": 8
+    }
+   ],
+   "states": [],
+   "suppliers": [
+    "Astera Labs",
+    "Marvell Technology",
+    "MACOM Technology Solutions",
+    "Semtech"
+   ],
+   "uncovered": [
+    {
+     "company_id": "company:alab",
+     "company": "Astera Labs",
+     "size_band": "large"
+    },
+    {
+     "company_id": "company:mrvl",
+     "company": "Marvell Technology",
+     "size_band": "large"
+    },
+    {
+     "company_id": "company:mtsi",
+     "company": "MACOM Technology Solutions",
+     "size_band": "mid"
+    },
+    {
+     "company_id": "company:smtc",
+     "company": "Semtech",
+     "size_band": "mid"
+    }
+   ]
+  }
+ ],
+ "price_leads": [
+  {
+   "company_id": "company:tgen",
+   "company": "Tecogen",
+   "size_band": "micro",
+   "price": {
+    "close": 2.1,
+    "r1m": -33.5,
+    "r3m": -30.0,
+    "r12m": -79.0,
+    "from_high": -79.0,
+    "from_low": 9.4,
+    "vol_ratio": 2.54,
+    "market_cap_usd": null,
+    "key": "TGEN",
+    "as_of": "2026-10-27",
+    "points": 275,
+    "flags": [
+     "1개월 -34% 급락"
+    ],
+    "tenbagger": {
+     "candidate": null,
+     "reason": "시가총액 미확인"
+    }
+   },
+   "bottlenecks": [
+    "계통연계 대기열·전력 인입 지연"
+   ]
+  }
+ ],
+ "untagged_issues": [
+  {
+   "issue_key": "cae532cd61b506554c92",
+   "title": "광섬유 현물가 수배 급등, 2028년까지 부족 전망",
+   "date": "2026-10-19"
+  },
+  {
+   "issue_key": "55039bf970cc8c6219ce",
+   "title": "FormFactor, 텍사스 AI 칩 테스트 공장 가동",
+   "date": "2026-10-26"
+  },
+  {
+   "issue_key": "24243a372b3f9d3fe8aa",
+   "title": "Adeia, TCL 과 다년 IP 라이선스 갱신",
+   "date": "2026-10-26"
+  },
+  {
+   "issue_key": "4b3105e1aa07e210469e",
+   "title": "미 재무부, 대외투자 안보 규정 제안",
+   "date": "2026-10-26"
+  },
+  {
+   "issue_key": "a2a960c0f8353c823654",
+   "title": "TrendForce, 2027년 CSP 설비투자 1.5조 달러 상회 전망",
+   "date": "2026-10-14"
+  }
+ ],
+ "second_order": [
+  {
+   "w": 1.1645000000000003,
+   "company_id": "company:fit_hon_teng",
+   "company": "FIT Hon Teng / Foxconn Interconnect",
+   "size_band": "mid",
+   "hops": 3,
+   "path": [
+    "tech:cpo",
+    "bottleneck:cpo_laser_reliability",
+    "component:els",
+    "company:fit_hon_teng"
+   ],
+   "path_labels": [
+    "Co-Packaged Optics",
+    "CPO 광원 열·신뢰성·현장 교체성",
+    "CPO 외부 레이저 광원 모듈",
+    "FIT Hon Teng / Foxconn Interconnect"
+   ],
+   "confidence": 0.685,
+   "trigger": "Nvidia, 기판·CPO·패키징 캐파 선점 투자",
+   "trigger_key": "774a3a73547b54bf62d8",
+   "trigger_date": "2026-10-27",
+   "price": null,
+   "quiet": true,
+   "rank": 1.1645000000000003
+  },
+  {
+   "w": 1.088,
+   "company_id": "company:innoscience",
+   "company": "Innoscience",
+   "size_band": "mid",
+   "hops": 2,
+   "path": [
+    "gen:800vdc",
+    "company:nvda",
+    "company:innoscience"
+   ],
+   "path_labels": [
+    "800VDC 배전 아키텍처",
+    "NVIDIA",
+    "Innoscience"
+   ],
+   "confidence": 0.68,
+   "trigger": "Infineon-Nvidia, 800VDC용 GaN 전력변환 협력 확대",
+   "trigger_key": "d34c2e73055ffc126a83",
+   "trigger_date": "2026-10-26",
+   "price": null,
+   "quiet": true,
+   "rank": 1.088
+  },
+  {
+   "w": 0.864,
+   "company_id": "company:auros",
+   "company": "Auros Technology",
+   "size_band": "micro",
+   "hops": 2,
+   "path": [
+    "gen:hbm4",
+    "company:samsung",
+    "company:auros"
+   ],
+   "path_labels": [
+    "HBM4",
+    "Samsung Electronics",
+    "Auros Technology"
+   ],
+   "confidence": 0.48,
+   "trigger": "SK hynix, DRAM·HBM 2029년까지 사실상 완판",
+   "trigger_key": "f15cfab1714bf0dacfd0",
+   "trigger_date": "2026-10-28",
+   "price": {
+    "r1m": -25.8,
+    "r12m": -60.2,
+    "from_low": 10.5,
+    "market_cap_usd": null
+   },
+   "quiet": true,
+   "rank": 0.864
+  },
+  {
+   "w": 0.8298000000000001,
+   "company_id": "company:plan_optik",
+   "company": "Plan Optik",
+   "size_band": "micro",
+   "hops": 4,
+   "path": [
+    "gen:hbm4",
+    "req:hbm_stack",
+    "process:tbdb",
+    "material:carrier_wafer",
+    "company:plan_optik"
+   ],
+   "path_labels": [
+    "HBM4",
+    "고적층·미세 접합 확대",
+    "임시 접합·탈착",
+    "캐리어 웨이퍼",
+    "Plan Optik"
+   ],
+   "confidence": 0.461,
+   "trigger": "SK hynix, DRAM·HBM 2029년까지 사실상 완판",
+   "trigger_key": "f15cfab1714bf0dacfd0",
+   "trigger_date": "2026-10-28",
+   "price": null,
+   "quiet": true,
+   "rank": 0.8298000000000001
+  },
+  {
+   "w": 0.8192,
+   "company_id": "company:yamaichi",
+   "company": "Yamaichi Electronics",
+   "size_band": "small",
+   "hops": 3,
+   "path": [
+    "bottleneck:hbm_kged",
+    "process:hbm_burn_in",
+    "component:memory_test_socket",
+    "company:yamaichi"
+   ],
+   "path_labels": [
+    "적층 전 Known-Good-Die 수율 검사",
+    "HBM 번인",
+    "메모리 테스트·번인 소켓",
+    "Yamaichi Electronics"
+   ],
+   "confidence": 0.512,
+   "trigger": "AI 칩 테스트 공급사 9월 매출: WinWay +88%, MPI +82%",
+   "trigger_key": "ce9f9a31e3d51a8eec95",
+   "trigger_date": "2026-10-27",
+   "price": {
+    "r1m": null,
+    "r12m": null,
+    "from_low": null,
+    "market_cap_usd": null
+   },
+   "quiet": true,
+   "rank": 0.8192
+  },
+  {
+   "w": 0.8160000000000001,
+   "company_id": "company:matek",
+   "company": "Materials Analysis Technology 閎康",
+   "size_band": "small",
+   "hops": 2,
+   "path": [
+    "component:package_substrate",
+    "process:substrate_inspection",
+    "company:matek"
+   ],
+   "path_labels": [
+    "고밀도 패키지 기판",
+    "패키지 기판 외관·AOI 검사",
+    "Materials Analysis Technology 閎康"
+   ],
+   "confidence": 0.48,
+   "trigger": "Nvidia, 기판·CPO·패키징 캐파 선점 투자",
+   "trigger_key": "774a3a73547b54bf62d8",
+   "trigger_date": "2026-10-27",
+   "price": {
+    "r1m": -5.0,
+    "r12m": 6.1,
+    "from_low": 25.8,
+    "market_cap_usd": null
+   },
+   "quiet": true,
+   "rank": 0.8160000000000001
+  },
+  {
+   "w": 0.6912,
+   "company_id": "company:towa",
+   "company": "TOWA",
+   "size_band": "small",
+   "hops": 3,
+   "path": [
+    "bottleneck:cowos_capacity",
+    "tech:foplp",
+    "equipment:compression_molder",
+    "company:towa"
+   ],
+   "path_labels": [
+    "CoWoS 2.5D 패키징 생산능력 부족",
+    "팬아웃 패널레벨 패키징",
+    "웨이퍼 레벨 컴프레션 몰딩 장비",
+    "TOWA"
+   ],
+   "confidence": 0.384,
+   "trigger": "TSMC, CoWoS 가격 최대 20% 인상 검토 보도",
+   "trigger_key": "5b808ff0bcde7c2c161f",
+   "trigger_date": "2026-10-28",
+   "price": {
+    "r1m": null,
+    "r12m": null,
+    "from_low": null,
+    "market_cap_usd": null
+   },
+   "quiet": true,
+   "rank": 0.6912
+  },
+  {
+   "w": 0.6144000000000001,
+   "company_id": "company:actron",
+   "company": "Actron Technology",
+   "size_band": "small",
+   "hops": 3,
+   "path": [
+    "req:800v",
+    "bottleneck:conversion",
+    "component:power_converter",
+    "company:actron"
+   ],
+   "path_labels": [
+    "차세대 800VDC 배전 아키텍처",
+    "전력변환 단계·효율·제어",
+    "DC/DC 전력변환 모듈",
+    "Actron Technology"
+   ],
+   "confidence": 0.384,
+   "trigger": "Infineon-Nvidia, 800VDC용 GaN 전력변환 협력 확대",
+   "trigger_key": "d34c2e73055ffc126a83",
+   "trigger_date": "2026-10-26",
+   "price": {
+    "r1m": -3.2,
+    "r12m": -1.1,
+    "from_low": 17.4,
+    "market_cap_usd": null
+   },
+   "quiet": true,
+   "rank": 0.6144000000000001
+  },
+  {
+   "w": 0.4662,
+   "company_id": "company:vpec",
+   "company": "Visual Photonics Epitaxy",
+   "size_band": "small",
+   "hops": 4,
+   "path": [
+    "gen:1p6t",
+    "req:1p6t",
+    "component:photodiode",
+    "material:inp_epi_wafer",
+    "company:vpec"
+   ],
+   "path_labels": [
+    "1.6T 광모듈 세대",
+    "1.6 Tb/s Ethernet 및 200 Gb/s/lane 전환",
+    "광검출기",
+    "InP 에피택시 웨이퍼",
+    "Visual Photonics Epitaxy"
+   ],
+   "confidence": 0.259,
+   "trigger": "MaxLinear 3분기 매출 +72%, 1.6T·AEC 로 확장",
+   "trigger_key": "3fcc15c9b7c92474b124",
+   "trigger_date": "2026-10-24",
+   "price": {
+    "r1m": -6.4,
+    "r12m": 259.3,
+    "from_low": 290.8,
+    "market_cap_usd": 2942087603.0
+   },
+   "quiet": true,
+   "rank": 0.4662
+  },
+  {
+   "w": 0.3672,
+   "company_id": "company:fittech",
+   "company": "FitTech",
+   "size_band": "small",
+   "hops": 3,
+   "path": [
+    "tech:cpo",
+    "process:fiber_attach",
+    "equipment:active_alignment",
+    "company:fittech"
+   ],
+   "path_labels": [
+    "Co-Packaged Optics",
+    "광섬유 부착·FAU 결합 공정",
+    "능동 정렬·광결합 장비",
+    "FitTech"
+   ],
+   "confidence": 0.216,
+   "trigger": "Nvidia, 기판·CPO·패키징 캐파 선점 투자",
+   "trigger_key": "774a3a73547b54bf62d8",
+   "trigger_date": "2026-10-27",
+   "price": {
+    "r1m": -6.0,
+    "r12m": 99.4,
+    "from_low": 111.8,
+    "market_cap_usd": 337950876.0
+   },
+   "quiet": true,
+   "rank": 0.3672
+  },
+  {
+   "w": 0.29410000000000003,
+   "company_id": "company:enlitech",
+   "company": "Enlitech",
+   "size_band": "micro",
+   "hops": 4,
+   "path": [
+    "tech:cpo",
+    "bottleneck:cpo_test_throughput",
+    "process:siph_wafer_test",
+    "equipment:photonics_ate",
+    "company:enlitech"
+   ],
+   "path_labels": [
+    "Co-Packaged Optics",
+    "CPO PIC·광엔진 테스트 처리량",
+    "SiPh PIC 웨이퍼 레벨 광·전 테스트",
+    "포토닉스 광·전 ATE",
+    "Enlitech"
+   ],
+   "confidence": 0.173,
+   "trigger": "Nvidia, 기판·CPO·패키징 캐파 선점 투자",
+   "trigger_key": "774a3a73547b54bf62d8",
+   "trigger_date": "2026-10-27",
+   "price": {
+    "r1m": -6.4,
+    "r12m": 80.3,
+    "from_low": 89.1,
+    "market_cap_usd": null
+   },
+   "quiet": true,
+   "rank": 0.29410000000000003
+  },
+  {
+   "w": 0.1404,
+   "company_id": "company:chemtronics",
+   "company": "Chemtronics 켐트로닉스",
+   "size_band": "micro",
+   "hops": 5,
+   "path": [
+    "gen:hbm4",
+    "req:ai_large_package",
+    "bottleneck:interposer_reticle",
+    "tech:copos",
+    "component:glass_interposer",
+    "company:chemtronics"
+   ],
+   "path_labels": [
+    "HBM4",
+    "AI 가속기 초대형 패키지",
+    "인터포저 레티클 크기 한계·웨이퍼 면적효율",
+    "칩-온-패널-온-서브스트레이트 패널 2.5D",
+    "글라스 인터포저",
+    "Chemtronics 켐트로닉스"
+   ],
+   "confidence": 0.078,
+   "trigger": "SK hynix, DRAM·HBM 2029년까지 사실상 완판",
+   "trigger_key": "f15cfab1714bf0dacfd0",
+   "trigger_date": "2026-10-28",
+   "price": {
+    "r1m": -3.6,
+    "r12m": -31.4,
+    "from_low": 35.3,
+    "market_cap_usd": null
+   },
+   "quiet": true,
+   "rank": 0.1404
+  },
+  {
+   "w": 0.1404,
+   "company_id": "company:cheng_uei",
+   "company": "Cheng Uei Precision / Foxlink",
+   "size_band": "small",
+   "hops": 5,
+   "path": [
+    "gen:1p6t",
+    "req:1p6t",
+    "bottleneck:copper_reach",
+    "tech:optical_io_chiplet",
+    "component:hs_copper_cable",
+    "company:cheng_uei"
+   ],
+   "path_labels": [
+    "1.6T 광모듈 세대",
+    "1.6 Tb/s Ethernet 및 200 Gb/s/lane 전환",
+    "고속 구리 링크 도달거리·손실 한계",
+    "패키지 내 광 I/O 칩렛",
+    "고속 구리 케이블·커넥터",
+    "Cheng Uei Precision / Foxlink"
+   ],
+   "confidence": 0.078,
+   "trigger": "MaxLinear 3분기 매출 +72%, 1.6T·AEC 로 확장",
+   "trigger_key": "3fcc15c9b7c92474b124",
+   "trigger_date": "2026-10-24",
+   "price": {
+    "r1m": -9.0,
+    "r12m": -16.9,
+    "from_low": 20.4,
+    "market_cap_usd": null
+   },
+   "quiet": true,
+   "rank": 0.1404
+  },
+  {
+   "w": 0.10880000000000001,
+   "company_id": "company:toyo_tanso",
+   "company": "Toyo Tanso",
+   "size_band": "small",
+   "hops": 3,
+   "path": [
+    "tech:sic",
+    "process:sic_crystal_growth",
+    "material:sic_growth_graphite",
+    "company:toyo_tanso"
+   ],
+   "path_labels": [
+    "SiC 전력반도체",
+    "SiC 단결정 잉곳 성장",
+    "SiC 성장용 고순도 흑연·고온 단열재",
+    "Toyo Tanso"
+   ],
+   "confidence": 0.064,
+   "trigger": "Infineon-Wolfspeed, 200mm SiC 웨이퍼 공급계약 확대",
+   "trigger_key": "47cc25a01b515671c6b9",
+   "trigger_date": "2026-10-23",
+   "price": {
+    "r1m": null,
+    "r12m": null,
+    "from_low": null,
+    "market_cap_usd": null
+   },
+   "quiet": true,
+   "rank": 0.10880000000000001
+  },
+  {
+   "w": 0.0416,
+   "company_id": "company:cvv",
+   "company": "Cvd Equipment Corp",
+   "size_band": "micro",
+   "hops": 4,
+   "path": [
+    "req:800v",
+    "bottleneck:conversion",
+    "component:sic_mosfet",
+    "material:sic_wafer",
+    "company:cvv"
+   ],
+   "path_labels": [
+    "차세대 800VDC 배전 아키텍처",
+    "전력변환 단계·효율·제어",
+    "SiC MOSFET 소자",
+    "SiC 결정 웨이퍼·에피층",
+    "Cvd Equipment Corp"
+   ],
+   "confidence": 0.026,
+   "trigger": "Infineon-Nvidia, 800VDC용 GaN 전력변환 협력 확대",
+   "trigger_key": "d34c2e73055ffc126a83",
+   "trigger_date": "2026-10-26",
+   "price": {
+    "r1m": -5.2,
+    "r12m": 3.6,
+    "from_low": 35.9,
+    "market_cap_usd": null
+   },
+   "quiet": true,
+   "rank": 0.0416
+  }
+ ]
+}

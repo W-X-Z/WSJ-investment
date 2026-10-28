@@ -31,6 +31,8 @@ CURRENCY = {"us": "USD", "twse": "TWD", "tpex": "TWD", "kr": "KRW", "cn": "CNY",
 US_REFRESH_DAYS = 30
 TWSE_PL = "https://openapi.twse.com.tw/v1/opendata/t187ap06_L_ci"
 TPEX_PL = "https://www.tpex.org.tw/openapi/v1/mopsfin_t187ap14_O"
+TWSE_REV = "https://openapi.twse.com.tw/v1/opendata/t187ap05_L"
+TPEX_REV = "https://www.tpex.org.tw/openapi/v1/mopsfin_t187ap05_O"
 NAVER_Q = "https://m.stock.naver.com/api/stock/{code}/finance/quarter"
 
 
@@ -100,6 +102,21 @@ def ttm_from_monthly(points: list[tuple[date, float]], unit: float = 1000.0) -> 
     return sum(v for _, v in pts) * unit, end
 
 
+def parse_tw_ytd(rows: list[dict[str, Any]]) -> dict[str, tuple[float, date, int]]:
+    """월매출 표의 누적 매출(당월 누적, NT$ 천) → code: (YTD NT$, 기준월 말일, 누적 개월 수). 월매출 이력이 12개월 안 될 때 TTM 대신 YTD 연환산에 쓴다."""
+    from wsj.ecosystems.indicators import _roc_month
+
+    out = {}
+    for r in rows:
+        code = str(r.get("公司代號") or "").strip()
+        d = _roc_month(str(r.get("資料年月") or ""))
+        ytd = _num(r.get("累計營業收入-當月累計營收"))
+        if code and d and ytd and ytd > 0:
+            end = (d.replace(day=28) + timedelta(days=4)).replace(day=1) - timedelta(days=1)
+            out[code] = (ytd * 1000.0, end, d.month)
+    return out
+
+
 def parse_tw_margins(rows: list[dict[str, Any]], code_key: str, rev_key: str, op_key: str, ni_key: str) -> dict[str, dict[str, Any]]:
     out = {}
     for r in rows:
@@ -120,22 +137,33 @@ def fetch_tw(http: HttpClient, xs: list[Listing], monthly: dict[str, list[tuple[
             margins = parse_tw_margins(http.get_json(TPEX_PL, headers=UA), "SecuritiesCompanyCode", "營業收入", "營業利益", "稅後淨利")
     except Exception as exc:  # noqa: BLE001
         log.warning("%s 손익표: %s", market, str(exc)[:100])
+    ytd: dict[str, tuple[float, date, int]] = {}
+    try:  # 월매출 이력이 12개월 안 되는 동안은 공식 월매출 표의 누적 매출을 연환산한다
+        ytd = parse_tw_ytd(http.get_json(TWSE_REV if market == "twse" else TPEX_REV, headers=UA))
+    except Exception as exc:  # noqa: BLE001
+        log.warning("%s 월매출표: %s", market, str(exc)[:100])
     out = []
     for x in xs:
         t = ttm_from_monthly(monthly.get(f"tw:{x.ticker}") or [])
-        if not t:
+        basis = "TTM 매출 = 월매출 12개월 합"
+        if t:
+            rev, end = t
+        elif x.ticker in ytd:
+            y, end, months = ytd[x.ticker]
+            rev = y * 12.0 / months
+            basis = f"매출 = 1~{months}월 누적 매출 연환산 (월매출 이력 12개월 미만)"
+        else:
             continue
-        rev, end = t
         m = margins.get(x.ticker) or {}
-        note = None
+        note = basis
         op = ni = None
         if m.get("op_margin") is not None:
             op = round(rev * m["op_margin"])
             ni = round(rev * m["net_margin"]) if m.get("net_margin") is not None else None
-            note = f"영업이익·순이익 = {m.get('year')}년 {m.get('quarter')}분기 누적 손익 비율 × TTM 매출"
+            note += f"; 영업이익·순이익 = {m.get('year')}년 {m.get('quarter')}분기 누적 손익 비율 × 그 매출"
         out.append(_row(x, "ttm", end.isoformat(), f"{market}_monthly" + ("+pl" if op is not None else ""), revenue=round(rev),
                         operating_income=op, net_income=ni, note=note,
-                        source_url="https://openapi.twse.com.tw/v1/opendata/t187ap05_L" if market == "twse" else "https://www.tpex.org.tw/openapi/v1/mopsfin_t187ap05_O"))
+                        source_url=TWSE_REV if market == "twse" else TPEX_REV))
     return out
 
 
