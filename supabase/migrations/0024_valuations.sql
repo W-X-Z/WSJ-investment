@@ -69,7 +69,7 @@ create table if not exists ideas.valuations (
   expected_upside_pct  numeric not null,                             -- expected_price ÷ price − 1
   confidence           text not null check (confidence in ('low', 'mid', 'high')),
   verdict              text not null,                               -- 한 단락: 이슈 → 영향 → 이 기업 숫자 → 가격
-  assumptions          jsonb not null default '[]',                  -- [{claim, evidence: [{id, url, title, date, …}]}]
+  assumptions          jsonb not null default '[]',                  -- [{kind: fact|estimate, claim, basis?, evidence: [{id, url, title, date, …}]}] — 추정은 LLM 의 판단(basis), 사실은 근거
   breaks               jsonb not null default '[]',                  -- 깨지는 조건
   path                 jsonb,                                        -- {labels: [...], mechanism} — 선행 추론의 경로 (점수 없이 글로)
   calculator           jsonb,                                        -- 참고로 쓴 엔진 점수 {evidence_score, anticipation_score, priced_in, tenbagger} — 표면에 안 올림
@@ -80,12 +80,12 @@ create table if not exists ideas.valuations (
 );
 create index if not exists valuations_latest on ideas.valuations (idea_key, as_of desc);
 
--- 쓰기 함수 (예약작업). 검증: 활성 아이디어 · 시나리오 2~4개(bear/base/bull, 확률 합 1±0.02, 내재 주가 > 0) · 가정 2개 이상(https 출처) · verdict 120자 이상.
+-- 쓰기 함수 (예약작업). 검증: 활성 아이디어 · 시나리오 2~4개(bear/base/bull, 확률 합 1±0.02, 내재 주가 > 0) · 가정(사실 https 출처 1개+, 추정은 basis, 전체 2개+) · verdict 120자 이상.
 -- expected_price·expected_upside_pct·시나리오별 upside_pct 는 서버가 다시 계산한다 (LLM 산수를 믿지 않는다).
 create or replace function ideas.put_valuations(rows jsonb) returns jsonb language plpgsql as $$
 declare
   r jsonb; i int := 0; ok int := 0; rej jsonb := '[]'::jsonb; k text; px numeric; sh numeric; d date;
-  sc jsonb; sc2 jsonb := '[]'::jsonb; s jsonb; p numeric; psum numeric; ip numeric; ep numeric; n_assume int; nm text;
+  sc jsonb; sc2 jsonb := '[]'::jsonb; s jsonb; p numeric; psum numeric; ip numeric; ep numeric; n_assume int; n_fact int; nm text;
 begin
   if jsonb_typeof(rows) <> 'array' then raise exception 'rows 는 JSON 배열이어야 한다'; end if;
   for r in select * from jsonb_array_elements(rows) loop
@@ -124,10 +124,13 @@ begin
     if nm is not null then rej := rej || jsonb_build_object('i', i, 'reason', nm); continue; end if;
     if abs(psum - 1) > 0.02 then rej := rej || jsonb_build_object('i', i, 'reason', '확률 합이 1 이 아님: ' || psum::text); continue; end if;
     ep := ep / psum;
-    select count(*) into n_assume from jsonb_array_elements(coalesce(r->'assumptions', '[]'::jsonb)) a
-     where nullif(btrim(a->>'claim'), '') is not null and jsonb_typeof(a->'evidence') = 'array'
-       and exists (select 1 from jsonb_array_elements(a->'evidence') e where (e->>'url') ~ '^https://');
-    if n_assume < 2 then rej := rej || jsonb_build_object('i', i, 'reason', '출처 있는 가정이 2개 미만'); continue; end if;
+    -- 가정 = 사실(https 출처) 또는 추정(basis). 사실 1개 이상, 전체 2개 이상.
+    select count(*) filter (where ok_fact) + count(*) filter (where not ok_fact and ok_est), count(*) filter (where ok_fact) into n_assume, n_fact
+    from (select nullif(btrim(a->>'claim'), '') is not null and jsonb_typeof(a->'evidence') = 'array'
+                 and exists (select 1 from jsonb_array_elements(a->'evidence') e where (e->>'url') ~ '^https://') as ok_fact,
+                 nullif(btrim(a->>'claim'), '') is not null and length(coalesce(a->>'basis', '')) >= 6 as ok_est
+          from jsonb_array_elements(coalesce(r->'assumptions', '[]'::jsonb)) a) t;
+    if n_assume < 2 or n_fact < 1 then rej := rej || jsonb_build_object('i', i, 'reason', '가정은 사실(출처) 1개 이상, 전체 2개 이상 (추정은 basis 필수)'); continue; end if;
     insert into ideas.valuations (idea_key, as_of, company_id, currency, price, price_as_of, shares, market_cap_usd, horizon_months, scenarios,
                                   expected_price, expected_upside_pct, confidence, verdict, assumptions, breaks, path, calculator, model, method)
     values (k, d, r->>'company_id', r->>'currency', px, nullif(r->>'price_as_of', '')::date, sh, nullif(r->>'market_cap_usd', '')::numeric,

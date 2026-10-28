@@ -312,7 +312,10 @@ def test_parse_valuation_recomputes_mcap_and_price_and_expected_value():
            "scenarios": [{"name": "bear", "prob": 0.3, "revenue": 2.8e9, "metric": "ps", "multiple": 1.5, "implied_mcap_local": 9e9, "evidence": ["S1"]},  # LLM 산수 틀림 → 4.2e9
                          {"name": "base", "prob": 0.5, "revenue": 4.5e9, "margin_pct": 14, "metric": "pe", "multiple": 20, "evidence": ["S2"]},   # 4.5e9×0.14×20 = 1.26e10
                          {"name": "bull", "prob": 0.2, "implied_price": 150, "evidence": []}],
-           "assumptions": [{"claim": "a", "evidence": ["S1"]}, {"claim": "b", "evidence": ["S2"]}, {"claim": "근거 없음", "evidence": ["Z9"]}],
+           "assumptions": [{"claim": "a", "evidence": ["S1"]}, {"claim": "b", "evidence": ["S2"]}, {"claim": "근거 없음", "evidence": ["Z9"]},
+                           {"kind": "estimate", "claim": "변화 크기 2.5배", "basis": "번인 1.8배 × 증설 2배", "evidence": ["G1"]},
+                           {"claim": "basis 로만 추정", "basis": "상위 2사 과점이라 점유율 40%", "evidence": []},
+                           {"kind": "estimate", "claim": "basis 짧음", "basis": "x", "evidence": []}],
            "breaks": [{"claim": "c", "evidence": ["G1"]}]}
     v, why = parse_valuation(raw, money, _ev)
     assert why is None and v is not None
@@ -321,7 +324,9 @@ def test_parse_valuation_recomputes_mcap_and_price_and_expected_value():
     assert base["implied_mcap_local"] == 1.26e10 and base["implied_price"] == 84.0 and base["upside_pct"] == 100.0
     assert bull["implied_price"] == 150.0 and bull["implied_mcap_local"] == 2.25e10
     assert v["expected_price"] == round(0.3 * 28 + 0.5 * 84 + 0.2 * 150, 4) and v["expected_upside_pct"] == 91.4
-    assert len(v["assumptions"]) == 2 and v["calc_notes"] and "bear" in v["calc_notes"][0]
+    assert [x["kind"] for x in v["assumptions"]] == ["fact", "fact", "estimate", "estimate"]  # 근거 없는 사실·basis 없는 추정은 버린다
+    assert v["assumptions"][2]["basis"] == "번인 1.8배 × 증설 2배" and v["assumptions"][2]["evidence"][0]["id"] == "G1"
+    assert v["calc_notes"] and "bear" in v["calc_notes"][0]
     assert v["currency"] == "TWD" and v["price"] == 42.0 and v["shares"] == 1.5e8
 
 
@@ -335,6 +340,9 @@ def test_parse_valuation_rejects_bad_inputs():
     assert parse_valuation(good, None, _ev) == (None, "주가 없음")
     assert "확률 합" in parse_valuation(good | {"scenarios": [{"name": "bear", "prob": 0.5, "implied_price": 8}, {"name": "bull", "prob": 0.3, "implied_price": 30}]}, money, _ev)[1]
     assert "가정" in parse_valuation(good | {"assumptions": [{"claim": "a", "evidence": ["S1"]}]}, money, _ev)[1]
+    # 추정만 있고 사실이 없으면 거부, 사실 1 + 추정 1 은 통과
+    assert "사실 0" in parse_valuation(good | {"assumptions": [{"kind": "estimate", "claim": "e", "basis": "논리가 있다", "evidence": []}, {"kind": "estimate", "claim": "f", "basis": "논리가 있다", "evidence": []}]}, money, _ev)[1]
+    assert parse_valuation(good | {"assumptions": [{"claim": "a", "evidence": ["S1"]}, {"kind": "estimate", "claim": "e", "basis": "논리가 있다", "evidence": []}]}, money, _ev)[0] is not None
     assert "verdict" in parse_valuation(good | {"verdict": "짧다"}, money, _ev)[1]
     assert "confidence" in parse_valuation(good | {"confidence": "sure"}, money, _ev)[1]
     # 주식수를 모르고 implied_price 도 없으면 시나리오를 못 만든다
