@@ -228,9 +228,23 @@ def run(http: HttpClient, store, graph: dict[str, Any], only: set[str] | None = 
     if rows:
         store.upsert("raw.company_facts", rows, ["company_id"])
     fx = fetch_fx(http)
-    if fx:
-        store.upsert("ref.fx_rates", [dict(r, updated_at=datetime.now(UTC).isoformat()) for r in fx], ["currency"])
-    return {"rows": len(rows), "fx": len(fx), "by_market": stats}
+    n_fx = save_fx(store, fx) if fx else 0
+    return {"rows": len(rows), "fx": n_fx, "by_market": stats}
+
+
+def save_fx(store, fx: list[dict[str, Any]]) -> int:
+    """환율 저장. ref 스키마는 PostgREST 에 노출되지 않으므로(PGRST106) 0026 의 raw.put_fx_rates RPC 로 쓰고,
+    RPC 가 아직 없으면(0026 전) 예전 경로를 시도한 뒤 실패해도 발행주식수 저장은 지키고 경고만 남긴다."""
+    try:
+        resp = store._req("POST", "raw.rpc/put_fx_rates", body={"rows": fx})
+        return int((resp.json() or {}).get("upserted") or 0)
+    except Exception as exc:  # noqa: BLE001
+        log.warning("put_fx_rates 실패 (0026 전?): %s", str(exc)[:160])
+    try:
+        return store.upsert("ref.fx_rates", [dict(r, updated_at=datetime.now(UTC).isoformat()) for r in fx], ["currency"])
+    except Exception as exc:  # noqa: BLE001
+        log.warning("ref.fx_rates upsert 실패 — 환율은 지난 값 유지: %s", str(exc)[:160])
+        return 0
 
 
 def main(argv: list[str] | None = None) -> int:
