@@ -456,7 +456,9 @@ LLM_SYSTEM = """너는 AI 공급망(HBM·첨단 패키징 / 800G·1.6T 광통신
 아이디어를 만드는 법
 - 한 아이디어 = 하나의 논리: "무엇이 바뀌었나(최근 사실) → 그래서 어떤 병목/전환이 조여지나 → 공급이 왜 소수에게 몰리나 → 그래서 이 기업".
   유형: bottleneck(병목 수혜) | transition(기술 전환의 승자·새 병목) | confirmation(실적·수주·가격이 확인해 준 노출) | risk(대체·수요 이탈로 피해).
-- 제목: 투자자가 바로 이해하는 한 문장 + 기업명. 업계 은어 대신 결과를 말한다. 40자 안팎. 예) "HBM이 높게 쌓일수록 번인 검사가 길어진다 — 유니테스트"
+- 제목: 투자자가 바로 이해하는 짧은 한 문장, 30자 안팎. 무엇이 어디로 움직이는지를 말한다.
+  기업명·티커·숫자·괄호·줄표(—)·부제는 넣지 않는다 — 기업은 카드에 따로 나온다. 업계 은어 대신 결과를 말한다.
+  예) "전력망 연결을 못 기다리는 데이터센터는 현장 가스엔진으로", "HBM 을 높이 쌓을수록 번인 검사가 길어진다"
 - thesis: 2문장. 첫 문장은 최근 변화(날짜 포함), 둘째 문장은 왜 이 기업인가.
 - primary 는 상장 소형·중형 공급사를 우선한다. 대형·초대형은 논리가 압도적일 때만 primary, 보통은 수요처·경쟁 맥락으로 companies 에 넣는다.
 - chain: 3~5 단계. 각 단계 claim 은 한 문장, evidence 에 근거 id 1개 이상. 기술 추론(technical_inference) 근거만 있는 단계는 claim 끝에 "(추론)".
@@ -553,6 +555,29 @@ def build_payload(signals: list[dict[str, Any]], candidates: list[dict[str, Any]
 
 
 # ---------------------------------------------------------------- validation → rows
+def clean_title(title: str, comps: list[dict[str, Any]]) -> str:
+    """제목 끝의 '— 기업명 …'·'(기업명)' 꼬리를 뗀다 — 기업은 카드에 따로 나온다. 남는 앞부분이 너무 짧으면 그대로 둔다."""
+    names: set[str] = set()
+    for c in comps:
+        for part in str(c.get("name") or "").split(" / "):
+            part = part.strip().lower()
+            if len(part) >= 3:
+                names.add(part)
+            if len(part.split(" ")[0]) >= 4:
+                names.add(part.split(" ")[0])
+        if len(str(c.get("ticker") or "")) >= 3:
+            names.add(str(c["ticker"]).lower())
+    t = title.strip()
+    if " — " in t:
+        head, tail = t.rsplit(" — ", 1)
+        if len(head) >= 12 and any(n in tail.lower() for n in names):
+            t = head.strip()
+    m = re.search(r"\s*\(([^)]*)\)\s*$", t)
+    if m and any(n in m.group(1).lower() for n in names):
+        t = t[: m.start()].strip()
+    return t
+
+
 def make_key(kind: str, primary: str, title: str) -> str:
     slug = re.sub(r"\W+", "", title)[:24]
     return hashlib.sha1(f"{kind}|{primary}|{slug}".encode()).hexdigest()[:12]
@@ -652,6 +677,7 @@ def validate(raw: list[dict[str, Any]], reg: Registry, graph: dict[str, Any], si
             rejects.append(f"#{i} no valid company: {title[:40]}")
             continue
         idea_cos = {c["id"] for c in comps}
+        title = clean_title(title, comps)
 
         def ev_rows(ids: list[str], pid: str = primary["id"], cos: set[str] = idea_cos) -> list[dict[str, Any]]:
             return [reg.items[e].public() | {"rel": evidence_rel(e, sig_by_ev.get(e), pid, cos)} for e in ids if e in reg.items]

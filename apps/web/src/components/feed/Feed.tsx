@@ -1,6 +1,6 @@
 import Link from "next/link";
-import { IDEA_TYPE, SIZE_KO, TREND_KO, nextWatch, pct, type InvestmentIdea } from "@/lib/ideas";
-import { REL_KO, dayLabel, ecoLabel, rel, type IdeaView, type TimelineItem } from "@/lib/feed";
+import { IDEA_TYPE, TREND_KO, type InvestmentIdea } from "@/lib/ideas";
+import { REL_KO, ecoLabel, rel, shortName, type FeedIdea, type IdeaView } from "@/lib/feed";
 
 /** ★ 를 글자로 (배지 없이). */
 export function StarText({ n }: { n: number }) {
@@ -30,18 +30,6 @@ export function Freshness({ idea }: { idea: IdeaView }) {
   </span>;
 }
 
-function CompanyLine({ idea }: { idea: IdeaView }) {
-  const p = idea.primary;
-  if (!p) return null;
-  const others = idea.companies.filter((c) => c.id !== p.id && c.role !== "customer").slice(0, 3).map((c) => c.name);
-  const customers = idea.companies.filter((c) => c.role === "customer").slice(0, 2).map((c) => c.name);
-  return <div className="fd-co">
-    <b>{p.name}</b> <span>{[p.ticker, p.exchange, p.size_band ? SIZE_KO[p.size_band] : null].filter(Boolean).join(" · ")}</span>
-    {others.length ? <em>함께 보는 기업 {others.join(", ")}</em> : null}
-    {customers.length ? <em>수요처 {customers.join(", ")}</em> : null}
-  </div>;
-}
-
 /** 근거 점수 (10점) — 숫자와 막대. 점수가 아직 없으면(0021 전·첫 계산 전) 아무것도 안 그린다. */
 export function ScoreText({ idea }: { idea: Pick<InvestmentIdea, "assessment"> }) {
   const s = idea.assessment?.score;
@@ -50,79 +38,35 @@ export function ScoreText({ idea }: { idea: Pick<InvestmentIdea, "assessment"> }
     근거 {s}/10</span>;
 }
 
-/** 이미 움직인 폭 — 근거가 아니라 맥락. */
-export function PriceText({ idea }: { idea: Pick<InvestmentIdea, "assessment"> }) {
-  const p = idea.assessment?.price;
-  if (!p) return null;
-  const parts = [p.r1m != null ? `1개월 ${pct(p.r1m)}` : null, p.r12m != null ? `12개월 ${pct(p.r12m)}` : null,
-    p.from_high != null && p.from_high < -5 ? `고점 대비 ${pct(p.from_high)}` : null].filter(Boolean);
-  if (!parts.length) return null;
-  return <span className="fd-price" title={`가격 ${p.as_of ?? ""} 기준 — 근거가 아니라 이미 움직인 폭`}>이미 움직인 폭 {parts.join(" · ")}</span>;
-}
+/** 피드 카드: ★·생태계·생성일 → 제목 → 관련 기업 → 관련 이슈. 논리·근거·판단은 상세에서. */
+const CHANGE_KO: Record<string, string> = { new: "새로", strengthened: "강화", weakened: "약화" };
+const md = (d?: string | null) => (d ? `${Number(d.slice(5, 7))}/${Number(d.slice(8, 10))}` : "");
+const ROLE_ORDER: Record<string, number> = { primary: 0, peer: 1, competitor: 2, customer: 3, displaced: 4 };
 
-/** 다음 확인 일정 한 줄. */
-export function NextCheck({ idea }: { idea: Pick<InvestmentIdea, "watch"> }) {
-  const w = nextWatch(idea);
-  if (!w) return null;
-  return <p className="fd-next"><b>다음 확인</b>{w.due ? <span className="fd-date">{w.due.slice(5).replace("-", "/")}</span> : null}
-    {w.what}{w.threshold ? <em> — {w.metric ? `${w.metric} ` : ""}{w.threshold}</em> : null}</p>;
-}
-
-/** 아이디어 이야기 카드 (Axios 식): 메타 한 줄 → 제목 → 두 문장 → 왜 지금 → 기업 → 근거 나이. */
-export function StoryCard({ idea }: { idea: IdeaView }) {
+export function IdeaCard({ idea, changed }: { idea: FeedIdea; changed: boolean }) {
   const href = `/ideas/${idea.idea_key}`;
-  const w = idea.whyNow;
-  return <article className={`fd-story fd-tone-${idea.type}`}>
-    <MetaLine idea={idea}/>
+  const tag = changed && idea.shownTrend ? CHANGE_KO[idea.shownTrend] : null;
+  const cos = [...idea.companies].sort((a, b) => (a.id === idea.primary_company ? -1 : b.id === idea.primary_company ? 1 : 0)
+    || (ROLE_ORDER[a.role] ?? 9) - (ROLE_ORDER[b.role] ?? 9));
+  const shown = cos.slice(0, 3);
+  const eco = idea.ecosystems.map((e) => ecoLabel(e)).filter(Boolean).join(" · ");
+  return <article className="fd-card">
+    <div className="fd-card-top">
+      <StarText n={idea.stars}/>{eco ? <span>{eco}</span> : null}{tag ? <b className={`fd-trend fd-trend-${idea.shownTrend}`}>{tag}</b> : null}
+      {idea.first_seen ? <time dateTime={idea.first_seen.slice(0, 10)}>{md(idea.first_seen)} 생성</time> : null}
+    </div>
     <h3><Link href={href}>{idea.title}</Link></h3>
-    <p className="fd-thesis">{idea.thesis}</p>
-    {w ? <p className="fd-why"><b>{w.rel === "direct" ? "왜 지금" : "왜 지금 · 업계 신호"}</b>{w.date ? <span className="fd-date">{w.date.slice(5).replace("-", "/")}</span> : null}
-      {w.text}<Cites ns={w.refs} href={href}/></p> : null}
-    <CompanyLine idea={idea}/>
-    <NextCheck idea={idea}/>
-    <div className="fd-foot"><span className="fd-foot-l"><ScoreText idea={idea}/><Freshness idea={idea}/><PriceText idea={idea}/></span>
-      <Link href={href}>근거 {idea.refs.length}개 · 반대 근거 보기 →</Link></div>
+    <dl className="fd-card-dl">
+      <dt>관련 기업</dt>
+      <dd><ul className="fd-chips">{shown.map((c) => <li key={c.id} className={c.id === idea.primary_company ? "on" : ""}>
+        {shortName(c)}{c.ticker ? <small>{c.ticker}</small> : null}</li>)}
+        {cos.length > shown.length ? <li className="more">외 {cos.length - shown.length}</li> : null}</ul></dd>
+      {idea.issues.length ? <><dt>관련 이슈</dt>
+        <dd><ul className="fd-card-iss">{idea.issues.map((i) => <li key={i.key}>
+          <time>{md(i.date)}</time>{i.url ? <a href={i.url} target="_blank" rel="noreferrer">{i.title}</a> : <span>{i.title}</span>}</li>)}
+          {idea.issueCount > idea.issues.length ? <li className="more"><Link href={href}>외 {idea.issueCount - idea.issues.length}건</Link></li> : null}</ul></dd></> : null}
+    </dl>
   </article>;
-}
-
-/** 무슨 일이 있었나 — 날짜별, 기업 소식(확인된 사실) 먼저, 업계 이슈. 출처는 텍스트, 연결된 아이디어는 화살표 링크. */
-export function Timeline({ items, ideas }: { items: TimelineItem[]; ideas: IdeaView[] }) {
-  const titleOf = new Map(ideas.map((v) => [v.idea_key, v.primary?.name ?? v.title]));
-  const days = Array.from(new Set(items.map((x) => x.date))).filter(Boolean);
-  if (!items.length) return <p className="fd-empty">최근 5일 동안 정리된 소식이 없습니다.</p>;
-  return <div className="fd-tl">{days.map((d) => <section key={d}>
-    <h4>{dayLabel(d)}</h4>
-    <ul>{items.filter((x) => x.date === d).map((x) => <li key={x.kind + x.key} className={`fd-tl-${x.kind}`}>
-      <span className="fd-tl-kind">{x.kind === "event" ? "기업" : "업계"}</span>
-      <div>
-        {x.kind === "event"
-          ? <><p className="fd-tl-head"><b>{x.company ?? x.companyId.replace("company:", "")}</b> {firstSentence(stripDate(x.text)) ?? x.title}</p>
-              <p className="fd-tl-sub"><a href={x.url} target="_blank" rel="noreferrer">{x.title}</a></p>
-              {x.more.slice(0, 2).map((m) => <p key={m.url} className="fd-tl-sub"><a href={m.url} target="_blank" rel="noreferrer">{m.title}</a></p>)}
-              <div className="fd-tl-meta">{[x.publisher, ...x.more.map((m) => m.publisher)].filter(Boolean).filter((v, i, a) => a.indexOf(v) === i).join(", ")}
-                {x.ideaKeys.map((k) => <Link key={k} href={`/ideas/${k}`}>→ {titleOf.get(k)} 아이디어</Link>)}</div></>
-          : <><p className="fd-tl-head">{x.stars >= 3 ? <StarText n={3}/> : null}{x.url ? <a href={x.url} target="_blank" rel="noreferrer">{x.title}</a> : x.title}</p>
-              {x.why || x.summary ? <p className="fd-tl-sub">{trim(x.why ?? x.summary ?? "", 150)}</p> : null}
-              <div className="fd-tl-meta">{pubs(x.publishers, x.sourceCount)}{ecoLabel(x.ecosystem) ? ` · ${ecoLabel(x.ecosystem)}` : ""}
-                {x.ideaKeys.map((k) => <Link key={k} href={`/ideas/${k}`}>→ {titleOf.get(k)} 아이디어</Link>)}</div></>}
-      </div>
-    </li>)}</ul>
-  </section>)}</div>;
-}
-
-/** 모든 아이디어 — 관심 종목표처럼 한 줄씩. */
-export function IdeaTable({ ideas }: { ideas: IdeaView[] }) {
-  return <div className="fd-table" role="table" aria-label="모든 투자 아이디어">
-    <div className="fd-tr fd-th" role="row"><span>★</span><span>아이디어</span><span>주 기업</span><span>근거 점수</span><span>기업 근거</span><span>업계 근거</span></div>
-    {ideas.map((v) => <Link key={v.idea_key} href={`/ideas/${v.idea_key}`} className={`fd-tr ${v.stale ? "fd-stale" : ""}`} role="row">
-      <span><StarText n={v.stars}/></span>
-      <span className="fd-td-title">{v.title}{v.shownTrend && TREND_KO[v.shownTrend] ? <em className={`fd-trend fd-trend-${v.shownTrend}`}>{TREND_KO[v.shownTrend]}</em> : null}</span>
-      <span className="fd-td-co">{v.primary?.name}<small>{v.primary?.ticker}</small></span>
-      <span>{v.assessment?.score != null ? <ScoreText idea={v}/> : <small className="fd-muted">계산 전</small>}</span>
-      <span className={v.companyAt ? "" : "fd-warn"}>{v.companyAt ? rel(v.companyAt) : "없음"}</span>
-      <span>{rel(v.industryAt)}</span>
-    </Link>)}
-  </div>;
 }
 
 /** 상세 화면 출처 목록 (각주 대상). 층(기업 직접·관련·업계·그래프 배경)을 글자로. */
@@ -136,13 +80,3 @@ export function References({ idea }: { idea: IdeaView }) {
     </div>
   </li>)}</ol>;
 }
-
-const trim = (s: string, n: number) => (s.length > n ? s.slice(0, n - 1).trimEnd() + "…" : s);
-/** 확인 내용 앞의 '2026-10-27 발표' 같은 날짜는 날짜 묶음 제목과 겹치니 뺀다. */
-const stripDate = (s: string | null) => (s ? s.replace(/^\d{4}-\d{2}-\d{2}(\s*(발표|공시|실적설명회))?\s*[:：]?\s*/, "") : s);
-const firstSentence = (s: string | null) => {
-  if (!s) return null;
-  const m = s.match(/^.{20,220}?[.。](\s|$)/);
-  return trim((m ? m[0] : s).trim(), 220);
-};
-const pubs = (ps: string[], n: number) => (ps.length > 2 ? `${ps.slice(0, 2).join(", ")} 외 ${Math.max(n, ps.length) - 2}곳` : ps.join(", "));

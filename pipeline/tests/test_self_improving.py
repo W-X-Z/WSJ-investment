@@ -210,3 +210,16 @@ def test_star_rule_audit_demotes_untouched_ideas_but_never_promotes():
     got = {r["idea_key"]: r["stars"] for r in out}
     assert got == {"low": 1, "s3": 2}  # ok·hi 는 그대로 (올리지 않는다)
     assert audited[0]["stars"] == 1 and "1/10" in audited[0]["what_changed"]  # 이미 있는 행은 고친다 (중복 행 없음)
+
+
+def test_clean_title_drops_company_tails():
+    from wsj.ecosystems.ideas import clean_title
+
+    cos = [{"name": "Ideal Power Inc.", "ticker": "IPWR"}, {"name": "Japan Electronic Materials", "ticker": "6855"},
+           {"name": "Powertech Technology", "ticker": "6239"}, {"name": "SUSS MicroTec", "ticker": "SMHN"}]
+    assert clean_title("800VDC 데이터센터는 기계식 대신 반도체 차단기가 필요하다 — Ideal Power", cos) == "800VDC 데이터센터는 기계식 대신 반도체 차단기가 필요하다"
+    assert clean_title("HBM 테스트 붐은 일본 프로브카드로도 번진다 (JEM)", cos[:1] + [{"name": "JEM", "ticker": "6855"}]) == "HBM 테스트 붐은 일본 프로브카드로도 번진다"
+    assert clean_title("패키징이 모자라 값이 오른다 — 고객이 가격 인상을 받아들이는 力成(Powertech)", cos) == "패키징이 모자라 값이 오른다"
+    # 기업 이야기가 아닌 부제·짧은 앞부분은 그대로
+    assert clean_title("전력망 연결을 못 기다리는 데이터센터는 현장 가스엔진으로", cos) == "전력망 연결을 못 기다리는 데이터센터는 현장 가스엔진으로"
+    assert clean_title("AXT — Ideal Power", cos) == "AXT — Ideal Power"
