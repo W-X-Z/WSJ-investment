@@ -56,16 +56,16 @@ def test_validate_drops_invented_evidence_unknown_company_and_signal_free_ideas(
     g, reg, signals, _, _ = _prepare()
     s_ev = signals[0]["evidence"][0]
     g_ev = next(e for e in reg.items if e.startswith("G"))
-    good = {"action": "new", "type": "bottleneck", "title": "HBM 테스트 붐 — JEM", "thesis": "a. b.", "stars": 2,
-            "companies": [{"id": "company:jem", "role": "primary", "why": "x"}],
+    good = {"action": "new", "type": "bottleneck", "title": "HBM 테스트 붐 — 테크윙", "thesis": "a. b.", "stars": 2,
+            "companies": [{"id": "company:techwing", "role": "primary", "why": "x"}],
             "chain": [{"claim": "c1", "evidence": [s_ev]}, {"claim": "c2", "evidence": [g_ev, "G9999"]}], "risks": [], "watch": ["w"]}
     invented = {**good, "title": "가짜", "chain": [{"claim": "c1", "evidence": ["S999"]}, {"claim": "c2", "evidence": ["G9999"]}]}
     unknown = {**good, "title": "없는 회사", "companies": [{"id": "company:nope", "role": "primary"}]}
     no_signal = {**good, "title": "신호 없음", "chain": [{"claim": "c1", "evidence": [g_ev]}, {"claim": "c2", "evidence": [g_ev]}]}
     rows, rejects = ideas.validate([good, invented, unknown, no_signal], reg, g, signals, {}, NOW, "m", "llm")
-    assert [r["title"] for r in rows] == ["HBM 테스트 붐 — JEM"] and len(rejects) == 3
+    assert [r["title"] for r in rows] == ["HBM 테스트 붐 — 테크윙"] and len(rejects) == 3
     r = rows[0]
-    assert r["primary_company"] == "company:jem" and r["trend"] == "new" and r["companies"][0]["ticker"] == "6855"
+    assert r["primary_company"] == "company:techwing" and r["trend"] == "new" and r["companies"][0]["ticker"] == "089030"
     assert all(e["url"].startswith("https://") for st in r["chain"] for e in st["evidence"])
     assert {e["id"] for e in r["chain"][1]["evidence"]} == {g_ev}  # 없는 id 는 빠진다
 
@@ -86,11 +86,11 @@ def test_update_keeps_key_and_close_touches_only_status():
 def test_industry_news_alone_does_not_strengthen_or_earn_three_stars():
     """주 기업 이야기가 아닌 업계 소식으로는 '강화'·★ 상향·★3 이 안 된다 (미쓰이금속 사례)."""
     g, reg, signals, _, _ = _prepare()
-    s_ev = signals[0]["evidence"][0]  # FormFactor 를 말하는 이슈 → JEM 에게는 업계 근거
+    s_ev = signals[0]["evidence"][0]  # FormFactor 를 말하는 이슈 → 테크윙에게는 업계 근거
     g_ev = next(e for e in reg.items if e.startswith("G"))
-    existing = {"abc": {"idea_key": "abc", "stars": 1, "primary_company": "company:jem", "companies": [{"id": "company:jem", "name": "Japan Electronic Materials"}],
-                        "chain": [{"claim": "x", "evidence": [{"id": "S1", "date": "2026-09-01", "title": "Japan Electronic Materials orders"}]}]}}
-    base = {"type": "bottleneck", "title": "t", "thesis": "a. b.", "companies": [{"id": "company:jem", "role": "primary"}],
+    existing = {"abc": {"idea_key": "abc", "stars": 1, "primary_company": "company:techwing", "companies": [{"id": "company:techwing", "name": "Techwing"}],
+                        "chain": [{"claim": "x", "evidence": [{"id": "S1", "date": "2026-09-01", "title": "Techwing orders"}]}]}}
+    base = {"type": "bottleneck", "title": "t", "thesis": "a. b.", "companies": [{"id": "company:techwing", "role": "primary"}],
             "chain": [{"claim": "c", "evidence": [s_ev]}, {"claim": "d", "evidence": [g_ev]}]}
     upd = {**base, "action": "update", "idea_key": "abc", "stars": 2, "what_changed": "프로브카드 수요 급증"}
     new3 = {**base, "action": "new", "title": "새 아이디어", "stars": 3}
@@ -115,8 +115,8 @@ def test_session_mode_pins_snapshot_time_and_writes_guarded_sql(tmp_path):
     s_ev = a["signals"][0]["evidence"][0]
     raw = tmp_path / "raw.json"
     raw.write_text(json.dumps({"model": "claude-opus-5-5", "ideas": [
-        {"action": "new", "type": "bottleneck", "title": "HBM 테스트 붐 — JEM", "thesis": "a. b.", "stars": 2,
-         "companies": [{"id": "company:jem", "role": "primary"}], "chain": [{"claim": "c", "evidence": [s_ev]}, {"claim": "d", "evidence": [s_ev]}]}]}))
+        {"action": "new", "type": "bottleneck", "title": "HBM 테스트 붐 — 테크윙", "thesis": "a. b.", "stars": 2,
+         "companies": [{"id": "company:techwing", "role": "primary"}], "chain": [{"claim": "c", "evidence": [s_ev]}, {"claim": "d", "evidence": [s_ev]}]}]}))
     out_sql = tmp_path / "sql"
     assert ideas.main(["--snapshot", str(snap), "--from-llm-json", str(raw), "--method", "session", "--emit-sql", str(out_sql)]) == 0
     files = sorted(out_sql.glob("*.sql"))
@@ -129,10 +129,10 @@ def test_session_mode_pins_snapshot_time_and_writes_guarded_sql(tmp_path):
 
 def test_kept_three_star_idea_without_company_evidence_drops_to_two():
     g, reg, signals, _, _ = _prepare()
-    ex = {"k3": {"idea_key": "k3", "stars": 3, "type": "bottleneck", "title": "기판 소재 독점", "thesis": "a. b.", "primary_company": "company:mitsui_kinzoku",
-                 "companies": [{"id": "company:mitsui_kinzoku", "name": "Mitsui Mining & Smelting"}], "last_signal_at": "2026-10-27",
+    ex = {"k3": {"idea_key": "k3", "stars": 3, "type": "bottleneck", "title": "기판 소재 독점", "thesis": "a. b.", "primary_company": "company:form",
+                 "companies": [{"id": "company:form", "name": "FormFactor"}], "last_signal_at": "2026-10-27",
                  "chain": [{"claim": "업계", "evidence": [{"id": "S1", "date": "2026-10-27", "title": "Unimicron September revenue +64.7%", "url": "https://x"}]}]},
-          "ok3": {"idea_key": "ok3", "stars": 3, "primary_company": "company:jem", "companies": [{"id": "company:jem", "name": "Japan Electronic Materials"}],
+          "ok3": {"idea_key": "ok3", "stars": 3, "primary_company": "company:techwing", "companies": [{"id": "company:techwing", "name": "Techwing"}],
                   "last_signal_at": "2026-10-20", "chain": [{"claim": "c", "evidence": [{"id": "S2", "date": "2026-10-20", "title": "Japan Electronic Materials orders", "url": "https://y", "rel": "direct"}]}]}}
     rows, _ = ideas.validate([{"action": "keep", "idea_key": "k3"}], reg, g, signals, ex, NOW, "m", "session")
     assert [r["idea_key"] for r in rows] == ["k3"]

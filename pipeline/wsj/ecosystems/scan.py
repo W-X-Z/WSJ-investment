@@ -21,6 +21,7 @@ from pathlib import Path
 from typing import Any
 
 from wsj.ecosystems.assess import Structure, price_context
+from wsj.ecosystems.scope import in_scope
 
 
 def _get(e: Any, k: str) -> Any:
@@ -62,7 +63,7 @@ def leads(graph: dict[str, Any], issues: list[dict[str, Any]], indicators: list[
         if cid in covered:
             continue
         n = nodes[cid]
-        if n.get("size_band") in ("private",) or not (n.get("listing") or {}).get("ticker"):
+        if n.get("size_band") in ("private",) or not (n.get("listing") or {}).get("ticker") or not in_scope(n):
             continue
         evs.sort(key=lambda e: (_date(_get(e, "published_at")), int(_get(e, "importance") or 1)), reverse=True)
         top = evs[0]
@@ -93,14 +94,14 @@ def leads(graph: dict[str, Any], issues: list[dict[str, Any]], indicators: list[
                       "states": [{"label": o.get("label"), "value": o.get("value"), "unit": o.get("unit"), "as_of": _date(o.get("as_of"))} for o in obs[:3]],
                       "suppliers": [st.label(c) for c in sups][:10],
                       "uncovered": [{"company_id": c, "company": st.label(c), "size_band": nodes[c].get("size_band")}
-                                    for c in sups if c not in covered and nodes[c].get("size_band") not in ("mega",)][:8]})
+                                    for c in sups if c not in covered and nodes[c].get("size_band") not in ("mega",) and in_scope(nodes[c])][:8]})
     board.sort(key=lambda x: -x["activity"])
 
     # 3) 설명 안 된 가격 급변
     recent_co = {_get(e, "company_id") for e in events if _date(_get(e, "published_at")) >= cut14}
     price_leads = []
     for n in graph["nodes"]:
-        if n.get("kind") != "company":
+        if n.get("kind") != "company" or not in_scope(n):
             continue
         pc = price_context(prices, n)
         if not pc:
@@ -146,7 +147,7 @@ def second_order(graph: dict[str, Any], st: Structure, issues: list[dict[str, An
             for p in cache[nid]:
                 cid = p["company_id"]
                 n = st.nodes.get(cid) or {}
-                if cid in named or cid in recent_co or cid in covered or not (n.get("listing") or {}).get("ticker"):
+                if cid in named or cid in recent_co or cid in covered or not (n.get("listing") or {}).get("ticker") or not in_scope(n):
                     continue
                 if n.get("size_band") not in ("micro", "small", "mid"):
                     continue

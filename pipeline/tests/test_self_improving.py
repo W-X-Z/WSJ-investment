@@ -425,3 +425,67 @@ def test_validate_accepts_inference_steps_and_estimated_effect():
     raw2 = [dict(raw[0], chain=[{"claim": "a (추론)", "evidence": []}, {"claim": "b (추론)", "evidence": []}])]
     _, rej2 = validate(raw2, reg, g, signals, {}, now, "m", "session")
     assert rej2 and "fact=0" in rej2[0]
+
+
+# ------------------------------------------------------------------ 시장 범위 (ADR-0021)
+def _graph_tw():
+    g = _graph()
+    g["nodes"].append({"id": "company:t", "kind": "company", "label": "Taiwan T (6664)", "listing": {"ticker": "6664", "exchange": "TPEx"}, "size_band": "small"})
+    g["edges"].append({"from": "component:x", "to": "company:t", "relation": "offered_by"})
+    return g
+
+
+def test_scope_helpers():
+    from wsj.ecosystems.scope import in_scope, scope_note
+
+    assert in_scope({"listing": {"exchange": "KOSDAQ"}}) and in_scope({"listing": {"exchange": "NYSE"}})
+    assert not in_scope({"listing": {"exchange": "TPEx"}}) and not in_scope({}) and not in_scope(None)
+    assert scope_note({"listing": {"exchange": "Xetra"}}) == "범위 밖(Xetra)" and scope_note({"listing": {"exchange": "KRX"}}) is None
+
+
+def test_candidates_and_leads_keep_only_us_kr_companies():
+    from wsj.ecosystems.ideas import Registry, build_candidates
+    from wsj.ecosystems.scope import in_scope
+
+    g = load_graph()
+    nodes = {n["id"]: n for n in g["nodes"]}
+    reg = Registry()
+    eid = reg.add("S", "https://x/i", "CoWoS 증설", publisher="P", date="2026-10-27", tier="third_party_report")
+    signals = [{"sid": "sig1", "ref": "issue:1", "kind": "issue", "title": "t", "stars": 3, "date": "2026-10-27", "evidence": [eid],
+                "nodes": ["bottleneck:cowos_capacity"], "companies": ["company:powertech"], "subject": None}]
+    cands = build_candidates(g, signals, reg, top=24, now=NOW)
+    assert cands and all(in_scope(nodes[c["company_id"]]) for c in cands)  # 대만·일본·유럽 상장사는 후보가 아니다
+    assert any("범위 밖(" in p for c in cands for p in c["peers"])  # 범위 밖 동종사는 맥락으로 표시
+    events = [{"company_id": "company:powertech", "published_at": "2026-10-26T00:00:00+00:00", "importance": 3, "title": "力成 법설회", "url": "https://t"}]
+    issues = [{"issue_key": "x", "title": "CoWoS 증설", "latest_published_at": "2026-10-27", "nodes": ["bottleneck:cowos_capacity"], "importance": 7, "companies": []}]
+    prices = {"TWSE:6239": {"close": 1, "r1m": 60, "vol_ratio": 1, "as_of": "2026-10-27"}}
+    ld = scan.leads(g, issues, [], events, [], prices, NOW)
+    picked = [x["company_id"] for x in ld["company_leads"] + ld["price_leads"] + ld["second_order"]] + [u["company_id"] for b in ld["bottlenecks"] for u in b["uncovered"]]
+    assert picked and all(in_scope(nodes[c]) for c in picked) and "company:powertech" not in picked
+
+
+def test_validate_rejects_out_of_scope_primary_and_retires_existing():
+    from wsj.ecosystems.ideas import Registry, validate
+
+    g = _graph_tw()
+    reg = Registry()
+    eid = reg.add("S", "https://x/s1", "10/27 T 수주 공시", publisher="KIND", date="2026-10-27", tier="official_issuer")
+    signals = [{"sid": "sig1", "ref": "issue:1", "kind": "issue", "title": "t", "stars": 2, "date": "2026-10-27", "evidence": [eid], "nodes": ["bottleneck:b"], "companies": []}]
+    now = datetime(2026, 10, 28, tzinfo=UTC)
+    base = {"type": "bottleneck", "title": "병목이 조여진다", "thesis": "변화. 기업.", "stars": 1,
+            "chain": [{"claim": "10/27 T 가 수주를 공시했다", "evidence": [eid]}, {"claim": "그래서 P 의 매출이 는다 (추론)", "evidence": []}],
+            "watch": [{"what": "11월 월매출", "due": "2026-12-10", "metric": "YoY", "threshold": "≥ +50%", "direction": "strengthen"}]}
+    raw = [dict(base, action="new", companies=[{"id": "company:t", "role": "primary"}, {"id": "company:p", "role": "peer"}]),
+           dict(base, action="new", companies=[{"id": "company:p", "role": "primary"}, {"id": "company:t", "role": "customer"}])]
+    rows, rejects = validate(raw, reg, g, signals, {}, now, "m", "session")
+    assert len(rows) == 1 and rows[0]["primary_company"] == "company:p" and any("out of scope (TPEx)" in r for r in rejects)
+    assert [c["id"] for c in rows[0]["companies"]] == ["company:p", "company:t"]  # 범위 밖 기업은 관련 기업으로는 남는다
+    # 범위 밖 주 기업의 기존 아이디어: keep 이면 종료, update 로 범위 안 기업에 옮기면 그 행을 받는다
+    existing = {"k1": {"idea_key": "k1", "primary_company": "company:t", "companies": [{"id": "company:t", "exchange": "TPEx"}], "stars": 2, "type": "bottleneck"},
+                "k2": {"idea_key": "k2", "primary_company": "company:t", "companies": [{"id": "company:t", "exchange": "TPEx"}], "stars": 2, "type": "bottleneck"}}
+    raw2 = [{"action": "keep", "idea_key": "k1"},
+            dict(base, action="update", idea_key="k2", what_changed="10/27 수주", companies=[{"id": "company:p", "role": "primary"}, {"id": "company:t", "role": "customer"}])]
+    rows2, rej2 = validate(raw2, reg, g, signals, existing, now, "m", "session")
+    closed = [r for r in rows2 if r.get("status") == "closed"]
+    assert len(closed) == 1 and closed[0]["idea_key"] == "k1" and "ADR-0021" in closed[0]["close_reason"]
+    assert any(r.get("idea_key") == "k2" and r.get("primary_company") == "company:p" for r in rows2)

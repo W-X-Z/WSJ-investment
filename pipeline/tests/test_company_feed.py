@@ -92,13 +92,13 @@ def test_recency_and_fresh_evidence_rule():
     g = load_graph()
     reg = ideas.Registry()
     sigs = ideas.company_signals([_ev("company:unitest", "UniTest HBM burn-in tester supply contract", "2026-10-21", 3),
-                                  _ev("company:jem", "JEM probe card order", "2026-10-02", 3)], g, reg, NOW, days=30)
+                                  _ev("company:techwing", "Techwing handler order", "2026-10-02", 3)], g, reg, NOW, days=30)
     fresh_ev = next(s for s in sigs if s["subject"] == "company:unitest")["evidence"][0]
-    old_ev = next(s for s in sigs if s["subject"] == "company:jem")["evidence"][0]
+    old_ev = next(s for s in sigs if s["subject"] == "company:techwing")["evidence"][0]
     base = {"action": "new", "type": "confirmation", "thesis": "a. b.", "stars": 2, "risks": [], "watch": []}
     fresh = {**base, "title": "최신", "companies": [{"id": "company:unitest", "role": "primary"}],
              "chain": [{"claim": "c", "evidence": [fresh_ev]}, {"claim": "d", "evidence": [fresh_ev]}]}
-    stale = {**base, "title": "오래됨", "companies": [{"id": "company:jem", "role": "primary"}],
+    stale = {**base, "title": "오래됨", "companies": [{"id": "company:techwing", "role": "primary"}],
              "chain": [{"claim": "c", "evidence": [old_ev]}, {"claim": "d", "evidence": [old_ev]}]}
     stale_update = {**stale, "action": "update", "idea_key": "k"}
     stale_weaken = {**stale, "action": "weaken", "idea_key": "k", "stars": 1}
