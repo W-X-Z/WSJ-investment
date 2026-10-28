@@ -33,6 +33,7 @@ from pathlib import Path
 from typing import Any
 
 from wsj.ecosystems.ontology import load_graph, load_ontology
+from wsj.ecosystems.scope import OUT_OF_SCOPE_REASON, SCOPE_LABEL, in_scope, scope_note
 
 log = logging.getLogger("wsj.ecosystems.ideas")
 
@@ -334,6 +335,8 @@ def build_candidates(graph: dict[str, Any], signals: list[dict[str, Any]], reg: 
         size = n.get("size_band") or "unknown"
         if size == "private" or (n.get("listing") or {}).get("filer_type") == "private":
             continue
+        if not in_scope(n):  # 범위 밖 시장의 기업은 후보가 아니다 — 경로의 맥락(peers·고객)으로만 (ADR-0021)
+            continue
         paths = sorted(c["paths"], key=lambda p: -p["confidence"])
         supply_node = None
         for p in paths:
@@ -404,7 +407,8 @@ def build_candidates(graph: dict[str, Any], signals: list[dict[str, Any]], reg: 
             for pid in sup.get(c["_supply"], []):
                 if pid != c["company_id"]:
                     pn = nodes[pid]
-                    peers.append(f"{pn['label']} [{pn.get('size_band')}]")
+                    tag = scope_note(pn)
+                    peers.append(f"{pn['label']} [{pn.get('size_band')}{', ' + tag if tag else ''}]")
         trans = []
         path_nodes = {x["node_id"] for p in c["_paths"][:6] for x in p["path"]} | {c["company_id"]}
         for e in graph["edges"]:
@@ -442,6 +446,7 @@ LLM_SYSTEM = """너는 AI 공급망(HBM·첨단 패키징 / 800G·1.6T 광통신
   offers 는 그 기업이 직접 공급·개발하는 부품·기술(그래프 근거). 기업 소식(E)으로 들어온 후보는 offers 로 '왜 AI 공급망인가'를 잇는다.
 - evidence: 인용 가능한 근거 목록. S=최근 신호 출처(age_d = 며칠 전), G=그래프 관계 출처(배경 구조, 날짜가 오래됐을 수 있음). 이 목록의 id 만 인용한다.
 - existing: 이미 피드에 있는 아이디어 (last_signal_at = 마지막 최신 근거 날짜). 같은 논리면 같은 idea_key 로 갱신한다.
+  scope 가 '범위 밖(…)'이면 주 기업이 시장 범위 밖이라 이번 실행에서 종료된다 — 그 가설의 미국·한국 고리가 있으면 새 아이디어(action=new)로 쓴다.
 
 최신성 규칙 (가장 중요)
 - 아이디어는 최근 {fresh}일 안의 사실(S 근거, age_d ≤ {fresh})에서 출발한다. 그런 근거가 없으면 새 아이디어를 만들지 않는다.
@@ -483,6 +488,9 @@ LLM_SYSTEM = """너는 AI 공급망(HBM·첨단 패키징 / 800G·1.6T 광통신
   예) "전력망 연결을 못 기다리는 데이터센터는 현장 가스엔진으로", "HBM 을 높이 쌓을수록 번인 검사가 길어진다"
 - thesis: 2문장. 첫 문장은 최근 변화(날짜 포함), 둘째 문장은 왜 이 기업인가.
 - primary 는 상장 소형·중형 공급사를 우선한다. 대형·초대형은 논리가 압도적일 때만 primary, 보통은 수요처·경쟁 맥락으로 companies 에 넣는다.
+- 시장 범위: primary 는 **{scope}**만 (candidates 는 이미 그 범위다). 대만·일본·유럽·중국 기업은 변화의 출발점·고객·경쟁·동종으로 companies 와 근거에 쓰되
+  primary 로 쓰지 않는다 — 검증기가 거부한다. 변화가 그런 기업에서 시작됐으면(E 신호·peers 의 '범위 밖' 표시) 같은 경로에서 미국·한국 고리를 찾는다:
+  그 기업의 고객·장비·소재 공급사, 같은 부품의 미국·한국 동종사, 그 기술을 대체·보완하는 미국·한국 기업. 없으면 아이디어를 만들지 않고 states·leads 로만 남긴다.
 - chain: 3~6 단계. 사실 단계는 evidence 에 근거 id 1개 이상. 추론 단계는 근거 없이 써도 된다 — claim 끝에 "(추론)" 을 붙이고 왜 그렇게 보는지 한 문장을 넣는다.
   첫 단계는 최근 사실(S 근거)이고, 마지막 단계는 "그래서 이 기업의 어떤 숫자가 언제 어떻게 바뀐다"는 예측이다. 사실 단계가 1개 이상 있어야 한다.
 - stars 는 확신이 아니라 **검증 단계**다: ★1 = 가설(예측만 있음, 아직 아무것도 확인되지 않음) · ★2 = 부분 확인(예측 1개 적중, 또는 기업 자신의 공시·실적이 경로를 확인)
@@ -568,7 +576,7 @@ VALUATION_HORIZON_MONTHS = 12
 
 
 def system_prompt(now: datetime) -> str:
-    return LLM_SYSTEM.format(today=now.date().isoformat(), fresh=FRESH_DAYS, stale=21, horizon=VALUATION_HORIZON_MONTHS)
+    return LLM_SYSTEM.format(today=now.date().isoformat(), fresh=FRESH_DAYS, stale=21, horizon=VALUATION_HORIZON_MONTHS, scope=SCOPE_LABEL)
 
 
 def build_payload(signals: list[dict[str, Any]], candidates: list[dict[str, Any]], reg: Registry, existing: list[dict[str, Any]],
@@ -617,6 +625,11 @@ def build_payload(signals: list[dict[str, Any]], candidates: list[dict[str, Any]
             return None
         return {k: v.get(k) for k in ("as_of", "price", "currency", "expected_price", "expected_upside_pct", "confidence", "horizon_months")}
 
+    def scope_view(x: dict[str, Any]) -> str | None:
+        """기존 아이디어의 주 기업이 범위 밖이면 표시 — 이번 실행에서 종료되므로 같은 경로의 미국·한국 고리를 새로 쓰라는 뜻."""
+        ex = next((c.get("exchange") for c in x.get("companies") or [] if c.get("id") == x.get("primary_company")), None)
+        return scope_note({"listing": {"exchange": ex}})
+
     return {
         "today": now.date().isoformat(),
         "max_ideas": max_ideas,
@@ -628,7 +641,8 @@ def build_payload(signals: list[dict[str, Any]], candidates: list[dict[str, Any]
         "prices": extras.get("prices") or {},
         "existing": [{k: x.get(k) for k in ("idea_key", "type", "title", "thesis", "stars", "primary_company", "last_signal_at", "updated_at")}
                      | {"companies": [c.get("id") for c in x.get("companies") or []], "company_signal_at": company_signal_date(x),
-                        "score": ((x.get("assessment") or {}).get("score")), "watch": watch_view(x), "valuation": val_view(x["idea_key"])} for x in existing],
+                        "score": ((x.get("assessment") or {}).get("score")), "watch": watch_view(x), "valuation": val_view(x["idea_key"]),
+                        "scope": scope_view(x)} for x in existing],
     }
 
 
@@ -730,11 +744,20 @@ def validate(raw: list[dict[str, Any]], reg: Registry, graph: dict[str, Any], si
                              "tenbagger": ((assessment or {}).get("price") or {}).get("tenbagger")} if assessment else None}
         valuations.append(v)
 
+    def retire(key: str, why: str) -> None:
+        rows.append({"idea_key": key, "status": "closed", "trend": "weakened", "close_reason": why[:300], "updated_at": now.isoformat()})
+
     for i, it in enumerate(raw):
         action = it.get("action") or "new"
         key = it.get("idea_key") if it.get("idea_key") in existing else None
         if action in ("keep", "close", "weaken") and not key:
             rejects.append(f"#{i} {action} without known idea_key")
+            continue
+        # 시장 범위 (ADR-0021): 범위 밖 주 기업의 기존 아이디어는 이어 가지 않는다 — update 가 범위 안 기업으로 옮기면 받고, 아니면 종료
+        prev_primary = nodes.get(existing[key].get("primary_company")) if key else None
+        if key and action in ("keep", "weaken") and prev_primary and not in_scope(prev_primary):
+            retire(key, OUT_OF_SCOPE_REASON)
+            rejects.append(f"#{i} {action} → closed, primary out of scope: {existing[key].get('primary_company')}")
             continue
         if action == "keep":
             prev = existing[key]
@@ -775,6 +798,11 @@ def validate(raw: list[dict[str, Any]], reg: Registry, graph: dict[str, Any], si
         primary = next((c for c in comps if c["role"] == "primary"), comps[0] if comps else None)
         if not primary:
             rejects.append(f"#{i} no valid company: {title[:40]}")
+            continue
+        if not in_scope(nodes[primary["id"]]):
+            rejects.append(f"#{i} primary out of scope ({primary.get('exchange') or '비상장'}): {primary['id']} — {title[:40]}")
+            if key and action in ("update",):  # 범위 밖 기업에 머문 갱신 → 그 아이디어는 종료
+                retire(key, OUT_OF_SCOPE_REASON)
             continue
         idea_cos = {c["id"] for c in comps}
         title = clean_title(title, comps)
