@@ -3,7 +3,8 @@
 # 아침 실행은 Claude 예약작업(06:41 KST)이 Run workflow 로 시킨다 — GitHub 예약 실행은 몇 시간씩 늦을 때가 있어서
 #   실행 시점을 예약작업 한 곳에서 관리한다(2026-10-28). 수집이 끝나면 같은 예약작업이 아이디어를 쓴다 (ADR-0016 개정 2).
 #   뉴스·업계지·뉴스룸·SEC 8-K·관보·정책·TrendForce·논문·지표 → 이슈 선별(Sonnet ≈ $0.1) → 기업별 최신 소식 → ideas.company_events
-# 18:47 KST (09:47 UTC) 예약: 기업 소식 수집·저장만 (LLM 없음, 늦어도 괜찮은 작업이라 GitHub 예약에 둔다)
+#   → 그래프 상장사 가격 (ADR-0017)
+# 18:47 KST (09:47 UTC) 예약: 기업 소식·가격 수집·저장만 (LLM 없음, 늦어도 괜찮은 작업이라 GitHub 예약에 둔다)
 # API 로 아이디어를 쓰려면 Run workflow 에서 ideas_api=true (대체 경로). 코드 병합(push)으로는 돌지 않는다.
 name: issues
 
@@ -44,7 +45,7 @@ concurrency:
 jobs:
   issues:
     runs-on: ubuntu-latest
-    timeout-minutes: 45
+    timeout-minutes: 60
     env:
       WSJ_STORE: postgrest
       SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
@@ -84,6 +85,16 @@ jobs:
           set -euo pipefail
           mkdir -p data/issues
           python -m wsj.ecosystems.company_feed --days "$IN_FEED_DAYS" --save --out data/issues/company_events.json | tee -a "$GITHUB_STEP_SUMMARY"
+      # 그래프 상장사 일봉 → raw.px_daily (ADR-0017). 가격은 '이미 움직인 폭'과 설명 안 된 급변 탐지에만 쓴다.
+      # 증분은 매번 전부, 1년 이력 백필은 남은 시간(아침 10분·저녁 15분)만큼 나눠서. 실패해도 다음 단계는 돈다.
+      - name: Collect prices
+        continue-on-error: true
+        working-directory: pipeline
+        env:
+          IN_BUDGET: ${{ github.event.schedule == '47 9 * * *' && '15' || '10' }}
+        run: |
+          set -euo pipefail
+          python -m wsj.ecosystems.prices run --budget-min "$IN_BUDGET" | tee -a "$GITHUB_STEP_SUMMARY"
       # 대체 경로: API LLM 으로 아이디어 쓰기 (수동 실행에서 ideas_api=true 일 때만, 1회 ≈ $0.3)
       - name: Write investment ideas (API fallback)
         if: ${{ inputs.ideas_api == 'true' && inputs.no_llm != 'true' }}

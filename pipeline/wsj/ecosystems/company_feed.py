@@ -232,9 +232,27 @@ def _num(s: Any) -> float | None:
 
 
 # ---------------------------------------------------------------- US: SEC EDGAR
-def sec_events(http, cos: list[dict[str, Any]], since: date, headline_limit: int = 40) -> list[CompanyEvent]:
+INSIDER_MIN_USD = 100_000  # 장내 매수(코드 P) 합계가 이 이상이면 소식으로
+
+
+def form4_purchase(xml_text: str) -> dict[str, Any] | None:
+    """Form 4 XML → 장내 매수(P) 요약 {owner, title, shares, usd, avg}. 매수가 없거나 10b5-1 계획이면 None."""
+    from wsj.parsers.form4_xml import parse_form4
+
+    f = parse_form4(xml_text)
+    buys = [r for r in f.rows if r.get("table_type") == "nonDerivative" and r.get("transaction_code") == "P" and (r.get("shares") or 0) > 0]
+    if not buys or f.header.get("aff10b5one"):
+        return None
+    shares = sum(r["shares"] for r in buys)
+    usd = sum(r["shares"] * (r.get("price_per_share") or 0) for r in buys)
+    title = f.header.get("officer_title") or ("이사" if f.header.get("is_director") else "10% 주주" if f.header.get("is_ten_percent_owner") else "내부자")
+    return {"owner": f.header.get("owner_name"), "title": title, "shares": shares, "usd": usd, "avg": usd / shares if shares else None}
+
+
+def sec_events(http, cos: list[dict[str, Any]], since: date, headline_limit: int = 40, form4_limit: int = 80) -> list[CompanyEvent]:
     out: list[CompanyEvent] = []
     heads = 0
+    f4 = 0
     for c in cos:
         if not c.get("cik"):
             continue
@@ -251,6 +269,25 @@ def sec_events(http, cos: list[dict[str, Any]], since: date, headline_limit: int
             fdate = date.fromisoformat(rec["filingDate"][i])
             if fdate < since:
                 break  # 최신순
+            if form == "4" and f4 < form4_limit:
+                # 내부자 장내 매수 — 경영진이 자기 돈으로 산다는 공식 신호 (매도는 보상·세금 목적이 많아 쓰지 않는다)
+                f4 += 1
+                acc4 = rec["accessionNumber"][i].replace("-", "")
+                doc = re.sub(r"^xsl[^/]+/", "", rec["primaryDocument"][i])
+                url4 = f"https://www.sec.gov/Archives/edgar/data/{cik}/{acc4}/{doc}"
+                try:
+                    buy = form4_purchase(http.get_text(url4))
+                except Exception as exc:  # noqa: BLE001
+                    log.warning("form4 %s failed: %s", url4, exc)
+                    buy = None
+                if buy and buy["usd"] >= INSIDER_MIN_USD:
+                    imp = 3 if buy["usd"] >= 1_000_000 else 2
+                    avg = f" (평균 ${buy['avg']:,.2f})" if buy.get("avg") else ""
+                    out.append(CompanyEvent(c["id"], "filing", _utc(fdate),
+                                            f"{c['name']} 내부자 장내 매수: {buy['owner']} ({buy['title']}) {buy['shares']:,.0f}주, 약 ${buy['usd']:,.0f}{avg}",
+                                            f"https://www.sec.gov/Archives/edgar/data/{cik}/{acc4}/{rec['primaryDocument'][i]}",
+                                            f"SEC EDGAR ({c['name']})", "official_issuer", imp, extra={"form": "4", "insider_buy_usd": round(buy["usd"])}))
+                continue
             if form not in SEC_FORMS:
                 continue
             items = [x.strip() for x in str(items_all[i] or "").split(",") if x.strip()]

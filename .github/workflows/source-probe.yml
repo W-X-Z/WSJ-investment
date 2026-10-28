@@ -1,0 +1,51 @@
+# 외부 출처 도달 점검 (ADR-0017) — GitHub Actions 러너(클라우드 IP)에서 가격·지표 출처가 응답하는지 본다.
+# 개발 컨테이너와 Actions 러너는 막히는 출처가 다르다 (예: FRED 는 브라우저 UA 를 막고, 일부 중국 출처는 해외 IP 를 막는다).
+# 시크릿 없이 공개 출처만 읽고, 아무것도 저장하지 않는다. 개선 예약작업이 새 출처를 붙일 때 이 결과로 확인한다.
+name: source-probe
+
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - "pipeline/wsj/ecosystems/prices.py"
+      - "pipeline/wsj/ecosystems/indicators.py"
+      - "pipeline/wsj/ecosystems/company_feed.py"
+      - ".github/workflows/source-probe.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: pipeline/pyproject.toml
+      - name: Install
+        working-directory: pipeline
+        run: pip install -e .
+      - name: Prices — one ticker per market
+        working-directory: pipeline
+        continue-on-error: true
+        run: |
+          echo '### 가격 출처 (시장별 한 종목)' >> "$GITHUB_STEP_SUMMARY"
+          echo '```' >> "$GITHUB_STEP_SUMMARY"
+          python -m wsj.ecosystems.prices probe | tee -a "$GITHUB_STEP_SUMMARY"
+          echo '```' >> "$GITHUB_STEP_SUMMARY"
+      - name: Indicators — DRAMeXchange·BLS·FRED·TWSE/TPEx (no save)
+        working-directory: pipeline
+        continue-on-error: true
+        env:
+          WSJ_STORE: sqlite
+        run: |
+          echo '### 지표 출처' >> "$GITHUB_STEP_SUMMARY"
+          echo '```' >> "$GITHUB_STEP_SUMMARY"
+          python -m wsj.ecosystems.indicators run --no-save 2>&1 | grep -E "points|failed|unreachable|^\{" | tee -a "$GITHUB_STEP_SUMMARY"
+          echo '```' >> "$GITHUB_STEP_SUMMARY"

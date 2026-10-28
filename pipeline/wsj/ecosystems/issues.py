@@ -755,6 +755,15 @@ def rows_from_picks(picked: list[dict[str, Any]], cands: list[dict[str, Any]], g
             continue
         members = [m for i in ids for m in cands[i]["members"]]
         nodes = [n for n in p.get("nodes") or [] if n in gnodes and not gnodes[n].get("_extra")]
+        if not nodes:
+            # 태깅 안전망: 선별 모델이 노드를 비워 두면 묶음 기사들의 어휘 태그(별칭·현지어)를 많이 나온 순으로 6개까지 쓴다.
+            # 노드가 없는 이슈는 아이디어 후보 경로가 끊긴다 (10/19 광섬유 현물가 급등 이슈가 그랬다).
+            freq: dict[str, int] = {}
+            for m in members:
+                for n in m.nodes:
+                    if n in gnodes and not gnodes[n].get("_extra") and not n.startswith("eco:"):
+                        freq[n] = freq.get(n, 0) + 1
+            nodes = [n for n, _ in sorted(freq.items(), key=lambda kv: -kv[1])[:6]]
         comps = []
         for c in p.get("companies") or []:
             cid = c.get("id") if isinstance(c, dict) else None
