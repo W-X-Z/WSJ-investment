@@ -64,7 +64,9 @@ Claude 예약작업 "WSJ 수집 실행 + 투자 아이디어 작성 (06:41)"이 
     mechanism · lead_quarters · effect{pct_of_revenue, basis, evidence} · priced_in. 수주·계약이 이미 나온 기업은 priced_in=full 로 적고,
     같은 논리의 다음 고리(아직 조용한 공급사)가 있으면 그쪽을 primary 로 한 아이디어를 따로 쓴다. 하루에 **선행 아이디어(priced_in=none·partial) 1건 이상**.
   - **아이디어마다 valuation 을 쓴다** (프롬프트의 '가치평가' 절, p23 일 때). 질문은 하나 — 이 변화가 이 기업 숫자를 바꾸면 12개월 뒤 얼마짜리 회사인가:
-    시나리오 bear·base·bull(확률 합 1) 각각 매출(현지 통화 원 단위)·마진·배수(ps|pe) → 내재 시총, 가정 2개 이상(근거 id), 깨지는 조건, confidence, verdict 3~5문장.
+    시나리오 bear·base·bull(확률 합 1) 각각 매출(현지 통화 원 단위)·마진·배수(ps|pe) → 내재 시총, 가정(사실 kind=fact 근거 id 1개+ · 추정 kind=estimate basis — 변화의 크기·닿는 비율·시점·배수), 깨지는 조건, confidence, verdict 3~5문장.
+    **영향 추정은 LLM 의 판단이다** — 변화가 이 기업 매출을 얼마나·언제·어느 확률로 바꾸는지는 입력에 숫자로 없다. 추정은 금지가 아니라 표시다(기존의 '추정 금지'는 사실 칸에만). 계산기는 산수와 형식만 본다.
+    existing 은 지난 실행의 판단이지 사실이 아니다 — 오늘 근거로 다시 판단하고, bear 에 "아이디어 자체가 틀렸다"를 넣는다. 기업 자신의 근거가 없는 아이디어는 confidence high 불가.
     재료는 prices[primary] 의 close·currency·shares·fundamentals(TTM 매출·마진·P/S·P/E). fundamentals 가 없으면 원문(IR·실적 발표)에서 읽은 매출·이익을 가정에 근거 id 와 함께 적는다.
     close 가 없으면 valuation_skipped 에 이유. 검증기가 산수(내재 시총 → 주식수로 나눈 주가 → 확률 가중)를 다시 한다 — 너는 가정을 댄다.
     keep 인 기존 아이디어도 valuation 을 쓴다 — existing.valuation 이 없으면 반드시(첫날은 전부), 있으면 그 뒤 주가가 ±15% 넘게 움직였거나 새 근거가 매출·마진 가정을 바꿀 때.

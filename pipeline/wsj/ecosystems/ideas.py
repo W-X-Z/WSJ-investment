@@ -497,23 +497,32 @@ LLM_SYSTEM = """너는 AI 공급망(HBM·첨단 패키징 / 800G·1.6T 광통신
 가치평가 (결과 — 사람은 이것만 본다)
 - 아이디어마다 valuation 을 쓴다. 질문은 하나다: 이 변화가 이 기업의 숫자를 바꾸면 이 회사는 {horizon}개월 뒤 얼마짜리 회사인가, 지금 주가와 얼마나 다른가.
 - 재료는 prices[primary] 다: close·currency·shares·market_cap_usd·fundamentals. fundamentals 가 없으면 근거(IR·공시·실적 발표)에서 읽은 매출·이익을 쓰되
-  assumptions 에 근거 id 와 함께 적는다. 종가(close)가 없으면 valuation 을 쓰지 않고 valuation_skipped 에 이유를 적는다.
+  assumptions 에 사실(fact)로 근거 id 와 함께 적는다. 종가(close)가 없으면 valuation 을 쓰지 않고 valuation_skipped 에 이유를 적는다.
+- **영향 추정은 네 판단이다.** 기술·산업의 변화가 이 기업 매출을 얼마나 바꾸는지는 입력 어디에도 숫자로 없다 — 네가 추정한다:
+  변화의 크기(시장·수량·가격이 얼마나 바뀌나) × 이 기업에 닿는 비율(점유율·공급 비중·경로의 확실성) × 시점(몇 분기 뒤 숫자에 나타나나) → 매출 증분,
+  그리고 그때의 마진과 시장이 줄 배수. 이 숫자들은 추정이다. 추정은 금지가 아니라 **표시**다: assumptions 에 kind="estimate" 로 적고 basis 에
+  "무엇에서 어떻게 그 숫자를 냈나"를 쓴다 (예: "HBM4 12단은 번인 시간 1.8배(G7) × 고객 증설 2배(S12) → 소켓 수요 2.5배, 이 회사 점유율 40%(추정: 상위 2사 과점) → 매출 +60%").
+  사실(kind="fact")은 근거 id 가 있어야 하고, 추정(kind="estimate")은 basis 가 있어야 한다. 다른 절의 '추정 금지'(노출 순도·effect)는 사실 칸에만 적용된다.
+  최소한 변화의 크기 · 닿는 비율 · 시점 세 추정이 assumptions 에 있어야 한다.
 - 시나리오 3개 bear·base·bull (prob 합 = 1). 각각 {horizon}개월 뒤의 매출(revenue, 현지 통화 원 단위) · 마진(margin_pct, 영업이익률 또는 순이익률) ·
   배수(metric: ps|pe, multiple) → 내재 시총 implied_mcap_local = revenue × multiple (ps) 또는 revenue × margin_pct/100 × multiple (pe).
-  검증기가 같은 식으로 다시 계산하고 shares 로 나눠 내재 주가를 낸다 — 산수는 검증기가 한다, 너는 가정을 댄다.
-  - 매출 경로는 변화의 규모에서 온다 (anticipation.effect 와 같은 분자·분모): 변화가 이 기업 매출을 몇 % 더하는지, 몇 분기에 걸쳐.
-  - 배수는 지금 배수(fundamentals.ps·pe)와 동종(peers)의 배수에서 출발해, 성장이 확인될 때 시장이 주는 배수로 옮긴다. 근거 없이 배수를 키우지 않는다.
-  - bear = 변화가 이 기업에 닿지 않거나(경로 단절·경쟁사 수주·고객 내재화) 이미 다 반영된 경우: 지금 배수 × 지금 매출 또는 그 아래.
-  - story 는 그 시나리오가 일어나는 한 문장, evidence 는 그 시나리오의 숫자를 받치는 근거 id.
+  검증기가 같은 식으로 다시 계산하고 shares 로 나눠 내재 주가를 낸다 — 산수는 검증기가 한다, 추정은 네가 한다. 확률(prob)도 추정이다: 경로의 확실성·
+  경쟁·시장 반영 정도를 보고 매긴다.
+  - 배수는 지금 배수(fundamentals.ps·pe)와 동종(peers)의 배수에서 출발해, 성장이 확인될 때 시장이 주는 배수로 옮긴다. 배수를 바꾸면 그 이유를 추정으로 적는다.
+  - bear = 아이디어 자체가 틀린 경우를 반드시 포함한다: 변화가 이 기업에 닿지 않거나(경로 단절·경쟁사 수주·고객 내재화) 이미 다 반영된 경우 —
+    지금 배수 × 지금 매출 또는 그 아래. 기업 자신의 근거가 없는 아이디어는 bear 확률을 낮게 잡을 이유가 없다.
+  - story 는 그 시나리오가 일어나는 한 문장, evidence 는 그 시나리오의 숫자를 받치는 근거 id (없으면 빈 배열).
 - expected_price = Σ prob × 내재 주가 (서버 계산). confidence: high = 경로가 그래프 간선과 기업 직접 근거로 이어지고 분모가 공식 재무,
-  mid = 경로나 분모 중 하나가 추론, low = 둘 다 추론.
-- verdict: 3~5문장 한 단락 — 어떤 변화가(날짜) → 어떤 경로로 이 기업 숫자를 → 얼마나(매출·마진) → 그래서 시총·주가는 → 시장이 지금 반영한 정도.
-  숫자는 payload 와 근거에 있는 것만. "목표가"·"매수" 같은 말은 쓰지 않는다 — 모형 산출이지 권유가 아니다.
-- assumptions 2~4개(각각 근거 id 1개 이상), breaks 1~3개(이 평가가 깨지는 조건과 그것을 확인할 데이터·날짜).
+  mid = 경로나 분모 중 하나가 추론, low = 둘 다 추론 (기업 자신의 근거가 없으면 high 는 불가).
+- verdict: 3~5문장 한 단락 — 어떤 변화가(날짜) → 어떤 경로로 이 기업 숫자를 → 얼마나(매출·마진, 추정이면 "추정"이라 밝힌다) → 그래서 시총·주가는 →
+  시장이 지금 반영한 정도. 사실 숫자는 근거에서, 추정 숫자는 네 논리에서 — 둘을 섞어 쓰지 않는다. "목표가"·"매수" 같은 말은 쓰지 않는다 — 모형 산출이지 권유가 아니다.
+- assumptions 3~6개: fact(근거 id 1개 이상) 1개 이상 + estimate(basis) — 변화의 크기·닿는 비율·시점·배수. breaks 1~3개(이 평가가 깨지는 조건과 그것을 확인할 데이터·날짜).
 - action=keep 인 기존 아이디어도 valuation 을 쓴다: existing.valuation 이 없으면(아직 평가가 없음) **반드시**, 있으면 (a) 그 뒤 주가가 ±15% 넘게 움직였거나
   (b) 새 근거가 매출·마진 가정을 바꿀 때. 둘 다 아니면 생략한다 — 지난 평가가 그대로 쓰이고 상승여력만 오늘 주가로 다시 계산된다.
 
 existing 처리
+- existing 은 지난 실행의 판단이지 사실이 아니다. 믿고 이어 쓰지 말고 오늘의 근거로 다시 판단한다 — 특히 기업 자신의 근거(company_signal_at)가 없는 아이디어는
+  구조 추론일 뿐이므로 가치평가에서 bear 확률과 confidence 로 그 사실을 드러낸다. 같은 기업·같은 논리로 더 나은 다음 고리가 보이면 기존 것을 close 하고 새로 쓴다.
 - 같은 논리에 최근 {fresh}일 안의 새 근거가 있으면 action=update (idea_key 그대로, chain 을 새 근거로 다시 쓰고, what_changed 에 "날짜 + 새 사실" 한 줄).
 - 새 근거가 반대 방향이면 action=weaken, 반증·소멸되면 action=close (reason). 새 근거가 없으면 action=keep (idea_key 만).
 - last_signal_at 이 {stale}일 넘게 지났고 이번 입력에도 새 근거가 없으면 action=weaken (reason: 최신 근거 없음).
@@ -535,7 +544,12 @@ existing 처리
     "scenarios": [{{"name": "bear", "prob": 0.25, "story": "한 문장", "revenue": 2800000000, "margin_pct": 8, "metric": "ps", "multiple": 1.5, "implied_mcap_local": 4200000000, "evidence": ["S12"]}},
                   {{"name": "base", "prob": 0.5, "story": "…", "revenue": 4500000000, "margin_pct": 14, "metric": "pe", "multiple": 20, "implied_mcap_local": 12600000000, "evidence": ["S54", "G3"]}},
                   {{"name": "bull", "prob": 0.25, "story": "…", "revenue": 7000000000, "margin_pct": 18, "metric": "pe", "multiple": 25, "implied_mcap_local": 31500000000, "evidence": ["S54"]}}],
-    "verdict": "3~5문장", "assumptions": [{{"claim": "…", "evidence": ["S12"]}}], "breaks": [{{"claim": "…", "evidence": ["S3"]}}]}},
+    "verdict": "3~5문장",
+    "assumptions": [{{"kind": "fact", "claim": "번인 소켓 매출 비중 60%", "evidence": ["S12"]}},
+                    {{"kind": "estimate", "claim": "변화의 크기: 고적층 번인 수요 2.5배", "basis": "번인 시간 1.8배(G7) × 증설 2배(S12)", "evidence": ["G7", "S12"]}},
+                    {{"kind": "estimate", "claim": "닿는 비율: 점유율 40%", "basis": "상위 2사 과점, 최근 수주 비중", "evidence": []}},
+                    {{"kind": "estimate", "claim": "시점: 2분기 뒤 월매출", "basis": "증설 → 장비 반입 → 양산 리드타임", "evidence": []}}],
+    "breaks": [{{"claim": "…", "evidence": ["S3"]}}]}},
   "valuation_skipped": "valuation 을 못 쓸 때만, 이유",
   "what_changed": "update 일 때만", "reason": "weaken/close 일 때"}}],
  "grades": [{{"idea_key": "...", "index": 0, "status": "hit|miss|void", "evidence": "S12", "note": "한 줄"}}]}}"""
@@ -913,11 +927,22 @@ def parse_valuation(raw: Any, money: dict[str, Any] | None, ev_rows: Any, horizo
     order = {n: i for i, n in enumerate(SCENARIO_NAMES)}
     scen.sort(key=lambda x: order[x["name"]])
     expected = sum(x["prob"] * x["implied_price"] for x in scen) / psum
-    assumptions = [{"claim": str(a["claim"]).strip()[:300], "evidence": ev_rows(a.get("evidence") or [])}
-                   for a in raw.get("assumptions") or [] if isinstance(a, dict) and a.get("claim")]
-    assumptions = [a for a in assumptions if a["evidence"]]
-    if len(assumptions) < VALUATION_MIN_ASSUMPTIONS:
-        return None, f"근거 있는 가정 {len(assumptions)}개 (최소 {VALUATION_MIN_ASSUMPTIONS})"
+    # 가정은 두 종류: 사실(fact, 근거 id 필수)과 추정(estimate, basis 필수 — 변화의 크기·닿는 비율·시점·배수는 LLM 의 판단이다)
+    assumptions = []
+    for a in raw.get("assumptions") or []:
+        if not isinstance(a, dict) or not a.get("claim"):
+            continue
+        evs = ev_rows(a.get("evidence") or [])
+        basis = str(a.get("basis") or "").strip()
+        kind = "estimate" if a.get("kind") == "estimate" or (not evs and basis) else "fact"
+        if kind == "fact" and not evs:
+            continue
+        if kind == "estimate" and len(basis) < 6:
+            continue
+        assumptions.append({"kind": kind, "claim": str(a["claim"]).strip()[:300], "basis": basis[:300] or None, "evidence": evs})
+    n_fact = sum(1 for a in assumptions if a["kind"] == "fact")
+    if len(assumptions) < VALUATION_MIN_ASSUMPTIONS or n_fact < 1:
+        return None, f"가정 {len(assumptions)}개 (사실 {n_fact}) — 사실(근거 id) 1개 이상, 전체 {VALUATION_MIN_ASSUMPTIONS}개 이상 (추정은 basis 필수)"
     breaks = [{"claim": str(b["claim"]).strip()[:300], "evidence": ev_rows(b.get("evidence") or [])}
               for b in raw.get("breaks") or [] if isinstance(b, dict) and b.get("claim")]
     conf = raw.get("confidence") if raw.get("confidence") in ("low", "mid", "high") else None
@@ -934,7 +959,7 @@ def parse_valuation(raw: Any, money: dict[str, Any] | None, ev_rows: Any, horizo
     return {"currency": money.get("currency"), "price": price, "price_as_of": money.get("as_of"), "shares": shares,
             "market_cap_usd": _f(money.get("market_cap_usd")), "horizon_months": horizon, "scenarios": scen,
             "expected_price": round(expected, 4), "expected_upside_pct": round(100 * (expected / price - 1), 1), "confidence": conf,
-            "verdict": verdict[:2000], "assumptions": assumptions[:6], "breaks": breaks[:4],
+            "verdict": verdict[:2000], "assumptions": assumptions[:8], "breaks": breaks[:4],
             "calc_notes": notes or None}, None
 
 

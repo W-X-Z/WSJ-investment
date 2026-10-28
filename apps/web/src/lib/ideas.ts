@@ -79,11 +79,13 @@ export async function loadFacts(): Promise<Map<string, CompanyFacts>> {
 
 /** 가치평가 (ADR-0019, ideas.valuations → v_valuations): 매일 아침 LLM 이 이슈 → 영향 경로 → 기업 숫자 → 시나리오별 내재 시총·주가와 기댓값.
  *  사람이 보는 결과는 이것이다. 근거·선행 점수는 계산기로 뒤에 남는다. 모형 산출이지 권유가 아니다. */
+/** 가정: 사실(fact, 근거 각주)과 추정(estimate, LLM 의 판단 — basis 에 그 논리). 변화의 크기·닿는 비율·시점·배수는 추정이다. */
+export type Assumption = IdeaStep & { kind?: "fact" | "estimate"; basis?: string | null };
 export type ValuationScenario = { name: "bear" | "base" | "bull"; prob: number; story?: string; revenue?: number | null; margin_pct?: number | null;
   metric?: "ps" | "pe" | null; multiple?: number | null; implied_mcap_local?: number | null; implied_price: number; upside_pct: number; evidence?: IdeaEvidence[] };
 export type Valuation = { idea_key: string; as_of: string; company_id: string; currency: string; price: number; price_as_of?: string | null; shares?: number | null;
   market_cap_usd?: number | null; horizon_months: number; scenarios: ValuationScenario[]; expected_price: number; expected_upside_pct: number;
-  confidence: "low" | "mid" | "high"; verdict: string; assumptions: IdeaStep[]; breaks: IdeaStep[]; path?: { labels?: string[]; mechanism?: string | null } | null;
+  confidence: "low" | "mid" | "high"; verdict: string; assumptions: Assumption[]; breaks: IdeaStep[]; path?: { labels?: string[]; mechanism?: string | null } | null;
   model?: string | null; method?: string | null; prev_expected_upside_pct?: number | null; prev_as_of?: string | null; n_valuations?: number | null };
 export const SCENARIO_KO: Record<string, string> = { bear: "약세", base: "기본", bull: "강세" };
 export const CONFIDENCE_KO: Record<string, string> = { low: "확신 낮음", mid: "확신 중간", high: "확신 높음" };

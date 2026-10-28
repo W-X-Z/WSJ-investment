@@ -806,6 +806,8 @@ tr:hover td{background:#f8faff}
 .fd-sc-bear td:first-child b{color:#a0312a}.fd-sc-bull td:first-child b{color:#17794a}
 .fd-assume{margin:2px 0 0;padding-left:18px;font-size:13px;line-height:1.7;color:#22324a}
 .fd-assume li{margin:0 0 3px}
+.fd-assume li em{font-style:normal;font-size:10.5px;font-weight:800;color:#3f5f96;background:#eaf0fb;padding:0 6px;border-radius:999px;margin-right:6px;vertical-align:1px}
+.fd-assume li small{color:#7b8798;font-size:12px}
 @media (max-width:720px){
   .fd-sc-table{display:block;overflow-x:auto;-webkit-overflow-scrolling:touch}
   .fd-sc-table td small{max-width:26ch}

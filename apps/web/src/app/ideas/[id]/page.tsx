@@ -168,7 +168,9 @@ function Value({ idea, v, facts, history, cite }: { idea: IdeaView; v: Valuation
     </table>
     {v.path?.labels?.length ? <p className="fd-ant-path">{v.path.labels.map((l, i) => <span key={i}>{i ? <i> → </i> : null}{l}</span>)}</p> : null}
     {v.path?.mechanism ? <p className="fd-judge-line"><b>왜 번지나</b>{v.path.mechanism}</p> : null}
-    {v.assumptions?.length ? <div className="fd-judge-line"><b>가정</b><ul className="fd-assume">{v.assumptions.map((x, i) => <li key={i}>{x.claim}<Cites ns={x.evidence.map(cite)}/></li>)}</ul></div> : null}
+    {v.assumptions?.length ? <div className="fd-judge-line"><b>가정</b><ul className="fd-assume">{v.assumptions.map((x, i) => <li key={i} className={x.kind === "estimate" ? "est" : ""}>
+      {x.kind === "estimate" ? <em>추정</em> : null}{x.claim}<Cites ns={(x.evidence ?? []).map(cite)}/>
+      {x.kind === "estimate" && x.basis ? <small> — {x.basis}</small> : null}</li>)}</ul></div> : null}
     {v.breaks?.length ? <div className="fd-judge-line"><b>깨지는 조건</b><ul className="fd-assume">{v.breaks.map((x, i) => <li key={i}>{x.claim}<Cites ns={x.evidence.map(cite)}/></li>)}</ul></div> : null}
     {history.length > 1 ? <p className="fd-judge-line"><b>평가 이력</b>{history.map((h, i) => <span key={h.as_of}>{i ? " → " : ""}{h.as_of.slice(5).replace("-", "/")} {pct(h.expected_upside_pct)}</span>)}
       {live.live && live.upside !== v.expected_upside_pct ? ` (오늘 종가 기준 ${pct(live.upside)})` : ""}</p> : null}
