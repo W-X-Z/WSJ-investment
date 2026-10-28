@@ -1496,9 +1496,9 @@ def main(argv: list[str] | None = None) -> int:
         log.info("signals %d, candidates %d, evidence %d", len(signals), len(candidates), len(payload["evidence"]))
         from wsj.ecosystems import hypotheses as H
 
-        if args.emit_hypotheses:  # 1단계: 가설 후보 프롬프트 (입력은 아이디어 단계와 같다)
-            args.emit_hypotheses.write_text(json.dumps({"system": H.system_prompt(now), "payload": payload}, ensure_ascii=False, indent=1), encoding="utf-8")
-            args.emit_hypotheses.with_suffix(".system.md").write_text(H.system_prompt(now), encoding="utf-8")
+        if args.emit_hypotheses:  # 1단계: 이슈별 영향 경로(가설 후보) 프롬프트 (입력은 아이디어 단계와 같다)
+            args.emit_hypotheses.write_text(json.dumps({"system": H.system_prompt(now, FRESH_DAYS), "payload": payload}, ensure_ascii=False, indent=1), encoding="utf-8")
+            args.emit_hypotheses.with_suffix(".system.md").write_text(H.system_prompt(now, FRESH_DAYS), encoding="utf-8")
             args.emit_hypotheses.with_suffix(".payload.json").write_text(json.dumps(payload, ensure_ascii=False, indent=1), encoding="utf-8")
             print(json.dumps({"stage": "hypotheses", "signals": len(signals), "candidates": len(candidates), "evidence": len(payload["evidence"])}))
             return 0
@@ -1516,7 +1516,14 @@ def main(argv: list[str] | None = None) -> int:
             if args.emit_research_plan:
                 plan = H.research_plan(selected, graph, signals)
                 args.emit_research_plan.write_text(json.dumps(plan, ensure_ascii=False, indent=1), encoding="utf-8")
-            print(json.dumps({"stage": "select", "candidates": len(cands), "selected": len(selected), "rejected": len(h_rejects)}))
+            h_model = raw_h.get("model", args.model) if isinstance(raw_h, dict) else args.model
+            issue_rows = H.by_issue(cands, selected, now, h_model, args.method)  # 이슈 탭: 이슈마다 경로 ≤3 (0026)
+            if args.emit_sql:
+                p_sql = H.write_issue_sql(issue_rows, args.emit_sql)
+                if p_sql:
+                    log.info("sql: %s (이슈 %d건)", p_sql, len(issue_rows))
+            print(json.dumps({"stage": "select", "candidates": len(cands), "selected": len(selected), "rejected": len(h_rejects),
+                              "issues": len(issue_rows), "paths_without_company": sum(1 for c in cands if not c.get("company"))}))
             return 0
         if args.hypotheses:  # 2단계: 고른 후보를 아이디어 입력에 (trigger 는 이번 레지스트리 id 로 다시 맞춘다)
             sel = json.loads(args.hypotheses.read_text(encoding="utf-8"))
