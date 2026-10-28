@@ -144,11 +144,24 @@ def parse_twse(data: dict[str, Any], key: str) -> list[dict[str, Any]]:
 
 
 def fetch_twse(http: HttpClient, x: Listing, start: date, end: date) -> list[dict[str, Any]]:
-    out = []
+    """월 단위 호출. TWSE 는 빠르게 두드리면 본문이 빈 200 을 돌려준다 → 그 달만 한 번 쉬었다 다시, 그래도 비면 건너뛴다
+    (한 달 때문에 종목 전체 14개월을 버리지 않는다)."""
+    out, empty = [], 0
     for m in _months(start, end):
-        data = http.get_json("https://www.twse.com.tw/exchangeReport/STOCK_DAY",
-                             params={"response": "json", "date": m.strftime("%Y%m01"), "stockNo": x.ticker}, headers=UA)
+        params = {"response": "json", "date": m.strftime("%Y%m01"), "stockNo": x.ticker}
+        data = None
+        for attempt in range(2):
+            resp = http.request("GET", "https://www.twse.com.tw/exchangeReport/STOCK_DAY", params=params, headers=UA)
+            if resp.status_code < 400 and resp.text.strip().startswith("{"):
+                data = resp.json()
+                break
+            time.sleep(2.0 + 2.0 * attempt)
+        if data is None:
+            empty += 1
+            continue
         out += parse_twse(data, x.key)
+    if empty and not out:
+        raise RuntimeError(f"TWSE 빈 응답 {empty}개월")
     return out
 
 
