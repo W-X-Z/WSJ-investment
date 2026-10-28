@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Icon } from "@/components/Icon";
-import { Cites, Freshness, MetaLine, PriceLine, References, ValueLine } from "@/components/feed/Feed";
+import { Cites, Freshness, MetaLine, PriceLine, References, TargetPrice } from "@/components/feed/Feed";
 import { EVENT_KIND_KO, ROLE_KO, SCENARIO_KO, SIZE_KO, WATCH_STATUS_KO, liveUpside, loadCompanyEvents, loadFacts, loadIdea, loadIdeaNote, loadValuationHistory, loadValuations, money, pct, usdB, verification, verificationText, watchItems, type CompanyFacts, type IdeaEvidence, type IdeaNote, type Valuation } from "@/lib/ideas";
 import { REL_KO, rel, relOf, viewIdea, type IdeaView } from "@/lib/feed";
 
@@ -9,12 +9,12 @@ export const dynamic = "force-dynamic";
 
 export async function generateMetadata({ params }: { params: Promise<{ id: string }> }) {
   const idea = await loadIdea((await params).id);
-  return { title: idea?.title ?? "투자 아이디어" };
+  return { title: idea?.title ?? "리서치 리포트" };
 }
 
 /**
- * 아이디어 상세 (Semafor 식으로 사실·해석·반대 근거를 나눈다):
- * 왜 지금 → 가치평가(시나리오·가정·깨지는 조건 — 사람이 보는 결과, ADR-0019) → 확인된 사실 → 논리(각주) → 반대 근거 → 지켜볼 것 → 관련 기업 최근 소식 → 출처.
+ * 리서치 리포트 상세 (ADR-0023; 사실·해석·반대 근거를 나눈다):
+ * 기업 · 목표주가 → 투자 아이디어(왜 지금) → 목표주가와 시나리오(추론 요약·시나리오 표·가정·깨지는 조건, ADR-0019) → 데이터 근거 → 가설의 논리(각주) → 반대 근거 → 예측·검증 → 관련 기업 최근 소식 → 출처.
  * 근거·선행 점수는 계산기로 뒤에 남고 화면에 올리지 않는다.
  */
 export default async function IdeaDetail({ params }: { params: Promise<{ id: string }> }) {
@@ -39,18 +39,20 @@ export default async function IdeaDetail({ params }: { params: Promise<{ id: str
     .sort((a, b) => (b.date ?? "").localeCompare(a.date ?? "")).slice(0, 6);
   const w = idea.whyNow;
   return <div className="fd fd-detail">
-    <div className="breadcrumb"><Link href="/">오늘의 피드</Link><Icon name="chevron-right" size={13}/><span>{idea.title}</span></div>
+    <div className="breadcrumb"><Link href="/">리서치</Link><Icon name="chevron-right" size={13}/><span>{idea.primary?.name ?? idea.title}</span></div>
     <header className="fd-dhead">
+      <p className="fd-dco"><b>{idea.primary?.name}</b>{idea.primary ? <span>{[idea.primary.ticker, idea.primary.exchange, idea.primary.size_band ? SIZE_KO[idea.primary.size_band] : null].filter(Boolean).join(" · ")}</span> : null}</p>
       <MetaLine idea={idea}/>
       <h1>{idea.title}</h1>
       <p className="fd-thesis">{idea.thesis}</p>
+      <TargetPrice v={valuation} facts={factsMap.get(idea.primary_company) ?? null}/>
       <div className="fd-foot"><Freshness idea={idea}/><span>갱신 {rel(idea.updated_at)}</span></div>
     </header>
 
     <div className="fd-dgrid">
       <div>
         <section className="fd-dsec">
-          <h2>왜 지금</h2>
+          <h2>투자 아이디어<small>왜 지금 이 기업인가</small></h2>
           {w ? <p className="fd-lead">{w.date ? <span className="fd-date">{w.date.slice(5).replace("-", "/")}</span> : null}{w.text}<Cites ns={w.refs}/></p> : null}
           {!idea.companyAt ? <p className="fd-note-warn">주 기업({idea.primary?.name}) 자신의 최근 공시·실적·수주로 확인된 근거는 아직 없습니다. 업계 신호와 공급망 구조로 세운 아이디어입니다.</p> : null}
           {idea.what_changed ? <p className="fd-changed"><b>바뀐 점</b>{idea.what_changed}</p> : null}
@@ -62,7 +64,7 @@ export default async function IdeaDetail({ params }: { params: Promise<{ id: str
         <DeepDive note={note}/>
 
         {facts.length ? <section className="fd-dsec">
-          <h2>확인된 사실<small>주 기업·관련 기업 자신의 소식</small></h2>
+          <h2>데이터 근거<small>주 기업·관련 기업 자신의 공시·실적·수주 — 원문에서 확인한 숫자</small></h2>
           <ul className="fd-facts">{facts.map((r) => <li key={r.n}>
             <div className="fd-ref-meta">{[r.date?.slice(0, 10), r.publisher, REL_KO[r.rel]].filter(Boolean).join(" · ")}</div>
             <p>{checked.has(r.url) ? r.note : r.title}<Cites ns={[r.n]}/></p>
@@ -81,7 +83,7 @@ export default async function IdeaDetail({ params }: { params: Promise<{ id: str
         </section>
 
         {idea.watch.length ? <section className="fd-dsec">
-          <h2>예측<small>가설이 맞으면 이 날짜에 이 숫자가 나온다 — 다음 실행이 채점하고, 적중 1건이면 ★2 · 2건이면 ★3 · 반증이 성립하면 가설을 버립니다 · {verificationText(verification(idea))}</small></h2>
+          <h2>예측과 검증<small>가설이 맞으면 이 날짜에 이 숫자가 나온다 — 다음 실행이 채점하고, 적중 1건이면 ★2 · 2건이면 ★3 · 반증이 성립하면 가설을 버립니다 · {verificationText(verification(idea))}</small></h2>
           <ul className="fd-watch">{watchItems(idea).map((w, i) => <li key={i} className={`fd-w-${w.status ?? "pending"}`}>
             <span className="fd-w-status">{w.status === "hit" && w.direction === "weaken" ? "반증 성립" : w.status === "hit" ? "적중" : WATCH_STATUS_KO[w.status ?? "pending"] ?? w.status}</span>
             <div>
@@ -119,15 +121,15 @@ export default async function IdeaDetail({ params }: { params: Promise<{ id: str
           {idea.first_seen ? <div>처음 등장 {idea.first_seen.slice(0, 10)}</div> : null}
           {idea.revision ? <div>개정 {idea.revision}회</div> : null}
           <div>{idea.method === "session" ? "Claude 예약작업" : "자동 분석"}{idea.model ? ` · ${idea.model}` : ""}</div>
-          <div>투자 권유 아님</div>
+          <div>목표주가는 모형 산출 · 투자 권유 아님</div>
         </div>
       </aside>
     </div>
   </div>;
 }
 
-/** 가치평가 (ADR-0019): 사람이 보는 결과. 현재 → 기대 주가와 상승여력, 시나리오 표(확률·매출·마진·배수 → 내재 시총·주가), 영향 경로, 가정(각주), 깨지는 조건,
- *  평가 이력. 그 아래에 '이미 움직인 폭'(시총·수익률)과 병목 상태 관측치. 근거·선행 점수는 그리지 않는다. */
+/** 목표주가와 시나리오 (ADR-0019·0023): 사람이 보는 결과. 추론 요약(verdict), 시나리오 표(확률·매출·마진·배수 → 내재 시총·주가), 영향 경로, 가정(각주), 깨지는 조건,
+ *  산출 이력. 그 아래에 '이미 움직인 폭'(시총·수익률)과 병목 상태 관측치. 근거·선행 점수는 그리지 않는다. */
 function Value({ idea, v, facts, history, cite }: { idea: IdeaView; v: Valuation | null; facts: CompanyFacts | null;
   history: Awaited<ReturnType<typeof loadValuationHistory>>; cite: (e: IdeaEvidence) => number }) {
   const a = idea.assessment;
@@ -144,8 +146,7 @@ function Value({ idea, v, facts, history, cite }: { idea: IdeaView; v: Valuation
   </>;
   if (!v) {
     return <section className="fd-dsec fd-value-sec">
-      <h2>가치평가<small>다음 아침 실행이 씁니다 · 모형 산출이지 권유가 아님</small></h2>
-      <ValueLine v={null} facts={facts}/>
+      <h2>목표주가와 시나리오<small>주가·재무가 모이면 다음 아침 실행이 산출합니다 · 모형 산출이지 권유가 아님</small></h2>
       {ctx}
     </section>;
   }
@@ -153,8 +154,8 @@ function Value({ idea, v, facts, history, cite }: { idea: IdeaView; v: Valuation
   const fmtBig = (x?: number | null) => (x == null ? "—" : x >= 1e12 ? `${(x / 1e12).toFixed(2)}조` : x >= 1e8 ? `${(x / 1e8).toFixed(1)}억` : x >= 1e6 ? `${(x / 1e6).toFixed(1)}M` : x.toLocaleString());
   const mult = (s: Valuation["scenarios"][number]) => (s.multiple != null && s.metric ? `${s.metric === "ps" ? "P/S" : "P/E"} ${s.multiple}` : "—");
   return <section className="fd-dsec fd-value-sec">
-    <h2>가치평가<small>{v.as_of} 평가 · {v.horizon_months}개월 · {v.model ?? ""} · 모형 산출이지 권유가 아님</small></h2>
-    <ValueLine v={v} facts={facts} detail/>
+    <h2>목표주가와 시나리오<small>{v.as_of} 산출 · {v.horizon_months}개월 · {v.model ?? ""} · 모형 산출이지 권유가 아님</small></h2>
+    <p className="fd-judge-line"><b>추론 요약</b></p>
     <p className="fd-lead">{v.verdict}</p>
     <table className="fd-sc-table">
       <thead><tr><th>시나리오</th><th>확률</th><th>매출 ({v.currency})</th><th>마진</th><th>배수</th><th>내재 시총</th><th>내재 주가</th><th>여력</th></tr></thead>
@@ -164,7 +165,7 @@ function Value({ idea, v, facts, history, cite }: { idea: IdeaView; v: Valuation
         <td>{fmtBig(s.implied_mcap_local)}</td><td>{money(s.implied_price, v.currency)}</td>
         <td className={s.upside_pct >= 0 ? "up" : "down"}>{pct(s.upside_pct)}</td>
       </tr>)}</tbody>
-      <tfoot><tr><td colSpan={6}>확률 가중 기대 주가</td><td>{money(v.expected_price, v.currency)}</td><td className={live.upside >= 0 ? "up" : "down"}>{pct(live.upside)}</td></tr></tfoot>
+      <tfoot><tr><td colSpan={6}>목표주가 = 확률 가중 기대 주가</td><td>{money(v.expected_price, v.currency)}</td><td className={live.upside >= 0 ? "up" : "down"}>{pct(live.upside)}</td></tr></tfoot>
     </table>
     {v.path?.labels?.length ? <p className="fd-ant-path">{v.path.labels.map((l, i) => <span key={i}>{i ? <i> → </i> : null}{l}</span>)}</p> : null}
     {v.path?.mechanism ? <p className="fd-judge-line"><b>왜 번지나</b>{v.path.mechanism}</p> : null}
@@ -172,7 +173,7 @@ function Value({ idea, v, facts, history, cite }: { idea: IdeaView; v: Valuation
       {x.kind === "estimate" ? <em>추정</em> : null}{x.claim}<Cites ns={(x.evidence ?? []).map(cite)}/>
       {x.kind === "estimate" && x.basis ? <small> — {x.basis}</small> : null}</li>)}</ul></div> : null}
     {v.breaks?.length ? <div className="fd-judge-line"><b>깨지는 조건</b><ul className="fd-assume">{v.breaks.map((x, i) => <li key={i}>{x.claim}<Cites ns={x.evidence.map(cite)}/></li>)}</ul></div> : null}
-    {history.length > 1 ? <p className="fd-judge-line"><b>평가 이력</b>{history.map((h, i) => <span key={h.as_of}>{i ? " → " : ""}{h.as_of.slice(5).replace("-", "/")} {pct(h.expected_upside_pct)}</span>)}
+    {history.length > 1 ? <p className="fd-judge-line"><b>산출 이력</b>{history.map((h, i) => <span key={h.as_of}>{i ? " → " : ""}{h.as_of.slice(5).replace("-", "/")} {pct(h.expected_upside_pct)}</span>)}
       {live.live && live.upside !== v.expected_upside_pct ? ` (오늘 종가 기준 ${pct(live.upside)})` : ""}</p> : null}
     {ctx}
   </section>;

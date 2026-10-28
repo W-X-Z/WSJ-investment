@@ -5,16 +5,19 @@ import { usePathname, useRouter } from "next/navigation";
 import { FormEvent, useEffect, useRef, useState } from "react";
 import { Icon } from "@/components/Icon";
 
-// 홈 = 오늘의 피드 (아이디어 + 업계 이슈 + 확인된 기업 소식). 나머지는 AI 가 아이디어를 만들 때 쓰는 근거 데이터 (ADR-0016).
+// 제품 (ADR-0023): 탭 둘 — 리서치(기업 리포트 피드) · 이슈(최근 이슈와 공급망에서의 의미). 나머지는 '더 보기'에 수납한다.
 const NAV = [
-  { href:"/", label:"오늘의 피드", icon:"lightbulb" },
-  { href:"/bottlenecks", label:"병목 보드", icon:"radar" },
-  { href:"/system", label:"시스템 점검", icon:"database" },
-  { href:"/feed", label:"근거 · 이슈", icon:"rss" },
-  { href:"/indicators", label:"근거 · 가격·실적", icon:"activity" },
-  { href:"/map", label:"근거 · 공급망 그래프", icon:"network" },
-  { href:"/discovery", label:"근거 · 공급사 발굴", icon:"search" },
-  { href:"/briefs?kind=moat", label:"근거 · 해자 카드", icon:"layers" },
+  { href:"/", label:"리서치", icon:"lightbulb" },
+  { href:"/issues", label:"이슈", icon:"rss" },
+] as const;
+const MORE_ROUTES = [
+  { href:"/bottlenecks", label:"병목 보드" },
+  { href:"/indicators", label:"가격·실적 지표" },
+  { href:"/map", label:"공급망 그래프" },
+  { href:"/discovery", label:"공급사 발굴" },
+  { href:"/briefs?kind=moat", label:"해자 카드" },
+  { href:"/system", label:"시스템 점검" },
+  { href:"/feed", label:"이슈 아카이브 (이전 화면)" },
 ] as const;
 const RESEARCH_ROUTES = [
   { href:"/ecosystems", label:"기술 생태계 (이전 화면)" },
@@ -34,8 +37,8 @@ const DEEP_ROUTES = [
   { href:"/entities", label:"기업명 매칭" },
 ] as const;
 const LABELS: Record<string,string> = {
-  "/":"오늘의 피드", "/map":"공급망 그래프", "/history":"과거 기술 아카이브", "/review":"기술 관계 검토", "/ecosystems":"기술 생태계", "/feed":"이슈 피드",
-  "/ideas":"투자 아이디어", "/discovery":"공급사 발굴", "/indicators":"가격·실적 지표", "/triggers":"트리거", "/search":"통합 검색",
+  "/":"리서치", "/issues":"이슈", "/map":"공급망 그래프", "/history":"과거 기술 아카이브", "/review":"기술 관계 검토", "/ecosystems":"기술 생태계", "/feed":"이슈 아카이브",
+  "/ideas":"리서치 리포트", "/discovery":"공급사 발굴", "/indicators":"가격·실적 지표", "/triggers":"트리거", "/search":"통합 검색",
   "/data":"Research Data", "/briefs":"기업 브리프", "/bottlenecks":"병목 보드", "/system":"시스템 점검",
 };
 function Brand() {
@@ -72,9 +75,10 @@ export function Shell({ children }: { children: React.ReactNode }) {
     setSearchOpen(false);
     router.push(term ? `/search?q=${encodeURIComponent(term)}` : "/search");
   }
-  const section = path === "/" ? "/" : NAV.find(item=>item.href!=="/" && path.startsWith(item.href))?.href ?? path;
-  const currentLabel = LABELS[section] ?? (path.startsWith("/ideas")?"투자 아이디어":path.startsWith("/ecosystems/")?"기술 생태계":path.startsWith("/feed/")?"이슈 분석":"리서치");
-  const legacyOpen = ["/review","/history","/data","/candidates","/briefs","/signals","/companies","/filings","/finra","/fda","/trials","/awards","/entities","/insider"].some(p=>path.startsWith(p));
+  const section = path === "/" ? "/" : [...NAV, ...MORE_ROUTES].find(item=>item.href!=="/" && path.startsWith(item.href.split("?")[0]))?.href.split("?")[0] ?? path;
+  const currentLabel = LABELS[section] ?? (path.startsWith("/ideas")?"리서치 리포트":path.startsWith("/issues/")?"이슈":path.startsWith("/ecosystems/")?"기술 생태계":path.startsWith("/feed/")?"이슈 아카이브":"리서치");
+  const moreOpen = MORE_ROUTES.some(i=>path.startsWith(i.href.split("?")[0]));
+  const legacyOpen = ["/review","/history","/data","/candidates","/briefs","/signals","/companies","/filings","/finra","/fda","/trials","/awards","/entities","/insider","/ecosystems","/triggers"].some(p=>path.startsWith(p));
   return (
     <div className="workspace">
       {mobileOpen && <button className="mobile-scrim" onClick={()=>setMobileOpen(false)} aria-label="메뉴 닫기"/>}
@@ -90,19 +94,22 @@ export function Shell({ children }: { children: React.ReactNode }) {
           })}
         </nav>
         <div className="sidebar-divider"/>
-        <div className="sidebar-section-title">RESEARCH ARCHIVE <span>02</span></div>
-        <details className="legacy-group" open={legacyOpen || undefined}>
-          <summary className="legacy-trigger"><Icon name="database" size={17}/><span>데이터 워크스페이스</span><Icon name="chevron-down" size={14}/></summary>
+        <div className="sidebar-section-title">MORE <span>02</span></div>
+        <details className="legacy-group" open={moreOpen || legacyOpen || undefined}>
+          <summary className="legacy-trigger"><Icon name="layers" size={17}/><span>더 보기 — 근거·도구</span><Icon name="chevron-down" size={14}/></summary>
           <div className="legacy-links">
-            {RESEARCH_ROUTES.map(i=><Link key={i.href} href={i.href} className={path===i.href?"legacy-active":""}>{i.label}</Link>)}
-            <details className="legacy-subgroup">
-              <summary>원천 데이터 더 보기 <Icon name="chevron-down" size={13}/></summary>
-              <div className="legacy-links nested">{DEEP_ROUTES.map(i=><Link key={i.href} href={i.href}>{i.label}</Link>)}</div>
+            {MORE_ROUTES.map(i=><Link key={i.href} href={i.href} className={path.startsWith(i.href.split("?")[0])?"legacy-active":""}>{i.label}</Link>)}
+            <details className="legacy-subgroup" open={legacyOpen || undefined}>
+              <summary>데이터 워크스페이스 <Icon name="chevron-down" size={13}/></summary>
+              <div className="legacy-links nested">
+                {RESEARCH_ROUTES.map(i=><Link key={i.href} href={i.href} className={path===i.href?"legacy-active":""}>{i.label}</Link>)}
+                {DEEP_ROUTES.map(i=><Link key={i.href} href={i.href}>{i.label}</Link>)}
+              </div>
             </details>
           </div>
         </details>
         <div className="sidebar-spacer"/>
-        <div className="sidebar-footnote"><span className="pulse-ring"/><div><strong>RESEARCH WORKSPACE</strong><p>공개 근거 기반 기술 분석<br/>기업가치 예측·매매 실행 아님</p></div></div>
+        <div className="sidebar-footnote"><span className="pulse-ring"/><div><strong>RESEARCH WORKSPACE</strong><p>공개 근거 기반 공급망 리서치<br/>목표주가는 모형 산출 · 매매 권유 아님</p></div></div>
         <div className="sidebar-bottom">© 2026 SIGNAL ATLAS <span>v1.0</span></div>
       </aside>
       <div className="main-column">

@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { CONFIDENCE_KO, IDEA_TYPE, SCENARIO_KO, TREND_KO, liveUpside, money, pct, usdB, type CompanyFacts, type InvestmentIdea, type PriceCtx, type Valuation } from "@/lib/ideas";
+import { CONFIDENCE_KO, IDEA_TYPE, ROLE_KO, SCENARIO_KO, TREND_KO, liveUpside, money, pct, usdB, verification, verificationText, watchItems, type CompanyFacts, type PriceCtx, type Valuation } from "@/lib/ideas";
 import { REL_KO, ecoLabel, rel, shortName, type FeedIdea, type IdeaView } from "@/lib/feed";
 
 /** ★ 를 글자로 (배지 없이). ★ 는 확신이 아니라 검증 단계 — ★1 가설 · ★2 부분 확인 · ★3 확인 (ADR-0020). */
@@ -31,54 +31,74 @@ export function Freshness({ idea }: { idea: IdeaView }) {
   </span>;
 }
 
-/** 가치평가 결과 한 줄 (ADR-0019): 현재 → 기대 주가 (상승여력, 기간) · 확신. 오늘 종가가 있으면 여력을 다시 계산한다.
- *  평가가 없으면 '가치평가 전'. 점수는 그리지 않는다. */
-export function ValueLine({ v, facts, detail }: { v: Valuation | null; facts: CompanyFacts | null; detail?: boolean }) {
-  if (!v) return <p className="fd-value fd-value-none">가치평가 전{facts?.market_cap_usd != null ? ` · 시총 ${usdB(facts.market_cap_usd)}` : ""}</p>;
+/** 목표주가 블록 (ADR-0023): 목표주가 = 12개월 확률가중 기대 주가, 범위 = 약세~강세 내재 주가. 오늘 종가가 있으면 여력을 다시 계산한다.
+ *  모형 산출이지 권유가 아니다 — 카드 하단 문구로 밝힌다. 평가가 없으면 '목표주가 산출 전'. */
+export function TargetPrice({ v, facts, compact }: { v: Valuation | null; facts: CompanyFacts | null; compact?: boolean }) {
+  if (!v) return <p className="fd-tp fd-tp-none"><span className="fd-tp-label">목표주가</span><span>산출 전{facts?.market_cap_usd != null ? ` · 시총 ${usdB(facts.market_cap_usd)}` : ""}</span>
+    <small>주가·재무가 모이면 다음 실행에서 산출합니다</small></p>;
   const live = liveUpside(v, facts?.close);
   const up = live.upside;
   const tone = up >= 50 ? "hi" : up >= 15 ? "mid" : up > -15 ? "flat" : "lo";
-  const sc = v.scenarios;
-  return <p className={`fd-value fd-value-${tone}`}>
-    <b className="fd-value-up">{pct(up)}</b>
-    <span className="fd-value-px">{money(live.price, v.currency)} → {money(v.expected_price, v.currency)}<small> · {v.horizon_months}개월 기대</small></span>
-    <span className="fd-value-conf">{CONFIDENCE_KO[v.confidence]}</span>
-    {detail && sc.length ? <span className="fd-value-sc">{sc.map((s) => `${SCENARIO_KO[s.name]} ${pct(s.upside_pct)}`).join(" · ")}</span> : null}
-    {!detail && sc.length ? <span className="fd-value-sc" title={sc.map((s) => `${SCENARIO_KO[s.name]} ${Math.round(s.prob * 100)}% → ${money(s.implied_price, v.currency)}`).join(" · ")}>
-      {sc.map((s) => `${SCENARIO_KO[s.name]} ${pct(s.upside_pct)}`).join(" · ")}</span> : null}
-    <time dateTime={v.as_of}>{v.as_of.slice(5).replace("-", "/")} 평가{live.live && facts?.price_as_of ? ` · ${facts.price_as_of.slice(5).replace("-", "/")} 종가` : ""}</time>
-  </p>;
+  const bear = v.scenarios.find((s) => s.name === "bear"), bull = v.scenarios.find((s) => s.name === "bull");
+  return <div className={`fd-tp fd-tp-${tone}`}>
+    <span className="fd-tp-label">목표주가 <small>{v.horizon_months}개월</small></span>
+    <b className="fd-tp-price">{money(v.expected_price, v.currency)}</b>
+    <b className="fd-tp-up">{pct(up)}</b>
+    <span className="fd-tp-now">현재 {money(live.price, v.currency)}{live.live && facts?.price_as_of ? <small> {facts.price_as_of.slice(5).replace("-", "/")}</small> : null}</span>
+    <span className="fd-tp-conf">{CONFIDENCE_KO[v.confidence]}</span>
+    {bear && bull ? <span className="fd-tp-range" title={v.scenarios.map((s) => `${SCENARIO_KO[s.name]} ${Math.round(s.prob * 100)}% → ${money(s.implied_price, v.currency)}`).join(" · ")}>
+      약세 {money(bear.implied_price, v.currency)} <i>~</i> 강세 {money(bull.implied_price, v.currency)}</span> : null}
+    {!compact ? <time dateTime={v.as_of}>{v.as_of.slice(5).replace("-", "/")} 산출</time> : null}
+  </div>;
 }
 
-/** 피드 카드: ★·생태계·생성일 → 제목 → 가치평가 결과 → 관련 기업 → 관련 이슈. 논리·근거·시나리오는 상세에서. */
-const CHANGE_KO: Record<string, string> = { new: "새로", strengthened: "강화", weakened: "약화" };
+/** 리서치 리포트 카드 (ADR-0023): 기업 → 목표주가 → 투자 아이디어(제목·요지) → 데이터 근거 2개 → 예측 상태. 상세는 클릭. */
+const CHANGE_KO: Record<string, string> = { new: "새 리포트", strengthened: "강화", weakened: "약화" };
 const md = (d?: string | null) => (d ? `${Number(d.slice(5, 7))}/${Number(d.slice(8, 10))}` : "");
 const ROLE_ORDER: Record<string, number> = { primary: 0, peer: 1, competitor: 2, customer: 3, displaced: 4 };
+const EXCHANGE_KO: Record<string, string> = { KRX: "KOSPI", KOSDAQ: "KOSDAQ", NYSE: "NYSE", Nasdaq: "Nasdaq", "NYSE American": "NYSE Am." };
 
-export function IdeaCard({ idea, changed }: { idea: FeedIdea; changed: boolean }) {
+/** 카드에 올릴 근거 2개: 주 기업 직접 근거가 있는 단계 → 최근 사실 단계. 날짜 접두는 떼고 각주 날짜를 앞에 둔다. */
+function keyFacts(idea: FeedIdea, n = 2): { date: string | null; text: string; n: number }[] {
+  const steps = idea.chain.map((st) => {
+    const refs = st.evidence.map((e) => idea.refs.find((r) => r.url === e.url && r.title === e.title)).filter((r): r is NonNullable<typeof r> => !!r);
+    const s = refs.filter((r) => r.id.startsWith("S"));
+    const direct = s.some((r) => r.rel === "direct");
+    const date = s.map((r) => r.date?.slice(0, 10) ?? "").filter(Boolean).sort().at(-1) ?? null;
+    return { st, direct, date, n: refs[0]?.n ?? 0, fact: s.length > 0 };
+  }).filter((x) => x.fact);
+  steps.sort((a, b) => Number(b.direct) - Number(a.direct) || (b.date ?? "").localeCompare(a.date ?? ""));
+  return steps.slice(0, n).map((x) => ({ date: x.date, text: x.st.claim.replace(/^\d{1,2}\/\d{1,2}\s*(일\s*)?/, "").replace(/\s*\(추론\)$/, ""), n: x.n }));
+}
+
+export function ReportCard({ idea, changed }: { idea: FeedIdea; changed: boolean }) {
   const href = `/ideas/${idea.idea_key}`;
   const tag = changed && idea.shownTrend ? CHANGE_KO[idea.shownTrend] : null;
-  const cos = [...idea.companies].sort((a, b) => (a.id === idea.primary_company ? -1 : b.id === idea.primary_company ? 1 : 0)
-    || (ROLE_ORDER[a.role] ?? 9) - (ROLE_ORDER[b.role] ?? 9));
-  const shown = cos.slice(0, 3);
+  const p = idea.primary;
+  const others = [...idea.companies].filter((c) => c.id !== idea.primary_company).sort((a, b) => (ROLE_ORDER[a.role] ?? 9) - (ROLE_ORDER[b.role] ?? 9)).slice(0, 3);
   const eco = idea.ecosystems.map((e) => ecoLabel(e)).filter(Boolean).join(" · ");
-  return <article className="fd-card">
-    <div className="fd-card-top">
-      <StarText n={idea.stars}/>{eco ? <span>{eco}</span> : null}{tag ? <b className={`fd-trend fd-trend-${idea.shownTrend}`}>{tag}</b> : null}
-      {idea.first_seen ? <time dateTime={idea.first_seen.slice(0, 10)}>{md(idea.first_seen)} 생성</time> : null}
-    </div>
+  const facts = keyFacts(idea);
+  const ver = verification(idea);
+  const nPred = watchItems(idea).length;
+  const mcap = idea.facts?.market_cap_usd ?? idea.valuation?.market_cap_usd ?? null;
+  return <article className="fd-rc">
+    <header className="fd-rc-head">
+      <div className="fd-rc-co">
+        <Link href={href} className="fd-rc-name">{p ? shortName(p) : idea.title}</Link>
+        <span className="fd-rc-tk">{[p?.ticker, p?.exchange ? EXCHANGE_KO[p.exchange] ?? p.exchange : null, mcap != null ? `시총 ${usdB(mcap)}` : null, eco].filter(Boolean).join(" · ")}</span>
+      </div>
+      <div className="fd-rc-meta"><StarText n={idea.stars}/><span>{STAR_KO[idea.stars]}</span>{tag ? <b className={`fd-trend fd-trend-${idea.shownTrend}`}>{tag}</b> : null}</div>
+    </header>
+    <TargetPrice v={idea.valuation} facts={idea.facts} compact/>
     <h3><Link href={href}>{idea.title}</Link></h3>
-    <ValueLine v={idea.valuation} facts={idea.facts}/>
-    <dl className="fd-card-dl">
-      <dt>관련 기업</dt>
-      <dd><ul className="fd-chips">{shown.map((c) => <li key={c.id} className={c.id === idea.primary_company ? "on" : ""}>
-        {shortName(c)}{c.ticker ? <small>{c.ticker}</small> : null}</li>)}
-        {cos.length > shown.length ? <li className="more">외 {cos.length - shown.length}</li> : null}</ul></dd>
-      {idea.issues.length ? <><dt>관련 이슈</dt>
-        <dd><ul className="fd-card-iss">{idea.issues.map((i) => <li key={i.key}>
-          <time>{md(i.date)}</time>{i.url ? <a href={i.url} target="_blank" rel="noreferrer">{i.title}</a> : <span>{i.title}</span>}</li>)}
-          {idea.issueCount > idea.issues.length ? <li className="more"><Link href={href}>외 {idea.issueCount - idea.issues.length}건</Link></li> : null}</ul></dd></> : null}
-    </dl>
+    <p className="fd-rc-thesis">{idea.thesis}</p>
+    {facts.length ? <ul className="fd-rc-facts">{facts.map((f, i) => <li key={i}><time>{md(f.date)}</time><span>{f.text}</span><Cites ns={f.n ? [f.n] : []} href={href}/></li>)}</ul> : null}
+    <footer className="fd-rc-foot">
+      <span>{nPred ? `예측 ${nPred}건 · ${verificationText(ver)}` : "예측 없음"}</span>
+      <span>근거 {idea.evidence_count}건</span>
+      {others.length ? <span className="fd-rc-others">{others.map((c) => `${shortName(c)}(${ROLE_KO[c.role] ?? c.role})`).join(" · ")}</span> : null}
+      {idea.first_seen ? <time dateTime={idea.first_seen.slice(0, 10)}>{md(idea.first_seen)} 첫 리포트</time> : null}
+    </footer>
   </article>;
 }
 
