@@ -1,0 +1,1 @@
+select ideas.put_ideas($wsj$[{"idea_key": "069c3493e9ad", "status": "closed", "trend": "weakened", "close_reason": "기업 자신의 근거 없음 — HBM 테스트 호황은 시장이 아는 이야기이고 JEM 의 노출을 확인할 근거가 없다", "updated_at": "2026-10-28T15:46:30.151638+00:00", "usage": null}]$wsj$::jsonb);

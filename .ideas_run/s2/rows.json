@@ -1,0 +1,2423 @@
+[
+ {
+  "idea_key": "a5b7178dc3bf",
+  "status": "active",
+  "trend": "new",
+  "type": "bottleneck",
+  "title": "기판 증설이 확정되면 다음 주문은 공정장비다",
+  "thesis": "10/28 삼성전기는 FC-BGA 부족이 2027년까지 심화된다며 6조7,800억 증설을 2027년 단계 양산으로 확인했고, 같은 날 Unimicron 은 장기 리드타임 장비 선주문을 NT$509억 더 늘렸다. 기판 한 층마다 들어가는 도포·진공 라미네이션·건조·경화 장비를 대만에서 공급하는 群翊은 수주잔고 NT$60억이 2027년 말까지 차 있는데, 시총 $0.63B 로 기판 업체들만큼 오르지 않았다.",
+  "stars": 1,
+  "stars_reason": "가설 — 기판 증설(사실)이 장비 주문으로 번지는 경로는 그래프와 Unimicron 선주문으로 이어지지만, 群翊 자신의 신규 수주 공시는 아직 없다",
+  "primary_company": "company:group_up",
+  "companies": [
+   {
+    "id": "company:group_up",
+    "name": "Group Up 群翊",
+    "ticker": "6664",
+    "exchange": "TPEx",
+    "size_band": "small",
+    "role": "primary",
+    "why": "기판·첨단패키징 공정장비(도포·압합·건조), 수주잔고 NT$60억·납기 2027년 말, 신공장 2028년 가동"
+   },
+   {
+    "id": "company:csun",
+    "name": "C Sun 志聖",
+    "ticker": "2467",
+    "exchange": "TWSE",
+    "size_band": "mid",
+    "role": "peer",
+    "why": "같은 기판 공정장비(노광·건조) — 9월 매출 +91%"
+   },
+   {
+    "id": "company:unimicron",
+    "name": "Unimicron Technology",
+    "ticker": "3037",
+    "exchange": "TWSE",
+    "size_band": "large",
+    "role": "customer",
+    "why": "장기 리드타임 장비 선주문 NT$509억 추가"
+   },
+   {
+    "id": "company:semco",
+    "name": "Samsung Electro-Mechanics",
+    "ticker": "009150",
+    "exchange": "KRX",
+    "size_band": "large",
+    "role": "customer",
+    "why": "FC-BGA 6조7,800억 증설, 2027년 단계 양산"
+   }
+  ],
+  "chain": [
+   {
+    "claim": "10/28 삼성전기는 FC-BGA 공급 부족이 4분기·2027년에 더 심해진다고 밝히고, 세종·베트남 6조7,800억 증설이 2027년 단계 양산·2028년 본격 매출이라고 확인했다",
+    "evidence": [
+     {
+      "id": "S117",
+      "url": "https://news.google.com/rss/articles/CBMicEFVX3lxTFA3WEltaFRPSjVwR09zOTNTMTBfWXFfVXpCZFBaLUVIOU03d3pnT3ZjT2M1d0IwNGlCRHltejUyd0tmU2hpVUt0MmV1WnVzQXpoWnZRMmFubjFUVGQ0aGRFOFJCRVhfQnNhVVV6cUg0T1k?oc=5",
+      "title": "삼성전기 \"MLCC 장기공급계약 추가 진행…FC-BGA 쇼티지 심화\"",
+      "publisher": "연합인포맥스",
+      "date": "2026-10-28",
+      "tier": "third_party_report",
+      "tier_ko": "보도·리서치",
+      "note": "10/28 삼성전기 3분기 컨콜: 매출 3조7,633억(+30% YoY) 영업이익 6,910억(+165% YoY) 분기 최대. FC-BGA 공급 부족이 4분기·2027년에도 지속·심화, 전 제품군으로 확대, 가격 협상 진행. 9월 발표 6조7,800억 세종·베트남 증설은 2027년 단계 양산, 2028년 매출 본격 기여. 4분기 서버 CPU 기판 공급량 2배. MLCC LTA 약 50개 고객, 2027년 MLCC 매출의 과반이 LTA. 필리핀 신공장 2027년 양산, 글라스 기판 2028년 가동.",
+      "rel": "related"
+     },
+     {
+      "id": "S120",
+      "url": "https://news.google.com/rss/articles/CBMigwFBVV95cUxQX3E4SzVBTV84MzBVR1ZXUndiSjJ6cnpsQ2RxV3V1cWM3Q2JlMVZpTklfNnNyelQxcWxtdkRkbkp4MzZUUExZT0dDRHhJSnFKYTRHZy1GeHZIWEN0QTB6UTNYVERYcTJ6QUNfRWNVb3duTHRjMl9WYmZ5amIwcHgtUkhlYw?oc=5",
+      "title": "삼성전기, 엔비디아와 반도체 기판 파트너십...세종·부산에 전용 라인 증설",
+      "publisher": "조선일보",
+      "date": "2026-10-21",
+      "tier": "third_party_report",
+      "tier_ko": "보도·리서치",
+      "note": "10/21 삼성전기-NVIDIA 전략 파트너십(보도자료): 세종·부산에 AI 칩 패키지 기판 전용 라인을 공동 투자로 구축, 2026년부터 다년간 공급. 대상은 NVIDIA 컴퓨트 칩셋 기판과 네트워크 스위치 기판. 공급량은 올해부터 연평균 두 자릿수 이상 성장, 2028년에는 NVIDIA 가 삼성전기 기판 연간 생산능력의 상당 비중. 기판에 MLCC·실리콘 커패시터 내장. 투자 금액은 미공개.",
+      "rel": "related"
+     }
+    ]
+   },
+   {
+    "claim": "10/28 Unimicron 이사회는 대만 AI 기판 증설용 장기 리드타임 장비 선주문을 NT$509억 더 승인했다 — 기판 캐파 부족이 장비 발주로 번지는 중이다",
+    "evidence": [
+     {
+      "id": "S66",
+      "url": "https://www.digitimes.com/news/a20261028PD222/unimicron-equipment-capacity-demand-production.html",
+      "title": "Unimicron steers resources to Taiwan AI substrates with NT$50.9B equipment orders, Japan unit sale",
+      "publisher": "DigiTimes",
+      "date": "2026-10-28",
+      "tier": "third_party_report",
+      "tier_ko": "보도·리서치",
+      "rel": "related"
+     },
+     {
+      "id": "G96",
+      "url": "https://udn.com/news/story/7252/9840528",
+      "title": "AI용 대면적·고다층 패키지 기판 공급 부족 (Substrate capacity) → 기판·첨단패키징 공정장비 (진공 라미네이션·도포·건조·경화) (mitigated_by)",
+      "publisher": null,
+      "date": "2026-10-27",
+      "tier": "third_party_report",
+      "tier_ko": "보도·리서치",
+      "rel": "background"
+     }
+    ]
+   },
+   {
+    "claim": "群翊은 이 장비를 대만 기판사에 공급하며 수주잔고 약 NT$60억이 2027년 말까지 차 있고, 새 공장은 2027년 1월 착공·2028년 가동이다",
+    "evidence": [
+     {
+      "id": "G95",
+      "url": "https://wantrich.chinatimes.com/news/20261021900219-420101",
+      "title": "기판·첨단패키징 공정장비 (진공 라미네이션·도포·건조·경화) → Group Up 群翊 (TPEx 6664, 비SEC) (offered_by)",
+      "publisher": null,
+      "date": "2026-10-21",
+      "tier": "third_party_report",
+      "tier_ko": "보도·리서치",
+      "rel": "background"
+     },
+     {
+      "id": "S237",
+      "url": "https://news.google.com/rss/articles/CBMiVkFVX3lxTE40Mk4zUVAwb05hbnZJZDJXNkdPMm1FTDFWaFM1RFpiT1N3RVdhMktIbVFDMWExSzhpSGhjM201b1hQU0F5cVdtS3EyeXVWOW9QdVBHZjl3?oc=5",
+      "title": "群翊手中訂單爆增 新廠規劃明年1月動工、2028年投產",
+      "publisher": "優分析UAnalyze",
+      "date": "2026-10-21",
+      "tier": "third_party_report",
+      "tier_ko": "보도·리서치",
+      "rel": "direct"
+     }
+    ]
+   },
+   {
+    "claim": "그래서 2027년 群翊 매출은 2026년의 약 2배가 되고, 삼성전기·Unimicron 의 2027년 양산 일정상 그 주문은 2026년 4분기~2027년 상반기에 잡힌다 (추론)",
+    "evidence": [],
+    "inference": true
+   }
+  ],
+  "risks": [
+   {
+    "claim": "삼성전기 증설 장비는 한국·일본 장비사 몫일 수 있어 群翊에는 대만 기판사(Unimicron·Kinsus·Nan Ya PCB) 투자만 닿는다 (추론)",
+    "evidence": []
+   },
+   {
+    "claim": "저점 대비 +40% 올랐고 2027년 말까지 납기가 차 있어 '풀 캐파'가 이미 알려진 정도일 수 있다",
+    "evidence": [
+     {
+      "id": "G95",
+      "url": "https://wantrich.chinatimes.com/news/20261021900219-420101",
+      "title": "기판·첨단패키징 공정장비 (진공 라미네이션·도포·건조·경화) → Group Up 群翊 (TPEx 6664, 비SEC) (offered_by)",
+      "publisher": null,
+      "date": "2026-10-21",
+      "tier": "third_party_report",
+      "tier_ko": "보도·리서치",
+      "rel": "background"
+     }
+    ]
+   }
+  ],
+  "watch": [
+   {
+    "what": "群翊 11월 월매출 공시 (TPEx)",
+    "due": "2026-12-10",
+    "metric": "YoY",
+    "threshold": "≥ +40%",
+    "direction": "strengthen",
+    "status": "pending"
+   },
+   {
+    "what": "群翊 신규 수주·수주잔고 공시 또는 법설회",
+    "due": "2027-03-31",
+    "metric": "수주잔고",
+    "threshold": "≥ NT$80억",
+    "direction": "strengthen",
+    "status": "pending"
+   },
+   {
+    "what": "群翊 1월 월매출 공시",
+    "due": "2027-02-10",
+    "metric": "YoY",
+    "threshold": "< +10%",
+    "direction": "weaken",
+    "status": "pending"
+   }
+  ],
+  "what_changed": null,
+  "assessment": {
+   "score": 7,
+   "parts": {
+    "company": {
+     "pts": 4,
+     "max": 4,
+     "note": "기업 직접 근거 2026-10-21 (7일 전)"
+    },
+    "confirm": {
+     "pts": 0,
+     "max": 1,
+     "note": "기업 근거의 숫자를 원문으로 확인하지 못함"
+    },
+    "structure": {
+     "pts": 3,
+     "max": 3,
+     "note": "병목: AI용 대면적·고다층 패키지 기판 공급 부족 · 최근 30일 관련 이슈 4건 · 상태 관측치 3개 · 공급사 2곳"
+    },
+    "exposure": {
+     "pts": 0,
+     "max": 2,
+     "note": "관련 사업의 매출 비중 미확인"
+    },
+    "counter": {
+     "pts": 0,
+     "max": 0,
+     "note": "주 기업 자신의 최근 반대 사실 없음"
+    }
+   },
+   "exposure": null,
+   "price": {
+    "close": 334.0,
+    "r1m": -3.7,
+    "r3m": -5.1,
+    "r12m": 21.0,
+    "from_high": -30.4,
+    "from_low": 40.3,
+    "vol_ratio": 0.61,
+    "market_cap_usd": 627674806.0,
+    "key": "TPEx:6664",
+    "as_of": "2026-10-28",
+    "points": 258,
+    "flags": [],
+    "tenbagger": {
+     "candidate": true,
+     "reason": "시총 $0.63B · 저점 대비 +40%"
+    }
+   },
+   "bottlenecks": [
+    {
+     "id": "bottleneck:substrate_capacity",
+     "label": "AI용 대면적·고다층 패키지 기판 공급 부족"
+    }
+   ],
+   "observations": [
+    {
+     "indicator_id": "obs:semco_fcbga_server_cpu_supply_multiple",
+     "label": "삼성전기 서버 CPU 기판(임베딩·멀티코어) 4분기 공급량 배수 (QoQ)",
+     "unit": "배",
+     "as_of": "2026-10-28",
+     "value": 2.0,
+     "source_url": "https://www.thelec.kr/news/articleView.html?idxno=64447"
+    },
+    {
+     "indicator_id": "obs:unimicron_long_lead_equipment",
+     "label": "Unimicron 장기 리드타임 장비 선주문 추가액",
+     "unit": "억 대만달러",
+     "as_of": "2026-10-27",
+     "value": 509.0,
+     "source_url": "https://udn.com/news/story/7252/9840528"
+    },
+    {
+     "indicator_id": "obs:substrate_equipment_backlog_groupup",
+     "label": "群翊(Group Up) 수주잔고",
+     "unit": "억 대만달러",
+     "as_of": "2026-10-21",
+     "value": 60.0,
+     "source_url": "https://wantrich.chinatimes.com/news/20261021900219-420101"
+    }
+   ],
+   "anticipation": {
+    "score": 7,
+    "parts": {
+     "path": {
+      "pts": 2,
+      "max": 3,
+      "note": "2단계 경로, 최약 간선 확신도 0.60"
+     },
+     "unpriced": {
+      "pts": 2,
+      "max": 3,
+      "note": "기업 직접 근거 7일 전이지만 주가는 아직 (1개월 -4%)"
+     },
+     "room": {
+      "pts": 2,
+      "max": 2,
+      "note": "변화 규모 ≈ 매출의 100% (수주잔고 NT$60억(G95) ÷ 2026년 매출 약 NT$30억(추정: 9월까지 누적 매출 연환산) → 2027년 매출 +100%) · 시총 $0.6B"
+     },
+     "lead": {
+      "pts": 1,
+      "max": 2,
+      "note": "숫자로 나타나기까지 약 3분기"
+     }
+    },
+    "trigger": "S117",
+    "path": [
+     "bottleneck:substrate_capacity",
+     "equipment:substrate_process_equipment",
+     "company:group_up"
+    ],
+    "path_labels": [
+     "AI용 대면적·고다층 패키지 기판 공급 부족",
+     "기판·첨단패키징 공정장비",
+     "Group Up 群翊"
+    ],
+    "hops": 2,
+    "mechanism": "고다층 AI 기판은 층수가 늘수록 도포·라미네이션·건조 공정 횟수가 비례해 늘어, 기판 캐파 증설이 그 장비 대수로 직결된다",
+    "lead_quarters": 3,
+    "effect": {
+     "pct_of_revenue": 100.0,
+     "basis": "수주잔고 NT$60억(G95) ÷ 2026년 매출 약 NT$30억(추정: 9월까지 누적 매출 연환산) → 2027년 매출 +100%",
+     "url": "https://wantrich.chinatimes.com/news/20261021900219-420101",
+     "as_of": "2026-10-21",
+     "estimated": false
+    },
+    "priced_in": "partial"
+   },
+   "computed_at": "2026-10-28T15:46:30+00:00",
+   "version": 2
+  },
+  "anticipation": {
+   "trigger": "S117",
+   "trigger_title": "Samsung Electro-Mechanics 최근 소식 4건",
+   "path": [
+    "bottleneck:substrate_capacity",
+    "equipment:substrate_process_equipment",
+    "company:group_up"
+   ],
+   "mechanism": "고다층 AI 기판은 층수가 늘수록 도포·라미네이션·건조 공정 횟수가 비례해 늘어, 기판 캐파 증설이 그 장비 대수로 직결된다",
+   "priced_in": "partial",
+   "lead_quarters": 3,
+   "effect": {
+    "pct_of_revenue": 100.0,
+    "basis": "수주잔고 NT$60억(G95) ÷ 2026년 매출 약 NT$30억(추정: 9월까지 누적 매출 연환산) → 2027년 매출 +100%",
+    "evidence": "G95",
+    "url": "https://wantrich.chinatimes.com/news/20261021900219-420101",
+    "as_of": "2026-10-21"
+   }
+  },
+  "nodes": [
+   "bottleneck:substrate_capacity",
+   "component:mlcc_ai",
+   "component:package_substrate",
+   "equipment:substrate_process_equipment",
+   "material:abf"
+  ],
+  "ecosystems": [
+   "hbm"
+  ],
+  "signal_refs": [
+   "61cbe101b26518a0fcc4",
+   "events:company:group_up",
+   "events:company:semco"
+  ],
+  "evidence_count": 6,
+  "last_signal_at": "2026-10-28",
+  "updated_at": "2026-10-28T15:46:30.151638+00:00",
+  "model": "claude-fable-5-1",
+  "method": "session",
+  "usage": null
+ },
+ {
+  "idea_key": "d9e34bbd515b",
+  "status": "active",
+  "trend": "new",
+  "type": "bottleneck",
+  "title": "HBM 을 쌓고 나면 검사 핸들러가 더 필요하다",
+  "thesis": "10/28 SK hynix 는 HBM 이 2029년까지 매진이고 수요가 공급의 2배라고 밝혔다. 적층이 끝난 HBM 스택은 베어다이 상태로 다시 검사(KGSD)해야 하고 그 공정에는 전용 프로버·핸들러가 필요한데, 테크윙은 HBM 프로버·메모리 테스트 핸들러를 만들며 10/28 인도 마이크론에서 94억원 장비를 수주했다 — 주가는 12개월 −33% 로 조용하다.",
+  "stars": 1,
+  "stars_reason": "가설 — HBM 매진(사실)→적층 후 검사(그래프)→핸들러(테크윙 제품)로 경로가 이어지고 마이크론 수주가 방향을 보여 주지만, HBM 전용 수주의 규모는 아직 확인되지 않았다",
+  "primary_company": "company:techwing",
+  "companies": [
+   {
+    "id": "company:techwing",
+    "name": "Techwing",
+    "ticker": "089030",
+    "exchange": "KOSDAQ",
+    "size_band": "small",
+    "role": "primary",
+    "why": "HBM 프로버·메모리 테스트 핸들러, 10/28 마이크론 인도 법인 94억원 수주"
+   },
+   {
+    "id": "company:skhynix",
+    "name": "SK hynix",
+    "ticker": "000660",
+    "exchange": "KRX",
+    "size_band": "mega",
+    "role": "customer",
+    "why": "HBM 2029년까지 매진, 수요가 공급의 2배 — 증설의 원천"
+   },
+   {
+    "id": "company:unitest",
+    "name": "UniTest",
+    "ticker": "086390",
+    "exchange": "KOSDAQ",
+    "size_band": "micro",
+    "role": "peer",
+    "why": "같은 HBM 검사 단계의 번인 테스터 공급사"
+   }
+  ],
+  "chain": [
+   {
+    "claim": "10/28 SK hynix 는 DRAM·HBM 이 사실상 2029년까지 매진이고 HBM 수요가 공급의 2배라며 메모리 부족이 2030년까지 간다고 밝혔다",
+    "evidence": [
+     {
+      "id": "S46",
+      "url": "https://news.skhynix.com/en/q3-2026-business-results-1/",
+      "title": "SK hynix Announces 3Q26 Financial Results",
+      "publisher": "SK hynix Newsroom",
+      "date": "2026-10-28",
+      "tier": "official_issuer",
+      "tier_ko": "당사자 공시",
+      "rel": "related"
+     },
+     {
+      "id": "S49",
+      "url": "https://news.google.com/rss/articles/CBMiogFBVV95cUxQQ1NhbWRRM3RTWmNyNTAzcF93RVhXREF1YUp6a0VqVDZ2OXJfbG40N2RiYVVyLVh6b0o2WUNmRHlOa1BOOU1Lb1JrOHJkdVBzbC1WdEhSN3AyWmd2ZEFHcFFQOTFLZDR1UEVmc2RnY3g1ckp2SVJwYVdrWmZiXzNQby1ueC1HNklJSWowVTZ3dGRYb1Vhc0VQTWMtcFZHZUs1OHc?oc=5",
+      "title": "HBM Demand Runs at Twice Supply, SK hynix CEO Says",
+      "publisher": "Seoul Economic Daily",
+      "date": "2026-10-28",
+      "tier": "third_party_report",
+      "tier_ko": "보도·리서치",
+      "rel": "related"
+     }
+    ]
+   },
+   {
+    "claim": "HBM4 는 16단까지 규격화돼 적층이 높아질수록 적층 후 스택 검사(KGSD)가 필요해지고, 그 검사는 싱귤레이션된 HBM 을 다루는 베어다이 프로버·핸들러를 요구한다",
+    "evidence": [
+     {
+      "id": "G140",
+      "url": "https://www.storagenewsletter.com/2025/04/17/jedec-and-industry-leaders-collaborate-to-release-jesd270-4-hbm4-standard/",
+      "title": "HBM4 (2,048 I/O, JESD270-4) → 고적층·미세 접합 확대 (drives_requirement)",
+      "publisher": null,
+      "date": "2025-04-17",
+      "tier": "standard_body",
+      "tier_ko": "표준 문서",
+      "rel": "background"
+     },
+     {
+      "id": "G192",
+      "url": "https://www.businesswire.com/news/home/20250804458862/en/teradyne-unveils-magnum-7h---the-next-generation-memory-tester-for-high-bandwidth-memory-devices",
+      "title": "고적층·미세 접합 확대 → 적층 후 KGSD 테스트 (Known-Good-Stack-Die) (requires)",
+      "publisher": null,
+      "date": "2025-08-04",
+      "tier": "official_issuer",
+      "tier_ko": "당사자 공시",
+      "rel": "background"
+     },
+     {
+      "id": "G190",
+      "url": "https://www.businesswire.com/news/home/20250804458862/en/teradyne-unveils-magnum-7h---the-next-generation-memory-tester-for-high-bandwidth-memory-devices",
+      "title": "적층 후 KGSD 테스트 (Known-Good-Stack-Die) → HBM 프로버·메모리 테스트 핸들러 (requires)",
+      "publisher": null,
+      "date": "2025-08-04",
+      "tier": "official_issuer",
+      "tier_ko": "당사자 공시",
+      "rel": "background"
+     }
+    ]
+   },
+   {
+    "claim": "테크윙은 HBM 프로버와 메모리 테스트 핸들러를 공급하며, 10/28 인도 마이크론 법인과 94억9,722만원 검사장비 공급계약을 맺었다",
+    "evidence": [
+     {
+      "id": "G191",
+      "url": "https://www.techwing.co.kr/",
+      "title": "HBM 프로버·메모리 테스트 핸들러 → Techwing (KOSDAQ 089030, 비SEC) (offered_by)",
+      "publisher": null,
+      "date": null,
+      "tier": "official_issuer",
+      "tier_ko": "당사자 공시",
+      "rel": "background"
+     },
+     {
+      "id": "S192",
+      "url": "https://news.google.com/rss/articles/CBMiakFVX3lxTE1mNnRMRjBrc2FVdElMdmY4M0lIMGJVX0d3Qjc4VG5UUUEzMDFGNG5sNmlfaGlrZHRWTVVudzVYLUQzNGtTeUtpMmxzN3ZpNHhhalpTZGRkeDRHa0xxOEtnQWpIVm16Vl9pTWc?oc=5",
+      "title": "[특징주] 테크윙, 인도 마이크론과 94억원 반도체 검사장비 공급계약",
+      "publisher": "뉴스티앤티",
+      "date": "2026-10-28",
+      "tier": "third_party_report",
+      "tier_ko": "보도·리서치",
+      "rel": "direct"
+     }
+    ]
+   },
+   {
+    "claim": "HBM 캐파가 2027년까지 2배 가까이 늘면 적층 후 검사 핸들러 수요도 비례해 늘고, 테크윙이 현재 점유율을 지키면 2027년 매출은 2026년 대비 +60~80% 가 된다 (추론)",
+    "evidence": [],
+    "inference": true
+   }
+  ],
+  "risks": [
+   {
+    "claim": "Advantest 가 HBM 테스트 흐름(KGSD) 전체를 묶어 공급하면 핸들러만 파는 테크윙의 몫이 줄 수 있다",
+    "evidence": [
+     {
+      "id": "G190",
+      "url": "https://www.businesswire.com/news/home/20250804458862/en/teradyne-unveils-magnum-7h---the-next-generation-memory-tester-for-high-bandwidth-memory-devices",
+      "title": "적층 후 KGSD 테스트 (Known-Good-Stack-Die) → HBM 프로버·메모리 테스트 핸들러 (requires)",
+      "publisher": null,
+      "date": "2025-08-04",
+      "tier": "official_issuer",
+      "tier_ko": "당사자 공시",
+      "rel": "background"
+     }
+    ]
+   },
+   {
+    "claim": "12단 대신 8단 HBM4 로 물러선다는 보도 — 적층 높이가 낮아지면 검사 공정 증가분도 작아진다",
+    "evidence": [
+     {
+      "id": "S78",
+      "url": "https://news.google.com/rss/articles/CBMirgFBVV95cUxOaENzeGF6NkFYUU9Tc2JYc0lSZnBIUkE5THVXWndhT0ExSV9oc3ZJLXRVRkxkdXBLT09xNHA5eTdxamNfcnVUYWNnd3ZXWExOcURhWW9aU1c1YjVIVTMxaWJObkl3dkdHRjRkbkR2X0EzQmZRMUFMREIxaVYzczFIdUZCMVBYazRPaGxzWjFwNVAzcVVaZURiRDdNMWVoN2Q5c0NCUjUtRmE5TEhuUXc?oc=5",
+      "title": "NVIDIA quietly cuts Vera Rubin specs, HBM4 bandwidth and NVLink 6 speeds now lower",
+      "publisher": "VideoCardz.com",
+      "date": "2026-10-27",
+      "tier": "third_party_report",
+      "tier_ko": "보도·리서치",
+      "rel": "related"
+     }
+    ]
+   }
+  ],
+  "watch": [
+   {
+    "what": "테크윙 3분기 실적(11월)의 HBM 관련 수주잔고·매출 비중 공개",
+    "due": "2026-11-20",
+    "metric": "HBM 수주잔고",
+    "threshold": "≥ 500억원",
+    "direction": "strengthen",
+    "status": "pending"
+   },
+   {
+    "what": "SK hynix·Micron 향 HBM 핸들러 수주 공시",
+    "due": "2027-01-31",
+    "metric": "공시 건수",
+    "threshold": "≥ 1건 (100억원 이상)",
+    "direction": "strengthen",
+    "status": "pending"
+   },
+   {
+    "what": "테크윙 2026년 4분기 매출 (잠정)",
+    "due": "2027-02-15",
+    "metric": "YoY",
+    "threshold": "< 0%",
+    "direction": "weaken",
+    "status": "pending"
+   }
+  ],
+  "what_changed": null,
+  "assessment": {
+   "score": 6,
+   "parts": {
+    "company": {
+     "pts": 4,
+     "max": 4,
+     "note": "기업 직접 근거 2026-10-28 (0일 전)"
+    },
+    "confirm": {
+     "pts": 0,
+     "max": 1,
+     "note": "기업 근거의 숫자를 원문으로 확인하지 못함"
+    },
+    "structure": {
+     "pts": 2,
+     "max": 3,
+     "note": "최근 30일 관련 이슈 6건 · 공급사 2곳"
+    },
+    "exposure": {
+     "pts": 0,
+     "max": 2,
+     "note": "관련 사업의 매출 비중 미확인"
+    },
+    "counter": {
+     "pts": 0,
+     "max": 0,
+     "note": "주 기업 자신의 최근 반대 사실 없음"
+    }
+   },
+   "exposure": null,
+   "price": {
+    "close": 41400.0,
+    "r1m": -15.8,
+    "r3m": -8.1,
+    "r12m": -32.9,
+    "from_high": -41.8,
+    "from_low": 29.8,
+    "vol_ratio": 0.56,
+    "market_cap_usd": 1157706674.0,
+    "key": "KOSDAQ:089030",
+    "as_of": "2026-10-28",
+    "points": 256,
+    "flags": [],
+    "tenbagger": {
+     "candidate": true,
+     "reason": "시총 $1.16B · 저점 대비 +30%"
+    }
+   },
+   "bottlenecks": [],
+   "observations": [],
+   "anticipation": {
+    "score": 8,
+    "parts": {
+     "path": {
+      "pts": 3,
+      "max": 3,
+      "note": "4단계 경로, 최약 간선 확신도 0.80"
+     },
+     "unpriced": {
+      "pts": 2,
+      "max": 3,
+      "note": "기업 직접 근거 0일 전이지만 주가는 아직 (1개월 -16%)"
+     },
+     "room": {
+      "pts": 2,
+      "max": 2,
+      "note": "변화 규모 ≈ 매출의 70% (HBM 캐파 2배(S49: 수요=공급×2) × 테크윙 점유율 유지 ÷ TTM 매출 1,849억 → 2027년 매출 +70% (추정)) · 시총 $1.2B"
+     },
+     "lead": {
+      "pts": 1,
+      "max": 2,
+      "note": "숫자로 나타나기까지 약 3분기"
+     }
+    },
+    "trigger": "S46",
+    "path": [
+     "gen:hbm4",
+     "req:hbm_stack",
+     "process:stack_test_kgsd",
+     "equipment:hbm_prober_handler",
+     "company:techwing"
+    ],
+    "path_labels": [
+     "HBM4",
+     "고적층·미세 접합 확대",
+     "적층 후 KGSD 테스트",
+     "HBM 프로버·메모리 테스트 핸들러",
+     "Techwing"
+    ],
+    "hops": 4,
+    "mechanism": "적층이 높아질수록 스택 하나의 검사 시간이 길어지고 KGSD 검사가 추가돼, HBM 생산량 증가보다 핸들러·프로버 대수가 더 빨리 는다",
+    "lead_quarters": 3,
+    "effect": {
+     "pct_of_revenue": 70.0,
+     "basis": "HBM 캐파 2배(S49: 수요=공급×2) × 테크윙 점유율 유지 ÷ TTM 매출 1,849억 → 2027년 매출 +70% (추정)",
+     "url": "https://news.google.com/rss/articles/CBMiogFBVV95cUxQQ1NhbWRRM3RTWmNyNTAzcF93RVhXREF1YUp6a0VqVDZ2OXJfbG40N2RiYVVyLVh6b0o2WUNmRHlOa1BOOU1Lb1JrOHJkdVBzbC1WdEhSN3AyWmd2ZEFHcFFQOTFLZDR1UEVmc2RnY3g1ckp2SVJwYVdrWmZiXzNQby1ueC1HNklJSWowVTZ3dGRYb1Vhc0VQTWMtcFZHZUs1OHc?oc=5",
+     "as_of": "2026-10-28",
+     "estimated": false
+    },
+    "priced_in": "none"
+   },
+   "computed_at": "2026-10-28T15:46:30+00:00",
+   "version": 2
+  },
+  "anticipation": {
+   "trigger": "S46",
+   "trigger_title": "SK hynix 3Q26 영업이익률 80%, HBM 2029년까지 매진",
+   "path": [
+    "gen:hbm4",
+    "req:hbm_stack",
+    "process:stack_test_kgsd",
+    "equipment:hbm_prober_handler",
+    "company:techwing"
+   ],
+   "mechanism": "적층이 높아질수록 스택 하나의 검사 시간이 길어지고 KGSD 검사가 추가돼, HBM 생산량 증가보다 핸들러·프로버 대수가 더 빨리 는다",
+   "priced_in": "none",
+   "lead_quarters": 3,
+   "effect": {
+    "pct_of_revenue": 70.0,
+    "basis": "HBM 캐파 2배(S49: 수요=공급×2) × 테크윙 점유율 유지 ÷ TTM 매출 1,849억 → 2027년 매출 +70% (추정)",
+    "evidence": "S49",
+    "url": "https://news.google.com/rss/articles/CBMiogFBVV95cUxQQ1NhbWRRM3RTWmNyNTAzcF93RVhXREF1YUp6a0VqVDZ2OXJfbG40N2RiYVVyLVh6b0o2WUNmRHlOa1BOOU1Lb1JrOHJkdVBzbC1WdEhSN3AyWmd2ZEFHcFFQOTFLZDR1UEVmc2RnY3g1ckp2SVJwYVdrWmZiXzNQby1ueC1HNklJSWowVTZ3dGRYb1Vhc0VQTWMtcFZHZUs1OHc?oc=5",
+    "as_of": "2026-10-28"
+   }
+  },
+  "nodes": [
+   "gen:hbm4"
+  ],
+  "ecosystems": [
+   "hbm"
+  ],
+  "signal_refs": [
+   "events:company:techwing",
+   "f15cfab1714bf0dacfd0"
+  ],
+  "evidence_count": 7,
+  "last_signal_at": "2026-10-28",
+  "updated_at": "2026-10-28T15:46:30.151638+00:00",
+  "model": "claude-fable-5-1",
+  "method": "session",
+  "usage": null
+ },
+ {
+  "idea_key": "bd5d40716b32",
+  "status": "active",
+  "trend": "new",
+  "type": "confirmation",
+  "title": "AI 데이터센터 레이저 수요가 장비 주문으로 번졌다",
+  "thesis": "10/15 AIXTRON 은 3분기 잠정 수주가 €2.75억으로 전년 대비 +122%(컨센서스 €2.15억)라고 밝히고 그 동력을 'AI 데이터센터 통신용 레이저 장비 수요'라고 했다. InP 레이저 칩 부족이 기판(AXT)·에피(LandMark)를 지나 MOCVD 장비까지 닿았다는 첫 숫자이고, LandMark 가 2027년 CW 레이저 캐파를 2.5배로 늘리는 투자와 맞물린다.",
+  "stars": 2,
+  "stars_reason": "부분 확인 — 기업 자신의 잠정 수주 공시(사실)로 경로가 확인됐다. 전체 3분기 보고서(10/29)와 4분기 수주가 다음 확인",
+  "primary_company": "company:aixtron",
+  "companies": [
+   {
+    "id": "company:aixtron",
+    "name": "AIXTRON",
+    "ticker": "AIXA",
+    "exchange": "Xetra",
+    "size_band": "mid",
+    "role": "primary",
+    "why": "InP/GaAs MOCVD(G10-AsP) 공급사, 3분기 수주 €2.75억 +122% YoY"
+   },
+   {
+    "id": "company:landmark_optoelectronics",
+    "name": "LandMark Optoelectronics",
+    "ticker": "3081",
+    "exchange": "TPEx",
+    "size_band": "mid",
+    "role": "customer",
+    "why": "2027년 CW 레이저 캐파 2.5배, 설비 NT$22.7억 매입"
+   },
+   {
+    "id": "company:lite",
+    "name": "Lumentum",
+    "ticker": "LITE",
+    "exchange": "Nasdaq",
+    "size_band": "large",
+    "role": "customer",
+    "why": "AIXTRON G10-AsP 복수 주문, 6인치 InP 팹 2028년"
+   }
+  ],
+  "chain": [
+   {
+    "claim": "10/15 AIXTRON 3분기 잠정 수주 약 €2.75억(전년 €1.24억, +122%; 컨센서스 €2.146억), EBIT 마진 31% — 'AI 데이터센터 통신용 레이저 장비의 강한 수요'가 동력",
+    "evidence": [
+     {
+      "id": "S140",
+      "url": "https://news.google.com/rss/articles/CBMiogFBVV95cUxOQ0RMejBSNVlLMmhwRUM3RXBaY3hxNzJQS0VvcGFMTVhfVm9IVlJLcV9yX3NGZF9VRHRob0RBRy1Ub2xTUFpFVWszZHp5M2E1NGV1Zm1LaTRkTVdZM1dJRk01UjFpdVdxNXFCOE8zLUN0b0FFZmZoeXhzMmFmSEtWVzRwVFo2U2ZSdC04WERmMlZHQkY3Z3JIdHBtTGNNQnRIMUE?oc=5",
+      "title": "Why did AIXTRON (AIXXF) pre-announce a 122% jump in orders?",
+      "publisher": "Kalkine",
+      "date": "2026-10-28",
+      "tier": "third_party_report",
+      "tier_ko": "보도·리서치",
+      "note": "10/15 AIXTRON 3분기 잠정: 수주 약 €2.75억(전년 €1.24억, +122%; 컨센서스 €2.146억, 2분기 €2.145억), 매출 약 €1.84억(전년 €1.196억), 매출총이익률 약 48%(전년 39%), EBIT 약 €0.57억(마진 31%, 전년 13%). 수주 동력은 'AI 데이터센터 통신용 레이저 장비의 강한 수요'. 2026 가이던스 유지. 전체 3분기 보고서 10/29.",
+      "rel": "direct"
+     },
+     {
+      "id": "S143",
+      "url": "https://news.google.com/rss/articles/CBMiyAFBVV95cUxQd0dVd1JFdjlFRkkzQ3FPNzhiVXo4Y1FKRHZjY2VoQ29MY0pxT2xQTzUxM3c5Ri0tTERaYkhKeVZieXJyX25IbDFlSVBRVUZ1Q01jWThxWnBCVE9uLWlodDZsVHlLTXRSTW5VUlZQT1B1RTJ1ZnROYkhRNXpaZHpzd2pFbVFtUDJ5Qm1XOFRsNTU5QldtSXQ5ZUpkaU5hLUR3V1lnU2gxd1pKcUpBQTk3bHhQMzRJNkxrdHRSemxSYmpFX0lWYlhSVtIBzgFBVV95cUxNVEI5YU9wdWZ2Ykx2S3RxVmZ3SFlSUEU1YXlJMmNadHkyVFZhZGtKeE1tdFN2REVHMURTYnRlTF80YkRRTTdnV25oak9JVEhlTS1qOEoyeU9DbW9DRUdZaGtpeXBFZHZWME9xMi1wamllYmFxM2x3Z0p3N3hVRjYtTkJZenJYR3VVcWVNQ0NaLTc2dENweFZ5ZEJNT1FSZGN1YzFhaEJHYzNmOWgxVzY0eG8tcjFmSjNOWm9kMTZWOW1rSkZDY1JpYW9jV2EyUQ?oc=5",
+      "title": "Aixtron's Q3 orders double, exceed market expectations",
+      "publisher": "electronics.economictimes.indiatimes.com",
+      "date": "2026-10-21",
+      "tier": "third_party_report",
+      "tier_ko": "보도·리서치",
+      "note": "10/15 AIXTRON 3분기 잠정 수주 €2.75억(+122% YoY, 컨센서스 €2.146억 상회), 매출 €1.84억, EBIT 마진 31%. AI 데이터센터 통신용 레이저(InP 계열 MOCVD) 장비 수요가 동력.",
+      "rel": "direct"
+     }
+    ]
+   },
+   {
+    "claim": "LandMark 는 8/26 AI 수요 대응 설비 NT$22.7억 매입과 미국 고객 CW 레이저 4년 장기계약을 공시했고 2027년 캐파를 2026년의 2.5배로 잡았다 — 그 설비의 핵심이 InP MOCVD 다",
+    "evidence": [
+     {
+      "id": "S124",
+      "url": "https://news.google.com/rss/articles/CBMiT0FVX3lxTFBaM09aMnlhVHUxRnF2VTBzTUcxUXRhWUNHY2tHUWJScjlpS2ZYRTQwU0xTY2hCMmg2cTZsZks4a29RUWFEVkZ5U1NUV1dzakU?oc=5",
+      "title": "〈焦點股〉AI需求旺盛磷化銦缺口短期難解 聯亞飆漲半根停板",
+      "publisher": "鉅亨網",
+      "date": "2026-10-27",
+      "tier": "third_party_report",
+      "tier_ko": "보도·리서치",
+      "rel": "related"
+     },
+     {
+      "id": "G57",
+      "url": "https://aixtron.com/en/investors/AIXTRON%20receives%20multiple%20orders%20for%20G10-AsP%20MOCVD%20Systems%20from%20Lumentum%20to%20support%20expansion%20of%20High-Speed%20Optical%20Solutions%20for%20AI%20Networks_n13987",
+      "title": "InP/GaAs MOCVD 반응기 (MOCVD reactor) → AIXTRON (Xetra AIXA, 비SEC) (offered_by)",
+      "publisher": null,
+      "date": "2026-05-19",
+      "tier": "official_issuer",
+      "tier_ko": "당사자 공시",
+      "rel": "background"
+     }
+    ]
+   },
+   {
+    "claim": "Lumentum 도 AIXTRON G10-AsP 를 복수 주문했고 6인치 InP 팹을 2028년 중반 양산으로 짓는다",
+    "evidence": [
+     {
+      "id": "G52",
+      "url": "https://aixtron.com/en/investors/AIXTRON%20receives%20multiple%20orders%20for%20G10-AsP%20MOCVD%20Systems%20from%20Lumentum%20to%20support%20expansion%20of%20High-Speed%20Optical%20Solutions%20for%20AI%20Networks_n13987",
+      "title": "AIXTRON (Xetra AIXA, 비SEC) → Lumentum (LITE) (supplied_to)",
+      "publisher": null,
+      "date": "2026-05-19",
+      "tier": "official_issuer",
+      "tier_ko": "당사자 공시",
+      "rel": "background"
+     },
+     {
+      "id": "G49",
+      "url": "https://xenospectrum.com/en/inp-shortage-ai-optical-supply/",
+      "title": "Lumentum (LITE) → 6인치 InP 웨이퍼 양산 전환 (6-inch InP fab) (develops)",
+      "publisher": null,
+      "date": null,
+      "tier": "third_party_report",
+      "tier_ko": "보도·리서치",
+      "rel": "background"
+     }
+    ]
+   },
+   {
+    "claim": "레이저 칩 부족이 풀리려면 에피 캐파가 먼저 늘어야 하므로 MOCVD 주문은 2027년 상반기까지 분기 €2억 이상을 유지하고, 매출은 수주보다 2~3분기 늦게 따라온다 (추론)",
+    "evidence": [],
+    "inference": true
+   }
+  ],
+  "risks": [
+   {
+    "claim": "주문이 소수 고객(Lumentum·LandMark 급)에 몰려 있어 한 고객의 투자 지연이 분기 수주를 크게 흔든다 (추론)",
+    "evidence": []
+   },
+   {
+    "claim": "수주 서프라이즈는 10/15 에 발표돼 주가가 이미 반응했다 — 1차 수혜는 반영됐다고 본다",
+    "evidence": [
+     {
+      "id": "S140",
+      "url": "https://news.google.com/rss/articles/CBMiogFBVV95cUxOQ0RMejBSNVlLMmhwRUM3RXBaY3hxNzJQS0VvcGFMTVhfVm9IVlJLcV9yX3NGZF9VRHRob0RBRy1Ub2xTUFpFVWszZHp5M2E1NGV1Zm1LaTRkTVdZM1dJRk01UjFpdVdxNXFCOE8zLUN0b0FFZmZoeXhzMmFmSEtWVzRwVFo2U2ZSdC04WERmMlZHQkY3Z3JIdHBtTGNNQnRIMUE?oc=5",
+      "title": "Why did AIXTRON (AIXXF) pre-announce a 122% jump in orders?",
+      "publisher": "Kalkine",
+      "date": "2026-10-28",
+      "tier": "third_party_report",
+      "tier_ko": "보도·리서치",
+      "note": "10/15 AIXTRON 3분기 잠정: 수주 약 €2.75억(전년 €1.24억, +122%; 컨센서스 €2.146억, 2분기 €2.145억), 매출 약 €1.84억(전년 €1.196억), 매출총이익률 약 48%(전년 39%), EBIT 약 €0.57억(마진 31%, 전년 13%). 수주 동력은 'AI 데이터센터 통신용 레이저 장비의 강한 수요'. 2026 가이던스 유지. 전체 3분기 보고서 10/29.",
+      "rel": "direct"
+     }
+    ]
+   }
+  ],
+  "watch": [
+   {
+    "what": "AIXTRON 3분기 전체 보고서 — 2026 가이던스 상향 여부",
+    "due": "2026-10-29",
+    "metric": "FY26 매출 가이던스",
+    "threshold": "상향",
+    "direction": "strengthen",
+    "status": "pending"
+   },
+   {
+    "what": "AIXTRON 4분기 수주 (2027년 2월 잠정)",
+    "due": "2027-02-20",
+    "metric": "분기 수주",
+    "threshold": "≥ €2.0억",
+    "direction": "strengthen",
+    "status": "pending"
+   },
+   {
+    "what": "AIXTRON 4분기 수주",
+    "due": "2027-02-20",
+    "metric": "분기 수주",
+    "threshold": "< €1.5억",
+    "direction": "weaken",
+    "status": "pending"
+   }
+  ],
+  "what_changed": null,
+  "assessment": {
+   "score": 7,
+   "parts": {
+    "company": {
+     "pts": 4,
+     "max": 4,
+     "note": "기업 직접 근거 2026-10-28 (0일 전)"
+    },
+    "confirm": {
+     "pts": 1,
+     "max": 1,
+     "note": "원문에서 확인한 숫자 있음"
+    },
+    "structure": {
+     "pts": 3,
+     "max": 3,
+     "note": "병목: EML·고출력 CW 레이저 칩 공급 부족 · 최근 30일 관련 이슈 5건 · 상태 관측치 2개 · 공급사 1곳"
+    },
+    "exposure": {
+     "pts": 0,
+     "max": 2,
+     "note": "관련 사업의 매출 비중 미확인"
+    },
+    "counter": {
+     "pts": -1,
+     "max": 0,
+     "note": "주 기업 자신의 최근 반대 사실 1건"
+    }
+   },
+   "exposure": null,
+   "price": null,
+   "bottlenecks": [
+    {
+     "id": "bottleneck:laser_chip_shortage",
+     "label": "EML·고출력 CW 레이저 칩 공급 부족"
+    }
+   ],
+   "observations": [
+    {
+     "indicator_id": "obs:aixtron_order_intake_eur_m",
+     "label": "AIXTRON 분기 수주 (MOCVD — InP 레이저·GaN·SiC)",
+     "unit": "백만 유로",
+     "as_of": "2026-09-30",
+     "value": 275.0,
+     "source_url": "https://live.deutsche-boerse.com/news/EQS-News-AIXTRON-Q3-2026-Order-intake-and-operating-profitability-significantly-exceed-market-expectations-392cf040-c49a-44e1-be8e-d02ab1f8702d"
+    },
+    {
+     "indicator_id": "obs:landmark_cw_laser_capacity_multiple_2027",
+     "label": "聯亞(LandMark) 2027년 실리콘 포토닉스(CW 레이저) 캐파 — 2026 대비 배수",
+     "unit": "배",
+     "as_of": "2026-08-26",
+     "value": 2.5,
+     "source_url": "https://uanalyze.com.tw/articles/2769454097"
+    }
+   ],
+   "anticipation": {
+    "score": 9,
+    "parts": {
+     "path": {
+      "pts": 3,
+      "max": 3,
+      "note": "3단계 경로, 최약 간선 확신도 0.80"
+     },
+     "unpriced": {
+      "pts": 2,
+      "max": 3,
+      "note": "기업 직접 근거 있음, 주가 미확인"
+     },
+     "room": {
+      "pts": 2,
+      "max": 2,
+      "note": "변화 규모 ≈ 매출의 50% (3분기 수주 €2.75억 × 4 ÷ 2025년 매출 수준(€1.2억×4, 추정) → 매출 +50% 이상 (추정))"
+     },
+     "lead": {
+      "pts": 2,
+      "max": 2,
+      "note": "숫자로 나타나기까지 약 2분기"
+     }
+    },
+    "trigger": "S140",
+    "path": [
+     "component:eml",
+     "product:lite_eml_200g",
+     "company:lite",
+     "company:aixtron"
+    ],
+    "path_labels": [
+     "200G EML 광변조 레이저",
+     "Lumentum 200G PAM4 EML",
+     "Lumentum",
+     "AIXTRON"
+    ],
+    "hops": 3,
+    "mechanism": "레이저 칩 공급 부족은 InP 에피 캐파 증설로만 풀리고, 에피 증설은 MOCVD 반응기 대수로 직결된다",
+    "lead_quarters": 2,
+    "effect": {
+     "pct_of_revenue": 50.0,
+     "basis": "3분기 수주 €2.75억 × 4 ÷ 2025년 매출 수준(€1.2억×4, 추정) → 매출 +50% 이상 (추정)",
+     "url": "https://news.google.com/rss/articles/CBMiogFBVV95cUxOQ0RMejBSNVlLMmhwRUM3RXBaY3hxNzJQS0VvcGFMTVhfVm9IVlJLcV9yX3NGZF9VRHRob0RBRy1Ub2xTUFpFVWszZHp5M2E1NGV1Zm1LaTRkTVdZM1dJRk01UjFpdVdxNXFCOE8zLUN0b0FFZmZoeXhzMmFmSEtWVzRwVFo2U2ZSdC04WERmMlZHQkY3Z3JIdHBtTGNNQnRIMUE?oc=5",
+     "as_of": "2026-10-28",
+     "estimated": false
+    },
+    "priced_in": "partial"
+   },
+   "computed_at": "2026-10-28T15:46:30+00:00",
+   "version": 2
+  },
+  "anticipation": {
+   "trigger": "S140",
+   "trigger_title": "AIXTRON 최근 소식 4건",
+   "path": [
+    "component:eml",
+    "product:lite_eml_200g",
+    "company:lite",
+    "company:aixtron"
+   ],
+   "mechanism": "레이저 칩 공급 부족은 InP 에피 캐파 증설로만 풀리고, 에피 증설은 MOCVD 반응기 대수로 직결된다",
+   "priced_in": "partial",
+   "lead_quarters": 2,
+   "effect": {
+    "pct_of_revenue": 50.0,
+    "basis": "3분기 수주 €2.75억 × 4 ÷ 2025년 매출 수준(€1.2억×4, 추정) → 매출 +50% 이상 (추정)",
+    "evidence": "S140",
+    "url": "https://news.google.com/rss/articles/CBMiogFBVV95cUxOQ0RMejBSNVlLMmhwRUM3RXBaY3hxNzJQS0VvcGFMTVhfVm9IVlJLcV9yX3NGZF9VRHRob0RBRy1Ub2xTUFpFVWszZHp5M2E1NGV1Zm1LaTRkTVdZM1dJRk01UjFpdVdxNXFCOE8zLUN0b0FFZmZoeXhzMmFmSEtWVzRwVFo2U2ZSdC04WERmMlZHQkY3Z3JIdHBtTGNNQnRIMUE?oc=5",
+    "as_of": "2026-10-28"
+   }
+  },
+  "nodes": [
+   "bottleneck:inp_substrate_shortage",
+   "component:pic",
+   "material:inp",
+   "material:silicon_photonics"
+  ],
+  "ecosystems": [
+   "optics",
+   "power"
+  ],
+  "signal_refs": [
+   "events:company:aixtron",
+   "events:company:landmark_optoelectronics"
+  ],
+  "evidence_count": 6,
+  "last_signal_at": "2026-10-28",
+  "updated_at": "2026-10-28T15:46:30.151638+00:00",
+  "model": "claude-fable-5-1",
+  "method": "session",
+  "usage": null
+ },
+ {
+  "idea_key": "ffbe511b77cd",
+  "status": "active",
+  "trend": "unchanged",
+  "type": "confirmation",
+  "title": "패키징이 모자라 후공정 가격이 오른다",
+  "thesis": "10/27 TSMC 가 CoWoS 가격을 최대 20% 올리는 방안을 검토한다는 보도가 나온 날, 力成은 3분기 EPS NT$3.55(사상 최고)·매출 +26.9% YoY·매출총이익률 24.0% 를 발표하고 패키징·테스트 가동률이 90% 를 넘어 대부분 고객이 가격 조정을 받아들이고 있다고 밝혔다. 메모리(DRAM·NAND) 후공정에 CoWoS 대안 패널 팬아웃(PiFO)을 갖춘 중형 후공정사라, 가격 인상이 4분기 마진에 바로 나타난다.",
+  "stars": 2,
+  "stars_reason": "확인 — 기업 공식 숫자(법설회 공시)로 가동률·가격·마진이 확인됐다 (새 기업 직접 근거 없음 → ★ 유지)",
+  "primary_company": "company:powertech",
+  "companies": [
+   {
+    "id": "company:powertech",
+    "name": "Powertech Technology",
+    "ticker": "6239",
+    "exchange": "TWSE",
+    "size_band": "mid",
+    "role": "primary",
+    "why": "3분기 EPS NT$3.55 기록, 가동률 90% 초과, 가격 조정 수용 중"
+   },
+   {
+    "id": "company:tsmc",
+    "name": "Taiwan Semiconductor Manufacturing",
+    "ticker": "TSM",
+    "exchange": "NYSE",
+    "size_band": "mega",
+    "role": "customer",
+    "why": "CoWoS 가격 최대 20% 인상 검토 보도"
+   },
+   {
+    "id": "company:ase_technology",
+    "name": "ASE Technology Holding",
+    "ticker": "ASX",
+    "exchange": "NYSE",
+    "size_band": "large",
+    "role": "peer",
+    "why": "9월 매출 +46%"
+   },
+   {
+    "id": "company:amkr",
+    "name": "Amkor Technology",
+    "ticker": "AMKR",
+    "exchange": "Nasdaq",
+    "size_band": "mid",
+    "role": "peer",
+    "why": "3분기 매출 보합, 4분기 가이던스 $19~20억 — 통신 비중 축소"
+   }
+  ],
+  "chain": [
+   {
+    "claim": "10/27 TSMC 가 Blackwell·Rubin 수요로 CoWoS 가격을 최대 20% 올리는 방안을 검토 중이라는 보도가 나왔다 (공식 확인 아님)",
+    "evidence": [
+     {
+      "id": "S50",
+      "url": "https://www.tomshardware.com/tech-industry/semiconductors/tsmc-reportedly-weighs-20-percent-cowos-price-increase-as-nvidia-blackwell-and-rubin-chips-put-pressure-on-packaging-capacity-equipment-lead-times-stretch-to-eight-months",
+      "title": "TSMC reportedly weighs 20% CoWoS price increase as Nvidia Blackwell and Rubin chips put pressure on packaging capacity",
+      "publisher": "Tom's Hardware",
+      "date": "2026-10-27",
+      "tier": "third_party_report",
+      "tier_ko": "보도·리서치",
+      "rel": "industry"
+     }
+    ]
+   },
+   {
+    "claim": "10/27 力成 법설회: 3분기 매출 NT$253.3억(+26.9% YoY), 매출총이익률 24.0%(+7.9%p), EPS NT$3.55 사상 최고; 패키징·테스트 가동률 모두 90% 초과, 4분기 매출·GM 추가 상승",
+    "evidence": [
+     {
+      "id": "S133",
+      "url": "https://mops.twse.com.tw/mops/#/web/t05st01?companyId=6239&date=20261027",
+      "title": "Powertech Technology 중대공시: 公告本公司今日法人說明會摘要",
+      "publisher": "TWSE 중대공시",
+      "date": "2026-10-27",
+      "tier": "official_issuer",
+      "tier_ko": "당사자 공시",
+      "note": "10/27 力成 법설회: 3분기 매출 NT$253.3억(+9.6% QoQ, +26.9% YoY), 매출총이익률 24.0%(+7.9%p YoY), 영업이익 NT$44.7억(+117.9% YoY), EPS NT$3.55 사상 최고. 믹스 로직 43%·NAND 28%·DRAM 20%·SiP 9%. 패키징·테스트 가동률 모두 90% 초과, 4분기 매출·GM 추가 상승 전망. 대부분 고객이 가격 조정을 수용 중(폭·시점 미공개).",
+      "rel": "direct"
+     },
+     {
+      "id": "S130",
+      "url": "https://news.google.com/rss/articles/CBMiT0FVX3lxTE9NQmdNT25SQUVtQ1Brc3ZlenA3X1Myb09rNzhTeGdHRkpsTEwwMFBnR0N1MUNhLV80U1FYRzkwT191VU5jQzRvNG02eVFHT2M?oc=5",
+      "title": "〈力成法說〉Q3 EPS 3.55元創新高 Q4營收毛利率、稼動率可望續揚",
+      "publisher": "鉅亨網",
+      "date": "2026-10-27",
+      "tier": "third_party_report",
+      "tier_ko": "보도·리서치",
+      "note": "10/27 力成 3분기 EPS NT$3.55 사상 최고(매출 NT$253.3억 +26.9% YoY, GM 24.0%), 1~9월 EPS NT$9.05. CEO: 패키징·테스트 가동률 90% 초과, 4분기 가동률·매출·GM 계속 상승. DRAM 주문 가시성 높음, AI 서버 eSSD 로 NAND 성장, 로직 두 자릿수 성장.",
+      "rel": "direct"
+     }
+    ]
+   },
+   {
+    "claim": "대부분 고객이 가격 조정을 수용하고 있어 4분기 매출총이익률은 3분기 24.0% 에서 1~2%p 더 오른다 (추론: 가동률 90% 초과 상태의 가격 인상은 마진으로 직행)",
+    "evidence": [
+     {
+      "id": "S130",
+      "url": "https://news.google.com/rss/articles/CBMiT0FVX3lxTE9NQmdNT25SQUVtQ1Brc3ZlenA3X1Myb09rNzhTeGdHRkpsTEwwMFBnR0N1MUNhLV80U1FYRzkwT191VU5jQzRvNG02eVFHT2M?oc=5",
+      "title": "〈力成法說〉Q3 EPS 3.55元創新高 Q4營收毛利率、稼動率可望續揚",
+      "publisher": "鉅亨網",
+      "date": "2026-10-27",
+      "tier": "third_party_report",
+      "tier_ko": "보도·리서치",
+      "note": "10/27 力成 3분기 EPS NT$3.55 사상 최고(매출 NT$253.3억 +26.9% YoY, GM 24.0%), 1~9월 EPS NT$9.05. CEO: 패키징·테스트 가동률 90% 초과, 4분기 가동률·매출·GM 계속 상승. DRAM 주문 가시성 높음, AI 서버 eSSD 로 NAND 성장, 로직 두 자릿수 성장.",
+      "rel": "direct"
+     }
+    ]
+   },
+   {
+    "claim": "같은 날 Amkor 는 3분기 매출 보합·4분기 가이던스 $19~20억을 내 가격 인상이 모든 OSAT 에 균등하지 않음을 보여 준다 — 메모리·대만 후공정 쪽 쏠림이다",
+    "evidence": [
+     {
+      "id": "S135",
+      "url": "https://www.sec.gov/Archives/edgar/data/1047127/000104712726000049/amkr9302026erex-991.htm",
+      "title": "Amkor Technology: Amkor Technology Reports Financial Results for the Third Quarter 2026",
+      "publisher": "SEC EDGAR (Amkor Technology)",
+      "date": "2026-10-26",
+      "tier": "official_issuer",
+      "tier_ko": "당사자 공시",
+      "note": "10/26 Amkor 3분기 매출 $19.9억(전년比 +0.2%), 매출총이익률 18.3%(전년 14.3%), 영업이익 $2.25억, EPS $0.76. 4분기 가이던스 매출 $19~20억·GM 18~19%·EPS $0.65~0.75. 2026 설비투자 약 $25억. Communications 비중 51%→37%, Computing·Automotive 기록 매출. 선진 패키징(플립칩·메모리·WLP) $16.3억 = 매출 82%(전년 $16.8억).",
+      "rel": "related"
+     }
+    ]
+   }
+  ],
+  "risks": [
+   {
+    "claim": "로직 43%·NAND 28%·DRAM 20% 믹스에서 메모리 가격 사이클이 꺾이면 가동률이 먼저 빠진다",
+    "evidence": [
+     {
+      "id": "S133",
+      "url": "https://mops.twse.com.tw/mops/#/web/t05st01?companyId=6239&date=20261027",
+      "title": "Powertech Technology 중대공시: 公告本公司今日法人說明會摘要",
+      "publisher": "TWSE 중대공시",
+      "date": "2026-10-27",
+      "tier": "official_issuer",
+      "tier_ko": "당사자 공시",
+      "note": "10/27 力成 법설회: 3분기 매출 NT$253.3억(+9.6% QoQ, +26.9% YoY), 매출총이익률 24.0%(+7.9%p YoY), 영업이익 NT$44.7억(+117.9% YoY), EPS NT$3.55 사상 최고. 믹스 로직 43%·NAND 28%·DRAM 20%·SiP 9%. 패키징·테스트 가동률 모두 90% 초과, 4분기 매출·GM 추가 상승 전망. 대부분 고객이 가격 조정을 수용 중(폭·시점 미공개).",
+      "rel": "direct"
+     }
+    ]
+   },
+   {
+    "claim": "저점 대비 +82% 로 올랐고 법설회 숫자는 이미 공개됐다 — 확인 아이디어다",
+    "evidence": [
+     {
+      "id": "S130",
+      "url": "https://news.google.com/rss/articles/CBMiT0FVX3lxTE9NQmdNT25SQUVtQ1Brc3ZlenA3X1Myb09rNzhTeGdHRkpsTEwwMFBnR0N1MUNhLV80U1FYRzkwT191VU5jQzRvNG02eVFHT2M?oc=5",
+      "title": "〈力成法說〉Q3 EPS 3.55元創新高 Q4營收毛利率、稼動率可望續揚",
+      "publisher": "鉅亨網",
+      "date": "2026-10-27",
+      "tier": "third_party_report",
+      "tier_ko": "보도·리서치",
+      "note": "10/27 力成 3분기 EPS NT$3.55 사상 최고(매출 NT$253.3억 +26.9% YoY, GM 24.0%), 1~9월 EPS NT$9.05. CEO: 패키징·테스트 가동률 90% 초과, 4분기 가동률·매출·GM 계속 상승. DRAM 주문 가시성 높음, AI 서버 eSSD 로 NAND 성장, 로직 두 자릿수 성장.",
+      "rel": "direct"
+     }
+    ]
+   }
+  ],
+  "watch": [
+   {
+    "what": "力成 10월 월매출 (TWSE)",
+    "due": "2026-11-10",
+    "metric": "YoY",
+    "threshold": "≥ +25%",
+    "direction": "strengthen",
+    "status": "pending"
+   },
+   {
+    "what": "力成 4분기 매출총이익률 (2027년 1월 법설회)",
+    "due": "2027-01-31",
+    "metric": "GM",
+    "threshold": "≥ 25%",
+    "direction": "strengthen",
+    "status": "pending"
+   },
+   {
+    "what": "力成 11월 월매출",
+    "due": "2026-12-10",
+    "metric": "YoY",
+    "threshold": "< +10%",
+    "direction": "weaken",
+    "status": "pending"
+   }
+  ],
+  "what_changed": "업계: 10/27 법설회 공시로 3분기 EPS NT$3.55·GM 24.0%·가동률 90% 초과·가격 조정 수용을 확인",
+  "assessment": {
+   "score": 5,
+   "parts": {
+    "company": {
+     "pts": 4,
+     "max": 4,
+     "note": "기업 직접 근거 2026-10-27 (1일 전)"
+    },
+    "confirm": {
+     "pts": 1,
+     "max": 1,
+     "note": "원문에서 확인한 숫자 있음"
+    },
+    "structure": {
+     "pts": 2,
+     "max": 3,
+     "note": "병목: CoWoS 2.5D 패키징 생산능력 부족 · 최근 30일 관련 이슈 1건 · 상태 관측치 1개 · 공급사 1곳"
+    },
+    "exposure": {
+     "pts": 0,
+     "max": 2,
+     "note": "관련 사업의 매출 비중 미확인"
+    },
+    "counter": {
+     "pts": -2,
+     "max": 0,
+     "note": "주 기업 자신의 최근 반대 사실 2건"
+    }
+   },
+   "exposure": null,
+   "price": {
+    "close": 272.5,
+    "r1m": -6.7,
+    "r3m": -2.5,
+    "r12m": 77.5,
+    "from_high": -28.1,
+    "from_low": 81.7,
+    "vol_ratio": 0.78,
+    "market_cap_usd": 6357328660.0,
+    "key": "TWSE:6239",
+    "as_of": "2026-10-28",
+    "points": 258,
+    "flags": [],
+    "tenbagger": {
+     "candidate": false,
+     "reason": "시총 $6.4B > $3B"
+    }
+   },
+   "bottlenecks": [
+    {
+     "id": "bottleneck:cowos_capacity",
+     "label": "CoWoS 2.5D 패키징 생산능력 부족"
+    }
+   ],
+   "observations": [
+    {
+     "indicator_id": "obs:powertech_utilization_pct",
+     "label": "力成(Powertech) 패키징·테스트 가동률",
+     "unit": "%",
+     "as_of": "2026-10-27",
+     "value": 90.0,
+     "source_url": "https://news.cnyes.com/news/id/6638326"
+    }
+   ],
+   "anticipation": {
+    "score": 7,
+    "parts": {
+     "path": {
+      "pts": 2,
+      "max": 3,
+      "note": "2단계 경로, 최약 간선 확신도 0.60"
+     },
+     "unpriced": {
+      "pts": 2,
+      "max": 3,
+      "note": "기업 직접 근거 1일 전이지만 주가는 아직 (1개월 -7%)"
+     },
+     "room": {
+      "pts": 1,
+      "max": 2,
+      "note": "변화 규모 ≈ 매출의 15% (가격 조정 수용(S130) + 가동률 90% 초과에서 매출 +15%·마진 +2%p (추정)) · 시총 $6.4B"
+     },
+     "lead": {
+      "pts": 2,
+      "max": 2,
+      "note": "숫자로 나타나기까지 약 1분기"
+     }
+    },
+    "trigger": "S50",
+    "path": [
+     "bottleneck:cowos_capacity",
+     "tech:foplp",
+     "company:powertech"
+    ],
+    "path_labels": [
+     "CoWoS 2.5D 패키징 생산능력 부족",
+     "팬아웃 패널레벨 패키징",
+     "Powertech Technology"
+    ],
+    "hops": 2,
+    "mechanism": "CoWoS 가격이 오르면 대안 패널 팬아웃(PiFO)과 메모리 후공정의 가격 협상력이 같이 올라간다",
+    "lead_quarters": 1,
+    "effect": {
+     "pct_of_revenue": 15.0,
+     "basis": "가격 조정 수용(S130) + 가동률 90% 초과에서 매출 +15%·마진 +2%p (추정)",
+     "url": "https://news.google.com/rss/articles/CBMiT0FVX3lxTE9NQmdNT25SQUVtQ1Brc3ZlenA3X1Myb09rNzhTeGdHRkpsTEwwMFBnR0N1MUNhLV80U1FYRzkwT191VU5jQzRvNG02eVFHT2M?oc=5",
+     "as_of": "2026-10-27",
+     "estimated": false
+    },
+    "priced_in": "full"
+   },
+   "computed_at": "2026-10-28T15:46:30+00:00",
+   "version": 2
+  },
+  "anticipation": {
+   "trigger": "S50",
+   "trigger_title": "TSMC, CoWoS 가격 최대 20% 인상 검토 보도",
+   "path": [
+    "bottleneck:cowos_capacity",
+    "tech:foplp",
+    "company:powertech"
+   ],
+   "mechanism": "CoWoS 가격이 오르면 대안 패널 팬아웃(PiFO)과 메모리 후공정의 가격 협상력이 같이 올라간다",
+   "priced_in": "full",
+   "lead_quarters": 1,
+   "effect": {
+    "pct_of_revenue": 15.0,
+    "basis": "가격 조정 수용(S130) + 가동률 90% 초과에서 매출 +15%·마진 +2%p (추정)",
+    "evidence": "S130",
+    "url": "https://news.google.com/rss/articles/CBMiT0FVX3lxTE9NQmdNT25SQUVtQ1Brc3ZlenA3X1Myb09rNzhTeGdHRkpsTEwwMFBnR0N1MUNhLV80U1FYRzkwT191VU5jQzRvNG02eVFHT2M?oc=5",
+    "as_of": "2026-10-27"
+   }
+  },
+  "nodes": [
+   "bottleneck:cowos_capacity",
+   "tech:foplp"
+  ],
+  "ecosystems": [
+   "hbm"
+  ],
+  "signal_refs": [
+   "5b808ff0bcde7c2c161f",
+   "events:company:amkr",
+   "events:company:powertech"
+  ],
+  "evidence_count": 4,
+  "last_signal_at": "2026-10-27",
+  "updated_at": "2026-10-28T15:46:30.151638+00:00",
+  "model": "claude-fable-5-1",
+  "method": "session",
+  "usage": null
+ },
+ {
+  "idea_key": "ddff4804a831",
+  "status": "active",
+  "trend": "unchanged",
+  "type": "transition",
+  "title": "광 DSP 시장의 소형 도전자가 매출을 내기 시작했다",
+  "thesis": "10/22 MaxLinear 는 3분기 매출 $2.181억(+72% YoY), 인프라 부문 +210%, 4분기 가이던스 $2.4~2.6억을 발표했다 — Keystone PAM4 DSP 양산 확대가 숫자로 확인됐고 1.6T 대응 Rushmore·Annapurna 로 다음 세대에 들어섰다. 다만 저점 대비 +472% 오른 주가는 이 성장을 상당히 반영했고, 영업현금흐름은 아직 마이너스다.",
+  "stars": 2,
+  "stars_reason": "확인 — 8-K 실적으로 인프라 성장이 확인됐다 (새 기업 직접 근거 없음 → ★ 유지)",
+  "primary_company": "company:mxl",
+  "companies": [
+   {
+    "id": "company:mxl",
+    "name": "Maxlinear, Inc",
+    "ticker": "MXL",
+    "exchange": "Nasdaq",
+    "size_band": "small",
+    "role": "primary",
+    "why": "3분기 매출 +72%, 인프라 +210%, 4분기 가이던스 $2.4~2.6억"
+   },
+   {
+    "id": "company:crdo",
+    "name": "Credo",
+    "ticker": "CRDO",
+    "exchange": "Nasdaq",
+    "size_band": "large",
+    "role": "competitor",
+    "why": "AEC 시장 — MaxLinear 진입"
+   },
+   {
+    "id": "company:avgo",
+    "name": "Broadcom",
+    "ticker": "AVGO",
+    "exchange": "Nasdaq",
+    "size_band": "mega",
+    "role": "competitor",
+    "why": "광 DSP 1위"
+   },
+   {
+    "id": "company:nvda",
+    "name": "NVIDIA",
+    "ticker": "NVDA",
+    "exchange": "Nasdaq",
+    "size_band": "mega",
+    "role": "customer",
+    "why": "1.6T 전환의 수요처"
+   }
+  ],
+  "chain": [
+   {
+    "claim": "10/22 MaxLinear 3분기 매출 $2.181억(+29% QoQ, +72% YoY), non-GAAP GM 60.0%, 인프라 +210% YoY; 4분기 가이던스 $2.4~2.6억",
+    "evidence": [
+     {
+      "id": "S138",
+      "url": "https://www.sec.gov/Archives/edgar/data/1288469/000128846926000060/mxl-20261022.htm",
+      "title": "Maxlinear, Inc 8-K: 중요 계약 체결, 실적 발표, 채무 발생",
+      "publisher": "SEC EDGAR (Maxlinear, Inc)",
+      "date": "2026-10-22",
+      "tier": "official_issuer",
+      "tier_ko": "당사자 공시",
+      "note": "10/22 MaxLinear 3분기 매출 $2.181억(+29% QoQ, +72% YoY), GAAP GM 58.7%, non-GAAP GM 60.0%. 인프라 부문 +210% YoY — '광 AI 데이터센터 제품 채택 가속'(Keystone PAM4 DSP 볼륨 램프, 1.6T Rushmore·Annapurna). 4분기 가이던스 매출 $2.4~2.6억, non-GAAP GM 59~62%. 영업현금흐름 3분기 −$1,360만, 장기부채 $1.239억→$1.641억(리볼버 $4,000만 인출), ",
+      "rel": "direct"
+     },
+     {
+      "id": "S39",
+      "url": "https://www.sec.gov/Archives/edgar/data/1288469/000128846926000060/a09302026exhibit991.htm",
+      "title": "MAXLINEAR, INC: MaxLinear, Inc. Announces Third Quarter 2026 Financial Results",
+      "publisher": "SEC EDGAR (MAXLINEAR, INC)",
+      "date": "2026-10-22",
+      "tier": "official_issuer",
+      "tier_ko": "당사자 공시",
+      "rel": "direct"
+     }
+    ]
+   },
+   {
+    "claim": "Keystone 5nm 100G/lane PAM4 DSP 가 대량 양산 단계이고 회사는 2026 광 데이터센터 매출을 $2.1~2.3억으로 봤다 — 3분기 한 분기 매출이 그 연간 전망에 근접했다",
+    "evidence": [
+     {
+      "id": "G200",
+      "url": "https://www.nasdaq.com/articles/mxls-ai-optical-growth-accelerates-can-it-challenge-avgo-mrvl",
+      "title": "MaxLinear Keystone 5nm 100G/lane PAM4 DSP → Maxlinear, Inc (MXL) (offered_by)",
+      "publisher": null,
+      "date": "2026-08-26",
+      "tier": "third_party_report",
+      "tier_ko": "보도·리서치",
+      "rel": "background"
+     },
+     {
+      "id": "G199",
+      "url": "https://investors.maxlinear.com/press-releases/detail/602/maxlinear-to-showcase-nextgeneration-1-6t-rushmore-dsp/",
+      "title": "MaxLinear Keystone 5nm 100G/lane PAM4 DSP → 고속 SerDes·DSP (implements)",
+      "publisher": null,
+      "date": "2026-03-12",
+      "tier": "official_issuer",
+      "tier_ko": "당사자 공시",
+      "rel": "background"
+     }
+    ]
+   },
+   {
+    "claim": "1.6T 전환은 200G/lane DSP 를 요구하고 MaxLinear 는 Rushmore·Annapurna 로 대응한다 — 2027년 1.6T 램프에서 점유율 10% 안팎을 가져가면 인프라 매출은 2026년의 2배가 된다 (추론)",
+    "evidence": [
+     {
+      "id": "G201",
+      "url": "https://standards.ieee.org/ieee/802.3dj/11115/",
+      "title": "1.6 Tb/s Ethernet 및 200 Gb/s/lane 전환 → 고속 SerDes·DSP (requires)",
+      "publisher": null,
+      "date": null,
+      "tier": "technical_inference",
+      "tier_ko": "기술 추론",
+      "rel": "background"
+     }
+    ]
+   },
+   {
+    "claim": "영업현금흐름은 3분기 −$1,360만, 장기부채 $1.641억으로 늘어 성장 자금을 차입으로 대고 있다",
+    "evidence": [
+     {
+      "id": "S138",
+      "url": "https://www.sec.gov/Archives/edgar/data/1288469/000128846926000060/mxl-20261022.htm",
+      "title": "Maxlinear, Inc 8-K: 중요 계약 체결, 실적 발표, 채무 발생",
+      "publisher": "SEC EDGAR (Maxlinear, Inc)",
+      "date": "2026-10-22",
+      "tier": "official_issuer",
+      "tier_ko": "당사자 공시",
+      "note": "10/22 MaxLinear 3분기 매출 $2.181억(+29% QoQ, +72% YoY), GAAP GM 58.7%, non-GAAP GM 60.0%. 인프라 부문 +210% YoY — '광 AI 데이터센터 제품 채택 가속'(Keystone PAM4 DSP 볼륨 램프, 1.6T Rushmore·Annapurna). 4분기 가이던스 매출 $2.4~2.6억, non-GAAP GM 59~62%. 영업현금흐름 3분기 −$1,360만, 장기부채 $1.239억→$1.641억(리볼버 $4,000만 인출), ",
+      "rel": "direct"
+     }
+    ]
+   }
+  ],
+  "risks": [
+   {
+    "claim": "저점 대비 +472%, 12개월 +393% — 성장의 상당 부분이 주가에 반영됐다",
+    "evidence": [
+     {
+      "id": "S40",
+      "url": "https://news.google.com/rss/articles/CBMimAFBVV95cUxOeTdpWDJoMHRLSzRkbGdVTUxLbjVaR2JmU2VmOFg5NUQtTnFlTk9WbjlPR0hsbXhJMW5pcVRHSkxNeTJqbE5DNnQyclF2MzZzVU4xYk9yNWFCV2p0THgxQktmMDhZTjl2cFgxcG9hOVRIaFpSUmdBcVBkSzZUbWJ0aS1zTXdoVTd5MWpiT0UwUnVHTTBLU2tRLQ?oc=5",
+      "title": "MaxLinear (MXL) Stock Slips As Q3 Earnings Fuel AI Rebound Questions",
+      "publisher": "Yahoo Finance",
+      "date": "2026-10-24",
+      "tier": "third_party_report",
+      "tier_ko": "보도·리서치",
+      "rel": "direct"
+     }
+    ]
+   },
+   {
+    "claim": "Marvell·Broadcom 의 1.6T DSP 가 먼저 인증되면 MaxLinear 의 1.6T 점유율 가정이 깨진다",
+    "evidence": [
+     {
+      "id": "G201",
+      "url": "https://standards.ieee.org/ieee/802.3dj/11115/",
+      "title": "1.6 Tb/s Ethernet 및 200 Gb/s/lane 전환 → 고속 SerDes·DSP (requires)",
+      "publisher": null,
+      "date": null,
+      "tier": "technical_inference",
+      "tier_ko": "기술 추론",
+      "rel": "background"
+     }
+    ]
+   }
+  ],
+  "watch": [
+   {
+    "what": "MaxLinear 4분기 실적 — 매출이 가이던스 $2.4~2.6억 안에 들고 인프라 비중 공개",
+    "due": "2027-02-05",
+    "metric": "매출",
+    "threshold": "≥ $2.4억",
+    "direction": "strengthen",
+    "status": "pending"
+   },
+   {
+    "what": "1.6T Rushmore 양산 출하 발표",
+    "due": "2027-03-31",
+    "metric": "발표",
+    "threshold": "양산 출하",
+    "direction": "strengthen",
+    "status": "pending"
+   },
+   {
+    "what": "MaxLinear 4분기 실적",
+    "due": "2027-02-05",
+    "metric": "매출",
+    "threshold": "< $2.3억",
+    "direction": "weaken",
+    "status": "pending"
+   }
+  ],
+  "what_changed": "업계: 10/22 8-K: 3분기 매출 +72%, 인프라 +210%, 4분기 가이던스 $2.4~2.6억; 영업현금흐름 −$1,360만·리볼버 $4,000만 인출",
+  "assessment": {
+   "score": 7,
+   "parts": {
+    "company": {
+     "pts": 4,
+     "max": 4,
+     "note": "기업 직접 근거 2026-10-22 (6일 전)"
+    },
+    "confirm": {
+     "pts": 1,
+     "max": 1,
+     "note": "원문에서 확인한 숫자 있음"
+    },
+    "structure": {
+     "pts": 3,
+     "max": 3,
+     "note": "병목: 신호 무결성·비트오류율 BER · 최근 30일 관련 이슈 2건 · 공급사 1곳"
+    },
+    "exposure": {
+     "pts": 0,
+     "max": 2,
+     "note": "관련 사업의 매출 비중 미확인"
+    },
+    "counter": {
+     "pts": -1,
+     "max": 0,
+     "note": "주 기업 자신의 최근 반대 사실 1건"
+    }
+   },
+   "exposure": null,
+   "price": {
+    "close": 74.67,
+    "r1m": -17.0,
+    "r3m": 30.4,
+    "r12m": 392.9,
+    "from_high": -41.7,
+    "from_low": 472.2,
+    "vol_ratio": 1.7,
+    "market_cap_usd": 6794970597.0,
+    "key": "MXL",
+    "as_of": "2026-10-27",
+    "points": 275,
+    "flags": [
+     "1년 저점 대비 +472% — 이미 5.7배"
+    ],
+    "tenbagger": {
+     "candidate": false,
+     "reason": "시총 $6.8B > $3B"
+    }
+   },
+   "bottlenecks": [
+    {
+     "id": "bottleneck:optic_ber",
+     "label": "신호 무결성·비트오류율 BER"
+    }
+   ],
+   "observations": [],
+   "anticipation": {
+    "score": 5,
+    "parts": {
+     "path": {
+      "pts": 1,
+      "max": 3,
+      "note": "4단계 경로, 최약 간선 확신도 0.40"
+     },
+     "unpriced": {
+      "pts": 0,
+      "max": 3,
+      "note": "1년 저점 대비 +472% — 이미 반영"
+     },
+     "room": {
+      "pts": 2,
+      "max": 2,
+      "note": "변화 규모 ≈ 매출의 60% (4분기 가이던스 중간 $2.5억 × 4 = $10억 ÷ TTM $6.6억 → +50~60% (추정)) · 시총 $6.8B"
+     },
+     "lead": {
+      "pts": 2,
+      "max": 2,
+      "note": "숫자로 나타나기까지 약 2분기"
+     }
+    },
+    "trigger": "S138",
+    "path": [
+     "gen:1p6t",
+     "req:1p6t",
+     "component:optical_dsp",
+     "product:mxl_keystone",
+     "company:mxl"
+    ],
+    "path_labels": [
+     "1.6T 광모듈 세대",
+     "1.6 Tb/s Ethernet 및 200 Gb/s/lane 전환",
+     "고속 SerDes·DSP",
+     "MaxLinear Keystone 5nm 100G/lane PAM4 DSP",
+     "Maxlinear, Inc"
+    ],
+    "hops": 4,
+    "mechanism": "800G→1.6T 전환은 트랜시버당 DSP 단가를 올리고, 3위 공급사가 인증을 통과하면 점유율보다 단가 상승이 먼저 매출로 온다",
+    "lead_quarters": 2,
+    "effect": {
+     "pct_of_revenue": 60.0,
+     "basis": "4분기 가이던스 중간 $2.5억 × 4 = $10억 ÷ TTM $6.6억 → +50~60% (추정)",
+     "url": "https://www.sec.gov/Archives/edgar/data/1288469/000128846926000060/mxl-20261022.htm",
+     "as_of": "2026-10-22",
+     "estimated": false
+    },
+    "priced_in": "partial"
+   },
+   "computed_at": "2026-10-28T15:46:30+00:00",
+   "version": 2
+  },
+  "anticipation": {
+   "trigger": "S138",
+   "trigger_title": "Maxlinear, Inc 최근 소식 2건",
+   "path": [
+    "gen:1p6t",
+    "req:1p6t",
+    "component:optical_dsp",
+    "product:mxl_keystone",
+    "company:mxl"
+   ],
+   "mechanism": "800G→1.6T 전환은 트랜시버당 DSP 단가를 올리고, 3위 공급사가 인증을 통과하면 점유율보다 단가 상승이 먼저 매출로 온다",
+   "priced_in": "partial",
+   "lead_quarters": 2,
+   "effect": {
+    "pct_of_revenue": 60.0,
+    "basis": "4분기 가이던스 중간 $2.5억 × 4 = $10억 ÷ TTM $6.6억 → +50~60% (추정)",
+    "evidence": "S138",
+    "url": "https://www.sec.gov/Archives/edgar/data/1288469/000128846926000060/mxl-20261022.htm",
+    "as_of": "2026-10-22"
+   }
+  },
+  "nodes": [
+   "component:aec",
+   "component:optical_dsp",
+   "gen:1p6t",
+   "gen:800g",
+   "product:credo_aec"
+  ],
+  "ecosystems": [
+   "optics"
+  ],
+  "signal_refs": [
+   "3fcc15c9b7c92474b124",
+   "events:company:mxl"
+  ],
+  "evidence_count": 5,
+  "last_signal_at": "2026-10-22",
+  "updated_at": "2026-10-28T15:46:30.151638+00:00",
+  "model": "claude-fable-5-1",
+  "method": "session",
+  "usage": null
+ },
+ {
+  "idea_key": "d499818aa147",
+  "status": "active",
+  "trend": "strengthened",
+  "type": "bottleneck",
+  "title": "HBM 을 쌓기 전 좋은 칩 고르기가 병목이다",
+  "thesis": "10/28 SK hynix 는 HBM 수요가 공급의 2배이고 2029년까지 매진이라고 밝혔고, 10/21 유니테스트는 SK하이닉스와 162억2,600만원(2025년 매출의 14.72%) 검사장비 계약(2027-02-12 까지)을 공시했다. 유니테스트는 SK하이닉스 HBM4 번인 테스터 양산 검증을 마친 초소형 공급사(시총 $0.19B)라 HBM 증설이 수주로 잡히는데, 주가는 12개월 −32% 로 시장이 아직 HBM 고리를 보지 않는다.",
+  "stars": 2,
+  "stars_reason": "부분 확인 — 기업 자신의 수주 공시(사실)가 경로를 확인했지만 HBM 번인 테스터 수주 자체는 아직 공시되지 않았다",
+  "primary_company": "company:unitest",
+  "companies": [
+   {
+    "id": "company:unitest",
+    "name": "UniTest",
+    "ticker": "086390",
+    "exchange": "KOSDAQ",
+    "size_band": "micro",
+    "role": "primary",
+    "why": "HBM 번인 테스터(SK hynix HBM4 양산 퀄 완료), 10/21 162억 검사장비 수주"
+   },
+   {
+    "id": "company:skhynix",
+    "name": "SK hynix",
+    "ticker": "000660",
+    "exchange": "KRX",
+    "size_band": "mega",
+    "role": "customer",
+    "why": "HBM 2029년까지 매진·수요 2배"
+   },
+   {
+    "id": "company:techwing",
+    "name": "Techwing",
+    "ticker": "089030",
+    "exchange": "KOSDAQ",
+    "size_band": "small",
+    "role": "peer",
+    "why": "같은 검사 단계의 프로버·핸들러"
+   },
+   {
+    "id": "company:form",
+    "name": "Formfactor Inc",
+    "ticker": "FORM",
+    "exchange": "Nasdaq",
+    "size_band": "mid",
+    "role": "peer",
+    "why": "HBM 프로브카드 +50%"
+   }
+  ],
+  "chain": [
+   {
+    "claim": "10/28 SK hynix: DRAM·HBM 2029년까지 매진, HBM 수요가 공급의 2배 — 증설이 이어진다",
+    "evidence": [
+     {
+      "id": "S46",
+      "url": "https://news.skhynix.com/en/q3-2026-business-results-1/",
+      "title": "SK hynix Announces 3Q26 Financial Results",
+      "publisher": "SK hynix Newsroom",
+      "date": "2026-10-28",
+      "tier": "official_issuer",
+      "tier_ko": "당사자 공시",
+      "rel": "related"
+     },
+     {
+      "id": "S49",
+      "url": "https://news.google.com/rss/articles/CBMiogFBVV95cUxQQ1NhbWRRM3RTWmNyNTAzcF93RVhXREF1YUp6a0VqVDZ2OXJfbG40N2RiYVVyLVh6b0o2WUNmRHlOa1BOOU1Lb1JrOHJkdVBzbC1WdEhSN3AyWmd2ZEFHcFFQOTFLZDR1UEVmc2RnY3g1ckp2SVJwYVdrWmZiXzNQby1ueC1HNklJSWowVTZ3dGRYb1Vhc0VQTWMtcFZHZUs1OHc?oc=5",
+      "title": "HBM Demand Runs at Twice Supply, SK hynix CEO Says",
+      "publisher": "Seoul Economic Daily",
+      "date": "2026-10-28",
+      "tier": "third_party_report",
+      "tier_ko": "보도·리서치",
+      "rel": "related"
+     }
+    ]
+   },
+   {
+    "claim": "10/21 유니테스트는 SK하이닉스와 162억2,600만원(2025년 연결매출 대비 14.72%) 반도체 검사장비 공급계약(2026-10-21~2027-02-12)을 공시했다",
+    "evidence": [
+     {
+      "id": "S154",
+      "url": "https://news.google.com/rss/articles/CBMie0FVX3lxTE9ob2NCZVQ3UmpZXzlaQmZrekUzdHRraTRDN0pUc1NmZThLUF9lZFkyZXdnY2FiTjR6b29xZzA5a0FQODFFMTBXbzk3cERkaUllSUIyR3NhdnphMnRMa1l5ck4yVC1MZy1Uel8zNUFveEVGU2c5MGktcFNQQQ?oc=5",
+      "title": "유니테스트, SK하이닉스와 162억2600만원 규모 반도체 검사장비 공급계약 체결",
+      "publisher": "디지털투데이",
+      "date": "2026-10-21",
+      "tier": "third_party_report",
+      "tier_ko": "보도·리서치",
+      "note": "2026-10-21 공시: SK하이닉스와 반도체 검사장비 공급계약 162억2,600만 원(2025년 연결매출 대비 14.72%), 계약기간 2026-10-21~2027-02-12.",
+      "rel": "direct"
+     },
+     {
+      "id": "S152",
+      "url": "https://news.google.com/rss/articles/CBMiWkFVX3lxTFBZaW5KRXlpNzROT0YweGREaVJGRE1MOU9NT3YwNHo5MnFmMXdQM0RyLS03M2xER2dPeVFSVGxDTUwxTHNQYVhaOExEMVZ0Z0Vrd08yeUxqaGppUQ?oc=5",
+      "title": "유니테스트 수주공시 - 반도체 검사장비 162.3억원 (매출액대비 14.72 %)",
+      "publisher": "한국경제",
+      "date": "2026-10-21",
+      "tier": "third_party_report",
+      "tier_ko": "보도·리서치",
+      "note": "10/21 유니테스트, SK하이닉스와 162.3억원(2025 매출 대비 14.72%) 규모 반도체 검사장비(Gen6 SSD 테스터) 공급계약 공시.",
+      "rel": "direct"
+     }
+    ]
+   },
+   {
+    "claim": "적층 전 KGD 수율 검사는 HBM 번인으로 보완되고, 유니테스트는 SK하이닉스 HBM4 번인 테스터 양산 퀄을 마쳐 2분기 흑자 전환의 동력이 됐다",
+    "evidence": [
+     {
+      "id": "G81",
+      "url": "https://www.uni-test.com/kr/ir/ir_notice.php?bgu=view&idx=142",
+      "title": "적층 전 Known-Good-Die 수율 검사 → HBM 번인 (웨이퍼·스택 레벨) (mitigated_by)",
+      "publisher": null,
+      "date": "2026-03-05",
+      "tier": "official_issuer",
+      "tier_ko": "당사자 공시",
+      "rel": "background"
+     },
+     {
+      "id": "G82",
+      "url": "https://www.uni-test.com/kr/ir/ir_notice.php?bgu=view&idx=148",
+      "title": "HBM 번인 (웨이퍼·스택 레벨) → UniTest (KOSDAQ 086390, 비SEC) (offered_by)",
+      "publisher": null,
+      "date": "2026-08-14",
+      "tier": "official_issuer",
+      "tier_ko": "당사자 공시",
+      "rel": "background"
+     }
+    ]
+   },
+   {
+    "claim": "대만 테스트 소모품(WinWay +88%, MPI +82%)이 AI·HBM 테스트 수요를 보여 주고, 12단 이상 적층은 번인 시간이 길어져 테스터 대수가 적층 높이에 비례해 는다 (추론)",
+    "evidence": [
+     {
+      "id": "S31",
+      "url": "https://mops.twse.com.tw/mops/#/web/t146sb05?companyId=6515#tw:6515-2026-09",
+      "title": "WinWay 월매출 2026-09: 1,250,373 NT$ 천 (YoY +87.7%, MoM -26.7%)",
+      "publisher": "TWSE",
+      "date": "2026-10-27",
+      "tier": "official_issuer",
+      "tier_ko": "당사자 공시",
+      "rel": "related"
+     },
+     {
+      "id": "S32",
+      "url": "https://mops.twse.com.tw/mops/#/web/t146sb05?companyId=6223#tw:6223-2026-09",
+      "title": "MPI 월매출 2026-09: 2,047,814 NT$ 천 (YoY +82.2%)",
+      "publisher": "TPEx",
+      "date": "2026-10-27",
+      "tier": "official_issuer",
+      "tier_ko": "당사자 공시",
+      "rel": "related"
+     }
+    ]
+   }
+  ],
+  "risks": [
+   {
+    "claim": "이번 162억 계약은 Gen6 SSD 테스터 보도도 있어 HBM 번인 테스터 수주가 아닐 수 있다",
+    "evidence": [
+     {
+      "id": "S152",
+      "url": "https://news.google.com/rss/articles/CBMiWkFVX3lxTFBZaW5KRXlpNzROT0YweGREaVJGRE1MOU9NT3YwNHo5MnFmMXdQM0RyLS03M2xER2dPeVFSVGxDTUwxTHNQYVhaOExEMVZ0Z0Vrd08yeUxqaGppUQ?oc=5",
+      "title": "유니테스트 수주공시 - 반도체 검사장비 162.3억원 (매출액대비 14.72 %)",
+      "publisher": "한국경제",
+      "date": "2026-10-21",
+      "tier": "third_party_report",
+      "tier_ko": "보도·리서치",
+      "note": "10/21 유니테스트, SK하이닉스와 162.3억원(2025 매출 대비 14.72%) 규모 반도체 검사장비(Gen6 SSD 테스터) 공급계약 공시.",
+      "rel": "direct"
+     }
+    ]
+   },
+   {
+    "claim": "8단 HBM4 로 물러서면 번인 시간 증가분이 작아진다",
+    "evidence": [
+     {
+      "id": "S78",
+      "url": "https://news.google.com/rss/articles/CBMirgFBVV95cUxOaENzeGF6NkFYUU9Tc2JYc0lSZnBIUkE5THVXWndhT0ExSV9oc3ZJLXRVRkxkdXBLT09xNHA5eTdxamNfcnVUYWNnd3ZXWExOcURhWW9aU1c1YjVIVTMxaWJObkl3dkdHRjRkbkR2X0EzQmZRMUFMREIxaVYzczFIdUZCMVBYazRPaGxzWjFwNVAzcVVaZURiRDdNMWVoN2Q5c0NCUjUtRmE5TEhuUXc?oc=5",
+      "title": "NVIDIA quietly cuts Vera Rubin specs, HBM4 bandwidth and NVLink 6 speeds now lower",
+      "publisher": "VideoCardz.com",
+      "date": "2026-10-27",
+      "tier": "third_party_report",
+      "tier_ko": "보도·리서치",
+      "rel": "related"
+     }
+    ]
+   },
+   {
+    "claim": "TTM 영업이익률 −5.6% — 수주가 늦으면 적자가 이어진다",
+    "evidence": []
+   }
+  ],
+  "watch": [
+   {
+    "what": "유니테스트 3분기 실적(11월) 검사장비 매출·수주잔고",
+    "due": "2026-11-16",
+    "metric": "수주잔고",
+    "threshold": "≥ 500억",
+    "direction": "strengthen",
+    "status": "pending"
+   },
+   {
+    "what": "SK하이닉스 향 HBM 번인 테스터 추가 수주 공시",
+    "due": "2027-01-31",
+    "metric": "공시",
+    "threshold": "≥ 1건 (100억 이상)",
+    "direction": "strengthen",
+    "status": "pending"
+   },
+   {
+    "what": "유니테스트 4분기 잠정 매출",
+    "due": "2027-02-15",
+    "metric": "YoY",
+    "threshold": "< 0%",
+    "direction": "weaken",
+    "status": "pending"
+   }
+  ],
+  "what_changed": "10/28 SK hynix HBM 2029년 매진·수요 2배 발언 추가; 10/21 162억 계약 기간(2027-02-12) 확인",
+  "assessment": {
+   "score": 7,
+   "parts": {
+    "company": {
+     "pts": 4,
+     "max": 4,
+     "note": "기업 직접 근거 2026-10-21 (7일 전)"
+    },
+    "confirm": {
+     "pts": 1,
+     "max": 1,
+     "note": "원문에서 확인한 숫자 있음"
+    },
+    "structure": {
+     "pts": 3,
+     "max": 3,
+     "note": "병목: 적층 전 Known-Good-Die 수율 검사, 메모리 테스터(ATE) 과점 · 최근 30일 관련 이슈 8건 · 공급사 2곳"
+    },
+    "exposure": {
+     "pts": 0,
+     "max": 2,
+     "note": "관련 사업의 매출 비중 미확인"
+    },
+    "counter": {
+     "pts": -1,
+     "max": 0,
+     "note": "주 기업 자신의 최근 반대 사실 1건"
+    }
+   },
+   "exposure": null,
+   "price": {
+    "close": 12000.0,
+    "r1m": -9.6,
+    "r3m": 38.4,
+    "r12m": -31.8,
+    "from_high": -47.1,
+    "from_low": 82.4,
+    "vol_ratio": 0.62,
+    "market_cap_usd": 191376865.0,
+    "key": "KOSDAQ:086390",
+    "as_of": "2026-10-28",
+    "points": 256,
+    "flags": [],
+    "tenbagger": {
+     "candidate": true,
+     "reason": "시총 $0.19B · 저점 대비 +82%"
+    }
+   },
+   "bottlenecks": [
+    {
+     "id": "bottleneck:hbm_kged",
+     "label": "적층 전 Known-Good-Die 수율 검사"
+    },
+    {
+     "id": "bottleneck:memory_ate_concentration",
+     "label": "메모리 테스터(ATE) 과점"
+    }
+   ],
+   "observations": [],
+   "anticipation": {
+    "score": 9,
+    "parts": {
+     "path": {
+      "pts": 3,
+      "max": 3,
+      "note": "2단계 경로, 최약 간선 확신도 0.80"
+     },
+     "unpriced": {
+      "pts": 2,
+      "max": 3,
+      "note": "기업 직접 근거 7일 전이지만 주가는 아직 (1개월 -10%)"
+     },
+     "room": {
+      "pts": 2,
+      "max": 2,
+      "note": "변화 규모 ≈ 매출의 80% (HBM 캐파 2배(S49) × 번인 시간 1.5배(추정) × 유니테스트 SK hynix 번인 테스터 점유율 ÷ TTM 매출 1,315억 → +8) · 시총 $0.2B"
+     },
+     "lead": {
+      "pts": 2,
+      "max": 2,
+      "note": "숫자로 나타나기까지 약 2분기"
+     }
+    },
+    "trigger": "S46",
+    "path": [
+     "bottleneck:hbm_kged",
+     "process:hbm_burn_in",
+     "company:unitest"
+    ],
+    "path_labels": [
+     "적층 전 Known-Good-Die 수율 검사",
+     "HBM 번인",
+     "UniTest"
+    ],
+    "hops": 2,
+    "mechanism": "적층 높이가 올라갈수록 KGD 검사만으로 수율을 못 잡아 번인이 길어지고, 번인 테스터 대수는 적층 높이와 생산량의 곱으로 는다",
+    "lead_quarters": 2,
+    "effect": {
+     "pct_of_revenue": 80.0,
+     "basis": "HBM 캐파 2배(S49) × 번인 시간 1.5배(추정) × 유니테스트 SK hynix 번인 테스터 점유율 ÷ TTM 매출 1,315억 → +80% (추정)",
+     "url": "https://news.google.com/rss/articles/CBMiogFBVV95cUxQQ1NhbWRRM3RTWmNyNTAzcF93RVhXREF1YUp6a0VqVDZ2OXJfbG40N2RiYVVyLVh6b0o2WUNmRHlOa1BOOU1Lb1JrOHJkdVBzbC1WdEhSN3AyWmd2ZEFHcFFQOTFLZDR1UEVmc2RnY3g1ckp2SVJwYVdrWmZiXzNQby1ueC1HNklJSWowVTZ3dGRYb1Vhc0VQTWMtcFZHZUs1OHc?oc=5",
+     "as_of": "2026-10-28",
+     "estimated": false
+    },
+    "priced_in": "partial"
+   },
+   "computed_at": "2026-10-28T15:46:30+00:00",
+   "version": 2
+  },
+  "anticipation": {
+   "trigger": "S46",
+   "trigger_title": "SK hynix 3Q26 영업이익률 80%, HBM 2029년까지 매진",
+   "path": [
+    "bottleneck:hbm_kged",
+    "process:hbm_burn_in",
+    "company:unitest"
+   ],
+   "mechanism": "적층 높이가 올라갈수록 KGD 검사만으로 수율을 못 잡아 번인이 길어지고, 번인 테스터 대수는 적층 높이와 생산량의 곱으로 는다",
+   "priced_in": "partial",
+   "lead_quarters": 2,
+   "effect": {
+    "pct_of_revenue": 80.0,
+    "basis": "HBM 캐파 2배(S49) × 번인 시간 1.5배(추정) × 유니테스트 SK hynix 번인 테스터 점유율 ÷ TTM 매출 1,315억 → +80% (추정)",
+    "evidence": "S49",
+    "url": "https://news.google.com/rss/articles/CBMiogFBVV95cUxQQ1NhbWRRM3RTWmNyNTAzcF93RVhXREF1YUp6a0VqVDZ2OXJfbG40N2RiYVVyLVh6b0o2WUNmRHlOa1BOOU1Lb1JrOHJkdVBzbC1WdEhSN3AyWmd2ZEFHcFFQOTFLZDR1UEVmc2RnY3g1ckp2SVJwYVdrWmZiXzNQby1ueC1HNklJSWowVTZ3dGRYb1Vhc0VQTWMtcFZHZUs1OHc?oc=5",
+    "as_of": "2026-10-28"
+   }
+  },
+  "nodes": [
+   "bottleneck:hbm_kged",
+   "gen:hbm4",
+   "process:kgd_test"
+  ],
+  "ecosystems": [
+   "hbm"
+  ],
+  "signal_refs": [
+   "ce9f9a31e3d51a8eec95",
+   "events:company:unitest",
+   "f15cfab1714bf0dacfd0"
+  ],
+  "evidence_count": 8,
+  "last_signal_at": "2026-10-28",
+  "updated_at": "2026-10-28T15:46:30.151638+00:00",
+  "model": "claude-fable-5-1",
+  "method": "session",
+  "usage": null
+ },
+ {
+  "idea_key": "edffc8103fb7",
+  "status": "active",
+  "trend": "weakened",
+  "type": "transition",
+  "title": "800VDC 데이터센터는 기계식 대신 반도체 차단기로",
+  "thesis": "10/26~28 Infineon 은 Nvidia 와 800VDC GaN 전력변환 협력을 넓히고 Enphase 에 900V GaN 양방향 스위치를 공급한다고 밝혀, 800VDC 가 시연에서 공급 단계로 넘어갔다. Ideal Power 의 양방향 스위치 B-TRAN 은 Power Integrations 와 함께 만든 800VDC 상시형 반도체 차단기의 핵심 소자로 시제품이 작동 중이지만, 시총 $49M·매출 거의 0 인 회사라 레퍼런스 디자인이 첫 주문으로 바뀌어야 가설이 산다.",
+  "stars": 1,
+  "stars_reason": "가설 — 경로(800VDC→SSCB→B-TRAN)는 확인됐지만 Ideal Power 자신의 수주·매출은 아직 없다",
+  "primary_company": "company:ipwr",
+  "companies": [
+   {
+    "id": "company:ipwr",
+    "name": "Ideal Power Inc.",
+    "ticker": "IPWR",
+    "exchange": "Nasdaq",
+    "size_band": "micro",
+    "role": "primary",
+    "why": "B-TRAN 양방향 스위치, Power Integrations 와 800VDC SSCB 시제품"
+   },
+   {
+    "id": "company:powi",
+    "name": "Power Integrations",
+    "ticker": "POWI",
+    "exchange": "Nasdaq",
+    "size_band": "mid",
+    "role": "peer",
+    "why": "1700V InnoMux-2 + B-TRAN 레퍼런스 디자인"
+   },
+   {
+    "id": "company:infineon",
+    "name": "Infineon Technologies",
+    "ticker": "IFX",
+    "exchange": "Xetra",
+    "size_band": "large",
+    "role": "competitor",
+    "why": "900V GaN 양방향 스위치를 Enphase SST 에 공급 — 같은 기능의 대형 경쟁자"
+   },
+   {
+    "id": "company:sedg",
+    "name": "SolarEdge Technologies",
+    "ticker": "SEDG",
+    "exchange": "Nasdaq",
+    "size_band": "small",
+    "role": "peer",
+    "why": "Infineon 과 800VDC SSCB 협력"
+   }
+  ],
+  "chain": [
+   {
+    "claim": "10/21~26 Infineon 은 Nvidia 800VDC AI 데이터센터용 GaN 전력변환 협력을 확대했고 10/26~28 Enphase 에 세계 최초 900V GaN 모놀리식 양방향 스위치를 공급한다고 밝혔다",
+    "evidence": [
+     {
+      "id": "S14",
+      "url": "https://semiconductor-today.com/news_items/2026/oct/infineon-211026.shtml",
+      "title": "Infineon collaborates with NVIDIA on GaN-based power conversion systems for 800VDC AI data centers",
+      "publisher": "Semiconductor Today",
+      "date": "2026-10-21",
+      "tier": "third_party_report",
+      "tier_ko": "보도·리서치",
+      "rel": "related"
+     },
+     {
+      "id": "S76",
+      "url": "https://www.eenewseurope.com/en/infineon-and-enphase-develop-900-v-gan-switches-for-ai-data-centres/",
+      "title": "Infineon and Enphase develop 900 V GaN switches for AI data centres",
+      "publisher": "eeNews Europe",
+      "date": "2026-10-28",
+      "tier": "third_party_report",
+      "tier_ko": "보도·리서치",
+      "rel": "related"
+     },
+     {
+      "id": "S77",
+      "url": "https://semiconductor-today.com/news_items/2026/oct/infineon-261026.shtml",
+      "title": "Infineon supplying world’s first 900V GaN monolithic BDS devices to Enphase",
+      "publisher": "Semiconductor Today",
+      "date": "2026-10-26",
+      "tier": "third_party_report",
+      "tier_ko": "보도·리서치",
+      "rel": "related"
+     }
+    ]
+   },
+   {
+    "claim": "10/16~22 Power Integrations 와 Ideal Power 는 B-TRAN 양방향 스위치로 800VDC 데이터센터용 상시형 반도체 차단기를 공동 개발 — 시제품 작동, 레퍼런스 디자인 개발 중",
+    "evidence": [
+     {
+      "id": "S71",
+      "url": "https://semiconductor-today.com/news_items/2026/oct/powerintegrations-161026.shtml",
+      "title": "Power Integrations and Ideal Power collaborate on efficient, always-on solid-state circuit breakers",
+      "publisher": "Semiconductor Today",
+      "date": "2026-10-16",
+      "tier": "third_party_report",
+      "tier_ko": "보도·리서치",
+      "rel": "direct"
+     },
+     {
+      "id": "S72",
+      "url": "https://news.google.com/rss/articles/CBMiygFBVV95cUxNR3M5SnhTQnR6UmNhVUVxeXZLNHhoZHZPZ1hkcWdNOHdQa08yekVYUFZLbmJWOEZNNVhZVUMyMDAzNTFMNE0yNUJCa2VVNHkzaERzZ3FhdkVOTjlORTY5NF9iSFdESHJKT3NRdEpyYWhjX3VkMkF2NVJpcmU0blZiSEJ5TXhsUmZLNWJjMzZYWl9CVVlpN1BGZHdIMGNfaGdxZHhaU0tCbDBNMHNKM0dKei1TZ3BjZThRUHhPcVF0Ym44aWZSUzl1YUtn?oc=5",
+      "title": "Power Integrations and Ideal Power partner on solid-state circuit breaker technology",
+      "publisher": "New Electronics",
+      "date": "2026-10-22",
+      "tier": "third_party_report",
+      "tier_ko": "보도·리서치",
+      "rel": "direct"
+     },
+     {
+      "id": "G1",
+      "url": "https://s25.q4cdn.com/829851629/files/doc_news/Power-Integrations-and-Ideal-Power-Collaborate-on-Efficient-Always-On-Solid-State-Circuit-Breakers-for-800-VDC-AI-Data-Centers-2026.pdf",
+      "title": "Ideal Power Inc. (IPWR) → 반도체 차단기 (SSCB, Solid-State Circuit Breaker) (develops)",
+      "publisher": null,
+      "date": "2026-10-12",
+      "tier": "official_issuer",
+      "tier_ko": "당사자 공시",
+      "rel": "background"
+     },
+     {
+      "id": "G5",
+      "url": "https://s25.q4cdn.com/829851629/files/doc_news/Power-Integrations-and-Ideal-Power-Collaborate-on-Efficient-Always-On-Solid-State-Circuit-Breakers-for-800-VDC-AI-Data-Centers-2026.pdf",
+      "title": "Power Integrations (POWI) → 반도체 차단기 (SSCB, Solid-State Circuit Breaker) (develops)",
+      "publisher": null,
+      "date": "2026-10-12",
+      "tier": "official_issuer",
+      "tier_ko": "당사자 공시",
+      "rel": "background"
+     }
+    ]
+   },
+   {
+    "claim": "800VDC 랙은 아크가 꺼지지 않는 DC 를 끊어야 하므로 기계식 차단기 대신 반도체 차단기(SSCB)가 필수가 되고, 랙당 수십 개의 양방향 스위치가 들어간다 (추론)",
+    "evidence": [
+     {
+      "id": "G4",
+      "url": "https://www.eenewseurope.com/en/infineon-and-solaredge-bring-solid-state-protection-to-800-vdc-ai-data-centers/",
+      "title": "SolarEdge Technologies (SEDG) → 반도체 차단기 (SSCB, Solid-State Circuit Breaker) (develops)",
+      "publisher": null,
+      "date": "2026-09-10",
+      "tier": "third_party_report",
+      "tier_ko": "보도·리서치",
+      "rel": "background"
+     }
+    ]
+   },
+   {
+    "claim": "Nvidia 가 2027년 1MW 랙에 800VDC 를 채택하면 SSCB 양산은 2027년 하반기부터이고, Ideal Power 가 레퍼런스 디자인의 소자 공급을 따내면 2027년 매출 $5~10M, 2028년 수천만 달러가 된다 (추론)",
+    "evidence": [
+     {
+      "id": "G9",
+      "url": "https://developer.nvidia.com/blog/nvidia-800-v-hvdc-architecture-will-power-the-next-Generation-of-ai-factories",
+      "title": "NVIDIA (NVDA) — HBM·광·전력 공통 수요처 → 800VDC 배전 아키텍처 (NVIDIA 2027 1MW 랙 목표) (adopts)",
+      "publisher": null,
+      "date": "2025-05-20",
+      "tier": "customer_statement",
+      "tier_ko": "고객 진술",
+      "rel": "background"
+     }
+    ]
+   }
+  ],
+  "risks": [
+   {
+    "claim": "Infineon 이 같은 기능의 GaN 양방향 스위치를 먼저 양산 공급하기 시작해 B-TRAN 의 틈이 좁다",
+    "evidence": [
+     {
+      "id": "S77",
+      "url": "https://semiconductor-today.com/news_items/2026/oct/infineon-261026.shtml",
+      "title": "Infineon supplying world’s first 900V GaN monolithic BDS devices to Enphase",
+      "publisher": "Semiconductor Today",
+      "date": "2026-10-26",
+      "tier": "third_party_report",
+      "tier_ko": "보도·리서치",
+      "rel": "related"
+     }
+    ]
+   },
+   {
+    "claim": "매출 거의 0(TTM $3만), 영업현금 소진 — 수주 전에 증자 희석이 올 수 있다",
+    "evidence": []
+   }
+  ],
+  "watch": [
+   {
+    "what": "Power Integrations·Ideal Power SSCB 레퍼런스 디자인 공개",
+    "due": "2027-03-31",
+    "metric": "발표",
+    "threshold": "레퍼런스 디자인 출시",
+    "direction": "strengthen",
+    "status": "pending"
+   },
+   {
+    "what": "Ideal Power B-TRAN 첫 양산 주문 공시(8-K)",
+    "metric": "주문",
+    "threshold": "≥ $1M",
+    "direction": "strengthen",
+    "status": "pending"
+   },
+   {
+    "what": "Ideal Power 10-K/분기 보고의 자금 조달·희석",
+    "due": "2027-03-31",
+    "metric": "증자",
+    "threshold": "주식수 +30% 이상 증자",
+    "direction": "weaken",
+    "status": "pending"
+   }
+  ],
+  "what_changed": "10/26~28 Infineon-Enphase 900V GaN 양방향 스위치 공급 확인 — 경쟁자가 먼저 공급 시작",
+  "assessment": {
+   "score": 7,
+   "parts": {
+    "company": {
+     "pts": 4,
+     "max": 4,
+     "note": "기업 직접 근거 2026-10-22 (6일 전)"
+    },
+    "confirm": {
+     "pts": 0,
+     "max": 1,
+     "note": "기업 근거의 숫자를 원문으로 확인하지 못함"
+    },
+    "structure": {
+     "pts": 3,
+     "max": 3,
+     "note": "병목: 전력변환 단계·효율·제어, HVDC 보호·차단·안전 · 최근 30일 관련 이슈 8건 · 공급사 1곳"
+    },
+    "exposure": {
+     "pts": 0,
+     "max": 2,
+     "note": "관련 사업의 매출 비중 미확인"
+    },
+    "counter": {
+     "pts": 0,
+     "max": 0,
+     "note": "주 기업 자신의 최근 반대 사실 없음"
+    }
+   },
+   "exposure": null,
+   "price": {
+    "close": 3.0,
+    "r1m": -24.1,
+    "r3m": -10.4,
+    "r12m": -46.5,
+    "from_high": -66.6,
+    "from_low": 11.9,
+    "vol_ratio": 0.71,
+    "market_cap_usd": 49303965.0,
+    "key": "IPWR",
+    "as_of": "2026-10-27",
+    "points": 275,
+    "flags": [],
+    "tenbagger": {
+     "candidate": true,
+     "reason": "시총 $0.05B · 저점 대비 +12%"
+    }
+   },
+   "bottlenecks": [
+    {
+     "id": "bottleneck:conversion",
+     "label": "전력변환 단계·효율·제어"
+    },
+    {
+     "id": "bottleneck:dc_protection",
+     "label": "HVDC 보호·차단·안전"
+    }
+   ],
+   "observations": [],
+   "anticipation": {
+    "score": 8,
+    "parts": {
+     "path": {
+      "pts": 3,
+      "max": 3,
+      "note": "1단계 경로, 최약 간선 확신도 0.80"
+     },
+     "unpriced": {
+      "pts": 2,
+      "max": 3,
+      "note": "기업 직접 근거 6일 전이지만 주가는 아직 (1개월 -24%)"
+     },
+     "room": {
+      "pts": 2,
+      "max": 2,
+      "note": "변화 규모 ≈ 매출의 1000% (2027년 매출 $5~10M(추정) ÷ TTM $0.03M — 사실상 매출 0 에서 출발) · 시총 $0.0B"
+     },
+     "lead": {
+      "pts": 1,
+      "max": 2,
+      "note": "숫자로 나타나기까지 약 4분기"
+     }
+    },
+    "trigger": "S76",
+    "path": [
+     "component:sscb",
+     "company:ipwr"
+    ],
+    "path_labels": [
+     "반도체 차단기",
+     "Ideal Power Inc."
+    ],
+    "hops": 1,
+    "mechanism": "DC 는 전류가 0 을 지나지 않아 아크 차단이 어렵고, 800VDC 랙 보호는 반도체 차단기로 갈 수밖에 없다 — 그 핵심이 양방향 스위치다",
+    "lead_quarters": 4,
+    "effect": {
+     "pct_of_revenue": 1000.0,
+     "basis": "2027년 매출 $5~10M(추정) ÷ TTM $0.03M — 사실상 매출 0 에서 출발",
+     "url": "https://semiconductor-today.com/news_items/2026/oct/powerintegrations-161026.shtml",
+     "as_of": "2026-10-16",
+     "estimated": false
+    },
+    "priced_in": "none"
+   },
+   "computed_at": "2026-10-28T15:46:30+00:00",
+   "version": 2
+  },
+  "anticipation": {
+   "trigger": "S76",
+   "trigger_title": "Infineon·Enphase, 900V GaN 양방향 스위치 SST 공급",
+   "path": [
+    "component:sscb",
+    "company:ipwr"
+   ],
+   "mechanism": "DC 는 전류가 0 을 지나지 않아 아크 차단이 어렵고, 800VDC 랙 보호는 반도체 차단기로 갈 수밖에 없다 — 그 핵심이 양방향 스위치다",
+   "priced_in": "none",
+   "lead_quarters": 4,
+   "effect": {
+    "pct_of_revenue": 1000.0,
+    "basis": "2027년 매출 $5~10M(추정) ÷ TTM $0.03M — 사실상 매출 0 에서 출발",
+    "evidence": "S71",
+    "url": "https://semiconductor-today.com/news_items/2026/oct/powerintegrations-161026.shtml",
+    "as_of": "2026-10-16"
+   }
+  },
+  "nodes": [
+   "bottleneck:dc_protection",
+   "component:bidirectional_switch",
+   "component:dc_breaker",
+   "component:planar_transformer",
+   "component:sscb",
+   "gen:800vdc",
+   "req:800v",
+   "tech:gan_power"
+  ],
+  "ecosystems": [
+   "power"
+  ],
+  "signal_refs": [
+   "33d3ae888d7a8c06e0ac",
+   "d34c2e73055ffc126a83",
+   "e11140a34dd0a5d74fac"
+  ],
+  "evidence_count": 9,
+  "last_signal_at": "2026-10-28",
+  "updated_at": "2026-10-28T15:46:30.151638+00:00",
+  "model": "claude-fable-5-1",
+  "method": "session",
+  "usage": null
+ },
+ {
+  "idea_key": "7848707b5fed",
+  "status": "closed",
+  "trend": "weakened",
+  "close_reason": "기업 자신의 근거 없음 — 같은 InP 수요의 더 나은 다음 고리는 장비(AIXTRON) 쪽이고 LandMark 는 이미 반영",
+  "updated_at": "2026-10-28T15:46:30.151638+00:00",
+  "usage": null
+ },
+ {
+  "idea_key": "069c3493e9ad",
+  "status": "closed",
+  "trend": "weakened",
+  "close_reason": "기업 자신의 근거 없음 — HBM 테스트 호황은 시장이 아는 이야기이고 JEM 의 노출을 확인할 근거가 없다",
+  "updated_at": "2026-10-28T15:46:30.151638+00:00",
+  "usage": null
+ }
+]

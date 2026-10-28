@@ -9,11 +9,12 @@ Claude 예약작업 "WSJ 수집 실행 + 투자 아이디어 작성 (06:41)"이 
 ## 0. 날짜와 전제
 - `date` 로 KST(UTC+9) 오늘 날짜를 구한다. 일요일이면 "일요일" 한 줄로 끝낸다.
 - Supabase MCP execute_sql (project_id: dcatgfivsvbktylmtvgf):
-  `select to_regprocedure('ideas.put_ideas(jsonb)') is not null as p20, to_regprocedure('ideas.put_assessments(jsonb)') is not null as p21, to_regprocedure('ideas.put_idea_notes(jsonb)') is not null as p22, to_regprocedure('ideas.put_valuations(jsonb)') is not null as p23;`
+  `select to_regprocedure('ideas.put_ideas(jsonb)') is not null as p20, to_regprocedure('ideas.put_assessments(jsonb)') is not null as p21, to_regprocedure('ideas.put_idea_notes(jsonb)') is not null as p22, to_regprocedure('ideas.put_valuations(jsonb)') is not null as p23, position('추론' in pg_get_functiondef('ideas.put_ideas(jsonb)'::regprocedure)) > 0 as p24;`
   - p20 이 false 면 "0020 미적용"으로 알리고 끝낸다.
   - p21 이 false 면 "0021 미적용"을 보고에 적고, 아래의 관측치(3-2)·판단 갱신(zz_assessments.sql) 단계는 건너뛴다.
   - p22 가 false 면 "0022 미적용"을 보고에 적고, 심층 분석(6-2)은 건너뛴다.
   - p23 이 false 면 "0024 미적용"을 보고에 적고, 가치평가(4 의 valuation, 6-1 의 zy_valuations.sql)는 건너뛴다.
+  - p24 가 false 면 "0025 미적용"을 보고에 적는다 — DB 가 추론 단계를 거부하므로 raw.json 의 추론 단계(근거 없는 "(추론)")를 바로 앞 사실 단계의 claim 끝에 합쳐 넣는다 (추론 자체는 버리지 않는다).
 - add_repo 로 W-X-Z/WSJ-investment 를 붙이고 `--depth 1` clone. `cd pipeline && python3 -m venv .venv && .venv/bin/pip install -q -e .`
 - 작업 폴더는 `../.ideas_run/` (저장소에 커밋하지 않는다).
 - Supabase MCP get_project_url · get_publishable_keys 로 `SUPABASE_URL`, `SUPABASE_PUBLISHABLE_KEY`(sb_publishable_…)를 export 한다. secret 키는 쓰지 않는다.
@@ -80,6 +81,7 @@ Claude 예약작업 "WSJ 수집 실행 + 투자 아이디어 작성 (06:41)"이 
 ## 5. 검증
 `.venv/bin/python -m wsj.ecosystems.ideas --snapshot ../.ideas_run/s2 --from-llm-json ../.ideas_run/s2/raw.json --method session --model claude-opus-5-5 --out ../.ideas_run/s2/rows.json --emit-sql ../.ideas_run/s2/sql`
 - `rejected:` 줄을 보고 raw.json 을 고쳐 다시 돌린다 (최대 2번). `valuation rejected:` 는 아이디어는 받되 가치평가만 거부된 것 — 사유(확률 합·가정 부족·verdict 길이·주식수 없음)대로 고친다.
+- 6-1 에서 DB 가 `근거 없는 단계` 로 거부하면 0025 미적용이다 — 위 p24 규칙대로 추론 단계를 합쳐 다시 만든다.
   `valuation skipped:` 는 주가가 없어 평가를 안 쓴 아이디어 — 보고에 적는다.
 
 ## 6. 저장
