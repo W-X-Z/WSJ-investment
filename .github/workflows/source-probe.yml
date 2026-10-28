@@ -11,6 +11,7 @@ on:
       - "pipeline/wsj/ecosystems/indicators.py"
       - "pipeline/wsj/ecosystems/company_feed.py"
       - "pipeline/wsj/ecosystems/facts.py"
+      - "pipeline/wsj/ecosystems/fundamentals.py"
       - ".github/workflows/source-probe.yml"
 
 permissions:
@@ -47,6 +48,7 @@ jobs:
           echo '### 발행주식수·환율 출처 (시장별 한 종목)' >> "$GITHUB_STEP_SUMMARY"
           echo '```' >> "$GITHUB_STEP_SUMMARY"
           python -m wsj.ecosystems.facts probe | tee -a "$GITHUB_STEP_SUMMARY"
+          python -m wsj.ecosystems.fundamentals probe | tee -a "$GITHUB_STEP_SUMMARY"
           echo '```' >> "$GITHUB_STEP_SUMMARY"
       - name: Indicators — DRAMeXchange·BLS·FRED·TWSE/TPEx (no save)
         working-directory: pipeline

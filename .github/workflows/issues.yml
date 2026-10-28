@@ -102,6 +102,13 @@ jobs:
         run: |
           set -euo pipefail
           python -m wsj.ecosystems.facts run --max-us 40 | tee -a "$GITHUB_STEP_SUMMARY"
+      # 재무(TTM 매출·영업이익·순이익) → v_company_fundamentals: 가치평가의 분모 (ADR-0019). 미국 40곳/일, 대만은 월매출 합, 한국은 네이버 분기 표.
+      - name: Collect company fundamentals (revenue, income)
+        continue-on-error: true
+        working-directory: pipeline
+        run: |
+          set -euo pipefail
+          python -m wsj.ecosystems.fundamentals run --max-us 40 | tee -a "$GITHUB_STEP_SUMMARY"
       # 대체 경로: API LLM 으로 아이디어 쓰기 (수동 실행에서 ideas_api=true 일 때만, 1회 ≈ $0.3)
       - name: Write investment ideas (API fallback)
         if: ${{ inputs.ideas_api == 'true' && inputs.no_llm != 'true' }}

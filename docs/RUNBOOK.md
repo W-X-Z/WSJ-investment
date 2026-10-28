@@ -125,4 +125,5 @@ cd apps/web && cp .env.local.example .env.local && npm install && npm run dev
   텐배거 출발 조건(시총 $3B 이하 · 저점 대비 3배 미만)은 `assess.TENBAGGER_*` 와 `apps/web/src/lib/ideas.ts` 두 곳에 같은 값 — 바꿀 때 함께.
 - 심층 분석 메모: 매일 작업 6-2 (`docs/agents/deep-dive.md`), `ideas.put_idea_notes`. 상세 화면 '심층 분석' 절.
 - 선행 추론(ADR-0017 개정 2): 근거 점수(확신)와 별개의 선행 점수(기대값) — `assess.anticipation`. 단서는 `scan --from-public` 의 `second_order`. 0023 은 고점·저점 대비의 이력 120일 보호.
+- 가치평가(ADR-0019, 0024): 재무 `python -m wsj.ecosystems.fundamentals run` (Actions 매일, 미국 40곳/일; 도달 점검 `fundamentals probe`). 예약작업이 아이디어마다 `ideas.put_valuations` 로 시나리오별 내재 주가를 쓴다 (`zy_valuations.sql`). 0024 적용 전에는 카드에 "가치평가 전". 점수(assessment)는 계속 계산되지만 화면에 없다.
 - 개선 예약작업이 연 PR 중 코드·워크플로·마이그레이션이 바뀐 것은 사람이 병합한다. 데이터(`research/`, `apps/web/src/data/`, `graph_patches/`)만 바뀐 PR 은 CI 통과 시 스스로 병합한다.

@@ -484,14 +484,34 @@ LLM_SYSTEM = """너는 AI 공급망(HBM·첨단 패키징 / 800G·1.6T 광통신
   "direction": "strengthen"}} — 그 날짜에 무엇을 보면 아이디어가 강해지는지(strengthen) 약해지는지(weaken) 판정할 수 있게 쓴다. 날짜를 모르면 due 를 비운다.
 - 노출 순도: primary 기업 항목에 "exposure": {{"share_pct": 49, "segment": "광통신", "basis": "3Q26 부문 매출 23.79억/전체 48.6억 달러", "evidence": "S12"}}.
   그 병목·전환과 관련된 사업이 회사 매출에서 차지하는 비중이다. 입력 근거(공시·실적 발표의 부문 매출)로 계산할 수 있을 때만 쓰고, 모르면 빼라 — 추정 금지.
-- 판단 점수: 검증기가 10점 근거 점수를 계산한다 (기업 직접 근거 4 · 숫자 확인 1 · 병목 구조 3 · 노출 순도 2 · 최근 반대 근거 −2). ★3 은 7점 이상이어야 하고,
-  2점 이하는 ★1 로 내려간다. 노출 비중을 근거로 확인하면 점수가 오른다.
+- 판단 점수: 검증기가 근거 점수(확신, 10점: 기업 직접 근거 4 · 숫자 확인 1 · 병목 구조 3 · 노출 순도 2 · 반대 근거 −2)와 선행 점수(기대값)를 계산하지만
+  화면에는 올리지 않는다 — 사람이 보는 결과는 아래 '가치평가'다. ★3 은 근거 점수 7점 이상이어야 하고, 2점 이하는 ★1 로 내려간다.
 - states: 병목·부품의 상태 관측치(가격 배수·리드타임·가동률·재고·수주잔고·평균단가 등, 원문에서 확인한 숫자). 병목이 조여지는지 풀리는지의 근거로 쓴다.
 - leads: 엔진이 찾은 조사 단서 — 기업 소식은 있는데 아이디어가 없는 기업, 활동이 많은 병목의 미커버 공급사, 설명 안 된 가격 급변. 근거가 되면 아이디어로 만든다.
-- prices: 주요 기업의 '이미 움직인 폭'(1·12개월, 고점·저점 대비)과 시가총액(USD), tenbagger{{candidate, reason}}. 근거로 쓰지 않는다.
-  저점 대비 3배 이상 오른 기업은 risks 에 "이미 알려진 정도"를 적고, 같은 논리에 시총이 작고 덜 오른 공급사가 있으면 그쪽을 primary 로 고려한다.
-- 숫자·날짜는 입력에 있는 것만 쓴다. 주가·목표가·매수/매도 권유·시점 예측 금지.
+- prices: 주요 기업의 종가(close, currency)·발행주식수(shares)·시가총액(market_cap_usd)·이미 움직인 폭(1·12개월, 고점·저점 대비)·tenbagger 와
+  fundamentals(TTM 매출 revenue·영업이익률 op_margin_pct·순이익률 net_margin_pct·매출 성장률 revenue_yoy_pct·P/S ps·P/E pe, 현지 통화 원 단위). 가치평가의 재료다.
+  근거로 인용하지는 않는다. 저점 대비 3배 이상 오른 기업은 risks 에 "이미 알려진 정도"를 적고, 같은 논리에 시총이 작고 덜 오른 공급사가 있으면 그쪽을 primary 로 고려한다.
+- 숫자·날짜는 입력에 있는 것만 쓴다. 매수/매도 권유·시점 예측 금지. 주가에 대한 판단은 아래 valuation 의 시나리오로만 말한다.
 - 서로 다른 아이디어가 같은 기업·같은 논리를 반복하지 않게 묶는다. 근거가 빈약하면 만들지 않는다 — 개수보다 질.
+
+가치평가 (결과 — 사람은 이것만 본다)
+- 아이디어마다 valuation 을 쓴다. 질문은 하나다: 이 변화가 이 기업의 숫자를 바꾸면 이 회사는 {horizon}개월 뒤 얼마짜리 회사인가, 지금 주가와 얼마나 다른가.
+- 재료는 prices[primary] 다: close·currency·shares·market_cap_usd·fundamentals. fundamentals 가 없으면 근거(IR·공시·실적 발표)에서 읽은 매출·이익을 쓰되
+  assumptions 에 근거 id 와 함께 적는다. 종가(close)가 없으면 valuation 을 쓰지 않고 valuation_skipped 에 이유를 적는다.
+- 시나리오 3개 bear·base·bull (prob 합 = 1). 각각 {horizon}개월 뒤의 매출(revenue, 현지 통화 원 단위) · 마진(margin_pct, 영업이익률 또는 순이익률) ·
+  배수(metric: ps|pe, multiple) → 내재 시총 implied_mcap_local = revenue × multiple (ps) 또는 revenue × margin_pct/100 × multiple (pe).
+  검증기가 같은 식으로 다시 계산하고 shares 로 나눠 내재 주가를 낸다 — 산수는 검증기가 한다, 너는 가정을 댄다.
+  - 매출 경로는 변화의 규모에서 온다 (anticipation.effect 와 같은 분자·분모): 변화가 이 기업 매출을 몇 % 더하는지, 몇 분기에 걸쳐.
+  - 배수는 지금 배수(fundamentals.ps·pe)와 동종(peers)의 배수에서 출발해, 성장이 확인될 때 시장이 주는 배수로 옮긴다. 근거 없이 배수를 키우지 않는다.
+  - bear = 변화가 이 기업에 닿지 않거나(경로 단절·경쟁사 수주·고객 내재화) 이미 다 반영된 경우: 지금 배수 × 지금 매출 또는 그 아래.
+  - story 는 그 시나리오가 일어나는 한 문장, evidence 는 그 시나리오의 숫자를 받치는 근거 id.
+- expected_price = Σ prob × 내재 주가 (서버 계산). confidence: high = 경로가 그래프 간선과 기업 직접 근거로 이어지고 분모가 공식 재무,
+  mid = 경로나 분모 중 하나가 추론, low = 둘 다 추론.
+- verdict: 3~5문장 한 단락 — 어떤 변화가(날짜) → 어떤 경로로 이 기업 숫자를 → 얼마나(매출·마진) → 그래서 시총·주가는 → 시장이 지금 반영한 정도.
+  숫자는 payload 와 근거에 있는 것만. "목표가"·"매수" 같은 말은 쓰지 않는다 — 모형 산출이지 권유가 아니다.
+- assumptions 2~4개(각각 근거 id 1개 이상), breaks 1~3개(이 평가가 깨지는 조건과 그것을 확인할 데이터·날짜).
+- action=keep 인 기존 아이디어도 (a) 지난 평가(existing.valuation) 뒤 주가가 ±15% 넘게 움직였거나 (b) 새 근거가 매출·마진 가정을 바꾸면 valuation 을
+  다시 쓴다. 아니면 생략한다 — 지난 평가가 그대로 쓰이고 상승여력만 오늘 주가로 다시 계산된다.
 
 existing 처리
 - 같은 논리에 최근 {fresh}일 안의 새 근거가 있으면 action=update (idea_key 그대로, chain 을 새 근거로 다시 쓰고, what_changed 에 "날짜 + 새 사실" 한 줄).
@@ -511,12 +531,20 @@ existing 처리
   "risks": [{{"claim": "...", "evidence": []}}], "watch": [{{"what": "...", "due": "YYYY-MM-DD", "metric": "...", "threshold": "...", "direction": "strengthen"}}],
   "anticipation": {{"trigger": "S12", "path": ["bottleneck:…", "equipment:…", "company:…"], "mechanism": "한 문장", "lead_quarters": 2,
                    "effect": {{"pct_of_revenue": 25, "basis": "NT$509억 발주 × 점유율 30% ÷ 연매출 NT$28억", "evidence": "S54"}}, "priced_in": "none"}},
+  "valuation": {{"horizon_months": {horizon}, "confidence": "mid",
+    "scenarios": [{{"name": "bear", "prob": 0.25, "story": "한 문장", "revenue": 2800000000, "margin_pct": 8, "metric": "ps", "multiple": 1.5, "implied_mcap_local": 4200000000, "evidence": ["S12"]}},
+                  {{"name": "base", "prob": 0.5, "story": "…", "revenue": 4500000000, "margin_pct": 14, "metric": "pe", "multiple": 20, "implied_mcap_local": 12600000000, "evidence": ["S54", "G3"]}},
+                  {{"name": "bull", "prob": 0.25, "story": "…", "revenue": 7000000000, "margin_pct": 18, "metric": "pe", "multiple": 25, "implied_mcap_local": 31500000000, "evidence": ["S54"]}}],
+    "verdict": "3~5문장", "assumptions": [{{"claim": "…", "evidence": ["S12"]}}], "breaks": [{{"claim": "…", "evidence": ["S3"]}}]}},
+  "valuation_skipped": "valuation 을 못 쓸 때만, 이유",
   "what_changed": "update 일 때만", "reason": "weaken/close 일 때"}}],
  "grades": [{{"idea_key": "...", "index": 0, "status": "hit|miss|void", "evidence": "S12", "note": "한 줄"}}]}}"""
 
+VALUATION_HORIZON_MONTHS = 12
+
 
 def system_prompt(now: datetime) -> str:
-    return LLM_SYSTEM.format(today=now.date().isoformat(), fresh=FRESH_DAYS, stale=21)
+    return LLM_SYSTEM.format(today=now.date().isoformat(), fresh=FRESH_DAYS, stale=21, horizon=VALUATION_HORIZON_MONTHS)
 
 
 def build_payload(signals: list[dict[str, Any]], candidates: list[dict[str, Any]], reg: Registry, existing: list[dict[str, Any]],
@@ -557,6 +585,14 @@ def build_payload(signals: list[dict[str, Any]], candidates: list[dict[str, Any]
         return out
 
     extras = extras or {}
+    vals = extras.get("valuations") or {}
+
+    def val_view(key: str) -> dict[str, Any] | None:
+        v = vals.get(key)
+        if not v:
+            return None
+        return {k: v.get(k) for k in ("as_of", "price", "currency", "expected_price", "expected_upside_pct", "confidence", "horizon_months")}
+
     return {
         "today": now.date().isoformat(),
         "max_ideas": max_ideas,
@@ -568,7 +604,7 @@ def build_payload(signals: list[dict[str, Any]], candidates: list[dict[str, Any]
         "prices": extras.get("prices") or {},
         "existing": [{k: x.get(k) for k in ("idea_key", "type", "title", "thesis", "stars", "primary_company", "last_signal_at", "updated_at")}
                      | {"companies": [c.get("id") for c in x.get("companies") or []], "company_signal_at": company_signal_date(x),
-                        "score": ((x.get("assessment") or {}).get("score")), "watch": watch_view(x)} for x in existing],
+                        "score": ((x.get("assessment") or {}).get("score")), "watch": watch_view(x), "valuation": val_view(x["idea_key"])} for x in existing],
     }
 
 
@@ -641,7 +677,9 @@ def company_signal_date(idea: dict[str, Any]) -> str | None:
 
 def validate(raw: list[dict[str, Any]], reg: Registry, graph: dict[str, Any], signals: list[dict[str, Any]],
              existing: dict[str, dict[str, Any]], now: datetime, model: str, method: str,
-             ctx: dict[str, Any] | None = None) -> tuple[list[dict[str, Any]], list[str]]:
+             ctx: dict[str, Any] | None = None, valuations: list[dict[str, Any]] | None = None) -> tuple[list[dict[str, Any]], list[str]]:
+    """LLM 출력 → ideas.put_ideas 행. valuations 리스트를 주면 아이디어마다 쓴 가치평가(검증·재계산 끝낸 ideas.put_valuations 행)를 거기에 모은다
+    (keep 인 아이디어가 다시 쓴 평가도 포함)."""
     from wsj.ecosystems import assess as A
 
     ctx = ctx or {}
@@ -649,7 +687,25 @@ def validate(raw: list[dict[str, Any]], reg: Registry, graph: dict[str, Any], si
     nodes = {n["id"]: n for n in graph["nodes"]}
     sig_by_ev = {e: s for s in signals for e in s["evidence"]}
     fresh_cut = (now - timedelta(days=FRESH_DAYS)).date().isoformat()
+    money = ctx.get("money") or {}
+    today = now.date().isoformat()
     rows, rejects = [], []
+
+    def add_valuation(it: dict[str, Any], key: str, primary_id: str, cos: set[str], assessment: dict[str, Any] | None, label: str) -> None:
+        if valuations is None or not isinstance(it.get("valuation"), dict):
+            return
+        ev = lambda ids: [reg.items[e].public() | {"rel": evidence_rel(e, sig_by_ev.get(e), primary_id, cos)} for e in ids if e in reg.items]  # noqa: E731
+        v, why = parse_valuation(it["valuation"], money.get(primary_id), ev)
+        if not v:
+            rejects.append(f"#{label} valuation rejected: {why}")
+            return
+        ant = (assessment or {}).get("anticipation") or {}
+        v |= {"idea_key": key, "as_of": today, "company_id": primary_id, "model": model, "method": method,
+              "path": {"labels": ant.get("path_labels") or [], "mechanism": ant.get("mechanism")} if ant else None,
+              "calculator": {"evidence_score": (assessment or {}).get("score"), "anticipation_score": ant.get("score"), "priced_in": ant.get("priced_in"),
+                             "tenbagger": ((assessment or {}).get("price") or {}).get("tenbagger")} if assessment else None}
+        valuations.append(v)
+
     for i, it in enumerate(raw):
         action = it.get("action") or "new"
         key = it.get("idea_key") if it.get("idea_key") in existing else None
@@ -657,6 +713,8 @@ def validate(raw: list[dict[str, Any]], reg: Registry, graph: dict[str, Any], si
             rejects.append(f"#{i} {action} without known idea_key")
             continue
         if action == "keep":
+            prev = existing[key]
+            add_valuation(it, key, prev.get("primary_company"), {c.get("id") for c in prev.get("companies") or []}, prev.get("assessment"), str(i))
             continue
         if action == "close":
             rows.append({"idea_key": key, "status": "closed", "trend": "weakened", "close_reason": (it.get("reason") or "")[:300], "updated_at": now.isoformat()})
@@ -748,8 +806,10 @@ def validate(raw: list[dict[str, Any]], reg: Registry, graph: dict[str, Any], si
         trend = "new" if not prev else ("weakened" if action == "weaken" or stars < (prev.get("stars") or 0)
                                         else "strengthened" if new_direct and (stars > (prev.get("stars") or 0) or action == "update")
                                         else "unchanged")
+        new_key = key or make_key(kind, primary["id"], title)
+        add_valuation(it, new_key, primary["id"], idea_cos, assessment, str(i))
         rows.append({
-            "idea_key": key or make_key(kind, primary["id"], title), "status": "active", "trend": trend, "type": kind,
+            "idea_key": new_key, "status": "active", "trend": trend, "type": kind,
             "title": title[:120], "thesis": thesis[:600], "stars": stars, "stars_reason": ((it.get("stars_reason") or "") + stars_note)[:300],
             "primary_company": primary["id"], "companies": comps, "chain": chain, "risks": risks,
             "watch": watch, "what_changed": what_changed, "assessment": assessment, "anticipation": anticipation,
@@ -790,6 +850,92 @@ def parse_anticipation(raw: Any, reg: Registry, nodes: dict[str, dict[str, Any]]
 
 
 ANTICIPATION_MAX_PATH = 8
+SCENARIO_NAMES = ("bear", "base", "bull")
+VALUATION_MIN_VERDICT = 120
+VALUATION_MIN_ASSUMPTIONS = 2
+
+
+def _f(v: Any) -> float | None:
+    try:
+        x = float(v)
+    except (TypeError, ValueError):
+        return None
+    return x if x == x and abs(x) != float("inf") else None
+
+
+def parse_valuation(raw: Any, money: dict[str, Any] | None, ev_rows: Any, horizon_default: int = VALUATION_HORIZON_MONTHS
+                    ) -> tuple[dict[str, Any] | None, str | None]:
+    """LLM 의 가치평가 → ideas.put_valuations 행. 산수는 여기서 다시 한다 (ADR-0019):
+    내재 시총 = revenue × multiple (ps) 또는 revenue × margin/100 × multiple (pe) → ÷ shares = 내재 주가 → 확률 가중 = expected_price.
+    돌려주는 값: (행, None) 또는 (None, 거부 사유). 종가가 없으면 평가하지 않는다."""
+    if not isinstance(raw, dict):
+        return None, "valuation 없음"
+    price = _f((money or {}).get("close"))
+    if not money or not price or price <= 0:
+        return None, "주가 없음"
+    shares = _f(money.get("shares"))
+    scen: list[dict[str, Any]] = []
+    notes: list[str] = []
+    for s in raw.get("scenarios") or []:
+        if not isinstance(s, dict) or s.get("name") not in SCENARIO_NAMES or any(x["name"] == s["name"] for x in scen):
+            continue
+        prob = _f(s.get("prob"))
+        if prob is None or not 0 <= prob <= 1:
+            continue
+        rev, margin, mult = _f(s.get("revenue")), _f(s.get("margin_pct")), _f(s.get("multiple"))
+        metric = s.get("metric") if s.get("metric") in ("ps", "pe") else None
+        mcap = _f(s.get("implied_mcap_local"))
+        calc = None
+        if rev is not None and rev >= 0 and mult is not None and mult > 0:
+            if metric == "ps":
+                calc = rev * mult
+            elif metric == "pe" and margin is not None:
+                calc = rev * margin / 100 * mult
+        if calc is not None and calc > 0:
+            if mcap and abs(calc / mcap - 1) > 0.15:
+                notes.append(f"{s['name']}: 내재 시총 {mcap:,.0f} → 계산값 {calc:,.0f} 으로 고침")
+            mcap = calc
+        ip = _f(s.get("implied_price"))
+        if mcap and mcap > 0 and shares:
+            ip = mcap / shares
+        elif ip and ip > 0 and shares:
+            mcap = ip * shares
+        if not ip or ip <= 0:
+            continue
+        scen.append({"name": s["name"], "prob": round(prob, 3), "story": str(s.get("story") or "")[:200], "revenue": rev, "margin_pct": margin,
+                     "metric": metric, "multiple": mult, "implied_mcap_local": round(mcap) if mcap else None, "implied_price": round(ip, 4),
+                     "upside_pct": round(100 * (ip / price - 1), 1), "evidence": ev_rows(s.get("evidence") or [])})
+    if len(scen) < 2:
+        return None, f"시나리오 {len(scen)}개 (내재 주가를 계산할 수 없음 — revenue·multiple·shares 또는 implied_price 필요)"
+    psum = sum(x["prob"] for x in scen)
+    if abs(psum - 1) > 0.02:
+        return None, f"시나리오 확률 합 {psum:.2f}"
+    order = {n: i for i, n in enumerate(SCENARIO_NAMES)}
+    scen.sort(key=lambda x: order[x["name"]])
+    expected = sum(x["prob"] * x["implied_price"] for x in scen) / psum
+    assumptions = [{"claim": str(a["claim"]).strip()[:300], "evidence": ev_rows(a.get("evidence") or [])}
+                   for a in raw.get("assumptions") or [] if isinstance(a, dict) and a.get("claim")]
+    assumptions = [a for a in assumptions if a["evidence"]]
+    if len(assumptions) < VALUATION_MIN_ASSUMPTIONS:
+        return None, f"근거 있는 가정 {len(assumptions)}개 (최소 {VALUATION_MIN_ASSUMPTIONS})"
+    breaks = [{"claim": str(b["claim"]).strip()[:300], "evidence": ev_rows(b.get("evidence") or [])}
+              for b in raw.get("breaks") or [] if isinstance(b, dict) and b.get("claim")]
+    conf = raw.get("confidence") if raw.get("confidence") in ("low", "mid", "high") else None
+    if not conf:
+        return None, "confidence 는 low|mid|high"
+    verdict = str(raw.get("verdict") or "").strip()
+    if len(verdict) < VALUATION_MIN_VERDICT:
+        return None, f"verdict {len(verdict)}자 (최소 {VALUATION_MIN_VERDICT})"
+    try:
+        horizon = int(raw.get("horizon_months") or horizon_default)
+    except (TypeError, ValueError):
+        horizon = horizon_default
+    horizon = min(36, max(3, horizon))
+    return {"currency": money.get("currency"), "price": price, "price_as_of": money.get("as_of"), "shares": shares,
+            "market_cap_usd": _f(money.get("market_cap_usd")), "horizon_months": horizon, "scenarios": scen,
+            "expected_price": round(expected, 4), "expected_upside_pct": round(100 * (expected / price - 1), 1), "confidence": conf,
+            "verdict": verdict[:2000], "assumptions": assumptions[:6], "breaks": breaks[:4],
+            "calc_notes": notes or None}, None
 
 
 def judged_keys(rows: list[dict[str, Any]]) -> set[str]:
@@ -869,9 +1015,19 @@ def prepare(issues: list[dict[str, Any]], indicators: list[dict[str, Any]], grap
 
         nodes = {n["id"]: n for n in graph["nodes"]}
         want = {c["company_id"] for c in candidates} | focus_companies(existing)
-        extras["prices"] = {cid: {k: v for k, v in (price_context(extras["prices_full"], nodes.get(cid)) or {}).items()
-                                  if k in ("r1m", "r12m", "from_high", "from_low", "market_cap_usd", "flags", "tenbagger")}
-                            for cid in sorted(want) if price_context(extras["prices_full"], nodes.get(cid))}
+        money = extras.get("money") or {}
+        extras["prices"] = {}
+        for cid in sorted(want):
+            pc = price_context(extras["prices_full"], nodes.get(cid))
+            if not pc:
+                continue
+            row = {k: v for k, v in pc.items() if k in ("r1m", "r12m", "from_high", "from_low", "market_cap_usd", "flags", "tenbagger")}
+            m = money.get(cid)
+            if m:  # 가치평가 재료: 종가·통화·주식수·재무
+                row |= {k: m.get(k) for k in ("close", "currency", "as_of", "shares")}
+                if m.get("fundamentals"):
+                    row["fundamentals"] = m["fundamentals"]
+            extras["prices"][cid] = row
     payload = build_payload(signals, candidates, reg, existing, max_ideas, now, extras)
     return reg, signals, candidates, payload
 
@@ -886,23 +1042,55 @@ def merge_facts(prices: list[dict[str, Any]] | None, facts: list[dict[str, Any]]
         by_key.setdefault(k, {"ticker": k, "close": f.get("close"), "as_of": f.get("price_as_of")})
         by_key[k]["market_cap_usd"] = f["market_cap_usd"]
         by_key[k]["shares_outstanding"] = f.get("shares_outstanding")
+        by_key[k]["currency"] = f.get("currency")
         if by_key[k].get("from_low") is None and f.get("from_low") is not None:
             by_key[k]["from_low"] = f["from_low"]
     return by_key
 
 
+CURRENCY_OF_EXCHANGE = {"TWSE": "TWD", "TPEx": "TWD", "KRX": "KRW", "KOSDAQ": "KRW", "SSE": "CNY", "SZSE": "CNY", "BJSE": "CNY", "HKEX": "HKD", "TSE": "JPY"}
+FUND_KEYS = ("period", "period_end", "revenue", "operating_income", "net_income", "op_margin_pct", "net_margin_pct", "revenue_yoy_pct", "ps", "pe", "note")
+
+
+def money_context(graph: dict[str, Any], by_key: dict[str, dict[str, Any]], fundamentals: list[dict[str, Any]] | None) -> dict[str, dict[str, Any]]:
+    """기업 id → 가치평가 재료 {close, currency, as_of, shares, market_cap_usd, fundamentals}. 종가가 있는 기업만."""
+    from wsj.ecosystems.assess import price_key
+
+    fund = {f["company_id"]: f for f in fundamentals or [] if f.get("company_id")}
+    out: dict[str, dict[str, Any]] = {}
+    for n in graph["nodes"]:
+        if n.get("kind") != "company":
+            continue
+        key = price_key(n)
+        p = by_key.get(key) if key else None
+        if not p or p.get("close") is None:
+            continue
+        f = fund.get(n["id"]) or {}
+        ex = (n.get("listing") or {}).get("exchange")
+        cur = p.get("currency") or f.get("currency") or CURRENCY_OF_EXCHANGE.get(ex, "USD")
+        fd = {k: (_f(f[k]) if k not in ("period", "period_end", "note") else f[k]) for k in FUND_KEYS if f.get(k) is not None} if f else None
+        if fd and f.get("currency") and f["currency"] != cur:
+            fd["currency"] = f["currency"]  # 재무 통화가 가격 통화와 다르면 밝힌다 (ADR 보고 기업 등)
+        out[n["id"]] = {"key": key, "close": _f(p.get("close")), "currency": cur, "as_of": str(p.get("as_of"))[:10] if p.get("as_of") else None,
+                        "shares": _f(p.get("shares_outstanding")), "market_cap_usd": _f(p.get("market_cap_usd")), "fundamentals": fd}
+    return out
+
+
 def build_context(graph: dict[str, Any], issues: list[dict[str, Any]], indicators: list[dict[str, Any]], prices: list[dict[str, Any]],
-                  events: list[Any], existing: list[dict[str, Any]], now: datetime, facts: list[dict[str, Any]] | None = None
+                  events: list[Any], existing: list[dict[str, Any]], now: datetime, facts: list[dict[str, Any]] | None = None,
+                  fundamentals: list[dict[str, Any]] | None = None, valuations: list[dict[str, Any]] | None = None
                   ) -> tuple[dict[str, Any], dict[str, Any]]:
-    """판단(점수)에 쓰는 문맥과 LLM 입력에 더할 것 — 병목 상태 관측치·조사 단서·가격 맥락(시총 포함)."""
+    """판단(점수)에 쓰는 문맥과 LLM 입력에 더할 것 — 병목 상태 관측치·조사 단서·가격 맥락(시총 포함)·가치평가 재료(재무)·지난 평가."""
     from wsj.ecosystems import scan
     from wsj.ecosystems.assess import Structure
 
     st = Structure(graph)
     by_key = merge_facts(prices, facts)
     ld = scan.leads(graph, issues, indicators, events, existing, by_key, now)
-    ctx = {"structure": st, "issues": issues, "indicators": indicators, "prices": by_key, "leads": ld}
-    extras = {"states": scan.states(indicators, st), "leads": scan.compact(ld), "prices_full": by_key}
+    money = money_context(graph, by_key, fundamentals)
+    vals = {v["idea_key"]: v for v in valuations or [] if v.get("idea_key")}
+    ctx = {"structure": st, "issues": issues, "indicators": indicators, "prices": by_key, "leads": ld, "money": money, "valuations": vals}
+    extras = {"states": scan.states(indicators, st), "leads": scan.compact(ld), "prices_full": by_key, "money": money, "valuations": vals}
     return ctx, extras
 
 
@@ -933,6 +1121,31 @@ def write_assess_sql(rows: list[dict[str, Any]], d: Path) -> Path | None:
     p = d / "zz_assessments.sql"
     p.write_text(f"select ideas.put_assessments($wsj${body}$wsj$::jsonb);\n", encoding="utf-8")
     return p
+
+
+def write_valuation_sql(vals: list[dict[str, Any]], d: Path) -> Path | None:
+    """가치평가 행 → `select ideas.put_valuations(...)` 한 문장 (zy_ = put_ideas 뒤, zz_assessments 앞)."""
+    if not vals:
+        return None
+    body = json.dumps(vals, ensure_ascii=False, default=str)
+    if "$wsj$" in body:
+        raise ValueError("$wsj$ 가 있어 SQL 로 감쌀 수 없다")
+    d.mkdir(parents=True, exist_ok=True)
+    p = d / "zy_valuations.sql"
+    p.write_text(f"select ideas.put_valuations($wsj${body}$wsj$::jsonb);\n", encoding="utf-8")
+    return p
+
+
+def save_valuations(store, vals: list[dict[str, Any]]) -> int:
+    """API 경로(Actions)에서 가치평가 저장 — 0024 의 put_valuations RPC. 없으면 건너뛴다."""
+    if not vals:
+        return 0
+    try:
+        resp = store._req("POST", "ideas.rpc/put_valuations", body={"rows": vals})
+        return int((resp.json() or {}).get("upserted") or 0)
+    except Exception as exc:  # noqa: BLE001
+        log.warning("put_valuations 실패 (0024 전?): %s", exc)
+        return 0
 
 
 def save_assessments(store, rows: list[dict[str, Any]]) -> int:
@@ -994,8 +1207,8 @@ def gather_events(args, settings, store, graph: dict[str, Any], existing: list[d
 
 # ---------------------------------------------------------------- session mode (Claude 예약작업이 LLM 단계를 맡을 때)
 PUBLIC_VIEWS = {"issues": "v_supply_chain_issues", "indicators": "v_indicators", "existing": "v_investment_ideas", "events": "v_company_events",
-                "prices": "v_price_context", "facts": "v_company_facts"}
-OPTIONAL_VIEWS = {"prices", "facts"}  # 0021·0022 적용 전에는 없다
+                "prices": "v_price_context", "facts": "v_company_facts", "fundamentals": "v_company_fundamentals", "valuations": "v_valuations"}
+OPTIONAL_VIEWS = {"prices", "facts", "fundamentals", "valuations"}  # 0021·0022·0024 적용 전에는 없다
 
 
 def public_credentials() -> tuple[str, str]:
@@ -1134,6 +1347,8 @@ def main(argv: list[str] | None = None) -> int:
             args.dry_run = True
         prices: list[dict[str, Any]] = []
         facts: list[dict[str, Any]] = []
+        fundamentals: list[dict[str, Any]] = []
+        valuations: list[dict[str, Any]] = []
         if args.snapshot:
             issues = json.loads((args.snapshot / "issues.json").read_text(encoding="utf-8"))
             indicators = json.loads((args.snapshot / "indicators.json").read_text(encoding="utf-8"))
@@ -1141,6 +1356,10 @@ def main(argv: list[str] | None = None) -> int:
             prices = json.loads(pp.read_text(encoding="utf-8")) if pp.exists() else []
             fp = args.snapshot / "facts.json"
             facts = json.loads(fp.read_text(encoding="utf-8")) if fp.exists() else []
+            fu = args.snapshot / "fundamentals.json"
+            fundamentals = json.loads(fu.read_text(encoding="utf-8")) if fu.exists() else []
+            vp = args.snapshot / "valuations.json"
+            valuations = json.loads(vp.read_text(encoding="utf-8")) if vp.exists() else []
             ex_path = args.snapshot / "existing.json"
             existing = json.loads(ex_path.read_text(encoding="utf-8")) if ex_path.exists() else []
             meta = args.snapshot / "meta.json"
@@ -1159,12 +1378,17 @@ def main(argv: list[str] | None = None) -> int:
                 facts = store.select("public.v_company_facts", ["*"], {})
             except Exception as exc:  # noqa: BLE001
                 log.warning("v_company_facts 없음 (0022 전?): %s", exc)
+            try:
+                fundamentals = store.select("public.v_company_fundamentals", ["*"], {})
+                valuations = store.select("public.v_valuations", ["*"], {})
+            except Exception as exc:  # noqa: BLE001
+                log.warning("v_company_fundamentals·v_valuations 없음 (0024 전?): %s", exc)
         graph = load_graph()
         events, feed_stats = gather_events(args, settings, store, graph, existing)
         if args.events_out:
             args.events_out.parent.mkdir(parents=True, exist_ok=True)
             args.events_out.write_text(json.dumps([e.public() for e in events], ensure_ascii=False, indent=1), encoding="utf-8")
-        ctx, extras = build_context(graph, issues, indicators, prices, events, existing, now, facts)
+        ctx, extras = build_context(graph, issues, indicators, prices, events, existing, now, facts, fundamentals, valuations)
         reg, signals, candidates, payload = prepare(issues, indicators, graph, now, args.days, existing, args.max_ideas, args.top, events, extras)
         if args.leads_out:
             args.leads_out.write_text(json.dumps(ctx["leads"], ensure_ascii=False, indent=1, default=str), encoding="utf-8")
@@ -1198,7 +1422,11 @@ def main(argv: list[str] | None = None) -> int:
                 "직전 응답을 유효한 JSON 하나로 다시 출력하라. 오류: {error}", max_tokens=12000, effort="high")
             raw, usage = out, sum_usage(comps)
         ex_map = {x["idea_key"]: x for x in existing}
-        rows, rejects = validate(raw.get("ideas") or [], reg, graph, signals, ex_map, now, model, args.method, ctx)
+        vals: list[dict[str, Any]] = []
+        rows, rejects = validate(raw.get("ideas") or [], reg, graph, signals, ex_map, now, model, args.method, ctx, vals)
+        skipped = [f"#{i} {x.get('title') or x.get('idea_key')}: {x['valuation_skipped']}" for i, x in enumerate(raw.get("ideas") or []) if x.get("valuation_skipped")]
+        for x in skipped:
+            log.info("valuation skipped: %s", x)
         from wsj.ecosystems.assess import apply_grades
 
         grades = apply_grades(ex_map, raw.get("grades") or [], reg, now)
@@ -1213,9 +1441,13 @@ def main(argv: list[str] | None = None) -> int:
             log.warning("rejected: %s", x)
         if args.out:
             args.out.write_text(json.dumps(rows, ensure_ascii=False, indent=1), encoding="utf-8")
+            args.out.with_name(args.out.stem + ".valuations.json").write_text(json.dumps(vals, ensure_ascii=False, indent=1, default=str), encoding="utf-8")
         if args.emit_sql:
             for x in write_sql(rows, args.emit_sql):
                 log.info("sql: %s", x)
+            v = write_valuation_sql(vals, args.emit_sql)
+            if v:
+                log.info("sql: %s (가치평가 %d건)", v, len(vals))
             a = write_assess_sql(refresh, args.emit_sql)
             if a:
                 log.info("sql: %s (판단 %d건)", a, len(refresh))
@@ -1226,12 +1458,13 @@ def main(argv: list[str] | None = None) -> int:
             with logged_run(store, "ideas", {"days": args.days, "model": model}) as run:
                 n = save(store, rows)
                 n_assess = save_assessments(store, refresh)
-                run["rows"] = n + n_assess
+                n_val = save_valuations(store, vals)
+                run["rows"] = n + n_assess + n_val
                 run["notes"] = json.dumps({"signals": len(signals), "company_signals": sum(1 for x in signals if x["kind"] == "company"),
                                            "events": len(events), "candidates": len(candidates), "ideas": len(rows), "rejected": len(rejects),
                                            "cost_usd": usage.get("cost_usd")})
         print(json.dumps({"signals": len(signals), "company_signals": sum(1 for x in signals if x["kind"] == "company"), "events": len(events),
-                          "candidates": len(candidates), "ideas": len(rows), "rejected": len(rejects), "saved": n,
+                          "candidates": len(candidates), "ideas": len(rows), "valuations": len(vals), "rejected": len(rejects), "saved": n,
                           "cost_usd": usage.get("cost_usd")}))
         return 0
     finally:
