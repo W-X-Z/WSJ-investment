@@ -97,7 +97,7 @@ def test_industry_news_alone_does_not_strengthen_or_earn_three_stars():
     rows, _ = ideas.validate([upd, new3], reg, g, signals, existing, NOW, "m", "llm")
     assert rows[0]["trend"] == "unchanged" and rows[0]["stars"] == 1 and rows[0]["what_changed"].startswith("업계:")
     assert [e["rel"] for e in rows[0]["chain"][0]["evidence"]] == ["industry"] and rows[0]["chain"][1]["evidence"][0]["rel"] == "background"
-    assert rows[1]["stars"] == 2 and "★2" in rows[1]["stars_reason"]
+    assert rows[1]["stars"] == 1 and "★2" in rows[1]["stars_reason"] and "★1" in rows[1]["stars_reason"]  # 업계 근거만 → 근거 점수 2점 이하 → ★1
     assert ideas.company_signal_date(existing["abc"]) == "2026-09-01"
 
 

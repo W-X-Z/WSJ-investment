@@ -462,8 +462,16 @@ LLM_SYSTEM = """너는 AI 공급망(HBM·첨단 패키징 / 800G·1.6T 광통신
 - chain: 3~5 단계. 각 단계 claim 은 한 문장, evidence 에 근거 id 1개 이상. 기술 추론(technical_inference) 근거만 있는 단계는 claim 끝에 "(추론)".
 - stars: 3 = 최근 사실이 병목·전환을 직접 확인하고 + 공급이 소수에 집중되고 + 기업 노출이 최근 공식 근거(공시·실적)로 확인. 2 = 셋 중 둘. 1 = 하나 또는 추론 의존.
   ★3 은 primary 기업의 최근 30일 직접 근거가 있어야 한다 (없으면 검증기가 ★2 로 내린다).
-- risks: 1~3개. 반대 근거·대체 경로·이미 알려진 정도(대형 고객 집중, 중국 경쟁 등). 근거 id 가 있으면 붙이고 없으면 빈 배열.
-- watch: 2~3개. 다음에 무엇이 확인되면 강화/약화되는지 구체적으로 (예: "11월 10일 전후 TPEx 10월 월매출 YoY", "SK hynix 16단 양산 공식 발표").
+- risks: 1~3개. 반대 근거·대체 경로·이미 알려진 정도(대형 고객 집중, 중국 경쟁, 경쟁사 증설 시점 등). 근거 id 가 있으면 붙이고 없으면 빈 배열.
+- watch: 2~3개, 날짜와 측정 기준이 있는 확인 일정. {{"what": "TPEx 10월 월매출 공시", "due": "2026-11-10", "metric": "YoY", "threshold": "≥ +50%",
+  "direction": "strengthen"}} — 그 날짜에 무엇을 보면 아이디어가 강해지는지(strengthen) 약해지는지(weaken) 판정할 수 있게 쓴다. 날짜를 모르면 due 를 비운다.
+- 노출 순도: primary 기업 항목에 "exposure": {{"share_pct": 49, "segment": "광통신", "basis": "3Q26 부문 매출 23.79억/전체 48.6억 달러", "evidence": "S12"}}.
+  그 병목·전환과 관련된 사업이 회사 매출에서 차지하는 비중이다. 입력 근거(공시·실적 발표의 부문 매출)로 계산할 수 있을 때만 쓰고, 모르면 빼라 — 추정 금지.
+- 판단 점수: 검증기가 10점 근거 점수를 계산한다 (기업 직접 근거 4 · 숫자 확인 1 · 병목 구조 3 · 노출 순도 2 · 최근 반대 근거 −2). ★3 은 7점 이상이어야 하고,
+  2점 이하는 ★1 로 내려간다. 노출 비중을 근거로 확인하면 점수가 오른다.
+- states: 병목·부품의 상태 관측치(가격 배수·리드타임·가동률·재고·수주잔고·평균단가 등, 원문에서 확인한 숫자). 병목이 조여지는지 풀리는지의 근거로 쓴다.
+- leads: 엔진이 찾은 조사 단서 — 기업 소식은 있는데 아이디어가 없는 기업, 활동이 많은 병목의 미커버 공급사, 설명 안 된 가격 급변. 근거가 되면 아이디어로 만든다.
+- prices: 주요 기업의 '이미 움직인 폭' (1·3·12개월, 고점 대비). 근거로 쓰지 않는다. 12개월에 크게 오른 기업은 risks 에 "이미 알려진 정도"를 적는다.
 - 숫자·날짜는 입력에 있는 것만 쓴다. 주가·목표가·매수/매도 권유·시점 예측 금지.
 - 서로 다른 아이디어가 같은 기업·같은 논리를 반복하지 않게 묶는다. 근거가 빈약하면 만들지 않는다 — 개수보다 질.
 
@@ -472,12 +480,19 @@ existing 처리
 - 새 근거가 반대 방향이면 action=weaken, 반증·소멸되면 action=close (reason). 새 근거가 없으면 action=keep (idea_key 만).
 - last_signal_at 이 {stale}일 넘게 지났고 이번 입력에도 새 근거가 없으면 action=weaken (reason: 최신 근거 없음).
 
+확인 일정 채점 (grades)
+- existing 의 watch 중 status=pending 이고 due 가 지났거나 이번 입력에 결과가 나온 항목을 채점한다.
+  hit = 적힌 기준대로 나왔다(아이디어 방향과 같음), miss = 반대로 나왔다, void = 더는 의미가 없다. hit·miss 는 근거 id 가 필요하다.
+- 결과가 아직 없으면 채점하지 않는다. 채점은 아이디어를 고치지 않아도(keep) 할 수 있다.
+
 출력: JSON 하나만.
 {{"ideas": [{{"action": "new|update|weaken|keep|close", "idea_key": "기존 key 또는 null", "type": "bottleneck|transition|confirmation|risk",
   "title": "...", "thesis": "...", "stars": 1, "stars_reason": "한 줄",
-  "companies": [{{"id": "company:...", "role": "primary|peer|customer|competitor|displaced", "why": "한 줄"}}],
+  "companies": [{{"id": "company:...", "role": "primary|peer|customer|competitor|displaced", "why": "한 줄", "exposure": {{"share_pct": 0, "segment": "...", "basis": "...", "evidence": "S1"}}}}],
   "chain": [{{"claim": "...", "evidence": ["S1", "G3"]}}],
-  "risks": [{{"claim": "...", "evidence": []}}], "watch": ["..."], "what_changed": "update 일 때만", "reason": "weaken/close 일 때"}}]}}"""
+  "risks": [{{"claim": "...", "evidence": []}}], "watch": [{{"what": "...", "due": "YYYY-MM-DD", "metric": "...", "threshold": "...", "direction": "strengthen"}}],
+  "what_changed": "update 일 때만", "reason": "weaken/close 일 때"}}],
+ "grades": [{{"idea_key": "...", "index": 0, "status": "hit|miss|void", "evidence": "S12", "note": "한 줄"}}]}}"""
 
 
 def system_prompt(now: datetime) -> str:
@@ -485,7 +500,7 @@ def system_prompt(now: datetime) -> str:
 
 
 def build_payload(signals: list[dict[str, Any]], candidates: list[dict[str, Any]], reg: Registry, existing: list[dict[str, Any]],
-                  max_ideas: int, now: datetime | None = None) -> dict[str, Any]:
+                  max_ideas: int, now: datetime | None = None, extras: dict[str, Any] | None = None) -> dict[str, Any]:
     used = set()
     for s in signals:
         used.update(s["evidence"])
@@ -514,14 +529,26 @@ def build_payload(signals: list[dict[str, Any]], candidates: list[dict[str, Any]
         else:
             d |= {"what": s.get("what"), "why": s.get("why")}
         sigs.append(d | {"nodes": s["nodes"], "companies": s["companies"]})
+    def watch_view(x: dict[str, Any]) -> list[dict[str, Any]]:
+        out = []
+        for i, w in enumerate(x.get("watch") or []):
+            w = w if isinstance(w, dict) else {"what": str(w)}
+            out.append({"index": i, "what": w.get("what"), "due": w.get("due"), "threshold": w.get("threshold"), "status": w.get("status", "pending")})
+        return out
+
+    extras = extras or {}
     return {
         "today": now.date().isoformat(),
         "max_ideas": max_ideas,
         "signals": sigs,
         "candidates": candidates,
         "evidence": evidence,
+        "states": extras.get("states") or [],
+        "leads": extras.get("leads") or {},
+        "prices": extras.get("prices") or {},
         "existing": [{k: x.get(k) for k in ("idea_key", "type", "title", "thesis", "stars", "primary_company", "last_signal_at", "updated_at")}
-                     | {"companies": [c.get("id") for c in x.get("companies") or []], "company_signal_at": company_signal_date(x)} for x in existing],
+                     | {"companies": [c.get("id") for c in x.get("companies") or []], "company_signal_at": company_signal_date(x),
+                        "score": ((x.get("assessment") or {}).get("score")), "watch": watch_view(x)} for x in existing],
     }
 
 
@@ -570,7 +597,12 @@ def company_signal_date(idea: dict[str, Any]) -> str | None:
 
 
 def validate(raw: list[dict[str, Any]], reg: Registry, graph: dict[str, Any], signals: list[dict[str, Any]],
-             existing: dict[str, dict[str, Any]], now: datetime, model: str, method: str) -> tuple[list[dict[str, Any]], list[str]]:
+             existing: dict[str, dict[str, Any]], now: datetime, model: str, method: str,
+             ctx: dict[str, Any] | None = None) -> tuple[list[dict[str, Any]], list[str]]:
+    from wsj.ecosystems import assess as A
+
+    ctx = ctx or {}
+    structure = ctx.get("structure") or A.Structure(graph)
     nodes = {n["id"]: n for n in graph["nodes"]}
     sig_by_ev = {e: s for s in signals for e in s["evidence"]}
     fresh_cut = (now - timedelta(days=FRESH_DAYS)).date().isoformat()
@@ -601,8 +633,20 @@ def validate(raw: list[dict[str, Any]], reg: Registry, graph: dict[str, Any], si
             if cid in nodes and nodes[cid]["kind"] == "company":
                 n = nodes[cid]
                 lst = n.get("listing") or {}
-                comps.append({"id": cid, "name": re.split(r"\s+\(", n["label"])[0], "ticker": lst.get("ticker"), "exchange": lst.get("exchange"),
-                              "size_band": n.get("size_band"), "role": c.get("role") or "peer", "why": (c.get("why") or "")[:200]})
+                row_c = {"id": cid, "name": re.split(r"\s+\(", n["label"])[0], "ticker": lst.get("ticker"), "exchange": lst.get("exchange"),
+                         "size_band": n.get("size_band"), "role": c.get("role") or "peer", "why": (c.get("why") or "")[:200]}
+                ex = c.get("exposure")
+                # 노출 비중은 근거 id 가 있어야 받는다 (추정 금지)
+                if isinstance(ex, dict) and ex.get("evidence") in reg.items:
+                    try:
+                        share = float(ex.get("share_pct"))
+                    except (TypeError, ValueError):
+                        share = -1
+                    if 0 <= share <= 100:
+                        ev = reg.items[ex["evidence"]]
+                        row_c["exposure"] = {"share_pct": round(share, 1), "segment": str(ex.get("segment") or "")[:60],
+                                             "basis": str(ex.get("basis") or "")[:160], "url": ev.url, "as_of": ev.date}
+                comps.append(row_c)
         primary = next((c for c in comps if c["role"] == "primary"), comps[0] if comps else None)
         if not primary:
             rejects.append(f"#{i} no valid company: {title[:40]}")
@@ -650,6 +694,11 @@ def validate(raw: list[dict[str, Any]], reg: Registry, graph: dict[str, Any], si
                 stars, stars_note = int(prev.get("stars") or stars), " (새 기업 직접 근거 없음 → ★ 유지)"
             if what_changed and not what_changed.startswith("업계"):
                 what_changed = "업계: " + what_changed
+        watch = A.normalize_watch(it.get("watch") or [], now, (prev or {}).get("watch"))
+        draft = {"primary_company": primary["id"], "companies": comps, "chain": chain, "risks": risks, "nodes": theme[:12]}
+        assessment = A.assess(draft, structure, ctx.get("issues") or [], ctx.get("indicators") or [], ctx.get("prices") or {}, now)
+        stars, rule_note = A.apply_star_rule(stars, assessment["score"])
+        stars_note += rule_note
         trend = "new" if not prev else ("weakened" if action == "weaken" or stars < (prev.get("stars") or 0)
                                         else "strengthened" if new_direct and (stars > (prev.get("stars") or 0) or action == "update")
                                         else "unchanged")
@@ -657,7 +706,7 @@ def validate(raw: list[dict[str, Any]], reg: Registry, graph: dict[str, Any], si
             "idea_key": key or make_key(kind, primary["id"], title), "status": "active", "trend": trend, "type": kind,
             "title": title[:120], "thesis": thesis[:600], "stars": stars, "stars_reason": ((it.get("stars_reason") or "") + stars_note)[:300],
             "primary_company": primary["id"], "companies": comps, "chain": chain, "risks": risks,
-            "watch": [str(w)[:200] for w in (it.get("watch") or [])][:4], "what_changed": what_changed,
+            "watch": watch, "what_changed": what_changed, "assessment": assessment,
             "nodes": theme[:12], "ecosystems": ecos, "signal_refs": sig_refs,
             "evidence_count": len({e["id"] for st in chain for e in st["evidence"]}),
             "last_signal_at": last_sig, "updated_at": now.isoformat(), "model": model, "method": method,
@@ -691,15 +740,78 @@ def focus_companies(existing: list[dict[str, Any]]) -> set[str]:
 
 
 def prepare(issues: list[dict[str, Any]], indicators: list[dict[str, Any]], graph: dict[str, Any], now: datetime, days: int,
-            existing: list[dict[str, Any]], max_ideas: int, top: int, events: list[Any] | None = None
+            existing: list[dict[str, Any]], max_ideas: int, top: int, events: list[Any] | None = None, extras: dict[str, Any] | None = None
             ) -> tuple[Registry, list[dict[str, Any]], list[dict[str, Any]], dict[str, Any]]:
     reg = Registry()
     signals = load_signals(issues, indicators, graph, reg, now, days)
     if events:
         signals += company_signals(events, graph, reg, now, focus_companies(existing))
     candidates = build_candidates(graph, signals, reg, top=top, now=now)
-    payload = build_payload(signals, candidates, reg, existing, max_ideas, now)
+    if extras and extras.get("prices_full"):
+        # 후보·기존 아이디어 기업의 '이미 움직인 폭'만 입력에 (전체 가격표는 넣지 않는다)
+        from wsj.ecosystems.assess import price_context
+
+        nodes = {n["id"]: n for n in graph["nodes"]}
+        want = {c["company_id"] for c in candidates} | focus_companies(existing)
+        extras["prices"] = {cid: {k: v for k, v in (price_context(extras["prices_full"], nodes.get(cid)) or {}).items() if k in ("r1m", "r12m", "from_high", "flags")}
+                            for cid in sorted(want) if price_context(extras["prices_full"], nodes.get(cid))}
+    payload = build_payload(signals, candidates, reg, existing, max_ideas, now, extras)
     return reg, signals, candidates, payload
+
+
+def build_context(graph: dict[str, Any], issues: list[dict[str, Any]], indicators: list[dict[str, Any]], prices: list[dict[str, Any]],
+                  events: list[Any], existing: list[dict[str, Any]], now: datetime) -> tuple[dict[str, Any], dict[str, Any]]:
+    """판단(점수)에 쓰는 문맥과 LLM 입력에 더할 것 — 병목 상태 관측치·조사 단서·가격 맥락."""
+    from wsj.ecosystems import scan
+    from wsj.ecosystems.assess import Structure
+
+    st = Structure(graph)
+    by_key = {p["ticker"]: p for p in prices or [] if p.get("ticker")}
+    ld = scan.leads(graph, issues, indicators, events, existing, by_key, now)
+    ctx = {"structure": st, "issues": issues, "indicators": indicators, "prices": by_key, "leads": ld}
+    extras = {"states": scan.states(indicators, st), "leads": scan.compact(ld), "prices_full": by_key}
+    return ctx, extras
+
+
+def refresh_rows(existing: dict[str, dict[str, Any]], touched: set[str], grades: dict[str, list[Any]], ctx: dict[str, Any],
+                 now: datetime) -> list[dict[str, Any]]:
+    """손대지 않은 아이디어의 판단(근거 나이·가격 맥락)과 확인 일정 채점을 다시 쓴다 → ideas.put_assessments (updated_at 그대로)."""
+    from wsj.ecosystems import assess as A
+
+    out = []
+    for key, x in existing.items():
+        if key in touched:
+            continue
+        watch = grades.get(key) or x.get("watch") or []
+        watch, _ = A.expire_watch(watch, now)
+        a = A.assess(x, ctx["structure"], ctx.get("issues") or [], ctx.get("indicators") or [], ctx.get("prices") or {}, now,
+                     fallback_direct=company_signal_date(x))
+        out.append({"idea_key": key, "assessment": a, "watch": watch})
+    return out
+
+
+def write_assess_sql(rows: list[dict[str, Any]], d: Path) -> Path | None:
+    if not rows:
+        return None
+    body = json.dumps(rows, ensure_ascii=False, default=str)
+    if "$wsj$" in body:
+        raise ValueError("$wsj$ 가 있어 SQL 로 감쌀 수 없다")
+    d.mkdir(parents=True, exist_ok=True)
+    p = d / "zz_assessments.sql"
+    p.write_text(f"select ideas.put_assessments($wsj${body}$wsj$::jsonb);\n", encoding="utf-8")
+    return p
+
+
+def save_assessments(store, rows: list[dict[str, Any]]) -> int:
+    """API 경로(Actions)에서 판단만 갱신 — 0021 의 put_assessments RPC. 없으면 건너뛴다."""
+    if not rows:
+        return 0
+    try:
+        resp = store._req("POST", "ideas.rpc/put_assessments", body={"rows": rows})
+        return int((resp.json() or {}).get("updated") or 0)
+    except Exception as exc:  # noqa: BLE001
+        log.warning("put_assessments 실패 (0021 전?): %s", exc)
+        return 0
 
 
 def save(store, rows: list[dict[str, Any]]) -> int:
@@ -748,7 +860,21 @@ def gather_events(args, settings, store, graph: dict[str, Any], existing: list[d
 
 
 # ---------------------------------------------------------------- session mode (Claude 예약작업이 LLM 단계를 맡을 때)
-PUBLIC_VIEWS = {"issues": "v_supply_chain_issues", "indicators": "v_indicators", "existing": "v_investment_ideas", "events": "v_company_events"}
+PUBLIC_VIEWS = {"issues": "v_supply_chain_issues", "indicators": "v_indicators", "existing": "v_investment_ideas", "events": "v_company_events",
+                "prices": "v_price_context"}
+OPTIONAL_VIEWS = {"prices"}  # 0021 적용 전에는 없다
+
+
+def public_credentials() -> tuple[str, str]:
+    import os
+
+    from wsj.config import load_settings
+
+    url = os.environ.get("SUPABASE_URL") or os.environ.get("NEXT_PUBLIC_SUPABASE_URL") or load_settings().supabase_url
+    key = os.environ.get("SUPABASE_PUBLISHABLE_KEY") or os.environ.get("NEXT_PUBLIC_SUPABASE_KEY")
+    if not (url and key):
+        raise SystemExit("SUPABASE_URL · SUPABASE_PUBLISHABLE_KEY 가 필요하다 (공개 읽기 키)")
+    return url, key
 
 
 def load_public_inputs(url: str, key: str, feed_days: int = FRESH_DAYS) -> dict[str, list[dict[str, Any]]]:
@@ -765,12 +891,18 @@ def load_public_inputs(url: str, key: str, feed_days: int = FRESH_DAYS) -> dict[
             params: dict[str, str] = {"select": "*"}
             if name == "events":
                 params |= {"published_at": f"gte.{since}", "order": "published_at.desc"}
-            while True:
-                page = http.get_json(f"{url.rstrip('/')}/rest/v1/{view}", params={**params, "limit": "1000", "offset": str(len(rows))},
-                                     headers=headers)
-                rows += page
-                if len(page) < 1000:
-                    break
+            try:
+                while True:
+                    page = http.get_json(f"{url.rstrip('/')}/rest/v1/{view}", params={**params, "limit": "1000", "offset": str(len(rows))},
+                                         headers=headers)
+                    rows += page
+                    if len(page) < 1000:
+                        break
+            except Exception as exc:  # noqa: BLE001
+                if name not in OPTIONAL_VIEWS:
+                    raise
+                log.warning("%s 없음 (마이그레이션 0021 전?): %s", view, exc)
+                rows = []
             out[name] = rows
     finally:
         http.close()
@@ -784,7 +916,7 @@ def write_snapshot(d: Path, inputs: dict[str, list[dict[str, Any]]], now: dateti
     """같은 입력·같은 시각으로 프롬프트와 검증을 두 번 돌려도 근거 id 가 같도록 입력을 고정한다."""
     d.mkdir(parents=True, exist_ok=True)
     for name in PUBLIC_VIEWS:
-        (d / f"{name}.json").write_text(json.dumps(inputs[name], ensure_ascii=False), encoding="utf-8")
+        (d / f"{name}.json").write_text(json.dumps(inputs.get(name) or [], ensure_ascii=False, default=str), encoding="utf-8")
     (d / "meta.json").write_text(json.dumps({"now": now.isoformat()}), encoding="utf-8")
 
 
@@ -838,6 +970,7 @@ def main(argv: list[str] | None = None) -> int:
     ap.add_argument("--snapshot-out", type=Path, help="--from-public 입력과 기준 시각을 이 폴더에 고정한다 (이후 --snapshot 으로 검증)")
     ap.add_argument("--emit-research", type=Path, help="원문 확인 후보(기업 소식 ★2+, 미확인) 목록을 JSON 으로 쓴다")
     ap.add_argument("--emit-sql", type=Path, help="검증된 행을 ideas.put_ideas 호출 SQL 파일로 쓴다 (DB 에는 쓰지 않음)")
+    ap.add_argument("--leads-out", type=Path, help="기회 스캔(조사 단서) 결과를 JSON 으로 쓴다")
     args = ap.parse_args(argv)
     logging.basicConfig(level=logging.INFO, format="%(levelname)-7s %(name)s: %(message)s")
     logging.getLogger("httpx").setLevel(logging.WARNING)
@@ -857,13 +990,7 @@ def main(argv: list[str] | None = None) -> int:
             return 0
         now = datetime.now(UTC)
         if args.from_public:
-            import os
-
-            url = os.environ.get("SUPABASE_URL") or os.environ.get("NEXT_PUBLIC_SUPABASE_URL") or settings.supabase_url
-            key = os.environ.get("SUPABASE_PUBLISHABLE_KEY") or os.environ.get("NEXT_PUBLIC_SUPABASE_KEY")
-            if not (url and key):
-                raise SystemExit("SUPABASE_URL · SUPABASE_PUBLISHABLE_KEY 가 필요하다 (공개 읽기 키)")
-            inputs = load_public_inputs(url, key, args.feed_days)
+            inputs = load_public_inputs(*public_credentials(), args.feed_days)
             if args.snapshot_out:
                 write_snapshot(args.snapshot_out, inputs, now)
                 args.snapshot = args.snapshot_out
@@ -872,9 +999,12 @@ def main(argv: list[str] | None = None) -> int:
                 write_snapshot(tmp, inputs, now)
                 args.snapshot = tmp
             args.dry_run = True
+        prices: list[dict[str, Any]] = []
         if args.snapshot:
             issues = json.loads((args.snapshot / "issues.json").read_text(encoding="utf-8"))
             indicators = json.loads((args.snapshot / "indicators.json").read_text(encoding="utf-8"))
+            pp = args.snapshot / "prices.json"
+            prices = json.loads(pp.read_text(encoding="utf-8")) if pp.exists() else []
             ex_path = args.snapshot / "existing.json"
             existing = json.loads(ex_path.read_text(encoding="utf-8")) if ex_path.exists() else []
             meta = args.snapshot / "meta.json"
@@ -885,12 +1015,19 @@ def main(argv: list[str] | None = None) -> int:
             if maybe is None:
                 args.dry_run = True
             existing = maybe or []
+            try:
+                prices = store.select("public.v_price_context", ["*"], {})
+            except Exception as exc:  # noqa: BLE001
+                log.warning("v_price_context 없음 (0021 전?): %s", exc)
         graph = load_graph()
         events, feed_stats = gather_events(args, settings, store, graph, existing)
         if args.events_out:
             args.events_out.parent.mkdir(parents=True, exist_ok=True)
             args.events_out.write_text(json.dumps([e.public() for e in events], ensure_ascii=False, indent=1), encoding="utf-8")
-        reg, signals, candidates, payload = prepare(issues, indicators, graph, now, args.days, existing, args.max_ideas, args.top, events)
+        ctx, extras = build_context(graph, issues, indicators, prices, events, existing, now)
+        reg, signals, candidates, payload = prepare(issues, indicators, graph, now, args.days, existing, args.max_ideas, args.top, events, extras)
+        if args.leads_out:
+            args.leads_out.write_text(json.dumps(ctx["leads"], ensure_ascii=False, indent=1, default=str), encoding="utf-8")
         log.info("feed %s", json.dumps(feed_stats, ensure_ascii=False))
         log.info("signals %d, candidates %d, evidence %d", len(signals), len(candidates), len(payload["evidence"]))
         if args.emit_research:
@@ -920,9 +1057,17 @@ def main(argv: list[str] | None = None) -> int:
                 system_prompt(now), json.dumps(payload, ensure_ascii=False), model,
                 "직전 응답을 유효한 JSON 하나로 다시 출력하라. 오류: {error}", max_tokens=12000, effort="high")
             raw, usage = out, sum_usage(comps)
-        rows, rejects = validate(raw.get("ideas") or [], reg, graph, signals, {x["idea_key"]: x for x in existing}, now, model, args.method)
+        ex_map = {x["idea_key"]: x for x in existing}
+        rows, rejects = validate(raw.get("ideas") or [], reg, graph, signals, ex_map, now, model, args.method, ctx)
+        from wsj.ecosystems.assess import apply_grades
+
+        grades = apply_grades(ex_map, raw.get("grades") or [], reg, now)
         for r in rows:
             r["usage"] = usage or None
+            if r["idea_key"] in grades and r.get("status") == "active":  # 고친 아이디어에도 채점을 같은 문구로 옮긴다
+                done = {w.get("what"): w for w in grades[r["idea_key"]] if isinstance(w, dict) and w.get("status") != "pending"}
+                r["watch"] = [done.get(w.get("what"), w) if isinstance(w, dict) else w for w in r.get("watch") or []]
+        refresh = refresh_rows(ex_map, {r["idea_key"] for r in rows}, grades, ctx, now)
         for x in rejects:
             log.warning("rejected: %s", x)
         if args.out:
@@ -930,13 +1075,17 @@ def main(argv: list[str] | None = None) -> int:
         if args.emit_sql:
             for x in write_sql(rows, args.emit_sql):
                 log.info("sql: %s", x)
+            a = write_assess_sql(refresh, args.emit_sql)
+            if a:
+                log.info("sql: %s (판단 %d건)", a, len(refresh))
         n = 0
         if not args.dry_run and store is not None:
             from wsj.runlog import logged_run
 
             with logged_run(store, "ideas", {"days": args.days, "model": model}) as run:
                 n = save(store, rows)
-                run["rows"] = n
+                n_assess = save_assessments(store, refresh)
+                run["rows"] = n + n_assess
                 run["notes"] = json.dumps({"signals": len(signals), "company_signals": sum(1 for x in signals if x["kind"] == "company"),
                                            "events": len(events), "candidates": len(candidates), "ideas": len(rows), "rejected": len(rejects),
                                            "cost_usd": usage.get("cost_usd")})
