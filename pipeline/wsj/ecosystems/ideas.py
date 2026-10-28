@@ -715,6 +715,47 @@ def validate(raw: list[dict[str, Any]], reg: Registry, graph: dict[str, Any], si
     return rows, rejects
 
 
+def judged_keys(rows: list[dict[str, Any]]) -> set[str]:
+    """이번 실행에서 판단까지 새로 쓴 아이디어 (refresh_rows 가 건너뛸 것). ★3 점검(star3_audit)으로 ★만 내린 행은
+    판단이 없으므로 넣지 않는다 — 손대지 않은 아이디어처럼 판단을 다시 계산해야 상세 화면의 점수가 비지 않는다."""
+    return {r["idea_key"] for r in rows if r.get("assessment") or r.get("status") != "active"}
+
+
+_KEEP = ("type", "title", "thesis", "primary_company", "companies", "chain", "risks", "watch", "nodes", "ecosystems", "signal_refs",
+         "evidence_count", "last_signal_at")
+
+
+def star_rule_audit(existing: dict[str, dict[str, Any]], rows: list[dict[str, Any]], refresh: list[dict[str, Any]], now: datetime,
+                    model: str, method: str) -> list[dict[str, Any]]:
+    """손대지 않은 아이디어도 오늘 다시 계산한 근거 점수와 ★ 가 어긋나면 ★ 를 내린다 (★3 은 7점 이상, 2점 이하는 ★1).
+    올리는 일은 하지 않는다 — ★ 를 올리는 판단은 아이디어를 고쳐 쓰는 작업의 몫이다. star3_audit 가 이미 만든 행은 그 행을 고친다."""
+    from wsj.ecosystems.assess import apply_star_rule
+
+    by_key = {r["idea_key"]: r for r in rows}
+    out = []
+    for f in refresh:
+        key, score = f["idea_key"], (f.get("assessment") or {}).get("score")
+        x = existing.get(key) or {}
+        if score is None or (x.get("status") or "active") != "active":
+            continue
+        row = by_key.get(key)
+        cur = int((row or x).get("stars") or 0)
+        new, note = apply_star_rule(cur, int(score))
+        if new >= cur:
+            continue
+        if row is not None:
+            row["stars"] = new
+            row["stars_reason"] = ((row.get("stars_reason") or "") + note)[:300]
+            row["what_changed"] = f"{row.get('what_changed') or ''} · 근거 점수 {score}/10 → ★{new}".strip(" ·")[:300]
+            continue
+        out.append({"idea_key": key, "status": "active", "trend": "weakened", **{k: x.get(k) for k in _KEEP}, "stars": new,
+                    "stars_reason": ((x.get("stars_reason") or "") + note)[:300],
+                    "what_changed": f"근거 점수 {score}/10 — ★ 규칙(★3 은 7점 이상, 2점 이하는 ★1)으로 ★{cur}→★{new}",
+                    "last_signal_at": str(x.get("last_signal_at"))[:10] if x.get("last_signal_at") else None,
+                    "updated_at": now.isoformat(), "model": model, "method": method})
+    return out
+
+
 def star3_audit(existing: dict[str, dict[str, Any]], touched: set[str], now: datetime, model: str, method: str) -> list[dict[str, Any]]:
     """손대지 않은(keep) ★3 아이디어도 주 기업 직접 근거가 30일 넘게 없으면 ★2 로 내린다 — ★3 규칙은 매일 다시 본다."""
     cut = (now - timedelta(days=DIRECT_STAR3_DAYS)).date().isoformat()
@@ -725,9 +766,7 @@ def star3_audit(existing: dict[str, dict[str, Any]], touched: set[str], now: dat
         at = company_signal_date(x)
         if at and at >= cut:
             continue
-        keep = ("type", "title", "thesis", "primary_company", "companies", "chain", "risks", "watch", "nodes", "ecosystems", "signal_refs",
-                "evidence_count", "last_signal_at")
-        out.append({"idea_key": key, "status": "active", "trend": "weakened", **{k: x.get(k) for k in keep}, "stars": 2,
+        out.append({"idea_key": key, "status": "active", "trend": "weakened", **{k: x.get(k) for k in _KEEP}, "stars": 2,
                     "stars_reason": ((x.get("stars_reason") or "") + f" (기업 직접 근거가 {DIRECT_STAR3_DAYS}일 넘게 없어 ★2)")[:300],
                     "what_changed": f"주 기업 자신의 최근 {DIRECT_STAR3_DAYS}일 근거가 없어 ★3→★2 (마지막 기업 직접 근거: {at or '없음'})",
                     "last_signal_at": str(x.get("last_signal_at"))[:10], "updated_at": now.isoformat(), "model": model, "method": method})
@@ -1067,7 +1106,8 @@ def main(argv: list[str] | None = None) -> int:
             if r["idea_key"] in grades and r.get("status") == "active":  # 고친 아이디어에도 채점을 같은 문구로 옮긴다
                 done = {w.get("what"): w for w in grades[r["idea_key"]] if isinstance(w, dict) and w.get("status") != "pending"}
                 r["watch"] = [done.get(w.get("what"), w) if isinstance(w, dict) else w for w in r.get("watch") or []]
-        refresh = refresh_rows(ex_map, {r["idea_key"] for r in rows}, grades, ctx, now)
+        refresh = refresh_rows(ex_map, judged_keys(rows), grades, ctx, now)
+        rows += star_rule_audit(ex_map, rows, refresh, now, model, args.method)
         for x in rejects:
             log.warning("rejected: %s", x)
         if args.out:

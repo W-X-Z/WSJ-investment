@@ -186,3 +186,27 @@ def test_japan_and_tpex_fallback_parsers():
     t = P.parse_tpex_daily([{"Date": "1151027", "SecuritiesCompanyCode": "6664", "Open": "332.50", "High": "337.50", "Low": "324.00", "Close": "325.50",
                               "TradingShares": "218305"}])
     assert t["6664"]["trade_date"] == "2026-10-27" and t["6664"]["close"] == 325.5
+
+
+def test_star3_audit_rows_still_get_an_assessment():
+    from wsj.ecosystems.ideas import judged_keys
+
+    rows = [
+        {"idea_key": "a", "status": "active", "assessment": {"score": 7}},  # 작성·갱신한 행 — 판단 있음
+        {"idea_key": "b", "status": "active", "stars": 2},  # ★3 점검으로 ★만 내린 행 — 판단 없음
+        {"idea_key": "c", "status": "closed"},  # 종료 행
+    ]
+    assert judged_keys(rows) == {"a", "c"}
+
+
+def test_star_rule_audit_demotes_untouched_ideas_but_never_promotes():
+    from wsj.ecosystems.ideas import star_rule_audit
+
+    ex = {k: {"idea_key": k, "status": "active", "stars": s, "title": k, "last_signal_at": "2026-10-20"}
+          for k, s in [("low", 2), ("ok", 2), ("hi", 2), ("s3", 3), ("aud", 3)]}
+    refresh = [{"idea_key": k, "assessment": {"score": v}} for k, v in [("low", 2), ("ok", 5), ("hi", 9), ("s3", 6), ("aud", 1)]]
+    audited = [{"idea_key": "aud", "status": "active", "stars": 2, "what_changed": "직접 근거 없음"}]  # star3_audit 가 만든 행
+    out = star_rule_audit(ex, audited, refresh, NOW, "m", "session")
+    got = {r["idea_key"]: r["stars"] for r in out}
+    assert got == {"low": 1, "s3": 2}  # ok·hi 는 그대로 (올리지 않는다)
+    assert audited[0]["stars"] == 1 and "1/10" in audited[0]["what_changed"]  # 이미 있는 행은 고친다 (중복 행 없음)
