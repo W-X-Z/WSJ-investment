@@ -28,3 +28,6 @@ next-env.d.ts
 .idea/
 .vscode/
 .claude/worktrees/
+
+# daily-run scratch (prompts, raw LLM output, generated SQL) — never committed
+.ideas_run/

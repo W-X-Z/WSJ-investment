@@ -1,1 +1,0 @@
-select ideas.put_ideas($wsj$[{"idea_key":"7848707b5fed","status":"closed","trend":"weakened","close_reason":"기업 자신의 근거 없음 — 같은 InP 수요의 더 나은 다음 고리는 장비(AIXTRON) 쪽이고 LandMark 는 이미 반영","updated_at":"2026-10-28T15:46:30.151638+00:00","usage":null}]$wsj$::jsonb);
