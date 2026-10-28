@@ -10,12 +10,13 @@ Claude 예약작업 "WSJ 수집 실행 + 투자 아이디어 작성 (06:41)"이 
 ## 0. 날짜와 전제
 - `date` 로 KST(UTC+9) 오늘 날짜를 구한다. 일요일이면 "일요일" 한 줄로 끝낸다.
 - Supabase MCP execute_sql (project_id: dcatgfivsvbktylmtvgf):
-  `select to_regprocedure('ideas.put_ideas(jsonb)') is not null as p20, to_regprocedure('ideas.put_assessments(jsonb)') is not null as p21, to_regprocedure('ideas.put_idea_notes(jsonb)') is not null as p22, to_regprocedure('ideas.put_valuations(jsonb)') is not null as p23, position('추론' in pg_get_functiondef('ideas.put_ideas(jsonb)'::regprocedure)) > 0 as p24;`
+  `select to_regprocedure('ideas.put_ideas(jsonb)') is not null as p20, to_regprocedure('ideas.put_assessments(jsonb)') is not null as p21, to_regprocedure('ideas.put_idea_notes(jsonb)') is not null as p22, to_regprocedure('ideas.put_valuations(jsonb)') is not null as p23, position('추론' in pg_get_functiondef('ideas.put_ideas(jsonb)'::regprocedure)) > 0 as p24, to_regprocedure('ideas.put_issue_hypotheses(jsonb)') is not null as p26;`
   - p20 이 false 면 "0020 미적용"으로 알리고 끝낸다.
   - p21 이 false 면 "0021 미적용"을 보고에 적고, 아래의 관측치(3-2)·판단 갱신(zz_assessments.sql) 단계는 건너뛴다.
   - p22 가 false 면 "0022 미적용"을 보고에 적고, 심층 분석(6-2)은 건너뛴다.
   - p23 이 false 면 "0024 미적용"을 보고에 적고, 가치평가(4 의 valuation, 6-1 의 zy_valuations.sql)는 건너뛴다.
   - p24 가 false 면 "0025 미적용"을 보고에 적는다 — DB 가 추론 단계를 거부하므로 raw.json 의 추론 단계(근거 없는 "(추론)")를 바로 앞 사실 단계의 claim 끝에 합쳐 넣는다 (추론 자체는 버리지 않는다).
+  - p26 이 false 면 "0026 미적용"을 보고에 적고, 이슈별 영향 경로 저장(6-1 의 zx_issue_hypotheses.sql)은 건너뛴다 — 가설 후보·선택은 그대로 한다.
 - add_repo 로 W-X-Z/WSJ-investment 를 붙이고 `--depth 1` clone. `cd pipeline && python3 -m venv .venv && .venv/bin/pip install -q -e .`
 - 작업 폴더는 `../.ideas_run/` (저장소에 커밋하지 않는다).
 - Supabase MCP get_project_url · get_publishable_keys 로 `SUPABASE_URL`, `SUPABASE_PUBLISHABLE_KEY`(sb_publishable_…)를 export 한다. secret 키는 쓰지 않는다.
@@ -34,12 +35,14 @@ Claude 예약작업 "WSJ 수집 실행 + 투자 아이디어 작성 (06:41)"이 
 ## 2-1. 가설 후보 (1단계, ADR-0022)
 아이디어를 바로 쓰지 않는다. 먼저 가설을 넓게 연 뒤 엔진이 걸러 준 것만 조사하고 쓴다.
 - `s1/hypo.system.md` 를 읽고 `s1/hypo.payload.json` 을 Read 로 2,000줄씩 끝까지 읽는다 (아이디어 단계와 같은 입력).
-- `s1/hypotheses.json` 에 `{"candidates": [...]}` 를 쓴다 — 8~15개. 한 줄 가설(변화 근거 id → 그래프 경로 → 미국·한국 기업 → 숫자·시점 → 왜 시장이 모르나 → 반증 조건 → 확인할 것).
+- `s1/hypotheses.json` 에 `{"model": "claude-opus-5-5", "issues": [{"trigger": "S12", "change": "…", "paths": [...]}]}` 를 쓴다 — **이슈마다 "이 변화가 업계에 어떤 영향을 주나" 경로 최대 3개**, 전체 8~15개.
+  경로 = 변화 근거 id → 그래프 경로 → (있으면) 미국·한국 기업 → 숫자·시점 → 왜 시장이 모르나 → 반증 조건 → 확인할 것. 적당한 미국·한국 기업이 없으면 company 를 null 로 두고 경로만 — 이슈 탭에 '업계 영향'으로 남는다.
   안전한 것만 모으지 말고 대담한 2차·3차 고리를 섞는다. 걸러내는 것은 엔진의 일이다. existing 과 같은 논리면 extends 에 idea_key.
-- `.venv/bin/python -m wsj.ecosystems.ideas --snapshot ../.ideas_run/s1 --from-hypotheses ../.ideas_run/s1/hypotheses.json --hypotheses-out ../.ideas_run/s1/selected.json --emit-research-plan ../.ideas_run/s1/research_plan.json`
-  - 엔진이 검사(근거 id·노드·시장 범위)하고 채점(구체·대담·반증 가능·설명력 각 3점, 경로 끊김·기업 중복 감점)해 상위 max_ideas 개를 고른다(기업당 1개, 생태계마다 1개 이상).
+- `.venv/bin/python -m wsj.ecosystems.ideas --snapshot ../.ideas_run/s1 --from-hypotheses ../.ideas_run/s1/hypotheses.json --hypotheses-out ../.ideas_run/s1/selected.json --emit-research-plan ../.ideas_run/s1/research_plan.json --emit-sql ../.ideas_run/s1/sql`
+  - 엔진이 검사(근거 id·노드·시장 범위)하고 채점(구체·대담·반증 가능·설명력 각 3점, 경로 끊김·기업 중복 감점)해 기업이 있는 경로 중 상위 max_ideas 개를 리포트 후보로 고른다(기업당 1개, 생태계마다 1개 이상).
   - `hypothesis rejected:` 가 절반 넘으면 사유대로 hypotheses.json 을 고쳐 한 번 더 돌린다. 고른 후보가 3개 미만이면 후보를 더 써서 다시.
   - research_plan.json = 고른 후보마다 확인할 것(confirm)·반증 조건·경고(flags)·이미 아는 그 기업 소식.
+  - `s1/sql/zx_issue_hypotheses.sql` = 이슈별 경로(≤3) 저장문 — 6-1 에서 실행한다 (p26 일 때). 이슈 탭이 이것을 보여 준다.
 
 ## 3. 원문 확인
 ### 3-1. 기업 소식 (최대 12건)
@@ -115,6 +118,7 @@ Claude 예약작업 "WSJ 수집 실행 + 투자 아이디어 작성 (06:41)"이 
 ## 6. 저장
 ### 6-1. 아이디어
 - `s2/sql/` 의 파일을 이름순으로 Read 해서 그대로 execute_sql 로 실행한다: `01_…`(아이디어) → `zy_valuations.sql`(가치평가 — p23 이 false 면 건너뛴다; 결과의 rejected 가 있으면 raw.json 의 그 valuation 을 고쳐 5 부터 다시) → `zz_assessments.sql`(손대지 않은 아이디어의 점수·확인 일정 채점 갱신; p21 이 false 면 건너뛴다). SQL 을 손으로 고치지 않는다.
+- 그다음 `s1/sql/zx_issue_hypotheses.sql`(이슈별 영향 경로; p26 일 때)을 실행한다. 이슈 탭은 경로의 기업과 그 이슈를 근거로 쓴 리포트를 화면에서 잇는다. rejected 가 있으면(이슈 없음 등) 보고에만 적는다.
 
 ### 6-2. 심층 분석 메모 (p22 일 때만, 하루 최대 2건)
 - 대상: 이번 실행에서 **새로 ★3 이 됐거나 기대 상승여력(valuation.expected_upside_pct)이 +50% 이상이면서 시총 $3B 이하인 아이디어**, 그리고 30일 넘게 메모가 없는 ★3 (`select idea_key, updated_at from public.v_idea_notes;` 로 확인). 기대 상승여력 높은 것부터 2건.

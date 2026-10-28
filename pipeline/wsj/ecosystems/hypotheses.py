@@ -1,62 +1,70 @@
-"""가설 후보 — 아이디어 작성의 1단계 (ADR-0022).
+"""가설 후보 — 아이디어(리포트) 작성의 1단계 (ADR-0022·0023).
 
-아이디어를 바로 쓰면 LLM 은 근거가 가장 많은 기업으로 수렴한다(시장이 이미 아는 것). 그래서 두 단계로 나눈다:
-  1단계  같은 입력에서 가설 후보를 넓게 연다 — 한 줄짜리 가설 8~15개: 변화(근거) → 경로 → 미국·한국 기업 → 왜 시장이 모르나 → 반증 조건 → 확인할 것.
+워크플로우: 최신 이슈·데이터 → **이슈마다 "업계에 어떤 영향을 주나" 경로 최대 3개** → 기업이 있는 경로를 채점·선택해 조사 → 리포트(2단계).
+  1단계  같은 입력에서 이슈별 영향 경로를 연다: 변화(근거 id) → 그래프 경로 → (있으면) 미국·한국 기업 → 숫자·시점 → 왜 시장이 모르나 → 반증 조건 → 확인할 것.
+         기업이 없는 경로도 받는다 — 이슈 탭의 "이 이슈가 공급망에 갖는 의미"가 되고, 기업이 붙은 경로만 리포트 후보가 된다.
          엔진이 후보를 검사·채점(구체·대담·반증 가능·설명력, 12점)하고 겹치는 것을 걸러 상위 K 개를 고른 뒤, 후보마다 '조사 계획'을 낸다.
+         이슈별 경로는 ideas.put_issue_hypotheses 로 저장한다 (0026, zx_issue_hypotheses.sql).
   조사   예약작업이 조사 계획대로 원문(IR·공시·고객 발표)을 확인해 기업 소식·관측치로 저장한다 → 2차 입력에 근거로 들어온다.
-  2단계  고른 후보만 아이디어(가설·예측·가치평가)로 쓴다. 후보 밖 아이디어는 조사에서 새 변화가 드러났을 때만.
+  2단계  고른 후보만 아이디어(가설·예측·목표주가)로 쓴다. 후보 밖 아이디어는 조사에서 새 변화가 드러났을 때만.
 
     python -m wsj.ecosystems.ideas --snapshot DIR --emit-hypotheses DIR/hypo.json                      # 1단계 프롬프트
     python -m wsj.ecosystems.ideas --snapshot DIR --from-hypotheses DIR/hypotheses.json \\
-           --hypotheses-out DIR/selected.json --emit-research-plan DIR/research_plan.json             # 검사·선택·조사 계획
-    python -m wsj.ecosystems.ideas --snapshot DIR2 --hypotheses DIR/selected.json --emit-prompt …     # 2단계 (아이디어)
+           --hypotheses-out DIR/selected.json --emit-research-plan DIR/research_plan.json --emit-sql DIR/sql   # 검사·선택·조사 계획·이슈 경로 SQL
+    python -m wsj.ecosystems.ideas --snapshot DIR2 --hypotheses DIR/selected.json --emit-prompt …     # 2단계 (리포트)
 """
 from __future__ import annotations
 
+import json
 import re
 from collections import defaultdict
 from datetime import datetime
+from pathlib import Path
 from typing import Any
 
 from wsj.ecosystems.scope import SCOPE_LABEL, in_scope
 
 HYPOTHESIS_SYSTEM = """너는 AI 공급망(HBM·첨단 패키징 / 800G·1.6T 광통신 / AI 데이터센터 800VDC 전력·냉각) 전문 투자 리서치 애널리스트다.
-이 단계의 일은 **가설 후보를 넓게 여는 것**이다 — 아직 아이디어를 완성하지 않는다. 입력(signals·candidates·evidence·states·leads·prices·existing)은
-아이디어 작성 단계와 같다. 오늘 날짜: {today}
+이 단계의 일은 **이슈마다 "이 변화가 업계에 어떤 영향을 주나"를 경로로 여는 것**이다 — 아직 리포트를 쓰지 않는다.
+입력(signals·candidates·evidence·states·leads·prices·existing)은 리포트 작성 단계와 같다. 오늘 날짜: {today}
 
-가설 = "변화 X(최근 사실, 근거 id)가 경로 P 를 타고 기업 C 의 숫자를 N분기 안에 Y 만큼 바꾼다 — 시장은 아직 그렇게 보지 않는다".
-좋은 가설의 조건(중요한 순): 구체적(경로·기업·숫자·시점) · 대담(시장 미반영 — 1차 수혜가 아니라 2차·3차 고리, 아직 조용한 기업) ·
+영향 경로 = "변화 X(최근 사실, 근거 id)가 경로 P 를 타고 어느 부품·공정·기업의 숫자를 N분기 안에 Y 만큼 바꾼다 — 시장은 아직 그렇게 보지 않는다".
+좋은 경로의 조건(중요한 순): 구체적(경로·숫자·시점) · 대담(시장 미반영 — 1차 수혜가 아니라 2차·3차 고리, 아직 조용한 기업) ·
 반증 가능(틀리면 어느 날짜에 어떤 숫자로 드러나나) · 설명력(지금 보이는 사실들을 한 논리로).
 
 규칙
-- {n_min}~{n_max}개. 생태계 셋(hbm·optics·power)을 모두 건드리고, 같은 기업은 2개까지. 안전한 것만 모으지 말고 대담한 것을 섞어라 — 걸러내는 것은 엔진의 일이다.
-- trigger 는 최근 S 근거 id 하나(변화). change 는 그 변화를 날짜와 함께 한 문장으로.
-- path 는 그래프 노드 id 로 '변화 → … → 기업' (candidates.chains.path_ids 처럼; 마지막은 company). 그래프에 없는 고리는 네 지식으로 채우되
-  path 에는 있는 노드만 쓰고 claim 에 "(추론)" 으로 적는다.
-- company 는 {scope}만 (candidates·leads 가 그 범위다). 변화가 대만·일본·유럽 기업에서 시작됐으면 같은 경로의 미국·한국 고리를 찾는다.
-- claim 한 문장에 숫자(effect_pct = 이 기업 매출 대비 변화의 크기, %)와 시점(lead_quarters)을 넣는다. 추정이어도 쓴다 — 그것이 가설이다.
+- 최근 {fresh}일 안의 중요 이슈(I 신호 ★2+, M 지표, 중요한 E 소식)마다 경로를 **최대 {per_issue}개** 쓴다. 전체 {n_min}~{n_max}개.
+  생태계 셋(hbm·optics·power)을 모두 건드리고, 안전한 것만 모으지 말고 대담한 것을 섞어라 — 걸러내는 것은 엔진의 일이다.
+- trigger 는 그 이슈의 S 근거 id 하나(변화). change 는 그 변화를 날짜와 함께 한 문장으로.
+- path 는 그래프 노드 id 로 '변화 → … → 끝' (candidates.chains.path_ids 처럼). 끝은 기업(company)일 수도, 아직 기업을 못 붙인 부품·공정·병목일 수도 있다.
+  그래프에 없는 고리는 네 지식으로 채우되 path 에는 있는 노드만 쓰고 claim 에 "(추론)" 으로 적는다.
+- company 는 있으면 {scope}만 (candidates·leads 가 그 범위다). 변화가 대만·일본·유럽 기업에서 시작됐으면 같은 경로의 미국·한국 고리를 찾는다.
+  적당한 미국·한국 기업이 없으면 company 를 null 로 두고 경로만 적는다 — 이슈 탭에 '업계 영향'으로 남는다 (리포트 후보는 아니다).
+- claim 한 문장에 숫자(effect_pct = 그 기업(없으면 그 부품 시장) 매출 대비 변화의 크기, %)와 시점(lead_quarters)을 넣는다. 추정이어도 쓴다 — 그것이 가설이다.
 - why_unpriced: 왜 시장이 아직 이 고리를 보지 않는가 (주가가 조용함·기업 소식 없음·경로가 2단계 이상·업계가 다른 데를 봄).
 - falsifier: "날짜 D 에 지표 M 이 T 면 폐기" 꼴 — 날짜와 숫자가 있어야 한다.
-- research: 이 가설을 확인하려면 어떤 원문을 봐야 하나 1~3개 (예: "C 의 3Q IR 자료에서 HBM 장비 매출 비중", "고객 X 의 증설 공시에서 장비 발주처").
+- research: 이 경로를 확인하려면 어떤 원문을 봐야 하나 1~3개 (예: "C 의 3Q IR 자료에서 HBM 장비 매출 비중", "고객 X 의 증설 공시에서 장비 발주처").
   이미 입력에 있는 것(E 신호·evidence)은 다시 적지 않는다.
 - existing 과 같은 기업·같은 논리면 extends 에 그 idea_key (갱신 후보). 다른 고리면 null.
 - 숫자·날짜는 입력에 있는 것과 네 추정만. 매수/매도 권유 없음.
 
-출력: JSON 하나만.
-{{"candidates": [{{"id": "H1", "trigger": "S12", "change": "10/28 SK hynix 가 HBM 수요가 공급의 2배라고 밝혔다",
-   "path": ["bottleneck:…", "process:…", "company:…"], "company": "company:…",
-   "claim": "HBM 증설이 적층 후 검사 핸들러 수요를 2027년까지 2배로 늘려 C 의 매출을 2분기 뒤 +60% 바꾼다 (추론)",
-   "effect_pct": 60, "lead_quarters": 2, "why_unpriced": "…", "falsifier": "2026-12-10 11월 월매출 YoY < +10% 면 폐기",
-   "research": ["…"], "extends": null}}]}}"""
+출력: JSON 하나만. 이슈 단위로 묶는다.
+{{"issues": [{{"trigger": "S12", "change": "10/28 SK hynix 가 HBM 수요가 공급의 2배라고 밝혔다",
+   "paths": [{{"id": "H1", "path": ["gen:hbm4", "process:…", "company:…"], "company": "company:…",
+      "claim": "HBM 증설이 적층 후 검사 핸들러 수요를 2027년까지 2배로 늘려 C 의 매출을 2분기 뒤 +60% 바꾼다 (추론)",
+      "effect_pct": 60, "lead_quarters": 2, "why_unpriced": "…", "falsifier": "2026-12-10 11월 월매출 YoY < +10% 면 폐기",
+      "research": ["…"], "extends": null}},
+     {{"id": "H2", "path": ["gen:hbm4", "process:hbm_burn_in"], "company": null, "claim": "번인 시간이 길어져 번인 소켓·보드 수요가 2027년 2배 (추론)", "effect_pct": 100, "lead_quarters": 3,
+      "why_unpriced": "…", "falsifier": "…", "research": ["…"], "extends": null}}]}}]}}"""
 
-N_MIN, N_MAX = 8, 15
+N_MIN, N_MAX, PER_ISSUE = 8, 15, 3
 CRITERIA = ("specific", "bold", "falsifiable", "explanatory")
 _DATE = re.compile(r"(20\d\d[-./]\d{1,2}|\d{1,2}월|[1-4]분기|[1-4]Q|Q[1-4]|상반기|하반기)")
 _NUMBER = re.compile(r"(\d[\d,.]*\s*(%|％|억|조|만|배|달러|원|\$|NT\$|M|B)|[≥≤<>]\s*[+\-]?\d)")
 
 
-def system_prompt(now: datetime) -> str:
-    return HYPOTHESIS_SYSTEM.format(today=now.date().isoformat(), scope=SCOPE_LABEL, n_min=N_MIN, n_max=N_MAX)
+def system_prompt(now: datetime, fresh_days: int = 14) -> str:
+    return HYPOTHESIS_SYSTEM.format(today=now.date().isoformat(), scope=SCOPE_LABEL, n_min=N_MIN, n_max=N_MAX, per_issue=PER_ISSUE, fresh=fresh_days)
 
 
 def _neighbors(graph: dict[str, Any]) -> dict[str, set[str]]:
@@ -73,9 +81,28 @@ def _linked(adj: dict[str, set[str]], a: str, b: str) -> bool:
     return b in adj.get(a, ()) or bool(adj.get(a, set()) & adj.get(b, set()))
 
 
+def flatten(raw: Any) -> list[dict[str, Any]]:
+    """LLM 출력 → 평평한 후보 목록. 이슈 단위({"issues": [{trigger, change, paths: [...]}]})와 예전의 평평한 꼴({"candidates": [...]}) 둘 다 받는다.
+    이슈마다 PER_ISSUE 개까지만."""
+    if isinstance(raw, list):
+        return [c for c in raw if isinstance(c, dict)]
+    if not isinstance(raw, dict):
+        return []
+    out: list[dict[str, Any]] = []
+    for grp in raw.get("issues") or []:
+        if not isinstance(grp, dict):
+            continue
+        for p in (grp.get("paths") or [])[:PER_ISSUE]:
+            if isinstance(p, dict):
+                out.append({"trigger": grp.get("trigger"), "change": grp.get("change")} | p)
+    out += [c for c in raw.get("candidates") or [] if isinstance(c, dict)]
+    return out
+
+
 def validate_candidates(raw: Any, graph: dict[str, Any], reg: Any, signals: list[dict[str, Any]], existing: list[dict[str, Any]],
                         prices: dict[str, dict[str, Any]], now: datetime) -> tuple[list[dict[str, Any]], list[str]]:
-    """LLM 의 후보 → 검사(근거 id·노드·시장 범위)와 채점(12점). 반환 (후보, 거부 사유)."""
+    """LLM 의 경로 → 검사(근거 id·노드·시장 범위)와 채점(12점). 기업이 없는 경로도 받는다(company=None, 리포트 후보는 아니다).
+    반환 (후보, 거부 사유). 후보마다 issue_key(그 trigger 가 속한 이슈)가 붙는다."""
     from wsj.ecosystems.assess import price_context
 
     nodes = {n["id"]: n for n in graph["nodes"]}
@@ -83,18 +110,20 @@ def validate_candidates(raw: Any, graph: dict[str, Any], reg: Any, signals: list
     active = {x["idea_key"]: x for x in existing if (x.get("status") or "active") == "active"}
     covered = {x.get("primary_company") for x in active.values()}
     own_signal = {s.get("subject") for s in signals if s.get("kind") == "company" and s.get("subject")}
-    items = (raw or {}).get("candidates") if isinstance(raw, dict) else raw
+    sig_by_ev: dict[str, dict[str, Any]] = {}
+    for s in signals:  # 같은 근거를 이슈 신호와 기업 신호가 함께 쓰면 이슈 쪽으로 (issue_key 를 찾기 위해)
+        for e in s.get("evidence") or []:
+            if e not in sig_by_ev or s.get("kind") == "issue":
+                sig_by_ev[e] = s
     out, rejects = [], []
-    for i, c in enumerate(items or []):
-        if not isinstance(c, dict):
-            continue
-        cid, trig = c.get("company"), c.get("trigger")
+    for i, c in enumerate(flatten(raw)):
+        cid, trig = c.get("company") or None, c.get("trigger")
         hid = str(c.get("id") or f"H{i + 1}")
-        n = nodes.get(cid)
-        if not n or n.get("kind") != "company":
+        n = nodes.get(cid) if cid else None
+        if cid and (not n or n.get("kind") != "company"):
             rejects.append(f"{hid}: unknown company {cid}")
             continue
-        if not in_scope(n):
+        if n and not in_scope(n):
             rejects.append(f"{hid}: company out of scope ({(n.get('listing') or {}).get('exchange')}) {cid}")
             continue
         ev = reg.items.get(trig) if trig else None
@@ -106,8 +135,11 @@ def validate_candidates(raw: Any, graph: dict[str, Any], reg: Any, signals: list
             rejects.append(f"{hid}: claim too short")
             continue
         path = [p for p in (c.get("path") or []) if isinstance(p, str) and p in nodes]
-        if not path or path[-1] != cid:
+        if cid and (not path or path[-1] != cid):
             path = (path + [cid]) if cid not in path else path
+        if not path:
+            rejects.append(f"{hid}: path has no known graph node")
+            continue
         gaps = [(a, b) for a, b in zip(path, path[1:], strict=False) if not _linked(adj, a, b)]
         try:
             effect = float(c.get("effect_pct")) if c.get("effect_pct") is not None else None
@@ -119,29 +151,35 @@ def validate_candidates(raw: Any, graph: dict[str, Any], reg: Any, signals: list
             lead = None
         falsifier = str(c.get("falsifier") or "").strip()
         why = str(c.get("why_unpriced") or "").strip()
-        pc = price_context(prices, n) or {}
+        pc = (price_context(prices, n) or {}) if n else {}
         quiet = bool(pc) and not ((pc.get("r1m") or 0) >= 30 or (pc.get("from_low") or 0) >= 200)
         path_set = set(path)
-        explain = {s["sid"] for s in signals if (set(s.get("nodes") or []) & path_set) or cid in (s.get("companies") or [])}
+        explain = {s["sid"] for s in signals if (set(s.get("nodes") or []) & path_set) or (cid and cid in (s.get("companies") or []))}
         crit = {
             "specific": int(len(path) >= 2) + int(effect is not None) + int(lead is not None),
-            "bold": int(bool(why)) + int(quiet) + int(cid not in own_signal),
+            "bold": int(bool(why)) + int(quiet) + int(bool(cid) and cid not in own_signal),
             "falsifiable": int(bool(falsifier)) + int(bool(_DATE.search(falsifier))) + int(bool(_NUMBER.search(falsifier))),
             "explanatory": min(3, len(explain)),
         }
         extends = c.get("extends") if c.get("extends") in active else None
-        penalty = min(2, len(gaps)) + (1 if (cid in covered and not extends) else 0)
+        penalty = min(2, len(gaps)) + (1 if (cid and cid in covered and not extends) else 0)
         score = max(0, sum(crit.values()) - penalty)
         flags = []
         if gaps:
             flags.append("경로 끊김: " + ", ".join(f"{a}→{b}" for a, b in gaps[:2]))
         if pc and not quiet:
             flags.append(f"이미 움직임 (1개월 {pc.get('r1m')}% · 저점 대비 {pc.get('from_low')}%)")
-        if cid in covered and not extends:
+        if cid and cid in covered and not extends:
             flags.append("같은 기업의 활성 아이디어 있음 — extends 로 잇거나 다른 고리")
-        out.append({"id": hid, "trigger": {"id": trig, "url": ev.url, "title": ev.title, "date": ev.date}, "change": str(c.get("change") or "")[:200],
+        if not cid:
+            flags.append("기업 없음 — 업계 영향 경로 (리포트 후보 아님)")
+        sig = sig_by_ev.get(trig) or {}
+        out.append({"id": hid, "trigger": {"id": trig, "url": ev.url, "title": ev.title, "date": ev.date},
+                    "issue_key": sig.get("ref") if sig.get("kind") == "issue" else None, "signal": sig.get("sid"),  # 이슈 신호의 ref = issue_key
+                    "change": str(c.get("change") or "")[:200],
                     "path": path, "path_labels": [re.split(r"\s+\(", nodes[p]["label"])[0] for p in path], "company": cid,
-                    "company_label": re.split(r"\s+\(", n["label"])[0], "ecosystem": n.get("ecosystem"), "size_band": n.get("size_band"),
+                    "company_label": re.split(r"\s+\(", n["label"])[0] if n else None, "ecosystem": (n or nodes[path[0]]).get("ecosystem"),
+                    "size_band": n.get("size_band") if n else None,
                     "claim": claim[:300], "effect_pct": effect, "lead_quarters": lead, "why_unpriced": why[:200], "falsifier": falsifier[:200],
                     "research": [str(r)[:160] for r in (c.get("research") or []) if str(r).strip()][:3], "extends": extends,
                     "price": {k: pc.get(k) for k in ("r1m", "from_low", "market_cap_usd")} if pc else None,
@@ -150,9 +188,11 @@ def validate_candidates(raw: Any, graph: dict[str, Any], reg: Any, signals: list
 
 
 def select(cands: list[dict[str, Any]], k: int, per_company: int = 1, min_score: int = 5) -> list[dict[str, Any]]:
-    """점수 순으로 K 개 — 기업당 1개, 생태계마다 최소 1개(있으면). 같은 기업·같은 trigger 는 높은 점수만."""
+    """리포트 후보: 기업이 있는 경로를 점수 순으로 K 개 — 기업당 1개, 생태계마다 최소 1개(있으면). 같은 기업·같은 trigger 는 높은 점수만."""
     best: dict[tuple[str, str], dict[str, Any]] = {}
     for c in cands:
+        if not c.get("company"):
+            continue
         key = (c["company"], c["trigger"]["id"])
         if key not in best or c["score"] > best[key]["score"]:
             best[key] = c
@@ -177,6 +217,33 @@ def select(cands: list[dict[str, Any]], k: int, per_company: int = 1, min_score:
     for r, c in enumerate(picked, 1):
         c["rank"] = r
     return picked
+
+
+def by_issue(cands: list[dict[str, Any]], selected: list[dict[str, Any]], now: datetime, model: str | None, method: str) -> list[dict[str, Any]]:
+    """이슈 탭용: 이슈마다 경로 최대 PER_ISSUE 개 (점수 순, 기업 있는 것 우선) → ideas.put_issue_hypotheses 행."""
+    chosen = {c["id"] for c in selected}
+    groups: dict[str, list[dict[str, Any]]] = defaultdict(list)
+    for c in cands:
+        if c.get("issue_key"):
+            groups[c["issue_key"]].append(c)
+    rows = []
+    for key, xs in groups.items():
+        xs = sorted(xs, key=lambda c: (-int(bool(c.get("company"))), -c["score"], c["id"]))[:PER_ISSUE]
+        paths = [{k: c.get(k) for k in ("id", "claim", "path", "path_labels", "company", "company_label", "effect_pct", "lead_quarters",
+                                        "why_unpriced", "falsifier", "research", "score", "criteria", "flags", "extends")}
+                 | {"selected": c["id"] in chosen, "rank": c.get("rank")} for c in xs]
+        rows.append({"issue_key": key, "as_of": now.date().isoformat(), "paths": paths, "model": model, "method": method})
+    return rows
+
+
+def write_issue_sql(rows: list[dict[str, Any]], d: Path) -> Path | None:
+    """이슈별 경로 → `select ideas.put_issue_hypotheses(...)` 한 문장 (zx_…: 01_ 아이디어 뒤, zy_ 가치평가 앞 — 순서는 상관없다)."""
+    if not rows:
+        return None
+    d.mkdir(parents=True, exist_ok=True)
+    p = d / "zx_issue_hypotheses.sql"
+    p.write_text("select ideas.put_issue_hypotheses($wsj$" + json.dumps(rows, ensure_ascii=False, default=str) + "$wsj$::jsonb);\n", encoding="utf-8")
+    return p
 
 
 def research_plan(selected: list[dict[str, Any]], graph: dict[str, Any], signals: list[dict[str, Any]]) -> list[dict[str, Any]]:
@@ -205,6 +272,6 @@ def stage2_view(selected: list[dict[str, Any]], reg: Any) -> list[dict[str, Any]
         t = c.get("trigger") or {}
         tid = by_url.get(t.get("url"))
         out.append({k: c.get(k) for k in ("id", "rank", "score", "change", "path", "company", "claim", "effect_pct", "lead_quarters",
-                                            "why_unpriced", "falsifier", "research", "extends", "flags")}
+                                            "why_unpriced", "falsifier", "research", "extends", "flags", "issue_key")}
                    | {"trigger": tid or {"title": t.get("title"), "url": t.get("url")}})
     return out

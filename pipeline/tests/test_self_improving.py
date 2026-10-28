@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import json
 from datetime import UTC, date, datetime
+from pathlib import Path
 
 from wsj.ecosystems import assess as A
 from wsj.ecosystems import prices as P
@@ -543,31 +544,43 @@ def test_hypotheses_validate_score_select_and_plan():
     reg = Registry()
     s1 = reg.add("S", "https://x/s1", "10/27 병목 B 심화", publisher="P", date="2026-10-27", tier="third_party_report")
     g1 = reg.add("G", "https://x/g1", "구조", publisher=None, date=None, tier="third_party_report")
-    signals = [{"sid": "sig1", "ref": "issue:1", "kind": "issue", "title": "t", "stars": 3, "date": "2026-10-27", "evidence": [s1], "nodes": ["bottleneck:b"], "companies": []},
+    signals = [{"sid": "sig1", "ref": "issue-key-1", "kind": "issue", "title": "t", "stars": 3, "date": "2026-10-27", "evidence": [s1], "nodes": ["bottleneck:b"], "companies": []},
                {"sid": "sig2", "ref": "events:company:q", "kind": "company", "subject": "company:q", "title": "Q 수주", "stars": 2, "date": "2026-10-26", "evidence": [s1],
                 "nodes": ["component:x"], "companies": ["company:q"], "items": [{"title": "Q 수주 공시", "ev": s1}]}]
     prices = {"P": {"close": 10, "r1m": 2, "from_low": 20, "market_cap_usd": 3e8, "as_of": "2026-10-27"}, "Q": {"close": 5, "r1m": 45, "from_low": 300, "as_of": "2026-10-27"}}
-    raw = {"candidates": [
-        {"id": "H1", "trigger": s1, "change": "10/27 병목 B 심화", "path": ["bottleneck:b", "component:x", "company:p"], "company": "company:p",
+    # 이슈 단위 출력: 이슈마다 경로 ≤3, 기업 없는 경로(업계 영향)도 받는다
+    raw = {"issues": [{"trigger": s1, "change": "10/27 병목 B 심화", "paths": [
+        {"id": "H1", "path": ["bottleneck:b", "component:x", "company:p"], "company": "company:p",
          "claim": "병목 B 가 부품 X 수요를 2배로 늘려 P 매출을 2분기 뒤 +40% 바꾼다 (추론)", "effect_pct": 40, "lead_quarters": 2,
          "why_unpriced": "주가 조용, 자기 소식 없음", "falsifier": "2026-12-10 11월 월매출 YoY < +10% 면 폐기", "research": ["P 의 3Q IR 에서 X 매출 비중"], "extends": None},
-        {"id": "H2", "trigger": s1, "change": "같은 변화", "path": ["bottleneck:b", "company:q"], "company": "company:q",
+        {"id": "H2", "path": ["bottleneck:b", "company:q"], "company": "company:q",
          "claim": "병목 B 가 Q 매출을 늘린다", "effect_pct": None, "lead_quarters": None, "why_unpriced": "", "falsifier": "실적이 나쁘면 폐기", "research": [], "extends": None},
+        {"id": "H0", "path": ["bottleneck:b", "component:x"], "company": None, "claim": "병목 B 가 부품 X 가격을 2027년 +20% 올린다 (추론)", "effect_pct": 20, "lead_quarters": 2,
+         "why_unpriced": "가격 지표 없음", "falsifier": "2027-03-31 까지 X 가격 인상 보도 없으면 폐기", "research": ["X 가격 동향"]},
+        {"id": "H9", "path": ["bottleneck:b"], "company": None, "claim": "네 번째 경로는 이슈당 3개 제한으로 잘린다", "falsifier": "x"}]}],
+           "candidates": [
         {"id": "H3", "trigger": s1, "change": "x", "path": ["bottleneck:b", "component:x", "company:t"], "company": "company:t", "claim": "대만 기업 T 가 수혜를 본다 — 범위 밖", "falsifier": "x"},
         {"id": "H4", "trigger": g1, "change": "x", "path": ["company:p"], "company": "company:p", "claim": "G 근거를 변화로 쓴 잘못된 후보 — 거부", "falsifier": "x"}]}
     cands, rejects = H.validate_candidates(raw, g, reg, signals, [], prices, NOW)
-    assert [c["id"] for c in cands] == ["H1", "H2"] and len(rejects) == 2 and any("out of scope" in r for r in rejects) and any("trigger" in r for r in rejects)
-    h1, h2 = cands
-    assert h1["score"] == 11 and h1["criteria"] == {"specific": 3, "bold": 3, "falsifiable": 3, "explanatory": 2} and not h1["flags"]
+    assert [c["id"] for c in cands] == ["H1", "H2", "H0"] and len(rejects) == 2 and any("out of scope" in r for r in rejects) and any("trigger" in r for r in rejects)
+    h1, h2, h0 = cands
+    assert h1["score"] == 11 and h1["criteria"] == {"specific": 3, "bold": 3, "falsifiable": 3, "explanatory": 2} and not h1["flags"] and h1["issue_key"] == "issue-key-1"
     assert h2["score"] < 6 and h2["criteria"]["bold"] == 0 and any("이미 움직임" in f for f in h2["flags"])  # 가격이 뛰었고 자기 소식도 있다
+    assert h0["company"] is None and h0["path_labels"] == ["병목 B", "부품 X"] and any("기업 없음" in f for f in h0["flags"])
     sel = H.select(cands, k=3)
-    assert [c["id"] for c in sel] == ["H1"] and sel[0]["rank"] == 1
+    assert [c["id"] for c in sel] == ["H1"] and sel[0]["rank"] == 1  # 기업 없는 경로는 리포트 후보가 아니다
     plan = H.research_plan(sel, g, signals)
     assert plan[0]["company"] == "Primary" and plan[0]["ticker"] == "P" and plan[0]["confirm"] == ["P 의 3Q IR 에서 X 매출 비중"]
+    rows = H.by_issue(cands, sel, NOW, "m", "session")
+    assert len(rows) == 1 and rows[0]["issue_key"] == "issue-key-1" and [(p["id"], p["selected"]) for p in rows[0]["paths"]] == [("H1", True), ("H2", False), ("H0", False)]
+    out = H.write_issue_sql(rows, Path(__file__).parent / ".tmp_issue_sql")
+    assert out and out.read_text().startswith("select ideas.put_issue_hypotheses($wsj$[")
+    out.unlink()
+    out.parent.rmdir()
     reg2 = Registry()
     s1b = reg2.add("S", "https://x/s1", "같은 출처, 새 레지스트리", publisher="P", date="2026-10-27", tier="third_party_report")
     v = H.stage2_view(sel, reg2)
-    assert v[0]["trigger"] == s1b and v[0]["id"] == "H1"
+    assert v[0]["trigger"] == s1b and v[0]["id"] == "H1" and v[0]["issue_key"] == "issue-key-1"
 
 
 def test_validate_records_hypothesis_provenance():
