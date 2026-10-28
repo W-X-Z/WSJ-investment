@@ -816,3 +816,91 @@ tr:hover td{background:#f8faff}
 
 /* ADR-0020: 가설 우선 — 추론 단계는 색으로 구분 (사실 단계는 각주가 있다) */
 .fd-chain li.inf{color:#3f5f96}
+
+/* ADR-0023: 제품 형태 — 리서치 리포트 카드(기업 · 목표주가 · 아이디어 · 근거 · 예측), 이슈 피드(의미 · 영향 경로 · 연결 리포트) */
+.fd-summary-note{color:#8a96a8}
+.fd-tabs-right{margin-left:auto}
+.fd-rc{background:#fff;border:1px solid #e3e8ef;border-radius:14px;padding:16px 18px 12px;display:flex;flex-direction:column;gap:9px;min-width:0}
+.fd-rc-head{display:flex;align-items:flex-start;justify-content:space-between;gap:10px}
+.fd-rc-co{display:flex;flex-direction:column;gap:2px;min-width:0}
+.fd-rc-name{font-size:16px;font-weight:800;color:#14243b;letter-spacing:-.3px;line-height:1.3}
+.fd-rc-name:hover{color:#2f55c9}
+.fd-rc-tk{font-size:11.5px;color:#7b8798;font-family:ui-monospace,monospace;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.fd-rc-meta{display:flex;align-items:baseline;gap:6px;font-size:11.5px;color:#6b788b;white-space:nowrap}
+.fd-rc-meta .fd-trend{font-size:11.5px}
+.fd-rc h3{margin:2px 0 0;font-size:16.5px;line-height:1.45;letter-spacing:-.3px;word-break:keep-all;text-wrap:balance}
+.fd-rc h3 a{color:#14243b}
+.fd-rc h3 a:hover{color:#2f55c9}
+.fd-rc-thesis{margin:0;font-size:13px;line-height:1.7;color:#33425a;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+.fd-rc-facts{list-style:none;margin:0;padding:8px 0 0;border-top:1px dashed #e6ebf2;display:flex;flex-direction:column;gap:4px}
+.fd-rc-facts li{display:grid;grid-template-columns:38px minmax(0,1fr) auto;gap:6px;font-size:12.5px;line-height:1.55;color:#33425a}
+.fd-rc-facts time{font-family:ui-monospace,monospace;font-size:11.5px;color:#2c4f86;font-weight:700;padding-top:1px}
+.fd-rc-facts span{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.fd-rc-foot{display:flex;flex-wrap:wrap;gap:4px 12px;font-size:11.5px;color:#8a96a8;padding-top:6px;border-top:1px solid #eef1f5}
+.fd-rc-foot time{margin-left:auto;font-family:ui-monospace,monospace}
+.fd-rc-others{color:#7b8798}
+/* 목표주가 블록 */
+.fd-tp{display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 10px;margin:0;padding:10px 12px;border-radius:10px;background:#f6f8fb;font-size:12.5px;color:#43546d}
+.fd-tp-label{font-size:11px;font-weight:800;color:#5a6a84;letter-spacing:.2px}
+.fd-tp-label small{font-weight:600;color:#9aa5b5}
+.fd-tp-price{font-size:21px;font-weight:800;color:#14243b;letter-spacing:-.5px;font-variant-numeric:tabular-nums;line-height:1}
+.fd-tp-up{font-size:17px;font-weight:800;font-variant-numeric:tabular-nums;line-height:1}
+.fd-tp-hi .fd-tp-up{color:#17794a}.fd-tp-mid .fd-tp-up{color:#3f5f96}.fd-tp-flat .fd-tp-up{color:#6c7a90}.fd-tp-lo .fd-tp-up{color:#a0312a}
+.fd-tp-now{font-weight:600;color:#33425a;font-variant-numeric:tabular-nums}
+.fd-tp-now small{font-weight:500;color:#9aa5b5;font-family:ui-monospace,monospace;font-size:10.5px}
+.fd-tp-conf{font-size:10.5px;font-weight:800;padding:1px 8px;border-radius:999px;background:#fff;border:1px solid #e3e8ef;color:#5a6a84}
+.fd-tp-range{flex-basis:100%;font-size:11.5px;color:#7b8798;font-variant-numeric:tabular-nums}
+.fd-tp-range i{font-style:normal;color:#b5bdc9;margin:0 4px}
+.fd-tp time{font-size:11px;color:#9aa5b5;font-family:ui-monospace,monospace;margin-left:auto}
+.fd-tp-none{color:#8a96a8;background:#fafbfd}
+.fd-tp-none small{flex-basis:100%;font-size:11px;color:#a3adbb}
+.fd-dhead .fd-tp{margin:10px 0 12px;padding:14px 16px}
+.fd-dhead .fd-tp-price{font-size:28px}
+.fd-dhead .fd-tp-up{font-size:21px}
+.fd-dco{margin:0 0 4px;display:flex;align-items:baseline;gap:10px;font-size:13px;color:#7b8798}
+.fd-dco b{font-size:15px;color:#14243b;font-weight:800;letter-spacing:-.2px}
+/* 이슈 피드 */
+.fd-ics{display:flex;flex-direction:column;gap:12px;margin-bottom:28px}
+.fd-ic{background:#fff;border:1px solid #e3e8ef;border-radius:14px;padding:16px 18px 14px;display:flex;flex-direction:column;gap:8px;min-width:0}
+.fd-ic-top{display:flex;align-items:baseline;gap:10px;font-size:12px;color:#6b788b}
+.fd-ic-top time{font-family:ui-monospace,monospace;font-weight:700;color:#2c4f86}
+.fd-ic-top small{margin-left:auto;color:#9aa5b5;font-size:11px}
+.fd-ic h3{margin:0;font-size:17px;line-height:1.45;letter-spacing:-.3px;word-break:keep-all;text-wrap:balance}
+.fd-ic h3 a{color:#14243b}
+.fd-ic h3 a:hover{color:#2f55c9}
+.fd-ic-sum{margin:0;font-size:13.5px;line-height:1.75;color:#22324a}
+.fd-ic-why{margin:0;font-size:13px;line-height:1.7;color:#33425a}
+.fd-ic-why b,.fd-ic-ideas b,.fd-ic-paths>b{display:block;font-size:11px;font-weight:800;color:#8a96a8;letter-spacing:.2px;margin-bottom:2px}
+.fd-ic-paths>b small{font-weight:500;letter-spacing:0;color:#a3adbb}
+.fd-ic-nodes{margin:0;display:flex;flex-wrap:wrap;gap:5px}
+.fd-ic-nodes a{font-size:11.5px;padding:1px 9px;border-radius:999px;background:#f3f5f9;color:#33425a}
+.fd-ic-paths ul{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:6px}
+.fd-ip{padding:8px 10px;border-radius:10px;background:#f8fafc;border-left:3px solid #d5dbe5;display:flex;flex-direction:column;gap:2px}
+.fd-ip.co{border-left-color:#3f5f96}
+.fd-ip.sel{background:#eef3fb;border-left-color:#1f3f8f}
+.fd-ip-path{margin:0;font-size:12px;color:#5a6a84;line-height:1.6}
+.fd-ip-path i{font-style:normal;color:#b5bdc9}
+.fd-ip-path span:last-child{font-weight:700;color:#14243b}
+.fd-ip-claim{margin:0;font-size:13px;line-height:1.65;color:#22324a}
+.fd-ip-meta{margin:0;display:flex;flex-wrap:wrap;gap:3px 12px;font-size:11.5px;color:#7b8798}
+.fd-ip-co{font-weight:700;color:#3f5f96}
+.fd-ip-ind{font-weight:700;color:#8a96a8}
+.fd-ip-link{font-weight:700;color:#1f3f8f}
+.fd-ip-link.muted{color:#9aa5b5;font-weight:600}
+.fd-ic-ideas{margin:0;display:flex;flex-wrap:wrap;gap:4px 10px;font-size:12.5px}
+.fd-ic-ideas a{color:#1f3f8f;font-weight:700}
+.fd-ic-ideas a small{color:#17794a;font-weight:700}
+.fd-ic-none{margin:0;font-size:12px;color:#a3adbb}
+.fd-ic-src{list-style:none;margin:4px 0 0;padding:8px 0 0;border-top:1px dashed #e6ebf2;display:flex;flex-direction:column;gap:3px;font-size:12.5px}
+.fd-ic-src a{color:#33425a}
+.fd-ic-src a:hover{color:#2f55c9;text-decoration:underline}
+.fd-ic-src small{margin-left:8px;color:#9aa5b5;font-size:11px}
+.fd-ic-detail h3{font-size:22px}
+@media (max-width:860px){
+  .fd-rc{padding:14px 14px 10px}
+  .fd-rc-head{flex-direction:column;gap:4px}
+  .fd-tp-price{font-size:19px}
+  .fd-dhead .fd-tp-price{font-size:24px}
+  .fd-rc-facts li{grid-template-columns:38px minmax(0,1fr)}
+  .fd-rc-facts li sup{display:none}
+}
