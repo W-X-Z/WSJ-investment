@@ -2,6 +2,7 @@ import "server-only";
 import seedJson from "@/data/ecosystem-seed.json";
 import { db } from "@/lib/supabase";
 import { type InvestmentIdea } from "@/lib/ideas";
+import { shortName } from "@/lib/feed";
 
 /**
  * 이슈 피드 (ADR-0023): 최근 공급망 이슈와 "그 이슈가 공급망에 갖는 의미".
@@ -84,3 +85,92 @@ export function ideasByIssue(ideas: InvestmentIdea[]): Map<string, InvestmentIde
 
 /** 이슈의 짧은 날짜 (최신 보도일 → 처음 본 날). */
 export const issueDate = (i: Issue): string | null => (i.latest_published_at ?? i.first_seen ?? null)?.slice(0, 10) ?? null;
+
+/* ------------------------------------------------------------------ 이슈의 온톨로지 그래프 (ADR-0023 개정)
+ * 이슈 상세에 그리는 국소 그래프: 변화(이슈가 태깅한 노드) → 병목·요구·기술 → 부품·소재·공정·장비 → 기업. 1단계 가설의 경로는 굵게.
+ * 시드 그래프(ecosystem-seed.json)에서 태깅 노드로부터 2단계까지 BFS 로 모으고, 열마다 상한을 두어 읽을 수 있는 크기로 줄인다. */
+type SeedEdge = { id: string; from: string; to: string; relation: string };
+type SeedNodeFull = SeedNode & { ecosystem?: string; listing?: { exchange?: string; ticker?: string } | null; size_band?: string | null };
+const EDGES = ((seedJson as unknown as { edges: SeedEdge[] }).edges ?? []);
+const NODES_FULL = new Map<string, SeedNodeFull>(((seedJson as unknown as { nodes: SeedNodeFull[] }).nodes ?? []).map((n) => [n.id, n]));
+const DRAW_RELS = new Set(["requires", "mitigated_by", "creates_bottleneck", "drives_requirement", "offered_by", "develops", "implements", "substitutes_for", "displaces", "adopts", "supplied_to", "holds_ip", "succeeds", "specified_by"]);
+const SCOPE_EXCHANGES = new Set(["NYSE", "Nasdaq", "NYSE American", "KRX", "KOSDAQ"]);
+export const inScope = (id: string) => SCOPE_EXCHANGES.has(NODES_FULL.get(id)?.listing?.exchange ?? "");
+/** 열: 0 변화(태깅 노드) · 1 병목·요구·기술·세대 · 2 부품·소재·공정·장비·제품 · 3 기업 */
+const COL_OF: Record<string, number> = { requirement: 1, bottleneck: 1, technology: 1, product_generation: 1, standard: 1, component: 2, material: 2, process: 2, equipment: 2, product: 2, company: 3 };
+const KIND_PRIO: Record<string, number> = { bottleneck: 6, technology: 5, requirement: 4, product_generation: 3, process: 5, equipment: 5, component: 4, material: 4, product: 2, company: 3 };
+export const COL_LABEL = ["변화", "병목·기술", "부품·공정·장비", "기업"];
+export type GraphNode = { id: string; label: string; kind: string; col: number; onPath: boolean; tagged: boolean; company?: { inScope: boolean; ticker?: string | null; ideaKey?: string | null; selected?: boolean } };
+export type GraphEdge = { from: string; to: string; relation: string; onPath: boolean; inferred?: boolean };
+export type IssueGraph = { nodes: GraphNode[]; edges: GraphEdge[]; truncated: boolean };
+
+export function issueGraph(issue: Issue, paths: IssuePath[], reportByCompany: Map<string, string>, caps = [4, 8, 9, 8]): IssueGraph {
+  const tagged = (issue.nodes ?? []).filter((n) => NODES_FULL.has(n) && NODES_FULL.get(n)!.kind !== "ecosystem").slice(0, caps[0]);
+  const onPath = new Set<string>();
+  const pathPairs = new Set<string>();
+  for (const p of paths) {
+    const ids = (p.path ?? []).filter((n) => NODES_FULL.has(n));
+    ids.forEach((n) => onPath.add(n));
+    for (let i = 1; i < ids.length; i++) pathPairs.add(`${ids[i - 1]}>${ids[i]}`);
+  }
+  const adj = new Map<string, { other: string; e: SeedEdge }[]>();
+  for (const e of EDGES) {
+    if (!DRAW_RELS.has(e.relation)) continue;
+    adj.set(e.from, [...(adj.get(e.from) ?? []), { other: e.to, e }]);
+    adj.set(e.to, [...(adj.get(e.to) ?? []), { other: e.from, e }]);
+  }
+  // BFS: 태깅 노드 → 2단계. 부모를 기억해 두면 자식을 넣을 때 부모도 넣을 수 있다.
+  const hop = new Map<string, number>(); const parent = new Map<string, string>();
+  const queue: string[] = [];
+  for (const t of tagged) { hop.set(t, 0); queue.push(t); }
+  while (queue.length) {
+    const cur = queue.shift()!;
+    const h = hop.get(cur)!;
+    if (h >= 2) continue;
+    for (const { other } of adj.get(cur) ?? []) {
+      if (hop.has(other)) continue;
+      const n = NODES_FULL.get(other);
+      if (!n || n.kind === "ecosystem") continue;
+      if (n.kind === "company" && !inScope(other) && !onPath.has(other)) continue;  // 범위 밖 기업은 경로에 있을 때만
+      hop.set(other, h + 1); parent.set(other, cur); queue.push(other);
+    }
+  }
+  const score = (id: string) => {
+    const n = NODES_FULL.get(id)!;
+    return (onPath.has(id) ? 100 : 0) + (KIND_PRIO[n.kind ?? ""] ?? 1) + (reportByCompany.has(id) ? 30 : 0) + (n.kind === "company" && inScope(id) ? 5 : 0) - 6 * (hop.get(id) ?? 3);
+  };
+  const colOf = (id: string) => (tagged.includes(id) ? 0 : COL_OF[NODES_FULL.get(id)!.kind ?? ""] ?? 2);
+  const chosen = new Set<string>(tagged);
+  for (const id of onPath) if (NODES_FULL.has(id)) chosen.add(id);
+  let truncated = false;
+  for (const col of [1, 2, 3]) {
+    const pool = [...hop.keys()].filter((id) => !chosen.has(id) && colOf(id) === col).sort((a, b) => score(b) - score(a));
+    const room = Math.max(0, caps[col] - [...chosen].filter((id) => colOf(id) === col).length);
+    pool.slice(0, room).forEach((id) => chosen.add(id));
+    if (pool.length > room) truncated = true;
+  }
+  for (let guard = 0; guard < 4; guard++) for (const id of [...chosen]) { const p = parent.get(id); if (p && !chosen.has(p)) chosen.add(p); }  // 부모 사슬 보장
+  const nodes: GraphNode[] = [...chosen].map((id) => {
+    const n = NODES_FULL.get(id)!;
+    const label = n.kind === "company" ? shortName({ id, name: nodeLabel(id), ticker: n.listing?.ticker ?? null }) : nodeLabel(id);
+    const node: GraphNode = { id, label, kind: n.kind ?? "", col: colOf(id), onPath: onPath.has(id), tagged: tagged.includes(id) };
+    if (n.kind === "company") node.company = { inScope: inScope(id), ticker: n.listing?.ticker ?? null, ideaKey: reportByCompany.get(id) ?? null, selected: paths.some((p) => p.company === id && p.selected) };
+    return node;
+  });
+  const order = (a: GraphNode, b: GraphNode) => Number(b.onPath) - Number(a.onPath) || Number(!!b.company?.ideaKey) - Number(!!a.company?.ideaKey) || (KIND_PRIO[b.kind] ?? 0) - (KIND_PRIO[a.kind] ?? 0) || a.label.localeCompare(b.label);
+  nodes.sort((a, b) => a.col - b.col || order(a, b));
+  const edges: GraphEdge[] = [];
+  const seen = new Set<string>();
+  for (const e of EDGES) {
+    if (!DRAW_RELS.has(e.relation) || !chosen.has(e.from) || !chosen.has(e.to)) continue;
+    const k = `${e.from}>${e.to}`;
+    if (seen.has(k)) continue;
+    seen.add(k);
+    edges.push({ from: e.from, to: e.to, relation: e.relation, onPath: pathPairs.has(k) || pathPairs.has(`${e.to}>${e.from}`) });
+  }
+  for (const pair of pathPairs) {  // 경로가 그래프 간선 없이 건너뛴 고리는 점선(추론)
+    const [a, b] = pair.split(">");
+    if (chosen.has(a) && chosen.has(b) && !seen.has(pair) && !seen.has(`${b}>${a}`)) { edges.push({ from: a, to: b, relation: "inferred", onPath: true, inferred: true }); seen.add(pair); }
+  }
+  return { nodes, edges, truncated };
+}

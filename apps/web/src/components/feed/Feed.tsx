@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { CONFIDENCE_KO, IDEA_TYPE, ROLE_KO, SCENARIO_KO, TREND_KO, liveUpside, money, pct, usdB, verification, verificationText, watchItems, type CompanyFacts, type PriceCtx, type Valuation } from "@/lib/ideas";
+import { CONFIDENCE_KO, IDEA_TYPE, TREND_KO, liveUpside, money, pct, usdB, type CompanyFacts, type PriceCtx, type Valuation } from "@/lib/ideas";
 import { REL_KO, ecoLabel, rel, shortName, type FeedIdea, type IdeaView } from "@/lib/feed";
 
 /** ★ 를 글자로 (배지 없이). ★ 는 확신이 아니라 검증 단계 — ★1 가설 · ★2 부분 확인 · ★3 확인 (ADR-0020). */
@@ -31,75 +31,60 @@ export function Freshness({ idea }: { idea: IdeaView }) {
   </span>;
 }
 
-/** 목표주가 블록 (ADR-0023): 목표주가 = 12개월 확률가중 기대 주가, 범위 = 약세~강세 내재 주가. 오늘 종가가 있으면 여력을 다시 계산한다.
- *  모형 산출이지 권유가 아니다 — 카드 하단 문구로 밝힌다. 평가가 없으면 '목표주가 산출 전'. */
-export function TargetPrice({ v, facts, compact }: { v: Valuation | null; facts: CompanyFacts | null; compact?: boolean }) {
-  if (!v) return <p className="fd-tp fd-tp-none"><span className="fd-tp-label">목표주가</span><span>산출 전{facts?.market_cap_usd != null ? ` · 시총 ${usdB(facts.market_cap_usd)}` : ""}</span>
-    <small>주가·재무가 모이면 다음 실행에서 산출합니다</small></p>;
+/** 값의 띠 (ADR-0023 개정): 목표주가·여력을 숫자로, 약세~강세 범위와 현재·목표의 위치를 막대로. 말은 없다 — 읽는 법은 ? 에.
+ *  막대는 로그 눈금: 양 끝이 약세·강세 내재 주가, 속이 빈 점이 현재, 찬 점이 목표, 둘 사이를 여력 색으로 잇는다. */
+export function ValueBand({ v, facts, large }: { v: Valuation | null; facts: CompanyFacts | null; large?: boolean }) {
+  if (!v) return <div className="fd-vb fd-vb-none"><span>목표주가 산출 전</span>{facts?.market_cap_usd != null ? <small>시총 {usdB(facts.market_cap_usd)}</small> : null}</div>;
   const live = liveUpside(v, facts?.close);
   const up = live.upside;
-  const tone = up >= 50 ? "hi" : up >= 15 ? "mid" : up > -15 ? "flat" : "lo";
+  const dir = up >= 0 ? "up" : "down";
   const bear = v.scenarios.find((s) => s.name === "bear"), bull = v.scenarios.find((s) => s.name === "bull");
-  return <div className={`fd-tp fd-tp-${tone}`}>
-    <span className="fd-tp-label">목표주가 <small>{v.horizon_months}개월</small></span>
-    <b className="fd-tp-price">{money(v.expected_price, v.currency)}</b>
-    <b className="fd-tp-up">{pct(up)}</b>
-    <span className="fd-tp-now">현재 {money(live.price, v.currency)}{live.live && facts?.price_as_of ? <small> {facts.price_as_of.slice(5).replace("-", "/")}</small> : null}</span>
-    <span className="fd-tp-conf">{CONFIDENCE_KO[v.confidence]}</span>
-    {bear && bull ? <span className="fd-tp-range" title={v.scenarios.map((s) => `${SCENARIO_KO[s.name]} ${Math.round(s.prob * 100)}% → ${money(s.implied_price, v.currency)}`).join(" · ")}>
-      약세 {money(bear.implied_price, v.currency)} <i>~</i> 강세 {money(bull.implied_price, v.currency)}</span> : null}
-    {!compact ? <time dateTime={v.as_of}>{v.as_of.slice(5).replace("-", "/")} 산출</time> : null}
+  const pts = [bear?.implied_price, bull?.implied_price, live.price, v.expected_price].filter((x): x is number => x != null && x > 0);
+  const lo = Math.min(...pts) / 1.08, hi = Math.max(...pts) * 1.08;
+  const x = (val: number) => (Math.log(val) - Math.log(lo)) / (Math.log(hi) - Math.log(lo)) * 100;
+  const cur = x(live.price), tgt = x(v.expected_price);
+  return <div className={`fd-vb fd-vb-${dir}${large ? " fd-vb-lg" : ""}`}>
+    <div className="fd-vb-num">
+      <b className="fd-vb-price">{money(v.expected_price, v.currency)}</b>
+      <b className="fd-vb-up">{pct(up)}</b>
+      <span className="fd-vb-now">현재 {money(live.price, v.currency)}</span>
+    </div>
+    {bear && bull ? <div className="fd-vb-bar" aria-label={`약세 ${money(bear.implied_price, v.currency)} · 강세 ${money(bull.implied_price, v.currency)}`}>
+      <svg viewBox="0 0 100 10" preserveAspectRatio="none" aria-hidden="true">
+        <line x1="1" y1="5" x2="99" y2="5" className="fd-vb-track"/>
+        <line x1={x(bear.implied_price)} y1="5" x2={x(bull.implied_price)} y2="5" className="fd-vb-range"/>
+        <line x1={cur} y1="5" x2={tgt} y2="5" className="fd-vb-move"/>
+      </svg>
+      <i className="fd-vb-cur" style={{ left: `${cur}%` }}/>
+      <i className="fd-vb-tgt" style={{ left: `${tgt}%` }}/>
+      <span className="fd-vb-lo">{money(bear.implied_price, v.currency)}</span>
+      <span className="fd-vb-hi">{money(bull.implied_price, v.currency)}</span>
+    </div> : null}
+    {large ? <div className="fd-vb-meta"><span>{CONFIDENCE_KO[v.confidence]}</span><span>{v.horizon_months}개월</span><time dateTime={v.as_of}>{v.as_of.slice(5).replace("-", "/")} 산출</time>{live.live && facts?.price_as_of ? <time dateTime={facts.price_as_of}>{facts.price_as_of.slice(5).replace("-", "/")} 종가</time> : null}</div> : null}
   </div>;
 }
 
-/** 리서치 리포트 카드 (ADR-0023): 기업 → 목표주가 → 투자 아이디어(제목·요지) → 데이터 근거 2개 → 예측 상태. 상세는 클릭. */
+/** 리포트 카드 (ADR-0023 개정): 생태계 색 띠 → 기업 → 아이디어 제목·요지 → 값의 띠. 카드 전체가 상세로 가는 하나의 링크. 변화가 있을 때만 작은 표시. */
 const CHANGE_KO: Record<string, string> = { new: "새 리포트", strengthened: "강화", weakened: "약화" };
-const md = (d?: string | null) => (d ? `${Number(d.slice(5, 7))}/${Number(d.slice(8, 10))}` : "");
-const ROLE_ORDER: Record<string, number> = { primary: 0, peer: 1, competitor: 2, customer: 3, displaced: 4 };
-const EXCHANGE_KO: Record<string, string> = { KRX: "KOSPI", KOSDAQ: "KOSDAQ", NYSE: "NYSE", Nasdaq: "Nasdaq", "NYSE American": "NYSE Am." };
-
-/** 카드에 올릴 근거 2개: 주 기업 직접 근거가 있는 단계 → 최근 사실 단계. 날짜 접두는 떼고 각주 날짜를 앞에 둔다. */
-function keyFacts(idea: FeedIdea, n = 2): { date: string | null; text: string; n: number }[] {
-  const steps = idea.chain.map((st) => {
-    const refs = st.evidence.map((e) => idea.refs.find((r) => r.url === e.url && r.title === e.title)).filter((r): r is NonNullable<typeof r> => !!r);
-    const s = refs.filter((r) => r.id.startsWith("S"));
-    const direct = s.some((r) => r.rel === "direct");
-    const date = s.map((r) => r.date?.slice(0, 10) ?? "").filter(Boolean).sort().at(-1) ?? null;
-    return { st, direct, date, n: refs[0]?.n ?? 0, fact: s.length > 0 };
-  }).filter((x) => x.fact);
-  steps.sort((a, b) => Number(b.direct) - Number(a.direct) || (b.date ?? "").localeCompare(a.date ?? ""));
-  return steps.slice(0, n).map((x) => ({ date: x.date, text: x.st.claim.replace(/^\d{1,2}\/\d{1,2}\s*(일\s*)?/, "").replace(/\s*\(추론\)$/, ""), n: x.n }));
-}
+const EXCHANGE_KO: Record<string, string> = { KRX: "KOSPI", KOSDAQ: "KOSDAQ", NYSE: "NYSE", Nasdaq: "Nasdaq", "NYSE American": "NYSE" };
+export const ECO_CLASS: Record<string, string> = { hbm: "eco-hbm", optics: "eco-optics", power: "eco-power" };
 
 export function ReportCard({ idea, changed }: { idea: FeedIdea; changed: boolean }) {
-  const href = `/ideas/${idea.idea_key}`;
-  const tag = changed && idea.shownTrend ? CHANGE_KO[idea.shownTrend] : null;
   const p = idea.primary;
-  const others = [...idea.companies].filter((c) => c.id !== idea.primary_company).sort((a, b) => (ROLE_ORDER[a.role] ?? 9) - (ROLE_ORDER[b.role] ?? 9)).slice(0, 3);
-  const eco = idea.ecosystems.map((e) => ecoLabel(e)).filter(Boolean).join(" · ");
-  const facts = keyFacts(idea);
-  const ver = verification(idea);
-  const nPred = watchItems(idea).length;
-  const mcap = idea.facts?.market_cap_usd ?? idea.valuation?.market_cap_usd ?? null;
-  return <article className="fd-rc">
-    <header className="fd-rc-head">
-      <div className="fd-rc-co">
-        <Link href={href} className="fd-rc-name">{p ? shortName(p) : idea.title}</Link>
-        <span className="fd-rc-tk">{[p?.ticker, p?.exchange ? EXCHANGE_KO[p.exchange] ?? p.exchange : null, mcap != null ? `시총 ${usdB(mcap)}` : null, eco].filter(Boolean).join(" · ")}</span>
-      </div>
-      <div className="fd-rc-meta"><StarText n={idea.stars}/><span>{STAR_KO[idea.stars]}</span>{tag ? <b className={`fd-trend fd-trend-${idea.shownTrend}`}>{tag}</b> : null}</div>
-    </header>
-    <TargetPrice v={idea.valuation} facts={idea.facts} compact/>
-    <h3><Link href={href}>{idea.title}</Link></h3>
+  const tag = changed && idea.shownTrend ? CHANGE_KO[idea.shownTrend] : null;
+  const eco = idea.ecosystems[0];
+  return <Link href={`/ideas/${idea.idea_key}`} className={`fd-rc ${ECO_CLASS[eco] ?? ""}`}>
+    <div className="fd-rc-row">
+      <span className="fd-rc-name">{p ? shortName(p) : idea.title}</span>
+      <span className="fd-rc-tk">{[p?.ticker, p?.exchange ? EXCHANGE_KO[p.exchange] ?? p.exchange : null].filter(Boolean).join(" ")}</span>
+      {tag ? <b className={`fd-chg fd-chg-${idea.shownTrend}`}>{tag}</b> : null}
+      <StarText n={idea.stars}/>
+      <span className="fd-rc-go" aria-hidden="true">›</span>
+    </div>
+    <h3>{idea.title}</h3>
     <p className="fd-rc-thesis">{idea.thesis}</p>
-    {facts.length ? <ul className="fd-rc-facts">{facts.map((f, i) => <li key={i}><time>{md(f.date)}</time><span>{f.text}</span><Cites ns={f.n ? [f.n] : []} href={href}/></li>)}</ul> : null}
-    <footer className="fd-rc-foot">
-      <span>{nPred ? `예측 ${nPred}건 · ${verificationText(ver)}` : "예측 없음"}</span>
-      <span>근거 {idea.evidence_count}건</span>
-      {others.length ? <span className="fd-rc-others">{others.map((c) => `${shortName(c)}(${ROLE_KO[c.role] ?? c.role})`).join(" · ")}</span> : null}
-      {idea.first_seen ? <time dateTime={idea.first_seen.slice(0, 10)}>{md(idea.first_seen)} 첫 리포트</time> : null}
-    </footer>
-  </article>;
+    <ValueBand v={idea.valuation} facts={idea.facts}/>
+  </Link>;
 }
 
 /** 주가·시가총액 한 줄 (주 기업, 상세 화면): 시총 · 12개월 · 3개월 · 고점 대비 · 저점 대비 — 전망이 아니라 '이미 움직인 폭'.

@@ -26,8 +26,7 @@ export default async function IssuesPage({ searchParams }: { searchParams: Promi
   return <div className="fd">
     <header className="fd-head">
       <h1>이슈</h1>
-      <p className="fd-summary">최근 {days}일 이슈 {issues.length}건 · 영향 경로가 있는 이슈 {withPaths.length}건{latest ? ` · 최신 ${rel(latest.slice(0, 10))}` : ""}
-        <span className="fd-summary-note"> — 변화가 공급망의 어느 고리를 바꾸는지, 그 끝에 어느 기업이 있는지</span></p>
+      <p className="fd-summary">최근 {days}일 이슈 {issues.length}{withPaths.length ? ` · 영향 경로 ${withPaths.length}` : ""}{latest ? ` · 최신 ${rel(latest.slice(0, 10))}` : ""}</p>
       <nav className="fd-tabs" aria-label="생태계">
         <Link className={!eco ? "on" : ""} href={`/issues${days === 30 ? "?days=30" : ""}`}>전체</Link>
         {Object.entries(ECO_KO).map(([k, v]) => <Link key={k} className={eco === k ? "on" : ""} href={`/issues?eco=${k}${days === 30 ? "&days=30" : ""}`}>{v}</Link>)}
@@ -36,10 +35,6 @@ export default async function IssuesPage({ searchParams }: { searchParams: Promi
     </header>
     {!issues.length ? <p className="fd-empty">최근 {days}일에 중요도 5 이상인 이슈가 없습니다.</p> : null}
     <div className="fd-ics">{issues.map((i) => <IssueCard key={i.issue_key} issue={i} hyp={hyps.get(i.issue_key)} ideas={byIssue.get(i.issue_key) ?? []} valuations={valuations}/>)}</div>
-    <footer className="fd-footer">
-      <span>더 보기</span>
-      <Link href="/">리서치</Link><Link href="/feed">이슈 아카이브</Link><Link href="/bottlenecks">병목 보드</Link><Link href="/map">공급망 그래프</Link>
-      <em>이슈는 공개 보도·공시에서 수집·요약한 것이며, 영향 경로는 모형의 가설입니다.</em>
-    </footer>
+
   </div>;
 }

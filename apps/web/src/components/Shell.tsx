@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { FormEvent, useEffect, useRef, useState } from "react";
+import { HelpButton } from "@/components/Help";
 import { Icon } from "@/components/Icon";
 
 // 제품 (ADR-0023): 탭 둘 — 리서치(기업 리포트 피드) · 이슈(최근 이슈와 공급망에서의 의미). 나머지는 '더 보기'에 수납한다.
@@ -109,8 +110,6 @@ export function Shell({ children }: { children: React.ReactNode }) {
           </div>
         </details>
         <div className="sidebar-spacer"/>
-        <div className="sidebar-footnote"><span className="pulse-ring"/><div><strong>RESEARCH WORKSPACE</strong><p>공개 근거 기반 공급망 리서치<br/>목표주가는 모형 산출 · 매매 권유 아님</p></div></div>
-        <div className="sidebar-bottom">© 2026 SIGNAL ATLAS <span>v1.0</span></div>
       </aside>
       <div className="main-column">
         <header className="topbar">
@@ -120,8 +119,7 @@ export function Shell({ children }: { children: React.ReactNode }) {
           </div>
           <div className="topbar-right">
             <button className="search-shortcut" onClick={()=>setSearchOpen(true)}><Icon name="search" size={17}/><span>기술, 기업, 이슈 검색</span><kbd>⌘ K</kbd></button>
-            <span className="topbar-date">RESEARCH · 2026</span>
-            <span className="topbar-avatar" title="Research Workspace">R</span>
+            <HelpButton/>
           </div>
         </header>
         <main id="main" className="main-content">{children}</main>
