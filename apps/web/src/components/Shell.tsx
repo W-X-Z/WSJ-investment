@@ -8,6 +8,8 @@ import { Icon } from "@/components/Icon";
 // 홈 = 오늘의 피드 (아이디어 + 업계 이슈 + 확인된 기업 소식). 나머지는 AI 가 아이디어를 만들 때 쓰는 근거 데이터 (ADR-0016).
 const NAV = [
   { href:"/", label:"오늘의 피드", icon:"lightbulb" },
+  { href:"/bottlenecks", label:"병목 보드", icon:"radar" },
+  { href:"/system", label:"시스템 점검", icon:"database" },
   { href:"/feed", label:"근거 · 이슈", icon:"rss" },
   { href:"/indicators", label:"근거 · 가격·실적", icon:"activity" },
   { href:"/map", label:"근거 · 공급망 그래프", icon:"network" },
@@ -34,7 +36,7 @@ const DEEP_ROUTES = [
 const LABELS: Record<string,string> = {
   "/":"오늘의 피드", "/map":"공급망 그래프", "/history":"과거 기술 아카이브", "/review":"기술 관계 검토", "/ecosystems":"기술 생태계", "/feed":"이슈 피드",
   "/ideas":"투자 아이디어", "/discovery":"공급사 발굴", "/indicators":"가격·실적 지표", "/triggers":"트리거", "/search":"통합 검색",
-  "/data":"Research Data", "/briefs":"기업 브리프",
+  "/data":"Research Data", "/briefs":"기업 브리프", "/bottlenecks":"병목 보드", "/system":"시스템 점검",
 };
 function Brand() {
   return (

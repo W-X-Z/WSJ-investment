@@ -107,8 +107,18 @@ cd apps/web && cp .env.local.example .env.local && npm install && npm run dev
 
   | 워크플로 | 주기 | LLM |
   |---|---|---|
-  | 투자 아이디어 (Claude 예약작업, ADR-0016 개정 2·3) — 먼저 issues 를 Run workflow 로 실행시키고 끝나면 작성 | 월~토 06:41 KST | 요금제 안 (API 비용 없음) |
-  | issues (이슈 선별 + 기업 소식 수집, 위 예약작업이 실행) | 월~토 아침 | Sonnet 1회 ≈ $0.1 |
-  | issues (기업 소식 수집·저장만) | 매일 18:47 KST | 없음 |
+  | 투자 아이디어 (Claude 예약작업, `docs/agents/daily-ideas.md`) — issues 실행 → 원문 확인·병목 관측치 → 아이디어·판단 | 월~토 06:41 KST | 요금제 안 (API 비용 없음) |
+  | 시스템 개선 (Claude 예약작업, `docs/agents/weekly-improvement.md`, ADR-0017) — 점검 → 그래프 패치·관측치 → PR → CI → 데이터 PR 은 스스로 병합 | 일 10:23 KST | 요금제 안 |
+  | issues (이슈 선별 + 기업 소식 + 가격, 위 예약작업이 실행) | 월~토 아침 | Sonnet 1회 ≈ $0.1 |
+  | issues (기업 소식·가격 수집·저장만) | 매일 18:47 KST | 없음 |
+  | source-probe (Actions 러너에서 출처 도달 점검, 저장 없음) | 수동·관련 PR | 없음 |
   | collect (유니버스 + 공시·내부자·공매도·정부 수주) | 토 20:41 KST | 없음 |
   | moat (해자 카드, 같은 기준일 카드는 건너뜀) | 화 22:41 KST | Sonnet, 새 카드만 |
+
+## 10. 스스로 판단·개선하는 시스템 (ADR-0017, 2026-10-28)
+- 화면: `/bottlenecks`(병목 보드) · `/system`(시스템 점검 — 고칠 것, 수집 상태, 커버리지, 판단 성적, 스스로 고친 기록).
+- 점검·스캔을 손으로 돌리기: `cd pipeline && SUPABASE_URL=… SUPABASE_PUBLISHABLE_KEY=… python -m wsj.ecosystems.health` / `python -m wsj.ecosystems.scan --from-public`.
+- 가격: `python -m wsj.ecosystems.prices run --budget-min 10` (서비스 키 필요, Actions 에서만). 도달 점검: `python -m wsj.ecosystems.prices probe`.
+- 그래프 고치기: `seed_graph.json` 을 손으로 고치지 않고 `pipeline/wsj/ecosystems/graph_patches/pYYYYMMDD_*.py` 패치를 더한다. 병목은 2단계 안에 상장사가 있어야 검증을 통과한다.
+- 0021 적용 전: 점수·가격 맥락·관측치·수집 기록 화면이 비어 보일 뿐 나머지는 돈다.
+- 개선 예약작업이 연 PR 중 코드·워크플로·마이그레이션이 바뀐 것은 사람이 병합한다. 데이터(`research/`, `apps/web/src/data/`, `graph_patches/`)만 바뀐 PR 은 CI 통과 시 스스로 병합한다.

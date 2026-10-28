@@ -7,14 +7,37 @@ export type IdeaEvidence = { id: string; url: string; title: string; publisher?:
   rel?: string | null;    // 엔진이 붙인 층: direct(기업 직접) | related | industry | background
   note?: string | null }; // 확인된 사실·발췌
 export type IdeaStep = { claim: string; evidence: IdeaEvidence[] };
-export type IdeaCompany = { id: string; name: string; ticker?: string | null; exchange?: string | null; size_band?: string | null; role: string; why?: string };
+export type Exposure = { share_pct: number; segment?: string; basis?: string; url?: string | null; as_of?: string | null };
+export type IdeaCompany = { id: string; name: string; ticker?: string | null; exchange?: string | null; size_band?: string | null; role: string; why?: string;
+  exposure?: Exposure | null };
+/** 확인 일정 (ADR-0017): 날짜·기준이 있는 다음 확인. 예전 행은 문자열. */
+export type WatchItem = { what: string; due?: string | null; metric?: string | null; threshold?: string | null; direction?: "strengthen" | "weaken" | null;
+  status?: "pending" | "hit" | "miss" | "void" | "expired" | string; graded_at?: string | null; evidence_url?: string | null; grade_note?: string | null };
+export type PriceCtx = { key?: string; as_of?: string; close?: number | null; r1m?: number | null; r3m?: number | null; r12m?: number | null;
+  from_high?: number | null; vol_ratio?: number | null; flags?: string[] };
+/** 판단 (엔진이 계산한 10점 근거 점수와 내역). 주가 전망이 아니라 근거의 강도. */
+export type Assessment = { score: number; parts: Record<string, { pts: number; max: number; note: string }>; exposure?: Exposure | null;
+  price?: PriceCtx | null; bottlenecks?: { id: string; label: string }[]; observations?: { indicator_id: string; label?: string; unit?: string; as_of: string;
+  value?: number | null; source_url?: string | null }[]; computed_at?: string };
 export type InvestmentIdea = {
   idea_key: string; status?: string; trend?: string | null; type: "bottleneck" | "transition" | "confirmation" | "risk" | string;
   title: string; thesis: string; stars: number; stars_reason?: string | null; primary_company: string;
-  companies: IdeaCompany[]; chain: IdeaStep[]; risks: IdeaStep[]; watch: string[]; what_changed?: string | null;
+  companies: IdeaCompany[]; chain: IdeaStep[]; risks: IdeaStep[]; watch: (string | WatchItem)[]; what_changed?: string | null;
   nodes: string[]; ecosystems: string[]; signal_refs: string[]; evidence_count: number; last_signal_at?: string | null;
   first_seen?: string | null; updated_at: string; revision?: number; model?: string | null; method?: string | null; stale?: boolean;
+  assessment?: Assessment | null;
 };
+
+export const WATCH_STATUS_KO: Record<string, string> = { pending: "확인 전", hit: "확인됨", miss: "빗나감", void: "의미 없어짐", expired: "기한 지남" };
+export const PART_KO: Record<string, string> = { company: "기업 직접 근거", confirm: "숫자 확인", structure: "병목·전환 구조", exposure: "노출 순도", counter: "최근 반대 근거" };
+export const watchItems = (x: Pick<InvestmentIdea, "watch">): WatchItem[] =>
+  (x.watch ?? []).map((w) => (typeof w === "string" ? { what: w, status: "pending" } : { status: "pending", ...w }));
+/** 가장 가까운 확인 일정 (기한 있는 것 먼저). */
+export function nextWatch(x: Pick<InvestmentIdea, "watch">): WatchItem | null {
+  const ws = watchItems(x).filter((w) => (w.status ?? "pending") === "pending");
+  return ws.filter((w) => w.due).sort((a, b) => (a.due ?? "").localeCompare(b.due ?? ""))[0] ?? ws[0] ?? null;
+}
+export const pct = (v?: number | null, digits = 0) => (v == null ? null : `${v > 0 ? "+" : ""}${v.toFixed(digits)}%`);
 
 export const IDEA_TYPE: Record<string, { label: string; tone: string }> = {
   bottleneck: { label: "병목 수혜", tone: "bottleneck" },

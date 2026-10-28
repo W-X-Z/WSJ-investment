@@ -279,6 +279,7 @@ export const INDICATOR_GROUPS: { id: string; title: string; cats: string[] }[] =
   { id: "memory", title: "메모리 현물가", cats: ["memory_spot"] },
   { id: "tw", title: "대만 공급사 월매출", cats: ["tw_revenue"] },
   { id: "ppi", title: "미국 PPI·원자재", cats: ["ppi", "commodity"] },
+  { id: "obs", title: "병목 상태 관측치 (원문에서 확인한 숫자)", cats: ["observation"] },
 ];
 /** 지표의 대표 변화: 현물가는 1주(이력 없으면 출처 일간), 월간 지표는 YoY → 전월. */
 export function indicatorMove(r: IndicatorRecord): { pct: number|null; label: string } {

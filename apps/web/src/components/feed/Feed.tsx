@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { IDEA_TYPE, SIZE_KO, TREND_KO } from "@/lib/ideas";
+import { IDEA_TYPE, SIZE_KO, TREND_KO, nextWatch, pct, type InvestmentIdea } from "@/lib/ideas";
 import { REL_KO, dayLabel, ecoLabel, rel, type IdeaView, type TimelineItem } from "@/lib/feed";
 
 /** ★ 를 글자로 (배지 없이). */
@@ -42,6 +42,32 @@ function CompanyLine({ idea }: { idea: IdeaView }) {
   </div>;
 }
 
+/** 근거 점수 (10점) — 숫자와 막대. 점수가 아직 없으면(0021 전·첫 계산 전) 아무것도 안 그린다. */
+export function ScoreText({ idea }: { idea: Pick<InvestmentIdea, "assessment"> }) {
+  const s = idea.assessment?.score;
+  if (s == null) return null;
+  return <span className={`fd-score fd-score-${s >= 7 ? "hi" : s >= 4 ? "mid" : "lo"}`} title="근거 점수: 기업 직접 근거·숫자 확인·병목 구조·노출 순도·반대 근거 (주가 전망 아님)">
+    근거 {s}/10</span>;
+}
+
+/** 이미 움직인 폭 — 근거가 아니라 맥락. */
+export function PriceText({ idea }: { idea: Pick<InvestmentIdea, "assessment"> }) {
+  const p = idea.assessment?.price;
+  if (!p) return null;
+  const parts = [p.r1m != null ? `1개월 ${pct(p.r1m)}` : null, p.r12m != null ? `12개월 ${pct(p.r12m)}` : null,
+    p.from_high != null && p.from_high < -5 ? `고점 대비 ${pct(p.from_high)}` : null].filter(Boolean);
+  if (!parts.length) return null;
+  return <span className="fd-price" title={`가격 ${p.as_of ?? ""} 기준 — 근거가 아니라 이미 움직인 폭`}>이미 움직인 폭 {parts.join(" · ")}</span>;
+}
+
+/** 다음 확인 일정 한 줄. */
+export function NextCheck({ idea }: { idea: Pick<InvestmentIdea, "watch"> }) {
+  const w = nextWatch(idea);
+  if (!w) return null;
+  return <p className="fd-next"><b>다음 확인</b>{w.due ? <span className="fd-date">{w.due.slice(5).replace("-", "/")}</span> : null}
+    {w.what}{w.threshold ? <em> — {w.metric ? `${w.metric} ` : ""}{w.threshold}</em> : null}</p>;
+}
+
 /** 아이디어 이야기 카드 (Axios 식): 메타 한 줄 → 제목 → 두 문장 → 왜 지금 → 기업 → 근거 나이. */
 export function StoryCard({ idea }: { idea: IdeaView }) {
   const href = `/ideas/${idea.idea_key}`;
@@ -53,7 +79,9 @@ export function StoryCard({ idea }: { idea: IdeaView }) {
     {w ? <p className="fd-why"><b>{w.rel === "direct" ? "왜 지금" : "왜 지금 · 업계 신호"}</b>{w.date ? <span className="fd-date">{w.date.slice(5).replace("-", "/")}</span> : null}
       {w.text}<Cites ns={w.refs} href={href}/></p> : null}
     <CompanyLine idea={idea}/>
-    <div className="fd-foot"><Freshness idea={idea}/><Link href={href}>근거 {idea.refs.length}개 · 반대 근거 보기 →</Link></div>
+    <NextCheck idea={idea}/>
+    <div className="fd-foot"><span className="fd-foot-l"><ScoreText idea={idea}/><Freshness idea={idea}/><PriceText idea={idea}/></span>
+      <Link href={href}>근거 {idea.refs.length}개 · 반대 근거 보기 →</Link></div>
   </article>;
 }
 
@@ -85,11 +113,12 @@ export function Timeline({ items, ideas }: { items: TimelineItem[]; ideas: IdeaV
 /** 모든 아이디어 — 관심 종목표처럼 한 줄씩. */
 export function IdeaTable({ ideas }: { ideas: IdeaView[] }) {
   return <div className="fd-table" role="table" aria-label="모든 투자 아이디어">
-    <div className="fd-tr fd-th" role="row"><span>★</span><span>아이디어</span><span>주 기업</span><span>기업 근거</span><span>업계 근거</span></div>
+    <div className="fd-tr fd-th" role="row"><span>★</span><span>아이디어</span><span>주 기업</span><span>근거 점수</span><span>기업 근거</span><span>업계 근거</span></div>
     {ideas.map((v) => <Link key={v.idea_key} href={`/ideas/${v.idea_key}`} className={`fd-tr ${v.stale ? "fd-stale" : ""}`} role="row">
       <span><StarText n={v.stars}/></span>
       <span className="fd-td-title">{v.title}{v.shownTrend && TREND_KO[v.shownTrend] ? <em className={`fd-trend fd-trend-${v.shownTrend}`}>{TREND_KO[v.shownTrend]}</em> : null}</span>
       <span className="fd-td-co">{v.primary?.name}<small>{v.primary?.ticker}</small></span>
+      <span>{v.assessment?.score != null ? <ScoreText idea={v}/> : <small className="fd-muted">계산 전</small>}</span>
       <span className={v.companyAt ? "" : "fd-warn"}>{v.companyAt ? rel(v.companyAt) : "없음"}</span>
       <span>{rel(v.industryAt)}</span>
     </Link>)}

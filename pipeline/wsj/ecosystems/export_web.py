@@ -20,6 +20,8 @@ from wsj.ecosystems.ontology import GRAPH_PATH, edge_confidence, load_graph, loa
 WEB_DATA = Path(__file__).resolve().parents[3] / "apps" / "web" / "src" / "data"
 SEED_OUT = WEB_DATA / "ecosystem-seed.json"
 IMPACT_OUT = WEB_DATA / "impact-index.json"
+LOG_IN = Path(__file__).resolve().parents[3] / "research" / "improvement_log.json"  # 개선 기록 (ADR-0017) — 시스템 점검 화면
+LOG_OUT = WEB_DATA / "improvement-log.json"
 NAMES_OUT = WEB_DATA / "company-names.json"  # 화면이 근거 제목에서 주 기업을 알아볼 때 쓰는 현지어 이름 (feed.ts relOf)
 DISCOVERY_IN = GRAPH_PATH.parent / "discovery.json"
 DISCOVERY_OUT = WEB_DATA / "discovery.json"
@@ -111,18 +113,21 @@ def main(argv: list[str] | None = None) -> int:
     from wsj.ecosystems.company_feed import native_names
 
     names_text = json.dumps(dict(sorted(native_names().items())), ensure_ascii=False, separators=(",", ":")) + "\n"
+    log_text = json.dumps(json.loads(LOG_IN.read_text(encoding="utf-8")) if LOG_IN.exists() else [], ensure_ascii=False, indent=1) + "\n"
     if args.check:
         ok = (
+            LOG_OUT.exists() and LOG_OUT.read_text(encoding="utf-8") == log_text and (
             SEED_OUT.read_text(encoding="utf-8") == seed_text
             and IMPACT_OUT.read_text(encoding="utf-8") == index_text
             and NAMES_OUT.exists() and NAMES_OUT.read_text(encoding="utf-8") == names_text
             and (disc_text is None or (DISCOVERY_OUT.exists() and DISCOVERY_OUT.read_text(encoding="utf-8") == disc_text))
-        )
+        ))
         print("OK: web data in sync" if ok else "ERROR: run python -m wsj.ecosystems.export_web")
         return 0 if ok else 1
     SEED_OUT.write_text(seed_text, encoding="utf-8")
     IMPACT_OUT.write_text(index_text, encoding="utf-8")
     NAMES_OUT.write_text(names_text, encoding="utf-8")
+    LOG_OUT.write_text(log_text, encoding="utf-8")
     if disc_text:
         DISCOVERY_OUT.write_text(disc_text, encoding="utf-8")
     print(

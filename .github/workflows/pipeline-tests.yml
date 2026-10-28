@@ -4,9 +4,8 @@ on:
   pull_request:
     paths:
       - "pipeline/**"
-      - "research/ecosystems/**"
-      - "apps/web/src/data/ecosystem-seed.json"
-      - "apps/web/src/data/impact-index.json"
+      - "research/**"
+      - "apps/web/src/data/**"
       - ".github/workflows/pipeline-tests.yml"
 
 concurrency:

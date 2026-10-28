@@ -1,0 +1,11 @@
+[
+ {"date": "2026-10-28", "kind": "data", "by": "claude-session", "title": "그래프 상장사 313곳 일봉 수집 시작 (미국·대만·한국·중국·홍콩·일본)", "detail": "가격은 근거가 아니라 '이미 움직인 폭'과 설명 안 된 급변 탐지에 쓴다. 유럽·인도 거래소는 아직 출처가 없다."},
+ {"date": "2026-10-28", "kind": "data", "by": "claude-session", "title": "FRED 구리·알루미늄 0건 수리", "detail": "FRED(Akamai)가 브라우저 User-Agent 를 봇으로 보고 응답 없이 끊었다. 평범한 UA 로 바꿨다."},
+ {"date": "2026-10-28", "kind": "data", "by": "claude-session", "title": "대만 월매출 지표 17곳 → 63곳, 가속(당월 YoY − 누적 YoY) 신호 추가", "detail": "그래프의 대만 상장사 전부를 이력용으로 저장한다."},
+ {"date": "2026-10-28", "kind": "data", "by": "claude-session", "title": "미국 기업 내부자 장내 매수(Form 4, $10만 이상)를 기업 소식으로", "detail": "매도는 보상·세금 목적이 많아 쓰지 않는다."},
+ {"date": "2026-10-28", "kind": "ontology", "by": "claude-session", "title": "상장사로 이어지지 않던 병목 11곳 보수 + 검증 규칙", "detail": "기판 생산능력·ABF·프로브카드·메모리 테스터·TC 본더·MLCC 등. 이제 병목은 2단계 안에 상장사가 있어야 검증을 통과한다."},
+ {"date": "2026-10-28", "kind": "ontology", "by": "claude-session", "title": "광섬유·게르마늄 사슬, 기판 공정장비, 현장 발전 노드 추가", "detail": "광섬유·광케이블(Corning·YOFC·Fujikura·Furukawa·대한광통신·Sterlite), 게르마늄(Umicore·Teck), 기판 공정장비(志聖·群翊), 계통연계 대기열 → 가스엔진·연료전지."},
+ {"date": "2026-10-28", "kind": "ontology", "by": "claude-session", "title": "이슈 태깅 안전망", "detail": "선별 모델이 노드를 비우면 기사 어휘 태그를 쓴다 (10/19 광섬유 현물가 급등 이슈가 노드 없이 버려졌다)."},
+ {"date": "2026-10-28", "kind": "judgment", "by": "claude-session", "title": "10점 근거 점수·노출 순도·날짜 있는 확인 일정과 채점", "detail": "★3 은 7점 이상, 2점 이하는 ★1. 확인 일정은 다음 실행이 적중·빗나감을 채점한다."},
+ {"date": "2026-10-28", "kind": "ops", "by": "claude-session", "title": "주간 개선 예약작업 시작", "detail": "점검 보고서에서 고칠 일을 골라 그래프 패치·출처·별칭을 PR 로 올리고, 데이터 변경은 CI 통과 시 스스로 병합한다."}
+]

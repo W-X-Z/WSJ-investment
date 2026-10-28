@@ -30,6 +30,7 @@ log = logging.getLogger("wsj.ecosystems.indicators")
 BROWSER_UA = {"User-Agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0 Safari/537.36"}
 DRAMX = "https://www.dramexchange.com/"
 FRED_CSV = "https://fred.stlouisfed.org/graph/fredgraph.csv?id={sid}"
+FRED_UA = "WSJ-investment research (github.com/W-X-Z/WSJ-investment)"
 BLS_API = "https://api.bls.gov/publicAPI/v1/timeseries/data/"  # 무인증 v1: 하루 25회·요청당 25개 시리즈
 TWSE_REV = "https://openapi.twse.com.tw/v1/opendata/t187ap05_L"
 TPEX_REV = "https://www.tpex.org.tw/openapi/v1/mopsfin_t187ap05_O"
@@ -125,6 +126,7 @@ SPOT_DAILY = 3.0       # 이력이 없을 때 출처의 일간 변화 ±%
 REV_YOY_HIGH = 60.0    # 월매출 YoY ≥ %
 REV_YOY_LOW = -15.0    # 월매출 YoY ≤ %
 REV_MOM = 25.0         # 월매출 MoM ±%
+REV_ACCEL = 25.0       # 당월 YoY − 누적 YoY ≥ %p (가속)
 PPI_MOM = 1.5          # PPI·원자재 전월 대비 ±%
 PPI_YOY = 10.0         # PPI·원자재 전년 대비 ±%
 
@@ -208,8 +210,9 @@ def parse_fred_csv(text: str, keep: int = 30) -> list[tuple[date, float]]:
 
 
 def fetch_fred(http: HttpClient) -> list[Point]:
-    """FRED 는 클라우드 IP 에서 응답 없이 끊기는 일이 잦다 — 재시도 없는 짧은 타임아웃 전용 클라이언트로 시도한다."""
-    http = HttpClient(user_agent=BROWSER_UA["User-Agent"], timeout=15.0, max_retries=0)
+    """FRED(Akamai)는 브라우저 User-Agent 를 TLS 지문과 맞지 않는 봇으로 보고 응답 없이 끊는다 (2026-10-28 확인).
+    브라우저 흉내 없이 평범한 UA 로 요청한다. 재시도 없는 짧은 타임아웃 전용 클라이언트."""
+    http = HttpClient(user_agent=FRED_UA, timeout=15.0, max_retries=0)
     pts: list[Point] = []
     fails = 0
     for ind in INDICATORS:
@@ -219,7 +222,7 @@ def fetch_fred(http: HttpClient) -> list[Point]:
             log.warning("fred unreachable, skipping remaining series")
             break
         try:
-            series = parse_fred_csv(http.get_text(FRED_CSV.format(sid=ind.match), headers=BROWSER_UA))
+            series = parse_fred_csv(http.get_text(FRED_CSV.format(sid=ind.match), headers={"User-Agent": FRED_UA, "Accept": "text/csv"}))
         except Exception as exc:  # noqa: BLE001
             fails += 1
             log.warning("fred %s failed: %s", ind.match, exc)
@@ -296,15 +299,47 @@ def parse_tw_revenue(rows: list[dict[str, Any]], codes: set[str]) -> list[Point]
     return pts
 
 
-def fetch_tw(http: HttpClient) -> list[Point]:
+def graph_tw_indicators(graph: dict[str, Any] | None = None) -> list[Indicator]:
+    """지표 목록 밖의 그래프 대만 상장사 월매출 — 이력(가속·둔화)용으로만 저장한다. 이슈 후보는 만들지 않는다
+    (눈에 띄는 달은 company_feed 가 기업 소식으로 따로 올린다)."""
+    if graph is None:
+        try:
+            from wsj.ecosystems.ontology import load_graph
+
+            graph = load_graph()
+        except Exception as exc:  # noqa: BLE001
+            log.warning("graph unavailable for tw indicators: %s", exc)
+            return []
+    have = {i.match for i in INDICATORS if i.category == "tw_revenue"}
+    kinds = {n["id"]: n.get("kind") for n in graph["nodes"]}
+    offers: dict[str, list[str]] = {}
+    for e in graph["edges"]:
+        if e.get("relation") == "offered_by" and kinds.get(e["to"]) == "company":
+            offers.setdefault(e["to"], []).append(e["from"])
+    out = []
+    for n in graph["nodes"]:
+        lst = n.get("listing") or {}
+        code, ex = str(lst.get("ticker") or "").strip(), lst.get("exchange")
+        if n.get("kind") != "company" or ex not in ("TWSE", "TPEx") or not code or code in have:
+            continue
+        have.add(code)
+        name = re.split(r"\s+\(", n["label"])[0]
+        out.append(Indicator(f"tw:{code}", f"{name} 월매출", "tw_revenue", "NT$ 천", "monthly", ex,
+                             f"https://mops.twse.com.tw/mops/#/web/t146sb05?companyId={code}", n.get("ecosystem") or "cross",
+                             offers.get(n["id"], [])[:3], [n["id"]], "그래프 공급사 월매출 (이력용)", code))
+    return out
+
+
+def fetch_tw(http: HttpClient, extra: list[Indicator] | None = None) -> list[Point]:
     pts: list[Point] = []
+    allind = INDICATORS + (extra or [])
     for market, url in (("TWSE", TWSE_REV), ("TPEx", TPEX_REV)):
-        codes = {i.match for i in INDICATORS if i.category == "tw_revenue" and i.source == market}
+        codes = {i.match for i in allind if i.category == "tw_revenue" and i.source == market}
         try:
             pts += parse_tw_revenue(http.get_json(url, headers=BROWSER_UA), codes)
         except Exception as exc:  # noqa: BLE001
             log.warning("%s revenue failed: %s", market, exc)
-    log.info("tw revenue points: %d/%d", len(pts), sum(1 for i in INDICATORS if i.category == "tw_revenue"))
+    log.info("tw revenue points: %d/%d", len(pts), sum(1 for i in allind if i.category == "tw_revenue"))
     return pts
 
 
@@ -335,6 +370,9 @@ def notable(points: list[Point], history: dict[str, list[tuple[date, float]]]) -
         elif ind.category == "tw_revenue":
             if p.yoy_pct is not None and (p.yoy_pct >= REV_YOY_HIGH or p.yoy_pct <= REV_YOY_LOW):
                 reasons.append(f"YoY {p.yoy_pct:+.1f}%")
+            ytd = (p.meta or {}).get("ytd_yoy")
+            if p.yoy_pct is not None and ytd is not None and p.yoy_pct - ytd >= REV_ACCEL and p.yoy_pct >= 20:
+                reasons.append(f"가속 (당월 YoY {p.yoy_pct:+.1f}% vs 누적 {ytd:+.1f}%)")
             if p.change_pct is not None and abs(p.change_pct) >= REV_MOM:
                 reasons.append(f"MoM {p.change_pct:+.1f}%")
         else:
@@ -372,25 +410,27 @@ def load_history(store, ids: list[str], since: date) -> dict[str, list[tuple[dat
 
 def run(http: HttpClient, store, today: date | None = None) -> dict[str, Any]:
     today = today or datetime.now(UTC).date()
-    points = fetch_dramexchange(http, today) + fetch_bls(http, today) + fetch_fred(http) + fetch_tw(http)
+    extra = graph_tw_indicators()
+    points = fetch_dramexchange(http, today) + fetch_bls(http, today) + fetch_fred(http) + fetch_tw(http, extra)
     history = load_history(store, [i.indicator_id for i in INDICATORS], today - timedelta(days=60)) if store else {}
     for p in points:  # 이번 수집분도 이력에 (FRED 처럼 한 번에 여러 점이 오는 경우)
         history.setdefault(p.indicator_id, []).append((p.as_of, p.value))
     for v in history.values():
         v.sort()
-    return {"as_of": today.isoformat(), "points": points, "notable": notable(points, history),
+    return {"as_of": today.isoformat(), "points": points, "notable": notable(points, history), "extra": extra,
             "stats": {"points": len(points), "indicators": len({p.indicator_id for p in points})}}
 
 
-def save(store, points: list[Point]) -> int:
-    store.upsert("ideas.indicators", [i.row() | {"updated_at": datetime.now(UTC).isoformat()} for i in INDICATORS], ["indicator_id"])
+def save(store, points: list[Point], extra: list[Indicator] | None = None) -> int:
+    extra = graph_tw_indicators() if extra is None else extra  # 점의 FK — 이력용 대만 지표도 먼저 등록
+    store.upsert("ideas.indicators", [i.row() | {"updated_at": datetime.now(UTC).isoformat()} for i in INDICATORS + (extra or [])], ["indicator_id"])
     uniq = {(p.indicator_id, p.as_of): p.row() for p in points}
     return store.upsert("ideas.indicator_points", list(uniq.values()), ["indicator_id", "as_of"]) if uniq else 0
 
 
 def main(argv: list[str] | None = None) -> int:
     ap = argparse.ArgumentParser()
-    ap.add_argument("cmd", choices=["run"])
+    ap.add_argument("cmd", choices=["run", "fred-sql"])
     ap.add_argument("--no-save", action="store_true")
     ap.add_argument("--out", type=Path)
     args = ap.parse_args(argv)
@@ -400,19 +440,29 @@ def main(argv: list[str] | None = None) -> int:
     settings = load_settings()
     logging.basicConfig(level=logging.INFO, format="%(levelname)-7s %(name)s: %(message)s")
     logging.getLogger("httpx").setLevel(logging.WARNING)
+    if args.cmd == "fred-sql":
+        # GitHub Actions 러너에서는 FRED 가 응답하지 않는다 → Claude 예약작업(세션)이 받아 ideas.put_observations 로 넣는다
+        pts = fetch_fred(HttpClient(user_agent=FRED_UA))
+        rows = [{"indicator_id": p.indicator_id, "as_of": p.as_of.isoformat(), "value": p.value, "change_pct": p.change_pct,
+                 "yoy_pct": p.yoy_pct, "source_url": BY_ID[p.indicator_id].source_url} for p in pts if p.as_of >= date.today() - timedelta(days=400)]
+        body = json.dumps(rows, ensure_ascii=False)
+        sql = f"select ideas.put_observations($wsj${body}$wsj$::jsonb);\n" if rows else "-- FRED 응답 없음\n"
+        (args.out or Path("fred.sql")).write_text(sql, encoding="utf-8")
+        print(json.dumps({"fred_points": len(rows)}))
+        return 0
     store = None if args.no_save else make_store(settings)
     http = HttpClient(user_agent=settings.sec_user_agent)
     try:
         res = run(http, store)
         if store:
-            log.info("saved %d points", save(store, res["points"]))
+            log.info("saved %d points", save(store, res["points"], res.get("extra")))
     finally:
         http.close()
         if store:
             store.close()
     if args.out:
         args.out.parent.mkdir(parents=True, exist_ok=True)
-        args.out.write_text(json.dumps({**res, "points": [p.row() for p in res["points"]]}, ensure_ascii=False, indent=1, default=str), encoding="utf-8")
+        args.out.write_text(json.dumps({**res, "points": [p.row() for p in res["points"]], "extra": [i.row() for i in res.get("extra") or []]}, ensure_ascii=False, indent=1, default=str), encoding="utf-8")
     print(json.dumps(res["stats"], ensure_ascii=False))
     for n in res["notable"]:
         print("  *", n["title"])
