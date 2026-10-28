@@ -774,3 +774,12 @@ tr:hover td{background:#f8faff}
 .fd-deep-src a{color:#3f5f96;font-weight:650}
 .fd-deep-src span{color:#9aa5b5}
 
+/* ADR-0017 개정 2: 선행 추론 */
+.fd-scores{display:inline-flex;gap:10px;align-items:baseline}
+.fd-card-scores{margin:0;display:flex;gap:10px;align-items:baseline;font-size:12px}
+.fd-card-scores small{color:#8a96a8}
+.fd-ant{margin-top:12px;padding-top:10px;border-top:1px dashed #e3e8ef}
+.fd-ant-path{margin:4px 0 8px;font-size:12.5px;color:#33425a;line-height:1.7}
+.fd-ant-path i{font-style:normal;color:#9aa5b5}
+.fd-ant-path span:last-child{font-weight:700;color:#14243b}
+

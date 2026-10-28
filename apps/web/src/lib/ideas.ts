@@ -23,10 +23,14 @@ export type CompanyFacts = { company_id: string; ticker: string; currency: strin
 /** 심층 분석 메모 (ideas.idea_notes → v_idea_notes): 왜 병목인가 → 시장 규모 → 공급 구조 → 다음 고리 → 밸류에이션 맥락 → 반대 근거 → 확인 일정. */
 export type NoteSection = { id: string; title: string; body: string; sources: { title?: string; url: string; date?: string | null }[] };
 export type IdeaNote = { idea_key: string; kind: string; content: { summary?: string; sections: NoteSection[]; computed_at?: string }; model?: string | null; updated_at: string };
+/** 선행 추론 (ADR-0017 개정 2): 변화 → 경로 → 기업. 근거 점수(확신)와 별개의 기대값 — 경로·미반영·룸·발현. */
+export type Anticipation = { score: number; parts: Record<string, { pts: number; max: number; note: string }>; trigger?: string | null;
+  path: string[]; path_labels: string[]; hops: number; mechanism?: string; lead_quarters?: number | null;
+  effect?: { pct_of_revenue: number; basis?: string; url?: string | null; as_of?: string | null } | null; priced_in?: "none" | "partial" | "full" | null };
 /** 판단 (엔진이 계산한 10점 근거 점수와 내역). 주가 전망이 아니라 근거의 강도. */
 export type Assessment = { score: number; parts: Record<string, { pts: number; max: number; note: string }>; exposure?: Exposure | null;
   price?: PriceCtx | null; bottlenecks?: { id: string; label: string }[]; observations?: { indicator_id: string; label?: string; unit?: string; as_of: string;
-  value?: number | null; source_url?: string | null }[]; computed_at?: string };
+  value?: number | null; source_url?: string | null }[]; anticipation?: Anticipation | null; computed_at?: string };
 export type InvestmentIdea = {
   idea_key: string; status?: string; trend?: string | null; type: "bottleneck" | "transition" | "confirmation" | "risk" | string;
   title: string; thesis: string; stars: number; stars_reason?: string | null; primary_company: string;
@@ -38,6 +42,8 @@ export type InvestmentIdea = {
 
 export const WATCH_STATUS_KO: Record<string, string> = { pending: "확인 전", hit: "확인됨", miss: "빗나감", void: "의미 없어짐", expired: "기한 지남" };
 export const PART_KO: Record<string, string> = { company: "기업 직접 근거", confirm: "숫자 확인", structure: "병목·전환 구조", exposure: "노출 순도", counter: "최근 반대 근거" };
+export const ANT_PART_KO: Record<string, string> = { path: "변화 → 기업 경로", unpriced: "아직 미반영", room: "룸 (변화 규모 ÷ 매출)", lead: "발현 시점" };
+export const PRICED_KO: Record<string, string> = { none: "시장 미반영", partial: "일부 반영", full: "이미 반영" };
 export const watchItems = (x: Pick<InvestmentIdea, "watch">): WatchItem[] =>
   (x.watch ?? []).map((w) => (typeof w === "string" ? { what: w, status: "pending" } : { status: "pending", ...w }));
 /** 가장 가까운 확인 일정 (기한 있는 것 먼저). */

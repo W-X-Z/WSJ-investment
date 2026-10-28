@@ -396,7 +396,7 @@ def build_candidates(graph: dict[str, Any], signals: list[dict[str, Any]], reg: 
                     continue
                 steps.append({"from": nodes[e["from"]]["label"], "rel": e["relation"], "to": nodes[e["to"]]["label"],
                               "tier": e.get("evidence_tier"), "ev": _edge_evidence(e, reg, nodes)})
-            chains.append({"signal": p["_sid"], "confidence": p["confidence"], "steps": steps})
+            chains.append({"signal": p["_sid"], "confidence": p["confidence"], "path_ids": [x["node_id"] for x in p["path"]], "steps": steps})
             if len(chains) >= 3:
                 break
         peers = []
@@ -435,7 +435,8 @@ LLM_SYSTEM = """너는 AI 공급망(HBM·첨단 패키징 / 800G·1.6T 광통신
   verified=true 인 항목은 원문을 열어 확인한 소식이고, 확인한 숫자·날짜는 evidence 의 excerpt 에 있다 — 숫자는 여기서 가져온다.
   각 신호와 항목에 근거 id. date 가 최근일수록 중요하다.
 - candidates: 그래프가 계산한 '변화 → 병목·기술 → 공급 → 기업' 경로 후보. score 는 신호 강도×최근성×소형 가중×공급 집중.
-  chains.steps 는 관계 사슬(근거 id 'ev'), peers 는 같은 부품·공정의 다른 공급사, transitions 는 대체·개발·IP 관계(성숙도 stage),
+  chains.steps 는 관계 사슬(근거 id 'ev'), chains.path_ids 는 그 사슬의 노드 id (선행 추론의 path 에 그대로 쓴다),
+  peers 는 같은 부품·공정의 다른 공급사, transitions 는 대체·개발·IP 관계(성숙도 stage),
   offers 는 그 기업이 직접 공급·개발하는 부품·기술(그래프 근거). 기업 소식(E)으로 들어온 후보는 offers 로 '왜 AI 공급망인가'를 잇는다.
 - evidence: 인용 가능한 근거 목록. S=최근 신호 출처(age_d = 며칠 전), G=그래프 관계 출처(배경 구조, 날짜가 오래됐을 수 있음). 이 목록의 id 만 인용한다.
 - existing: 이미 피드에 있는 아이디어 (last_signal_at = 마지막 최신 근거 날짜). 같은 논리면 같은 idea_key 로 갱신한다.
@@ -452,6 +453,20 @@ LLM_SYSTEM = """너는 AI 공급망(HBM·첨단 패키징 / 800G·1.6T 광통신
   꼭 고쳐야 하면(사슬의 사실이 바뀜) update 하되 ★를 올리지 말고 what_changed 를 "업계: …" 로 쓴다 — 검증기도 그렇게 바꾼다.
 - 업계 소식만으로 만든 새 아이디어는 thesis 둘째 문장에 "아직 이 기업 자신의 확인(공시·실적)은 없다" 는 사실을 밝힌다.
 - existing 의 company_signal_at 은 그 아이디어의 기업 직접 근거 최신 날짜다. 이보다 새 직접 근거가 없으면 '강화'가 아니다.
+
+선행 추론 (이 시스템의 목적 — 가장 중요)
+- 수주·계약·실적은 발표 즉시 주가에 반영된다. 우리가 찾는 것은 그 **다음**이다: 기술·산업의 변화(I·M 신호)가 그래프의 영향 관계를 타고
+  어느 기업의 숫자를 바꿀지 **시장보다 먼저** 짚는 것. 1차 수혜(변화에 이름이 직접 나온 기업)는 대개 이미 반영됐다고 보고,
+  2차·3차(그 기업의 공급사, 병목을 푸는 부품·장비·소재의 공급사, 대체 기술의 보유자)에서 아직 조용한 기업을 찾는다.
+- 아이디어마다 anticipation 을 쓴다: trigger = 출발한 변화의 근거 id(S), path = candidates.chains.path_ids 처럼 그래프 노드 id 로 적은
+  '변화 → … → 기업' 경로(마지막은 primary 의 id), mechanism = 왜 그 변화가 이 기업의 매출·마진을 바꾸는지 한 문장(기술·공정 이유),
+  lead_quarters = 그 변화가 이 기업 숫자(월매출·분기 실적)에 나타나기까지 분기 수, effect = {{pct_of_revenue, basis, evidence}}
+  (변화의 규모 ÷ 이 기업 매출 — 입력 근거로 계산할 수 있을 때만, 분모·분자를 basis 에), priced_in = none|partial|full
+  (prices 의 1개월 수익률·거래량·저점 대비와 E 신호 유무로 판단; 기업 자신의 소식이 이미 나왔고 주가가 반응했으면 full).
+- 좋은 선행 아이디어의 모양: 변화는 확인된 사실(최근 S 근거), 경로는 그래프 간선으로 이어짐(끊기면 0점), 기업은 아직 자기 소식이 없고
+  주가가 조용함, 변화의 규모가 그 기업 매출에 비해 큼(작은 회사), 발현까지 1~4분기. 이런 기업은 기업 직접 근거가 없어 ★2 까지만 받는다 —
+  그래도 쓴다. ★는 확신이고 선행 점수는 기대값이다. 둘을 섞지 않는다.
+- 반대로 자기 소식이 이미 나와 주가가 반응한 기업(priced_in=full)은 '확인' 아이디어로만 쓰고, 같은 논리의 다음 고리가 있으면 그쪽을 primary 로.
 
 아이디어를 만드는 법
 - 한 아이디어 = 하나의 논리: "무엇이 바뀌었나(최근 사실) → 그래서 어떤 병목/전환이 조여지나 → 공급이 왜 소수에게 몰리나 → 그래서 이 기업".
@@ -494,6 +509,8 @@ existing 처리
   "companies": [{{"id": "company:...", "role": "primary|peer|customer|competitor|displaced", "why": "한 줄", "exposure": {{"share_pct": 0, "segment": "...", "basis": "...", "evidence": "S1"}}}}],
   "chain": [{{"claim": "...", "evidence": ["S1", "G3"]}}],
   "risks": [{{"claim": "...", "evidence": []}}], "watch": [{{"what": "...", "due": "YYYY-MM-DD", "metric": "...", "threshold": "...", "direction": "strengthen"}}],
+  "anticipation": {{"trigger": "S12", "path": ["bottleneck:…", "equipment:…", "company:…"], "mechanism": "한 문장", "lead_quarters": 2,
+                   "effect": {{"pct_of_revenue": 25, "basis": "NT$509억 발주 × 점유율 30% ÷ 연매출 NT$28억", "evidence": "S54"}}, "priced_in": "none"}},
   "what_changed": "update 일 때만", "reason": "weaken/close 일 때"}}],
  "grades": [{{"idea_key": "...", "index": 0, "status": "hit|miss|void", "evidence": "S12", "note": "한 줄"}}]}}"""
 
@@ -722,7 +739,9 @@ def validate(raw: list[dict[str, Any]], reg: Registry, graph: dict[str, Any], si
             if what_changed and not what_changed.startswith("업계"):
                 what_changed = "업계: " + what_changed
         watch = A.normalize_watch(it.get("watch") or [], now, (prev or {}).get("watch"))
-        draft = {"primary_company": primary["id"], "companies": comps, "chain": chain, "risks": risks, "nodes": theme[:12]}
+        anticipation = parse_anticipation(it.get("anticipation"), reg, nodes, sig_by_ev)
+        draft = {"primary_company": primary["id"], "companies": comps, "chain": chain, "risks": risks, "nodes": theme[:12],
+                 "anticipation": anticipation}
         assessment = A.assess(draft, structure, ctx.get("issues") or [], ctx.get("indicators") or [], ctx.get("prices") or {}, now)
         stars, rule_note = A.apply_star_rule(stars, assessment["score"])
         stars_note += rule_note
@@ -733,13 +752,44 @@ def validate(raw: list[dict[str, Any]], reg: Registry, graph: dict[str, Any], si
             "idea_key": key or make_key(kind, primary["id"], title), "status": "active", "trend": trend, "type": kind,
             "title": title[:120], "thesis": thesis[:600], "stars": stars, "stars_reason": ((it.get("stars_reason") or "") + stars_note)[:300],
             "primary_company": primary["id"], "companies": comps, "chain": chain, "risks": risks,
-            "watch": watch, "what_changed": what_changed, "assessment": assessment,
+            "watch": watch, "what_changed": what_changed, "assessment": assessment, "anticipation": anticipation,
             "nodes": theme[:12], "ecosystems": ecos, "signal_refs": sig_refs,
             "evidence_count": len({e["id"] for st in chain for e in st["evidence"]}),
             "last_signal_at": last_sig, "updated_at": now.isoformat(), "model": model, "method": method,
         })
     rows += star3_audit(existing, {r["idea_key"] for r in rows}, now, model, method)
     return rows, rejects
+
+
+def parse_anticipation(raw: Any, reg: Registry, nodes: dict[str, dict[str, Any]], sig_by_ev: dict[str, dict[str, Any]]) -> dict[str, Any] | None:
+    """LLM 의 선행 추론 {trigger, path, mechanism, lead_quarters, effect{pct_of_revenue, basis, evidence}, priced_in} 을 검증.
+    path 는 그래프 노드 id 만, effect 는 근거 id 가 있어야 받는다 (추정 금지). 점수는 assess.anticipation 이 매긴다."""
+    if not isinstance(raw, dict):
+        return None
+    path = [p for p in (raw.get("path") or []) if isinstance(p, str) and p in nodes][:ANTICIPATION_MAX_PATH]
+    trig = raw.get("trigger")
+    trig_sig = sig_by_ev.get(trig) if isinstance(trig, str) else None
+    out: dict[str, Any] = {"trigger": trig if isinstance(trig, str) else None, "trigger_title": (trig_sig or {}).get("title"),
+                           "path": path, "mechanism": str(raw.get("mechanism") or "")[:300],
+                           "priced_in": raw.get("priced_in") if raw.get("priced_in") in ("none", "partial", "full") else None}
+    try:
+        out["lead_quarters"] = int(raw.get("lead_quarters")) if raw.get("lead_quarters") is not None else None
+    except (TypeError, ValueError):
+        out["lead_quarters"] = None
+    eff = raw.get("effect") if isinstance(raw.get("effect"), dict) else None
+    if eff and eff.get("evidence") in reg.items:
+        try:
+            pct = float(eff.get("pct_of_revenue"))
+        except (TypeError, ValueError):
+            pct = None
+        if pct is not None and 0 <= pct <= 1000:
+            ev = reg.items[eff["evidence"]]
+            out["effect"] = {"pct_of_revenue": round(pct, 1), "basis": str(eff.get("basis") or "")[:160], "evidence": eff["evidence"],
+                             "url": ev.url, "as_of": ev.date}
+    return out
+
+
+ANTICIPATION_MAX_PATH = 8
 
 
 def judged_keys(rows: list[dict[str, Any]]) -> set[str]:

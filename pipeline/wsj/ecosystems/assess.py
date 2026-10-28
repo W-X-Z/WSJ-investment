@@ -41,8 +41,20 @@ class Structure:
         self.supplies: dict[str, set[str]] = defaultdict(set)      # company → 노드
         self.suppliers: dict[str, set[str]] = defaultdict(set)     # 노드 → 상장 공급사
         self.bottlenecks_of_node: dict[str, set[str]] = defaultdict(set)
+        self.edge_confs: dict[tuple[str, str], float] = {}      # (a, b) 양방향 → 가장 높은 간선 확신도 (근거 등급 기준)
+        onto = None
+        try:
+            from wsj.ecosystems.ontology import edge_confidence, load_ontology
+
+            onto = load_ontology()
+        except Exception:  # noqa: BLE001 - 온톨로지 파일이 없으면 등급 없이 0.5
+            edge_confidence = None  # type: ignore[assignment]
         for e in graph["edges"]:
             rel = e.get("relation")
+            c = float(e.get("confidence") or (edge_confidence(e, onto) if onto else 0.5))
+            for k in ((e["from"], e["to"]), (e["to"], e["from"])):
+                if c > self.edge_confs.get(k, 0.0):
+                    self.edge_confs[k] = c
             if rel == "offered_by" and self.nodes.get(e["to"], {}).get("kind") == "company":
                 self.supplies[e["to"]].add(e["from"])
                 if (self.nodes[e["to"]].get("listing") or {}).get("ticker"):
@@ -67,6 +79,10 @@ class Structure:
     def label(self, nid: str) -> str:
         return re.split(r"\s+\(", (self.nodes.get(nid) or {}).get("label", nid))[0]
 
+    def edge_conf(self, a: str, b: str) -> float | None:
+        """두 노드가 간선(어느 방향이든)으로 이어져 있으면 그 확신도."""
+        return self.edge_confs.get((a, b))
+
 
 # ------------------------------------------------------------------ 가격 맥락
 def price_key(node: dict[str, Any] | None) -> str | None:
@@ -79,6 +95,7 @@ def price_key(node: dict[str, Any] | None) -> str | None:
 # 텐배거 후보의 출발 조건 (ADR-0017 개정 1): 아직 작은가 · 아직 안 갔는가. 숫자는 임시값 — 사용자가 정하면 바꾼다.
 TENBAGGER_MCAP_USD = 3e9
 TENBAGGER_MAX_FROM_LOW = 200.0   # 1년 저점 대비 +200% (= 3배) 미만
+MIN_POINTS_FOR_RANGE = 120        # 고점·저점 대비를 믿으려면 최소 거래일 수
 
 
 def tenbagger_check(mcap_usd: float | None, from_low: float | None) -> dict[str, Any]:
@@ -99,7 +116,10 @@ def price_context(prices: dict[str, dict[str, Any]], node: dict[str, Any] | None
         return None
     out = {k: (float(p[k]) if p.get(k) is not None else None)
            for k in ("close", "r1m", "r3m", "r12m", "from_high", "from_low", "vol_ratio", "market_cap_usd")}
-    out |= {"key": key, "as_of": str(p.get("as_of"))[:10]}
+    pts = int(p.get("points") or 0)
+    if pts and pts < MIN_POINTS_FOR_RANGE:  # 이력이 몇 날뿐이면 고점·저점 대비는 뜻이 없다
+        out["from_high"] = out["from_low"] = None
+    out |= {"key": key, "as_of": str(p.get("as_of"))[:10], "points": pts or None}
     flags = []
     if out["from_low"] is not None and out["from_low"] >= TENBAGGER_MAX_FROM_LOW:
         flags.append(f"1년 저점 대비 {out['from_low']:+.0f}% — 이미 {1 + out['from_low'] / 100:.1f}배")
@@ -235,7 +255,101 @@ def assess(idea: dict[str, Any], st: Structure, issues: list[dict[str, Any]], in
     node = st.nodes.get(primary) if primary else None
     return {"score": score, "parts": parts, "exposure": ex, "price": price_context(prices, node),
             "bottlenecks": [{"id": b, "label": st.label(b)} for b in bns[:4]], "observations": obs[:3],
-            "computed_at": now.isoformat(timespec="seconds"), "version": 1}
+            "anticipation": anticipation(idea, st, prices, now, last, fallback_direct),
+            "computed_at": now.isoformat(timespec="seconds"), "version": 2}
+
+
+# ------------------------------------------------------------------ 선행 추론 점수 (ADR-0017 개정 2)
+# 온톨로지의 목적: 기술·산업의 변화가 생겼을 때 영향 관계를 따라가 '다음에 바뀔 기업'을 시장보다 먼저 찾는 것.
+# 수주·계약은 주가에 즉시 반영된다 — 그래서 근거 점수(확신)와 별개로 '아직 반영되지 않았나·룸이 큰가'를 따로 센다.
+#   경로 0–3: 변화 → … → 기업 경로가 그래프에 있고(근거 등급), 몇 단계 떨어져 있나
+#   미반영 0–3: 기업 직접 근거가 아직 없고 주가·거래량이 움직이지 않았나
+#   룸 0–2: 변화의 규모가 이 회사 매출에 비해 큰가 (LLM 이 근거 id 와 함께 추정, 시총이 크면 깎는다)
+#   발현 0–2: 몇 분기 안에 숫자로 나타나나
+ANTICIPATION_MAX_HOPS = 6
+
+
+def path_confidence(st: Structure, path: list[str]) -> tuple[float | None, list[str]]:
+    """노드 id 경로가 그래프 간선으로 이어지는지 — (최약 간선 확신도, 끊긴 구간)."""
+    if not path or len(path) < 2:
+        return None, []
+    confs, broken = [], []
+    for a, b in zip(path, path[1:]):
+        c = st.edge_conf(a, b)
+        if c is None:
+            broken.append(f"{st.label(a)} → {st.label(b)}")
+        else:
+            confs.append(c)
+    return (min(confs) if confs and not broken else None), broken
+
+
+def anticipation(idea: dict[str, Any], st: Structure, prices: dict[str, dict[str, Any]], now: datetime,
+                 direct_last: str | None, fallback_direct: str | None = None) -> dict[str, Any] | None:
+    """LLM 이 적은 anticipation{trigger, path, mechanism, lead_quarters, effect{pct_of_revenue, basis, evidence}, priced_in} 을 검증·채점."""
+    a = idea.get("anticipation") or ((idea.get("assessment") or {}).get("anticipation") if isinstance(idea.get("assessment"), dict) else None)
+    if not isinstance(a, dict):
+        return None
+    primary = idea.get("primary_company")
+    node = st.nodes.get(primary) if primary else None
+    px = price_context(prices, node) or {}
+    parts: dict[str, dict[str, Any]] = {}
+    # 경로
+    path = [p for p in (a.get("path") or []) if isinstance(p, str) and p in st.nodes]
+    if path and path[-1] != primary and primary in st.nodes:
+        path = path + [primary] if st.edge_conf(path[-1], primary) is not None else path
+    conf, broken = path_confidence(st, path)
+    hops = max(0, len(path) - 1)
+    if conf is None or hops == 0:
+        p_pts, p_note = 0, ("경로가 그래프 간선으로 이어지지 않음: " + "; ".join(broken[:2])) if broken else "변화 → 기업 경로 없음"
+    else:
+        p_pts = 3 if conf >= 0.8 else 2 if conf >= 0.6 else 1
+        p_note = f"{hops}단계 경로, 최약 간선 확신도 {conf:.2f}"
+    parts["path"] = {"pts": p_pts, "max": 3, "note": p_note}
+    # 미반영
+    last = direct_last or fallback_direct
+    age = (now.date() - _d(last)).days if _d(last) else None
+    r1m, vol, from_low = px.get("r1m"), px.get("vol_ratio"), px.get("from_low")
+    moved = (r1m is not None and r1m >= 30) or (vol is not None and vol >= 3)
+    if from_low is not None and from_low >= TENBAGGER_MAX_FROM_LOW:
+        u_pts, u_note = 0, f"1년 저점 대비 {from_low:+.0f}% — 이미 반영"
+    elif age is not None and age <= 30 and moved:
+        u_pts, u_note = 0, f"기업 직접 근거 {age}일 전 + 주가 반응(1개월 {r1m:+.0f}%)" if r1m is not None else "기업 직접 근거 + 거래량 급증"
+    elif age is not None and age <= 30:
+        u_pts, u_note = 2, f"기업 직접 근거 {age}일 전이지만 주가는 아직 (1개월 {r1m:+.0f}%)" if r1m is not None else "기업 직접 근거 있음, 주가 미확인"
+    elif moved:
+        u_pts, u_note = 1, f"기업 근거는 없는데 주가가 움직임 (1개월 {r1m:+.0f}%)" if r1m is not None else "거래량 급증"
+    elif px:
+        u_pts, u_note = 3, f"기업 직접 근거 없음 · 1개월 {r1m:+.0f}%" if r1m is not None else "기업 직접 근거 없음 · 주가 조용"
+    else:
+        u_pts, u_note = 2, "기업 직접 근거 없음 · 주가 미수집"
+    parts["unpriced"] = {"pts": u_pts, "max": 3, "note": u_note}
+    # 룸
+    eff = a.get("effect") if isinstance(a.get("effect"), dict) else {}
+    try:
+        pct = float(eff.get("pct_of_revenue")) if eff.get("pct_of_revenue") is not None else None
+    except (TypeError, ValueError):
+        pct = None
+    mcap = px.get("market_cap_usd")
+    if pct is None or not eff.get("basis"):
+        r_pts, r_note = 0, "변화의 규모 대비 매출 비중 미추정"
+    else:
+        r_pts = 2 if pct >= 30 else 1 if pct >= 10 else 0
+        if mcap is not None and mcap > 1e10 and r_pts:
+            r_pts = min(r_pts, 1)
+        r_note = f"변화 규모 ≈ 매출의 {pct:g}% ({str(eff.get('basis'))[:80]})" + (f" · 시총 ${mcap / 1e9:.1f}B" if mcap else "")
+    parts["room"] = {"pts": r_pts, "max": 2, "note": r_note}
+    # 발현 시점
+    try:
+        lq = int(a.get("lead_quarters")) if a.get("lead_quarters") is not None else None
+    except (TypeError, ValueError):
+        lq = None
+    l_pts = 0 if lq is None else 2 if lq <= 2 else 1 if lq <= 4 else 0
+    parts["lead"] = {"pts": l_pts, "max": 2, "note": f"숫자로 나타나기까지 약 {lq}분기" if lq is not None else "발현 시점 미추정"}
+    score = max(0, min(10, sum(p["pts"] for p in parts.values())))
+    return {"score": score, "parts": parts, "trigger": a.get("trigger"), "path": path, "path_labels": [st.label(n) for n in path],
+            "hops": hops, "mechanism": str(a.get("mechanism") or "")[:300], "lead_quarters": lq,
+            "effect": {"pct_of_revenue": pct, "basis": str(eff.get("basis") or "")[:160], "url": eff.get("url"), "as_of": eff.get("as_of")} if pct is not None else None,
+            "priced_in": a.get("priced_in") if a.get("priced_in") in ("none", "partial", "full") else None}
 
 
 def apply_star_rule(stars: int, score: int) -> tuple[int, str]:

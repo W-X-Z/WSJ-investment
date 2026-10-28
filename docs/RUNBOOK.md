@@ -124,4 +124,5 @@ cd apps/web && cp .env.local.example .env.local && npm install && npm run dev
 - 시가총액(ADR-0017 개정 1, 0022): `python -m wsj.ecosystems.facts run` (Actions 에서 매일, 미국은 하루 40곳). 도달 점검 `facts probe`. 0022 적용 전에는 카드에 "주가·시총 수집 전"으로 보인다.
   텐배거 출발 조건(시총 $3B 이하 · 저점 대비 3배 미만)은 `assess.TENBAGGER_*` 와 `apps/web/src/lib/ideas.ts` 두 곳에 같은 값 — 바꿀 때 함께.
 - 심층 분석 메모: 매일 작업 6-2 (`docs/agents/deep-dive.md`), `ideas.put_idea_notes`. 상세 화면 '심층 분석' 절.
+- 선행 추론(ADR-0017 개정 2): 근거 점수(확신)와 별개의 선행 점수(기대값) — `assess.anticipation`. 단서는 `scan --from-public` 의 `second_order`. 0023 은 고점·저점 대비의 이력 120일 보호.
 - 개선 예약작업이 연 PR 중 코드·워크플로·마이그레이션이 바뀐 것은 사람이 병합한다. 데이터(`research/`, `apps/web/src/data/`, `graph_patches/`)만 바뀐 PR 은 CI 통과 시 스스로 병합한다.
