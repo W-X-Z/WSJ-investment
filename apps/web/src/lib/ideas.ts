@@ -13,8 +13,16 @@ export type IdeaCompany = { id: string; name: string; ticker?: string | null; ex
 /** 확인 일정 (ADR-0017): 날짜·기준이 있는 다음 확인. 예전 행은 문자열. */
 export type WatchItem = { what: string; due?: string | null; metric?: string | null; threshold?: string | null; direction?: "strengthen" | "weaken" | null;
   status?: "pending" | "hit" | "miss" | "void" | "expired" | string; graded_at?: string | null; evidence_url?: string | null; grade_note?: string | null };
+export type Tenbagger = { candidate: boolean | null; reason?: string };
 export type PriceCtx = { key?: string; as_of?: string; close?: number | null; r1m?: number | null; r3m?: number | null; r12m?: number | null;
-  from_high?: number | null; vol_ratio?: number | null; flags?: string[] };
+  from_high?: number | null; from_low?: number | null; vol_ratio?: number | null; market_cap_usd?: number | null; flags?: string[]; tenbagger?: Tenbagger | null };
+/** 상장사 밸류에이션 맥락 (public.v_company_facts, 0022): 발행주식수 × 종가 × 환율. 주가가 갱신되면 시총도 따라간다. */
+export type CompanyFacts = { company_id: string; ticker: string; currency: string; shares_outstanding: number; shares_as_of?: string | null;
+  close?: number | null; price_as_of?: string | null; market_cap_local?: number | null; market_cap_usd?: number | null;
+  r1m?: number | null; r3m?: number | null; r12m?: number | null; from_high?: number | null; from_low?: number | null };
+/** 심층 분석 메모 (ideas.idea_notes → v_idea_notes): 왜 병목인가 → 시장 규모 → 공급 구조 → 다음 고리 → 밸류에이션 맥락 → 반대 근거 → 확인 일정. */
+export type NoteSection = { id: string; title: string; body: string; sources: { title?: string; url: string; date?: string | null }[] };
+export type IdeaNote = { idea_key: string; kind: string; content: { summary?: string; sections: NoteSection[]; computed_at?: string }; model?: string | null; updated_at: string };
 /** 판단 (엔진이 계산한 10점 근거 점수와 내역). 주가 전망이 아니라 근거의 강도. */
 export type Assessment = { score: number; parts: Record<string, { pts: number; max: number; note: string }>; exposure?: Exposure | null;
   price?: PriceCtx | null; bottlenecks?: { id: string; label: string }[]; observations?: { indicator_id: string; label?: string; unit?: string; as_of: string;
@@ -38,6 +46,39 @@ export function nextWatch(x: Pick<InvestmentIdea, "watch">): WatchItem | null {
   return ws.filter((w) => w.due).sort((a, b) => (a.due ?? "").localeCompare(b.due ?? ""))[0] ?? ws[0] ?? null;
 }
 export const pct = (v?: number | null, digits = 0) => (v == null ? null : `${v > 0 ? "+" : ""}${v.toFixed(digits)}%`);
+/** 시가총액을 읽기 쉽게: $0.64B · $12.7B · $109B. */
+export const usdB = (v?: number | null) => (v == null ? null : v >= 1e11 ? `$${Math.round(v / 1e9)}B` : v >= 1e10 ? `$${(v / 1e9).toFixed(1)}B` : v >= 1e8 ? `$${(v / 1e9).toFixed(2)}B` : `$${Math.round(v / 1e6)}M`);
+/** 텐배거 출발 조건 (엔진과 같은 임시값): 시총 $3B 이하 · 1년 저점 대비 3배 미만. */
+export const TENBAGGER_MCAP_USD = 3e9;
+export const TENBAGGER_MAX_FROM_LOW = 200;
+export function tenbaggerCheck(mcap?: number | null, fromLow?: number | null): Tenbagger {
+  if (mcap == null) return { candidate: null, reason: "시가총액 미확인" };
+  if (mcap > TENBAGGER_MCAP_USD) return { candidate: false, reason: `시총 ${usdB(mcap)} > $${TENBAGGER_MCAP_USD / 1e9}B` };
+  if (fromLow != null && fromLow >= TENBAGGER_MAX_FROM_LOW) return { candidate: false, reason: `1년 저점 대비 ${pct(fromLow)} — 이미 ${(1 + fromLow / 100).toFixed(1)}배` };
+  return { candidate: true, reason: `시총 ${usdB(mcap)}${fromLow != null ? ` · 저점 대비 ${pct(fromLow)}` : ""}` };
+}
+
+/** 상장사 밸류에이션 (0022 전에는 빈 Map). */
+export async function loadFacts(): Promise<Map<string, CompanyFacts>> {
+  if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.NEXT_PUBLIC_SUPABASE_KEY) return new Map();
+  try {
+    const { data, error } = await db("public").from("v_company_facts").select("*").limit(2000);
+    if (error || !data) return new Map();
+    const num = (v: unknown) => (v == null ? null : Number(v));
+    return new Map((data as CompanyFacts[]).map((f) => [f.company_id, { ...f, shares_outstanding: Number(f.shares_outstanding), close: num(f.close),
+      market_cap_local: num(f.market_cap_local), market_cap_usd: num(f.market_cap_usd), r1m: num(f.r1m), r3m: num(f.r3m), r12m: num(f.r12m),
+      from_high: num(f.from_high), from_low: num(f.from_low) }]));
+  } catch { return new Map(); }
+}
+
+/** 아이디어의 심층 분석 메모 (0022 전에는 null). */
+export async function loadIdeaNote(key: string): Promise<IdeaNote | null> {
+  if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.NEXT_PUBLIC_SUPABASE_KEY) return null;
+  try {
+    const { data, error } = await db("public").from("v_idea_notes").select("*").eq("idea_key", key).eq("kind", "deep").maybeSingle();
+    return error || !data ? null : (data as IdeaNote);
+  } catch { return null; }
+}
 
 export const IDEA_TYPE: Record<string, { label: string; tone: string }> = {
   bottleneck: { label: "병목 수혜", tone: "bottleneck" },

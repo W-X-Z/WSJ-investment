@@ -2,7 +2,7 @@ import "server-only";
 import improvementLog from "@/data/improvement-log.json";
 import { db } from "@/lib/supabase";
 import { seed } from "@/lib/research";
-import { loadIdeas, watchItems } from "@/lib/ideas";
+import { loadFacts, loadIdeas, tenbaggerCheck, watchItems } from "@/lib/ideas";
 import { loadPrices, pxKey } from "@/lib/board";
 
 /** 시스템 점검 (ADR-0017) — 데이터가 제대로 들어오는지, 판단이 쌓이는지, 스스로 무엇을 고쳤는지. pipeline/wsj/ecosystems/health.py 와 같은 기준. */
@@ -43,12 +43,13 @@ async function safe<T>(q: PromiseLike<{ data: T[] | null; error: { message: stri
 export async function loadSystem() {
   const hasDb = !!process.env.NEXT_PUBLIC_SUPABASE_URL && !!process.env.NEXT_PUBLIC_SUPABASE_KEY;
   const today = new Date();
-  const [runsQ, indQ, regQ, prices, { ideas }] = await Promise.all([
+  const [runsQ, indQ, regQ, prices, { ideas }, facts] = await Promise.all([
     hasDb ? safe<Run>(db("public").from("v_collector_runs").select("*").order("started_at", { ascending: false }).limit(400)) : Promise.resolve({ rows: [] as Run[], missing: true }),
     hasDb ? safe<{ indicator_id: string; label: string; category: string; frequency: string; as_of: string }>(db("public").from("v_indicators").select("indicator_id,label,category,frequency,as_of")) : Promise.resolve({ rows: [], missing: true }),
     hasDb ? safe<{ indicator_id: string; label: string; category: string }>(db("public").from("v_indicator_registry").select("indicator_id,label,category")) : Promise.resolve({ rows: [], missing: true }),
     hasDb ? loadPrices() : Promise.resolve(new Map()),
     loadIdeas(),
+    hasDb ? loadFacts() : Promise.resolve(new Map()),
   ]);
   const problems: Problem[] = [];
   // 수집기
@@ -87,6 +88,10 @@ export async function loadSystem() {
   }
   if (covered < listed.length * 0.6) problems.push({ severity: 2, area: "데이터", what: `최근 7일 가격이 있는 상장사 ${covered}/${listed.length}` });
   if (noSource) problems.push({ severity: 1, area: "데이터", what: `가격 출처가 없는 거래소의 상장사 ${noSource}곳 (유럽·인도·캐나다 등)` });
+  // 시가총액 (0022): 텐배거 조건의 첫째 입력
+  const withCap = listed.filter((n) => facts.get(n.id)?.market_cap_usd != null).length;
+  const tenbaggers = listed.filter((n) => { const f = facts.get(n.id); return f && tenbaggerCheck(f.market_cap_usd, f.from_low).candidate === true; }).length;
+  if (listed.length && withCap < listed.length * 0.6) problems.push({ severity: withCap ? 2 : 1, area: "데이터", what: withCap ? `시가총액이 있는 상장사 ${withCap}/${listed.length}` : "시가총액이 아직 없습니다 (마이그레이션 0022 적용 후 facts 수집기가 채웁니다)" });
   // 그래프·판단
   const dead = deadEndBottlenecks();
   if (dead.length) problems.push({ severity: 3, area: "온톨로지", what: `상장사로 이어지지 않는 병목 ${dead.length}개` });
@@ -100,7 +105,7 @@ export async function loadSystem() {
   return {
     problems, collectors, runsMissing: runsQ.missing,
     indicators: { total: indQ.rows.length, registered: regQ.rows.length, stale: stale.length, empty: empty.length, byCat: [...byCat.entries()] },
-    prices: { covered, listed: listed.length, noSource, byMarket: [...cov.entries()] },
+    prices: { covered, listed: listed.length, noSource, byMarket: [...cov.entries()], withCap, tenbaggers },
     graph: { nodes: seed.nodes.length, edges: seed.edges.length, bottlenecks: seed.nodes.filter((n) => n.kind === "bottleneck").length, dead },
     judgment: { ideas: ideas.length, scores, record },
     log: (improvementLog as LogEntry[]).slice().sort((a, b) => b.date.localeCompare(a.date)),

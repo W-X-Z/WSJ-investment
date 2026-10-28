@@ -121,4 +121,7 @@ cd apps/web && cp .env.local.example .env.local && npm install && npm run dev
 - 가격: `python -m wsj.ecosystems.prices run --budget-min 10` (서비스 키 필요, Actions 에서만). 도달 점검: `python -m wsj.ecosystems.prices probe`.
 - 그래프 고치기: `seed_graph.json` 을 손으로 고치지 않고 `pipeline/wsj/ecosystems/graph_patches/pYYYYMMDD_*.py` 패치를 더한다. 병목은 2단계 안에 상장사가 있어야 검증을 통과한다.
 - 0021 적용 전: 점수·가격 맥락·관측치·수집 기록 화면이 비어 보일 뿐 나머지는 돈다.
+- 시가총액(ADR-0017 개정 1, 0022): `python -m wsj.ecosystems.facts run` (Actions 에서 매일, 미국은 하루 40곳). 도달 점검 `facts probe`. 0022 적용 전에는 카드에 "주가·시총 수집 전"으로 보인다.
+  텐배거 출발 조건(시총 $3B 이하 · 저점 대비 3배 미만)은 `assess.TENBAGGER_*` 와 `apps/web/src/lib/ideas.ts` 두 곳에 같은 값 — 바꿀 때 함께.
+- 심층 분석 메모: 매일 작업 6-2 (`docs/agents/deep-dive.md`), `ideas.put_idea_notes`. 상세 화면 '심층 분석' 절.
 - 개선 예약작업이 연 PR 중 코드·워크플로·마이그레이션이 바뀐 것은 사람이 병합한다. 데이터(`research/`, `apps/web/src/data/`, `graph_patches/`)만 바뀐 PR 은 CI 통과 시 스스로 병합한다.

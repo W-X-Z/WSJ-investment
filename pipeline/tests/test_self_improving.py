@@ -223,3 +223,41 @@ def test_clean_title_drops_company_tails():
     # 기업 이야기가 아닌 부제·짧은 앞부분은 그대로
     assert clean_title("전력망 연결을 못 기다리는 데이터센터는 현장 가스엔진으로", cos) == "전력망 연결을 못 기다리는 데이터센터는 현장 가스엔진으로"
     assert clean_title("AXT — Ideal Power", cos) == "AXT — Ideal Power"
+
+
+# ------------------------------------------------------------------ 시가총액·텐배거 조건 (ADR-0017 개정 1)
+def test_tenbagger_check_and_price_flags():
+    assert A.tenbagger_check(None, 50)["candidate"] is None
+    assert A.tenbagger_check(6.4e8, 40)["candidate"] is True
+    assert A.tenbagger_check(4.4e9, 347)["candidate"] is False  # 크다
+    assert A.tenbagger_check(2e9, 482)["candidate"] is False  # 이미 5.8배
+    node = {"listing": {"exchange": "TPEx", "ticker": "6664"}}
+    ctx = A.price_context({"TPEx:6664": {"close": 334, "r1m": -3.7, "r3m": -5.1, "r12m": 21, "from_high": -30.4, "from_low": 40.3,
+                                         "vol_ratio": 0.9, "market_cap_usd": 6.4e8}}, node)
+    assert ctx["tenbagger"]["candidate"] is True and ctx["from_low"] == 40.3 and not ctx["flags"]
+    ctx = A.price_context({"TPEx:6664": {"close": 86.7, "r1m": -41.8, "r3m": -43.6, "r12m": 160.6, "from_high": -70.8, "from_low": 208.8,
+                                         "vol_ratio": 1.0, "market_cap_usd": 1.1e10}}, node)
+    assert ctx["tenbagger"]["candidate"] is False and any("3.1배" in f for f in ctx["flags"]) and any("3개월" in f for f in ctx["flags"])
+
+
+def test_facts_parsers():
+    from wsj.ecosystems import facts as F
+
+    cf = {"facts": {"dei": {"EntityCommonStockSharesOutstanding": {"units": {"shares": [
+        {"end": "2026-07-30", "val": 61129640, "accn": "a", "frame": "CY2026Q2I"},
+        {"end": "2026-04-30", "val": 60000000, "accn": "b"},
+        {"end": "2026-07-30", "val": 1000, "accn": "a", "frame": "CY2026Q2I-B"}]}}}}}
+    assert F.sec_shares(cf) == (61130640.0, "2026-07-30")  # 같은 기준일의 두 클래스 합산
+    assert F.parse_tencent("v_sh603256=\"1~宏和科技~603256~" + "~".join(["86.73"] + ["0"] * 40) + "~784.55~784.55~x\";") == (86.73, 784.55)
+    html = '<span>発行済株式数</span><div class="tip"><a>用語</a></div><span class="n">3,175,762,284</span><span>株</span>'
+    assert F.parse_yahoo_jp_shares(html) == 3175762284.0
+    assert F.parse_krw_won("2,557억") == 2.557e11 and F.parse_krw_won("6조 3,105억") == 6.3105e12 and F.parse_krw_won("N/A") is None
+
+
+def test_merge_facts_adds_market_cap_to_price_rows():
+    from wsj.ecosystems.ideas import merge_facts
+
+    m = merge_facts([{"ticker": "INIO", "close": 16.98, "r12m": None, "from_low": 12.4}],
+                    [{"ticker": "INIO", "market_cap_usd": 1.27e10, "shares_outstanding": 7.5e8, "from_low": 12.4},
+                     {"ticker": "TWSE:8996", "market_cap_usd": 4.6e9, "close": 1585, "price_as_of": "2026-10-28", "from_low": 126}])
+    assert m["INIO"]["market_cap_usd"] == 1.27e10 and m["TWSE:8996"]["close"] == 1585 and m["TWSE:8996"]["from_low"] == 126

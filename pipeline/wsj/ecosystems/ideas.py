@@ -473,7 +473,8 @@ LLM_SYSTEM = """너는 AI 공급망(HBM·첨단 패키징 / 800G·1.6T 광통신
   2점 이하는 ★1 로 내려간다. 노출 비중을 근거로 확인하면 점수가 오른다.
 - states: 병목·부품의 상태 관측치(가격 배수·리드타임·가동률·재고·수주잔고·평균단가 등, 원문에서 확인한 숫자). 병목이 조여지는지 풀리는지의 근거로 쓴다.
 - leads: 엔진이 찾은 조사 단서 — 기업 소식은 있는데 아이디어가 없는 기업, 활동이 많은 병목의 미커버 공급사, 설명 안 된 가격 급변. 근거가 되면 아이디어로 만든다.
-- prices: 주요 기업의 '이미 움직인 폭' (1·3·12개월, 고점 대비). 근거로 쓰지 않는다. 12개월에 크게 오른 기업은 risks 에 "이미 알려진 정도"를 적는다.
+- prices: 주요 기업의 '이미 움직인 폭'(1·12개월, 고점·저점 대비)과 시가총액(USD), tenbagger{{candidate, reason}}. 근거로 쓰지 않는다.
+  저점 대비 3배 이상 오른 기업은 risks 에 "이미 알려진 정도"를 적고, 같은 논리에 시총이 작고 덜 오른 공급사가 있으면 그쪽을 primary 로 고려한다.
 - 숫자·날짜는 입력에 있는 것만 쓴다. 주가·목표가·매수/매도 권유·시점 예측 금지.
 - 서로 다른 아이디어가 같은 기업·같은 논리를 반복하지 않게 묶는다. 근거가 빈약하면 만들지 않는다 — 개수보다 질.
 
@@ -818,20 +819,37 @@ def prepare(issues: list[dict[str, Any]], indicators: list[dict[str, Any]], grap
 
         nodes = {n["id"]: n for n in graph["nodes"]}
         want = {c["company_id"] for c in candidates} | focus_companies(existing)
-        extras["prices"] = {cid: {k: v for k, v in (price_context(extras["prices_full"], nodes.get(cid)) or {}).items() if k in ("r1m", "r12m", "from_high", "flags")}
+        extras["prices"] = {cid: {k: v for k, v in (price_context(extras["prices_full"], nodes.get(cid)) or {}).items()
+                                  if k in ("r1m", "r12m", "from_high", "from_low", "market_cap_usd", "flags", "tenbagger")}
                             for cid in sorted(want) if price_context(extras["prices_full"], nodes.get(cid))}
     payload = build_payload(signals, candidates, reg, existing, max_ideas, now, extras)
     return reg, signals, candidates, payload
 
 
+def merge_facts(prices: list[dict[str, Any]] | None, facts: list[dict[str, Any]] | None) -> dict[str, dict[str, Any]]:
+    """가격 맥락(v_price_context) + 시가총액(v_company_facts) → 가격 키별 한 행. 시총은 USD 로 함께 둔다."""
+    by_key = {p["ticker"]: dict(p) for p in prices or [] if p.get("ticker")}
+    for f in facts or []:
+        k = f.get("ticker")
+        if not k or f.get("market_cap_usd") is None:
+            continue
+        by_key.setdefault(k, {"ticker": k, "close": f.get("close"), "as_of": f.get("price_as_of")})
+        by_key[k]["market_cap_usd"] = f["market_cap_usd"]
+        by_key[k]["shares_outstanding"] = f.get("shares_outstanding")
+        if by_key[k].get("from_low") is None and f.get("from_low") is not None:
+            by_key[k]["from_low"] = f["from_low"]
+    return by_key
+
+
 def build_context(graph: dict[str, Any], issues: list[dict[str, Any]], indicators: list[dict[str, Any]], prices: list[dict[str, Any]],
-                  events: list[Any], existing: list[dict[str, Any]], now: datetime) -> tuple[dict[str, Any], dict[str, Any]]:
-    """판단(점수)에 쓰는 문맥과 LLM 입력에 더할 것 — 병목 상태 관측치·조사 단서·가격 맥락."""
+                  events: list[Any], existing: list[dict[str, Any]], now: datetime, facts: list[dict[str, Any]] | None = None
+                  ) -> tuple[dict[str, Any], dict[str, Any]]:
+    """판단(점수)에 쓰는 문맥과 LLM 입력에 더할 것 — 병목 상태 관측치·조사 단서·가격 맥락(시총 포함)."""
     from wsj.ecosystems import scan
     from wsj.ecosystems.assess import Structure
 
     st = Structure(graph)
-    by_key = {p["ticker"]: p for p in prices or [] if p.get("ticker")}
+    by_key = merge_facts(prices, facts)
     ld = scan.leads(graph, issues, indicators, events, existing, by_key, now)
     ctx = {"structure": st, "issues": issues, "indicators": indicators, "prices": by_key, "leads": ld}
     extras = {"states": scan.states(indicators, st), "leads": scan.compact(ld), "prices_full": by_key}
@@ -926,8 +944,8 @@ def gather_events(args, settings, store, graph: dict[str, Any], existing: list[d
 
 # ---------------------------------------------------------------- session mode (Claude 예약작업이 LLM 단계를 맡을 때)
 PUBLIC_VIEWS = {"issues": "v_supply_chain_issues", "indicators": "v_indicators", "existing": "v_investment_ideas", "events": "v_company_events",
-                "prices": "v_price_context"}
-OPTIONAL_VIEWS = {"prices"}  # 0021 적용 전에는 없다
+                "prices": "v_price_context", "facts": "v_company_facts"}
+OPTIONAL_VIEWS = {"prices", "facts"}  # 0021·0022 적용 전에는 없다
 
 
 def public_credentials() -> tuple[str, str]:
@@ -1065,11 +1083,14 @@ def main(argv: list[str] | None = None) -> int:
                 args.snapshot = tmp
             args.dry_run = True
         prices: list[dict[str, Any]] = []
+        facts: list[dict[str, Any]] = []
         if args.snapshot:
             issues = json.loads((args.snapshot / "issues.json").read_text(encoding="utf-8"))
             indicators = json.loads((args.snapshot / "indicators.json").read_text(encoding="utf-8"))
             pp = args.snapshot / "prices.json"
             prices = json.loads(pp.read_text(encoding="utf-8")) if pp.exists() else []
+            fp = args.snapshot / "facts.json"
+            facts = json.loads(fp.read_text(encoding="utf-8")) if fp.exists() else []
             ex_path = args.snapshot / "existing.json"
             existing = json.loads(ex_path.read_text(encoding="utf-8")) if ex_path.exists() else []
             meta = args.snapshot / "meta.json"
@@ -1084,12 +1105,16 @@ def main(argv: list[str] | None = None) -> int:
                 prices = store.select("public.v_price_context", ["*"], {})
             except Exception as exc:  # noqa: BLE001
                 log.warning("v_price_context 없음 (0021 전?): %s", exc)
+            try:
+                facts = store.select("public.v_company_facts", ["*"], {})
+            except Exception as exc:  # noqa: BLE001
+                log.warning("v_company_facts 없음 (0022 전?): %s", exc)
         graph = load_graph()
         events, feed_stats = gather_events(args, settings, store, graph, existing)
         if args.events_out:
             args.events_out.parent.mkdir(parents=True, exist_ok=True)
             args.events_out.write_text(json.dumps([e.public() for e in events], ensure_ascii=False, indent=1), encoding="utf-8")
-        ctx, extras = build_context(graph, issues, indicators, prices, events, existing, now)
+        ctx, extras = build_context(graph, issues, indicators, prices, events, existing, now, facts)
         reg, signals, candidates, payload = prepare(issues, indicators, graph, now, args.days, existing, args.max_ideas, args.top, events, extras)
         if args.leads_out:
             args.leads_out.write_text(json.dumps(ctx["leads"], ensure_ascii=False, indent=1, default=str), encoding="utf-8")

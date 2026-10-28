@@ -4,7 +4,7 @@ Claude 예약작업 "WSJ 시스템 개선 (주간)"이 매주 일요일 10:23 KS
 목표는 시스템이 **더 많은 근거를 보고, 끊긴 곳 없이 기회를 찾고, 판단을 채점받게** 만드는 것이다. 사용자는 자리에 없으니 질문하지 말고 진행한다.
 
 ## 권한과 경계
-- DB 쓰기: `ideas.put_observations`(병목 상태 관측치)와 `ideas.put_company_events`(원문 확인)만. 아이디어는 쓰지 않는다 (매일 작업의 일).
+- DB 쓰기: `ideas.put_observations`(병목 상태 관측치), `ideas.put_company_events`(원문 확인), `ideas.put_idea_notes`(심층 메모)만. 아이디어는 쓰지 않는다 (매일 작업의 일).
 - 저장소: 브랜치 `auto/improve-YYYYMMDD` 에 커밋하고 PR 을 연다.
 - **스스로 병합해도 되는 PR** — CI(pytest · typecheck-build · Vercel)가 모두 통과하고, 바뀐 파일이 전부 아래 경로 안일 때:
   `research/` · `apps/web/src/data/` · `pipeline/wsj/ecosystems/graph_patches/`
@@ -28,7 +28,8 @@ Claude 예약작업 "WSJ 시스템 개선 (주간)"이 매주 일요일 10:23 KS
 2. 노드가 없는 활성 이슈 → 맞는 노드가 있으면 별칭·현지어 용어 추가, 없으면 노드·간선 추가.
 3. scan 의 company_leads·bottlenecks.uncovered 중 그래프 밖이거나 관계가 빈약한 기업 → 원문으로 공급 관계를 확인해 노드·간선 추가.
 4. 활동 많은 병목 중 상태 관측치가 없거나 60일 넘은 곳 → 숫자(가격 배수·리드타임·가동률·재고·수주잔고·평균단가·증설 완공 시점)를 찾아 put_observations.
-5. 데이터 공백 (가격 출처가 없는 거래소, 값 없는 지표, 막힌 출처) → 무료·공식 대체 출처를 찾아 수집기 코드를 고친다 (사람 승인 PR).
+5. 데이터 공백 (가격·시가총액 출처가 없는 거래소, 값 없는 지표, 막힌 출처) → 무료·공식 대체 출처를 찾아 수집기 코드를 고친다 (사람 승인 PR).
+6. 심층 메모가 30일 넘은 ★3 아이디어 → `docs/agents/deep-dive.md` 대로 다시 쓴다 (`ideas.put_idea_notes`, 주 2건까지).
 
 ## 3. 그래프 패치 쓰는 법
 - `pipeline/wsj/ecosystems/graph_patches/pYYYYMMDD_<주제>.py` 를 새로 만든다 (기존 패치 p20261028_… 를 본보기로). 기존 패치는 고치지 않는다.

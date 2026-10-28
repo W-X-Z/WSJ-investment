@@ -6,9 +6,10 @@ Claude 예약작업 "WSJ 수집 실행 + 투자 아이디어 작성 (06:41)"이 
 ## 0. 날짜와 전제
 - `date` 로 KST(UTC+9) 오늘 날짜를 구한다. 일요일이면 "일요일" 한 줄로 끝낸다.
 - Supabase MCP execute_sql (project_id: dcatgfivsvbktylmtvgf):
-  `select to_regprocedure('ideas.put_ideas(jsonb)') is not null as p20, to_regprocedure('ideas.put_assessments(jsonb)') is not null as p21;`
+  `select to_regprocedure('ideas.put_ideas(jsonb)') is not null as p20, to_regprocedure('ideas.put_assessments(jsonb)') is not null as p21, to_regprocedure('ideas.put_idea_notes(jsonb)') is not null as p22;`
   - p20 이 false 면 "0020 미적용"으로 알리고 끝낸다.
   - p21 이 false 면 "0021 미적용"을 보고에 적고, 아래의 관측치(3-2)·판단 갱신(zz_assessments.sql) 단계는 건너뛴다.
+  - p22 가 false 면 "0022 미적용"을 보고에 적고, 심층 분석(6-2)은 건너뛴다.
 - add_repo 로 W-X-Z/WSJ-investment 를 붙이고 `--depth 1` clone. `cd pipeline && python3 -m venv .venv && .venv/bin/pip install -q -e .`
 - 작업 폴더는 `../.ideas_run/` (저장소에 커밋하지 않는다).
 - Supabase MCP get_project_url · get_publishable_keys 로 `SUPABASE_URL`, `SUPABASE_PUBLISHABLE_KEY`(sb_publishable_…)를 export 한다. secret 키는 쓰지 않는다.
@@ -53,6 +54,7 @@ Claude 예약작업 "WSJ 수집 실행 + 투자 아이디어 작성 (06:41)"이 
   - watch 는 날짜(due)·기준(metric·threshold)·방향(direction)이 있는 확인 일정 2~3개.
   - existing 의 watch 중 기한이 지났거나 결과가 나온 항목을 grades 로 채점한다 (hit·miss 는 근거 id 필수).
   - leads 의 company_leads·uncovered 공급사는 원문 확인(3-1)으로 근거가 생겼을 때만 새 아이디어로.
+  - prices 의 시총(market_cap_usd)·저점 대비(from_low)·tenbagger 판정을 본다: 같은 논리에 **시총이 작고 덜 오른 공급사**가 있으면 그쪽을 primary 로. 저점 대비 3배 이상 오른 기업은 risks 에 "이미 알려진 정도".
   - 숫자·날짜는 payload 에 있는 것만. 주가·목표가·매수/매도 권유·시점 예측 금지.
 
 ## 5. 검증
@@ -60,9 +62,16 @@ Claude 예약작업 "WSJ 수집 실행 + 투자 아이디어 작성 (06:41)"이 
 - `rejected:` 줄을 보고 raw.json 을 고쳐 다시 돌린다 (최대 2번).
 
 ## 6. 저장
+### 6-1. 아이디어
 - `s2/sql/` 의 파일을 이름순으로 Read 해서 그대로 execute_sql 로 실행한다 (마지막 zz_assessments.sql 은 손대지 않은 아이디어의 점수·확인 일정 채점 갱신; p21 이 false 면 건너뛴다). SQL 을 손으로 고치지 않는다.
-- DB 쓰기는 ideas.put_company_events · ideas.put_observations · ideas.put_ideas · ideas.put_assessments 네 함수뿐이다. 저장소는 수정·커밋하지 않는다. GitHub 에서는 issues 워크플로 실행만 한다.
+
+### 6-2. 심층 분석 메모 (p22 일 때만, 하루 최대 2건)
+- 대상: 이번 실행에서 **새로 ★3 이 됐거나 텐배거 후보(prices.tenbagger.candidate=true)인 아이디어**, 그리고 30일 넘게 메모가 없는 ★3 (`select idea_key, updated_at from public.v_idea_notes;` 로 확인). 가장 점수 높은 것부터 2건.
+- `docs/agents/deep-dive.md` 를 끝까지 읽고 그 문단 구성·규칙대로 쓴다. 원문을 WebFetch 로 직접 열어 숫자를 확인하고, 회사·기관·표준·정부 출처를 섞는다.
+- `select ideas.put_idea_notes($j$[…]$j$::jsonb);` 로 저장. 거부되면 사유대로 고쳐 한 번 더.
+
+- DB 쓰기는 ideas.put_company_events · ideas.put_observations · ideas.put_ideas · ideas.put_assessments · ideas.put_idea_notes 다섯 함수뿐이다. 저장소는 수정·커밋하지 않는다. GitHub 에서는 issues 워크플로 실행만 한다.
 
 ## 7. 보고와 알림
-6줄 이내: 수집 상태(가격 포함) · 확인한 소식 N건 · 관측치 N개 · 아이디어 new/update/weaken/close/keep 와 바뀐 아이디어(★, 근거 점수) · 채점 결과(적중·빗나감) · 버린 것.
-알림은 다음일 때만: 0020 미적용, 수집 미완료로 아이디어를 못 썼을 때, DB 쓰기 실패, 새 ★3 또는 ★3 으로 오른 아이디어(제목·근거 점수·thesis 한 줄), ★3 아이디어의 확인 일정이 빗나갔을 때.
+7줄 이내: 수집 상태(가격·시총 포함) · 확인한 소식 N건 · 관측치 N개 · 아이디어 new/update/weaken/close/keep 와 바뀐 아이디어(★, 근거 점수, 시총, 저점 대비) · 채점 결과(적중·빗나감) · 심층 메모 N건 · 버린 것.
+알림은 다음일 때만: 0020 미적용, 수집 미완료로 아이디어를 못 썼을 때, DB 쓰기 실패, 새 ★3 또는 ★3 으로 오른 아이디어(제목·근거 점수·시총·저점 대비·thesis 한 줄), **새 텐배거 후보**(시총 $3B 이하 · 저점 대비 3배 미만 · 근거 6점 이상), ★3 아이디어의 확인 일정이 빗나갔을 때.

@@ -1,8 +1,8 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Icon } from "@/components/Icon";
-import { Cites, Freshness, MetaLine, References, ScoreText } from "@/components/feed/Feed";
-import { EVENT_KIND_KO, PART_KO, ROLE_KO, SIZE_KO, WATCH_STATUS_KO, loadCompanyEvents, loadIdea, pct, watchItems } from "@/lib/ideas";
+import { Cites, Freshness, MetaLine, References, ScoreText, Valuation } from "@/components/feed/Feed";
+import { EVENT_KIND_KO, PART_KO, ROLE_KO, SIZE_KO, WATCH_STATUS_KO, loadCompanyEvents, loadFacts, loadIdea, loadIdeaNote, pct, usdB, watchItems, type CompanyFacts, type IdeaNote } from "@/lib/ideas";
 import { REL_KO, rel, viewIdea } from "@/lib/feed";
 
 export const dynamic = "force-dynamic";
@@ -20,7 +20,7 @@ export default async function IdeaDetail({ params }: { params: Promise<{ id: str
   const raw = await loadIdea((await params).id);
   if (!raw) notFound();
   const idea = viewIdea(raw);
-  const events = await loadCompanyEvents(idea.companies.filter((c) => c.role !== "customer").map((c) => c.id));
+  const [events, factsMap, note] = await Promise.all([loadCompanyEvents(idea.companies.filter((c) => c.role !== "customer").map((c) => c.id)), loadFacts(), loadIdeaNote(idea.idea_key)]);
   const nameOf = new Map(idea.companies.map((c) => [c.id, c.name]));
   // 같은 URL 의 기업 소식에 원문을 확인한 요약이 있으면 그것을 쓴다 (근거의 원문 발췌보다 읽기 쉽다)
   const checked = new Map(events.filter((e) => e.text && e.verified).map((e) => [e.url, e.text as string]));
@@ -47,7 +47,9 @@ export default async function IdeaDetail({ params }: { params: Promise<{ id: str
           {idea.stars_reason ? <p className="fd-starsreason"><b>★ 판단</b>{idea.stars_reason}</p> : null}
         </section>
 
-        <Judgment idea={idea}/>
+        <Judgment idea={idea} facts={factsMap.get(idea.primary_company) ?? null}/>
+
+        <DeepDive note={note}/>
 
         {facts.length ? <section className="fd-dsec">
           <h2>확인된 사실<small>주 기업·관련 기업 자신의 소식</small></h2>
@@ -115,14 +117,18 @@ export default async function IdeaDetail({ params }: { params: Promise<{ id: str
 }
 
 /** 판단: 10점 근거 점수의 내역, 노출 순도, 병목 상태 관측치, 이미 움직인 폭. 주가 전망이 아니다. */
-function Judgment({ idea }: { idea: Awaited<ReturnType<typeof loadIdea>> & object }) {
+function Judgment({ idea, facts }: { idea: Awaited<ReturnType<typeof loadIdea>> & object; facts: CompanyFacts | null }) {
   const a = idea.assessment;
-  if (!a) return null;
+  if (!a && !facts) return null;
   const order = ["company", "confirm", "structure", "exposure", "counter"];
-  const p = a.price;
+  const p = a?.price ?? null;
+  if (!a) return <section className="fd-dsec"><h2>주가·시가총액<small>전망이 아니라 이미 움직인 폭</small></h2><Valuation facts={facts} price={null} detail/></section>;
   return <section className="fd-dsec">
     <h2>판단<small>근거 점수 · {a.computed_at ? a.computed_at.slice(0, 10) : ""} 계산 · 주가 전망 아님</small></h2>
     <div className="fd-judge-head"><ScoreText idea={idea}/><span>★{idea.stars} — ★3 은 7점 이상, 2점 이하는 ★1</span></div>
+    <Valuation facts={facts} price={p} detail/>
+    {facts?.market_cap_usd != null ? <p className="fd-judge-line"><b>시가총액</b>{usdB(facts.market_cap_usd)} — 발행주식 {Math.round(facts.shares_outstanding / 1e6).toLocaleString()}M주 × {facts.close?.toLocaleString()} {facts.currency}
+      {facts.shares_as_of ? ` (주식수 ${facts.shares_as_of})` : ""}</p> : null}
     <ul className="fd-parts">{order.filter((k) => a.parts?.[k]).map((k) => {
       const v = a.parts[k];
       const w = v.max > 0 ? Math.max(0, v.pts) / v.max : 0;
@@ -138,10 +144,24 @@ function Judgment({ idea }: { idea: Awaited<ReturnType<typeof loadIdea>> & objec
     {a.observations?.length ? <div className="fd-judge-line"><b>병목 상태</b><ul className="fd-obs">{a.observations.map((o) => <li key={o.indicator_id}>
       {o.label}: <strong>{o.value}{o.unit ? ` ${o.unit}` : ""}</strong> ({o.as_of}){o.source_url ? <> · <a href={o.source_url} target="_blank" rel="noreferrer">출처</a></> : null}
     </li>)}</ul></div> : null}
-    {p ? <p className="fd-judge-line"><b>이미 움직인 폭</b>{[p.r1m != null ? `1개월 ${pct(p.r1m)}` : null, p.r3m != null ? `3개월 ${pct(p.r3m)}` : null,
-      p.r12m != null ? `12개월 ${pct(p.r12m)}` : null, p.from_high != null ? `1년 고점 대비 ${pct(p.from_high)}` : null].filter(Boolean).join(" · ")}
-      {p.as_of ? ` (${p.as_of})` : ""}{p.flags?.length ? <em> — {p.flags.join(" · ")}</em> : null}</p> : null}
+    {p?.flags?.length ? <p className="fd-judge-line"><b>가격 신호</b>{p.flags.join(" · ")}{p.r1m != null ? ` (1개월 ${pct(p.r1m)})` : ""}</p> : null}
     {a.bottlenecks?.length ? <p className="fd-judge-line"><b>걸린 병목</b>{a.bottlenecks.map((b, i) => <span key={b.id}>{i ? ", " : ""}
       <Link href={`/bottlenecks#${encodeURIComponent(b.id)}`}>{b.label}</Link></span>)}</p> : null}
+  </section>;
+}
+
+/** 심층 분석 (ADR-0017 개정 1): 왜 병목인가(기술) → 시장 규모 → 공급 구조 → 다음 고리 → 밸류에이션 맥락 → 반대 근거 → 확인 일정.
+ *  문단마다 날짜 있는 출처. 예약작업이 ★3·텐배거 후보 아이디어에 쓴다. */
+function DeepDive({ note }: { note: IdeaNote | null }) {
+  if (!note?.content?.sections?.length) return null;
+  return <section className="fd-dsec fd-deep">
+    <h2>심층 분석<small>{note.updated_at.slice(0, 10)} · {note.model ?? ""} · 숫자는 출처에 있는 것만</small></h2>
+    {note.content.summary ? <p className="fd-lead">{note.content.summary}</p> : null}
+    {note.content.sections.map((s) => <div key={s.id} className="fd-deep-sec">
+      <h3>{s.title}</h3>
+      {s.body.split(/\n{2,}/).map((para, i) => <p key={i}>{para}</p>)}
+      {s.sources?.length ? <ul className="fd-deep-src">{s.sources.map((r, i) => <li key={i}>
+        <a href={r.url} target="_blank" rel="noreferrer">{r.title ?? r.url}</a>{r.date ? <span> · {r.date.slice(0, 10)}</span> : null}</li>)}</ul> : null}
+    </div>)}
   </section>;
 }
