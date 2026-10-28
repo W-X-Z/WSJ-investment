@@ -6,7 +6,7 @@ import { db } from "@/lib/supabase";
 export type IdeaEvidence = { id: string; url: string; title: string; publisher?: string | null; date?: string | null; tier?: string | null; tier_ko?: string | null;
   rel?: string | null;    // 엔진이 붙인 층: direct(기업 직접) | related | industry | background
   note?: string | null }; // 확인된 사실·발췌
-export type IdeaStep = { claim: string; evidence: IdeaEvidence[] };
+export type IdeaStep = { claim: string; evidence: IdeaEvidence[]; inference?: boolean };  // inference = 근거 없는 추론 단계 (가설의 일부, ADR-0020)
 export type Exposure = { share_pct: number; segment?: string; basis?: string; url?: string | null; as_of?: string | null };
 export type IdeaCompany = { id: string; name: string; ticker?: string | null; exchange?: string | null; size_band?: string | null; role: string; why?: string;
   exposure?: Exposure | null };

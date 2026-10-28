@@ -274,7 +274,7 @@ def path_confidence(st: Structure, path: list[str]) -> tuple[float | None, list[
     if not path or len(path) < 2:
         return None, []
     confs, broken = [], []
-    for a, b in zip(path, path[1:]):
+    for a, b in zip(path, path[1:], strict=False):
         c = st.edge_conf(a, b)
         if c is None:
             broken.append(f"{st.label(a)} → {st.label(b)}")
@@ -336,7 +336,7 @@ def anticipation(idea: dict[str, Any], st: Structure, prices: dict[str, dict[str
         r_pts = 2 if pct >= 30 else 1 if pct >= 10 else 0
         if mcap is not None and mcap > 1e10 and r_pts:
             r_pts = min(r_pts, 1)
-        r_note = f"변화 규모 ≈ 매출의 {pct:g}% ({str(eff.get('basis'))[:80]})" + (f" · 시총 ${mcap / 1e9:.1f}B" if mcap else "")
+        r_note = f"변화 규모 ≈ 매출의 {pct:g}%{' (추정)' if eff.get('estimated') else ''} ({str(eff.get('basis'))[:80]})" + (f" · 시총 ${mcap / 1e9:.1f}B" if mcap else "")
     parts["room"] = {"pts": r_pts, "max": 2, "note": r_note}
     # 발현 시점
     try:
@@ -348,7 +348,8 @@ def anticipation(idea: dict[str, Any], st: Structure, prices: dict[str, dict[str
     score = max(0, min(10, sum(p["pts"] for p in parts.values())))
     return {"score": score, "parts": parts, "trigger": a.get("trigger"), "path": path, "path_labels": [st.label(n) for n in path],
             "hops": hops, "mechanism": str(a.get("mechanism") or "")[:300], "lead_quarters": lq,
-            "effect": {"pct_of_revenue": pct, "basis": str(eff.get("basis") or "")[:160], "url": eff.get("url"), "as_of": eff.get("as_of")} if pct is not None else None,
+            "effect": {"pct_of_revenue": pct, "basis": str(eff.get("basis") or "")[:160], "url": eff.get("url"), "as_of": eff.get("as_of"),
+                       "estimated": bool(eff.get("estimated"))} if pct is not None else None,
             "priced_in": a.get("priced_in") if a.get("priced_in") in ("none", "partial", "full") else None}
 
 

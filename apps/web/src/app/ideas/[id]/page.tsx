@@ -70,8 +70,8 @@ export default async function IdeaDetail({ params }: { params: Promise<{ id: str
         </section> : null}
 
         <section className="fd-dsec">
-          <h2>논리</h2>
-          <ol className="fd-chain">{idea.chain.map((s, i) => <li key={i}>{s.claim}<Cites ns={s.evidence.map((e) => idea.refs.find((r) => r.url === e.url && r.title === e.title)?.n ?? 0).filter(Boolean)}/></li>)}</ol>
+          <h2>가설의 논리<small>사실은 각주, 추론은 (추론)</small></h2>
+          <ol className="fd-chain">{idea.chain.map((s, i) => <li key={i} className={s.inference ? "inf" : ""}>{s.claim}<Cites ns={s.evidence.map((e) => idea.refs.find((r) => r.url === e.url && r.title === e.title)?.n ?? 0).filter(Boolean)}/></li>)}</ol>
         </section>
 
         <section className="fd-dsec">
@@ -81,7 +81,7 @@ export default async function IdeaDetail({ params }: { params: Promise<{ id: str
         </section>
 
         {idea.watch.length ? <section className="fd-dsec">
-          <h2>지켜볼 것<small>날짜가 오면 다음 실행이 결과를 채점합니다</small></h2>
+          <h2>예측<small>가설이 맞으면 이 날짜에 이 숫자가 나온다 — 다음 실행이 채점합니다</small></h2>
           <ul className="fd-watch">{watchItems(idea).map((w, i) => <li key={i} className={`fd-w-${w.status ?? "pending"}`}>
             <span className="fd-w-status">{WATCH_STATUS_KO[w.status ?? "pending"] ?? w.status}</span>
             <div>

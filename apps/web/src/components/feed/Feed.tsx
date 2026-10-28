@@ -2,9 +2,10 @@ import Link from "next/link";
 import { CONFIDENCE_KO, IDEA_TYPE, SCENARIO_KO, TREND_KO, liveUpside, money, pct, usdB, type CompanyFacts, type InvestmentIdea, type PriceCtx, type Valuation } from "@/lib/ideas";
 import { REL_KO, ecoLabel, rel, shortName, type FeedIdea, type IdeaView } from "@/lib/feed";
 
-/** ★ 를 글자로 (배지 없이). */
+/** ★ 를 글자로 (배지 없이). ★ 는 확신이 아니라 검증 단계 — ★1 가설 · ★2 부분 확인 · ★3 확인 (ADR-0020). */
+export const STAR_KO: Record<number, string> = { 1: "가설", 2: "부분 확인", 3: "확인" };
 export function StarText({ n }: { n: number }) {
-  return <span className="fd-stars" aria-label={`별 ${n}개 (3개 만점)`}>{"★".repeat(n)}<i>{"★".repeat(Math.max(0, 3 - n))}</i></span>;
+  return <span className="fd-stars" title={`검증 단계: ${STAR_KO[n] ?? n} (★1 가설 · ★2 부분 확인 · ★3 확인)`} aria-label={`검증 단계 ${STAR_KO[n] ?? n}`}>{"★".repeat(n)}<i>{"★".repeat(Math.max(0, 3 - n))}</i></span>;
 }
 
 /** 각주 번호 — 칩 대신 [1][2]. href 가 있으면 상세 화면의 출처로 간다. */

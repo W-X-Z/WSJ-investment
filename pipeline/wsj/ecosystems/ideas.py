@@ -426,7 +426,9 @@ def build_candidates(graph: dict[str, Any], signals: list[dict[str, Any]], reg: 
 
 # ---------------------------------------------------------------- LLM
 LLM_SYSTEM = """너는 AI 공급망(HBM·첨단 패키징 / 800G·1.6T 광통신 / AI 데이터센터 800VDC 전력·냉각) 전문 투자 리서치 애널리스트다.
-목표: '지금' 투자 기회가 큰 상장 기업을 찾아, 바쁜 투자자가 한눈에 이해하는 '투자 아이디어'로 쓴다. 사람은 데이터를 보지 않고 아이디어와 근거만 본다.
+목표: 기술·산업의 변화에서 **좋은 가설**을 세운다 — 이 변화가 어떤 경로로 어느 상장 기업의 숫자를 언제 얼마나 바꾸는지, 시장이 아직 반영하지 않은 것을.
+가설은 날짜 있는 예측으로 검증되고(watch), 가치평가로 기댓값이 된다(valuation). 사람은 데이터를 보지 않고 가설·예측·가치평가만 본다.
+근거는 가설을 막는 문이 아니라 가설을 시험하는 도구다: 사실은 근거 id 로, 추정은 '추정'이라 밝히고 논리로. 추정 없이는 가설이 없다.
 오늘 날짜: {today}
 
 입력
@@ -461,27 +463,35 @@ LLM_SYSTEM = """너는 AI 공급망(HBM·첨단 패키징 / 800G·1.6T 광통신
 - 아이디어마다 anticipation 을 쓴다: trigger = 출발한 변화의 근거 id(S), path = candidates.chains.path_ids 처럼 그래프 노드 id 로 적은
   '변화 → … → 기업' 경로(마지막은 primary 의 id), mechanism = 왜 그 변화가 이 기업의 매출·마진을 바꾸는지 한 문장(기술·공정 이유),
   lead_quarters = 그 변화가 이 기업 숫자(월매출·분기 실적)에 나타나기까지 분기 수, effect = {{pct_of_revenue, basis, evidence}}
-  (변화의 규모 ÷ 이 기업 매출 — 입력 근거로 계산할 수 있을 때만, 분모·분자를 basis 에), priced_in = none|partial|full
+  (변화의 규모 ÷ 이 기업 매출 — 근거로 계산할 수 있으면 evidence 에 근거 id, 없으면 추정이라도 쓰되 basis 에 분자·분모의 논리를 적는다), priced_in = none|partial|full
   (prices 의 1개월 수익률·거래량·저점 대비와 E 신호 유무로 판단; 기업 자신의 소식이 이미 나왔고 주가가 반응했으면 full).
 - 좋은 선행 아이디어의 모양: 변화는 확인된 사실(최근 S 근거), 경로는 그래프 간선으로 이어짐(끊기면 0점), 기업은 아직 자기 소식이 없고
   주가가 조용함, 변화의 규모가 그 기업 매출에 비해 큼(작은 회사), 발현까지 1~4분기. 이런 기업은 기업 직접 근거가 없어 ★2 까지만 받는다 —
   그래도 쓴다. ★는 확신이고 선행 점수는 기대값이다. 둘을 섞지 않는다.
 - 반대로 자기 소식이 이미 나와 주가가 반응한 기업(priced_in=full)은 '확인' 아이디어로만 쓰고, 같은 논리의 다음 고리가 있으면 그쪽을 primary 로.
 
-아이디어를 만드는 법
-- 한 아이디어 = 하나의 논리: "무엇이 바뀌었나(최근 사실) → 그래서 어떤 병목/전환이 조여지나 → 공급이 왜 소수에게 몰리나 → 그래서 이 기업".
+아이디어 = 가설을 세우는 법
+- 한 아이디어 = 하나의 가설: "변화 X(최근 사실)가 경로 P 를 타고 기업 C 의 숫자를 N분기 안에 Y 만큼 바꾼다 — 시장은 아직 그렇게 보지 않는다".
   유형: bottleneck(병목 수혜) | transition(기술 전환의 승자·새 병목) | confirmation(실적·수주·가격이 확인해 준 노출) | risk(대체·수요 이탈로 피해).
+- 좋은 가설의 조건 (이 순서로 중요): 구체적이다(경로·기업·숫자·시점이 있다) · 대담하다(시장이 아직 반영하지 않은 것을 말한다 — 이미 모두 아는 것은 가설이 아니다) ·
+  반증 가능하다(틀리면 어느 날짜에 어떤 숫자로 드러나는지 적혀 있다) · 설명력이 있다(지금 보이는 사실들 — 가격·리드타임·월매출·발표 — 을 한 논리로 묶는다).
+  근거가 적어도 이 넷을 갖춘 가설은 쓴다. 근거가 많아도 시장이 다 아는 이야기는 쓰지 않는다 (confirmation 유형만 예외).
+- 가설은 추론을 요구한다: 기술이 어떻게 바뀌는지(공정·물성·규격), 그래서 어떤 부품·장비·소재의 수요가 어떻게 바뀌는지, 누가 그것을 공급할 수 있는지(진입장벽·인증·캐파),
+  언제 숫자에 나타나는지. 입력에 없는 것을 네 지식과 논리로 채우고 '(추론)'이라 표시한다 — 그것이 네 일이다.
 - 제목: 투자자가 바로 이해하는 짧은 한 문장, 30자 안팎. 무엇이 어디로 움직이는지를 말한다.
   기업명·티커·숫자·괄호·줄표(—)·부제는 넣지 않는다 — 기업은 카드에 따로 나온다. 업계 은어 대신 결과를 말한다.
   예) "전력망 연결을 못 기다리는 데이터센터는 현장 가스엔진으로", "HBM 을 높이 쌓을수록 번인 검사가 길어진다"
 - thesis: 2문장. 첫 문장은 최근 변화(날짜 포함), 둘째 문장은 왜 이 기업인가.
 - primary 는 상장 소형·중형 공급사를 우선한다. 대형·초대형은 논리가 압도적일 때만 primary, 보통은 수요처·경쟁 맥락으로 companies 에 넣는다.
-- chain: 3~5 단계. 각 단계 claim 은 한 문장, evidence 에 근거 id 1개 이상. 기술 추론(technical_inference) 근거만 있는 단계는 claim 끝에 "(추론)".
-- stars: 3 = 최근 사실이 병목·전환을 직접 확인하고 + 공급이 소수에 집중되고 + 기업 노출이 최근 공식 근거(공시·실적)로 확인. 2 = 셋 중 둘. 1 = 하나 또는 추론 의존.
+- chain: 3~6 단계. 사실 단계는 evidence 에 근거 id 1개 이상. 추론 단계는 근거 없이 써도 된다 — claim 끝에 "(추론)" 을 붙이고 왜 그렇게 보는지 한 문장을 넣는다.
+  첫 단계는 최근 사실(S 근거)이고, 마지막 단계는 "그래서 이 기업의 어떤 숫자가 언제 어떻게 바뀐다"는 예측이다. 사실 단계가 1개 이상 있어야 한다.
+- stars 는 확신이 아니라 **검증 단계**다: ★1 = 가설(예측만 있음, 아직 아무것도 확인되지 않음) · ★2 = 부분 확인(예측 1개 적중, 또는 기업 자신의 공시·실적이 경로를 확인)
+  · ★3 = 확인(기업 공식 숫자로 확인되거나 예측 2개 이상 적중). 모든 좋은 가설은 ★1 에서 시작한다 — ★1 은 결함이 아니다.
   ★3 은 primary 기업의 최근 30일 직접 근거가 있어야 한다 (없으면 검증기가 ★2 로 내린다).
 - risks: 1~3개. 반대 근거·대체 경로·이미 알려진 정도(대형 고객 집중, 중국 경쟁, 경쟁사 증설 시점 등). 근거 id 가 있으면 붙이고 없으면 빈 배열.
-- watch: 2~3개, 날짜와 측정 기준이 있는 확인 일정. {{"what": "TPEx 10월 월매출 공시", "due": "2026-11-10", "metric": "YoY", "threshold": "≥ +50%",
-  "direction": "strengthen"}} — 그 날짜에 무엇을 보면 아이디어가 강해지는지(strengthen) 약해지는지(weaken) 판정할 수 있게 쓴다. 날짜를 모르면 due 를 비운다.
+- watch = 가설에서 도출한 **예측** 2~3개 + 반증 조건 1개: "가설이 맞으면 날짜 D 에 지표 M 이 T 를 넘는다". {{"what": "TPEx 10월 월매출 공시", "due": "2026-11-10",
+  "metric": "YoY", "threshold": "≥ +50%", "direction": "strengthen"}}. 반증 조건은 direction=weaken 으로 — 그 날짜에 그 숫자가 나오면 가설을 버린다.
+  예측은 가설의 숫자(anticipation.effect·lead_quarters)와 맞아야 한다: 매출 +60% 를 말했으면 월매출 예측도 그 크기여야 한다. 날짜를 모르면 due 를 비운다.
 - 노출 순도: primary 기업 항목에 "exposure": {{"share_pct": 49, "segment": "광통신", "basis": "3Q26 부문 매출 23.79억/전체 48.6억 달러", "evidence": "S12"}}.
   그 병목·전환과 관련된 사업이 회사 매출에서 차지하는 비중이다. 입력 근거(공시·실적 발표의 부문 매출)로 계산할 수 있을 때만 쓰고, 모르면 빼라 — 추정 금지.
 - 판단 점수: 검증기가 근거 점수(확신, 10점: 기업 직접 근거 4 · 숫자 확인 1 · 병목 구조 3 · 노출 순도 2 · 반대 근거 −2)와 선행 점수(기대값)를 계산하지만
@@ -774,12 +784,19 @@ def validate(raw: list[dict[str, Any]], reg: Registry, graph: dict[str, Any], si
 
         chain = []
         for st in it.get("chain") or []:
+            if not st.get("claim"):
+                continue
             evs = ev_rows(st.get("evidence") or [])
-            if st.get("claim") and evs:
-                chain.append({"claim": st["claim"].strip(), "evidence": evs})
+            claim = st["claim"].strip()
+            inference = bool(st.get("inference")) or claim.endswith("(추론)")
+            if evs:
+                chain.append({"claim": claim, "evidence": evs})
+            elif inference:  # 가설의 추론 단계 — 근거 없이 허용, 표시만 (ADR-0020)
+                chain.append({"claim": claim if claim.endswith("(추론)") else claim + " (추론)", "evidence": [], "inference": True})
+        n_fact = sum(1 for st in chain if st["evidence"])
         has_signal = any(e["id"] in sig_by_ev for st in chain for e in st["evidence"])
-        if len(chain) < 2 or (not key and not has_signal):
-            rejects.append(f"#{i} weak chain ({len(chain)} steps, signal={has_signal}): {title[:40]}")
+        if len(chain) < 2 or n_fact < 1 or (not key and not has_signal):
+            rejects.append(f"#{i} weak chain ({len(chain)} steps, fact={n_fact}, signal={has_signal}): {title[:40]}")
             continue
         s_dates = sorted({e["date"] for st in chain for e in st["evidence"] if e["id"].startswith("S") and e.get("date")})
         fresh = [d for d in s_dates if d >= fresh_cut]
@@ -851,15 +868,18 @@ def parse_anticipation(raw: Any, reg: Registry, nodes: dict[str, dict[str, Any]]
     except (TypeError, ValueError):
         out["lead_quarters"] = None
     eff = raw.get("effect") if isinstance(raw.get("effect"), dict) else None
-    if eff and eff.get("evidence") in reg.items:
+    if eff:
         try:
             pct = float(eff.get("pct_of_revenue"))
         except (TypeError, ValueError):
             pct = None
+        basis = str(eff.get("basis") or "").strip()
         if pct is not None and 0 <= pct <= 1000:
-            ev = reg.items[eff["evidence"]]
-            out["effect"] = {"pct_of_revenue": round(pct, 1), "basis": str(eff.get("basis") or "")[:160], "evidence": eff["evidence"],
-                             "url": ev.url, "as_of": ev.date}
+            if eff.get("evidence") in reg.items:
+                ev = reg.items[eff["evidence"]]
+                out["effect"] = {"pct_of_revenue": round(pct, 1), "basis": basis[:200], "evidence": eff["evidence"], "url": ev.url, "as_of": ev.date}
+            elif len(basis) >= 6:  # 근거 없는 추정도 논리가 있으면 받는다 — 가설의 숫자다 (ADR-0020)
+                out["effect"] = {"pct_of_revenue": round(pct, 1), "basis": basis[:200], "evidence": None, "url": None, "as_of": None, "estimated": True}
     return out
 
 
