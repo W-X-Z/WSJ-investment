@@ -95,6 +95,13 @@ jobs:
         run: |
           set -euo pipefail
           python -m wsj.ecosystems.prices run --budget-min "$IN_BUDGET" | tee -a "$GITHUB_STEP_SUMMARY"
+      # 발행주식수·환율 → 시가총액 (v_company_facts). 미국은 하루 40곳씩 30일 주기, 나머지 시장은 일괄. 실패해도 다음 단계는 돈다.
+      - name: Collect company facts (shares, FX)
+        continue-on-error: true
+        working-directory: pipeline
+        run: |
+          set -euo pipefail
+          python -m wsj.ecosystems.facts run --max-us 40 | tee -a "$GITHUB_STEP_SUMMARY"
       # 대체 경로: API LLM 으로 아이디어 쓰기 (수동 실행에서 ideas_api=true 일 때만, 1회 ≈ $0.3)
       - name: Write investment ideas (API fallback)
         if: ${{ inputs.ideas_api == 'true' && inputs.no_llm != 'true' }}

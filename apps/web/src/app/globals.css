@@ -760,3 +760,17 @@ tr:hover td{background:#f8faff}
   .fd-card-dl dt{padding-top:4px}
   .fd-card-iss a{white-space:normal}
 }
+
+/* ADR-0017 개정 1: 주가·시가총액 한 줄, 텐배거 출발 조건, 심층 분석 */
+.fd-val{margin:0;display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 10px;font-size:12.5px;color:#43546d}
+.fd-val-none{color:#a3adbb;font-size:12px}
+.fd-val time{font-size:11px;color:#9aa5b5;font-family:ui-monospace,monospace}
+.fd-tb{font-size:11px;font-weight:800;padding:1px 8px;border-radius:999px;letter-spacing:-.2px}
+.fd-tb.on{background:#e3f4ea;color:#17794a}
+.fd-tb.off{background:#f3f5f9;color:#8a96a8;font-weight:700}
+.fd-deep h3{font-size:14px;margin:14px 0 6px;color:#14243b}
+.fd-deep p{margin:0 0 8px;font-size:13.5px;line-height:1.75;color:#22324a}
+.fd-deep-src{list-style:none;margin:2px 0 4px;padding:0;display:flex;flex-wrap:wrap;gap:2px 14px;font-size:11.5px}
+.fd-deep-src a{color:#3f5f96;font-weight:650}
+.fd-deep-src span{color:#9aa5b5}
+

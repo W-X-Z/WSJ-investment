@@ -76,21 +76,43 @@ def price_key(node: dict[str, Any] | None) -> str | None:
     return px_key(lst.get("exchange"), lst.get("ticker"))
 
 
+# 텐배거 후보의 출발 조건 (ADR-0017 개정 1): 아직 작은가 · 아직 안 갔는가. 숫자는 임시값 — 사용자가 정하면 바꾼다.
+TENBAGGER_MCAP_USD = 3e9
+TENBAGGER_MAX_FROM_LOW = 200.0   # 1년 저점 대비 +200% (= 3배) 미만
+
+
+def tenbagger_check(mcap_usd: float | None, from_low: float | None) -> dict[str, Any]:
+    """{candidate: True|False|None, reason}. 시총을 모르면 None (판단 보류)."""
+    if mcap_usd is None:
+        return {"candidate": None, "reason": "시가총액 미확인"}
+    if mcap_usd > TENBAGGER_MCAP_USD:
+        return {"candidate": False, "reason": f"시총 ${mcap_usd / 1e9:.1f}B > ${TENBAGGER_MCAP_USD / 1e9:.0f}B"}
+    if from_low is not None and from_low >= TENBAGGER_MAX_FROM_LOW:
+        return {"candidate": False, "reason": f"1년 저점 대비 {from_low:+.0f}% — 이미 {1 + from_low / 100:.1f}배"}
+    return {"candidate": True, "reason": f"시총 ${mcap_usd / 1e9:.2f}B" + (f" · 저점 대비 {from_low:+.0f}%" if from_low is not None else " · 저점 대비 미확인")}
+
+
 def price_context(prices: dict[str, dict[str, Any]], node: dict[str, Any] | None) -> dict[str, Any] | None:
     key = price_key(node)
     p = prices.get(key) if key else None
     if not p or p.get("close") is None:
         return None
-    out = {k: (float(p[k]) if p.get(k) is not None else None) for k in ("close", "r1m", "r3m", "r12m", "from_high", "vol_ratio")}
+    out = {k: (float(p[k]) if p.get(k) is not None else None)
+           for k in ("close", "r1m", "r3m", "r12m", "from_high", "from_low", "vol_ratio", "market_cap_usd")}
     out |= {"key": key, "as_of": str(p.get("as_of"))[:10]}
     flags = []
-    if out["r12m"] is not None and out["r12m"] >= 200:
+    if out["from_low"] is not None and out["from_low"] >= TENBAGGER_MAX_FROM_LOW:
+        flags.append(f"1년 저점 대비 {out['from_low']:+.0f}% — 이미 {1 + out['from_low'] / 100:.1f}배")
+    elif out["r12m"] is not None and out["r12m"] >= 200:
         flags.append(f"12개월 {out['r12m']:+.0f}% — 이미 크게 오른 상태")
     if out["r1m"] is not None and out["r1m"] <= -25:
         flags.append(f"1개월 {out['r1m']:+.0f}% 급락")
+    if out["r3m"] is not None and out["r3m"] <= -35:
+        flags.append(f"3개월 {out['r3m']:+.0f}% — 근거와 어긋나면 설명이 필요")
     if out["vol_ratio"] is not None and out["vol_ratio"] >= 3:
         flags.append(f"거래량 평소의 {out['vol_ratio']:.1f}배")
     out["flags"] = flags
+    out["tenbagger"] = tenbagger_check(out["market_cap_usd"], out["from_low"])
     return out
 
 

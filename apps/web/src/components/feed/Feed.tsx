@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { IDEA_TYPE, TREND_KO, type InvestmentIdea } from "@/lib/ideas";
+import { IDEA_TYPE, TREND_KO, pct, tenbaggerCheck, usdB, type CompanyFacts, type InvestmentIdea, type PriceCtx } from "@/lib/ideas";
 import { REL_KO, ecoLabel, rel, shortName, type FeedIdea, type IdeaView } from "@/lib/feed";
 
 /** ★ 를 글자로 (배지 없이). */
@@ -56,6 +56,7 @@ export function IdeaCard({ idea, changed }: { idea: FeedIdea; changed: boolean }
       {idea.first_seen ? <time dateTime={idea.first_seen.slice(0, 10)}>{md(idea.first_seen)} 생성</time> : null}
     </div>
     <h3><Link href={href}>{idea.title}</Link></h3>
+    <Valuation facts={idea.facts} price={idea.assessment?.price ?? null}/>
     <dl className="fd-card-dl">
       <dt>관련 기업</dt>
       <dd><ul className="fd-chips">{shown.map((c) => <li key={c.id} className={c.id === idea.primary_company ? "on" : ""}>
@@ -67,6 +68,23 @@ export function IdeaCard({ idea, changed }: { idea: FeedIdea; changed: boolean }
           {idea.issueCount > idea.issues.length ? <li className="more"><Link href={href}>외 {idea.issueCount - idea.issues.length}건</Link></li> : null}</ul></dd></> : null}
     </dl>
   </article>;
+}
+
+/** 주가·시가총액 한 줄 (주 기업): 시총 · 12개월 · 고점 대비 · 저점 대비, 그리고 텐배거 출발 조건 판정.
+ *  v_company_facts(실시간)가 있으면 그것을, 없으면 판단에 저장된 가격 맥락을 쓴다. 전망이 아니라 '이미 움직인 폭'. */
+export function Valuation({ facts, price, detail }: { facts: CompanyFacts | null; price: PriceCtx | null; detail?: boolean }) {
+  const p = price ?? null;
+  const mcap = facts?.market_cap_usd ?? p?.market_cap_usd ?? null;
+  const r12 = facts?.r12m ?? p?.r12m ?? null, hi = facts?.from_high ?? p?.from_high ?? null, lo = facts?.from_low ?? p?.from_low ?? null, r3 = facts?.r3m ?? p?.r3m ?? null;
+  if (mcap == null && r12 == null && hi == null && p?.close == null) return <p className="fd-val fd-val-none">주가·시총 수집 전</p>;
+  const tb = p?.tenbagger && p.tenbagger.candidate !== null && mcap == null ? p.tenbagger : tenbaggerCheck(mcap, lo);
+  const parts = [mcap != null ? `시총 ${usdB(mcap)}` : null, r12 != null ? `12개월 ${pct(r12)}` : null, detail && r3 != null ? `3개월 ${pct(r3)}` : null,
+    hi != null ? `고점 ${pct(hi)}` : null, lo != null ? `저점 ${pct(lo)}` : null].filter(Boolean);
+  return <p className="fd-val">
+    {tb.candidate === true ? <b className="fd-tb on" title={tb.reason}>텐배거 후보</b> : tb.candidate === false ? <b className="fd-tb off" title={tb.reason}>{lo != null && lo >= 200 ? "이미 간 종목" : "큰 회사"}</b> : null}
+    <span>{parts.join(" · ")}</span>
+    {facts?.price_as_of ?? p?.as_of ? <time>{(facts?.price_as_of ?? p?.as_of ?? "").slice(5).replace("-", "/")}</time> : null}
+  </p>;
 }
 
 /** 상세 화면 출처 목록 (각주 대상). 층(기업 직접·관련·업계·그래프 배경)을 글자로. */

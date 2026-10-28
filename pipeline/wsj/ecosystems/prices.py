@@ -31,7 +31,7 @@ from wsj.http import HOST_RPS, HttpClient
 log = logging.getLogger("wsj.ecosystems.prices")
 
 UA = {"User-Agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0 Safari/537.36"}
-HOST_RPS.update({"www.twse.com.tw": 0.5, "www.tpex.org.tw": 0.8, "kabutan.jp": 1.0, "api.finance.naver.com": 2.0,
+HOST_RPS.update({"www.twse.com.tw": 0.3, "www.tpex.org.tw": 0.8, "kabutan.jp": 1.0, "api.finance.naver.com": 2.0,
                  "web.ifzq.gtimg.cn": 0.5, "api.nasdaq.com": 2.0})
 
 US = {"Nasdaq", "NYSE", "NYSE American"}
@@ -351,6 +351,25 @@ def save_state(store, state: dict[str, Any]) -> None:
         log.warning("collector_state save failed: %s", exc)
 
 
+def focus_companies(store, days: int = 14) -> set[str]:
+    """백필을 먼저 할 기업: 아이디어에 든 기업 + 최근 {days}일 안에 소식(공시·수주·월매출 ★2+)이 생긴 기업.
+    오늘 후보로 떠오른 기업의 주가가 없어 '이미 움직인 폭'을 못 말하는 일이 없게 (ADR-0017 개정 1)."""
+    focus: set[str] = set()
+    try:
+        for r in store.select("ideas.investment_ideas", ["companies"], {"status": "active"}):
+            focus |= {c.get("id") for c in r.get("companies") or [] if c.get("id")}
+    except Exception as exc:  # noqa: BLE001
+        log.warning("ideas focus unavailable: %s", exc)
+    try:
+        since = (datetime.now(UTC) - timedelta(days=days)).isoformat()
+        for r in store.select("ideas.company_events", ["company_id"], {"published_at": ("gte", since), "importance": ("gte", 2)}):
+            if r.get("company_id"):
+                focus.add(r["company_id"])
+    except Exception as exc:  # noqa: BLE001
+        log.warning("events focus unavailable: %s", exc)
+    return focus
+
+
 def plan(items: list[Listing], last: dict[str, str], has_year: set[str], state: dict[str, Any], today: date,
          focus: set[str]) -> tuple[list[tuple[Listing, date]], list[Listing]]:
     """(증분 목록, 백필 목록). 백필은 아이디어 기업 → 소형·중형 → 나머지 순. 실패가 3번 쌓인 종목은 일주일 쉰다."""
@@ -469,12 +488,7 @@ def main(argv: list[str] | None = None) -> int:
 
     store = make_store(load_settings())
     try:
-        focus: set[str] = set()
-        try:
-            for r in store.select("ideas.investment_ideas", ["companies"], {"status": "active"}):
-                focus |= {c.get("id") for c in r.get("companies") or []}
-        except Exception:  # noqa: BLE001
-            pass
+        focus = focus_companies(store)
         with logged_run(store, "prices", {"budget_min": args.budget_min}) as lr:
             res = run(http, store, graph, args.budget_min * 60, focus, set(args.only.split(",")) if args.only else None)
             lr["rows"] = sum(v["rows"] for v in res["by_market"].values())
