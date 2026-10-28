@@ -135,7 +135,10 @@
     "company:hgtech": "华工科技",
     "company:robotechnik": "罗博特科",
     "company:o_net": "昂纳科技",
-    "company:innoscience": "英诺赛科"
+    "company:innoscience": "英诺赛科",
+    "company:taihan_fiberoptics": "대한광통신",
+    "company:csun": "志聖",
+    "company:group_up": "群翊"
   },
   "news_context": {
     "_note": "현지어 이름이 흔한 낱말이라 다른 기사(게임·인물)가 섞이는 기업 — 현지 뉴스 검색에 이 문맥을 붙인다",
@@ -310,6 +313,24 @@
       "積層セラミック",
       "积层陶瓷",
       "積層陶瓷"
+    ],
+    "component:optical_fiber": [
+      "光纤",
+      "光纖",
+      "광섬유",
+      "光ファイバ"
+    ],
+    "material:germanium": [
+      "锗",
+      "鍺",
+      "게르마늄",
+      "ゲルマニウム"
+    ],
+    "equipment:substrate_process_equipment": [
+      "載板設備",
+      "壓膜",
+      "长交期设备",
+      "長交期設備"
     ]
   }
 }

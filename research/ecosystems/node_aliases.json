@@ -595,7 +595,8 @@
     ],
     "equipment:memory_ate": [
       "hbm ate",
-      "memory tester"
+      "memory tester",
+      "memory test"
     ],
     "component:hbm_controller_ip": [
       "phy ip"
@@ -824,7 +825,10 @@
       "substrate warpage"
     ],
     "bottleneck:substrate_capacity": [
-      "substrate capacity"
+      "substrate capacity",
+      "abf substrate",
+      "ic substrate shortage",
+      "substrate shortage"
     ],
     "bottleneck:tglass_shortage": [
       "t-glass shortage"
@@ -984,7 +988,12 @@
     "bottleneck:fiber_supply": [
       "optical fiber shortage",
       "fiber shortage",
-      "fiber spot price"
+      "fiber spot price",
+      "fiber spot prices",
+      "optical fiber prices",
+      "fiber prices",
+      "fibre shortage",
+      "fiber-kilometers"
     ],
     "tech:gpu_power_smoothing": [
       "power smoothing"
@@ -1048,6 +1057,27 @@
     ],
     "tech:ocs": [
       "optical circuit switch"
+    ],
+    "component:optical_fiber": [
+      "optical fiber",
+      "optical fibre",
+      "single-mode fiber",
+      "bend-insensitive fiber",
+      "fiber optic cable"
+    ],
+    "material:germanium": [
+      "germanium",
+      "germanium tetrachloride",
+      "gecl4"
+    ],
+    "bottleneck:germanium_supply": [
+      "germanium export",
+      "germanium ban"
+    ],
+    "equipment:substrate_process_equipment": [
+      "substrate equipment",
+      "lamination equipment",
+      "long-lead equipment"
     ]
   }
 }

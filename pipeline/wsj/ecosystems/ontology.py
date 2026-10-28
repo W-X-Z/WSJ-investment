@@ -65,6 +65,40 @@ def _host(url: str) -> str:
     return url.split("//", 1)[-1].split("/", 1)[0].lower().removeprefix("www.")
 
 
+def dead_end_bottlenecks(graph: dict[str, Any], hops: int = 2) -> list[str]:
+    """mitigated_by·offered_by(정방향)와 develops·holds_ip(기업 → 노드, 역방향)로 hops 안에 상장 기업에 닿지 않는 병목."""
+    nodes = {n["id"]: n for n in graph["nodes"]}
+    nxt: dict[str, list[str]] = defaultdict(list)
+    for e in graph["edges"]:
+        if e.get("relation") in ("mitigated_by", "offered_by"):
+            nxt[e["from"]].append(e["to"])
+        elif e.get("relation") in ("develops", "holds_ip"):
+            nxt[e["to"]].append(e["from"])
+
+    def listed(nid: str) -> bool:
+        n = nodes.get(nid) or {}
+        lst = n.get("listing") or {}
+        return n.get("kind") == "company" and bool(lst.get("ticker")) and bool(lst.get("exchange"))
+
+    out = []
+    for b in (n["id"] for n in graph["nodes"] if n.get("kind") == "bottleneck"):
+        frontier, seen, ok = [b], {b}, False
+        for _ in range(hops):
+            nf = []
+            for x in frontier:
+                for y in nxt[x]:
+                    if y in seen:
+                        continue
+                    seen.add(y)
+                    if listed(y):
+                        ok = True
+                    nf.append(y)
+            frontier = nf
+        if not ok:
+            out.append(b)
+    return out
+
+
 def validate(graph: dict[str, Any], onto: dict[str, Any]) -> Report:
     rep = Report()
     kinds = onto["node_kinds"]
@@ -171,6 +205,9 @@ def validate(graph: dict[str, Any], onto: dict[str, Any]) -> Report:
             weak_only.append(n["id"])
     if weak_only:
         rep.warnings.append(f"companies connected only by inference/hypothesis edges: {weak_only}")
+    # 병목은 2단계 안에 상장사로 이어져야 한다 (ADR-0017) — 끊긴 병목은 이슈가 와도 수혜 기업 후보가 나오지 않는다
+    for b in dead_end_bottlenecks(graph):
+        rep.errors.append(f"bottleneck {b}: 2단계 안에 상장 기업이 없다 (mitigated_by → 부품·소재 → offered_by → 상장사)")
 
     rep.stats = {
         "nodes": len(graph["nodes"]),

@@ -10016,6 +10016,126 @@
       },
       "size_band": "large",
       "in_universe": false
+    },
+    {
+      "id": "component:optical_fiber",
+      "kind": "component",
+      "label": "광섬유·광케이블 (단일모드·굽힘 강화 BIF, 데이터센터 배선)",
+      "ecosystem": "optics"
+    },
+    {
+      "id": "bottleneck:germanium_supply",
+      "kind": "bottleneck",
+      "label": "게르마늄 공급 집중·중국 수출통제 (광섬유 코어 도펀트)",
+      "ecosystem": "optics"
+    },
+    {
+      "id": "material:germanium",
+      "kind": "material",
+      "label": "게르마늄·사염화게르마늄 (GeCl4, 광섬유 코어 도펀트)",
+      "ecosystem": "optics"
+    },
+    {
+      "id": "equipment:substrate_process_equipment",
+      "kind": "equipment",
+      "label": "기판·첨단패키징 공정장비 (진공 라미네이션·도포·건조·경화)",
+      "ecosystem": "hbm"
+    },
+    {
+      "id": "material:inp_substrate_exchina",
+      "kind": "material",
+      "label": "중국 밖 InP 기판 공급 (Sumitomo·JX)",
+      "ecosystem": "optics"
+    },
+    {
+      "id": "company:taihan_fiberoptics",
+      "kind": "company",
+      "label": "Taihan Fiberoptics 대한광통신 (KOSDAQ 010170, 비SEC)",
+      "ecosystem": "optics",
+      "role": "supplier",
+      "listing": {
+        "ticker": "010170",
+        "exchange": "KOSDAQ",
+        "cik": null,
+        "filer_type": "non_sec_listed"
+      },
+      "size_band": "small",
+      "in_universe": false
+    },
+    {
+      "id": "company:sterlite_tech",
+      "kind": "company",
+      "label": "Sterlite Technologies (NSE STLTECH, 비SEC)",
+      "ecosystem": "optics",
+      "role": "supplier",
+      "listing": {
+        "ticker": "STLTECH",
+        "exchange": "NSE",
+        "cik": null,
+        "filer_type": "non_sec_listed"
+      },
+      "size_band": "small",
+      "in_universe": false
+    },
+    {
+      "id": "company:csun",
+      "kind": "company",
+      "label": "C Sun 志聖 (TWSE 2467, 비SEC)",
+      "ecosystem": "hbm",
+      "role": "supplier",
+      "listing": {
+        "ticker": "2467",
+        "exchange": "TWSE",
+        "cik": null,
+        "filer_type": "non_sec_listed"
+      },
+      "size_band": "mid",
+      "in_universe": false
+    },
+    {
+      "id": "company:group_up",
+      "kind": "company",
+      "label": "Group Up 群翊 (TPEx 6664, 비SEC)",
+      "ecosystem": "hbm",
+      "role": "supplier",
+      "listing": {
+        "ticker": "6664",
+        "exchange": "TPEx",
+        "cik": null,
+        "filer_type": "non_sec_listed"
+      },
+      "size_band": "small",
+      "in_universe": false
+    },
+    {
+      "id": "company:umicore",
+      "kind": "company",
+      "label": "Umicore (Euronext UMI, 비SEC)",
+      "ecosystem": "optics",
+      "role": "supplier",
+      "listing": {
+        "ticker": "UMI",
+        "exchange": "Euronext",
+        "cik": null,
+        "filer_type": "non_sec_listed"
+      },
+      "size_band": "mid",
+      "in_universe": false
+    },
+    {
+      "id": "company:teck",
+      "kind": "company",
+      "label": "Teck Resources (TECK)",
+      "ecosystem": "optics",
+      "role": "supplier",
+      "listing": {
+        "ticker": "TECK",
+        "exchange": "NYSE",
+        "cik": 886986,
+        "filer_type": "40-F"
+      },
+      "size_band": "large",
+      "in_universe": false
     }
   ],
   "edges": [
@@ -38710,6 +38830,547 @@
         }
       ],
       "note": "기판 2026-28 확보",
+      "confidence": 0.6
+    },
+    {
+      "id": "x-si-001",
+      "from": "bottleneck:fiber_supply",
+      "to": "component:optical_fiber",
+      "relation": "mitigated_by",
+      "evidence_tier": "third_party_report",
+      "polarity": "positive",
+      "evidence": [
+        {
+          "url": "https://www.trendforce.com/presscenter/news/20261019-13275.html",
+          "source_type": "third_party_report",
+          "published_at": "2026-10-19",
+          "excerpt": "global supply shortfall of 180 million fiber-kilometers in 2026; bend-insensitive fiber spot above 5x 2025 levels; utilization 92%"
+        }
+      ],
+      "confidence": 0.6
+    },
+    {
+      "id": "x-si-002",
+      "from": "component:optical_fiber",
+      "to": "company:glw",
+      "relation": "offered_by",
+      "evidence_tier": "official_issuer",
+      "polarity": "positive",
+      "evidence": [
+        {
+          "url": "https://www.sec.gov/Archives/edgar/data/0000024741/000002474126000273/glw-20261027xex99xq32026.htm",
+          "source_type": "official_issuer",
+          "published_at": "2026-10-27",
+          "excerpt": "Optical Communications net sales $2,379M, up 44% YoY; Enterprise Networks +84%; four long-term multibillion-dollar agreements in Q3"
+        }
+      ],
+      "confidence": 0.8
+    },
+    {
+      "id": "x-si-003",
+      "from": "component:optical_fiber",
+      "to": "company:yofc",
+      "relation": "offered_by",
+      "evidence_tier": "third_party_report",
+      "polarity": "positive",
+      "evidence": [
+        {
+          "url": "https://www.jiemian.com/article/14763704.html",
+          "source_type": "third_party_report",
+          "published_at": "2026-07-14",
+          "excerpt": "长飞光纤 2026 上半年归母净利润预计 24~30 亿元 (+711%~914%); G.652.D 光纤从不到 20 元/芯公里涨到约 100 元"
+        }
+      ],
+      "confidence": 0.6
+    },
+    {
+      "id": "x-si-004",
+      "from": "material:fiber_preform",
+      "to": "company:yofc",
+      "relation": "offered_by",
+      "evidence_tier": "third_party_report",
+      "polarity": "positive",
+      "evidence": [
+        {
+          "url": "https://govt.chinadaily.com.cn/s/202209/02/WS6357b1e2498ea274927a68de/yofc-enjoys-largest-global-market-share-for-6-years.html",
+          "source_type": "third_party_report",
+          "published_at": "2022-09-02",
+          "excerpt": "YOFC enjoys largest global market share for 6 years (preform·fiber·cable)"
+        }
+      ],
+      "confidence": 0.6
+    },
+    {
+      "id": "x-si-005",
+      "from": "component:optical_fiber",
+      "to": "company:fujikura",
+      "relation": "offered_by",
+      "evidence_tier": "third_party_report",
+      "polarity": "positive",
+      "evidence": [
+        {
+          "url": "https://www.datacenterdynamics.com/en/news/fujikura-to-triple-optical-fiber-production-as-part-of-2bn-investment/",
+          "source_type": "third_party_report",
+          "published_at": "2026-03-19",
+          "excerpt": "a maximum of 300 billion yen ($1.9bn) to increase production capacity up to approximately three times the current level"
+        }
+      ],
+      "confidence": 0.6
+    },
+    {
+      "id": "x-si-006",
+      "from": "component:optical_fiber",
+      "to": "company:furukawa_electric",
+      "relation": "offered_by",
+      "evidence_tier": "third_party_report",
+      "polarity": "positive",
+      "evidence": [
+        {
+          "url": "https://finance.technews.tw/2026/08/05/furukawa-electric-to-expand-fiber-optic-output-in-japan-us-brazil-india/",
+          "source_type": "third_party_report",
+          "published_at": "2026-08-05",
+          "excerpt": "古河電氣工業擬在日本、美國、巴西、印度投資 1,000 億日圓，倍增光纖產能"
+        }
+      ],
+      "confidence": 0.6
+    },
+    {
+      "id": "x-si-007",
+      "from": "component:optical_fiber",
+      "to": "company:taihan_fiberoptics",
+      "relation": "offered_by",
+      "evidence_tier": "third_party_report",
+      "polarity": "positive",
+      "evidence": [
+        {
+          "url": "https://www.job-post.co.kr/news/articleView.html?idxno=234998",
+          "source_type": "third_party_report",
+          "published_at": "2026-10-28",
+          "excerpt": "대한광통신은 광섬유와 광케이블을 통신망·데이터 전송 인프라에 공급"
+        }
+      ],
+      "confidence": 0.6
+    },
+    {
+      "id": "x-si-008",
+      "from": "component:optical_fiber",
+      "to": "company:sterlite_tech",
+      "relation": "offered_by",
+      "evidence_tier": "third_party_report",
+      "polarity": "positive",
+      "evidence": [
+        {
+          "url": "https://www.investywise.com/?p=122260",
+          "source_type": "third_party_report",
+          "published_at": "2026-10-23",
+          "excerpt": "STL Q2 FY'27 revenue ₹2,529 crore, up ~145% YoY, on hyperscaler data center demand"
+        }
+      ],
+      "confidence": 0.6
+    },
+    {
+      "id": "x-si-009",
+      "from": "bottleneck:germanium_supply",
+      "to": "bottleneck:fiber_supply",
+      "relation": "creates_bottleneck",
+      "evidence_tier": "third_party_report",
+      "polarity": "positive",
+      "evidence": [
+        {
+          "url": "https://introl.com/blog/germanium-chokepoint-china-fiber-optic-supply-chain-2026",
+          "source_type": "third_party_report",
+          "published_at": "2026-02-27",
+          "excerpt": "germanium dioxide is a dopant in every fiber's silica core; fiber optics consume roughly 30% of global germanium; China ~60% of production"
+        }
+      ],
+      "confidence": 0.6
+    },
+    {
+      "id": "x-si-010",
+      "from": "bottleneck:germanium_supply",
+      "to": "material:germanium",
+      "relation": "mitigated_by",
+      "evidence_tier": "third_party_report",
+      "polarity": "positive",
+      "evidence": [
+        {
+          "url": "https://evertiq.com/news/2025-11-10-china-suspends-ban-on-gallium-and-germanium-exports-to-the-us",
+          "source_type": "third_party_report",
+          "published_at": "2025-11-10",
+          "excerpt": "China suspended its ban on gallium, germanium and antimony exports to the US until November 27, 2026; export licenses still required"
+        }
+      ],
+      "note": "중국 밖 공급원이 수혜 — 유예 만료 2026-11-27",
+      "confidence": 0.6
+    },
+    {
+      "id": "x-si-011",
+      "from": "material:germanium",
+      "to": "company:umicore",
+      "relation": "offered_by",
+      "evidence_tier": "third_party_report",
+      "polarity": "positive",
+      "evidence": [
+        {
+          "url": "https://introl.com/blog/germanium-chokepoint-china-fiber-optic-supply-chain-2026",
+          "source_type": "third_party_report",
+          "published_at": "2026-02-27",
+          "excerpt": "Umicore's Olen recycling facilities supply 30% of U.S. germanium metal imports and 47% of germanium dioxide imports"
+        }
+      ],
+      "confidence": 0.6
+    },
+    {
+      "id": "x-si-012",
+      "from": "material:germanium",
+      "to": "company:teck",
+      "relation": "offered_by",
+      "evidence_tier": "third_party_report",
+      "polarity": "positive",
+      "evidence": [
+        {
+          "url": "https://introl.com/blog/germanium-chokepoint-china-fiber-optic-supply-chain-2026",
+          "source_type": "third_party_report",
+          "published_at": "2026-02-27",
+          "excerpt": "Teck refines germanium at its Trail smelter, supplying 46% of U.S. germanium dioxide imports"
+        }
+      ],
+      "confidence": 0.6
+    },
+    {
+      "id": "x-si-013",
+      "from": "bottleneck:substrate_capacity",
+      "to": "component:package_substrate",
+      "relation": "mitigated_by",
+      "evidence_tier": "third_party_report",
+      "polarity": "positive",
+      "evidence": [
+        {
+          "url": "https://www.trendforce.com/news/2026/05/20/news-intel-says-emib-customers-back-substrate-prepayments-4-taiwan-and-2-japan-suppliers-reportedly-seek-commitments/",
+          "source_type": "third_party_report",
+          "published_at": "2026-05-20",
+          "excerpt": "substrate supply remains extremely tight, with four suppliers from Taiwan and two from Japan requesting upfront commitments to secure capacity."
+        }
+      ],
+      "confidence": 0.6
+    },
+    {
+      "id": "x-si-014",
+      "from": "bottleneck:substrate_capacity",
+      "to": "equipment:substrate_process_equipment",
+      "relation": "mitigated_by",
+      "evidence_tier": "third_party_report",
+      "polarity": "positive",
+      "evidence": [
+        {
+          "url": "https://udn.com/news/story/7252/9840528",
+          "source_type": "third_party_report",
+          "published_at": "2026-10-27",
+          "excerpt": "欣興董事會通過長交期設備預下訂單再增加約新台幣509億元，用於新建廠房並提升製程能力"
+        }
+      ],
+      "confidence": 0.6
+    },
+    {
+      "id": "x-si-015",
+      "from": "equipment:substrate_process_equipment",
+      "to": "company:group_up",
+      "relation": "offered_by",
+      "evidence_tier": "third_party_report",
+      "polarity": "positive",
+      "evidence": [
+        {
+          "url": "https://wantrich.chinatimes.com/news/20261021900219-420101",
+          "source_type": "third_party_report",
+          "published_at": "2026-10-21",
+          "excerpt": "群翊 塗佈·壓合·烘烤設備; 在手訂單約60億元, 交期排到2027年底; FOPLP·TGV玻璃基板製程設備"
+        }
+      ],
+      "confidence": 0.6
+    },
+    {
+      "id": "x-si-016",
+      "from": "equipment:substrate_process_equipment",
+      "to": "company:csun",
+      "relation": "offered_by",
+      "evidence_tier": "third_party_report",
+      "polarity": "positive",
+      "evidence": [
+        {
+          "url": "https://news.cnyes.com/news/id/6629490",
+          "source_type": "third_party_report",
+          "published_at": "2026-10-13",
+          "excerpt": "志聖 1-9月營收 80.23億元 (+84.2%), 深化先進封裝與先進PCB布局, 台積電供應鏈"
+        }
+      ],
+      "confidence": 0.6
+    },
+    {
+      "id": "x-si-017",
+      "from": "bottleneck:abf_single_source",
+      "to": "material:abf",
+      "relation": "mitigated_by",
+      "evidence_tier": "third_party_report",
+      "polarity": "positive",
+      "evidence": [
+        {
+          "url": "https://www.trendforce.com/news/2026/05/08/news-ajinomoto-ramps-chip-packaging-push-with-%c2%a51-2b-land-buy-for-new-plant-in-2032-abf-margins-top-50-on-ai-boom/",
+          "source_type": "third_party_report",
+          "published_at": "2026-05-08",
+          "excerpt": "the company is said to hold more than 95% of the global ABF market share"
+        }
+      ],
+      "confidence": 0.6
+    },
+    {
+      "id": "x-si-018",
+      "from": "bottleneck:msb_supply",
+      "to": "material:micro_solder_ball",
+      "relation": "mitigated_by",
+      "evidence_tier": "third_party_report",
+      "polarity": "positive",
+      "evidence": [
+        {
+          "url": "https://m.stock.naver.com/research/company/94604",
+          "source_type": "third_party_report",
+          "published_at": "2026-07-28",
+          "excerpt": "마이크로솔더볼은 일본의 Senju Metal과 과점 구조 ... 공급이 수요 대비 부족한 상황"
+        }
+      ],
+      "confidence": 0.6
+    },
+    {
+      "id": "x-si-019",
+      "from": "bottleneck:tcb_supplier_concentration",
+      "to": "equipment:tc_bonder",
+      "relation": "mitigated_by",
+      "evidence_tier": "third_party_report",
+      "polarity": "positive",
+      "evidence": [
+        {
+          "url": "https://www.techinvestments.io/p/hbmdie-bonding-semicap-outlook",
+          "source_type": "third_party_report",
+          "excerpt": "SK Hynix: historically Hanmi, ASMPT took large share; Micron: Hanmi dominant; Samsung relies on in-house SEMES"
+        }
+      ],
+      "confidence": 0.6
+    },
+    {
+      "id": "x-si-020",
+      "from": "bottleneck:muf_single_source",
+      "to": "material:muf_lmc",
+      "relation": "mitigated_by",
+      "evidence_tier": "third_party_report",
+      "polarity": "positive",
+      "evidence": [
+        {
+          "url": "https://dealsite.co.kr/articles/119413",
+          "source_type": "third_party_report",
+          "published_at": "2024-03-15",
+          "excerpt": "일본 나믹스가 SK하이닉스 MR-MUF 소재를 독점 공급; 독점 계약으로 신규 진입 쉽지 않다는 분석"
+        }
+      ],
+      "confidence": 0.6
+    },
+    {
+      "id": "x-si-021",
+      "from": "bottleneck:hbm_probe_card_supply",
+      "to": "component:dram_probe_card",
+      "relation": "mitigated_by",
+      "evidence_tier": "official_issuer",
+      "polarity": "positive",
+      "evidence": [
+        {
+          "url": "https://www.fool.com/earnings/call-transcripts/2026/04/29/formfactor-form-q1-2026-earnings-transcript/",
+          "source_type": "official_issuer",
+          "published_at": "2026-04-29",
+          "excerpt": "we expect to be a leading supplier to all 3 DRAM manufacturers for these at speed DRAM test"
+        }
+      ],
+      "confidence": 0.8
+    },
+    {
+      "id": "x-si-022",
+      "from": "bottleneck:memory_ate_concentration",
+      "to": "equipment:memory_ate",
+      "relation": "mitigated_by",
+      "evidence_tier": "third_party_report",
+      "polarity": "positive",
+      "evidence": [
+        {
+          "url": "https://xenospectrum.com/en/china-memory-testing-hbm-equipment/",
+          "source_type": "third_party_report",
+          "excerpt": "Advantest estimated the 2025 global memory tester market at $2.1 billion, with its own share at 61%"
+        }
+      ],
+      "confidence": 0.6
+    },
+    {
+      "id": "x-si-023",
+      "from": "bottleneck:cpo_engine_yield",
+      "to": "equipment:photonics_wafer_prober",
+      "relation": "mitigated_by",
+      "evidence_tier": "third_party_report",
+      "polarity": "positive",
+      "evidence": [
+        {
+          "url": "https://www.trendforce.com/insights/cpo-testing-market-opportunities",
+          "source_type": "third_party_report",
+          "published_at": "2026-07-20",
+          "excerpt": "OE-level test: full-flow calibration, DC, high-speed, optical loop-back and S-parameter tests confirm Known Good Optical Engines (KGOE)"
+        }
+      ],
+      "confidence": 0.6
+    },
+    {
+      "id": "x-si-024",
+      "from": "bottleneck:cpo_engine_yield",
+      "to": "equipment:laser_burn_in",
+      "relation": "mitigated_by",
+      "evidence_tier": "official_issuer",
+      "polarity": "positive",
+      "evidence": [
+        {
+          "url": "https://www.aehr.com/2026/03/aehr-receives-follow-on-order-for-fully-automated-wafer-level-burn-in-systems-powering-ai-optical-i-o-and-data-center-interconnects/",
+          "source_type": "official_issuer",
+          "published_at": "2026-03-03",
+          "excerpt": "ultra-high-power FOX-XP wafer-level test and burn-in for SiPh ICs for data center optical interconnects and optical I/O"
+        }
+      ],
+      "confidence": 0.8
+    },
+    {
+      "id": "x-si-025",
+      "from": "bottleneck:mlcc_supply",
+      "to": "component:mlcc_ai",
+      "relation": "mitigated_by",
+      "evidence_tier": "third_party_report",
+      "polarity": "positive",
+      "evidence": [
+        {
+          "url": "https://www.trendforce.com/presscenter/news/20260706-13136.html",
+          "source_type": "third_party_report",
+          "published_at": "2026-07-06",
+          "excerpt": "AI server upgrades and custom accelerators boost demand for high-capacitance MLCCs; Q4 2026 critical period for shortage"
+        }
+      ],
+      "confidence": 0.6
+    },
+    {
+      "id": "x-si-026",
+      "from": "bottleneck:copper",
+      "to": "component:dc_busbar",
+      "relation": "mitigated_by",
+      "evidence_tier": "technical_inference",
+      "polarity": "positive",
+      "evidence": [
+        {
+          "url": "https://www.opencompute.org/news/powering-the-next-era-of-ai-how-google-microsoft-and-nvidia-are-standardizing-and-accelerating-the-industry-transition-to-lvdc/",
+          "source_type": "official_issuer"
+        }
+      ],
+      "note": "낮은 전압의 대전류 → 버스바 수요 (추론)",
+      "confidence": 0.4
+    },
+    {
+      "id": "x-si-027",
+      "from": "bottleneck:copper",
+      "to": "tech:sidecar",
+      "relation": "mitigated_by",
+      "evidence_tier": "technical_inference",
+      "polarity": "positive",
+      "evidence": [
+        {
+          "url": "https://www.opencompute.org/news/powering-the-next-era-of-ai-how-google-microsoft-and-nvidia-are-standardizing-and-accelerating-the-industry-transition-to-lvdc/",
+          "source_type": "official_issuer"
+        }
+      ],
+      "note": "전압을 올리면 같은 전력에 구리가 준다 (추론)",
+      "confidence": 0.4
+    },
+    {
+      "id": "x-si-028",
+      "from": "bottleneck:china_inp_export_control",
+      "to": "material:inp_substrate_exchina",
+      "relation": "mitigated_by",
+      "evidence_tier": "technical_inference",
+      "polarity": "positive",
+      "evidence": [
+        {
+          "url": "https://www.sec.gov/Archives/edgar/data/1051627/000121390026002690/ea027235801ex99-1_axtinc.htm",
+          "source_type": "official_issuer",
+          "published_at": "2026-01-08",
+          "excerpt": "Q4 2025 revenue cut: fewer indium phosphide export control permits issued by China's Ministry of Commerce"
+        }
+      ],
+      "note": "중국 허가가 줄면 중국 밖 기판 공급사로 수요가 옮겨간다 (추론). AXT 는 중국 생산이라 피해 쪽",
+      "confidence": 0.4
+    },
+    {
+      "id": "x-si-029",
+      "from": "material:inp_substrate_exchina",
+      "to": "company:sumitomo_electric",
+      "relation": "offered_by",
+      "evidence_tier": "third_party_report",
+      "polarity": "positive",
+      "evidence": [
+        {
+          "url": "https://www.trendforce.com/news/2026/06/16/news-jx-advanced-metals-to-invest-jpy-120b-through-fy2030-expand-inp-capacity-up-to-10x-as-cpo-demand-accelerates/",
+          "source_type": "third_party_report",
+          "published_at": "2026-06-16",
+          "excerpt": "AXT and Sumitomo together account for nearly 80% of global InP substrate production"
+        }
+      ],
+      "confidence": 0.6
+    },
+    {
+      "id": "x-si-030",
+      "from": "material:inp_substrate_exchina",
+      "to": "company:jx_metals",
+      "relation": "offered_by",
+      "evidence_tier": "official_issuer",
+      "polarity": "positive",
+      "evidence": [
+        {
+          "url": "https://wwwcdn.furuchi.co.jp/english/newsrelease/fy2026/20260616_02.html",
+          "source_type": "official_issuer",
+          "published_at": "2026-06-16",
+          "excerpt": "JX to invest up to JPY120bn to increase InP substrate production capacity ~7 to 10 times"
+        }
+      ],
+      "confidence": 0.8
+    },
+    {
+      "id": "x-si-031",
+      "from": "bottleneck:interconnection_queue",
+      "to": "component:recip_gas_engine",
+      "relation": "mitigated_by",
+      "evidence_tier": "official_issuer",
+      "polarity": "positive",
+      "evidence": [
+        {
+          "url": "https://www.businesswire.com/news/home/20261022191376/en/Follow-on-Order-Brings-Orders-from-INNIO-Data-Center-Customer-to-1.72-GW-Further-Strengthening-INNIO%E2%80%99s-Data-Center-Backlog-and-Revenue-Visibility/",
+          "source_type": "official_issuer",
+          "published_at": "2026-10-22",
+          "excerpt": "620 MW follow-on order of containerized Jenbacher J624 brings orders from a US data center customer to ~1.72 GW"
+        }
+      ],
+      "confidence": 0.8
+    },
+    {
+      "id": "x-si-032",
+      "from": "bottleneck:interconnection_queue",
+      "to": "component:fuel_cell",
+      "relation": "mitigated_by",
+      "evidence_tier": "third_party_report",
+      "polarity": "positive",
+      "evidence": [
+        {
+          "url": "https://enkiai.com/data-centers/ai-data-center-energy-2026-the-grid-bypass-revolution",
+          "source_type": "third_party_report",
+          "excerpt": "Oracle + Bloom Energy (Jul 2025): on-site solid oxide fuel cells at select data centers"
+        }
+      ],
       "confidence": 0.6
     }
   ],
