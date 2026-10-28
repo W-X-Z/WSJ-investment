@@ -67,7 +67,7 @@ Claude 예약작업 "WSJ 수집 실행 + 투자 아이디어 작성 (06:41)"이 
     시나리오 bear·base·bull(확률 합 1) 각각 매출(현지 통화 원 단위)·마진·배수(ps|pe) → 내재 시총, 가정 2개 이상(근거 id), 깨지는 조건, confidence, verdict 3~5문장.
     재료는 prices[primary] 의 close·currency·shares·fundamentals(TTM 매출·마진·P/S·P/E). fundamentals 가 없으면 원문(IR·실적 발표)에서 읽은 매출·이익을 가정에 근거 id 와 함께 적는다.
     close 가 없으면 valuation_skipped 에 이유. 검증기가 산수(내재 시총 → 주식수로 나눈 주가 → 확률 가중)를 다시 한다 — 너는 가정을 댄다.
-    keep 인 기존 아이디어도 지난 평가(existing.valuation) 뒤 주가가 ±15% 넘게 움직였거나 새 근거가 매출·마진 가정을 바꾸면 valuation 을 다시 쓴다.
+    keep 인 기존 아이디어도 valuation 을 쓴다 — existing.valuation 이 없으면 반드시(첫날은 전부), 있으면 그 뒤 주가가 ±15% 넘게 움직였거나 새 근거가 매출·마진 가정을 바꿀 때.
   - 숫자·날짜는 payload 에 있는 것만. 매수/매도 권유·시점 예측 금지. 주가 판단은 valuation 의 시나리오로만 — "목표가"·"매수" 같은 말은 쓰지 않는다 (모형 산출이지 권유가 아니다).
 
 ## 5. 검증
