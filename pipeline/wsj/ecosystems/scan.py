@@ -4,6 +4,8 @@
   bottlenecks     병목별 활동(최근 30일 이슈·상태 관측치)과 상장 공급사, 그중 아이디어가 없는 공급사
   price_leads     설명 안 된 가격 급변: 1개월 ±30% 이상 또는 거래량 3배인데 최근 14일 기업 소식이 없는 그래프 상장사
   untagged_issues 노드가 없는 활성 이슈 (그래프에 노드·별칭이 필요할 수 있다)
+  second_order    선행 단서 (ADR-0017 개정 2): 최근 14일 중요 이슈(★2+)의 노드에서 그래프를 2단계 이상 타고 닿는 상장사 중
+                  아직 자기 소식이 없고 주가가 조용한 곳 — "변화는 일어났는데 시장이 아직 안 본 다음 고리"
 
     python -m wsj.ecosystems.scan --from-public --out scan.json
 """
@@ -111,8 +113,63 @@ def leads(graph: dict[str, Any], issues: list[dict[str, Any]], indicators: list[
 
     untagged = [{"issue_key": i.get("issue_key"), "title": i.get("title"), "date": _date(i.get("latest_published_at"))}
                 for i in issues if not (i.get("nodes") or [])]
+    second = second_order(graph, st, issues, recent_co, covered, prices, cut14)
     return {"as_of": now.isoformat(timespec="seconds"), "company_leads": company_leads[:12], "bottlenecks": board[:12],
-            "price_leads": price_leads[:10], "untagged_issues": untagged}
+            "price_leads": price_leads[:10], "untagged_issues": untagged, "second_order": second[:15]}
+
+
+def second_order(graph: dict[str, Any], st: Structure, issues: list[dict[str, Any]], recent_co: set[str], covered: set[str],
+                 prices: dict[str, dict[str, Any]], cut14: str, min_hops: int = 2, max_depth: int = 5) -> list[dict[str, Any]]:
+    """최근 중요 이슈의 노드 → 영향 경로 → 상장사. 이슈에 이름이 나온 기업(1차)과 최근 소식이 있는 기업은 빼고, 2단계 이상 떨어진
+    소형·중형 상장사를 경로 확신도 × 이슈 중요도 순으로. 주가가 이미 움직였으면(1개월 +30%) 뒤로 보낸다."""
+    from wsj.ecosystems.impact import influence_paths
+    from wsj.ecosystems.ontology import load_ontology
+
+    try:
+        onto = load_ontology()
+    except Exception:  # noqa: BLE001
+        return []
+    acc: dict[str, dict[str, Any]] = {}
+    cache: dict[str, list[dict[str, Any]]] = {}
+    for i in issues:
+        if _date(i.get("latest_published_at") or i.get("last_seen")) < cut14 or int(i.get("importance") or 0) < 5:
+            continue
+        named = {c.get("id") if isinstance(c, dict) else c for c in i.get("companies") or []}
+        for nid in i.get("nodes") or []:
+            if nid not in st.nodes:
+                continue
+            if nid not in cache:
+                try:
+                    cache[nid] = influence_paths(graph, nid, max_depth=max_depth, onto=onto)
+                except KeyError:
+                    cache[nid] = []
+            for p in cache[nid]:
+                cid = p["company_id"]
+                n = st.nodes.get(cid) or {}
+                if cid in named or cid in recent_co or cid in covered or not (n.get("listing") or {}).get("ticker"):
+                    continue
+                if n.get("size_band") not in ("micro", "small", "mid"):
+                    continue
+                hops = len(p["path"]) - 1
+                if hops < min_hops:
+                    continue
+                w = float(p["confidence"]) * (1 + 0.1 * int(i.get("importance") or 0))
+                cur = acc.get(cid)
+                if cur is None or w > cur["w"]:
+                    acc[cid] = {"w": w, "company_id": cid, "company": st.label(cid), "size_band": n.get("size_band"), "hops": hops,
+                                "path": [x["node_id"] for x in p["path"]], "path_labels": [st.label(x["node_id"]) for x in p["path"]],
+                                "confidence": round(float(p["confidence"]), 3), "trigger": i.get("title"), "trigger_key": i.get("issue_key"),
+                                "trigger_date": _date(i.get("latest_published_at"))}
+    out = []
+    for c in acc.values():
+        pc = price_context(prices, st.nodes.get(c["company_id"])) or {}
+        quiet = not ((pc.get("r1m") or 0) >= 30 or (pc.get("vol_ratio") or 0) >= 3)
+        c["price"] = {k: pc.get(k) for k in ("r1m", "r12m", "from_low", "market_cap_usd")} if pc else None
+        c["quiet"] = quiet
+        c["rank"] = c["w"] * (1.0 if quiet else 0.4)
+        out.append(c)
+    out.sort(key=lambda x: -x["rank"])
+    return out
 
 
 def compact(ld: dict[str, Any]) -> dict[str, Any]:
@@ -122,6 +179,8 @@ def compact(ld: dict[str, Any]) -> dict[str, Any]:
         "bottlenecks": [{"label": b["label"], "activity": b["activity"], "states": b["states"], "uncovered": [u["company_id"] for u in b["uncovered"][:5]]}
                         for b in ld["bottlenecks"][:6]],
         "price_leads": [{"company_id": p["company_id"], "r1m": p["price"].get("r1m"), "vol_ratio": p["price"].get("vol_ratio")} for p in ld["price_leads"][:6]],
+        "second_order": [{k: x[k] for k in ("company_id", "company", "size_band", "hops", "path", "confidence", "trigger", "quiet", "price") if x.get(k) is not None}
+                         for x in ld.get("second_order", [])[:10]],
     }
 
 

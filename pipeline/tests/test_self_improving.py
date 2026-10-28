@@ -261,3 +261,39 @@ def test_merge_facts_adds_market_cap_to_price_rows():
                     [{"ticker": "INIO", "market_cap_usd": 1.27e10, "shares_outstanding": 7.5e8, "from_low": 12.4},
                      {"ticker": "TWSE:8996", "market_cap_usd": 4.6e9, "close": 1585, "price_as_of": "2026-10-28", "from_low": 126}])
     assert m["INIO"]["market_cap_usd"] == 1.27e10 and m["TWSE:8996"]["close"] == 1585 and m["TWSE:8996"]["from_low"] == 126
+
+
+# ------------------------------------------------------------------ 선행 추론 (ADR-0017 개정 2)
+def test_anticipation_scores_path_unpriced_room_lead():
+    st = A.Structure(load_graph())
+    prices = {"TPEx:6664": {"close": 334, "r1m": -3.7, "r3m": -5.1, "r12m": 21, "from_high": -30, "from_low": 40, "vol_ratio": 0.9,
+                            "market_cap_usd": 6.3e8, "points": 279}}
+    idea = {"primary_company": "company:group_up", "companies": [{"id": "company:group_up", "name": "Group Up 群翊", "role": "primary"}],
+            "chain": [], "risks": [], "nodes": ["bottleneck:substrate_capacity"],
+            "anticipation": {"trigger": "S54", "path": ["bottleneck:substrate_capacity", "equipment:substrate_process_equipment", "company:group_up"],
+                             "mechanism": "기판 증설은 도포·베이킹 장비 발주로 먼저 나타난다", "lead_quarters": 2,
+                             "effect": {"pct_of_revenue": 40, "basis": "NT$509억 × 10% ÷ 연매출 NT$28억", "evidence": "S54"}, "priced_in": "none"}}
+    a = A.anticipation(idea, st, prices, NOW, direct_last=None)
+    assert a["parts"]["path"]["pts"] == 2 and a["hops"] == 2            # 최약 간선 0.6
+    assert a["parts"]["unpriced"]["pts"] == 3                            # 직접 근거 없음 · 주가 조용
+    assert a["parts"]["room"]["pts"] == 2 and a["parts"]["lead"]["pts"] == 2
+    assert a["score"] == 9 and a["path_labels"][-1].startswith("Group Up")
+    prices["TPEx:6664"]["r1m"] = 45
+    a2 = A.anticipation(idea, st, prices, NOW, direct_last="2026-10-25")
+    assert a2["parts"]["unpriced"]["pts"] == 0                           # 직접 근거 3일 전 + 주가 반응
+    idea["anticipation"]["path"] = ["bottleneck:substrate_capacity", "company:group_up"]
+    assert A.anticipation(idea, st, prices, NOW, direct_last=None)["parts"]["path"]["pts"] == 0  # 끊긴 경로
+
+
+def test_price_context_ignores_range_with_few_points():
+    node = {"listing": {"exchange": "KRX", "ticker": "353200"}}
+    ctx = A.price_context({"KRX:353200": {"close": 140200, "r1m": None, "from_high": 0.0, "from_low": 17.4, "points": 3, "market_cap_usd": 5.2e9}}, node)
+    assert ctx["from_low"] is None and ctx["from_high"] is None and ctx["tenbagger"]["candidate"] is False
+
+
+def test_scan_second_order_finds_quiet_downstream_companies():
+    g = load_graph()
+    st = A.Structure(g)
+    issues = [{"issue_key": "x", "title": "CoWoS 증설", "importance": 7, "latest_published_at": "2026-10-27", "nodes": ["bottleneck:cowos_capacity"], "companies": []}]
+    out = scan.second_order(g, st, issues, recent_co=set(), covered=set(), prices={}, cut14="2026-10-14")
+    assert out and all(x["hops"] >= 2 for x in out) and all(x["size_band"] in ("micro", "small", "mid") for x in out)

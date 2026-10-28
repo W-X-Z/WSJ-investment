@@ -43,7 +43,7 @@ export default async function SystemPage() {
         <div><h3>가격 (최근 7일)</h3><ul>{s.prices.byMarket.map(([m, [a, b]]) => <li key={m}>{m} <b>{a}/{b}</b></li>)}
           {s.prices.noSource ? <li>출처 없는 거래소 <b>{s.prices.noSource}</b></li> : null}
           <li>시가총액 있음 <b>{s.prices.withCap}/{s.prices.listed}</b></li>
-          <li>텐배거 출발 조건 통과 <b>{s.prices.tenbaggers}</b> <small>(시총 $3B 이하 · 저점 대비 3배 미만)</small></li></ul></div>
+          <li>룸 조건 통과 <b>{s.prices.tenbaggers}</b> <small>(시총 $3B 이하 · 1년 저점 대비 3배 미만)</small></li></ul></div>
         <div><h3>지표</h3><ul>{s.indicators.byCat.map(([c, n]) => <li key={c}>{c} <b>{n}</b></li>)}
           <li>갱신 늦음 <b>{s.indicators.stale}</b></li><li>값 없음 <b>{s.indicators.empty}</b></li></ul></div>
         <div><h3>그래프</h3><ul><li>병목 <b>{s.graph.bottlenecks}</b></li><li>상장사로 안 이어지는 병목 <b>{s.graph.dead.length}</b></li></ul></div>

@@ -2,7 +2,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Icon } from "@/components/Icon";
 import { Cites, Freshness, MetaLine, References, ScoreText, Valuation } from "@/components/feed/Feed";
-import { EVENT_KIND_KO, PART_KO, ROLE_KO, SIZE_KO, WATCH_STATUS_KO, loadCompanyEvents, loadFacts, loadIdea, loadIdeaNote, pct, usdB, watchItems, type CompanyFacts, type IdeaNote } from "@/lib/ideas";
+import { ANT_PART_KO, EVENT_KIND_KO, PART_KO, PRICED_KO, ROLE_KO, SIZE_KO, WATCH_STATUS_KO, loadCompanyEvents, loadFacts, loadIdea, loadIdeaNote, pct, usdB, watchItems, type CompanyFacts, type IdeaNote } from "@/lib/ideas";
 import { REL_KO, rel, viewIdea } from "@/lib/feed";
 
 export const dynamic = "force-dynamic";
@@ -147,7 +147,26 @@ function Judgment({ idea, facts }: { idea: Awaited<ReturnType<typeof loadIdea>> 
     {p?.flags?.length ? <p className="fd-judge-line"><b>가격 신호</b>{p.flags.join(" · ")}{p.r1m != null ? ` (1개월 ${pct(p.r1m)})` : ""}</p> : null}
     {a.bottlenecks?.length ? <p className="fd-judge-line"><b>걸린 병목</b>{a.bottlenecks.map((b, i) => <span key={b.id}>{i ? ", " : ""}
       <Link href={`/bottlenecks#${encodeURIComponent(b.id)}`}>{b.label}</Link></span>)}</p> : null}
+    {a.anticipation ? <Anticipate a={a.anticipation}/> : null}
   </section>;
+}
+
+/** 선행 추론: 변화 → 경로 → 기업. 근거 점수(확신)와 다른 축 — 시장이 아직 안 본 다음 고리인가. */
+function Anticipate({ a }: { a: NonNullable<NonNullable<Awaited<ReturnType<typeof loadIdea>>>["assessment"]>["anticipation"] & object }) {
+  const order = ["path", "unpriced", "room", "lead"];
+  return <div className="fd-ant">
+    <div className="fd-judge-head"><span className={`fd-score fd-score-${a.score >= 7 ? "hi" : a.score >= 4 ? "mid" : "lo"}`}>선행 {a.score}/10</span>
+      <span>기대값 — 변화가 이 기업 숫자로 번지기 전인가{a.priced_in ? ` · ${PRICED_KO[a.priced_in]}` : ""}</span></div>
+    {a.path_labels?.length ? <p className="fd-ant-path">{a.path_labels.map((l, i) => <span key={i}>{i ? <i> → </i> : null}{l}</span>)}</p> : null}
+    {a.mechanism ? <p className="fd-judge-line"><b>왜 번지나</b>{a.mechanism}</p> : null}
+    <ul className="fd-parts">{order.filter((k) => a.parts?.[k]).map((k) => {
+      const v = a.parts[k]; const w = v.max > 0 ? Math.max(0, v.pts) / v.max : 0;
+      return <li key={k}><span className="fd-part-name">{ANT_PART_KO[k] ?? k}</span>
+        <span className="fd-part-bar" aria-hidden><i style={{ width: `${Math.round(w * 100)}%` }}/></span>
+        <span className="fd-part-pts">{v.pts}/{v.max}</span><span className="fd-part-note">{v.note}</span></li>;
+    })}</ul>
+    {a.effect ? <p className="fd-judge-line"><b>변화 규모</b>매출의 약 {a.effect.pct_of_revenue}% — {a.effect.basis}{a.effect.url ? <> · <a href={a.effect.url} target="_blank" rel="noreferrer">출처</a></> : null}</p> : null}
+  </div>;
 }
 
 /** 심층 분석 (ADR-0017 개정 1): 왜 병목인가(기술) → 시장 규모 → 공급 구조 → 다음 고리 → 밸류에이션 맥락 → 반대 근거 → 확인 일정.

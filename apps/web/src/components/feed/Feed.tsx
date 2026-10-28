@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { IDEA_TYPE, TREND_KO, pct, tenbaggerCheck, usdB, type CompanyFacts, type InvestmentIdea, type PriceCtx } from "@/lib/ideas";
+import { IDEA_TYPE, PRICED_KO, TREND_KO, pct, tenbaggerCheck, usdB, type CompanyFacts, type InvestmentIdea, type PriceCtx } from "@/lib/ideas";
 import { REL_KO, ecoLabel, rel, shortName, type FeedIdea, type IdeaView } from "@/lib/feed";
 
 /** ★ 를 글자로 (배지 없이). */
@@ -30,12 +30,15 @@ export function Freshness({ idea }: { idea: IdeaView }) {
   </span>;
 }
 
-/** 근거 점수 (10점) — 숫자와 막대. 점수가 아직 없으면(0021 전·첫 계산 전) 아무것도 안 그린다. */
+/** 근거 점수(확신, 10점)와 선행 점수(기대값, 10점). 점수가 아직 없으면 아무것도 안 그린다. */
 export function ScoreText({ idea }: { idea: Pick<InvestmentIdea, "assessment"> }) {
   const s = idea.assessment?.score;
+  const a = idea.assessment?.anticipation?.score;
   if (s == null) return null;
-  return <span className={`fd-score fd-score-${s >= 7 ? "hi" : s >= 4 ? "mid" : "lo"}`} title="근거 점수: 기업 직접 근거·숫자 확인·병목 구조·노출 순도·반대 근거 (주가 전망 아님)">
-    근거 {s}/10</span>;
+  return <span className="fd-scores">
+    <span className={`fd-score fd-score-${s >= 7 ? "hi" : s >= 4 ? "mid" : "lo"}`} title="근거 점수(확신): 기업 직접 근거·숫자 확인·병목 구조·노출 순도·반대 근거">근거 {s}/10</span>
+    {a != null ? <span className={`fd-score fd-score-${a >= 7 ? "hi" : a >= 4 ? "mid" : "lo"}`} title="선행 점수(기대값): 변화→기업 경로·아직 미반영·룸·발현 시점">선행 {a}/10</span> : null}
+  </span>;
 }
 
 /** 피드 카드: ★·생태계·생성일 → 제목 → 관련 기업 → 관련 이슈. 논리·근거·판단은 상세에서. */
@@ -57,6 +60,7 @@ export function IdeaCard({ idea, changed }: { idea: FeedIdea; changed: boolean }
     </div>
     <h3><Link href={href}>{idea.title}</Link></h3>
     <Valuation facts={idea.facts} price={idea.assessment?.price ?? null}/>
+    {idea.assessment?.score != null ? <p className="fd-card-scores"><ScoreText idea={idea}/>{idea.assessment.anticipation?.priced_in ? <small>{PRICED_KO[idea.assessment.anticipation.priced_in]}</small> : null}</p> : null}
     <dl className="fd-card-dl">
       <dt>관련 기업</dt>
       <dd><ul className="fd-chips">{shown.map((c) => <li key={c.id} className={c.id === idea.primary_company ? "on" : ""}>
@@ -81,7 +85,7 @@ export function Valuation({ facts, price, detail }: { facts: CompanyFacts | null
   const parts = [mcap != null ? `시총 ${usdB(mcap)}` : null, r12 != null ? `12개월 ${pct(r12)}` : null, detail && r3 != null ? `3개월 ${pct(r3)}` : null,
     hi != null ? `고점 ${pct(hi)}` : null, lo != null ? `저점 ${pct(lo)}` : null].filter(Boolean);
   return <p className="fd-val">
-    {tb.candidate === true ? <b className="fd-tb on" title={tb.reason}>텐배거 후보</b> : tb.candidate === false ? <b className="fd-tb off" title={tb.reason}>{lo != null && lo >= 200 ? "이미 간 종목" : "큰 회사"}</b> : null}
+    {tb.candidate === true ? <b className="fd-tb on" title={tb.reason}>룸 큼</b> : tb.candidate === false ? <b className="fd-tb off" title={tb.reason}>{lo != null && lo >= 200 ? "이미 간 종목" : "큰 회사"}</b> : null}
     <span>{parts.join(" · ")}</span>
     {facts?.price_as_of ?? p?.as_of ? <time>{(facts?.price_as_of ?? p?.as_of ?? "").slice(5).replace("-", "/")}</time> : null}
   </p>;

@@ -11,5 +11,6 @@
  {"date": "2026-10-28", "kind": "judgment", "by": "claude-session", "title": "★ 규칙을 매일 다시 적용", "detail": "손대지 않은 아이디어도 그날의 근거 점수로 ★ 를 다시 본다(2점 이하 ★2 → ★1). ★3 점검으로 ★만 내린 아이디어의 점수가 비던 문제도 고쳤다."},
  {"date": "2026-10-28", "kind": "ui", "by": "claude-session", "title": "피드를 카드로 간소화 — 제목·관련 기업·생성일·관련 이슈", "detail": "논지·왜 지금·점수·가격·타임라인은 피드에서 빼고 상세로. 제목은 30자 안팎, 기업명·숫자·줄표 없이 쓰도록 작성 규칙과 검증을 바꿨다."},
  {"date": "2026-10-28", "kind": "data", "by": "claude-session", "title": "시가총액·발행주식수 수집과 텐배거 출발 조건", "detail": "SEC dei·TWSE/TPEx 공시·Tencent·Naver·Yahoo JP 에서 주식수, FRED 환율로 USD 시총(v_company_facts). 시총 $3B 이하·저점 대비 3배 미만을 후보로 표시. 가격 백필은 소식이 생긴 기업 먼저."},
- {"date": "2026-10-28", "kind": "judgment", "by": "claude-session", "title": "심층 분석 메모 층 추가", "detail": "★3·텐배거 후보마다 기술·시장·공급·대체·노출·밸류에이션·반대·연관 데이터·확인 일정 9문단, 문단마다 날짜 있는 출처 (ideas.idea_notes)."}
+ {"date": "2026-10-28", "kind": "judgment", "by": "claude-session", "title": "심층 분석 메모 층 추가", "detail": "★3·텐배거 후보마다 기술·시장·공급·대체·노출·밸류에이션·반대·연관 데이터·확인 일정 9문단, 문단마다 날짜 있는 출처 (ideas.idea_notes)."},
+ {"date": "2026-10-28", "kind": "judgment", "by": "claude-session", "title": "선행 추론 — 변화의 다음 고리를 시장보다 먼저", "detail": "근거 점수(확신)와 별개로 선행 점수(경로·미반영·룸·발현). LLM 이 아이디어마다 변화→경로→기업과 발현 시점·규모를 쓰고 검증기가 그래프 간선으로 확인. scan.second_order 가 2단계 이상 떨어진 조용한 소형주를 단서로 올린다."}
 ]
