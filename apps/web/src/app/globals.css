@@ -813,3 +813,6 @@ tr:hover td{background:#f8faff}
   .fd-sc-table td small{max-width:26ch}
   .fd-value-sec .fd-value-up{font-size:22px}
 }
+
+/* ADR-0020: 가설 우선 — 추론 단계는 색으로 구분 (사실 단계는 각주가 있다) */
+.fd-chain li.inf{color:#3f5f96}

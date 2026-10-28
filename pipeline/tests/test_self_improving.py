@@ -393,3 +393,33 @@ def test_fundamentals_parsers():
     assert [q["period_end"] for q in qs] == ["2025-09-30", "2025-12-31", "2026-03-31", "2026-06-30"]
     kr = FU.kr_rows(P.Listing("company:k", "KOSDAQ", "086390", "KOSDAQ:086390", "kr"), qs)[0]
     assert kr["revenue"] == 1315e8 and kr["operating_income"] == -73e8 and kr["net_income"] == -53e8 and kr["period_end"] == "2026-06-30"
+
+
+# ------------------------------------------------------------------ 가설 우선 (ADR-0020): 추론 단계와 추정 effect 를 받는다
+def test_validate_accepts_inference_steps_and_estimated_effect():
+    from wsj.ecosystems.ideas import Registry, validate
+
+    g = _graph()
+    reg = Registry()
+    eid = reg.add("S", "https://x/s1", "10/27 P 가 Q 에 검사장비 공급계약 공시", publisher="KIND", date="2026-10-27", tier="official_issuer")
+    signals = [{"sid": "sig1", "ref": "issue:1", "kind": "issue", "title": "t", "stars": 2, "date": "2026-10-27", "evidence": [eid], "nodes": ["bottleneck:b"], "companies": []}]
+    now = datetime(2026, 10, 28, tzinfo=UTC)
+    raw = [{"action": "new", "type": "bottleneck", "title": "병목이 조여진다", "thesis": "변화. 기업.", "stars": 1,
+            "companies": [{"id": "company:p", "role": "primary"}],
+            "chain": [{"claim": "10/27 P 가 공급계약을 공시했다", "evidence": [eid]},
+                      {"claim": "적층이 높아지면 검사 시간이 1.8배 길어진다 (추론)", "evidence": []},
+                      {"claim": "그래서 P 의 장비 매출이 2분기 뒤 +60% 가 된다", "inference": True, "evidence": ["Z9"]}],
+            "watch": [{"what": "11월 월매출", "due": "2026-12-10", "metric": "YoY", "threshold": "≥ +50%", "direction": "strengthen"}],
+            "anticipation": {"trigger": eid, "path": ["bottleneck:b", "component:x", "company:p"], "mechanism": "m", "lead_quarters": 2,
+                             "effect": {"pct_of_revenue": 60, "basis": "검사 시간 1.8배 × 증설 2배 ÷ 연매출", "evidence": None}, "priced_in": "none"}}]
+    rows, rejects = validate(raw, reg, g, signals, {}, now, "m", "session")
+    assert not rejects and len(rows) == 1
+    chain = rows[0]["chain"]
+    assert [bool(st["evidence"]) for st in chain] == [True, False, False] and chain[1]["inference"] and chain[2]["claim"].endswith("(추론)")
+    eff = rows[0]["assessment"]["anticipation"]["effect"]
+    assert eff["pct_of_revenue"] == 60 and eff["estimated"] is True
+    assert "(추정)" in rows[0]["assessment"]["anticipation"]["parts"]["room"]["note"]
+    # 사실 단계가 하나도 없으면 거부
+    raw2 = [dict(raw[0], chain=[{"claim": "a (추론)", "evidence": []}, {"claim": "b (추론)", "evidence": []}])]
+    _, rej2 = validate(raw2, reg, g, signals, {}, now, "m", "session")
+    assert rej2 and "fact=0" in rej2[0]
