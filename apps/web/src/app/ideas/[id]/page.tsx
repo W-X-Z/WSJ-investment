@@ -1,8 +1,8 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Icon } from "@/components/Icon";
-import { Cites, Freshness, MetaLine, References } from "@/components/feed/Feed";
-import { EVENT_KIND_KO, ROLE_KO, SIZE_KO, loadCompanyEvents, loadIdea } from "@/lib/ideas";
+import { Cites, Freshness, MetaLine, References, ScoreText } from "@/components/feed/Feed";
+import { EVENT_KIND_KO, PART_KO, ROLE_KO, SIZE_KO, WATCH_STATUS_KO, loadCompanyEvents, loadIdea, pct, watchItems } from "@/lib/ideas";
 import { REL_KO, rel, viewIdea } from "@/lib/feed";
 
 export const dynamic = "force-dynamic";
@@ -47,6 +47,8 @@ export default async function IdeaDetail({ params }: { params: Promise<{ id: str
           {idea.stars_reason ? <p className="fd-starsreason"><b>★ 판단</b>{idea.stars_reason}</p> : null}
         </section>
 
+        <Judgment idea={idea}/>
+
         {facts.length ? <section className="fd-dsec">
           <h2>확인된 사실<small>주 기업·관련 기업 자신의 소식</small></h2>
           <ul className="fd-facts">{facts.map((r) => <li key={r.n}>
@@ -67,8 +69,16 @@ export default async function IdeaDetail({ params }: { params: Promise<{ id: str
         </section>
 
         {idea.watch.length ? <section className="fd-dsec">
-          <h2>지켜볼 것</h2>
-          <ul className="fd-watch">{idea.watch.map((x, i) => <li key={i}>{x}</li>)}</ul>
+          <h2>지켜볼 것<small>날짜가 오면 다음 실행이 결과를 채점합니다</small></h2>
+          <ul className="fd-watch">{watchItems(idea).map((w, i) => <li key={i} className={`fd-w-${w.status ?? "pending"}`}>
+            <span className="fd-w-status">{WATCH_STATUS_KO[w.status ?? "pending"] ?? w.status}</span>
+            <div>
+              <p>{w.due ? <span className="fd-date">{w.due}</span> : null}{w.what}
+                {w.threshold ? <em> — {w.metric ? `${w.metric} ` : ""}{w.threshold}</em> : null}
+                {w.direction ? <small> ({w.direction === "strengthen" ? "나오면 강화" : "나오면 약화"})</small> : null}</p>
+              {w.grade_note || w.evidence_url ? <p className="fd-ref-meta">{w.grade_note}{w.evidence_url ? <> · <a href={w.evidence_url} target="_blank" rel="noreferrer">근거</a></> : null}</p> : null}
+            </div>
+          </li>)}</ul>
         </section> : null}
 
         {events.length ? <section className="fd-dsec">
@@ -102,4 +112,36 @@ export default async function IdeaDetail({ params }: { params: Promise<{ id: str
       </aside>
     </div>
   </div>;
+}
+
+/** 판단: 10점 근거 점수의 내역, 노출 순도, 병목 상태 관측치, 이미 움직인 폭. 주가 전망이 아니다. */
+function Judgment({ idea }: { idea: Awaited<ReturnType<typeof loadIdea>> & object }) {
+  const a = idea.assessment;
+  if (!a) return null;
+  const order = ["company", "confirm", "structure", "exposure", "counter"];
+  const p = a.price;
+  return <section className="fd-dsec">
+    <h2>판단<small>근거 점수 · {a.computed_at ? a.computed_at.slice(0, 10) : ""} 계산 · 주가 전망 아님</small></h2>
+    <div className="fd-judge-head"><ScoreText idea={idea}/><span>★{idea.stars} — ★3 은 7점 이상, 2점 이하는 ★1</span></div>
+    <ul className="fd-parts">{order.filter((k) => a.parts?.[k]).map((k) => {
+      const v = a.parts[k];
+      const w = v.max > 0 ? Math.max(0, v.pts) / v.max : 0;
+      return <li key={k}>
+        <span className="fd-part-name">{PART_KO[k] ?? k}</span>
+        <span className="fd-part-bar" aria-hidden><i style={{ width: `${Math.round(w * 100)}%` }} className={v.pts < 0 ? "neg" : ""}/></span>
+        <span className="fd-part-pts">{v.pts > 0 && k === "counter" ? "+" : ""}{v.pts}{v.max ? `/${v.max}` : ""}</span>
+        <span className="fd-part-note">{v.note}</span>
+      </li>;
+    })}</ul>
+    {a.exposure ? <p className="fd-judge-line"><b>노출 순도</b>{a.exposure.segment ? `${a.exposure.segment} ` : ""}매출 비중 {a.exposure.share_pct}%
+      {a.exposure.basis ? ` — ${a.exposure.basis}` : ""}{a.exposure.url ? <> · <a href={a.exposure.url} target="_blank" rel="noreferrer">출처</a></> : null}</p> : null}
+    {a.observations?.length ? <div className="fd-judge-line"><b>병목 상태</b><ul className="fd-obs">{a.observations.map((o) => <li key={o.indicator_id}>
+      {o.label}: <strong>{o.value}{o.unit ? ` ${o.unit}` : ""}</strong> ({o.as_of}){o.source_url ? <> · <a href={o.source_url} target="_blank" rel="noreferrer">출처</a></> : null}
+    </li>)}</ul></div> : null}
+    {p ? <p className="fd-judge-line"><b>이미 움직인 폭</b>{[p.r1m != null ? `1개월 ${pct(p.r1m)}` : null, p.r3m != null ? `3개월 ${pct(p.r3m)}` : null,
+      p.r12m != null ? `12개월 ${pct(p.r12m)}` : null, p.from_high != null ? `1년 고점 대비 ${pct(p.from_high)}` : null].filter(Boolean).join(" · ")}
+      {p.as_of ? ` (${p.as_of})` : ""}{p.flags?.length ? <em> — {p.flags.join(" · ")}</em> : null}</p> : null}
+    {a.bottlenecks?.length ? <p className="fd-judge-line"><b>걸린 병목</b>{a.bottlenecks.map((b, i) => <span key={b.id}>{i ? ", " : ""}
+      <Link href={`/bottlenecks#${encodeURIComponent(b.id)}`}>{b.label}</Link></span>)}</p> : null}
+  </section>;
 }

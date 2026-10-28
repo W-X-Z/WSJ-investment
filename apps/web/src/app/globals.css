@@ -626,7 +626,7 @@ tr:hover td{background:#f8faff}
 .fd-tl-meta{margin-top:3px;font-size:11.5px;color:#9aa5b5;display:flex;flex-wrap:wrap;gap:2px 12px}
 .fd-tl-meta a{color:#3f5f96;font-weight:650}
 .fd-table{background:#fff;border:1px solid #e3e8ef;border-radius:12px;overflow:hidden}
-.fd-tr{display:grid;grid-template-columns:48px minmax(0,1fr) 150px 66px 66px;gap:10px;align-items:baseline;padding:10px 14px;border-top:1px solid #eef1f5;font-size:13px;color:#33425a}
+.fd-tr{display:grid;grid-template-columns:48px minmax(0,1fr) 150px 78px 66px 66px;gap:10px;align-items:baseline;padding:10px 14px;border-top:1px solid #eef1f5;font-size:13px;color:#33425a}
 .fd-th{border-top:0;font-size:11px;color:#8a96a8;font-weight:750;background:#fafbfd}
 a.fd-tr:hover{background:#f7f9fc}
 .fd-td-title{color:#17263c;font-weight:650;line-height:1.5}
@@ -673,10 +673,99 @@ a.fd-tr:hover{background:#f7f9fc}
 .fd-aside-meta{margin-top:18px;font-size:11px;color:#9aa5b5;line-height:1.9}
 @media (max-width:860px){
   .fd-dgrid{grid-template-columns:1fr}
-  .fd-tr{grid-template-columns:40px minmax(0,1fr) 56px}
-  .fd-tr>span:nth-child(3),.fd-tr>span:nth-child(5){display:none}
+  .fd-tr{grid-template-columns:40px minmax(0,1fr) 72px}
+  .fd-tr>span:nth-child(3),.fd-tr>span:nth-child(5),.fd-tr>span:nth-child(6){display:none}
   .fd-head h1{font-size:24px}
   .fd-story{padding:16px 16px 10px}
   .fd-dhead{padding:18px 16px 12px}
   .fd-dhead h1{font-size:21px}
+}
+
+/* ADR-0017: 판단(근거 점수)·이미 움직인 폭·다음 확인 */
+.fd-score{font-weight:760;font-size:12px;padding:1px 0;white-space:nowrap}
+.fd-score-hi{color:#17794a}.fd-score-mid{color:#3f5f96}.fd-score-lo{color:#a05a12}
+.fd-foot-l{display:flex;flex-wrap:wrap;gap:4px 10px;align-items:baseline}
+.fd-price{color:#7d8899;font-size:12px}
+.fd-next{margin:8px 0 2px;font-size:13px;color:#43546d;line-height:1.6}
+.fd-next b{font-size:11.5px;color:#5c6b80;margin-right:6px}
+.fd-next em{font-style:normal;color:#6c7a8e}
+.fd-muted{color:#a2adbc}
+.fd-judge-head{display:flex;gap:12px;align-items:baseline;margin-bottom:8px;font-size:12.5px;color:#7d8899}
+.fd-judge-head .fd-score{font-size:15px}
+.fd-parts{list-style:none;margin:0 0 10px;padding:0;display:flex;flex-direction:column;gap:6px}
+.fd-parts li{display:grid;grid-template-columns:112px 120px 44px minmax(0,1fr);gap:10px;align-items:center;font-size:13px;color:#33425a}
+.fd-part-name{font-weight:650;color:#40516b}
+.fd-part-bar{height:6px;background:#eef2f7;border-radius:3px;overflow:hidden}
+.fd-part-bar i{display:block;height:100%;background:#5d7fb8}
+.fd-part-bar i.neg{background:#c97b4a}
+.fd-part-pts{font-variant-numeric:tabular-nums;color:#55657c}
+.fd-part-note{color:#6c7a8e;font-size:12.5px}
+.fd-judge-line{margin:6px 0;font-size:13px;color:#33425a;line-height:1.65}
+.fd-judge-line b{font-size:11.5px;color:#5c6b80;margin-right:8px}
+.fd-judge-line em{font-style:normal;color:#a05a12}
+.fd-judge-line a{color:#3f5f96}
+.fd-obs{list-style:none;margin:2px 0 0;padding:0}
+.fd-watch li{display:grid;grid-template-columns:70px minmax(0,1fr);gap:10px;border-left:0;padding-left:0}
+.fd-watch li p{margin:0}
+.fd-watch em{font-style:normal;color:#5c6b80}
+.fd-watch small{color:#8a96a8}
+.fd-w-status{font-size:11.5px;font-weight:700;color:#7d8899;padding-top:2px}
+.fd-w-hit .fd-w-status{color:#17794a}.fd-w-miss .fd-w-status{color:#b3471d}.fd-w-expired .fd-w-status,.fd-w-void .fd-w-status{color:#a2adbc}
+/* 병목 보드 */
+.bn-list{display:flex;flex-direction:column;gap:14px}
+.bn-row{background:white;border:1px solid #e6ebf2;border-radius:12px;padding:16px 18px;scroll-margin-top:80px}
+.bn-head{display:flex;justify-content:space-between;gap:6px 14px;flex-wrap:wrap;align-items:baseline}
+.bn-head h3{margin:0;font-size:16px;color:#14243b;letter-spacing:-.3px;word-break:keep-all}
+.bn-head span{font-size:12px;color:#7d8899}
+.bn-states,.bn-issues{list-style:none;margin:8px 0 0;padding:0;font-size:13px;color:#33425a;line-height:1.7}
+.bn-states strong{color:#14243b}
+.bn-states small,.bn-issues small{color:#8a96a8}
+.bn-states a,.bn-issues a{color:#3f5f96}
+.bn-via{margin:8px 0 6px;font-size:12px;color:#7d8899}
+.bn-sup{border-top:1px solid #eef1f5;margin-top:6px}
+.bn-sup-row{display:grid;grid-template-columns:minmax(0,1fr) 190px 96px;gap:8px;padding:6px 0;border-bottom:1px solid #f3f5f8;font-size:13px;align-items:baseline}
+.bn-sup-name small{display:block;font-size:11px;color:#9aa5b5}
+.bn-sup-px{color:#55657c;font-variant-numeric:tabular-nums;font-size:12.5px}
+.bn-sup-idea a{color:#3f5f96;font-weight:700}
+.bn-sup-idea small,.bn-sup-px small{color:#a2adbc}
+.bn-ideas{display:flex;flex-direction:column;gap:3px;margin:8px 0 0;font-size:13px}
+.bn-ideas a{color:#2f4466}
+.bn-quiet{margin-top:18px;font-size:13px;color:#55657c}
+.bn-quiet summary{cursor:pointer;color:#3f5f96;font-weight:650}
+.bn-quiet ul{margin:8px 0 0;padding-left:18px;line-height:1.8}
+.bn-quiet small{color:#9aa5b5}
+/* 시스템 점검 */
+.sys-problems{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:6px}
+.sys-problems li{display:flex;gap:10px;align-items:baseline;font-size:13.5px;color:#2f4466;background:white;border:1px solid #e6ebf2;border-radius:9px;padding:9px 12px}
+.sys-problems li span{font-size:11px;font-weight:760;min-width:28px}
+.sys-problems li b{font-size:12px;color:#5c6b80;min-width:52px}
+.sys-problems .sev-3 span{color:#b3471d}.sys-problems .sev-2 span{color:#a05a12}.sys-problems .sev-1 span{color:#8a96a8}
+.sys-table{background:white;border:1px solid #e6ebf2;border-radius:12px;overflow:hidden}
+.sys-tr{display:grid;grid-template-columns:170px 90px 70px 70px minmax(0,1fr);gap:10px;padding:8px 14px;border-top:1px solid #eef1f5;font-size:13px;color:#33425a}
+.sys-th{border-top:0;background:#f7f9fc;font-size:11.5px;color:#7d8899;font-weight:700}
+.sys-tr small{color:#9aa5b5}
+.sys-err{color:#a05a12;font-size:12px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.sys-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+.sys-grid>div{background:white;border:1px solid #e6ebf2;border-radius:12px;padding:12px 14px}
+.sys-grid h3{margin:0 0 6px;font-size:13px;color:#40516b}
+.sys-grid ul{list-style:none;margin:0;padding:0;font-size:13px;color:#33425a;line-height:1.8}
+.sys-grid b{color:#14243b}
+.sys-scores{margin:0;font-size:13px;color:#33425a}
+.sys-log{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:8px}
+.sys-log li{font-size:13.5px;color:#2f4466;line-height:1.6}
+.sys-log b{font-size:11.5px;color:#5c6b80;margin:0 8px}
+.sys-log p{margin:2px 0 0 0;font-size:12.5px;color:#6c7a8e}
+.sys-log a{color:#3f5f96}
+.bn-more{margin:6px 0 0;font-size:12px;color:#8a96a8;line-height:1.6}
+@media (max-width:860px){
+  .bn-sup-row{grid-template-columns:minmax(0,1fr) auto}
+  .bn-sup-px{text-align:right}
+  .bn-sup-idea{grid-column:1/-1}
+  .bn-row{padding:14px}
+  .sys-tr{grid-template-columns:minmax(0,1fr) 70px 60px}
+  .sys-tr>span:nth-child(3),.sys-tr>span:nth-child(5){display:none}
+  .sys-grid{grid-template-columns:1fr}
+  .fd-parts li{grid-template-columns:96px 1fr 40px}
+  .fd-part-note{grid-column:1/-1}
+  .fd-watch li{grid-template-columns:58px minmax(0,1fr)}
 }
