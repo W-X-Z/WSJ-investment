@@ -2,14 +2,12 @@ import "server-only";
 import { db } from "@/lib/supabase";
 import nativeNames from "@/data/company-names.json";
 import { ECO_KO, loadIdeas, type IdeaEvidence, type InvestmentIdea } from "@/lib/ideas";
-import { nodeName } from "@/lib/research";
 
 const NATIVE = nativeNames as Record<string, string>;
 
 /**
- * 홈 피드 = 아이디어(그래서 무엇) + 업계 이슈·확인된 기업 소식(무슨 일이 있었나). ADR-0016 개정 3.
- * 참고한 형식: Axios Smart Brevity(한 화면에 결론·왜 중요한가), Semafor(사실 / 해석 / 반대 근거 분리),
- * Particle·Techmeme(한 사건에 여러 출처를 묶고 출처는 요약 아래 텍스트로), 각주식 인용(칩 대신 [1]).
+ * 홈 피드 = 아이디어 카드(제목 · 관련 기업 · 생성일 · 관련 이슈). 논리·근거·판단은 아이디어 상세에서 본다.
+ * 상세의 형식: Semafor(사실 / 해석 / 반대 근거 분리), 각주식 인용(칩 대신 [1]).
  */
 
 export type EvidenceRel = "direct" | "related" | "industry" | "background";
@@ -71,90 +69,68 @@ export function viewIdea(idea: InvestmentIdea): IdeaView {
   return { ...idea, shownTrend, companyAt, industryAt, whyNow, refs, primary: idea.companies.find((c) => c.id === idea.primary_company) ?? idea.companies[0] };
 }
 
-export type IssueItem = {
-  kind: "issue"; key: string; date: string; title: string; summary: string | null; why: string | null; stars: number; ecosystem: string | null;
-  publishers: string[]; sourceCount: number; url?: string; ideaKeys: string[];
-};
-export type EventItem = {
-  kind: "event"; key: string; date: string; title: string; text: string | null; companyId: string; company?: string; url: string;
-  publisher: string | null; importance: number; ecosystem: string | null; ideaKeys: string[];
-  more: { title: string; url: string; publisher: string | null }[];  // 같은 날 같은 기업의 다른 출처 (Particle 식 묶음)
-};
-export type TimelineItem = IssueItem | EventItem;
+/** 아이디어 카드의 '관련 이슈' 한 줄: 아이디어가 근거로 쓴 업계 이슈(signal_refs)의 제목·날짜·첫 출처. */
+export type RelatedIssue = { key: string; title: string; date: string | null; url?: string };
+export type FeedIdea = IdeaView & { issues: RelatedIssue[]; issueCount: number };
+export type Feed = { ideas: FeedIdea[]; source: "db" | "seed"; updatedAt: string | null; error?: string };
 
-type IssueRow = { issue_key: string; ecosystem: string | null; title: string; summary: string | null; why_it_matters: string | null; stars?: number | null;
-  importance: number; sources: { url: string; publisher: string; published_at: string }[]; source_count: number; publisher_count: number;
-  latest_published_at: string | null; first_seen: string };
-type EventRow = { event_id: string; company_id: string; kind: string; published_at: string; title: string; url: string; publisher: string | null;
-  importance: number; text?: string | null; verified?: boolean };
+type IssueRow = { issue_key: string; title: string; latest_published_at: string | null; first_seen: string; sources: { url: string }[] | null };
 
-export type Feed = { ideas: IdeaView[]; timeline: TimelineItem[]; source: "db" | "seed"; updatedAt: string | null; error?: string };
-
-/** 홈 피드 데이터: 활성 아이디어 + 최근 5일 업계 이슈(★2+) + 원문 확인된 기업 소식(7일). */
+/** 홈 피드 데이터: 활성 아이디어 + 아이디어마다 관련 이슈(최신 3개). 이슈 원문이 없으면(시드) 아이디어의 최근 근거 제목으로 대신한다. */
 export async function loadFeed(): Promise<Feed> {
   const { ideas, source, error } = await loadIdeas();
   const views = ideas.map(viewIdea);
-  const byIssue = new Map<string, string[]>();
-  const byCompany = new Map<string, string[]>();
-  for (const v of views) {
-    for (const r of v.signal_refs ?? []) byIssue.set(r, [...(byIssue.get(r) ?? []), v.idea_key]);
-    // 기업 소식은 그 기업이 주 기업인 아이디어에만 잇는다 (고객·경쟁사로 나온 아이디어까지 잇면 연결이 흐려진다)
-    if (v.primary_company) byCompany.set(v.primary_company, [...(byCompany.get(v.primary_company) ?? []), v.idea_key]);
-  }
-  const nameOf = new Map(views.flatMap((v) => v.companies.map((c) => [c.id, c.name] as const)));
-  const timeline: TimelineItem[] = [];
+  const keys = Array.from(new Set(views.flatMap((v) => (v.signal_refs ?? []).filter((r) => !r.startsWith("events:")))));
+  const byKey = new Map<string, RelatedIssue>();
   let err = error;
-  if (process.env.NEXT_PUBLIC_SUPABASE_URL && process.env.NEXT_PUBLIC_SUPABASE_KEY) {
+  if (keys.length && process.env.NEXT_PUBLIC_SUPABASE_URL && process.env.NEXT_PUBLIC_SUPABASE_KEY) {
     try {
-      const client = db("public");
-      const since = (d: number) => new Date(Date.now() - d * 864e5).toISOString();
-      const [iss, evs] = await Promise.all([
-        client.from("v_supply_chain_issues").select("issue_key,ecosystem,title,summary,why_it_matters,stars,importance,sources,source_count,publisher_count,latest_published_at,first_seen")
-          .gte("latest_published_at", since(5)).gte("importance", 5).order("latest_published_at", { ascending: false }).limit(40),
-        client.from("v_company_events").select("event_id,company_id,kind,published_at,title,url,publisher,importance,text,verified")
-          .gte("published_at", since(7)).eq("verified", true).gte("importance", 2).order("published_at", { ascending: false }).limit(40),
-      ]);
-      for (const r of (iss.data ?? []) as IssueRow[]) {
-        const pubs = Array.from(new Set((r.sources ?? []).map((s) => s.publisher).filter(Boolean)));
-        timeline.push({ kind: "issue", key: r.issue_key, date: day(r.latest_published_at ?? r.first_seen) ?? "", title: r.title, summary: r.summary,
-          why: r.why_it_matters, stars: r.stars ?? (r.importance >= 8 ? 3 : r.importance >= 5 ? 2 : 1), ecosystem: r.ecosystem, publishers: pubs,
-          sourceCount: r.source_count, url: r.sources?.[0]?.url, ideaKeys: byIssue.get(r.issue_key) ?? [] });
+      const { data, error: e } = await db("public").from("v_supply_chain_issues").select("issue_key,title,latest_published_at,first_seen,sources")
+        .in("issue_key", keys).limit(500);
+      for (const r of (data ?? []) as IssueRow[]) {
+        byKey.set(r.issue_key, { key: r.issue_key, title: r.title, date: day(r.latest_published_at ?? r.first_seen), url: r.sources?.[0]?.url });
       }
-      // 같은 날 같은 기업의 소식은 한 줄로 묶는다: 확인 내용이 가장 긴 것(공시 우선)이 머리, 나머지는 출처로
-      const groups = new Map<string, EventRow[]>();
-      for (const r of (evs.data ?? []) as EventRow[]) {
-        if (r.text?.startsWith("관련 없음")) continue;
-        const k = `${day(r.published_at)}|${r.company_id}`;
-        groups.set(k, [...(groups.get(k) ?? []), r]);
-      }
-      for (const rows of groups.values()) {
-        const [head, ...rest] = [...rows].sort((a, b) => (b.kind === "news" ? 0 : 1) - (a.kind === "news" ? 0 : 1) || (b.text?.length ?? 0) - (a.text?.length ?? 0));
-        timeline.push({ kind: "event", key: head.event_id, date: day(head.published_at) ?? "", title: head.title, text: head.text ?? null, companyId: head.company_id,
-          company: nameOf.get(head.company_id) ?? cleanLabel(nodeName(head.company_id)), url: head.url, publisher: head.publisher,
-          importance: Math.max(...rows.map((r) => r.importance)), ecosystem: null, ideaKeys: byCompany.get(head.company_id) ?? [],
-          more: rest.map((r) => ({ title: r.title, url: r.url, publisher: r.publisher })) });
-      }
-      err = [err, iss.error?.message, evs.error?.message].filter(Boolean).join("; ") || undefined;
+      err = [err, e?.message].filter(Boolean).join("; ") || undefined;
     } catch (e) {
       err = e instanceof Error ? e.message : "연결 오류";
     }
   }
-  // 같은 날 안에서는 기업 소식(사실) → 업계 이슈(★순)
-  timeline.sort((a, b) => b.date.localeCompare(a.date) || (a.kind === b.kind ? 0 : a.kind === "event" ? -1 : 1)
-    || (b.kind === "issue" && a.kind === "issue" ? b.stars - a.stars : 0));
+  const byDate = (a: RelatedIssue, b: RelatedIssue) => (b.date ?? "").localeCompare(a.date ?? "");
+  const out = views.map((v): FeedIdea => {
+    let iss = (v.signal_refs ?? []).map((k) => byKey.get(k)).filter((x): x is RelatedIssue => !!x);
+    if (!iss.length) {  // 이슈를 못 읽었으면 아이디어 자신의 최근 근거(S)로
+      const seen = new Set<string>();
+      iss = v.refs.filter((r) => r.id.startsWith("S") && r.rel !== "background" && !seen.has(r.title) && seen.add(r.title))
+        .map((r) => ({ key: r.id, title: r.title, date: day(r.date), url: r.url }));
+    }
+    iss.sort(byDate);
+    return { ...v, issues: iss.slice(0, 3), issueCount: iss.length };
+  });
   const updatedAt = ideas.map((x) => x.updated_at).sort().at(-1) ?? null;
-  return { ideas: views, timeline, source, updatedAt, error: err };
+  return { ideas: out, source, updatedAt, error: err };
 }
 
 /** 같은 ★ 안에서는 기업 직접 근거가 새로운 아이디어가 위로, 그다음 업계 근거. */
-export function orderIdeas(xs: IdeaView[]): IdeaView[] {
+export function orderIdeas<T extends IdeaView>(xs: T[]): T[] {
   return [...xs].sort((a, b) => b.stars - a.stars || (b.companyAt ?? "").localeCompare(a.companyAt ?? "")
     || (b.industryAt ?? "").localeCompare(a.industryAt ?? ""));
 }
 
 export const ecoLabel = (e?: string | null) => (e && ECO_KO[e] ? ECO_KO[e] : null);
-/** 'Shenzhen Taichenglight 太辰光 (SZSE 300570, 비SEC)' → 'Shenzhen Taichenglight 太辰光' */
-export const cleanLabel = (l: string) => (l.startsWith("company:") ? l.slice(8) : l.replace(/\s*\(.*\)\s*$/, "").split(" — ")[0]);
+/** 카드에 쓰는 짧은 기업 이름: 한국 상장사는 한글 이름, 긴 중화권 이름은 한자 이름, 그 밖은 Inc·Technology 같은 꼬리를 뗀다.
+ *  'ASE Technology Holding' → 'ASE', 'Yunnan Lincang Xinyuan Germanium 云南锗业' → '云南锗业', 'Taiwan Semiconductor Manufacturing' → 'TSMC'. */
+const TAIL = /,?\s+(Technology|Technologies|Holding|Industries|Manufacturing|Corporation|Corp\.?|Inc\.?|Co\.,?\s*Ltd\.?|Ltd\.?|plc|N\.V\.|S\.A\.|AG|SE)$/i;
+const ALIAS: Record<string, string> = { TSM: "TSMC" };
+export function shortName(c: { id: string; name: string; ticker?: string | null }): string {
+  const native = NATIVE[c.id];
+  if (native && /[가-힣]/.test(native)) return native;
+  if (c.ticker && ALIAS[c.ticker]) return ALIAS[c.ticker];
+  let base = c.name.split(" / ").map((s) => s.trim()).filter(Boolean).sort((a, b) => a.length - b.length)[0] ?? c.name;
+  const cjk = base.match(/[\u3400-\u9fff]{2,}$/)?.[0];
+  if (cjk && base.length > 18) return cjk;
+  for (let prev = ""; prev !== base && base.length > 3;) { prev = base; base = base.replace(TAIL, "").trim(); }
+  return base || c.name;
+}
 
 /** '오늘', '어제', '3일 전', 그보다 오래면 10/21. */
 export function rel(d?: string | null): string {
@@ -168,11 +144,4 @@ export function rel(d?: string | null): string {
   if (n < 8) return `${n}일 전`;
   const [, m, dd] = d.slice(0, 10).split("-");
   return `${Number(m)}/${Number(dd)}`;
-}
-
-export function dayLabel(d: string): string {
-  const r = rel(d);
-  if (r === "오늘" || r === "어제") return r;
-  const dt = new Date(`${d}T00:00:00+09:00`);
-  return `${dt.getMonth() + 1}월 ${dt.getDate()}일 (${"일월화수목금토"[dt.getDay()]})`;
 }
