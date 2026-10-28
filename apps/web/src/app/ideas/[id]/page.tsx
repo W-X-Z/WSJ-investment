@@ -1,9 +1,9 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Icon } from "@/components/Icon";
-import { Cites, Freshness, MetaLine, References, ScoreText, Valuation } from "@/components/feed/Feed";
-import { ANT_PART_KO, EVENT_KIND_KO, PART_KO, PRICED_KO, ROLE_KO, SIZE_KO, WATCH_STATUS_KO, loadCompanyEvents, loadFacts, loadIdea, loadIdeaNote, pct, usdB, watchItems, type CompanyFacts, type IdeaNote } from "@/lib/ideas";
-import { REL_KO, rel, viewIdea } from "@/lib/feed";
+import { Cites, Freshness, MetaLine, PriceLine, References, ValueLine } from "@/components/feed/Feed";
+import { EVENT_KIND_KO, ROLE_KO, SCENARIO_KO, SIZE_KO, WATCH_STATUS_KO, liveUpside, loadCompanyEvents, loadFacts, loadIdea, loadIdeaNote, loadValuationHistory, loadValuations, money, pct, usdB, watchItems, type CompanyFacts, type IdeaEvidence, type IdeaNote, type Valuation } from "@/lib/ideas";
+import { REL_KO, rel, relOf, viewIdea, type IdeaView } from "@/lib/feed";
 
 export const dynamic = "force-dynamic";
 
@@ -14,13 +14,23 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
 
 /**
  * 아이디어 상세 (Semafor 식으로 사실·해석·반대 근거를 나눈다):
- * 왜 지금 → 확인된 사실(기업 직접·관련 기업 근거) → 논리(각주) → 반대 근거 → 지켜볼 것 → 관련 기업 최근 소식 → 출처.
+ * 왜 지금 → 가치평가(시나리오·가정·깨지는 조건 — 사람이 보는 결과, ADR-0019) → 확인된 사실 → 논리(각주) → 반대 근거 → 지켜볼 것 → 관련 기업 최근 소식 → 출처.
+ * 근거·선행 점수는 계산기로 뒤에 남고 화면에 올리지 않는다.
  */
 export default async function IdeaDetail({ params }: { params: Promise<{ id: string }> }) {
   const raw = await loadIdea((await params).id);
   if (!raw) notFound();
   const idea = viewIdea(raw);
-  const [events, factsMap, note] = await Promise.all([loadCompanyEvents(idea.companies.filter((c) => c.role !== "customer").map((c) => c.id)), loadFacts(), loadIdeaNote(idea.idea_key)]);
+  const [events, factsMap, note, valuations, history] = await Promise.all([loadCompanyEvents(idea.companies.filter((c) => c.role !== "customer").map((c) => c.id)), loadFacts(),
+    loadIdeaNote(idea.idea_key), loadValuations(), loadValuationHistory(idea.idea_key)]);
+  const valuation = valuations.get(idea.idea_key) ?? null;
+  // 가치평가의 근거(가정·시나리오·깨지는 조건)도 같은 각주 번호 체계에 넣는다 → 출처 목록에 함께 나온다
+  const cite = (e: IdeaEvidence) => {
+    const found = idea.refs.find((r) => r.url === e.url && r.title === e.title);
+    if (found) return found.n;
+    idea.refs.push({ ...e, rel: relOf(e, idea), n: idea.refs.length + 1 });
+    return idea.refs.length;
+  };
   const nameOf = new Map(idea.companies.map((c) => [c.id, c.name]));
   // 같은 URL 의 기업 소식에 원문을 확인한 요약이 있으면 그것을 쓴다 (근거의 원문 발췌보다 읽기 쉽다)
   const checked = new Map(events.filter((e) => e.text && e.verified).map((e) => [e.url, e.text as string]));
@@ -47,7 +57,7 @@ export default async function IdeaDetail({ params }: { params: Promise<{ id: str
           {idea.stars_reason ? <p className="fd-starsreason"><b>★ 판단</b>{idea.stars_reason}</p> : null}
         </section>
 
-        <Judgment idea={idea} facts={factsMap.get(idea.primary_company) ?? null}/>
+        <Value idea={idea} v={valuation} facts={factsMap.get(idea.primary_company) ?? null} history={history} cite={cite}/>
 
         <DeepDive note={note}/>
 
@@ -116,58 +126,56 @@ export default async function IdeaDetail({ params }: { params: Promise<{ id: str
   </div>;
 }
 
-/** 판단: 10점 근거 점수의 내역, 노출 순도, 병목 상태 관측치, 이미 움직인 폭. 주가 전망이 아니다. */
-function Judgment({ idea, facts }: { idea: Awaited<ReturnType<typeof loadIdea>> & object; facts: CompanyFacts | null }) {
+/** 가치평가 (ADR-0019): 사람이 보는 결과. 현재 → 기대 주가와 상승여력, 시나리오 표(확률·매출·마진·배수 → 내재 시총·주가), 영향 경로, 가정(각주), 깨지는 조건,
+ *  평가 이력. 그 아래에 '이미 움직인 폭'(시총·수익률)과 병목 상태 관측치. 근거·선행 점수는 그리지 않는다. */
+function Value({ idea, v, facts, history, cite }: { idea: IdeaView; v: Valuation | null; facts: CompanyFacts | null;
+  history: Awaited<ReturnType<typeof loadValuationHistory>>; cite: (e: IdeaEvidence) => number }) {
   const a = idea.assessment;
-  if (!a && !facts) return null;
-  const order = ["company", "confirm", "structure", "exposure", "counter"];
   const p = a?.price ?? null;
-  if (!a) return <section className="fd-dsec"><h2>주가·시가총액<small>전망이 아니라 이미 움직인 폭</small></h2><Valuation facts={facts} price={null} detail/></section>;
-  return <section className="fd-dsec">
-    <h2>판단<small>근거 점수 · {a.computed_at ? a.computed_at.slice(0, 10) : ""} 계산 · 주가 전망 아님</small></h2>
-    <div className="fd-judge-head"><ScoreText idea={idea}/><span>★{idea.stars} — ★3 은 7점 이상, 2점 이하는 ★1</span></div>
-    <Valuation facts={facts} price={p} detail/>
+  const ctx = <>
+    <PriceLine facts={facts} price={p}/>
     {facts?.market_cap_usd != null ? <p className="fd-judge-line"><b>시가총액</b>{usdB(facts.market_cap_usd)} — 발행주식 {Math.round(facts.shares_outstanding / 1e6).toLocaleString()}M주 × {facts.close?.toLocaleString()} {facts.currency}
       {facts.shares_as_of ? ` (주식수 ${facts.shares_as_of})` : ""}</p> : null}
-    <ul className="fd-parts">{order.filter((k) => a.parts?.[k]).map((k) => {
-      const v = a.parts[k];
-      const w = v.max > 0 ? Math.max(0, v.pts) / v.max : 0;
-      return <li key={k}>
-        <span className="fd-part-name">{PART_KO[k] ?? k}</span>
-        <span className="fd-part-bar" aria-hidden><i style={{ width: `${Math.round(w * 100)}%` }} className={v.pts < 0 ? "neg" : ""}/></span>
-        <span className="fd-part-pts">{v.pts > 0 && k === "counter" ? "+" : ""}{v.pts}{v.max ? `/${v.max}` : ""}</span>
-        <span className="fd-part-note">{v.note}</span>
-      </li>;
-    })}</ul>
-    {a.exposure ? <p className="fd-judge-line"><b>노출 순도</b>{a.exposure.segment ? `${a.exposure.segment} ` : ""}매출 비중 {a.exposure.share_pct}%
-      {a.exposure.basis ? ` — ${a.exposure.basis}` : ""}{a.exposure.url ? <> · <a href={a.exposure.url} target="_blank" rel="noreferrer">출처</a></> : null}</p> : null}
-    {a.observations?.length ? <div className="fd-judge-line"><b>병목 상태</b><ul className="fd-obs">{a.observations.map((o) => <li key={o.indicator_id}>
+    {a?.observations?.length ? <div className="fd-judge-line"><b>병목 상태</b><ul className="fd-obs">{a.observations.map((o) => <li key={o.indicator_id}>
       {o.label}: <strong>{o.value}{o.unit ? ` ${o.unit}` : ""}</strong> ({o.as_of}){o.source_url ? <> · <a href={o.source_url} target="_blank" rel="noreferrer">출처</a></> : null}
     </li>)}</ul></div> : null}
-    {p?.flags?.length ? <p className="fd-judge-line"><b>가격 신호</b>{p.flags.join(" · ")}{p.r1m != null ? ` (1개월 ${pct(p.r1m)})` : ""}</p> : null}
-    {a.bottlenecks?.length ? <p className="fd-judge-line"><b>걸린 병목</b>{a.bottlenecks.map((b, i) => <span key={b.id}>{i ? ", " : ""}
+    {a?.bottlenecks?.length ? <p className="fd-judge-line"><b>걸린 병목</b>{a.bottlenecks.map((b, i) => <span key={b.id}>{i ? ", " : ""}
       <Link href={`/bottlenecks#${encodeURIComponent(b.id)}`}>{b.label}</Link></span>)}</p> : null}
-    {a.anticipation ? <Anticipate a={a.anticipation}/> : null}
+  </>;
+  if (!v) {
+    return <section className="fd-dsec fd-value-sec">
+      <h2>가치평가<small>다음 아침 실행이 씁니다 · 모형 산출이지 권유가 아님</small></h2>
+      <ValueLine v={null} facts={facts}/>
+      {ctx}
+    </section>;
+  }
+  const live = liveUpside(v, facts?.close);
+  const fmtBig = (x?: number | null) => (x == null ? "—" : x >= 1e12 ? `${(x / 1e12).toFixed(2)}조` : x >= 1e8 ? `${(x / 1e8).toFixed(1)}억` : x >= 1e6 ? `${(x / 1e6).toFixed(1)}M` : x.toLocaleString());
+  const mult = (s: Valuation["scenarios"][number]) => (s.multiple != null && s.metric ? `${s.metric === "ps" ? "P/S" : "P/E"} ${s.multiple}` : "—");
+  return <section className="fd-dsec fd-value-sec">
+    <h2>가치평가<small>{v.as_of} 평가 · {v.horizon_months}개월 · {v.model ?? ""} · 모형 산출이지 권유가 아님</small></h2>
+    <ValueLine v={v} facts={facts} detail/>
+    <p className="fd-lead">{v.verdict}</p>
+    <table className="fd-sc-table">
+      <thead><tr><th>시나리오</th><th>확률</th><th>매출 ({v.currency})</th><th>마진</th><th>배수</th><th>내재 시총</th><th>내재 주가</th><th>여력</th></tr></thead>
+      <tbody>{v.scenarios.map((s) => <tr key={s.name} className={`fd-sc-${s.name}`}>
+        <td><b>{SCENARIO_KO[s.name]}</b>{s.story ? <small>{s.story}<Cites ns={(s.evidence ?? []).map(cite)}/></small> : null}</td>
+        <td>{Math.round(s.prob * 100)}%</td><td>{fmtBig(s.revenue)}</td><td>{s.margin_pct != null ? `${s.margin_pct}%` : "—"}</td><td>{mult(s)}</td>
+        <td>{fmtBig(s.implied_mcap_local)}</td><td>{money(s.implied_price, v.currency)}</td>
+        <td className={s.upside_pct >= 0 ? "up" : "down"}>{pct(s.upside_pct)}</td>
+      </tr>)}</tbody>
+      <tfoot><tr><td colSpan={6}>확률 가중 기대 주가</td><td>{money(v.expected_price, v.currency)}</td><td className={live.upside >= 0 ? "up" : "down"}>{pct(live.upside)}</td></tr></tfoot>
+    </table>
+    {v.path?.labels?.length ? <p className="fd-ant-path">{v.path.labels.map((l, i) => <span key={i}>{i ? <i> → </i> : null}{l}</span>)}</p> : null}
+    {v.path?.mechanism ? <p className="fd-judge-line"><b>왜 번지나</b>{v.path.mechanism}</p> : null}
+    {v.assumptions?.length ? <div className="fd-judge-line"><b>가정</b><ul className="fd-assume">{v.assumptions.map((x, i) => <li key={i}>{x.claim}<Cites ns={x.evidence.map(cite)}/></li>)}</ul></div> : null}
+    {v.breaks?.length ? <div className="fd-judge-line"><b>깨지는 조건</b><ul className="fd-assume">{v.breaks.map((x, i) => <li key={i}>{x.claim}<Cites ns={x.evidence.map(cite)}/></li>)}</ul></div> : null}
+    {history.length > 1 ? <p className="fd-judge-line"><b>평가 이력</b>{history.map((h, i) => <span key={h.as_of}>{i ? " → " : ""}{h.as_of.slice(5).replace("-", "/")} {pct(h.expected_upside_pct)}</span>)}
+      {live.live && live.upside !== v.expected_upside_pct ? ` (오늘 종가 기준 ${pct(live.upside)})` : ""}</p> : null}
+    {ctx}
   </section>;
 }
 
-/** 선행 추론: 변화 → 경로 → 기업. 근거 점수(확신)와 다른 축 — 시장이 아직 안 본 다음 고리인가. */
-function Anticipate({ a }: { a: NonNullable<NonNullable<Awaited<ReturnType<typeof loadIdea>>>["assessment"]>["anticipation"] & object }) {
-  const order = ["path", "unpriced", "room", "lead"];
-  return <div className="fd-ant">
-    <div className="fd-judge-head"><span className={`fd-score fd-score-${a.score >= 7 ? "hi" : a.score >= 4 ? "mid" : "lo"}`}>선행 {a.score}/10</span>
-      <span>기대값 — 변화가 이 기업 숫자로 번지기 전인가{a.priced_in ? ` · ${PRICED_KO[a.priced_in]}` : ""}</span></div>
-    {a.path_labels?.length ? <p className="fd-ant-path">{a.path_labels.map((l, i) => <span key={i}>{i ? <i> → </i> : null}{l}</span>)}</p> : null}
-    {a.mechanism ? <p className="fd-judge-line"><b>왜 번지나</b>{a.mechanism}</p> : null}
-    <ul className="fd-parts">{order.filter((k) => a.parts?.[k]).map((k) => {
-      const v = a.parts[k]; const w = v.max > 0 ? Math.max(0, v.pts) / v.max : 0;
-      return <li key={k}><span className="fd-part-name">{ANT_PART_KO[k] ?? k}</span>
-        <span className="fd-part-bar" aria-hidden><i style={{ width: `${Math.round(w * 100)}%` }}/></span>
-        <span className="fd-part-pts">{v.pts}/{v.max}</span><span className="fd-part-note">{v.note}</span></li>;
-    })}</ul>
-    {a.effect ? <p className="fd-judge-line"><b>변화 규모</b>매출의 약 {a.effect.pct_of_revenue}% — {a.effect.basis}{a.effect.url ? <> · <a href={a.effect.url} target="_blank" rel="noreferrer">출처</a></> : null}</p> : null}
-  </div>;
-}
 
 /** 심층 분석 (ADR-0017 개정 1): 왜 병목인가(기술) → 시장 규모 → 공급 구조 → 다음 고리 → 밸류에이션 맥락 → 반대 근거 → 확인 일정.
  *  문단마다 날짜 있는 출처. 예약작업이 ★3·텐배거 후보 아이디어에 쓴다. */

@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { IdeaCard } from "@/components/feed/Feed";
 import { ECO_KO } from "@/lib/ideas";
-import { loadFeed, orderIdeas, rel } from "@/lib/feed";
+import { loadFeed, orderByValue, rel } from "@/lib/feed";
 
 export const dynamic = "force-dynamic";
 export const metadata = { title: "오늘의 피드" };
@@ -9,15 +9,15 @@ export const metadata = { title: "오늘의 피드" };
 type SP = { eco?: string };
 
 /**
- * 홈 = 오늘의 피드. 아이디어마다 카드 하나: 제목 · 관련 기업 · 생성일 · 관련 이슈.
- * 논리·근거·반대 근거·판단 점수는 아이디어 상세에 있다 — 피드는 훑어보는 곳이라 설명을 싣지 않는다.
- * 순서: 최근 36시간에 새로·강화·약화된 아이디어 → 나머지(★ → 기업 근거가 새로운 순).
+ * 홈 = 오늘의 피드. 아이디어마다 카드 하나: 제목 · 가치평가 결과(현재 → 기대 주가, 상승여력, 확신) · 관련 기업 · 생성일 · 관련 이슈.
+ * 논리·근거·반대 근거·시나리오는 아이디어 상세에 있다 — 피드는 훑어보는 곳이라 설명을 싣지 않는다. 점수는 표면에 올리지 않는다 (ADR-0019).
+ * 순서: 최근 36시간에 새로·강화·약화된 아이디어 → 나머지. 각 묶음 안에서는 기대 상승여력 순(평가 없는 아이디어는 뒤에 ★ 순).
  */
 export default async function Home({ searchParams }: { searchParams: Promise<SP> }) {
   const sp = await searchParams;
   const feed = await loadFeed();
   const eco = sp.eco && ECO_KO[sp.eco] ? sp.eco : undefined;
-  const ideas = orderIdeas(feed.ideas.filter((x) => !eco || x.ecosystems.includes(eco)));
+  const ideas = orderByValue(feed.ideas.filter((x) => !eco || x.ecosystems.includes(eco)));
   const since = Date.now() - 36 * 36e5;
   const isChanged = (x: (typeof ideas)[number]) => new Date(x.updated_at).getTime() >= since && ["new", "strengthened", "weakened"].includes(x.shownTrend ?? "");
   const changed = ideas.filter(isChanged);

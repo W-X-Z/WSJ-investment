@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { IDEA_TYPE, PRICED_KO, TREND_KO, pct, tenbaggerCheck, usdB, type CompanyFacts, type InvestmentIdea, type PriceCtx } from "@/lib/ideas";
+import { CONFIDENCE_KO, IDEA_TYPE, SCENARIO_KO, TREND_KO, liveUpside, money, pct, usdB, type CompanyFacts, type InvestmentIdea, type PriceCtx, type Valuation } from "@/lib/ideas";
 import { REL_KO, ecoLabel, rel, shortName, type FeedIdea, type IdeaView } from "@/lib/feed";
 
 /** ★ 를 글자로 (배지 없이). */
@@ -30,18 +30,26 @@ export function Freshness({ idea }: { idea: IdeaView }) {
   </span>;
 }
 
-/** 근거 점수(확신, 10점)와 선행 점수(기대값, 10점). 점수가 아직 없으면 아무것도 안 그린다. */
-export function ScoreText({ idea }: { idea: Pick<InvestmentIdea, "assessment"> }) {
-  const s = idea.assessment?.score;
-  const a = idea.assessment?.anticipation?.score;
-  if (s == null) return null;
-  return <span className="fd-scores">
-    <span className={`fd-score fd-score-${s >= 7 ? "hi" : s >= 4 ? "mid" : "lo"}`} title="근거 점수(확신): 기업 직접 근거·숫자 확인·병목 구조·노출 순도·반대 근거">근거 {s}/10</span>
-    {a != null ? <span className={`fd-score fd-score-${a >= 7 ? "hi" : a >= 4 ? "mid" : "lo"}`} title="선행 점수(기대값): 변화→기업 경로·아직 미반영·룸·발현 시점">선행 {a}/10</span> : null}
-  </span>;
+/** 가치평가 결과 한 줄 (ADR-0019): 현재 → 기대 주가 (상승여력, 기간) · 확신. 오늘 종가가 있으면 여력을 다시 계산한다.
+ *  평가가 없으면 '가치평가 전'. 점수는 그리지 않는다. */
+export function ValueLine({ v, facts, detail }: { v: Valuation | null; facts: CompanyFacts | null; detail?: boolean }) {
+  if (!v) return <p className="fd-value fd-value-none">가치평가 전{facts?.market_cap_usd != null ? ` · 시총 ${usdB(facts.market_cap_usd)}` : ""}</p>;
+  const live = liveUpside(v, facts?.close);
+  const up = live.upside;
+  const tone = up >= 50 ? "hi" : up >= 15 ? "mid" : up > -15 ? "flat" : "lo";
+  const sc = v.scenarios;
+  return <p className={`fd-value fd-value-${tone}`}>
+    <b className="fd-value-up">{pct(up)}</b>
+    <span className="fd-value-px">{money(live.price, v.currency)} → {money(v.expected_price, v.currency)}<small> · {v.horizon_months}개월 기대</small></span>
+    <span className="fd-value-conf">{CONFIDENCE_KO[v.confidence]}</span>
+    {detail && sc.length ? <span className="fd-value-sc">{sc.map((s) => `${SCENARIO_KO[s.name]} ${pct(s.upside_pct)}`).join(" · ")}</span> : null}
+    {!detail && sc.length ? <span className="fd-value-sc" title={sc.map((s) => `${SCENARIO_KO[s.name]} ${Math.round(s.prob * 100)}% → ${money(s.implied_price, v.currency)}`).join(" · ")}>
+      {sc.map((s) => `${SCENARIO_KO[s.name]} ${pct(s.upside_pct)}`).join(" · ")}</span> : null}
+    <time dateTime={v.as_of}>{v.as_of.slice(5).replace("-", "/")} 평가{live.live && facts?.price_as_of ? ` · ${facts.price_as_of.slice(5).replace("-", "/")} 종가` : ""}</time>
+  </p>;
 }
 
-/** 피드 카드: ★·생태계·생성일 → 제목 → 관련 기업 → 관련 이슈. 논리·근거·판단은 상세에서. */
+/** 피드 카드: ★·생태계·생성일 → 제목 → 가치평가 결과 → 관련 기업 → 관련 이슈. 논리·근거·시나리오는 상세에서. */
 const CHANGE_KO: Record<string, string> = { new: "새로", strengthened: "강화", weakened: "약화" };
 const md = (d?: string | null) => (d ? `${Number(d.slice(5, 7))}/${Number(d.slice(8, 10))}` : "");
 const ROLE_ORDER: Record<string, number> = { primary: 0, peer: 1, competitor: 2, customer: 3, displaced: 4 };
@@ -59,8 +67,7 @@ export function IdeaCard({ idea, changed }: { idea: FeedIdea; changed: boolean }
       {idea.first_seen ? <time dateTime={idea.first_seen.slice(0, 10)}>{md(idea.first_seen)} 생성</time> : null}
     </div>
     <h3><Link href={href}>{idea.title}</Link></h3>
-    <Valuation facts={idea.facts} price={idea.assessment?.price ?? null}/>
-    {idea.assessment?.score != null ? <p className="fd-card-scores"><ScoreText idea={idea}/>{idea.assessment.anticipation?.priced_in ? <small>{PRICED_KO[idea.assessment.anticipation.priced_in]}</small> : null}</p> : null}
+    <ValueLine v={idea.valuation} facts={idea.facts}/>
     <dl className="fd-card-dl">
       <dt>관련 기업</dt>
       <dd><ul className="fd-chips">{shown.map((c) => <li key={c.id} className={c.id === idea.primary_company ? "on" : ""}>
@@ -74,18 +81,16 @@ export function IdeaCard({ idea, changed }: { idea: FeedIdea; changed: boolean }
   </article>;
 }
 
-/** 주가·시가총액 한 줄 (주 기업): 시총 · 12개월 · 고점 대비 · 저점 대비, 그리고 텐배거 출발 조건 판정.
- *  v_company_facts(실시간)가 있으면 그것을, 없으면 판단에 저장된 가격 맥락을 쓴다. 전망이 아니라 '이미 움직인 폭'. */
-export function Valuation({ facts, price, detail }: { facts: CompanyFacts | null; price: PriceCtx | null; detail?: boolean }) {
+/** 주가·시가총액 한 줄 (주 기업, 상세 화면): 시총 · 12개월 · 3개월 · 고점 대비 · 저점 대비 — 전망이 아니라 '이미 움직인 폭'.
+ *  v_company_facts(실시간)가 있으면 그것을, 없으면 판단에 저장된 가격 맥락을 쓴다. 판정 꼬리표(룸 큼 등)는 붙이지 않는다 (ADR-0019). */
+export function PriceLine({ facts, price }: { facts: CompanyFacts | null; price: PriceCtx | null }) {
   const p = price ?? null;
   const mcap = facts?.market_cap_usd ?? p?.market_cap_usd ?? null;
   const r12 = facts?.r12m ?? p?.r12m ?? null, hi = facts?.from_high ?? p?.from_high ?? null, lo = facts?.from_low ?? p?.from_low ?? null, r3 = facts?.r3m ?? p?.r3m ?? null;
   if (mcap == null && r12 == null && hi == null && p?.close == null) return <p className="fd-val fd-val-none">주가·시총 수집 전</p>;
-  const tb = p?.tenbagger && p.tenbagger.candidate !== null && mcap == null ? p.tenbagger : tenbaggerCheck(mcap, lo);
-  const parts = [mcap != null ? `시총 ${usdB(mcap)}` : null, r12 != null ? `12개월 ${pct(r12)}` : null, detail && r3 != null ? `3개월 ${pct(r3)}` : null,
+  const parts = [mcap != null ? `시총 ${usdB(mcap)}` : null, r12 != null ? `12개월 ${pct(r12)}` : null, r3 != null ? `3개월 ${pct(r3)}` : null,
     hi != null ? `고점 ${pct(hi)}` : null, lo != null ? `저점 ${pct(lo)}` : null].filter(Boolean);
   return <p className="fd-val">
-    {tb.candidate === true ? <b className="fd-tb on" title={tb.reason}>룸 큼</b> : tb.candidate === false ? <b className="fd-tb off" title={tb.reason}>{lo != null && lo >= 200 ? "이미 간 종목" : "큰 회사"}</b> : null}
     <span>{parts.join(" · ")}</span>
     {facts?.price_as_of ?? p?.as_of ? <time>{(facts?.price_as_of ?? p?.as_of ?? "").slice(5).replace("-", "/")}</time> : null}
   </p>;

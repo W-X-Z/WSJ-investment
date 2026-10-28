@@ -1,7 +1,7 @@
 import "server-only";
 import { db } from "@/lib/supabase";
 import nativeNames from "@/data/company-names.json";
-import { ECO_KO, loadFacts, loadIdeas, type CompanyFacts, type IdeaEvidence, type InvestmentIdea } from "@/lib/ideas";
+import { ECO_KO, liveUpside, loadFacts, loadIdeas, loadValuations, type CompanyFacts, type IdeaEvidence, type InvestmentIdea, type Valuation } from "@/lib/ideas";
 
 const NATIVE = nativeNames as Record<string, string>;
 
@@ -71,14 +71,14 @@ export function viewIdea(idea: InvestmentIdea): IdeaView {
 
 /** 아이디어 카드의 '관련 이슈' 한 줄: 아이디어가 근거로 쓴 업계 이슈(signal_refs)의 제목·날짜·첫 출처. */
 export type RelatedIssue = { key: string; title: string; date: string | null; url?: string };
-export type FeedIdea = IdeaView & { issues: RelatedIssue[]; issueCount: number; facts: CompanyFacts | null };
+export type FeedIdea = IdeaView & { issues: RelatedIssue[]; issueCount: number; facts: CompanyFacts | null; valuation: Valuation | null };
 export type Feed = { ideas: FeedIdea[]; source: "db" | "seed"; updatedAt: string | null; error?: string };
 
 type IssueRow = { issue_key: string; title: string; latest_published_at: string | null; first_seen: string; sources: { url: string }[] | null };
 
 /** 홈 피드 데이터: 활성 아이디어 + 아이디어마다 관련 이슈(최신 3개). 이슈 원문이 없으면(시드) 아이디어의 최근 근거 제목으로 대신한다. */
 export async function loadFeed(): Promise<Feed> {
-  const [{ ideas, source, error }, facts] = await Promise.all([loadIdeas(), loadFacts()]);
+  const [{ ideas, source, error }, facts, valuations] = await Promise.all([loadIdeas(), loadFacts(), loadValuations()]);
   const views = ideas.map(viewIdea);
   const keys = Array.from(new Set(views.flatMap((v) => (v.signal_refs ?? []).filter((r) => !r.startsWith("events:")))));
   const byKey = new Map<string, RelatedIssue>();
@@ -104,10 +104,21 @@ export async function loadFeed(): Promise<Feed> {
         .map((r) => ({ key: r.id, title: r.title, date: day(r.date), url: r.url }));
     }
     iss.sort(byDate);
-    return { ...v, issues: iss.slice(0, 3), issueCount: iss.length, facts: facts.get(v.primary_company) ?? null };
+    return { ...v, issues: iss.slice(0, 3), issueCount: iss.length, facts: facts.get(v.primary_company) ?? null, valuation: valuations.get(v.idea_key) ?? null };
   });
   const updatedAt = ideas.map((x) => x.updated_at).sort().at(-1) ?? null;
-  return { ideas: out, source, updatedAt, error: err };
+  return { ideas: orderByValue(out), source, updatedAt, error: err };
+}
+
+/** 피드 순서 (ADR-0019): 가치평가가 있는 아이디어는 오늘 종가로 다시 계산한 기대 상승여력 순, 평가가 없는 아이디어는 그 뒤에 ★·근거 순. */
+export function orderByValue<T extends IdeaView & { valuation: Valuation | null; facts: CompanyFacts | null }>(xs: T[]): T[] {
+  const up = (x: T) => (x.valuation ? liveUpside(x.valuation, x.facts?.close).upside : null);
+  return [...xs].sort((a, b) => {
+    const ua = up(a), ub = up(b);
+    if (ua != null && ub != null) return ub - ua || b.stars - a.stars;
+    if (ua != null || ub != null) return ua != null ? -1 : 1;
+    return b.stars - a.stars || (b.companyAt ?? "").localeCompare(a.companyAt ?? "") || (b.industryAt ?? "").localeCompare(a.industryAt ?? "");
+  });
 }
 
 /** 같은 ★ 안에서는 기업 직접 근거가 새로운 아이디어가 위로, 그다음 업계 근거. */

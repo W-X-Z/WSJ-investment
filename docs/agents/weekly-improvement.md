@@ -31,6 +31,9 @@ Claude 예약작업 "WSJ 시스템 개선 (주간)"이 매주 일요일 10:23 KS
 5. 데이터 공백 (가격·시가총액 출처가 없는 거래소, 값 없는 지표, 막힌 출처) → 무료·공식 대체 출처를 찾아 수집기 코드를 고친다 (사람 승인 PR).
 6. 심층 메모가 30일 넘은 ★3 아이디어 → `docs/agents/deep-dive.md` 대로 다시 쓴다 (`ideas.put_idea_notes`, 주 2건까지).
 7. 모니터 1개 붙이기 — `docs/adr/0018-monitor-registry.md` 우선순위 순 (법설회 IR → 8-K 숫자 추출 → 품목 가격). 출처 도달을 `source-probe` 로 먼저 확인하고, 수집기 코드는 사람 승인 PR.
+8. 가치평가 적중 점검 (ADR-0019) — `select h.idea_key, h.as_of, h.price, h.expected_upside_pct, h.confidence, c.close from public.v_valuation_history h join public.v_company_facts c on c.company_id = h.company_id where h.as_of < current_date - 28 order by h.as_of;`
+   로 4주 넘은 평가의 기대 상승여력과 그 뒤 실제 주가 변화를 비교한다. 방향이 다른 평가가 confidence=high 에서 반복되면 프롬프트의 '가치평가' 절(배수·bear 규칙)을 고치는 PR 을 낸다.
+   재무(v_company_fundamentals)가 없는 주 기업이 있으면 그 시장의 재무 출처를 찾아 `fundamentals.py` 에 붙인다 (일본·중국이 비어 있다).
 
 ## 3. 그래프 패치 쓰는 법
 - `pipeline/wsj/ecosystems/graph_patches/pYYYYMMDD_<주제>.py` 를 새로 만든다 (기존 패치 p20261028_… 를 본보기로). 기존 패치는 고치지 않는다.

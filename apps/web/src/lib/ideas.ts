@@ -77,6 +77,55 @@ export async function loadFacts(): Promise<Map<string, CompanyFacts>> {
   } catch { return new Map(); }
 }
 
+/** 가치평가 (ADR-0019, ideas.valuations → v_valuations): 매일 아침 LLM 이 이슈 → 영향 경로 → 기업 숫자 → 시나리오별 내재 시총·주가와 기댓값.
+ *  사람이 보는 결과는 이것이다. 근거·선행 점수는 계산기로 뒤에 남는다. 모형 산출이지 권유가 아니다. */
+export type ValuationScenario = { name: "bear" | "base" | "bull"; prob: number; story?: string; revenue?: number | null; margin_pct?: number | null;
+  metric?: "ps" | "pe" | null; multiple?: number | null; implied_mcap_local?: number | null; implied_price: number; upside_pct: number; evidence?: IdeaEvidence[] };
+export type Valuation = { idea_key: string; as_of: string; company_id: string; currency: string; price: number; price_as_of?: string | null; shares?: number | null;
+  market_cap_usd?: number | null; horizon_months: number; scenarios: ValuationScenario[]; expected_price: number; expected_upside_pct: number;
+  confidence: "low" | "mid" | "high"; verdict: string; assumptions: IdeaStep[]; breaks: IdeaStep[]; path?: { labels?: string[]; mechanism?: string | null } | null;
+  model?: string | null; method?: string | null; prev_expected_upside_pct?: number | null; prev_as_of?: string | null; n_valuations?: number | null };
+export const SCENARIO_KO: Record<string, string> = { bear: "약세", base: "기본", bull: "강세" };
+export const CONFIDENCE_KO: Record<string, string> = { low: "확신 낮음", mid: "확신 중간", high: "확신 높음" };
+/** 통화 기호와 자릿수: 현지 통화 그대로 (NT$42.5 · ₩12,100 · $3.00 · ¥5,129). */
+const CUR_SYM: Record<string, string> = { USD: "$", TWD: "NT$", KRW: "₩", JPY: "¥", CNY: "CN¥", HKD: "HK$", EUR: "€", GBP: "£" };
+export function money(v: number | null | undefined, cur: string): string {
+  if (v == null) return "";
+  const sym = CUR_SYM[cur] ?? `${cur} `;
+  const digits = v >= 1000 ? 0 : v >= 100 ? 1 : 2;
+  return `${sym}${v.toLocaleString("en-US", { minimumFractionDigits: digits, maximumFractionDigits: digits })}`;
+}
+/** 오늘 종가로 다시 계산한 상승여력: 평가 뒤 주가가 움직여도 기대 주가는 그대로, 여력만 바뀐다. 종가가 없으면 평가 당시 값. */
+export function liveUpside(v: Valuation, close?: number | null): { upside: number; price: number; live: boolean } {
+  const p = close != null && close > 0 ? close : v.price;
+  return { upside: Math.round(10 * (100 * (v.expected_price / p - 1))) / 10, price: p, live: close != null && close > 0 };
+}
+
+/** 활성 아이디어의 최신 가치평가 (0024 전에는 빈 Map). */
+export async function loadValuations(): Promise<Map<string, Valuation>> {
+  if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.NEXT_PUBLIC_SUPABASE_KEY) return new Map();
+  try {
+    const { data, error } = await db("public").from("v_valuations").select("*").limit(500);
+    if (error || !data) return new Map();
+    const num = (x: unknown) => (x == null ? null : Number(x));
+    return new Map((data as Valuation[]).map((v) => [v.idea_key, { ...v, price: Number(v.price), expected_price: Number(v.expected_price),
+      expected_upside_pct: Number(v.expected_upside_pct), shares: num(v.shares), market_cap_usd: num(v.market_cap_usd),
+      prev_expected_upside_pct: num(v.prev_expected_upside_pct), horizon_months: Number(v.horizon_months ?? 12),
+      scenarios: (v.scenarios ?? []).map((s) => ({ ...s, prob: Number(s.prob), implied_price: Number(s.implied_price), upside_pct: Number(s.upside_pct) })) }]));
+  } catch { return new Map(); }
+}
+
+/** 한 아이디어의 평가 이력 (오래된 순). */
+export async function loadValuationHistory(key: string): Promise<{ as_of: string; price: number; expected_price: number; expected_upside_pct: number; confidence: string }[]> {
+  if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.NEXT_PUBLIC_SUPABASE_KEY) return [];
+  try {
+    const { data, error } = await db("public").from("v_valuation_history").select("as_of,price,expected_price,expected_upside_pct,confidence").eq("idea_key", key).order("as_of", { ascending: true }).limit(120);
+    if (error || !data) return [];
+    return (data as { as_of: string; price: number; expected_price: number; expected_upside_pct: number; confidence: string }[])
+      .map((r) => ({ ...r, price: Number(r.price), expected_price: Number(r.expected_price), expected_upside_pct: Number(r.expected_upside_pct) }));
+  } catch { return []; }
+}
+
 /** 아이디어의 심층 분석 메모 (0022 전에는 null). */
 export async function loadIdeaNote(key: string): Promise<IdeaNote | null> {
   if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.NEXT_PUBLIC_SUPABASE_KEY) return null;

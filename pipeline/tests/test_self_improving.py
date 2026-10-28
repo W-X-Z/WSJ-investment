@@ -297,3 +297,91 @@ def test_scan_second_order_finds_quiet_downstream_companies():
     issues = [{"issue_key": "x", "title": "CoWoS 증설", "importance": 7, "latest_published_at": "2026-10-27", "nodes": ["bottleneck:cowos_capacity"], "companies": []}]
     out = scan.second_order(g, st, issues, recent_co=set(), covered=set(), prices={}, cut14="2026-10-14")
     assert out and all(x["hops"] >= 2 for x in out) and all(x["size_band"] in ("micro", "small", "mid") for x in out)
+
+
+# ------------------------------------------------------------------ 가치평가 (ADR-0019): 결과는 가치평가, 점수는 계산기
+def _ev(ids):
+    return [{"id": e, "url": f"https://x/{e}", "title": e, "date": "2026-10-20"} for e in ids if e in ("S1", "S2", "G1")]
+
+
+def test_parse_valuation_recomputes_mcap_and_price_and_expected_value():
+    from wsj.ecosystems.ideas import parse_valuation
+
+    money = {"close": 42.0, "currency": "TWD", "shares": 1.5e8, "market_cap_usd": 1.9e8, "as_of": "2026-10-28"}
+    raw = {"horizon_months": 12, "confidence": "mid", "verdict": "가" * 130,
+           "scenarios": [{"name": "bear", "prob": 0.3, "revenue": 2.8e9, "metric": "ps", "multiple": 1.5, "implied_mcap_local": 9e9, "evidence": ["S1"]},  # LLM 산수 틀림 → 4.2e9
+                         {"name": "base", "prob": 0.5, "revenue": 4.5e9, "margin_pct": 14, "metric": "pe", "multiple": 20, "evidence": ["S2"]},   # 4.5e9×0.14×20 = 1.26e10
+                         {"name": "bull", "prob": 0.2, "implied_price": 150, "evidence": []}],
+           "assumptions": [{"claim": "a", "evidence": ["S1"]}, {"claim": "b", "evidence": ["S2"]}, {"claim": "근거 없음", "evidence": ["Z9"]}],
+           "breaks": [{"claim": "c", "evidence": ["G1"]}]}
+    v, why = parse_valuation(raw, money, _ev)
+    assert why is None and v is not None
+    bear, base, bull = v["scenarios"]
+    assert bear["implied_mcap_local"] == 4.2e9 and bear["implied_price"] == 28.0 and bear["upside_pct"] == -33.3
+    assert base["implied_mcap_local"] == 1.26e10 and base["implied_price"] == 84.0 and base["upside_pct"] == 100.0
+    assert bull["implied_price"] == 150.0 and bull["implied_mcap_local"] == 2.25e10
+    assert v["expected_price"] == round(0.3 * 28 + 0.5 * 84 + 0.2 * 150, 4) and v["expected_upside_pct"] == 91.4
+    assert len(v["assumptions"]) == 2 and v["calc_notes"] and "bear" in v["calc_notes"][0]
+    assert v["currency"] == "TWD" and v["price"] == 42.0 and v["shares"] == 1.5e8
+
+
+def test_parse_valuation_rejects_bad_inputs():
+    from wsj.ecosystems.ideas import parse_valuation
+
+    money = {"close": 10.0, "currency": "USD", "shares": 1e6}
+    good = {"confidence": "high", "verdict": "v" * 130, "assumptions": [{"claim": "a", "evidence": ["S1"]}, {"claim": "b", "evidence": ["S2"]}],
+            "scenarios": [{"name": "bear", "prob": 0.5, "implied_price": 8}, {"name": "bull", "prob": 0.5, "implied_price": 30}]}
+    assert parse_valuation(good, money, _ev)[0]["expected_upside_pct"] == 90.0
+    assert parse_valuation(good, None, _ev) == (None, "주가 없음")
+    assert "확률 합" in parse_valuation(good | {"scenarios": [{"name": "bear", "prob": 0.5, "implied_price": 8}, {"name": "bull", "prob": 0.3, "implied_price": 30}]}, money, _ev)[1]
+    assert "가정" in parse_valuation(good | {"assumptions": [{"claim": "a", "evidence": ["S1"]}]}, money, _ev)[1]
+    assert "verdict" in parse_valuation(good | {"verdict": "짧다"}, money, _ev)[1]
+    assert "confidence" in parse_valuation(good | {"confidence": "sure"}, money, _ev)[1]
+    # 주식수를 모르고 implied_price 도 없으면 시나리오를 못 만든다
+    assert "시나리오" in parse_valuation(good | {"scenarios": [{"name": "bear", "prob": 0.5, "revenue": 1e9, "metric": "ps", "multiple": 2},
+                                                              {"name": "bull", "prob": 0.5, "revenue": 2e9, "metric": "ps", "multiple": 3}]},
+                                        {"close": 10.0, "currency": "USD"}, _ev)[1]
+
+
+def test_money_context_joins_price_shares_and_fundamentals():
+    from wsj.ecosystems.ideas import money_context
+
+    g = _graph()
+    by_key = {"P": {"ticker": "P", "close": 42, "as_of": "2026-10-28", "shares_outstanding": 1.5e8, "market_cap_usd": 1.9e8, "currency": "USD"},
+              "Q": {"ticker": "Q", "close": None}}
+    fund = [{"company_id": "company:p", "period": "ttm", "period_end": "2026-06-30", "currency": "USD", "revenue": 2.8e9, "op_margin_pct": 7.1, "ps": 2.25, "pe": None}]
+    m = money_context(g, by_key, fund)
+    assert set(m) == {"company:p"}
+    assert m["company:p"]["close"] == 42.0 and m["company:p"]["shares"] == 1.5e8 and m["company:p"]["currency"] == "USD"
+    assert m["company:p"]["fundamentals"]["revenue"] == 2.8e9 and m["company:p"]["fundamentals"]["op_margin_pct"] == 7.1 and "pe" not in m["company:p"]["fundamentals"]
+
+
+def test_fundamentals_parsers():
+    from wsj.ecosystems import fundamentals as FU
+
+    # 미국: 분기 4개가 이어지면 TTM, 연간은 FY
+    fin = {"quarters": [{"period_end": f"2025-{m:02d}-30", "revenue": 100.0, "op_income": 10.0, "net_income": 8.0, "gross_profit": None} for m in (3, 6, 9)]
+           + [{"period_end": "2025-12-31", "revenue": 120.0, "op_income": 12.0, "net_income": 9.0, "gross_profit": None}],
+           "annual": [{"fiscal_year_end": "2025-12-31", "revenue": 420.0, "op_income": 42.0, "net_income": 33.0}]}
+    x = P.Listing("company:a", "NYSE", "A", "A", "us")
+    rows = FU.us_rows(x, fin, cik=123)
+    ttm = next(r for r in rows if r["period"] == "ttm")
+    assert ttm["revenue"] == 420.0 and ttm["operating_income"] == 42.0 and ttm["gross_profit"] is None and ttm["period_end"] == "2025-12-31"
+    assert ttm["source_url"].endswith("CIK0000000123.json") and any(r["period"] == "fy" and r["revenue"] == 420.0 for r in rows)
+    # 대만: 월매출 12개월 합 (NT$ 천 → NT$), 끊기면 None
+    pts = [(date(2025, m, 1), 1000.0) for m in range(1, 13)]
+    assert FU.ttm_from_monthly(pts) == (12_000_000.0, date(2025, 12, 31))
+    assert FU.ttm_from_monthly(pts[:11]) is None and FU.ttm_from_monthly(pts[:6] + pts[7:] + [(date(2026, 1, 1), 1.0)]) is None
+    m = FU.parse_tw_margins([{"公司代號": "6664", "營業收入": "1000.00", "營業利益（損失）": "150.00", "本期淨利（淨損）": "120.00", "年度": "115", "季別": "2"}],
+                            "公司代號", "營業收入", "營業利益（損失）", "本期淨利（淨損）")
+    assert m["6664"]["op_margin"] == 0.15 and m["6664"]["net_margin"] == 0.12
+    # 한국: 네이버 분기 표 (억원), 컨센서스 열 제외
+    d = {"financeInfo": {"trTitleList": [{"key": "202509", "isConsensus": "N"}, {"key": "202512", "isConsensus": "N"}, {"key": "202603", "isConsensus": "N"},
+                                         {"key": "202606", "isConsensus": "N"}, {"key": "202609", "isConsensus": "Y"}],
+                         "rowList": [{"title": "매출액", "columns": {k: {"value": v} for k, v in (("202509", "313"), ("202512", "273"), ("202603", "224"), ("202606", "505"), ("202609", "670"))}},
+                                     {"title": "영업이익", "columns": {k: {"value": v} for k, v in (("202509", "-4"), ("202512", "-123"), ("202603", "-25"), ("202606", "79"), ("202609", "140"))}},
+                                     {"title": "당기순이익", "columns": {k: {"value": v} for k, v in (("202509", "2"), ("202512", "-117"), ("202603", "-8"), ("202606", "70"))}}]}}
+    qs = FU.parse_naver_quarters(d)
+    assert [q["period_end"] for q in qs] == ["2025-09-30", "2025-12-31", "2026-03-31", "2026-06-30"]
+    kr = FU.kr_rows(P.Listing("company:k", "KOSDAQ", "086390", "KOSDAQ:086390", "kr"), qs)[0]
+    assert kr["revenue"] == 1315e8 and kr["operating_income"] == -73e8 and kr["net_income"] == -53e8 and kr["period_end"] == "2026-06-30"
