@@ -1,0 +1,278 @@
+S1 | 2026-10-24 | TOKENPOST | Micron Maps HBM Roadmap Through 2030, Sees Memory Imbalance for Two Years | 
+S2 | 2026-10-21 | Yahoo Finance | Micron Technology Maps AI Memory Future With HBM, DRAM and NAND Roadmap | 
+S3 | 2026-10-19 | shattered.io | Micron Maps AI Memory Roadmap: HBM4 Hits 2.6x Gains [2026] | 
+S4 | 2026-10-26 | Global Sources | Samsung Electro-Mechanics and NVIDIA to expand ABF substrate facilities in South Korea | 
+S5 | 2026-10-26 | shattered.io | Samsung Electro-Mechanics Nvidia Bet: KRW 4.27T [2026] | 
+S6 | 2026-10-21 | Korea JoongAng Daily | Nvidia taps Samsung Electro-Mechanics for AI chips substrate supply chain | 
+S7 | 2026-10-16 | Semiconductor Today | Infineon and Wolfspeed expand and extend long-term SiC wafer supply agreement to 200mm | 
+S8 | 2026-10-23 | Ink World Magazine | Infineon Signs Silicon Carbide Wafer Supply Agreement with Wolfspeed | 
+S9 | 2026-10-21 | digitimes | Infineon, Wolfspeed pivot to 8-inch SiC to cut costs and meet rising AI power demand | 
+S10 | 2026-10-21 | Gasgoo | Infineon Locks in Long-term Wolfspeed SiC Wafer Orders | 
+S11 | 2026-10-21 | LEDinside | [News] Intel Claims Industry’s Only High-Volume 300mm InP Silicon Photonics Capability as  | 
+S12 | 2026-10-20 | Bits&Chips | Intel pitches 300mm silicon photonics with integrated InP lasers | 
+S13 | 2026-10-20 | digitimes | Intel says it is the only high-volume fab for 12-inch InP silicon photonics as co-packaged | 
+S14 | 2026-10-21 | Semiconductor Today | Infineon collaborates with NVIDIA on GaN-based power conversion systems for 800VDC AI data | 
+S15 | 2026-10-26 | Data Center Frontier | 800 VDC for AI Data Centers: Rethinking Power Delivery in the White Space | 
+S16 | 2026-10-25 | THE ELEC, Korea Electronics Industry Media | Infineon to Supply GaN Power Chips for Nvidia’s 800V Data Centers | 
+S17 | 2026-10-23 | ET Datacenters | Infineon, Nvidia partner on GaN for 800 VDC AI data centers | 
+S18 | 2026-10-19 | TrendForce | Optical Fiber Spot Prices Surge Severalfold in 2026, with Data Center-Driven Supply Shorta | 
+S19 | 2026-10-25 | DigiTimes | Nvidia unveils OOI CPO prototype for post-2028 AI needs | 
+S20 | 2026-10-22 | TrendForce | [News] NVIDIA Unveils Next-Gen CPO Prototype With Optics on Silicon Interposer, Targets Hi | 
+S21 | 2026-10-27 | Tom's Hardware | Nvidia is bankrolling AI accelerator supply chain buildout to reserve production capacity | 
+S22 | 2026-10-26 | The Korea Herald | Samsung may have overtaken SK hynix in HBM revenue, analysis suggests | 
+S23 | 2026-10-22 | BigGo Finance | Bernstein: Samsung Topples SK hynix in HBM Revenue as HBM4 Race Tightens | 
+S24 | 2026-10-26 | IndexBox | Optical Test Costs Near Manufacturing Expenses in Co-Packaged Optics - News and Statistics | 
+S25 | 2026-10-26 | Semiconductor Engineering | Testing Silicon Photonics At Scale | 
+S26 | 2026-10-26 | Semiconductor Engineering | Bringing Down Test Costs For Co-Packaged Optics | 
+S27 | 2026-10-21 | Business Wire | Vantage and Heron Power Electronics Announce Gigawatt-Scale 800 VDC Agreement to Accelerat | 
+S28 | 2026-10-24 | Energies Media | SolarEdge displays MVAC-to-800 VDC solid-state transformer technology for AI data centers  | 
+S29 | 2026-10-19 | eeNews Europe | BizLink expands 800 VDC power and 1.6T connectivity for AI data centers | 
+S30 | 2026-10-26 | Federal Register · Treasury Department, Investment Security Office | Outbound Investment Security Program Regulations | 
+S31 | 2026-10-27 | TWSE | WinWay 월매출 2026-09: 1,250,373 NT$ 천 (YoY +87.7%, MoM -26.7%) | 
+S32 | 2026-10-27 | TPEx | MPI 월매출 2026-09: 2,047,814 NT$ 천 (YoY +82.2%) | 
+S33 | 2026-10-23 | Bits&Chips | Besi sees increasing momentum for hybrid bonding | 
+S34 | 2026-10-23 | BigGo Finance | ASML's Hybrid Bonding Patents Reveal a Carousel Design Aimed at BESI's Turf | 
+S35 | 2026-10-24 | note | Chinese Semiconductor Equipment Manufacturers to Strengthen Hybrid Bonding: NAURA, Piotech | 
+S36 | 2026-10-14 | TrendForce | CSP CapEx Projected to Exceed US$1.5 Trillion in 2027, with AI Server Revenue Growing Over | 
+S37 | 2026-10-26 | 조선일보 | Samsung, SK Hynix Post Record 180 Trillion Won Profits; Stocks Slump | 
+S38 | 2026-10-25 | Korea IT Times | Samsung, SK Hynix Expected to Post Combined Operating Profit Exceeding KRW 180 Trillion in | 
+S39 | 2026-10-22 | SEC EDGAR (MAXLINEAR, INC) | MAXLINEAR, INC: MaxLinear, Inc. Announces Third Quarter 2026 Financial Results | 
+S40 | 2026-10-24 | Yahoo Finance | MaxLinear (MXL) Stock Slips As Q3 Earnings Fuel AI Rebound Questions | 
+S41 | 2026-10-24 | Yahoo Finance Singapore | MaxLinear (MXL) Stock Slips As Q3 Earnings Fuel AI Rebound Questions | 
+S42 | 2026-10-23 | Yahoo Finance | How Investors Are Reacting To MaxLinear (MXL) Earnings Beat | 
+S43 | 2026-10-26 | Proactive financial news | AXT poised for further margin gains as indium phosphide supply remains tight, Wedbush says | 
+S44 | 2026-10-27 | Semiconductor Today | Infineon establishing first high-volume fab for GaN power semiconductors on 300mm wafers i | 
+S45 | 2026-10-27 | eeNews Europe | Infineon invests €1.1bn in Europe’s 300mm GaN chip production | 
+S46 | 2026-10-28 | SK hynix Newsroom | SK hynix Announces 3Q26 Financial Results | 
+S47 | 2026-10-28 | TechPowerUp | SK Hynix Expects Memory Demand to Outpace Supply Through 2030 | 
+S48 | 2026-10-28 | Startup Fortune | SK Hynix says AI memory demand will outrun supply past 2030 | 
+S49 | 2026-10-28 | Seoul Economic Daily | HBM Demand Runs at Twice Supply, SK hynix CEO Says | 
+S50 | 2026-10-27 | Tom's Hardware | TSMC reportedly weighs 20% CoWoS price increase as Nvidia Blackwell and Rubin chips put pr | 
+S51 | 2026-10-28 | GuruFocus | TSMC Considers 10-20% Price Increase for CoWoS Technology, Ticke | 
+S52 | 2026-10-28 | TechPowerUp | TSMC Could Charge Up to 20% More for CoWoS Packaging Amid AI Crunch | 
+S53 | 2026-10-28 | NeoTeo | TSMC CoWoS prices may rise up to 20%, report says | 
+S54 | 2026-10-11 | BLS | 미국 PPI: 인쇄회로기판(베어) 2026-09: 194.47 index (전년 +45.8%) | 
+S55 | 2026-10-11 | BLS | 미국 PPI: 개폐기·배전반 2026-09: 412.235 index (전년 +12.3%) | 
+S56 | 2026-10-11 | BLS | 미국 PPI: 구리 압연·인발 2026-09: 187.723 index (전년 +30.3%) | 
+S57 | 2026-10-11 | FRED | 구리 국제가격 2026-09: 14,473.056 USD/톤 (전년 +44.8%) | 
+S58 | 2026-10-28 | DigiTimes | Goke Microelectronics raises KGD packaging prices again | 
+S59 | 2026-10-26 | SEC EDGAR (APPLIED MATERIALS INC /DE) | APPLIED MATERIALS INC /DE: Applied Materials to Increase its Strategic Investment in BE Se | 
+S66 | 2026-10-28 | DigiTimes | Unimicron steers resources to Taiwan AI substrates with NT$50.9B equipment orders, Japan u | 
+S67 | 2026-10-28 | SEC EDGAR (AXT INC) | AXT INC: OF AXT, INC., DATED OCTOBER 28, 2026 (FURNISHED PURSUANT TO ITEM 7.01) Exhibit 99 | 
+S68 | 2026-10-28 | SEC EDGAR (AXT INC) | AXT INC: false 0001051627 0001051627 2026-10-27 2026-10-27 iso4217:USD xbrli:shares iso421 | 
+S69 | 2026-10-28 | Business Wire | AXT, Inc. Announces Up to RMB 3.67 Billion (Approximately US$545 Million) in Private Equit | 
+S70 | 2026-10-28 | Investing.com UK | Form 8K AXT Inc For: 28 October By Investing.com | 
+S71 | 2026-10-16 | Semiconductor Today | Power Integrations and Ideal Power collaborate on efficient, always-on solid-state circuit | 
+S72 | 2026-10-22 | New Electronics | Power Integrations and Ideal Power partner on solid-state circuit breaker technology | 
+S73 | 2026-10-19 | Bisinfotech | Power Integrations and Ideal Power Partner on 800 VDC Data Center Circuit Breakers | 
+S74 | 2026-10-27 | SEC EDGAR (Enphase Energy, Inc.) | Enphase Energy, Inc.: Enphase Energy Reports Financial Results for the Third Quarter of 20 | 
+S75 | 2026-10-27 | GlobeNewswire | Enphase Energy Successfully Demonstrates IQ Solid-State Transformer Technology Converting  | 
+S76 | 2026-10-28 | eeNews Europe | Infineon and Enphase develop 900 V GaN switches for AI data centres | 
+S77 | 2026-10-26 | Semiconductor Today | Infineon supplying world’s first 900V GaN monolithic BDS devices to Enphase | 
+S78 | 2026-10-27 | VideoCardz.com | NVIDIA quietly cuts Vera Rubin specs, HBM4 bandwidth and NVLink 6 speeds now lower | 
+S79 | 2026-10-27 | BigGo Finance | Nvidia Trims Vera Rubin HBM4 Bandwidth to 19.2 TB/s, NVLink 6 Also Cut in Silent Spec Revi | 
+S82 | 2026-10-11 | US BLS | 미국 PPI: 구리 압연·인발 2026-09 전년 대비 +30% | 
+S83 | 2026-10-11 | US BLS | 미국 PPI: 인쇄회로기판(베어) 2026-09 전년 대비 +46% | 
+S84 | 2026-10-11 | US BLS | 미국 PPI: 개폐기·배전반 2026-09 전년 대비 +12% | 
+S85 | 2026-10-11 | TWSE·TPEx 공시 | Nan Ya Plastics 월매출 2026-09 전년 대비 +55% | 
+S86 | 2026-10-11 | TWSE·TPEx 공시 | Fulltech Fiber Glass 월매출 2026-09 전년 대비 +82% | 
+S87 | 2026-10-11 | TWSE·TPEx 공시 | Yageo 월매출 2026-09 전년 대비 +46% | 
+S88 | 2026-10-11 | TWSE·TPEx 공시 | TSMC 월매출 2026-09 전년 대비 +55% | 
+S89 | 2026-10-11 | TWSE·TPEx 공시 | Accton 월매출 2026-09 전년 대비 +66% | 
+S90 | 2026-10-11 | TWSE·TPEx 공시 | Chroma ATE 월매출 2026-09 전년 대비 +206% | 
+S91 | 2026-10-11 | TWSE·TPEx 공시 | Cheng Uei Precision / Foxlink 월매출 2026-09 전년 대비 -48% | 
+S92 | 2026-10-11 | TWSE·TPEx 공시 | Mirle Automation 월매출 2026-09 전년 대비 +78% | 
+S93 | 2026-10-11 | TWSE·TPEx 공시 | C Sun 志聖 월매출 2026-09 전년 대비 +91% | 
+S94 | 2026-10-11 | TWSE·TPEx 공시 | Walsin Technology 월매출 2026-09 전년 대비 +54% | 
+S95 | 2026-10-11 | TWSE·TPEx 공시 | Asia Vital Components 월매출 2026-09 전년 대비 +45% | 
+S96 | 2026-10-11 | TWSE·TPEx 공시 | Unimicron 월매출 2026-09 전년 대비 +65% | 
+S97 | 2026-10-11 | TWSE·TPEx 공시 | LandMark Optoelectronics 월매출 2026-09 전년 대비 +190% | 
+S98 | 2026-10-11 | TWSE·TPEx 공시 | Grand Process Technology 弘塑 월매출 2026-09 전년 대비 +62% | 
+S99 | 2026-10-11 | TWSE·TPEx 공시 | Kinsus Interconnect Technology 월매출 2026-09 전년 대비 +44% | 
+S100 | 2026-10-11 | TWSE·TPEx 공시 | Dynapack International 월매출 2026-09 전년 대비 -34% | 
+S101 | 2026-10-11 | TWSE·TPEx 공시 | Global Unichip 월매출 2026-09 전년 대비 +98% | 
+S102 | 2026-10-11 | TWSE·TPEx 공시 | Jentech Precision 健策 월매출 2026-09 전년 대비 +80% | 
+S103 | 2026-10-11 | TWSE·TPEx 공시 | Gudeng Precision 월매출 2026-09 전년 대비 +68% | 
+S104 | 2026-10-11 | TWSE·TPEx 공시 | ASE Technology 월매출 2026-09 전년 대비 +46% | 
+S105 | 2026-10-11 | TWSE·TPEx 공시 | 新盛力 월매출 2026-09 전년 대비 +176% | 
+S106 | 2026-10-11 | TWSE·TPEx 공시 | Luxnet 월매출 2026-09 전년 대비 +98% | 
+S107 | 2026-10-11 | TWSE·TPEx 공시 | Simplo Technology 월매출 2026-09 전년 대비 -21% | 
+S108 | 2026-10-11 | TWSE·TPEx 공시 | All Ring Tech 월매출 2026-09 전년 대비 +109% | 
+S109 | 2026-10-11 | TWSE·TPEx 공시 | MPI 월매출 2026-09 전년 대비 +82% | 
+S110 | 2026-10-11 | TWSE·TPEx 공시 | Chunghwa Precision Test 월매출 2026-09 전년 대비 +56% | 
+S111 | 2026-10-11 | TWSE·TPEx 공시 | WinWay 월매출 2026-09 전년 대비 +88% | 
+S112 | 2026-10-11 | TWSE·TPEx 공시 | FitTech 월매출 2026-09 전년 대비 +132% | 
+S113 | 2026-10-11 | TWSE·TPEx 공시 | Powerchip Semiconductor Manufacturing 월매출 2026-09 전년 대비 +94% | 
+S114 | 2026-10-11 | TWSE·TPEx 공시 | Enlitech 월매출 2026-09 전년 대비 +69% | 
+S115 | 2026-10-11 | TWSE·TPEx 공시 | Nan Ya Printed Circuit Board 월매출 2026-09 전년 대비 +58% | 
+S116 | 2026-10-11 | TWSE·TPEx 공시 | Kaori Heat Treatment 高力 월매출 2026-09 전년 대비 +154% | 
+S117 | None | 연합인포맥스 |  | 10/28 삼성전기 3분기 컨콜: 매출 3조7,633억(+30% YoY) 영업이익 6,910억(+165% YoY) 분기 최대. FC-BGA 공급 부족이 4분기·2027년에도 지속·심화, 전 제품군으로 확대, 가격 협상 진행. 9월 발표 6조7,800억 세종·베트남 증설은 2027년 단계 양산, 2028년 매출 본격 기여. 4분기 서버 CPU 기판 공급량 2
+S117 | None | 연합인포맥스 |  | 10/28 삼성전기 3분기 컨콜: 매출 3조7,633억(+30% YoY) 영업이익 6,910억(+165% YoY) 분기 최대. FC-BGA 공급 부족이 4분기·2027년에도 지속·심화, 전 제품군으로 확대, 가격 협상 진행. 9월 발표 6조7,800억 세종·베트남 증설은 2027년 단계 양산, 2028년 매출 본격 기여. 4분기 서버 CPU 기판 공급량 2
+S118 | None | upi |  | 
+S119 | None | Yahoo Finance |  | 
+S120 | None | 조선일보 |  | 10/21 삼성전기-NVIDIA 전략 파트너십(보도자료): 세종·부산에 AI 칩 패키지 기판 전용 라인을 공동 투자로 구축, 2026년부터 다년간 공급. 대상은 NVIDIA 컴퓨트 칩셋 기판과 네트워크 스위치 기판. 공급량은 올해부터 연평균 두 자릿수 이상 성장, 2028년에는 NVIDIA 가 삼성전기 기판 연간 생산능력의 상당 비중. 기판에 MLCC·실리
+S121 | None | CMoney |  | 
+S122 | None | 口袋證券 |  | 
+S123 | None | 永豐金證券 |  | 
+S124 | None | 鉅亨網 |  | 
+S125 | None | SEC EDGAR (Axt Inc) |  | Axt Inc 8-K: 중요 계약 체결, 공정공시(Reg FD)
+S126 | None | TWSE 중대공시 |  | 1.提報董事會或經董事會決議日期:115/10/27 2.審計委員會通過日期:115/10/27 3.財務報告或年度自結財務資訊報導期間 起訖日期(XXX/XX/XX~XXX/XX/XX):(115/01/01~115/09/30) 4.1月1日累計至本期止營業收入(仟元):44,859,658 5.1月1日累計至本期止營業毛利(毛損) (仟元):21,039,356 6.1月1日累計至本期止營業
+S127 | None | 自由時報 |  | 大立光 10/8 법설회 기준: 광섬유 어레이(FA)가 9월 고객 인증 통과, 10월 고객과 캐파 규모 협의, 2027년 중반까지 캐파 구축. FAU(어레이 유닛) 신공장 완공, 이르면 2027년 중반 출하(PMLA 는 외부 구매). 다열 FA 는 샘플 단계로 2028년 과제. 신규 부지 착공 시 추가 캐파는 2030년. 3분기 설비투자 NT$81.8억. F
+S128 | None | 自由時報 |  | 大立光 CPO 용 FA: 9월 고객 인증 통과(10/8 법설회), 캐파는 2027년 중반 완공 목표, FAU 출하도 이르면 2027년 중반. 2027년 매출 기여 시작 전망, 다열 FA 는 2028년. 7월 법설회에서 첫 양산 사양 고객 확보, 2번째 고객은 고채널 CPO POC 단계.
+S129 | None | 工商時報 |  | 
+S130 | None | 鉅亨網 |  | 10/27 力成 3분기 EPS NT$3.55 사상 최고(매출 NT$253.3억 +26.9% YoY, GM 24.0%), 1~9월 EPS NT$9.05. CEO: 패키징·테스트 가동률 90% 초과, 4분기 가동률·매출·GM 계속 상승. DRAM 주문 가시성 높음, AI 서버 eSSD 로 NAND 성장, 로직 두 자릿수 성장.
+S131 | None | 工商時報 |  | 
+S132 | None | 自由時報 |  | 
+S133 | None | TWSE 중대공시 |  | 10/27 力成 법설회: 3분기 매출 NT$253.3억(+9.6% QoQ, +26.9% YoY), 매출총이익률 24.0%(+7.9%p YoY), 영업이익 NT$44.7억(+117.9% YoY), EPS NT$3.55 사상 최고. 믹스 로직 43%·NAND 28%·DRAM 20%·SiP 9%. 패키징·테스트 가동률 모두 90% 초과, 4분기 매출·GM 추가 
+S134 | None | Seeking Alpha |  | 
+S135 | None | SEC EDGAR (Amkor Technology) |  | 10/26 Amkor 3분기 매출 $19.9억(전년比 +0.2%), 매출총이익률 18.3%(전년 14.3%), 영업이익 $2.25억, EPS $0.76. 4분기 가이던스 매출 $19~20억·GM 18~19%·EPS $0.65~0.75. 2026 설비투자 약 $25억. Communications 비중 51%→37%, Computing·Automotive 기록
+S136 | None | Yahoo Finance |  | 
+S137 | None | Yahoo Finance |  | 
+S138 | None | SEC EDGAR (Maxlinear, Inc) |  | 10/22 MaxLinear 3분기 매출 $2.181억(+29% QoQ, +72% YoY), GAAP GM 58.7%, non-GAAP GM 60.0%. 인프라 부문 +210% YoY — '광 AI 데이터센터 제품 채택 가속'(Keystone PAM4 DSP 볼륨 램프, 1.6T Rushmore·Annapurna). 4분기 가이던스 매출 $2.4~2.6억,
+S139 | None | SEC EDGAR (Maxlinear, Inc) |  | 
+S140 | None | Kalkine |  | 10/15 AIXTRON 3분기 잠정: 수주 약 €2.75억(전년 €1.24억, +122%; 컨센서스 €2.146억, 2분기 €2.145억), 매출 약 €1.84억(전년 €1.196억), 매출총이익률 약 48%(전년 39%), EBIT 약 €0.57억(마진 31%, 전년 13%). 수주 동력은 'AI 데이터센터 통신용 레이저 장비의 강한 수요'. 2026 
+S141 | None | ad-hoc-news.de |  | 
+S142 | None | LEDinside |  | 
+S143 | None | electronics.economictimes.indiatimes.com |  | 10/15 AIXTRON 3분기 잠정 수주 €2.75억(+122% YoY, 컨센서스 €2.146억 상회), 매출 €1.84억, EBIT 마진 31%. AI 데이터센터 통신용 레이저(InP 계열 MOCVD) 장비 수요가 동력.
+S144 | None | SEC EDGAR (Rogers Corporation) |  | 
+S145 | None | Moomoo |  | 
+S146 | None | SEC EDGAR (Rogers Corporation) |  | 
+S147 | None | 壹蘋新聞網 |  | PicoJool(팔로알토) 은 AI 데이터센터용 200G VCSEL(대역폭 37GHz 초과, GaAs) 개발사로 穩懋(WIN) 6인치 GaAs 파운드리에 공정 이전. 칩 샘플링 2026 3분기, 대량 램프 2027년 초 예정(Semiconductor Today 6/16). 고객 미공개(하이퍼스케일러·CPO/NPO 협업 언급).
+S148 | None | TPEx 중대공시 |  | 1.董事會決議或公司決定日期:115/10/27 2.發行股數:15,034,127股 3.每股面額:美金1元 4.發行總金額:美金15,034,127元 5.發行價格:美金1元 6.員工認股股數:不適用 7.原股東認購比率:0.23% 8.公開銷售方式及股數:不適用 9.畸零股及逾期未認購股份之處理方式:不適用 10.本次發行新股之權利義務:新股之權利義務與原已發行之股份相同 11.本次增資資金
+S149 | None | TPEx 중대공시 |  | 1.董事會決議或公司決定日期:115/10/27 2.發行股數:不適用 3.每股面額:不適用 4.發行總金額:美金7,328,000元 5.發行價格:不適用 6.員工認股股數:不適用 7.原股東認購比率:100% 8.公開銷售方式及股數:不適用 9.畸零股及逾期未認購股份之處理方式:不適用 10.本次發行新股之權利義務:不適用 11.本次增資資金用途:充實營運資金暨償還借款 12.現金增資認股基準
+S150 | None | TPEx 중대공시 |  | 1.董事會決議或公司決定日期:115/10/27 2.發行股數:不適用 3.每股面額:不適用 4.發行總金額:美金7,672,000元 5.發行價格:不適用 6.員工認股股數:不適用 7.原股東認購比率:100% 8.公開銷售方式及股數:不適用 9.畸零股及逾期未認購股份之處理方式:不適用 10.本次發行新股之權利義務:不適用 11.本次增資資金用途:充實營運資金暨償還借款 12.現金增資認股基準
+S151 | None | 매일경제 |  | 
+S152 | None | 한국경제 |  | 10/21 유니테스트, SK하이닉스와 162.3억원(2025 매출 대비 14.72%) 규모 반도체 검사장비(Gen6 SSD 테스터) 공급계약 공시.
+S153 | None | TradingView |  | 
+S154 | None | 디지털투데이 |  | 2026-10-21 공시: SK하이닉스와 반도체 검사장비 공급계약 162억2,600만 원(2025년 연결매출 대비 14.72%), 계약기간 2026-10-21~2027-02-12.
+S155 | None | 巨潮资讯 공시 |  | 
+S156 | None | SEC EDGAR (FuelCell Energy) |  | FuelCell Energy 8-K: 임원 변동, 공정공시(Reg FD)
+S157 | None | Yahoo Finance |  | 
+S158 | None | 24/7 Wall St. |  | 
+S159 | None | TradingView |  | 
+S186 | None | www.marketscreener.com |  | 
+S187 | None | Simply Wall Street |  | 
+S188 | None | kalkine.ca |  | 
+S189 | None | Moomoo |  | 
+S190 | None | www.marketscreener.com |  | 
+S191 | None | TradingView |  | 
+S192 | None | 뉴스티앤티 |  | 
+S193 | None | TradingView |  | 
+S194 | None | 디지털투데이 |  | 
+S195 | None | 데이터투자 |  | 
+S196 | None | UDN |  | 
+S197 | None | CMoney投資網誌 |  | 
+S198 | None | UDN |  | 
+S199 | None | FTNN 新聞網 |  | 
+S230 | None | SEC EDGAR (Vertiv) |  | 
+S231 | None | SEC EDGAR (Vertiv) |  | 
+S232 | None | SEC EDGAR (Vertiv) |  | 
+S233 | None | Yahoo Finance |  | 
+S234 | None | CNBC |  | 
+S235 | None | 經濟日報 |  | 
+S236 | None | 蕃新聞 |  | 
+S237 | None | 優分析UAnalyze |  | 
+S238 | None | Plant Services |  | 
+S239 | None | Moomoo |  | 
+S240 | None | Investing.com |  | 
+S241 | None | TradingView |  | 
+S242 | None | TradingView |  | 
+S243 | None | www.marketscreener.com |  | 
+S244 | None | Evertiq |  | 
+S245 | None | kalkine.ca |  | 
+S246 | None | www.marketscreener.com |  | 
+S247 | None | Quiver Quantitative |  | 
+S248 | None | 에너지경제신문 |  | 
+S249 | None | 프라임경제 |  | 
+S250 | None | THE ELEC, Korea Electronics Industry Media |  | 
+S251 | None | TradingView |  | 
+S252 | None | CNBC |  | 
+S253 | None | NVIDIA Developer |  | 
+S254 | None | LINE TODAY |  | 
+S255 | None | MoneyDJ |  | 
+S256 | None | Investing.com 한국어 |  | 
+S257 | None | 뉴스핌 |  | 
+S258 | None | SEC EDGAR (Aeluma, Inc.) |  | 
+S259 | None | SEC EDGAR (Applied Materials) |  | Applied Materials 8-K: 기타 중요 사항
+S260 | None | SEC EDGAR (Marvell Technology) |  | 
+S261 | None | Simply Wall Street |  | 
+S262 | None | GuruFocus |  | 
+S263 | None | Simply Wall Street |  | 
+S264 | None | TradingView |  | 
+S265 | None | 數位時代 |  | 
+S266 | None | 프라임경제 |  | 
+S267 | None | 프라임경제 |  | 
+G1 | 2026-10-12 | None | Ideal Power Inc. (IPWR) → 반도체 차단기 (SSCB, Solid-State Circuit Breaker) (develops) | companies have demonstrated a working prototype and are developing a reference design
+G2 | 2026-10-12 | None | Ideal Power Inc. (IPWR) → 양방향 전력 스위치 (B-TRAN·Bidirectional switch) (develops) | Ideal Power's B-TRAN bidirectional switch for an always-on SSCB for 800 VDC AI data centers
+G4 | 2026-09-10 | None | SolarEdge Technologies (SEDG) → 반도체 차단기 (SSCB, Solid-State Circuit Breaker) (develops) | SolarEdge and Infineon extended collaboration to SSCBs for 800 VDC; the SSCB sits between SST and compute rack
+G5 | 2026-10-12 | None | Power Integrations (POWI) → 반도체 차단기 (SSCB, Solid-State Circuit Breaker) (develops) | design pairs Power Integrations' 1700 V InnoMux-2 with Ideal Power's B-TRAN; working prototype demonstrated
+G41 | 2026-03-17 | None | 인듐인(InP) 화합물 반도체 → Axt Inc (AXTI) (offered_by) | InP·GaAs 기판 — 레이저 소재 공급
+G42 | None | None | Lumentum 200G PAM4 EML → 200G EML 광변조 레이저 (implements) | 제품 ↔ 일반 기술 분리 (v0.3)
+G43 | None | None | Lumentum 200G PAM4 EML → Lumentum (LITE) (offered_by) | 
+G44 | 2026-08-04 | None | Axt Inc (AXTI) → Lumentum (LITE) (qualifying_with) | Lumentum agreed to pay the first of two $43.5m deposits to reserve InP wafer production capacity
+G47 | 2026-06-03 | None | Lumentum (LITE) → 400G/lane EML (3.2T용 차세대 EML) (develops) | Lumentum demonstrated 400 Gbps-per-lane EML technology at OFC 2026
+G48 | None | None | Lumentum (LITE) → CPO 외부 레이저 광원 모듈 (ELS/ELSFP) (develops) | Lumentum: first batch of external light source module orders expected to deliver in H2 2027
+G49 | None | None | Lumentum (LITE) → 6인치 InP 웨이퍼 양산 전환 (6-inch InP fab) (develops) | Lumentum new US plant will use 6-inch InP; mass production mid-2028
+G52 | 2026-05-19 | None | AIXTRON (Xetra AIXA, 비SEC) → Lumentum (LITE) (supplied_to) | AIXTRON receives multiple orders for G10-AsP MOCVD systems from Lumentum
+G53 | 2023-08-08 | None | Co-Packaged Optics (CPO) → CPO 광원 열·신뢰성·현장 교체성 (CPO laser reliability) (creates_bottleneck | placement of laser sources at the front panel, the coolest section of the system; hot-swap field replacement
+G54 | 2023-08-08 | None | CPO 광원 열·신뢰성·현장 교체성 (CPO laser reliability) → CPO 외부 레이저 광원 모듈 (ELS/ELSFP) (mitigated_by) | ELSFP front-panel pluggable for external laser sources for CPO, multi-vendor
+G57 | 2026-05-19 | None | InP/GaAs MOCVD 반응기 (MOCVD reactor) → AIXTRON (Xetra AIXA, 비SEC) (offered_by) | G10-AsP widely regarded as the industry benchmark for high-volume InP production
+G60 | 2026-05-27 | None | Enablence Technologies (TSXV ENA, 비SEC) → CPO 외부 레이저 광원 모듈 (ELS/ELSFP) (develops) | customers named: O-Net + Enablence (CPO ELS module)
+G63 | 2026-04-13 | None | Largan Precision (TWSE 3008, 비SEC) → CPO 외부 레이저 광원 모듈 (ELS/ELSFP) (develops) | Largan ... focuses on FAU (Fiber Array Unit) and ELS (External Laser Source) optics
+G79 | None | None | 적층 전 KGD 웨이퍼 테스트 (프로브·핸들러) → 메모리 테스터 (HBM ATE) (requires) | T5503HS2 tests high-speed memory incl. high-bandwidth memory (HBM) devices; 16,256 channels
+G80 | None | None | 메모리 테스터 (HBM ATE) → UniTest (KOSDAQ 086390, 비SEC) (offered_by) | Semiconductor: Wafer Tester, Memory Tester, Storage Tester, Logic Burn-in Tester
+G81 | 2026-03-05 | None | 적층 전 Known-Good-Die 수율 검사 → HBM 번인 (웨이퍼·스택 레벨) (mitigated_by) | 유니테스트가 SK하이닉스 HBM4용 번인테스터 양산 퀄테스트를 완료(2026-03-05 보도)
+G82 | 2026-08-14 | None | HBM 번인 (웨이퍼·스택 레벨) → UniTest (KOSDAQ 086390, 비SEC) (offered_by) | 유니테스트, 2Q 흑자 전환…HBM 번인테스터 실적 견인 (2026-08-14 보도)
+G86 | None | None | 미세 배선 패키지 절연·기판 소재 → Ajinomoto (TSE 2802, 비SEC) (offered_by) | Over 95% global market share!? The Ajinomoto Group’s Surprising Connection to Semiconductors
+G87 | None | None | 고밀도 패키지 기판 → 기판 세미애디티브 배선 (SAP/mSAP) (requires) | horizontal and vertical wet processing to fulfill all demands of future-oriented technologies such as SAP and mSAP in serial production for the advanced HDI and IC substrate markets
+G88 | None | None | 기판 세미애디티브 배선 (SAP/mSAP) → 미세 배선 패키지 절연·기판 소재 (requires) | Inside the substrate are layers of wiring, and ABF is incorporated to cover this wiring.
+G89 | 2026-05-20 | None | AI용 대면적·고다층 패키지 기판 공급 부족 (Substrate capacity) → 고밀도 패키지 기판 (mitigated_by) | substrate supply remains extremely tight, with four suppliers from Taiwan and two from Japan requesting upfront commitments to secure capacity.
+G95 | 2026-10-21 | None | 기판·첨단패키징 공정장비 (진공 라미네이션·도포·건조·경화) → Group Up 群翊 (TPEx 6664, 비SEC) (offered_by) | 群翊 塗佈·壓合·烘烤設備; 在手訂單約60億元, 交期排到2027年底; FOPLP·TGV玻璃基板製程設備
+G96 | 2026-10-27 | None | AI용 대면적·고다층 패키지 기판 공급 부족 (Substrate capacity) → 기판·첨단패키징 공정장비 (진공 라미네이션·도포·건조·경화) (mitigat | 欣興董事會通過長交期設備預下訂單再增加約新台幣509億元，用於新建廠房並提升製程能力
+G99 | 2026-09-16 | None | 인듐인(InP) 화합물 반도체 → Aeluma, Inc. (ALMU) (offered_by) | InP-on-Si 광소자 플랫폼, 마이크로캡
+G100 | 2026-09-16 | None | 광원 레이저 → Aeluma, Inc. (ALMU) (offered_by) | InP-on-Si 광소자 플랫폼, 마이크로캡
+G103 | 2026-03-20 | None | Aeluma, Inc. (ALMU) → 300mm 실리콘 위 III-V 단일·이종집적 광원 (III-V on Si) (develops) | Aeluma growing III-V materials directly on 300mm silicon wafers through monolithic integration
+G104 | None | None | 기판 세미애디티브 배선 (SAP/mSAP) → 직접 노광기 (LDI/DI, maskless) (requires) | direct imaging for patterning and solder mask, automated optical inspection (AOI), automated optical shaping (AOS)
+G105 | None | None | 직접 노광기 (LDI/DI, maskless) → Philoptics 필옵틱스 (KOSDAQ 161580, 비SEC) (offered_by) | The DI exposure is a Direct Imaging equipment for circuit formation and SRO of solder resist in semiconductor and PCB processes
+G106 | 2025-07-21 | None | 팬아웃 패널레벨 패키징 (FOPLP) → 직접 노광기 (LDI/DI, maskless) (requires) | DSP-100 digital lithography system, designed specifically for 600 mm square panels used in advanced AI chip packaging
+G117 | 2025-05-21 | None | SiC 전력반도체 → Navitas Semiconductor (NVTS) (offered_by) | GeneSiC 650V~6.5kV
+G118 | 2025-05-21 | None | Navitas Semiconductor (NVTS) → NVIDIA (NVDA) — HBM·광·전력 공통 수요처 (qualifying_with) | 협업 선정. 수주·매출 아님
+G120 | 2025-11-01 | None | Navitas Semiconductor (NVTS) → 고체 변압기 (SST, MV AC→800VDC) (develops) | Navitas describes SSTs with industrial-grade rectifiers for direct 13.8-kVac-to-800-Vdc conversion
+G122 | 2026-04-29 | None | DRAM·HBM용 프로브카드 (MEMS) → Formfactor Inc (FORM) (offered_by) | we've grown our HBM probe card business by more than 50%
+G123 | 2026-04-29 | None | 적층 전 KGD 웨이퍼 테스트 (프로브·핸들러) → DRAM·HBM용 프로브카드 (MEMS) (requires) | Smart Matrix lets customers test many HBM stacks at once at HBM4 data rates
+G124 | 2025-08-04 | None | 적층 전 Known-Good-Die 수율 검사 → 적층 후 KGSD 테스트 (Known-Good-Stack-Die) (mitigated_by) | Magnum 7H: test stages from base-die wafer test through memory core test and burn-in; KGSD level
+G138 | None | None | SUSS MicroTec (Xetra SMHN, 비SEC) → 웨이퍼·다이 하이브리드 본더 (develops) | Entry into Advanced Logic and HBM market; HB products XBC300 Gen2 D2W, XBS300 W2W
+G139 | 2025-04-14 | None | 하이브리드 본딩 → 웨이퍼·다이 하이브리드 본더 (requires) | Cu-Cu 접합 장비 (AMAT·BESI 공동개발)
+G140 | 2025-04-17 | None | HBM4 (2,048 I/O, JESD270-4) → 고적층·미세 접합 확대 (drives_requirement) | 16-high 까지 규격화
+G156 | None | None | 고밀도 패키지 기판 → 패키지 기판 솔더 레지스트 (Solder resist) (requires) | Solder resist is an essential element in these Printed circuit boards ... Semiconductor packages board materials
+G157 | None | None | 패키지 기판 솔더 레지스트 (Solder resist) → Taiyo Holdings (TSE 4626, 비SEC) (offered_by) | The World's Leading Manufacturer of Solder Resist ... top-class share in the global solder resist industry
+G162 | None | None | Innoscience (HKEX 2577, 비SEC) → NVIDIA (NVDA) — HBM·광·전력 공통 수요처 (qualifying_with) | Silicon providers: ... Infineon Technologies, Innoscience, MPS, Navitas ...
+G181 | None | None | 고밀도 패키지 기판 → 패키지 기판 외관·AOI 검사 (Substrate inspection) (requires) | From multi-layer boards to the most advanced IC substrate applications
+G182 | None | None | 패키지 기판 외관·AOI 검사 (Substrate inspection) → 기판·패키지 AOI/3D 외관 검사기 (Substrate AOI) (requires) | KLA’s comprehensive portfolio of direct imaging for patterning and solder mask, automated optical inspection (AOI)
+G183 | 2026-09-10 | None | 기판·패키지 AOI/3D 외관 검사기 (Substrate AOI) → Intekplus 인텍플러스 (KOSDAQ 064290, 비SEC) (offered_by) | WSI ... 플립칩에 적용되는 반도체 패키지용 Substrate의 외관을 검사하는 장비를 공급 ... 미국 글로벌 반도체 업체에서 검사 성능 검증을 완료
+G186 | None | None | DC Busbar 구리·절연재 → Mersen (Euronext MRN, 비SEC) (offered_by) | Bus Bar product category; Bus Bars Expert Corner
+G187 | None | None | 차세대 800VDC 배전 아키텍처 → DC Busbar 구리·절연재 (requires) | 
+G190 | 2025-08-04 | None | 적층 후 KGSD 테스트 (Known-Good-Stack-Die) → HBM 프로버·메모리 테스트 핸들러 (requires) | tests post-singulated HBM using new bare-die probers and handlers
+G191 | None | None | HBM 프로버·메모리 테스트 핸들러 → Techwing (KOSDAQ 089030, 비SEC) (offered_by) | Techwing product categories: Probe Station, HBM Prober, Memory / SOC Test Handler
+G192 | 2025-08-04 | None | 고적층·미세 접합 확대 → 적층 후 KGSD 테스트 (Known-Good-Stack-Die) (requires) | supports testing of pre-singulated HBM devices at the Known-Good-Stack-Die (KGSD) or Chip-on-Wafer level
+G193 | 2026-03-27 | None | Co-Packaged Optics (CPO) → 웨이퍼레벨 마이크로 광학·렌즈 (WLO/micro-optics) (requires) | Himax and FOCI unveiled CPO technology leveraging Himax WLO technology
+G194 | 2026-03-27 | None | FOCI Fiber Optic Communications (TPEx 3363, 비SEC) → 웨이퍼레벨 마이크로 광학·렌즈 (WLO/micro-optics) (d | Himax and FOCI Fiber Optic Communications unveiled CPO using WLO (June 2024)
+G199 | 2026-03-12 | None | MaxLinear Keystone 5nm 100G/lane PAM4 DSP → 고속 SerDes·DSP (implements) | Keystone 400G/800G DSPs deployed in data centers worldwide, millions of units shipped
+G200 | 2026-08-26 | None | MaxLinear Keystone 5nm 100G/lane PAM4 DSP → Maxlinear, Inc (MXL) (offered_by) | Keystone 5nm 100G/lane PAM4 ramping to high volume; 2026 optical DC outlook $210-230M
+G201 | None | None | 1.6 Tb/s Ethernet 및 200 Gb/s/lane 전환 → 고속 SerDes·DSP (requires) | 
+G205 | None | None | Co-Packaged Optics (CPO) → CPO 외부 레이저 광원 모듈 (ELS/ELSFP) (requires) | Broadcom CPO external laser module uses eight 100mW CWDM DFB lasers; NVIDIA ELS module contains eight lasers
+G206 | None | None | 팬아웃 패널레벨 패키징 (FOPLP) → 패키징·패널 전해도금 장비 (ECD plater) (requires) | The Ultra ECP ap-p can handle organic and glass substrates sized 510 x 515 mm2 and 600 x 600 mm2 while effectively managing cover warpages up to 7 mm.
+G207 | None | None | 패키징·패널 전해도금 장비 (ECD plater) → ACM Research (ACMR) (offered_by) | The Ultra ECP ap-p can support up to 16 plating chambers for copper, nickel, tin-silver, gold, and other plating materials.
+G208 | 2025-11-10 | None | CoWoS 2.5D 패키징 생산능력 부족 (CoWoS capacity) → 팬아웃 패널레벨 패키징 (FOPLP) (mitigated_by) | Powertech’s PiFO advanced packaging technology—benchmarked against TSMC’s CoWoS-L—has emerged as the industry’s top alternative amid tight capacity at TSMC.
+G212 | 2026-06-25 | None | ASE Technology Holding (ASX) — SPIL 포함 → 팬아웃 패널레벨 패키징 (FOPLP) (develops) | ASE’s first fully automated high-volume production line for FOPLP is expected to enter mass production by end-2026.
+G220 | 2025-10-06 | None | WG Tech 沃格光电 (SSE 603773, 비SEC) → 글라스 코어 패키지 기판 (Glass core substrate) (develops) | WG Tech’s operations span optoelectronic glass processing ... with glass-based advanced packaging substrates being one of its core businesses.
+G225 | None | None | 고밀도 광섬유 인터페이스 → 고정밀 광섬유 ferrule·어레이 (requires) | 
+G226 | 2026-08-30 | None | Largan Precision (TWSE 3008, 비SEC) → 고정밀 광섬유 ferrule·어레이 (develops) | Largan preparing trial production of first automated CPO line after securing a fiber-array order
+G229 | 2025-09-12 | None | 팬아웃 패널레벨 패키징 (FOPLP) → Powertech Technology (TWSE 6239, 비SEC) (offered_by) | FOPLP has reportedly entered small-scale production, with Taiwan’s Innolux and Powertech Technology taking the lead
+G236 | None | None | 고적층·미세 접합 확대 → 고밀도 인터커넥트의 미세 피치 한계 (creates_bottleneck) | HBM4 전면 채택 주장이 아니라 세대별 기술 옵션
+G237 | None | None | 고밀도 인터커넥트의 미세 피치 한계 → 무플럭스 TC 본딩 (Fluxless TCB·AOR) (mitigated_by) | fluxless TCB described as a bridge toward hybrid bonding for fine pitch
+G238 | None | None | 무플럭스 TC 본딩 (Fluxless TCB·AOR) → 패키징 웨트 세정 (플럭스·디본드 잔사 제거) (displaces) | ASMPT uses plasma activation (AOR: Active Oxide Removal) to replace chemical flux
+G239 | None | None | 패키징 웨트 세정 (플럭스·디본드 잔사 제거) → Zeus (KOSDAQ 079370, 비SEC) (offered_by) | Zeus supplies equipment for advanced packaging process (Flux, Etch, Debond), single and batch wafer cleaning
+G248 | 2025-04-05 | None | CPO 외부 레이저 광원 모듈 (ELS/ELSFP) → 다파장 DFB 레이저 어레이 (CW-WDM laser array) (requires) | Sivers DFB laser arrays used in O-Net ELSFP modules for CPO
+G249 | 2026-05-27 | None | 다파장 DFB 레이저 어레이 (CW-WDM laser array) → InP·GaAs 화합물 반도체 파운드리 (compound foundry) (requires) | design and prototyping at own Glasgow fab, high-volume production outsourced to WIN Semiconductor
+G250 | None | None | InP·GaAs 화합물 반도체 파운드리 (compound foundry) → WIN Semiconductors (TPEx 3105, 비SEC) (offered_b | WIN ~65% share of pure-play compound foundry; offers InP foundry services
