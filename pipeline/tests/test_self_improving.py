@@ -175,3 +175,14 @@ def test_graph_taiwan_companies_get_revenue_history_indicators():
     have = {i.match for i in I.INDICATORS}
     assert len(extra) >= 30 and not ({i.match for i in extra} & have)
     assert all(i.indicator_id.startswith("tw:") and i.companies[0].startswith("company:") for i in extra)
+
+
+def test_japan_and_tpex_fallback_parsers():
+    yj = ('<th class="x">2026/10/27</th><td><span class="_StyledNumber__value_1arhg_9">4,176</span></td><td><span class="_StyledNumber__value_1arhg_9">4,220</span></td>'
+          '<td><span class="_StyledNumber__value_1arhg_9">4,041</span></td><td><span class="_StyledNumber__value_1arhg_9">4,092</span></td>'
+          '<td><span class="_StyledNumber__value_1arhg_9">28,086,200</span></td><td><span class="_StyledNumber__value_1arhg_9">4,092</span></td></tr>')
+    r = P.parse_yahoo_jp(yj, "TSE:5803")[0]
+    assert r["trade_date"] == "2026-10-27" and r["close"] == 4092.0 and r["volume"] == 28086200
+    t = P.parse_tpex_daily([{"Date": "1151027", "SecuritiesCompanyCode": "6664", "Open": "332.50", "High": "337.50", "Low": "324.00", "Close": "325.50",
+                              "TradingShares": "218305"}])
+    assert t["6664"]["trade_date"] == "2026-10-27" and t["6664"]["close"] == 325.5

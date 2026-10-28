@@ -164,7 +164,26 @@ def parse_tpex(data: dict[str, Any], key: str) -> list[dict[str, Any]]:
     return out
 
 
+_TPEX_DAILY: dict[str, Any] = {}
+
+
+def parse_tpex_daily(rows: list[dict[str, Any]]) -> dict[str, dict[str, Any]]:
+    out = {}
+    for r in rows:
+        d = _roc(f"{str(r.get('Date', ''))[:-4]}/{str(r.get('Date', ''))[-4:-2]}/{str(r.get('Date', ''))[-2:]}")
+        code = str(r.get("SecuritiesCompanyCode") or "").strip()
+        if d and code:
+            out[code] = _row(f"TPEx:{code}", d, r.get("Open"), r.get("High"), r.get("Low"), r.get("Close"), r.get("TradingShares"), "tpex")
+    return {k: v for k, v in out.items() if v}
+
+
 def fetch_tpex(http: HttpClient, x: Listing, start: date, end: date) -> list[dict[str, Any]]:
+    """대만 상櫃: 최근분은 OpenAPI 일괄 시세 한 번(요청 1개), 이력은 종목·월 단위. TPEx 는 요청이 몰리면 403 으로 막으니 아껴 쓴다."""
+    if (end - start).days <= 7:
+        if "rows" not in _TPEX_DAILY:
+            _TPEX_DAILY["rows"] = parse_tpex_daily(http.get_json("https://www.tpex.org.tw/openapi/v1/tpex_mainboard_daily_close_quotes", headers=UA))
+        r = _TPEX_DAILY["rows"].get(x.ticker)
+        return [r] if r and r["trade_date"] >= start.isoformat() else []
     out = []
     for m in _months(start, end):
         data = http.get_json("https://www.tpex.org.tw/www/zh-tw/afterTrading/tradingStock",
@@ -240,15 +259,42 @@ def parse_kabutan(html: str, key: str) -> list[dict[str, Any]]:
     return out
 
 
-def fetch_jp(http: HttpClient, x: Listing, start: date, end: date) -> list[dict[str, Any]]:
+YJ_ROW = re.compile(r">(\d{4}/\d{2}/\d{2})</th>(.*?)</tr>", re.S)
+YJ_VAL = re.compile(r'_StyledNumber__value_\w+">([\d,.]+)<')
+
+
+def parse_yahoo_jp(html: str, key: str) -> list[dict[str, Any]]:
+    """Yahoo!ファイナンス 時系列 표: 날짜 | 시가 | 고가 | 저가 | 종가 | 거래량 | 조정 종가."""
+    out = []
+    for d, cells in YJ_ROW.findall(html):
+        v = YJ_VAL.findall(cells)
+        if len(v) >= 5:
+            row = _row(key, datetime.strptime(d, "%Y/%m/%d").date(), v[0], v[1], v[2], v[3], v[4], "yahoo_jp")
+            if row:
+                out.append(row)
+    return out
+
+
+def _paged(fetch_page, start: date, pages: int) -> list[dict[str, Any]]:
     out: list[dict[str, Any]] = []
-    for page in range(1, 11):
-        rows = parse_kabutan(http.get_text("https://kabutan.jp/stock/kabuka", params={"code": x.ticker, "ashi": "day", "page": str(page)},
-                                           headers=UA), x.key)
+    for page in range(1, pages + 1):
+        rows = fetch_page(page)
         out += rows
         if not rows or min(r["trade_date"] for r in rows) <= start.isoformat():
             break
     return [r for r in out if r["trade_date"] >= start.isoformat()]
+
+
+def fetch_jp(http: HttpClient, x: Listing, start: date, end: date) -> list[dict[str, Any]]:
+    """일본: kabutan 먼저, 막히면(GitHub Actions 러너는 405) Yahoo!ファイナンス."""
+    try:
+        return _paged(lambda pg: parse_kabutan(http.get_text("https://kabutan.jp/stock/kabuka", params={"code": x.ticker, "ashi": "day", "page": str(pg)},
+                                                             headers=UA), x.key), start, 10)
+    except Exception as exc:  # noqa: BLE001
+        log.info("kabutan %s failed (%s) → yahoo jp", x.key, str(exc)[:60])
+    return _paged(lambda pg: parse_yahoo_jp(http.get_text(f"https://finance.yahoo.co.jp/quote/{x.ticker}.T/history",
+                                                          params={"from": start.strftime("%Y%m%d"), "to": end.strftime("%Y%m%d"), "timeFrame": "d", "page": str(pg)},
+                                                          headers=UA), x.key), start, 14)
 
 
 FETCH = {"us": fetch_us, "twse": fetch_twse, "tpex": fetch_tpex, "kr": fetch_kr, "cn": fetch_cn, "hk": fetch_cn, "jp": fetch_jp}
@@ -322,10 +368,17 @@ def run(http: HttpClient, store, graph: dict[str, Any], budget_s: float = 720.0,
             store.upsert("raw.px_daily", list(uniq.values()), ["ticker", "trade_date"])
             buf.clear()
 
+    streak: dict[str, int] = defaultdict(int)
+
     def one(x: Listing, start: date, mode: str) -> None:
+        if streak[x.market] >= 3:  # 시장별 차단기: 연달아 3번 실패하면 이번 실행에서는 그 시장을 더 두드리지 않는다
+            stats[x.market]["skipped"] = stats[x.market].get("skipped", 0) + 1
+            return
         try:
             rows = FETCH[x.market](http, x, start, today)
+            streak[x.market] = 0
         except Exception as exc:  # noqa: BLE001 - 한 종목 실패가 전체를 막지 않게
+            streak[x.market] += 1
             stats[x.market]["fail"] += 1
             f = fails.setdefault(x.key, {"n": 0})
             f["n"], f["at"], f["err"] = f.get("n", 0) + 1, today.isoformat(), str(exc)[:120]
@@ -374,13 +427,17 @@ def main(argv: list[str] | None = None) -> int:
         items, _ = listings(graph)
         res = {}
         today = datetime.now(UTC).date()
+        rank = {"mega": 0, "large": 1, "mid": 2, "small": 3, "micro": 4}
         for m in sorted({x.market for x in items}):
-            x = next(i for i in items if i.market == m)
-            try:
-                rows = FETCH[m](http, x, today - timedelta(days=20), today)
-                res[m] = {"key": x.key, "rows": len(rows), "last": rows[-1]["trade_date"] if rows else None}
-            except Exception as exc:  # noqa: BLE001
-                res[m] = {"key": x.key, "error": str(exc)[:160]}
+            tries = sorted((i for i in items if i.market == m), key=lambda i: rank.get(i.size_band or "", 5))[:3]
+            for x in tries:  # 상장폐지 등으로 빈 종목이면 다음 종목
+                try:
+                    rows = FETCH[m](http, x, today - timedelta(days=20), today)
+                    res[m] = {"key": x.key, "rows": len(rows), "last": max(r["trade_date"] for r in rows) if rows else None}
+                except Exception as exc:  # noqa: BLE001
+                    res[m] = {"key": x.key, "error": str(exc)[:160]}
+                if res[m].get("rows"):
+                    break
         http.close()
         print(json.dumps(res, ensure_ascii=False, indent=1))
         return 0 if all("error" not in v for v in res.values()) else 1
