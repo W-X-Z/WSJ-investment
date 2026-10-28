@@ -1,9 +1,10 @@
-# 매일 아침 작업 — 수집 실행 · 원문 확인 · 병목 관측치 · 투자 아이디어 작성 · 가치평가 · 판단 갱신
+# 매일 아침 작업 — 수집 실행 · 가설 후보 · 원문 확인 · 병목 관측치 · 투자 아이디어 작성 · 가치평가 · 판단 갱신
 
 Claude 예약작업 "WSJ 수집 실행 + 투자 아이디어 작성 (06:41)"이 월~토 06:41 KST 에 이 문서를 그대로 따른다 (ADR-0016 개정 2, ADR-0017, ADR-0019).
 사람이 보는 결과는 **가치평가**(이슈 → 영향 경로 → 기업 숫자 → 시나리오별 내재 주가와 기댓값)다. 근거·선행 점수는 계산기로만 쓰고 화면에 올리지 않는다.
 **이 시스템의 일은 좋은 가설을 세우는 것이다** (ADR-0020): 변화가 어떤 경로로 어느 기업의 숫자를 언제 얼마나 바꾸는지 — 시장이 아직 반영하지 않은 것을 — 추론으로 세우고,
 날짜 있는 예측(watch)으로 검증하고, 가치평가로 기댓값을 낸다. 근거는 가설을 막는 문이 아니라 시험하는 도구다. ★ 는 확신이 아니라 검증 단계(★1 가설 · ★2 부분 확인 · ★3 확인).
+흐름은 두 단계다 (ADR-0022): 가설 후보를 넓게 연다 → 엔진이 걸러 조사 대상을 정한다 → 조사한다 → 고른 후보만 아이디어로 쓴다 → 예측 채점이 ★ 를 움직인다. 주 기업은 미국·한국 상장사만 (ADR-0021).
 사용자는 자리에 없으니 질문하지 말고 끝까지 진행한다. 이 문서를 바꾸려면 사람이 승인한 PR 이어야 한다 (개선 예약작업은 고치지 않는다).
 
 ## 0. 날짜와 전제
@@ -27,11 +28,27 @@ Claude 예약작업 "WSJ 수집 실행 + 투자 아이디어 작성 (06:41)"이 
 - `timeout 590 bash -c 'until <확인>; do sleep 30; done'` 으로 최대 45분 기다린다. 넘으면 쌓인 데이터로 진행하고 "오늘 수집 미완료"를 적는다.
 
 ## 2. 1차 입력
-`.venv/bin/python -m wsj.ecosystems.ideas --from-public --snapshot-out ../.ideas_run/s1 --emit-prompt ../.ideas_run/s1/prompt.json --emit-research ../.ideas_run/s1/research.json --leads-out ../.ideas_run/s1/leads.json`
+`.venv/bin/python -m wsj.ecosystems.ideas --from-public --snapshot-out ../.ideas_run/s1 --emit-prompt ../.ideas_run/s1/prompt.json --emit-research ../.ideas_run/s1/research.json --leads-out ../.ideas_run/s1/leads.json --emit-hypotheses ../.ideas_run/s1/hypo.json`
+(`--emit-hypotheses` 가 있으면 1단계 프롬프트까지 쓰고 끝난다. research.json·leads.json 은 먼저 쓰인다.)
+
+## 2-1. 가설 후보 (1단계, ADR-0022)
+아이디어를 바로 쓰지 않는다. 먼저 가설을 넓게 연 뒤 엔진이 걸러 준 것만 조사하고 쓴다.
+- `s1/hypo.system.md` 를 읽고 `s1/hypo.payload.json` 을 Read 로 2,000줄씩 끝까지 읽는다 (아이디어 단계와 같은 입력).
+- `s1/hypotheses.json` 에 `{"candidates": [...]}` 를 쓴다 — 8~15개. 한 줄 가설(변화 근거 id → 그래프 경로 → 미국·한국 기업 → 숫자·시점 → 왜 시장이 모르나 → 반증 조건 → 확인할 것).
+  안전한 것만 모으지 말고 대담한 2차·3차 고리를 섞는다. 걸러내는 것은 엔진의 일이다. existing 과 같은 논리면 extends 에 idea_key.
+- `.venv/bin/python -m wsj.ecosystems.ideas --snapshot ../.ideas_run/s1 --from-hypotheses ../.ideas_run/s1/hypotheses.json --hypotheses-out ../.ideas_run/s1/selected.json --emit-research-plan ../.ideas_run/s1/research_plan.json`
+  - 엔진이 검사(근거 id·노드·시장 범위)하고 채점(구체·대담·반증 가능·설명력 각 3점, 경로 끊김·기업 중복 감점)해 상위 max_ideas 개를 고른다(기업당 1개, 생태계마다 1개 이상).
+  - `hypothesis rejected:` 가 절반 넘으면 사유대로 hypotheses.json 을 고쳐 한 번 더 돌린다. 고른 후보가 3개 미만이면 후보를 더 써서 다시.
+  - research_plan.json = 고른 후보마다 확인할 것(confirm)·반증 조건·경고(flags)·이미 아는 그 기업 소식.
 
 ## 3. 원문 확인
 ### 3-1. 기업 소식 (최대 12건)
-- research.json(미확인 ★2+ 소식)에서 ★3, 기존 아이디어의 기업, leads.json 의 company_leads 기업을 먼저 고른다.
+- **가설 조사(research_plan.json)가 먼저다**: 고른 후보마다 confirm 항목을 원문(IR 자료·공시·제품 페이지·고객의 증설 발표)에서 확인한다.
+  확인한 사실은 그 기업의 소식으로 저장한다 — research.json 에 같은 기업의 event_id 가 있으면 그 id 로, 없으면 새 event 로
+  (`put_company_events` 는 event_id 가 없는 새 행도 받는다 — kind 는 filing|disclosure|revenue|news, 45일 안의 날짜, https 원문:
+  `{"company_id":"company:…","kind":"news","published_at":"YYYY-MM-DD","title":"…","url":"https://…","text":"확인한 사실 1~3문장","importance":2}`).
+  확인이 안 되면 보고에 "가설 미확인: H번호 회사명 — 무엇을 못 찾았나" 로 남기고, 4단계에서 그 가설은 추론 단계로만 쓴다.
+- 그다음 research.json(미확인 ★2+ 소식)에서 ★3, 기존 아이디어의 기업, leads.json 의 company_leads 기업을 고른다.
 - **선행 단서(leads.json 의 second_order 상위 5곳)**: 이 기업들은 소식이 없는 게 정상이다(그래서 단서다). 회사 IR·제품 페이지를 WebFetch 로 열어
   경로의 마지막 고리(이 회사가 정말 그 부품·장비를 공급하는지, 매출 비중)를 확인하고, 확인되면 4단계에서 선행 아이디어의 근거로 쓴다
   (그래프 간선 G 근거 + 변화 이슈 I 근거). 확인이 안 되면 보고에 "경로 미확인: 회사명" 으로 남긴다.
@@ -50,10 +67,13 @@ Claude 예약작업 "WSJ 수집 실행 + 투자 아이디어 작성 (06:41)"이 
 - `select ideas.put_observations($j$[{"indicator_id":"obs:…","label":"…","unit":"…","ecosystem":"optics","nodes":["bottleneck:…"],"source":"TrendForce","source_url":"https://…","as_of":"2026-10-19","value":5,"note":"원문 한 줄","meta":{"quote":"원문 발췌"}}]$j$::jsonb);`
 - FRED 지표(구리·알루미늄)가 30일 넘게 비어 있으면 `.venv/bin/python -m wsj.ecosystems.indicators fred-sql --out ../.ideas_run/fred.sql` 후 그 파일을 그대로 실행한다.
 
-## 4. 2차 입력과 아이디어 작성
-- `.venv/bin/python -m wsj.ecosystems.ideas --from-public --snapshot-out ../.ideas_run/s2 --emit-prompt ../.ideas_run/s2/prompt.json`
-- `s2/prompt.system.md` 를 끝까지 읽는다 — 작성 규칙(근거 세 층, ★, 노출 순도, 날짜 있는 확인 일정, 채점, 선행 추론, **가치평가**, states·leads·prices 사용법).
+## 4. 2차 입력과 아이디어 작성 (2단계)
+- `.venv/bin/python -m wsj.ecosystems.ideas --from-public --snapshot-out ../.ideas_run/s2 --hypotheses ../.ideas_run/s1/selected.json --emit-prompt ../.ideas_run/s2/prompt.json`
+  (`--hypotheses` 가 고른 후보를 payload.hypotheses 에 넣는다 — trigger 는 2차 레지스트리의 근거 id 로 다시 맞춰진다.)
+- `s2/prompt.system.md` 를 끝까지 읽는다 — 작성 규칙(근거 세 층, ★, 노출 순도, 날짜 있는 확인 일정, 채점, 선행 추론, **가치평가**, hypotheses, states·leads·prices 사용법).
 - `s2/prompt.payload.json` 을 Read 로 2,000줄씩 끝까지 읽는다.
+- **새 아이디어는 payload.hypotheses 의 후보에서 쓴다** (`"hypothesis": "H3"`). 조사(3-1)로 확인된 것은 근거 id 로, 못 한 것은 "(추론)" 으로. flags(경로 끊김·이미 움직임)는 risks·bear 에.
+  extends 가 있는 후보는 그 idea_key 의 update 로. 후보 밖 새 아이디어는 조사에서 새 변화가 드러났을 때만.
 - `s2/raw.json` 에 `{"model": "claude-opus-5-5", "ideas": [...], "grades": [...]}` 를 쓴다.
   - 제목은 30자 안팎의 짧은 한 문장 — 기업명·티커·숫자·괄호·줄표(—) 없이 무엇이 어디로 움직이는지만 (예 "전력망 연결을 못 기다리는 데이터센터는 현장 가스엔진으로"). 피드 카드는 제목·관련 기업·생성일·관련 이슈만 보여 준다.
   - 아이디어 = 가설. 좋은 가설의 조건: 구체적(경로·기업·숫자·시점) · 대담(시장이 아직 반영하지 않은 것) · 반증 가능(틀리면 어느 날짜에 어떤 숫자로 드러나는지) · 설명력.
@@ -67,7 +87,9 @@ Claude 예약작업 "WSJ 수집 실행 + 투자 아이디어 작성 (06:41)"이 
   - 주 기업 자신의 새 사실이 없으면 '강화'하지 않는다.
   - 노출 순도(exposure)는 부문 매출을 근거로 계산할 수 있을 때만, 근거 id 와 함께.
   - watch 는 날짜(due)·기준(metric·threshold)·방향(direction)이 있는 확인 일정 2~3개.
-  - existing 의 watch 중 기한이 지났거나 결과가 나온 항목을 grades 로 채점한다 (hit·miss 는 근거 id 필수).
+  - existing 의 watch 중 기한이 지났거나 결과가 나온 항목을 grades 로 채점한다 (hit·miss 는 근거 id 필수). hit = 적힌 조건이 그대로 일어났다
+    (strengthen 예측이면 적중, weaken 반증 조건이면 반증 성립). 채점이 ★ 를 움직인다(엔진 자동, ADR-0022): 적중 1 → ★2, 2 → ★3(문턱 충족 시), 반증 성립 → 종료, 빗나감 2 → ★1.
+    existing.verification(hits·misses·pending·falsified)을 보고 빗나간 가설은 왜 빗나갔는지 risks 에, 적중한 가설은 다음 예측을 더 구체적으로.
   - leads 의 company_leads·uncovered 공급사는 원문 확인(3-1)으로 근거가 생겼을 때만 새 아이디어로.
   - prices 의 시총(market_cap_usd)·저점 대비(from_low)·tenbagger 판정을 본다: 같은 논리에 **시총이 작고 덜 오른 공급사**가 있으면 그쪽을 primary 로. 저점 대비 3배 이상 오른 기업은 risks 에 "이미 알려진 정도".
   - **아이디어마다 anticipation 을 쓴다** (프롬프트의 '선행 추론' 절): trigger(변화 근거 id) · path(그래프 노드 id, candidates.chains.path_ids 그대로) ·
@@ -83,8 +105,10 @@ Claude 예약작업 "WSJ 수집 실행 + 투자 아이디어 작성 (06:41)"이 
   - 숫자·날짜는 payload 에 있는 것만. 매수/매도 권유·시점 예측 금지. 주가 판단은 valuation 의 시나리오로만 — "목표가"·"매수" 같은 말은 쓰지 않는다 (모형 산출이지 권유가 아니다).
 
 ## 5. 검증
-`.venv/bin/python -m wsj.ecosystems.ideas --snapshot ../.ideas_run/s2 --from-llm-json ../.ideas_run/s2/raw.json --method session --model claude-opus-5-5 --out ../.ideas_run/s2/rows.json --emit-sql ../.ideas_run/s2/sql`
+`.venv/bin/python -m wsj.ecosystems.ideas --snapshot ../.ideas_run/s2 --hypotheses ../.ideas_run/s1/selected.json --from-llm-json ../.ideas_run/s2/raw.json --method session --model claude-opus-5-5 --out ../.ideas_run/s2/rows.json --emit-sql ../.ideas_run/s2/sql`
+- 검증 명령에 `--hypotheses ../.ideas_run/s1/selected.json` 을 붙인다 (아이디어에 적은 hypothesis id 가 판단에 기록된다).
 - `rejected:` 줄을 보고 raw.json 을 고쳐 다시 돌린다 (최대 2번). `valuation rejected:` 는 아이디어는 받되 가치평가만 거부된 것 — 사유(확률 합·가정 부족·verdict 길이·주식수 없음)대로 고친다.
+- `verification:` 줄은 예측 채점이 ★·상태를 움직인 기록이다(적중 → ★ 상향, 반증 성립 → 종료, 빗나감 2건 → ★1) — 보고에 그대로 적는다.
 - 6-1 에서 DB 가 `근거 없는 단계` 로 거부하면 0025 미적용이다 — 위 p24 규칙대로 추론 단계를 합쳐 다시 만든다.
   `valuation skipped:` 는 주가가 없어 평가를 안 쓴 아이디어 — 보고에 적는다.
 
@@ -100,5 +124,5 @@ Claude 예약작업 "WSJ 수집 실행 + 투자 아이디어 작성 (06:41)"이 
 - DB 쓰기는 ideas.put_company_events · ideas.put_observations · ideas.put_ideas · ideas.put_valuations · ideas.put_assessments · ideas.put_idea_notes 여섯 함수뿐이다. 저장소는 수정·커밋하지 않는다. GitHub 에서는 issues 워크플로 실행만 한다.
 
 ## 7. 보고와 알림
-7줄 이내: 수집 상태(가격·시총·재무 포함) · 확인한 소식 N건 · 관측치 N개 · 아이디어 new/update/weaken/close/keep · **가치평가 N건**과 바뀐 아이디어(제목 · 현재 → 기대 주가 · 기대 상승여력 · 확신 · 시총; 점수는 적지 않는다) · 평가 못 쓴 아이디어(skipped·rejected 사유) · 선행 단서 중 경로 확인/미확인 · 채점 결과(적중·빗나감) · 심층 메모 N건 · 버린 것.
+7줄 이내: 수집 상태(가격·시총·재무 포함) · 가설 후보 N개 중 고른 N개(제목 한 줄씩, 미확인 표시) · 확인한 소식 N건 · 관측치 N개 · 아이디어 new/update/weaken/close/keep · **가치평가 N건**과 바뀐 아이디어(제목 · 현재 → 기대 주가 · 기대 상승여력 · 확신 · 시총; 점수는 적지 않는다) · 평가 못 쓴 아이디어(skipped·rejected 사유) · 선행 단서 중 경로 확인/미확인 · 채점 결과(적중·빗나감·반증)와 그로 바뀐 ★·종료 · 심층 메모 N건 · 버린 것.
 알림은 다음일 때만: 0020 미적용, 수집 미완료로 아이디어를 못 썼을 때, DB 쓰기 실패, **기대 상승여력 +50% 이상이고 확신 mid 이상이며 시총 $3B 이하인 새 가치평가**(제목·현재 → 기대 주가·여력·확신·verdict 첫 문장), 기존 평가의 기대 상승여력이 ±30%p 넘게 바뀐 아이디어, ★3 아이디어의 확인 일정이 빗나갔을 때.

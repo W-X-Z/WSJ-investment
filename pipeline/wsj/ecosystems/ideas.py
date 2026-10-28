@@ -447,6 +447,8 @@ LLM_SYSTEM = """너는 AI 공급망(HBM·첨단 패키징 / 800G·1.6T 광통신
 - evidence: 인용 가능한 근거 목록. S=최근 신호 출처(age_d = 며칠 전), G=그래프 관계 출처(배경 구조, 날짜가 오래됐을 수 있음). 이 목록의 id 만 인용한다.
 - existing: 이미 피드에 있는 아이디어 (last_signal_at = 마지막 최신 근거 날짜). 같은 논리면 같은 idea_key 로 갱신한다.
   scope 가 '범위 밖(…)'이면 주 기업이 시장 범위 밖이라 이번 실행에서 종료된다 — 그 가설의 미국·한국 고리가 있으면 새 아이디어(action=new)로 쓴다.
+  verification 은 예측 채점 기록(hits·misses·pending·falsified).
+- hypotheses: (있으면) 1단계에서 고른 가설 후보. 새 아이디어는 여기서 쓴다 — 아래 '아이디어' 절의 hypotheses 규칙.
 
 최신성 규칙 (가장 중요)
 - 아이디어는 최근 {fresh}일 안의 사실(S 근거, age_d ≤ {fresh})에서 출발한다. 그런 근거가 없으면 새 아이디어를 만들지 않는다.
@@ -511,6 +513,9 @@ LLM_SYSTEM = """너는 AI 공급망(HBM·첨단 패키징 / 800G·1.6T 광통신
   근거로 인용하지는 않는다. 저점 대비 3배 이상 오른 기업은 risks 에 "이미 알려진 정도"를 적고, 같은 논리에 시총이 작고 덜 오른 공급사가 있으면 그쪽을 primary 로 고려한다.
 - 숫자·날짜는 입력에 있는 것만 쓴다. 매수/매도 권유·시점 예측 금지. 주가에 대한 판단은 아래 valuation 의 시나리오로만 말한다.
 - 서로 다른 아이디어가 같은 기업·같은 논리를 반복하지 않게 묶는다. 근거가 빈약하면 만들지 않는다 — 개수보다 질.
+- hypotheses 가 있으면(1단계에서 고른 가설 후보 — id·순위·점수·claim·falsifier·research·flags) 새 아이디어는 그 후보에서 쓴다: 아이디어에 "hypothesis": "H3".
+  조사(research)로 확인된 것은 근거 id 로, 확인 못 한 것은 추론으로 적는다. flags 의 경고(경로 끊김·이미 움직임)는 risks 나 bear 에 반영한다.
+  extends 가 있는 후보는 그 idea_key 의 update 로. 후보 밖 새 아이디어는 조사에서 새 변화가 드러났을 때만 쓴다.
 
 가치평가 (결과 — 사람은 이것만 본다)
 - 아이디어마다 valuation 을 쓴다. 질문은 하나다: 이 변화가 이 기업의 숫자를 바꾸면 이 회사는 {horizon}개월 뒤 얼마짜리 회사인가, 지금 주가와 얼마나 다른가.
@@ -545,14 +550,17 @@ existing 처리
 - 새 근거가 반대 방향이면 action=weaken, 반증·소멸되면 action=close (reason). 새 근거가 없으면 action=keep (idea_key 만).
 - last_signal_at 이 {stale}일 넘게 지났고 이번 입력에도 새 근거가 없으면 action=weaken (reason: 최신 근거 없음).
 
-확인 일정 채점 (grades)
+예측 채점 (grades) — 검증 루프의 입력
 - existing 의 watch 중 status=pending 이고 due 가 지났거나 이번 입력에 결과가 나온 항목을 채점한다.
-  hit = 적힌 기준대로 나왔다(아이디어 방향과 같음), miss = 반대로 나왔다, void = 더는 의미가 없다. hit·miss 는 근거 id 가 필요하다.
+  hit = 적힌 조건이 실제로 일어났다(그대로: strengthen 예측의 hit 는 적중, weaken 반증 조건의 hit 는 반증 성립), miss = 그 날짜까지 반대로 나왔다,
+  void = 더는 의미가 없다. hit·miss 는 근거 id 가 필요하다.
 - 결과가 아직 없으면 채점하지 않는다. 채점은 아이디어를 고치지 않아도(keep) 할 수 있다.
+- 채점이 ★ 를 움직인다 (엔진이 자동으로): 적중 1개 → ★2, 2개 → ★3(기존 문턱 충족 시), 반증 성립 → 가설 폐기(close), 빗나감 2개 → ★1.
+  existing.verification 은 지금까지의 기록(hits·misses·pending·falsified)이다 — 빗나간 가설은 왜 빗나갔는지 risks·thesis 에 반영하고, 적중한 가설은 다음 예측을 더 구체적으로.
 
 출력: JSON 하나만.
-{{"ideas": [{{"action": "new|update|weaken|keep|close", "idea_key": "기존 key 또는 null", "type": "bottleneck|transition|confirmation|risk",
-  "title": "...", "thesis": "...", "stars": 1, "stars_reason": "한 줄",
+{{"ideas": [{{"action": "new|update|weaken|keep|close", "idea_key": "기존 key 또는 null", "hypothesis": "H3 (hypotheses 에서 온 아이디어만)",
+  "type": "bottleneck|transition|confirmation|risk", "title": "...", "thesis": "...", "stars": 1, "stars_reason": "한 줄",
   "companies": [{{"id": "company:...", "role": "primary|peer|customer|competitor|displaced", "why": "한 줄", "exposure": {{"share_pct": 0, "segment": "...", "basis": "...", "evidence": "S1"}}}}],
   "chain": [{{"claim": "...", "evidence": ["S1", "G3"]}}],
   "risks": [{{"claim": "...", "evidence": []}}], "watch": [{{"what": "...", "due": "YYYY-MM-DD", "metric": "...", "threshold": "...", "direction": "strengthen"}}],
@@ -642,8 +650,16 @@ def build_payload(signals: list[dict[str, Any]], candidates: list[dict[str, Any]
         "existing": [{k: x.get(k) for k in ("idea_key", "type", "title", "thesis", "stars", "primary_company", "last_signal_at", "updated_at")}
                      | {"companies": [c.get("id") for c in x.get("companies") or []], "company_signal_at": company_signal_date(x),
                         "score": ((x.get("assessment") or {}).get("score")), "watch": watch_view(x), "valuation": val_view(x["idea_key"]),
-                        "scope": scope_view(x)} for x in existing],
+                        "scope": scope_view(x), "verification": {k: v for k, v in _verification(x).items() if k in ("hits", "misses", "pending", "falsified")}}
+                     for x in existing],
+        "hypotheses": extras.get("hypotheses") or [],
     }
+
+
+def _verification(x: dict[str, Any]) -> dict[str, Any]:
+    from wsj.ecosystems.verification import summarize
+
+    return summarize(x.get("watch"))
 
 
 # ---------------------------------------------------------------- validation → rows
@@ -860,6 +876,9 @@ def validate(raw: list[dict[str, Any]], reg: Registry, graph: dict[str, Any], si
         draft = {"primary_company": primary["id"], "companies": comps, "chain": chain, "risks": risks, "nodes": theme[:12],
                  "anticipation": anticipation}
         assessment = A.assess(draft, structure, ctx.get("issues") or [], ctx.get("indicators") or [], ctx.get("prices") or {}, now)
+        hyp = (ctx.get("hypotheses") or {}).get(str(it.get("hypothesis") or ""))
+        if hyp:  # 1단계 가설 후보에서 온 아이디어 — 출처와 후보 점수를 기록 (ADR-0022)
+            assessment["hypothesis"] = {k: hyp.get(k) for k in ("id", "rank", "score", "criteria", "claim", "falsifier")}
         stars, rule_note = A.apply_star_rule(stars, assessment["score"])
         stars_note += rule_note
         trend = "new" if not prev else ("weakened" if action == "weaken" or stars < (prev.get("stars") or 0)
@@ -1039,6 +1058,8 @@ def star_rule_audit(existing: dict[str, dict[str, Any]], rows: list[dict[str, An
         new, note = apply_star_rule(cur, int(score))
         if new >= cur:
             continue
+        if new == 1 and ((f.get("assessment") or {}).get("verification") or {}).get("hits"):
+            continue  # 예측이 적중한 가설은 근거 점수가 낮아도 ★1 로 내리지 않는다 — ★2 는 검증 단계다 (ADR-0020·0022)
         if row is not None:
             row["stars"] = new
             row["stars_reason"] = ((row.get("stars_reason") or "") + note)[:300]
@@ -1390,6 +1411,12 @@ def main(argv: list[str] | None = None) -> int:
     ap.add_argument("--emit-research", type=Path, help="원문 확인 후보(기업 소식 ★2+, 미확인) 목록을 JSON 으로 쓴다")
     ap.add_argument("--emit-sql", type=Path, help="검증된 행을 ideas.put_ideas 호출 SQL 파일로 쓴다 (DB 에는 쓰지 않음)")
     ap.add_argument("--leads-out", type=Path, help="기회 스캔(조사 단서) 결과를 JSON 으로 쓴다")
+    # 가설 2단계 (ADR-0022): 1단계 후보 프롬프트 → 후보 검사·선택·조사 계획 → 2단계(아이디어) 입력에 고른 후보를 넣는다
+    ap.add_argument("--emit-hypotheses", type=Path, help="1단계(가설 후보) LLM 입력을 파일로 쓰고 끝낸다")
+    ap.add_argument("--from-hypotheses", type=Path, help="LLM 의 {'candidates': [...]} 를 검사·채점해 상위 후보를 고른다")
+    ap.add_argument("--hypotheses-out", type=Path, help="--from-hypotheses 결과(selected·all·rejected)를 쓴다")
+    ap.add_argument("--emit-research-plan", type=Path, help="고른 후보의 조사 계획을 JSON 으로 쓴다")
+    ap.add_argument("--hypotheses", type=Path, help="2단계: 고른 후보(--hypotheses-out 파일)를 아이디어 입력에 넣는다")
     args = ap.parse_args(argv)
     logging.basicConfig(level=logging.INFO, format="%(levelname)-7s %(name)s: %(message)s")
     logging.getLogger("httpx").setLevel(logging.WARNING)
@@ -1467,6 +1494,36 @@ def main(argv: list[str] | None = None) -> int:
             args.leads_out.write_text(json.dumps(ctx["leads"], ensure_ascii=False, indent=1, default=str), encoding="utf-8")
         log.info("feed %s", json.dumps(feed_stats, ensure_ascii=False))
         log.info("signals %d, candidates %d, evidence %d", len(signals), len(candidates), len(payload["evidence"]))
+        from wsj.ecosystems import hypotheses as H
+
+        if args.emit_hypotheses:  # 1단계: 가설 후보 프롬프트 (입력은 아이디어 단계와 같다)
+            args.emit_hypotheses.write_text(json.dumps({"system": H.system_prompt(now), "payload": payload}, ensure_ascii=False, indent=1), encoding="utf-8")
+            args.emit_hypotheses.with_suffix(".system.md").write_text(H.system_prompt(now), encoding="utf-8")
+            args.emit_hypotheses.with_suffix(".payload.json").write_text(json.dumps(payload, ensure_ascii=False, indent=1), encoding="utf-8")
+            print(json.dumps({"stage": "hypotheses", "signals": len(signals), "candidates": len(candidates), "evidence": len(payload["evidence"])}))
+            return 0
+        if args.from_hypotheses:  # 후보 검사·채점·선택 → 조사 계획
+            raw_h = json.loads(args.from_hypotheses.read_text(encoding="utf-8"))
+            cands, h_rejects = H.validate_candidates(raw_h, graph, reg, signals, existing, ctx.get("prices") or {}, now)
+            selected = H.select(cands, args.max_ideas)
+            for x in h_rejects:
+                log.warning("hypothesis rejected: %s", x)
+            for c in selected:
+                log.info("hypothesis #%d %s %d/12 %s — %s", c["rank"], c["id"], c["score"], c["company_label"], c["claim"][:60])
+            if args.hypotheses_out:
+                args.hypotheses_out.write_text(json.dumps({"as_of": now.isoformat(), "selected": selected, "all": cands, "rejected": h_rejects},
+                                                          ensure_ascii=False, indent=1, default=str), encoding="utf-8")
+            if args.emit_research_plan:
+                plan = H.research_plan(selected, graph, signals)
+                args.emit_research_plan.write_text(json.dumps(plan, ensure_ascii=False, indent=1), encoding="utf-8")
+            print(json.dumps({"stage": "select", "candidates": len(cands), "selected": len(selected), "rejected": len(h_rejects)}))
+            return 0
+        if args.hypotheses:  # 2단계: 고른 후보를 아이디어 입력에 (trigger 는 이번 레지스트리 id 로 다시 맞춘다)
+            sel = json.loads(args.hypotheses.read_text(encoding="utf-8"))
+            sel = sel.get("selected") if isinstance(sel, dict) else sel
+            payload["hypotheses"] = H.stage2_view(sel or [], reg)
+            ctx["hypotheses"] = {c["id"]: c for c in sel or []}
+            log.info("hypotheses: %d selected", len(payload["hypotheses"]))
         if args.emit_research:
             targets = research_targets(signals)
             args.emit_research.write_text(json.dumps(targets, ensure_ascii=False, indent=1), encoding="utf-8")
@@ -1509,6 +1566,12 @@ def main(argv: list[str] | None = None) -> int:
                 done = {w.get("what"): w for w in grades[r["idea_key"]] if isinstance(w, dict) and w.get("status") != "pending"}
                 r["watch"] = [done.get(w.get("what"), w) if isinstance(w, dict) else w for w in r.get("watch") or []]
         refresh = refresh_rows(ex_map, judged_keys(rows), grades, ctx, now)
+        from wsj.ecosystems import verification as V
+
+        v_rows, v_notes = V.audit(ex_map, rows, refresh, now, model, args.method, _KEEP)  # 예측 적중·반증 → ★·종료 (ADR-0022)
+        rows += v_rows
+        for x in v_notes:
+            log.info("verification: %s", x)
         rows += star_rule_audit(ex_map, rows, refresh, now, model, args.method)
         for x in rejects:
             log.warning("rejected: %s", x)
