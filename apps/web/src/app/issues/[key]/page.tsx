@@ -2,8 +2,9 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Icon } from "@/components/Icon";
 import { IssueCard } from "@/components/issues/IssueCards";
+import { PathGraph } from "@/components/issues/PathGraph";
 import { loadIdeas, loadValuations } from "@/lib/ideas";
-import { ideasByIssue, loadIssue, loadIssueHypotheses } from "@/lib/issues";
+import { ideasByIssue, issueGraph, loadIssue, loadIssueHypotheses } from "@/lib/issues";
 
 export const dynamic = "force-dynamic";
 
@@ -12,15 +13,18 @@ export async function generateMetadata({ params }: { params: Promise<{ key: stri
   return { title: issue?.title ?? "이슈" };
 }
 
-/** 이슈 상세: 카드의 전체 판 — 요약 · 공급망에서의 의미 · 태깅 노드 · 영향 경로 ≤3 · 연결된 리포트 · 출처. */
+/** 이슈 상세: 카드의 전체 판(요약·의미·경로·연결 리포트·출처) + 온톨로지 그래프(변화 → 병목·기술 → 부품·공정·장비 → 기업, 가설 경로는 굵게). */
 export default async function IssueDetail({ params }: { params: Promise<{ key: string }> }) {
   const { key } = await params;
   const issue = await loadIssue(key);
   if (!issue) notFound();
   const [hyps, { ideas }, valuations] = await Promise.all([loadIssueHypotheses([key]), loadIdeas(), loadValuations()]);
+  const paths = hyps.get(key)?.paths ?? [];
+  const reportByCompany = new Map(ideas.map((x) => [x.primary_company, x.idea_key]));
+  const g = issueGraph(issue, paths, reportByCompany);
   return <div className="fd fd-detail">
     <div className="breadcrumb"><Link href="/issues">이슈</Link><Icon name="chevron-right" size={13}/><span>{issue.title}</span></div>
     <IssueCard issue={issue} hyp={hyps.get(key)} ideas={ideasByIssue(ideas).get(key) ?? []} valuations={valuations} detail/>
-    <footer className="fd-footer"><span>더 보기</span><Link href="/issues">이슈 피드</Link><Link href="/">리서치</Link><em>영향 경로는 모형의 가설이며 매수·매도 권유가 아닙니다.</em></footer>
+    {g.nodes.length ? <section className="fd-dsec"><h2>공급망 그래프</h2><PathGraph g={g}/></section> : null}
   </div>;
 }

@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Icon } from "@/components/Icon";
-import { Cites, Freshness, MetaLine, PriceLine, References, TargetPrice } from "@/components/feed/Feed";
+import { Cites, ECO_CLASS, Freshness, MetaLine, PriceLine, References, ValueBand } from "@/components/feed/Feed";
 import { EVENT_KIND_KO, ROLE_KO, SCENARIO_KO, SIZE_KO, WATCH_STATUS_KO, liveUpside, loadCompanyEvents, loadFacts, loadIdea, loadIdeaNote, loadValuationHistory, loadValuations, money, pct, usdB, verification, verificationText, watchItems, type CompanyFacts, type IdeaEvidence, type IdeaNote, type Valuation } from "@/lib/ideas";
 import { REL_KO, rel, relOf, viewIdea, type IdeaView } from "@/lib/feed";
 
@@ -40,19 +40,18 @@ export default async function IdeaDetail({ params }: { params: Promise<{ id: str
   const w = idea.whyNow;
   return <div className="fd fd-detail">
     <div className="breadcrumb"><Link href="/">리서치</Link><Icon name="chevron-right" size={13}/><span>{idea.primary?.name ?? idea.title}</span></div>
-    <header className="fd-dhead">
-      <p className="fd-dco"><b>{idea.primary?.name}</b>{idea.primary ? <span>{[idea.primary.ticker, idea.primary.exchange, idea.primary.size_band ? SIZE_KO[idea.primary.size_band] : null].filter(Boolean).join(" · ")}</span> : null}</p>
-      <MetaLine idea={idea}/>
+    <header className={`fd-dhead ${ECO_CLASS[idea.ecosystems[0]] ?? ""}`}>
+      <p className="fd-dco"><b>{idea.primary?.name}</b>{idea.primary ? <span>{[idea.primary.ticker, idea.primary.exchange, idea.primary.size_band ? SIZE_KO[idea.primary.size_band] : null].filter(Boolean).join(" ")}</span> : null}</p>
       <h1>{idea.title}</h1>
       <p className="fd-thesis">{idea.thesis}</p>
-      <TargetPrice v={valuation} facts={factsMap.get(idea.primary_company) ?? null}/>
-      <div className="fd-foot"><Freshness idea={idea}/><span>갱신 {rel(idea.updated_at)}</span></div>
+      <ValueBand v={valuation} facts={factsMap.get(idea.primary_company) ?? null} large/>
+      <div className="fd-foot"><MetaLine idea={idea}/><Freshness idea={idea}/><span>갱신 {rel(idea.updated_at)}</span></div>
     </header>
 
     <div className="fd-dgrid">
       <div>
         <section className="fd-dsec">
-          <h2>투자 아이디어<small>왜 지금 이 기업인가</small></h2>
+          <h2>왜 지금</h2>
           {w ? <p className="fd-lead">{w.date ? <span className="fd-date">{w.date.slice(5).replace("-", "/")}</span> : null}{w.text}<Cites ns={w.refs}/></p> : null}
           {!idea.companyAt ? <p className="fd-note-warn">주 기업({idea.primary?.name}) 자신의 최근 공시·실적·수주로 확인된 근거는 아직 없습니다. 업계 신호와 공급망 구조로 세운 아이디어입니다.</p> : null}
           {idea.what_changed ? <p className="fd-changed"><b>바뀐 점</b>{idea.what_changed}</p> : null}
@@ -64,7 +63,7 @@ export default async function IdeaDetail({ params }: { params: Promise<{ id: str
         <DeepDive note={note}/>
 
         {facts.length ? <section className="fd-dsec">
-          <h2>데이터 근거<small>주 기업·관련 기업 자신의 공시·실적·수주 — 원문에서 확인한 숫자</small></h2>
+          <h2>데이터 근거</h2>
           <ul className="fd-facts">{facts.map((r) => <li key={r.n}>
             <div className="fd-ref-meta">{[r.date?.slice(0, 10), r.publisher, REL_KO[r.rel]].filter(Boolean).join(" · ")}</div>
             <p>{checked.has(r.url) ? r.note : r.title}<Cites ns={[r.n]}/></p>
@@ -72,7 +71,7 @@ export default async function IdeaDetail({ params }: { params: Promise<{ id: str
         </section> : null}
 
         <section className="fd-dsec">
-          <h2>가설의 논리<small>사실은 각주, 추론은 (추론)</small></h2>
+          <h2>가설의 논리</h2>
           <ol className="fd-chain">{idea.chain.map((s, i) => <li key={i} className={s.inference ? "inf" : ""}>{s.claim}<Cites ns={s.evidence.map((e) => idea.refs.find((r) => r.url === e.url && r.title === e.title)?.n ?? 0).filter(Boolean)}/></li>)}</ol>
         </section>
 
@@ -83,7 +82,7 @@ export default async function IdeaDetail({ params }: { params: Promise<{ id: str
         </section>
 
         {idea.watch.length ? <section className="fd-dsec">
-          <h2>예측과 검증<small>가설이 맞으면 이 날짜에 이 숫자가 나온다 — 다음 실행이 채점하고, 적중 1건이면 ★2 · 2건이면 ★3 · 반증이 성립하면 가설을 버립니다 · {verificationText(verification(idea))}</small></h2>
+          <h2>예측<small>{verificationText(verification(idea))}</small></h2>
           <ul className="fd-watch">{watchItems(idea).map((w, i) => <li key={i} className={`fd-w-${w.status ?? "pending"}`}>
             <span className="fd-w-status">{w.status === "hit" && w.direction === "weaken" ? "반증 성립" : w.status === "hit" ? "적중" : WATCH_STATUS_KO[w.status ?? "pending"] ?? w.status}</span>
             <div>
@@ -96,7 +95,7 @@ export default async function IdeaDetail({ params }: { params: Promise<{ id: str
         </section> : null}
 
         {events.length ? <section className="fd-dsec">
-          <h2>관련 기업 최근 소식<small>공시·월매출·뉴스 · 최근 30일</small></h2>
+          <h2>최근 소식</h2>
           <ul className="fd-events">{events.map((e) => <li key={e.event_id}>
             <div className="fd-ref-meta">{[e.published_at.slice(0, 10), nameOf.get(e.company_id), EVENT_KIND_KO[e.kind] ?? e.kind, e.publisher, e.verified ? "원문 확인" : null].filter(Boolean).join(" · ")}</div>
             {e.text && e.verified ? <p className="fd-ref-note">{e.text}</p> : null}
@@ -105,7 +104,7 @@ export default async function IdeaDetail({ params }: { params: Promise<{ id: str
         </section> : null}
 
         <section className="fd-dsec">
-          <h2>출처<small>기업 직접 · 관련 기업 · 업계 · 그래프 배경</small></h2>
+          <h2>출처</h2>
           <References idea={idea}/>
         </section>
       </div>
@@ -118,10 +117,8 @@ export default async function IdeaDetail({ params }: { params: Promise<{ id: str
           {c.why ? <p>{c.why}</p> : null}
         </li>)}</ul>
         <div className="fd-aside-meta">
-          {idea.first_seen ? <div>처음 등장 {idea.first_seen.slice(0, 10)}</div> : null}
+          {idea.first_seen ? <div>첫 리포트 {idea.first_seen.slice(0, 10)}</div> : null}
           {idea.revision ? <div>개정 {idea.revision}회</div> : null}
-          <div>{idea.method === "session" ? "Claude 예약작업" : "자동 분석"}{idea.model ? ` · ${idea.model}` : ""}</div>
-          <div>목표주가는 모형 산출 · 투자 권유 아님</div>
         </div>
       </aside>
     </div>
@@ -146,7 +143,8 @@ function Value({ idea, v, facts, history, cite }: { idea: IdeaView; v: Valuation
   </>;
   if (!v) {
     return <section className="fd-dsec fd-value-sec">
-      <h2>목표주가와 시나리오<small>주가·재무가 모이면 다음 아침 실행이 산출합니다 · 모형 산출이지 권유가 아님</small></h2>
+      <h2>시나리오</h2>
+      <p className="fd-empty">목표주가 산출 전</p>
       {ctx}
     </section>;
   }
@@ -154,8 +152,7 @@ function Value({ idea, v, facts, history, cite }: { idea: IdeaView; v: Valuation
   const fmtBig = (x?: number | null) => (x == null ? "—" : x >= 1e12 ? `${(x / 1e12).toFixed(2)}조` : x >= 1e8 ? `${(x / 1e8).toFixed(1)}억` : x >= 1e6 ? `${(x / 1e6).toFixed(1)}M` : x.toLocaleString());
   const mult = (s: Valuation["scenarios"][number]) => (s.multiple != null && s.metric ? `${s.metric === "ps" ? "P/S" : "P/E"} ${s.multiple}` : "—");
   return <section className="fd-dsec fd-value-sec">
-    <h2>목표주가와 시나리오<small>{v.as_of} 산출 · {v.horizon_months}개월 · {v.model ?? ""} · 모형 산출이지 권유가 아님</small></h2>
-    <p className="fd-judge-line"><b>추론 요약</b></p>
+    <h2>시나리오</h2>
     <p className="fd-lead">{v.verdict}</p>
     <table className="fd-sc-table">
       <thead><tr><th>시나리오</th><th>확률</th><th>매출 ({v.currency})</th><th>마진</th><th>배수</th><th>내재 시총</th><th>내재 주가</th><th>여력</th></tr></thead>
@@ -165,7 +162,7 @@ function Value({ idea, v, facts, history, cite }: { idea: IdeaView; v: Valuation
         <td>{fmtBig(s.implied_mcap_local)}</td><td>{money(s.implied_price, v.currency)}</td>
         <td className={s.upside_pct >= 0 ? "up" : "down"}>{pct(s.upside_pct)}</td>
       </tr>)}</tbody>
-      <tfoot><tr><td colSpan={6}>목표주가 = 확률 가중 기대 주가</td><td>{money(v.expected_price, v.currency)}</td><td className={live.upside >= 0 ? "up" : "down"}>{pct(live.upside)}</td></tr></tfoot>
+      <tfoot><tr><td colSpan={6}>목표주가</td><td>{money(v.expected_price, v.currency)}</td><td className={live.upside >= 0 ? "up" : "down"}>{pct(live.upside)}</td></tr></tfoot>
     </table>
     {v.path?.labels?.length ? <p className="fd-ant-path">{v.path.labels.map((l, i) => <span key={i}>{i ? <i> → </i> : null}{l}</span>)}</p> : null}
     {v.path?.mechanism ? <p className="fd-judge-line"><b>왜 번지나</b>{v.path.mechanism}</p> : null}
@@ -185,7 +182,7 @@ function Value({ idea, v, facts, history, cite }: { idea: IdeaView; v: Valuation
 function DeepDive({ note }: { note: IdeaNote | null }) {
   if (!note?.content?.sections?.length) return null;
   return <section className="fd-dsec fd-deep">
-    <h2>심층 분석<small>{note.updated_at.slice(0, 10)} · {note.model ?? ""} · 숫자는 출처에 있는 것만</small></h2>
+    <h2>심층 분석<small>{note.updated_at.slice(0, 10)}</small></h2>
     {note.content.summary ? <p className="fd-lead">{note.content.summary}</p> : null}
     {note.content.sections.map((s) => <div key={s.id} className="fd-deep-sec">
       <h3>{s.title}</h3>
