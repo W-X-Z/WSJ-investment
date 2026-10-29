@@ -537,12 +537,65 @@ LLM_SYSTEM = """\
 - 사실만 쓴다. 주가 전망·시나리오는 쓰지 않는다. 숫자는 출처에 있는 것만.
 - importance 는 1~10 정수, importance_rationale 에 근거(출처 수·1차 출처 여부·병목 크기·대상 기업 규모)를 한 문장으로.
 - 한국어. 회사명·제품명·기술 용어는 원문.
+- unmapped (잔차, ADR-0026): 이슈의 핵심인데 node_catalog·company_catalog 에 **없는** 기술·부품·소재·표준·메커니즘·기업 용어를 이슈당 최대 4개 적는다 \
+(예: 새 메모리 계층 이름, 새 커넥터 규격, 새 공정명). 일반 명사·마케팅 표현은 쓰지 않는다. 없으면 빈 배열. 이것은 온톨로지가 놓친 새 것을 찾는 신호다.
 
 출력: ```json 블록 하나.
 {{"issues": [{{"cluster_ids": [0], "title": "40자 이내", "summary": "2~3문장 사실 요약", "why_it_matters": "어느 병목·노드·기업에 어떻게 닿는지 1~2문장",
   "event_type": "{event_types}", "ecosystem": "hbm|optics|power|cross", "importance": 7, "importance_rationale": "...",
-  "nodes": ["..."], "companies": [{{"id": "company:...", "direction": "+|-|±", "basis": "근거 한 줄"}}]}}]}}
+  "nodes": ["..."], "companies": [{{"id": "company:...", "direction": "+|-|±", "basis": "근거 한 줄"}}],
+  "unmapped": [{{"term": "원문 용어", "kind_guess": "technology|component|material|standard|mechanism|company|other", "context": "이 이슈에서의 뜻 한 줄"}}]}}]}}
 """
+UNMAPPED_KINDS = ("technology", "component", "material", "standard", "mechanism", "company", "other")
+
+
+def term_key(term: str) -> str:
+    """잔차 용어의 키 — 소문자, 영숫자·한글 밖은 _ (DB 함수 put_unmapped_terms 와 같은 규칙)."""
+    return re.sub(r"[^a-zA-Z0-9가-힣]+", "_", term).strip("_").lower()
+
+
+def collect_unmapped(rows: list[dict[str, Any]], node_pats, comp_pats) -> list[dict[str, Any]]:
+    """선별 모델이 이슈마다 적은 잔차(unmapped)를 모아 용어별로 합친다. 어휘 사전(노드·기업 별칭)에 이미 걸리는 용어는 잔차가 아니다.
+    행에서는 `_unmapped` 를 떼어 낸다 (테이블 열이 아니다)."""
+    merged: dict[str, dict[str, Any]] = {}
+    for row in rows:
+        items = row.pop("_unmapped", None) or []
+        for u in items:
+            term = (u.get("term") or "").strip() if isinstance(u, dict) else ""
+            if not 2 <= len(term) <= 80:
+                continue
+            if any(p.search(term) for p, _ in node_pats) or any(p.search(term) for p, _ in comp_pats):
+                continue  # 온톨로지에 이미 있는 것 (별칭·현지어 포함)
+            k = term_key(term)
+            if len(k) < 2:
+                continue
+            cur = merged.setdefault(k, {"term_key": k, "term": term, "kind_guess": None, "ecosystem": row.get("ecosystem"), "context": None, "issue_keys": []})
+            kind = u.get("kind_guess")
+            cur["kind_guess"] = cur["kind_guess"] or (kind if kind in UNMAPPED_KINDS else None)
+            cur["context"] = cur["context"] or ((u.get("context") or "")[:300] or None)
+            if row["issue_key"] not in cur["issue_keys"]:
+                cur["issue_keys"].append(row["issue_key"])
+    return sorted(merged.values(), key=lambda r: (-len(r["issue_keys"]), r["term_key"]))
+
+
+def save_unmapped(store, terms: list[dict[str, Any]], now: datetime) -> int:
+    """ideas.unmapped_terms 에 누적 — 같은 term_key 는 n_seen +1, issue_keys 합집합, first_seen 유지 (DB 함수 put_unmapped_terms 와 같은 뜻; 스토어는 RPC 가 없어 읽고 합친다)."""
+    if not terms:
+        return 0
+    today = now.date().isoformat()
+    existing = {r["term_key"]: r for r in store.select("ideas.unmapped_terms", ["term_key", "issue_keys", "first_seen", "n_seen", "status", "kind_guess", "context"],
+                                                         {"term_key": [t["term_key"] for t in terms]})}
+    out = []
+    for t in terms:
+        e = existing.get(t["term_key"])
+        if e:
+            keys = list(dict.fromkeys([*(e.get("issue_keys") or []), *t["issue_keys"]]))
+            out.append({**t, "issue_keys": keys, "kind_guess": e.get("kind_guess") or t["kind_guess"], "context": e.get("context") or t["context"],
+                        "first_seen": e["first_seen"], "last_seen": today, "n_seen": int(e.get("n_seen") or 1) + 1, "status": e.get("status") or "open",
+                        "updated_at": now.isoformat()})
+        else:
+            out.append({**t, "first_seen": today, "last_seen": today, "n_seen": 1, "status": "open", "updated_at": now.isoformat()})
+    return store.upsert("ideas.unmapped_terms", out, ["term_key"])
 
 
 def llm_curate(cands: list[dict[str, Any]], graph: dict[str, Any], impact: dict[str, Any], model: str, max_issues: int, api_key: str) -> tuple[list[dict[str, Any]], dict[str, Any]]:
@@ -735,8 +788,10 @@ def run(http: HttpClient, store, days: int = 14, use_llm: bool = True, model: st
             rows.append(_row(c["members"], lead.title, lead.snippet or None, None, "other", c["ecosystem"], c["rule_importance"],
                              f"규칙 점수: 출처 가중 {SOURCE_WEIGHT.get(lead.source_type, 1)}, 출판사 {len(c['publishers'])}곳, 노드 {len(c['nodes'])}개, 최근성 {c['recency']}",
                              c["nodes"], comps, "rule", None))
+    unmapped = collect_unmapped(rows, node_pats, comp_pats)
+    stats["unmapped_terms"] = len(unmapped)
     return {"as_of": now.isoformat(), "days": days, "method": method, "stats": stats, "usage": usage, "issues": rows, "indicator_points": indicator_points,
-            "candidates": [candidate_view(i, c) for i, c in enumerate(cands)] if dump_candidates else None}
+            "unmapped_terms": unmapped, "candidates": [candidate_view(i, c) for i, c in enumerate(cands)] if dump_candidates else None}
 
 
 def candidate_view(i: int, c: dict[str, Any]) -> dict[str, Any]:
@@ -769,10 +824,12 @@ def rows_from_picks(picked: list[dict[str, Any]], cands: list[dict[str, Any]], g
             cid = c.get("id") if isinstance(c, dict) else None
             if cid in gnodes and gnodes[cid]["kind"] == "company":
                 comps.append(_company(gnodes[cid], c.get("direction") if c.get("direction") in ("+", "-", "±") else "±", c.get("basis")))
-        rows.append(_row(members, p.get("title") or members[0].title, p.get("summary"), p.get("why_it_matters"),
-                         p.get("event_type") if p.get("event_type") in EVENT_TYPES else "other",
-                         p.get("ecosystem") if p.get("ecosystem") in ("hbm", "optics", "power", "cross") else cands[ids[0]]["ecosystem"],
-                         int(max(1, min(10, int(p.get("importance") or 1)))), p.get("importance_rationale"), nodes, comps, "llm", model))
+        row = _row(members, p.get("title") or members[0].title, p.get("summary"), p.get("why_it_matters"),
+                   p.get("event_type") if p.get("event_type") in EVENT_TYPES else "other",
+                   p.get("ecosystem") if p.get("ecosystem") in ("hbm", "optics", "power", "cross") else cands[ids[0]]["ecosystem"],
+                   int(max(1, min(10, int(p.get("importance") or 1)))), p.get("importance_rationale"), nodes, comps, "llm", model)
+        row["_unmapped"] = [u for u in (p.get("unmapped") or []) if isinstance(u, dict)][:4]  # 잔차 (ADR-0026) — collect_unmapped 가 떼어 간다
+        rows.append(row)
     return rows
 
 
@@ -853,6 +910,12 @@ def main(argv: list[str] | None = None) -> int:
                     m = indicators.save(store, result["indicator_points"])
                     log.info("saved %d indicator points", m)
                     rl["rows"] += m
+                if result["unmapped_terms"]:
+                    try:
+                        u = save_unmapped(store, result["unmapped_terms"], datetime.fromisoformat(result["as_of"]))
+                        log.info("saved %d unmapped terms", u)
+                    except Exception as exc:  # noqa: BLE001 - 0029 전이거나 스토어가 모르는 테이블이면 잔차는 건너뛴다
+                        log.warning("unmapped terms not saved: %s", exc)
             rl["notes"] = json.dumps({"method": result["method"], **result["stats"]}, ensure_ascii=False, default=str)[:3900]
     finally:
         http.close()

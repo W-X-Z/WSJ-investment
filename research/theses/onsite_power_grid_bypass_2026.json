@@ -135,6 +135,9 @@
  ],
  "stage": 2,
  "stage_reason": "주문(1.72GW)·수주잔고가 원문으로 확인 — 그러나 계통연계 대기 수치가 없어 동인은 미계측",
+ "kind": "regime",
+ "novelty": "analog",
+ "novelty_reason": "전력 인프라 2023 의 재현. INNIO 1.72GW·Bloom 등 주문이 공개돼 stage 2 — 체제 기록. 계통연계 대기 년수는 미계측.",
  "benchmark": "thermal_power_2023",
  "model": "claude-fable-5-1",
  "method": "session"

@@ -10,7 +10,7 @@
 | research 06:49 | daily/research.md | `v_q_paths_needing_research` | put_company_events · put_observations · put_path_research |
 | report 07:37 | daily/report.md | `v_q_candidates_needing_report` · `v_q_ideas_needing_valuation` | put_ideas · put_valuations · put_assessments |
 | verify 08:11 | daily/verify.md | `v_q_predictions_due` | put_company_events · put_ideas · put_assessments · put_thesis_evidence |
-| thesis 토 09:17 | thesis.md | `v_theses` (활성 구조 가설) | put_theses · put_thesis_evidence · put_observations · put_company_events |
+| thesis 토 09:17 | thesis.md | `v_weak_signals` · `v_unmapped_terms` · `v_theses` (1부 약한 신호 → 2부 구조 가설) | put_weak_signals · put_theses · put_thesis_evidence · put_observations · put_company_events |
 
 모든 작업이 `ops.put_agent_run` 으로 실행 기록을 남긴다. 사용자는 자리에 없으니 질문하지 말고 끝까지 진행한다. 이 문서를 바꾸려면 사람이 승인한 PR 이어야 한다.
 

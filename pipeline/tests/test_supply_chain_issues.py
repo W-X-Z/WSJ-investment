@@ -74,3 +74,42 @@ def test_sec_headline_and_boilerplate():
            "• Q3 net revenue up 72% Carlsbad, Calif. – October 22, 2026 – volume ramp of our Keystone PAM4 DSP platform. About MaxLinear ...")
     head, boiler = issues.sec_headline(mxl, '"PAM4 DSP"', "MAXLINEAR, INC")
     assert head == "MaxLinear, Inc. Announces Third Quarter 2026 Financial Results" and not boiler
+
+
+def test_collect_unmapped_drops_known_vocabulary_and_merges_terms():
+    """잔차(ADR-0026): 어휘 사전에 걸리는 용어(hybrid bonding·Navitas)는 잔차가 아니고, 같은 용어는 이슈 키를 합친다."""
+    node_pats, comp_pats = issues.build_lexicon(load_graph())
+    rows = [
+        {"issue_key": "i1", "ecosystem": "hbm", "_unmapped": [{"term": "HBF", "kind_guess": "technology", "context": "NAND 적층 계층"},
+                                                             {"term": "hybrid bonding", "kind_guess": "technology"}, {"term": "x", "kind_guess": "other"}]},
+        {"issue_key": "i2", "ecosystem": "power", "_unmapped": [{"term": "hbf", "kind_guess": "nonsense"}, {"term": "Navitas"}, {"term": "Kyber liquid-cooled busway", "kind_guess": "component"}]},
+        {"issue_key": "i3", "ecosystem": "optics"},
+    ]
+    out = issues.collect_unmapped(rows, node_pats, comp_pats)
+    assert all("_unmapped" not in r for r in rows)
+    keys = {r["term_key"]: r for r in out}
+    assert set(keys) == {"hbf", "kyber_liquid_cooled_busway"}
+    assert keys["hbf"]["issue_keys"] == ["i1", "i2"] and keys["hbf"]["kind_guess"] == "technology" and keys["hbf"]["context"] == "NAND 적층 계층"
+    assert out[0]["term_key"] == "hbf"  # 더 많은 이슈에 나온 것이 앞
+
+
+def test_save_unmapped_accumulates_n_seen_and_issue_keys():
+    class Store:
+        def __init__(self):
+            self.rows = {"hbf": {"term_key": "hbf", "issue_keys": ["i0"], "first_seen": "2026-10-20", "n_seen": 2, "status": "open", "kind_guess": None, "context": None}}
+            self.upserted = []
+
+        def select(self, table, columns=None, filters=None, limit=None, order=None):
+            return [r for k, r in self.rows.items() if k in filters["term_key"]]
+
+        def upsert(self, table, rows, conflict):
+            self.upserted = rows
+            return len(rows)
+
+    st = Store()
+    n = issues.save_unmapped(st, [{"term_key": "hbf", "term": "HBF", "kind_guess": "technology", "ecosystem": "hbm", "context": "c", "issue_keys": ["i0", "i1"]},
+                                  {"term_key": "new_one", "term": "New One", "kind_guess": None, "ecosystem": None, "context": None, "issue_keys": ["i1"]}], NOW)
+    assert n == 2
+    by = {r["term_key"]: r for r in st.upserted}
+    assert by["hbf"]["n_seen"] == 3 and by["hbf"]["issue_keys"] == ["i0", "i1"] and by["hbf"]["first_seen"] == "2026-10-20" and by["hbf"]["kind_guess"] == "technology"
+    assert by["new_one"]["n_seen"] == 1 and by["new_one"]["first_seen"] == "2026-10-27" and by["new_one"]["status"] == "open"
