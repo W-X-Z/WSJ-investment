@@ -1278,6 +1278,34 @@
       "heat reuse",
       "waste heat",
       "폐열"
+    ],
+    "component:memory_interface_chip": [
+      "RCD",
+      "registered clock driver",
+      "MRCD",
+      "MDB",
+      "MRDIMM",
+      "PMIC",
+      "SPD hub",
+      "메모리 인터페이스 칩"
+    ],
+    "product:google_tpu_system": [
+      "TPU",
+      "Ironwood",
+      "TPU v8",
+      "Sunfish",
+      "Zebrafish",
+      "구글 TPU"
+    ],
+    "component:mlb_pcb": [
+      "MLB",
+      "multilayer board",
+      "high layer count PCB",
+      "고다층 기판"
+    ],
+    "company:isu_petasys": [
+      "ISU Petasys",
+      "이수페타시스"
     ]
   }
 }

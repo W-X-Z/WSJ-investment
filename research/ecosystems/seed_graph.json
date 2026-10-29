@@ -10325,6 +10325,39 @@
       },
       "size_band": "large",
       "in_universe": false
+    },
+    {
+      "id": "component:memory_interface_chip",
+      "kind": "component",
+      "label": "메모리 인터페이스 칩 (DDR5 RCD · MRDIMM MRCD/MDB · PMIC · SPD hub — 모듈마다 붙는 칩)",
+      "ecosystem": "hbm"
+    },
+    {
+      "id": "product:google_tpu_system",
+      "kind": "product",
+      "label": "Google TPU 시스템 (자사 + 외부 판매·임대)",
+      "ecosystem": "hbm"
+    },
+    {
+      "id": "component:mlb_pcb",
+      "kind": "component",
+      "label": "고다층 MLB 기판 (가속기 보드·스위치 — 다층·Sequential 적층)",
+      "ecosystem": "hbm"
+    },
+    {
+      "id": "company:isu_petasys",
+      "kind": "company",
+      "label": "ISU Petasys (KRX 007660, 비SEC)",
+      "ecosystem": "hbm",
+      "role": "supplier",
+      "listing": {
+        "ticker": "007660",
+        "exchange": "KRX",
+        "cik": null,
+        "filer_type": "non_sec_listed"
+      },
+      "size_band": "mid",
+      "in_universe": false
     }
   ],
   "edges": [
@@ -40834,6 +40867,244 @@
       ],
       "note": "TFLT 8λ 1.6T 송신기",
       "confidence": 0.625
+    },
+    {
+      "id": "t1030-001",
+      "from": "component:server_dram_lpdram",
+      "to": "component:memory_interface_chip",
+      "relation": "requires",
+      "evidence_tier": "third_party_report",
+      "polarity": "positive",
+      "evidence": [
+        {
+          "url": "https://pro.edgex.exchange/en-US/news/article/rambus-record-q3-2026-revenue-ai-server-demand",
+          "source_type": "third_party_report",
+          "published_at": "2026-10-27",
+          "excerpt": "Rambus Q3 2026: record product revenue $114.3M (+22% YoY, +15% QoQ), led by DDR5 registered clock drivers for AI servers; PMIC for LPDDR6 SOCAMM2"
+        },
+        {
+          "url": "https://news.skhynix.com/en/ocp-global-summit-2026/",
+          "source_type": "official_issuer",
+          "published_at": "2026-10-16",
+          "excerpt": "SK hynix OCP 2026: 128GB DDR5 MRDIMM; 256GB 3DS RDIMM 'the industry's largest capacity for AI workloads'; KV cache over CXL pooled memory demo"
+        }
+      ],
+      "note": "RDIMM 마다 RCD, MRDIMM 마다 MRCD + MDB — 비트가 아니라 모듈·채널 수에 비례",
+      "confidence": 0.625
+    },
+    {
+      "id": "t1030-002",
+      "from": "component:memory_interface_chip",
+      "to": "company:rmbs",
+      "relation": "offered_by",
+      "evidence_tier": "third_party_report",
+      "polarity": "positive",
+      "evidence": [
+        {
+          "url": "https://pro.edgex.exchange/en-US/news/article/rambus-record-q3-2026-revenue-ai-server-demand",
+          "source_type": "third_party_report",
+          "published_at": "2026-10-27",
+          "excerpt": "Rambus Q3 2026: record product revenue $114.3M (+22% YoY, +15% QoQ), led by DDR5 registered clock drivers for AI servers; PMIC for LPDDR6 SOCAMM2"
+        }
+      ],
+      "note": "DDR5 RCD 가 Q3 2026 기록적 제품 매출을 이끎",
+      "confidence": 0.6
+    },
+    {
+      "id": "t1030-003",
+      "from": "component:memory_interface_chip",
+      "to": "company:montage",
+      "relation": "offered_by",
+      "evidence_tier": "technical_inference",
+      "polarity": "positive",
+      "evidence": [
+        {
+          "url": "https://pro.edgex.exchange/en-US/news/article/rambus-record-q3-2026-revenue-ai-server-demand",
+          "source_type": "third_party_report",
+          "published_at": "2026-10-27",
+          "excerpt": "Rambus Q3 2026: record product revenue $114.3M (+22% YoY, +15% QoQ), led by DDR5 registered clock drivers for AI servers; PMIC for LPDDR6 SOCAMM2"
+        }
+      ],
+      "note": "RCD·MRCD 경쟁사 (SSE 상장 — 투자 범위 밖)",
+      "confidence": 0.4
+    },
+    {
+      "id": "t1030-004",
+      "from": "bottleneck:dram_bit_supply",
+      "to": "component:memory_interface_chip",
+      "relation": "mitigated_by",
+      "evidence_tier": "technical_inference",
+      "polarity": "positive",
+      "evidence": [
+        {
+          "url": "https://investor.marvell.com/news-events/press-releases/detail/1037/marvell-unveils-second-generation-structera-x-industry-first-six-channel-cxl-3-2-memory-expanders-for-ai-inference",
+          "source_type": "official_issuer",
+          "published_at": "2026-10-12",
+          "excerpt": "today's memory shortage and subsequent high prices are driving IT managers to use CXL to re-deploy used DDR4 DIMMs into DDR5 systems; KV-cache capacity directly determines TTFT"
+        },
+        {
+          "url": "https://news.skhynix.com/en/ocp-global-summit-2026/",
+          "source_type": "official_issuer",
+          "published_at": "2026-10-16",
+          "excerpt": "SK hynix OCP 2026: 128GB DDR5 MRDIMM; 256GB 3DS RDIMM 'the industry's largest capacity for AI workloads'; KV cache over CXL pooled memory demo"
+        }
+      ],
+      "note": "부족이 모듈당 고용량화(3DS 256GB)·MRDIMM·CXL 재배치를 부른다 — 칩 수요가 비트와 갈라진다 (추론)",
+      "confidence": 0.425
+    },
+    {
+      "id": "t1030-005",
+      "from": "product:google_tpu_system",
+      "to": "company:googl",
+      "relation": "offered_by",
+      "evidence_tier": "third_party_report",
+      "polarity": "positive",
+      "evidence": [
+        {
+          "url": "https://www.datacenterdynamics.com/en/news/google-grows-tpu-stash-by-7bn-in-last-year/",
+          "source_type": "third_party_report",
+          "published_at": "2026-07-30",
+          "excerpt": "Q2 FY2026 call: TPU system sales are reflected in the $514bn cloud backlog; 'the vast majority of the revenue from that agreement come through in 2027'; 10-Q inventory primarily hardware related to TPU systems for sale to enterprise customers"
+        }
+      ],
+      "note": "외부 판매 매출 대부분 2027",
+      "confidence": 0.6
+    },
+    {
+      "id": "t1030-006",
+      "from": "product:google_tpu_system",
+      "to": "component:hbm_stack",
+      "relation": "implements",
+      "evidence_tier": "technical_inference",
+      "polarity": "positive",
+      "evidence": [
+        {
+          "url": "https://thenextweb.com/news/google-inference-chips-nvidia-challenge-supply-chain",
+          "source_type": "third_party_report",
+          "published_at": "2026-04-20",
+          "excerpt": "Broadcom long-term supply agreement through 2031 (TPU v8 'Sunfish', 2nm, late 2027); MediaTek cost-optimised inference variant 'Zebrafish'; ~4.3M TPU shipments projected 2026, >35M 2028; Anthropic ~3.5 GW next-gen TPU from 2027"
+        }
+      ],
+      "confidence": 0.4
+    },
+    {
+      "id": "t1030-007",
+      "from": "product:google_tpu_system",
+      "to": "component:mlb_pcb",
+      "relation": "implements",
+      "evidence_tier": "third_party_report",
+      "polarity": "positive",
+      "evidence": [
+        {
+          "url": "https://dealsite.co.kr/articles/150410",
+          "source_type": "third_party_report",
+          "published_at": "2025-10-31",
+          "excerpt": "이수페타시스는 구글 TPU 에 들어가는 MLB 를 공급하는 핵심 협력사로 분석; 800G MLB 수율 80% 중반"
+        }
+      ],
+      "confidence": 0.6
+    },
+    {
+      "id": "t1030-008",
+      "from": "company:avgo",
+      "to": "product:google_tpu_system",
+      "relation": "develops",
+      "evidence_tier": "third_party_report",
+      "polarity": "positive",
+      "evidence": [
+        {
+          "url": "https://thenextweb.com/news/google-inference-chips-nvidia-challenge-supply-chain",
+          "source_type": "third_party_report",
+          "published_at": "2026-04-20",
+          "excerpt": "Broadcom long-term supply agreement through 2031 (TPU v8 'Sunfish', 2nm, late 2027); MediaTek cost-optimised inference variant 'Zebrafish'; ~4.3M TPU shipments projected 2026, >35M 2028; Anthropic ~3.5 GW next-gen TPU from 2027"
+        },
+        {
+          "url": "https://www.kucoin.com/news/flash/morgan-stanley-defends-broadcom-s-role-in-google-s-tpu-supply-chain-forecasts-5m-shipments-by-2027",
+          "source_type": "third_party_report",
+          "published_at": "2026-07-15",
+          "excerpt": "Morgan Stanley: TPU shipments 3.2M (2026), 5M (2027); Broadcom retains majority role in high-performance variants"
+        }
+      ],
+      "note": "고성능 변종 설계, 2031년까지 장기 공급 계약",
+      "confidence": 0.625
+    },
+    {
+      "id": "t1030-009",
+      "from": "component:mlb_pcb",
+      "to": "company:isu_petasys",
+      "relation": "offered_by",
+      "evidence_tier": "third_party_report",
+      "polarity": "positive",
+      "evidence": [
+        {
+          "url": "https://dealsite.co.kr/articles/150410",
+          "source_type": "third_party_report",
+          "published_at": "2025-10-31",
+          "excerpt": "이수페타시스는 구글 TPU 에 들어가는 MLB 를 공급하는 핵심 협력사로 분석; 800G MLB 수율 80% 중반"
+        }
+      ],
+      "note": "TPU·스위치 MLB",
+      "confidence": 0.6
+    },
+    {
+      "id": "t1030-010",
+      "from": "company:hyosung_hi",
+      "to": "component:sst",
+      "relation": "develops",
+      "evidence_tier": "third_party_report",
+      "polarity": "positive",
+      "evidence": [
+        {
+          "url": "https://www.kpinews.kr/newsView/1065577251239974",
+          "source_type": "third_party_report",
+          "published_at": "2026-04-30",
+          "excerpt": "효성중공업 IEEE PES T&D 2026: 데이터센터·신재생 전력 안정성을 강화하는 STATCOM, 차세대 데이터센터 핵심 전력 솔루션 SST(22.9kV 서브모듈)"
+        }
+      ],
+      "note": "22.9kV SST 서브모듈",
+      "confidence": 0.6
+    },
+    {
+      "id": "t1030-011",
+      "from": "company:hyosung_hi",
+      "to": "component:grid_forming_inverter",
+      "relation": "develops",
+      "evidence_tier": "third_party_report",
+      "polarity": "positive",
+      "evidence": [
+        {
+          "url": "https://www.kpinews.kr/newsView/1065577251239974",
+          "source_type": "third_party_report",
+          "published_at": "2026-04-30",
+          "excerpt": "효성중공업 IEEE PES T&D 2026: 데이터센터·신재생 전력 안정성을 강화하는 STATCOM, 차세대 데이터센터 핵심 전력 솔루션 SST(22.9kV 서브모듈)"
+        },
+        {
+          "url": "https://www.smarttoday.co.kr/ko-kr/articles/101702",
+          "source_type": "third_party_report",
+          "published_at": "2026-01-20",
+          "excerpt": "효성중공업 스태콤 + 스켈레톤 슈퍼커패시터 결합 e-STATCOM 을 2027년까지 공동개발"
+        }
+      ],
+      "note": "데이터센터용 STATCOM, e-STATCOM(+스켈레톤 슈퍼커패시터) 2027년까지",
+      "confidence": 0.625
+    },
+    {
+      "id": "t1030-012",
+      "from": "component:supercapacitor",
+      "to": "company:skeleton",
+      "relation": "offered_by",
+      "evidence_tier": "third_party_report",
+      "polarity": "positive",
+      "evidence": [
+        {
+          "url": "https://www.smarttoday.co.kr/ko-kr/articles/101702",
+          "source_type": "third_party_report",
+          "published_at": "2026-01-20",
+          "excerpt": "효성중공업 스태콤 + 스켈레톤 슈퍼커패시터 결합 e-STATCOM 을 2027년까지 공동개발"
+        }
+      ],
+      "note": "e-STATCOM 의 저장 소자",
+      "confidence": 0.6
     }
   ],
   "events": [
