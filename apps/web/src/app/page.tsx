@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { ReportCard } from "@/components/feed/Feed";
 import { ECO_KO } from "@/lib/ideas";
-import { loadFeed, orderByValue, rel } from "@/lib/feed";
+import { loadFeed, onFeed, orderByValue, rel } from "@/lib/feed";
 
 export const dynamic = "force-dynamic";
 export const metadata = { title: "리서치" };
@@ -11,17 +11,15 @@ type SP = { eco?: string };
 /**
  * 홈 = 리서치 피드 (ADR-0023 개정). 기업마다 리포트 카드 하나: 기업 · 아이디어 제목·요지 · 값의 띠(목표주가·여력·약세~강세). 설명은 ? 에, 근거·시나리오·예측은 상세에.
  * 점수는 표면에 올리지 않는다 (ADR-0019).
- * 순서: 최근 36시간에 새로·강화·약화된 리포트 → 나머지. 각 묶음 안에서는 상승여력 순(목표주가가 없는 리포트는 뒤에 ★ 순).
+ * 메인에는 ★2 이상이거나 여력이 큰 리포트만(onFeed). 나머지는 /ideas 의 '검토 중'. 순서는 상승여력 순 하나 (묶음 나누지 않는다).
  */
 export default async function Home({ searchParams }: { searchParams: Promise<SP> }) {
   const sp = await searchParams;
   const feed = await loadFeed();
   const eco = sp.eco && ECO_KO[sp.eco] ? sp.eco : undefined;
-  const ideas = orderByValue(feed.ideas.filter((x) => !eco || x.ecosystems.includes(eco)));
-  const since = Date.now() - 36 * 36e5;
-  const isChanged = (x: (typeof ideas)[number]) => new Date(x.updated_at).getTime() >= since && ["new", "strengthened", "weakened"].includes(x.shownTrend ?? "");
-  const changed = ideas.filter(isChanged);
-  const rest = ideas.filter((x) => !isChanged(x));
+  const pool = feed.ideas.filter((x) => !eco || x.ecosystems.includes(eco));
+  const ideas = orderByValue(pool.filter(onFeed));
+  const held = pool.length - ideas.length;
   const valued = ideas.filter((x) => x.valuation).length;
   return <div className="fd">
     <header className="fd-head">
@@ -34,15 +32,11 @@ export default async function Home({ searchParams }: { searchParams: Promise<SP>
     </header>
 
     {!ideas.length ? <p className="fd-empty">조건에 맞는 리포트가 없습니다.</p> : null}
-    {changed.length ? <section className="fd-sec">
-      <h2>최근 바뀐 리포트</h2>
-      <div className="fd-cards">{changed.map((x) => <ReportCard key={x.idea_key} idea={x} changed/>)}</div>
-    </section> : null}
-    {rest.length ? <section className="fd-sec">
-      {changed.length ? <h2>나머지 리포트</h2> : null}
-      <div className="fd-cards">{rest.map((x) => <ReportCard key={x.idea_key} idea={x} changed={false}/>)}</div>
+    {ideas.length ? <section className="fd-sec">
+      <div className="fd-cards">{ideas.map((x) => <ReportCard key={x.idea_key} idea={x}/>)}</div>
     </section> : null}
 
+    {held ? <p className="fd-held"><Link href="/ideas">검토 중인 가설 {held}</Link></p> : null}
     {feed.source === "seed" ? <p className="fd-empty">시드 데이터</p> : null}
   </div>;
 }

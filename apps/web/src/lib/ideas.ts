@@ -101,7 +101,7 @@ export type ValuationScenario = { name: "bear" | "base" | "bull"; prob: number; 
 export type Valuation = { idea_key: string; as_of: string; company_id: string; currency: string; price: number; price_as_of?: string | null; shares?: number | null;
   market_cap_usd?: number | null; horizon_months: number; scenarios: ValuationScenario[]; expected_price: number; expected_upside_pct: number;
   confidence: "low" | "mid" | "high"; verdict: string; assumptions: Assumption[]; breaks: IdeaStep[]; path?: { labels?: string[]; mechanism?: string | null } | null;
-  model?: string | null; method?: string | null; prev_expected_upside_pct?: number | null; prev_as_of?: string | null; n_valuations?: number | null };
+  model?: string | null; method?: string | null; created_at?: string | null; prev_expected_upside_pct?: number | null; prev_as_of?: string | null; n_valuations?: number | null };
 export const SCENARIO_KO: Record<string, string> = { bear: "약세", base: "기본", bull: "강세" };
 export const CONFIDENCE_KO: Record<string, string> = { low: "확신 낮음", mid: "확신 중간", high: "확신 높음" };
 /** 통화 기호와 자릿수: 현지 통화 그대로 (NT$42.5 · ₩12,100 · $3.00 · ¥5,129). */

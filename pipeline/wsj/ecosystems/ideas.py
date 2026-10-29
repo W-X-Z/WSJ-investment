@@ -540,8 +540,9 @@ LLM_SYSTEM = """너는 AI 공급망(HBM·첨단 패키징 / 800G·1.6T 광통신
 - verdict: 3~5문장 한 단락 — 어떤 변화가(날짜) → 어떤 경로로 이 기업 숫자를 → 얼마나(매출·마진, 추정이면 "추정"이라 밝힌다) → 그래서 시총·주가는 →
   시장이 지금 반영한 정도. 사실 숫자는 근거에서, 추정 숫자는 네 논리에서 — 둘을 섞어 쓰지 않는다. "목표가"·"매수" 같은 말은 쓰지 않는다 — 모형 산출이지 권유가 아니다.
 - assumptions 3~6개: fact(근거 id 1개 이상) 1개 이상 + estimate(basis) — 변화의 크기·닿는 비율·시점·배수. breaks 1~3개(이 평가가 깨지는 조건과 그것을 확인할 데이터·날짜).
-- action=keep 인 기존 아이디어도 valuation 을 쓴다: existing.valuation 이 없으면(아직 평가가 없음) **반드시**, 있으면 (a) 그 뒤 주가가 ±15% 넘게 움직였거나
-  (b) 새 근거가 매출·마진 가정을 바꿀 때. 둘 다 아니면 생략한다 — 지난 평가가 그대로 쓰이고 상승여력만 오늘 주가로 다시 계산된다.
+- **가격·주식수(prices[primary].close·shares)가 있으면 valuation 은 생략할 수 없다** — 검증기가 누락을 오류로 돌려보낸다.
+  new·update·weaken 행은 이번에 다시 쓴다(리포트를 고쳐 썼으면 값도 다시 매긴다 — 근거가 약해졌는데 지난 목표주가가 남는 일이 없게).
+  action=keep 은 existing.valuation 이 있으면 생략해도 된다(지난 평가가 그대로 쓰이고 여력만 오늘 주가로 다시 계산). 없으면 keep 이어도 쓴다.
 
 existing 처리
 - existing 은 지난 실행의 판단이지 사실이 아니다. 믿고 이어 쓰지 말고 오늘의 근거로 다시 판단한다 — 특히 기업 자신의 근거(company_signal_at)가 없는 아이디어는
@@ -1188,6 +1189,29 @@ def build_context(graph: dict[str, Any], issues: list[dict[str, Any]], indicator
     return ctx, extras
 
 
+def missing_valuations(rows: list[dict[str, Any]], vals: list[dict[str, Any]], existing: dict[str, dict[str, Any]],
+                       money: dict[str, dict[str, Any]], prev_vals: dict[str, dict[str, Any]]) -> list[str]:
+    """가격·주식수(money)가 있는데 목표주가가 없는 활성 아이디어. 새로 쓰거나 고친 행(rows)은 이번 vals 에 있어야 하고,
+    손대지 않은 아이디어(existing, keep)는 지난 평가(prev_vals)라도 있어야 한다. 없으면 '어떤 행이 왜' 를 돌려준다."""
+    have = {v["idea_key"] for v in vals}
+    out = []
+    touched = set()
+    for r in rows:
+        touched.add(r["idea_key"])
+        if r.get("status") != "active" or r["idea_key"] in have:
+            continue
+        m = money.get(r.get("primary_company") or "")
+        if m and m.get("close") and m.get("shares"):
+            out.append(f"{r['idea_key']} {str(r.get('title') or '')[:30]} — 가격·주식수 있음, 이번 실행에 valuation 없음 ({r.get('trend')})")
+    for key, x in existing.items():
+        if key in touched or (x.get("status") or "active") != "active" or key in have or key in prev_vals:
+            continue
+        m = money.get(x.get("primary_company") or "")
+        if m and m.get("close") and m.get("shares"):
+            out.append(f"{key} {str(x.get('title') or '')[:30]} — 가격·주식수 있음, 평가가 한 번도 없음 (keep 이어도 써야 한다)")
+    return out
+
+
 def refresh_rows(existing: dict[str, dict[str, Any]], touched: set[str], grades: dict[str, list[Any]], ctx: dict[str, Any],
                  now: datetime) -> list[dict[str, Any]]:
     """손대지 않은 아이디어의 판단(근거 나이·가격 맥락)과 확인 일정 채점을 다시 쓴다 → ideas.put_assessments (updated_at 그대로)."""
@@ -1417,6 +1441,7 @@ def main(argv: list[str] | None = None) -> int:
     ap.add_argument("--hypotheses-out", type=Path, help="--from-hypotheses 결과(selected·all·rejected)를 쓴다")
     ap.add_argument("--emit-research-plan", type=Path, help="고른 후보의 조사 계획을 JSON 으로 쓴다")
     ap.add_argument("--hypotheses", type=Path, help="2단계: 고른 후보(--hypotheses-out 파일)를 아이디어 입력에 넣는다")
+    ap.add_argument("--allow-missing-valuations", action="store_true", help="세션 모드에서 목표주가 누락을 오류(exit 2)로 보지 않는다")
     args = ap.parse_args(argv)
     logging.basicConfig(level=logging.INFO, format="%(levelname)-7s %(name)s: %(message)s")
     logging.getLogger("httpx").setLevel(logging.WARNING)
@@ -1582,6 +1607,11 @@ def main(argv: list[str] | None = None) -> int:
         rows += star_rule_audit(ex_map, rows, refresh, now, model, args.method)
         for x in rejects:
             log.warning("rejected: %s", x)
+        # 목표주가 누락 점검 (ADR-0023 개정 2): 가격·주식수가 있는 활성 아이디어는 모두 valuation 이 있어야 한다 —
+        # 새로 쓰거나 고친 행은 이번 평가, 손대지 않은 행은 지난 평가. 10/29 아침 실행이 새 리포트 4건을 목표주가 없이 쓴 뒤 추가.
+        missing = missing_valuations(rows, vals, ex_map, ctx.get("money") or {}, ctx.get("valuations") or {})
+        for x in missing:
+            log.error("valuation missing: %s", x)
         if args.out:
             args.out.write_text(json.dumps(rows, ensure_ascii=False, indent=1), encoding="utf-8")
             args.out.with_name(args.out.stem + ".valuations.json").write_text(json.dumps(vals, ensure_ascii=False, indent=1, default=str), encoding="utf-8")
@@ -1594,6 +1624,9 @@ def main(argv: list[str] | None = None) -> int:
             a = write_assess_sql(refresh, args.emit_sql)
             if a:
                 log.info("sql: %s (판단 %d건)", a, len(refresh))
+        if missing and args.method == "session" and not args.allow_missing_valuations:
+            print(json.dumps({"error": "valuation missing", "count": len(missing), "fix": "raw.json 의 해당 아이디어에 valuation 을 채우고 다시 검증 (가격·주식수가 있으면 생략 불가)"}, ensure_ascii=False))
+            return 2
         n = 0
         if not args.dry_run and store is not None:
             from wsj.runlog import logged_run

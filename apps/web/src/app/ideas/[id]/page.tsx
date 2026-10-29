@@ -1,9 +1,9 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Icon } from "@/components/Icon";
-import { Cites, ECO_CLASS, Freshness, MetaLine, PriceLine, References, ValueBand } from "@/components/feed/Feed";
+import { Cites, Freshness, MetaLine, PriceLine, References, ValueBand } from "@/components/feed/Feed";
 import { EVENT_KIND_KO, ROLE_KO, SCENARIO_KO, SIZE_KO, WATCH_STATUS_KO, liveUpside, loadCompanyEvents, loadFacts, loadIdea, loadIdeaNote, loadValuationHistory, loadValuations, money, pct, usdB, verification, verificationText, watchItems, type CompanyFacts, type IdeaEvidence, type IdeaNote, type Valuation } from "@/lib/ideas";
-import { REL_KO, rel, relOf, viewIdea, type IdeaView } from "@/lib/feed";
+import { REL_KO, isStale, rel, relOf, viewIdea, type IdeaView } from "@/lib/feed";
 
 export const dynamic = "force-dynamic";
 
@@ -23,7 +23,9 @@ export default async function IdeaDetail({ params }: { params: Promise<{ id: str
   const idea = viewIdea(raw);
   const [events, factsMap, note, valuations, history] = await Promise.all([loadCompanyEvents(idea.companies.filter((c) => c.role !== "customer").map((c) => c.id)), loadFacts(),
     loadIdeaNote(idea.idea_key), loadValuations(), loadValuationHistory(idea.idea_key)]);
-  const valuation = valuations.get(idea.idea_key) ?? null;
+  const lastVal = valuations.get(idea.idea_key) ?? null;
+  const stale = !!lastVal && isStale(lastVal, idea);
+  const valuation = stale ? null : lastVal;
   // 가치평가의 근거(가정·시나리오·깨지는 조건)도 같은 각주 번호 체계에 넣는다 → 출처 목록에 함께 나온다
   const cite = (e: IdeaEvidence) => {
     const found = idea.refs.find((r) => r.url === e.url && r.title === e.title);
@@ -40,11 +42,11 @@ export default async function IdeaDetail({ params }: { params: Promise<{ id: str
   const w = idea.whyNow;
   return <div className="fd fd-detail">
     <div className="breadcrumb"><Link href="/">리서치</Link><Icon name="chevron-right" size={13}/><span>{idea.primary?.name ?? idea.title}</span></div>
-    <header className={`fd-dhead ${ECO_CLASS[idea.ecosystems[0]] ?? ""}`}>
+    <header className="fd-dhead">
       <p className="fd-dco"><b>{idea.primary?.name}</b>{idea.primary ? <span>{[idea.primary.ticker, idea.primary.exchange, idea.primary.size_band ? SIZE_KO[idea.primary.size_band] : null].filter(Boolean).join(" ")}</span> : null}</p>
       <h1>{idea.title}</h1>
       <p className="fd-thesis">{idea.thesis}</p>
-      <ValueBand v={valuation} facts={factsMap.get(idea.primary_company) ?? null} large/>
+      <ValueBand v={valuation} facts={factsMap.get(idea.primary_company) ?? null} large stale={stale ? lastVal : null}/>
       <div className="fd-foot"><MetaLine idea={idea}/><Freshness idea={idea}/><span>갱신 {rel(idea.updated_at)}</span></div>
     </header>
 
@@ -58,7 +60,7 @@ export default async function IdeaDetail({ params }: { params: Promise<{ id: str
           {idea.stars_reason ? <p className="fd-starsreason"><b>★ 판단</b>{idea.stars_reason}</p> : null}
         </section>
 
-        <Value idea={idea} v={valuation} facts={factsMap.get(idea.primary_company) ?? null} history={history} cite={cite}/>
+        <Value idea={idea} v={valuation} facts={factsMap.get(idea.primary_company) ?? null} history={history} cite={cite} stale={stale ? lastVal : null}/>
 
         <DeepDive note={note}/>
 
@@ -112,8 +114,8 @@ export default async function IdeaDetail({ params }: { params: Promise<{ id: str
       <aside className="fd-aside">
         <h2>관련 기업</h2>
         <ul>{idea.companies.map((c) => <li key={c.id}>
-          <div><b>{c.name}</b><span>{ROLE_KO[c.role] ?? c.role}</span></div>
-          <small>{[c.exchange, c.ticker, c.size_band ? SIZE_KO[c.size_band] : null].filter(Boolean).join(" · ")} · <Link href={`/map?focus=${encodeURIComponent(c.id)}`}>공급망에서 보기</Link></small>
+          <div><Link href={`/companies/${c.id.replace(/^company:/, "")}`}><b>{c.name}</b></Link><span>{ROLE_KO[c.role] ?? c.role}</span></div>
+          <small>{[c.exchange, c.ticker, c.size_band ? SIZE_KO[c.size_band] : null].filter(Boolean).join(" ")}</small>
           {c.why ? <p>{c.why}</p> : null}
         </li>)}</ul>
         <div className="fd-aside-meta">
@@ -127,8 +129,8 @@ export default async function IdeaDetail({ params }: { params: Promise<{ id: str
 
 /** 목표주가와 시나리오 (ADR-0019·0023): 사람이 보는 결과. 추론 요약(verdict), 시나리오 표(확률·매출·마진·배수 → 내재 시총·주가), 영향 경로, 가정(각주), 깨지는 조건,
  *  산출 이력. 그 아래에 '이미 움직인 폭'(시총·수익률)과 병목 상태 관측치. 근거·선행 점수는 그리지 않는다. */
-function Value({ idea, v, facts, history, cite }: { idea: IdeaView; v: Valuation | null; facts: CompanyFacts | null;
-  history: Awaited<ReturnType<typeof loadValuationHistory>>; cite: (e: IdeaEvidence) => number }) {
+function Value({ idea, v, facts, history, cite, stale }: { idea: IdeaView; v: Valuation | null; facts: CompanyFacts | null;
+  history: Awaited<ReturnType<typeof loadValuationHistory>>; cite: (e: IdeaEvidence) => number; stale?: Valuation | null }) {
   const a = idea.assessment;
   const p = a?.price ?? null;
   const ctx = <>
@@ -144,7 +146,7 @@ function Value({ idea, v, facts, history, cite }: { idea: IdeaView; v: Valuation
   if (!v) {
     return <section className="fd-dsec fd-value-sec">
       <h2>시나리오</h2>
-      <p className="fd-empty">목표주가 산출 전</p>
+      <p className="fd-empty">{stale ? `리포트를 고쳐 쓴 뒤 목표주가를 다시 산출하기 전입니다 — 이전 산출(${stale.as_of}) ${money(stale.expected_price, stale.currency)}` : "목표주가 산출 전"}</p>
       {ctx}
     </section>;
   }

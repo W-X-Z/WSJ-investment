@@ -71,7 +71,12 @@ export function viewIdea(idea: InvestmentIdea): IdeaView {
 
 /** 아이디어 카드의 '관련 이슈' 한 줄: 아이디어가 근거로 쓴 업계 이슈(signal_refs)의 제목·날짜·첫 출처. */
 export type RelatedIssue = { key: string; title: string; date: string | null; url?: string };
-export type FeedIdea = IdeaView & { issues: RelatedIssue[]; issueCount: number; facts: CompanyFacts | null; valuation: Valuation | null };
+export type FeedIdea = IdeaView & { issues: RelatedIssue[]; issueCount: number; facts: CompanyFacts | null; valuation: Valuation | null; staleValuation: Valuation | null };
+/** 리포트를 고쳐 쓴 뒤(updated_at) 산출한 목표주가가 없으면 지난 목표주가는 낡은 것이다 — 메인 문턱·카드에서는 '없음'으로 보고 재산출을 기다린다. */
+export const isStale = (v: Valuation, idea: Pick<InvestmentIdea, "updated_at">) => {
+  const made = v.created_at ? Date.parse(v.created_at) : Date.parse(`${v.as_of}T23:59:59Z`);
+  return made < Date.parse(idea.updated_at) - 60_000;  // 리포트를 고쳐 쓴 시각보다 1분 넘게 앞선 산출은 그 리포트의 값이 아니다
+};
 export type Feed = { ideas: FeedIdea[]; source: "db" | "seed"; updatedAt: string | null; error?: string };
 
 type IssueRow = { issue_key: string; title: string; latest_published_at: string | null; first_seen: string; sources: { url: string }[] | null };
@@ -104,10 +109,20 @@ export async function loadFeed(): Promise<Feed> {
         .map((r) => ({ key: r.id, title: r.title, date: day(r.date), url: r.url }));
     }
     iss.sort(byDate);
-    return { ...v, issues: iss.slice(0, 3), issueCount: iss.length, facts: facts.get(v.primary_company) ?? null, valuation: valuations.get(v.idea_key) ?? null };
+    const val = valuations.get(v.idea_key) ?? null;
+    const stale = !!val && isStale(val, v);
+    return { ...v, issues: iss.slice(0, 3), issueCount: iss.length, facts: facts.get(v.primary_company) ?? null, valuation: stale ? null : val, staleValuation: stale ? val : null };
   });
   const updatedAt = ideas.map((x) => x.updated_at).sort().at(-1) ?? null;
   return { ideas: orderByValue(out), source, updatedAt, error: err };
+}
+
+/** 메인 노출 문턱 (ADR-0023 개정 2): 근거가 약한 가설은 메인에 올리지 않는다 — ★2 이상(검증됨)이거나, 목표주가 여력이 FEED_MIN_UPSIDE 이상(기댓값이 큼)일 때만.
+ *  나머지는 /ideas 의 '검토 중' 목록에만 있다. */
+export const FEED_MIN_UPSIDE = 30;
+export function onFeed(x: { stars: number; valuation: Valuation | null; facts: CompanyFacts | null }): boolean {
+  if (x.stars >= 2) return true;
+  return !!x.valuation && Math.round(liveUpside(x.valuation, x.facts?.close).upside) >= FEED_MIN_UPSIDE;  // 화면에 보이는 반올림 값 기준
 }
 
 /** 피드 순서 (ADR-0019): 가치평가가 있는 아이디어는 오늘 종가로 다시 계산한 기대 상승여력 순, 평가가 없는 아이디어는 그 뒤에 ★·근거 순. */

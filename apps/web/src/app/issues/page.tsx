@@ -1,8 +1,8 @@
 import Link from "next/link";
 import { IssueCard } from "@/components/issues/IssueCards";
-import { ECO_KO, loadIdeas, loadValuations } from "@/lib/ideas";
+import { ECO_KO } from "@/lib/ideas";
 import { ideasByIssue, loadIssueHypotheses, loadIssues } from "@/lib/issues";
-import { rel } from "@/lib/feed";
+import { loadFeed, rel } from "@/lib/feed";
 
 export const dynamic = "force-dynamic";
 export const metadata = { title: "이슈" };
@@ -17,10 +17,10 @@ export default async function IssuesPage({ searchParams }: { searchParams: Promi
   const sp = await searchParams;
   const eco = sp.eco && ECO_KO[sp.eco] ? sp.eco : undefined;
   const days = sp.days === "30" ? 30 : 14;
-  const [issuesAll, { ideas }, valuations] = await Promise.all([loadIssues(days, 5, 120), loadIdeas(), loadValuations()]);
+  const [issuesAll, feed] = await Promise.all([loadIssues(days, 5, 120), loadFeed()]);
   const issues = issuesAll.filter((i) => !eco || i.ecosystem === eco);
   const hyps = await loadIssueHypotheses(issues.map((i) => i.issue_key));
-  const byIssue = ideasByIssue(ideas);
+  const byIssue = ideasByIssue(feed.ideas);
   const withPaths = issues.filter((i) => hyps.get(i.issue_key)?.paths.length);
   const latest = issuesAll[0]?.latest_published_at ?? issuesAll[0]?.first_seen ?? null;
   return <div className="fd">
@@ -34,7 +34,7 @@ export default async function IssuesPage({ searchParams }: { searchParams: Promi
       </nav>
     </header>
     {!issues.length ? <p className="fd-empty">최근 {days}일에 중요도 5 이상인 이슈가 없습니다.</p> : null}
-    <div className="fd-ics">{issues.map((i) => <IssueCard key={i.issue_key} issue={i} hyp={hyps.get(i.issue_key)} ideas={byIssue.get(i.issue_key) ?? []} valuations={valuations}/>)}</div>
+    <div className="fd-ics">{issues.map((i) => <IssueCard key={i.issue_key} issue={i} hyp={hyps.get(i.issue_key)} ideas={byIssue.get(i.issue_key) ?? []}/>)}</div>
 
   </div>;
 }
