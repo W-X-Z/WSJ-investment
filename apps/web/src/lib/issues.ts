@@ -27,8 +27,10 @@ export type IssuePath = {
 };
 export type IssueHypotheses = { issue_key: string; as_of: string; paths: IssuePath[]; model?: string | null; method?: string | null };
 export type PathResearch = { issue_key: string; path_id: string; as_of: string; verdict: "confirmed" | "partial" | "unconfirmed" | "no_data" | "refuted"; summary: string;
-  event_ids?: string[]; sources?: { title?: string; url: string; date?: string }[]; created_at?: string };
+  event_ids?: string[]; sources?: { title?: string; url: string; date?: string; kind?: string }[]; created_at?: string };
 export const VERDICT_KO: Record<PathResearch["verdict"], string> = { confirmed: "확인", partial: "일부 확인", unconfirmed: "미확인", no_data: "자료 없음", refuted: "반박" };
+/** 출처 종류 (조사 작업이 sources[].kind 로 밝힌다 — 신뢰도는 표시하되 문턱이 아니다). */
+export const SOURCE_KIND_KO: Record<string, string> = { official: "공식", customer: "고객", trade_press: "업계지", news: "언론", rumor: "소문·단서" };
 
 export const EVENT_TYPE_KO: Record<string, string> = {
   capacity: "증설·캐파", pricing: "가격", order: "수주·계약", earnings: "실적", technology: "기술", policy: "정책·규제", supply: "공급", demand: "수요",

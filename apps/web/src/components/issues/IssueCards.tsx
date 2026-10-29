@@ -2,12 +2,15 @@ import Link from "next/link";
 import { StarText, ValueBand } from "@/components/feed/Feed";
 import { type FeedIdea, shortName } from "@/lib/feed";
 import { ECO_KO, pct } from "@/lib/ideas";
-import { EVENT_TYPE_KO, VERDICT_KO, issueDate, nodeLabel, type Issue, type IssueHypotheses, type IssuePath } from "@/lib/issues";
+import { EVENT_TYPE_KO, SOURCE_KIND_KO, VERDICT_KO, issueDate, nodeLabel, type Issue, type IssueHypotheses, type IssuePath } from "@/lib/issues";
 
 const md = (d?: string | null) => (d ? `${Number(d.slice(5, 7))}/${Number(d.slice(8, 10))}` : "");
 /** 수집기의 중요도(1~10) → ★ 1~3. */
 export const issueStars = (i: Issue) => i.stars ?? (i.importance >= 8 ? 3 : i.importance >= 6 ? 2 : 1);
 const slug = (id: string) => id.replace(/^company:/, "");
+
+/** 조사 출처의 종류를 한 줄로 (공식 · 업계지 · 소문·단서). */
+const kinds = (r: { sources?: { kind?: string }[] }) => Array.from(new Set((r.sources ?? []).map((s) => s.kind && SOURCE_KIND_KO[s.kind]).filter(Boolean))).join(" · ");
 
 /** 영향 경로 한 줄: 노드 사슬 → 주장 → (기업). 기업은 위키로, 리포트가 있으면 리포트로. */
 export function PathLine({ p, idea }: { p: IssuePath; idea?: FeedIdea | null }) {
@@ -16,7 +19,7 @@ export function PathLine({ p, idea }: { p: IssuePath; idea?: FeedIdea | null }) 
   return <li className={`fd-ip${p.selected ? " sel" : ""}${r ? ` v-${r.verdict}` : ""}`}>
     <p className="fd-ip-path">{labels.map((l, i) => <span key={i}>{i ? <i>→</i> : null}{l}</span>)}{p.effect_pct != null && p.effect_pct < 0 ? <em className="fd-ip-neg">피해</em> : null}</p>
     <p className="fd-ip-claim">{p.claim}</p>
-    {r ? <p className="fd-ip-research"><b>{VERDICT_KO[r.verdict]}</b>{r.summary}{r.sources?.[0]?.url ? <a href={r.sources[0].url} target="_blank" rel="noreferrer">원문</a> : null}</p> : null}
+    {r ? <p className="fd-ip-research"><b>{VERDICT_KO[r.verdict]}</b>{kinds(r) ? <small>{kinds(r)}</small> : null}{r.summary}{r.sources?.[0]?.url ? <a href={r.sources[0].url} target="_blank" rel="noreferrer">원문</a> : null}</p> : null}
     {idea ? <Link href={`/ideas/${idea.idea_key}`} className="fd-ip-link">{p.company_label ?? p.company}{idea.valuation ? <b className={idea.valuation.expected_upside_pct >= 0 ? "up" : "down"}>{pct(idea.valuation.expected_upside_pct)}</b> : null}<span>›</span></Link>
       : p.company ? <Link href={`/companies/${slug(p.company)}`} className="fd-ip-link muted">{p.company_label ?? p.company}{p.selected ? " · 리포트 작성 중" : ""}<span>›</span></Link> : null}
   </li>;
