@@ -643,3 +643,32 @@ def test_from_queue_rebuilds_stage2_candidates_from_db_rows():
     s1 = reg.add("S", "https://x/s1", "같은 출처", publisher="P", date="2026-10-27", tier="third_party_report")
     v = H.stage2_view(sel, reg)
     assert v[0]["trigger"] == s1 and v[0]["research_result"]["summary"] == "IR 에서 X 비중 35% 확인" and v[0]["source"]["path_id"] == "H1"
+
+
+def test_restrict_payload_keeps_only_queue_issues_and_what_they_touch():
+    """ADR-0024: 경로 작업의 1단계 입력은 큐의 이슈만 — 기업·지표 신호는 빠지고, 후보·근거·가격은 남긴 이슈에 닿는 것만."""
+    from wsj.ecosystems import hypotheses as H
+
+    payload = {
+        "signals": [
+            {"sid": "I1", "kind": "issue", "issue_key": "k1", "nodes": ["bottleneck:b"], "evidence": ["S1"]},
+            {"sid": "I2", "kind": "issue", "issue_key": "k2", "nodes": ["component:y"], "evidence": ["S2"]},
+            {"sid": "E1", "kind": "company", "items": [], "evidence": ["S3"]},
+            {"sid": "M1", "kind": "indicator", "evidence": ["S4"]}],
+        "candidates": [
+            {"company_id": "company:p", "signals": ["I1"], "chains": [{"signal": "I1", "path_ids": ["bottleneck:b", "company:p"], "steps": [{"ev": "G1"}]}], "transitions": []},
+            {"company_id": "company:q", "signals": ["E1"], "chains": [{"signal": "E1", "path_ids": ["component:y", "company:q"], "steps": [{"ev": "G2"}]}], "transitions": [{"ev": "S5"}]},
+            {"company_id": "company:r", "signals": ["M1"], "chains": [{"signal": "M1", "path_ids": ["component:z", "company:r"], "steps": []}], "transitions": []}],
+        "evidence": [{"id": i} for i in ("S1", "S2", "S3", "S4", "S5", "G1", "G2")],
+        "prices": {"company:p": {}, "company:q": {}, "company:r": {}, "company:x": {}},
+        "existing": [{"primary_company": "company:x"}], "states": [1], "leads": {"a": 1},
+    }
+    out = H.restrict_payload(payload, {"k1", "k9"})
+    assert [s["sid"] for s in out["signals"]] == ["I1"]
+    assert [c["company_id"] for c in out["candidates"]] == ["company:p"]          # 신호나 노드로 I1 에 닿는 후보만
+    assert [e["id"] for e in out["evidence"]] == ["S1"]                            # G 근거는 빠진다
+    assert set(out["prices"]) == {"company:p", "company:x"}                        # 남긴 후보 + 기존 리포트의 기업
+    assert out["queue"]["issues"] == ["k1", "k9"] and out["states"] == [1] and out["leads"] == {"a": 1}
+    # 노드로만 닿는 후보도 남는다
+    out2 = H.restrict_payload(payload, {"k2"})
+    assert [c["company_id"] for c in out2["candidates"]] == ["company:q"] and [e["id"] for e in out2["evidence"]] == ["S2", "S5"]

@@ -1462,6 +1462,8 @@ def main(argv: list[str] | None = None) -> int:
     ap.add_argument("--leads-out", type=Path, help="기회 스캔(조사 단서) 결과를 JSON 으로 쓴다")
     # 가설 2단계 (ADR-0022): 1단계 후보 프롬프트 → 후보 검사·선택·조사 계획 → 2단계(아이디어) 입력에 고른 후보를 넣는다
     ap.add_argument("--emit-hypotheses", type=Path, help="1단계(가설 후보) LLM 입력을 파일로 쓰고 끝낸다")
+    ap.add_argument("--issues-from-queue", action="store_true", help="1단계 입력을 DB 큐(v_q_issues_needing_paths)의 이슈로 줄인다 (--from-public 필요)")
+    ap.add_argument("--only-issues", help="1단계 입력을 이 이슈 key 들(쉼표)로 줄인다")
     ap.add_argument("--from-hypotheses", type=Path, help="LLM 의 {'candidates': [...]} 를 검사·채점해 상위 후보를 고른다")
     ap.add_argument("--hypotheses-out", type=Path, help="--from-hypotheses 결과(selected·all·rejected)를 쓴다")
     ap.add_argument("--emit-research-plan", type=Path, help="고른 후보의 조사 계획을 JSON 으로 쓴다")
@@ -1553,10 +1555,29 @@ def main(argv: list[str] | None = None) -> int:
         from wsj.ecosystems import hypotheses as H
 
         if args.emit_hypotheses:  # 1단계: 이슈별 영향 경로(가설 후보) 프롬프트 (입력은 아이디어 단계와 같다)
-            args.emit_hypotheses.write_text(json.dumps({"system": H.system_prompt(now, FRESH_DAYS), "payload": payload}, ensure_ascii=False, indent=1), encoding="utf-8")
+            h_payload = payload
+            keys: set[str] | None = None
+            if args.only_issues:
+                keys = {k.strip() for k in args.only_issues.split(",") if k.strip()}
+            elif args.issues_from_queue:  # 경로 작업 (ADR-0024): 큐의 이슈만
+                from wsj.http import HttpClient
+
+                http = HttpClient("WSJ-investment ideas session", timeout=30, max_retries=2)
+                try:
+                    keys = {r["issue_key"] for r in fetch_public_view(http, *public_credentials(), "v_q_issues_needing_paths")}
+                finally:
+                    http.close()
+            if keys is not None:
+                h_payload = H.restrict_payload(payload, keys)
+                missing_keys = sorted(keys - {s.get("issue_key") for s in h_payload["signals"]})
+                if missing_keys:
+                    log.warning("queue issues without a signal (출처 URL 없음·21일 밖): %s", ", ".join(missing_keys))
+                h_payload["queue"]["without_signal"] = missing_keys
+            args.emit_hypotheses.write_text(json.dumps({"system": H.system_prompt(now, FRESH_DAYS), "payload": h_payload}, ensure_ascii=False, indent=1), encoding="utf-8")
             args.emit_hypotheses.with_suffix(".system.md").write_text(H.system_prompt(now, FRESH_DAYS), encoding="utf-8")
-            args.emit_hypotheses.with_suffix(".payload.json").write_text(json.dumps(payload, ensure_ascii=False, indent=1), encoding="utf-8")
-            print(json.dumps({"stage": "hypotheses", "signals": len(signals), "candidates": len(candidates), "evidence": len(payload["evidence"])}))
+            args.emit_hypotheses.with_suffix(".payload.json").write_text(json.dumps(h_payload, ensure_ascii=False, indent=1), encoding="utf-8")
+            print(json.dumps({"stage": "hypotheses", "signals": len(h_payload["signals"]), "candidates": len(h_payload["candidates"]), "evidence": len(h_payload["evidence"]),
+                              "chars": len(json.dumps(h_payload, ensure_ascii=False)), "queue": len(keys) if keys is not None else None}))
             return 0
         if args.from_hypotheses:  # 후보 검사·채점·선택 → 조사 계획
             raw_h = json.loads(args.from_hypotheses.read_text(encoding="utf-8"))
