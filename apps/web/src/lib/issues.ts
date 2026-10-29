@@ -23,8 +23,12 @@ export type IssuePath = {
   id: string; claim: string; path: string[]; path_labels?: string[]; company?: string | null; company_label?: string | null;
   effect_pct?: number | null; lead_quarters?: number | null; why_unpriced?: string | null; falsifier?: string | null; research?: string[];
   score?: number | null; criteria?: Record<string, number>; flags?: string[]; extends?: string | null; selected?: boolean; rank?: number | null;
+  research_result?: PathResearch | null;  // 조사 작업의 판정 (ADR-0024) — loadIssueHypotheses 가 붙인다
 };
 export type IssueHypotheses = { issue_key: string; as_of: string; paths: IssuePath[]; model?: string | null; method?: string | null };
+export type PathResearch = { issue_key: string; path_id: string; as_of: string; verdict: "confirmed" | "partial" | "unconfirmed" | "no_data" | "refuted"; summary: string;
+  event_ids?: string[]; sources?: { title?: string; url: string; date?: string }[]; created_at?: string };
+export const VERDICT_KO: Record<PathResearch["verdict"], string> = { confirmed: "확인", partial: "일부 확인", unconfirmed: "미확인", no_data: "자료 없음", refuted: "반박" };
 
 export const EVENT_TYPE_KO: Record<string, string> = {
   capacity: "증설·캐파", pricing: "가격", order: "수주·계약", earnings: "실적", technology: "기술", policy: "정책·규제", supply: "공급", demand: "수요",
@@ -70,7 +74,16 @@ export async function loadIssueHypotheses(keys?: string[]): Promise<Map<string, 
     if (keys?.length) q = q.in("issue_key", keys);
     const { data, error } = await q.limit(300);
     if (error || !data) return new Map();
-    return new Map((data as IssueHypotheses[]).map((h) => [h.issue_key, { ...h, paths: Array.isArray(h.paths) ? h.paths : [] }]));
+    const hyps = (data as IssueHypotheses[]).map((h) => ({ ...h, paths: Array.isArray(h.paths) ? h.paths : [] }));
+    // 조사 판정을 경로에 붙인다 (0027 전이면 뷰가 없어 조용히 넘어간다)
+    try {
+      let rq = db("public").from("v_path_research").select("issue_key,path_id,as_of,verdict,summary,sources,created_at");
+      if (keys?.length) rq = rq.in("issue_key", keys);
+      const { data: rs } = await rq.limit(1000);
+      const byKey = new Map((rs as PathResearch[] | null ?? []).map((r) => [`${r.issue_key}|${r.path_id}|${r.as_of}`, r]));
+      for (const h of hyps) for (const p of h.paths) p.research_result = byKey.get(`${h.issue_key}|${p.id}|${h.as_of}`) ?? null;
+    } catch { /* 0027 전 */ }
+    return new Map(hyps.map((h) => [h.issue_key, h]));
   } catch { return new Map(); }
 }
 

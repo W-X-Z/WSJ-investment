@@ -2,7 +2,7 @@ import Link from "next/link";
 import { StarText, ValueBand } from "@/components/feed/Feed";
 import { type FeedIdea, shortName } from "@/lib/feed";
 import { ECO_KO, pct } from "@/lib/ideas";
-import { EVENT_TYPE_KO, issueDate, nodeLabel, type Issue, type IssueHypotheses, type IssuePath } from "@/lib/issues";
+import { EVENT_TYPE_KO, VERDICT_KO, issueDate, nodeLabel, type Issue, type IssueHypotheses, type IssuePath } from "@/lib/issues";
 
 const md = (d?: string | null) => (d ? `${Number(d.slice(5, 7))}/${Number(d.slice(8, 10))}` : "");
 /** 수집기의 중요도(1~10) → ★ 1~3. */
@@ -12,9 +12,11 @@ const slug = (id: string) => id.replace(/^company:/, "");
 /** 영향 경로 한 줄: 노드 사슬 → 주장 → (기업). 기업은 위키로, 리포트가 있으면 리포트로. */
 export function PathLine({ p, idea }: { p: IssuePath; idea?: FeedIdea | null }) {
   const labels = p.path_labels?.length ? p.path_labels : p.path.map(nodeLabel);
-  return <li className={`fd-ip${p.selected ? " sel" : ""}`}>
-    <p className="fd-ip-path">{labels.map((l, i) => <span key={i}>{i ? <i>→</i> : null}{l}</span>)}</p>
+  const r = p.research_result;
+  return <li className={`fd-ip${p.selected ? " sel" : ""}${r ? ` v-${r.verdict}` : ""}`}>
+    <p className="fd-ip-path">{labels.map((l, i) => <span key={i}>{i ? <i>→</i> : null}{l}</span>)}{p.effect_pct != null && p.effect_pct < 0 ? <em className="fd-ip-neg">피해</em> : null}</p>
     <p className="fd-ip-claim">{p.claim}</p>
+    {r ? <p className="fd-ip-research"><b>{VERDICT_KO[r.verdict]}</b>{r.summary}{r.sources?.[0]?.url ? <a href={r.sources[0].url} target="_blank" rel="noreferrer">원문</a> : null}</p> : null}
     {idea ? <Link href={`/ideas/${idea.idea_key}`} className="fd-ip-link">{p.company_label ?? p.company}{idea.valuation ? <b className={idea.valuation.expected_upside_pct >= 0 ? "up" : "down"}>{pct(idea.valuation.expected_upside_pct)}</b> : null}<span>›</span></Link>
       : p.company ? <Link href={`/companies/${slug(p.company)}`} className="fd-ip-link muted">{p.company_label ?? p.company}{p.selected ? " · 리포트 작성 중" : ""}<span>›</span></Link> : null}
   </li>;
