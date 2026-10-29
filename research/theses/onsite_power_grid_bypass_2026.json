@@ -1,0 +1,141 @@
+{
+ "thesis_key": "onsite_power_grid_bypass_2026",
+ "title": "전력망 접속 대기가 데이터센터 속도를 정하면 현장 발전이 별도 시장이 된다",
+ "statement": "하이퍼스케일러의 AI 데이터센터 건설 속도는 이제 GPU 가 아니라 전력 접속에 묶인다. 계통연계 대기가 수년 단위로 늘면서 사업자들은 가스엔진·가스터빈·연료전지로 현장에서 직접 전력을 만들기 시작했다 — INNIO 는 한 미국 데이터센터 고객에게서만 1.72GW 의 Jenbacher 주문을 받았고(2026-10-22) 장비 수주잔고는 $79.6억(3Q26), Oracle 은 Bloom 연료전지를 현장에 들였다(2025-07). 이 수요는 전력 기기 사이클이 아니라 '그리드를 우회하는' 구조 변화라 가스엔진·터빈·연료전지·변압기·개폐기 공급사의 수주잔고가 다년간 쌓인다. 시장은 GE Vernova·Vertiv 는 읽었지만 연료전지와 한국 발전기기 고리는 덜 읽었다는 것이 내기다.",
+ "ecosystem": "power",
+ "chain": [
+  {
+   "node": "bottleneck:transformer_leadtime",
+   "claim": "계통연계·변압기 리드타임이 데이터센터 착공의 병목 (추론 — 대기 년수 관측치 필요)",
+   "evidence": []
+  },
+  {
+   "node": "component:fuel_cell",
+   "claim": "현장 발전 주문이 숫자로: INNIO 데이터센터 고객 1.72GW, 수주잔고 $79.6억",
+   "evidence": [
+    {
+     "url": "https://www.businesswire.com/news/home/20261022191376/en/Follow-on-Order-Brings-Orders-from-INNIO-Data-Center-Customer-to-1.72-GW-Further-Strengthening-INNIO%E2%80%99s-Data-Center-Backlog-and-Revenue-Visibility/",
+     "title": "INNIO 1.72GW",
+     "date": "2026-10-22",
+     "kind": "official"
+    }
+   ]
+  },
+  {
+   "node": "company:fcel",
+   "claim": "연료전지·가스엔진·터빈 공급사의 다년 수주잔고 (추론)",
+   "evidence": [
+    {
+     "url": "https://enkiai.com/data-centers/ai-data-center-energy-2026-the-grid-bypass-revolution",
+     "title": "Oracle + Bloom on-site fuel cells",
+     "date": "2025-07-01",
+     "kind": "trade_press"
+    }
+   ]
+  }
+ ],
+ "drivers": [
+  {
+   "id": "innio_backlog",
+   "label": "INNIO 장비 수주잔고",
+   "metric": "USD bn",
+   "latest": {
+    "value": 7.963,
+    "as_of": "2026-09-30",
+    "source": "obs:innio_equipment_backlog"
+   },
+   "threshold": "두 분기 연속 감소면 약화",
+   "direction": "up",
+   "indicator_id": "obs:innio_equipment_backlog"
+  },
+  {
+   "id": "onsite_gw_orders",
+   "label": "데이터센터 현장 발전 주문 (GW, 공개 건 합)",
+   "metric": "GW",
+   "latest": {
+    "value": 1.72,
+    "as_of": "2026-10-22",
+    "source": "INNIO"
+   },
+   "threshold": "",
+   "direction": "up"
+  },
+  {
+   "id": "interconnection_wait_years",
+   "label": "미국 대형 부하 계통연계 대기",
+   "metric": "years",
+   "latest": {
+    "value": "미확인",
+    "as_of": "2026-10-29",
+    "source": "확인 필요 (유틸리티·LBNL 큐 자료)"
+   },
+   "threshold": "2년 미만으로 줄면 약화",
+   "direction": "up"
+  }
+ ],
+ "beneficiaries": [
+  {
+   "company": "company:fcel",
+   "role": "secondary",
+   "basis": "연료전지 (micro-cap)",
+   "size_band": "micro",
+   "rerating": {
+    "from": "",
+    "to": "",
+    "why": "수주 전환 확인 필요"
+   }
+  },
+  {
+   "company": "company:doosan_fuel_cell",
+   "role": "secondary",
+   "basis": "연료전지 (한국)",
+   "size_band": "small",
+   "rerating": {
+    "from": "",
+    "to": "",
+    "why": ""
+   }
+  },
+  {
+   "company": "company:doosan_enerbility",
+   "role": "primary",
+   "basis": "가스터빈·발전기기 (한국 대형주)",
+   "size_band": "large",
+   "rerating": {
+    "from": "원전·플랜트 사이클",
+    "to": "데이터센터 전원 공급사",
+    "why": "가스터빈 수주가 데이터센터로 번지면"
+   }
+  },
+  {
+   "company": "company:sanil_electric",
+   "role": "secondary",
+   "basis": "변압기",
+   "size_band": "mid",
+   "rerating": {
+    "from": "",
+    "to": "",
+    "why": ""
+   }
+  }
+ ],
+ "losers": [
+  {
+   "node": "bottleneck:transformer_leadtime",
+   "why": "전력망 접속에만 의존하는 데이터센터 개발사는 착공 지연"
+  }
+ ],
+ "falsifiers": [
+  {
+   "what": "계통연계 대기 단축·현장 발전 주문 감소 (INNIO·Bloom 수주잔고 두 분기 연속 감소)",
+   "metric": "수주잔고",
+   "threshold": "QoQ < 0 두 분기",
+   "due": "2027-06-30"
+  }
+ ],
+ "stage": 2,
+ "stage_reason": "주문(1.72GW)·수주잔고가 원문으로 확인 — 그러나 계통연계 대기 수치가 없어 동인은 미계측",
+ "benchmark": "thermal_power_2023",
+ "model": "claude-fable-5-1",
+ "method": "session"
+}
