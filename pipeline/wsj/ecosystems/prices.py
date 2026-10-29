@@ -367,7 +367,23 @@ def focus_companies(store, days: int = 14) -> set[str]:
                 focus.add(r["company_id"])
     except Exception as exc:  # noqa: BLE001
         log.warning("events focus unavailable: %s", exc)
+    focus |= thesis_companies(store)
     return focus
+
+
+def thesis_companies(store) -> set[str]:
+    """활성 구조 가설(ADR-0025·0026)의 수혜·피해 기업. 테제는 메가캡을 받으므로, 소형주부터 채우는 백필 순서에서
+    삼성전자·MU 같은 대형주가 늘 예산 밖으로 밀리던 것을 막는다 (조용함 검사가 가격을 필요로 한다)."""
+    out: set[str] = set()
+    try:
+        for r in store.select("ideas.theses", ["beneficiaries", "losers"], {"status": "active"}):
+            for b in [*(r.get("beneficiaries") or []), *(r.get("losers") or [])]:
+                cid = b.get("company") if isinstance(b, dict) else None
+                if isinstance(cid, str) and cid.startswith("company:"):
+                    out.add(cid)
+    except Exception as exc:  # noqa: BLE001 - 0028 전이면 테제가 없다
+        log.warning("thesis focus unavailable: %s", exc)
+    return out
 
 
 def plan(items: list[Listing], last: dict[str, str], has_year: set[str], state: dict[str, Any], today: date,
