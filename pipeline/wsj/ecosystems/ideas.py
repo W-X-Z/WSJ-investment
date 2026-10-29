@@ -451,6 +451,8 @@ LLM_SYSTEM = """너는 AI 공급망(HBM·첨단 패키징 / 800G·1.6T 광통신
   scope 가 '범위 밖(…)'이면 주 기업이 시장 범위 밖이라 이번 실행에서 종료된다 — 그 가설의 미국·한국 고리가 있으면 새 아이디어(action=new)로 쓴다.
   verification 은 예측 채점 기록(hits·misses·pending·falsified).
 - hypotheses: (있으면) 1단계에서 고른 가설 후보. 새 아이디어는 여기서 쓴다 — 아래 '아이디어' 절의 hypotheses 규칙.
+- theses: (있으면) 활성 구조 가설(ADR-0025) — 사용 방식의 변화 → 요구 → 병목 → 기업의 긴 사슬과 드라이버 수치. 후보가 어느 테제의 하류면 chain 의 추론 단계에 그 테제의 드라이버 수치를 쓰고,
+  테제의 수혜 기업(메가캡 포함)이 primary 인 리포트는 '텐배거' 가 아니라 '리레이팅' 으로 읽는다 — valuation 의 bull 에 체제 전환 배수를 둘 수 있다.
 
 최신성 규칙 (가장 중요)
 - 아이디어는 최근 {fresh}일 안의 사실(S 근거, age_d ≤ {fresh})에서 출발한다. 그런 근거가 없으면 새 아이디어를 만들지 않는다.
@@ -663,6 +665,7 @@ def build_payload(signals: list[dict[str, Any]], candidates: list[dict[str, Any]
                         "scope": scope_view(x), "verification": {k: v for k, v in _verification(x).items() if k in ("hits", "misses", "pending", "falsified")}}
                      for x in existing],
         "hypotheses": extras.get("hypotheses") or [],
+        "theses": extras.get("theses") or [],
     }
 
 
@@ -1220,6 +1223,20 @@ def money_context(graph: dict[str, Any], by_key: dict[str, dict[str, Any]], fund
     return out
 
 
+def theses_view(rows: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    """활성 구조 가설을 LLM 입력용으로 줄인다: key·제목·한 문단·사슬 노드·드라이버 최신값·수혜·stage."""
+    out = []
+    for t in rows or []:
+        if (t.get("status") or "active") != "active":
+            continue
+        out.append({"key": t.get("thesis_key"), "title": t.get("title"), "statement": str(t.get("statement") or "")[:600], "stage": t.get("stage"),
+                    "chain": [c.get("node") for c in (t.get("chain") or []) if isinstance(c, dict) and c.get("node")],
+                    "drivers": [{"id": d.get("id"), "label": d.get("label"), "latest": d.get("latest"), "threshold": d.get("threshold")} for d in (t.get("drivers") or []) if isinstance(d, dict)][:6],
+                    "beneficiaries": [b.get("company") for b in (t.get("beneficiaries") or []) if isinstance(b, dict) and b.get("company")],
+                    "support": t.get("n_support"), "against": t.get("n_against")})
+    return out
+
+
 def build_context(graph: dict[str, Any], issues: list[dict[str, Any]], indicators: list[dict[str, Any]], prices: list[dict[str, Any]],
                   events: list[Any], existing: list[dict[str, Any]], now: datetime, facts: list[dict[str, Any]] | None = None,
                   fundamentals: list[dict[str, Any]] | None = None, valuations: list[dict[str, Any]] | None = None
@@ -1374,8 +1391,9 @@ def gather_events(args, settings, store, graph: dict[str, Any], existing: list[d
 
 # ---------------------------------------------------------------- session mode (Claude 예약작업이 LLM 단계를 맡을 때)
 PUBLIC_VIEWS = {"issues": "v_supply_chain_issues", "indicators": "v_indicators", "existing": "v_investment_ideas", "events": "v_company_events",
-                "prices": "v_price_context", "facts": "v_company_facts", "fundamentals": "v_company_fundamentals", "valuations": "v_valuations"}
-OPTIONAL_VIEWS = {"prices", "facts", "fundamentals", "valuations"}  # 0021·0022·0024 적용 전에는 없다
+                "prices": "v_price_context", "facts": "v_company_facts", "fundamentals": "v_company_fundamentals", "valuations": "v_valuations",
+                "theses": "v_theses"}
+OPTIONAL_VIEWS = {"prices", "facts", "fundamentals", "valuations", "theses"}  # 0021·0022·0024·0028 적용 전에는 없다
 
 
 def public_credentials() -> tuple[str, str]:
@@ -1552,6 +1570,7 @@ def main(argv: list[str] | None = None) -> int:
         facts: list[dict[str, Any]] = []
         fundamentals: list[dict[str, Any]] = []
         valuations: list[dict[str, Any]] = []
+        theses: list[dict[str, Any]] = []
         if args.snapshot:
             issues = json.loads((args.snapshot / "issues.json").read_text(encoding="utf-8"))
             indicators = json.loads((args.snapshot / "indicators.json").read_text(encoding="utf-8"))
@@ -1563,6 +1582,8 @@ def main(argv: list[str] | None = None) -> int:
             fundamentals = json.loads(fu.read_text(encoding="utf-8")) if fu.exists() else []
             vp = args.snapshot / "valuations.json"
             valuations = json.loads(vp.read_text(encoding="utf-8")) if vp.exists() else []
+            tp = args.snapshot / "theses.json"
+            theses = json.loads(tp.read_text(encoding="utf-8")) if tp.exists() else []
             ex_path = args.snapshot / "existing.json"
             existing = json.loads(ex_path.read_text(encoding="utf-8")) if ex_path.exists() else []
             meta = args.snapshot / "meta.json"
@@ -1592,6 +1613,7 @@ def main(argv: list[str] | None = None) -> int:
             args.events_out.parent.mkdir(parents=True, exist_ok=True)
             args.events_out.write_text(json.dumps([e.public() for e in events], ensure_ascii=False, indent=1), encoding="utf-8")
         ctx, extras = build_context(graph, issues, indicators, prices, events, existing, now, facts, fundamentals, valuations)
+        extras["theses"] = theses_view(theses)  # 활성 구조 가설 (ADR-0025) — 1단계가 경로에 thesis 를 붙이고, 2단계가 수혜 기업을 안다
         focus_extra: set[str] = set()
         if args.hypotheses:  # 리포트 후보 기업의 소식(조사 작업이 저장한 것)은 신호 상한과 상관없이 입력에 넣는다
             try:

@@ -15,6 +15,7 @@
   → payload 에는 큐의 이슈 신호와 그 이슈에 닿는 후보·근거만 남는다 (전체의 1/3 안쪽). 출력 JSON 의 `queue` 가 큐 수, payload.queue.without_signal 이 신호가 없는 이슈다.
 - `s1/hypo.system.md`·`s1/hypo.payload.json` 을 끝까지 읽는다. payload.signals 의 이슈 신호(kind=issue)마다 `issue_key` 가 있다 — 그 신호의 evidence 첫 id 를 trigger 로 이슈마다 경로 ≤3 을 `s1/hypotheses.json` 에 쓴다.
   payload.queue.without_signal 의 이슈(출처 URL 없음 등)는 보고에 "신호 없음: issue_key" 로 남긴다 — 5일이 지나면 큐에서 빠진다.
+- 경로마다 `thesis` 를 적는다 (ADR-0025): 그 경로가 활성 구조 가설(`select thesis_key, title from public.v_theses where status='active';`)을 지지(+)하거나 반박(−)하면 `{"key": "…", "direction": "+|-"}`, 아니면 null. 0028 전이면 생략.
 - 공통 §A 의 검사·선택 명령을 돌린다. `hypothesis rejected:` 가 절반 넘으면 사유대로 고쳐 한 번 더 (최대 2번).
 
 ## 3. 저장

@@ -1078,6 +1078,40 @@
       "substrate equipment",
       "lamination equipment",
       "long-lead equipment"
+    ],
+    "demand_driver:agentic_inference": [
+      "agentic inference",
+      "AI agents workload",
+      "에이전트 추론"
+    ],
+    "demand_driver:long_context": [
+      "long context",
+      "output tokens",
+      "reasoning tokens",
+      "긴 컨텍스트"
+    ],
+    "demand_driver:kv_cache_residency": [
+      "KV cache",
+      "KV 캐시",
+      "context memory",
+      "Dynamo",
+      "CMX"
+    ],
+    "bottleneck:hbm_bit_supply": [
+      "HBM shortage",
+      "HBM sold out",
+      "HBM 공급 부족"
+    ],
+    "bottleneck:dram_bit_supply": [
+      "DRAM shortage",
+      "LPDRAM allocation",
+      "SOCAMM",
+      "DRAM 공급 부족"
+    ],
+    "component:kv_cache_ssd": [
+      "SSD POD",
+      "QLC eSSD",
+      "context storage"
     ]
   }
 }

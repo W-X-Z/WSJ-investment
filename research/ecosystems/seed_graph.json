@@ -10136,6 +10136,72 @@
       },
       "size_band": "large",
       "in_universe": false
+    },
+    {
+      "id": "demand_driver:agentic_inference",
+      "kind": "demand_driver",
+      "label": "에이전트 추론 워크로드 (다단계·장시간 세션, CPU:GPU 1:1 로)",
+      "ecosystem": "hbm"
+    },
+    {
+      "id": "demand_driver:long_context",
+      "kind": "demand_driver",
+      "label": "긴 컨텍스트·출력 토큰 폭증 (질문당 출력 토큰 연 5배↑, 3~4만 토큰)",
+      "ecosystem": "hbm"
+    },
+    {
+      "id": "demand_driver:kv_cache_residency",
+      "kind": "demand_driver",
+      "label": "KV 캐시 상주·오프로딩 (HBM → CPU DRAM → SSD 컨텍스트 계층)",
+      "ecosystem": "hbm"
+    },
+    {
+      "id": "req:memory_per_accelerator",
+      "kind": "requirement",
+      "label": "가속기당 메모리 용량·대역폭 요구 (KV 캐시 ∝ 시퀀스 길이 × 배치)",
+      "ecosystem": "hbm"
+    },
+    {
+      "id": "req:cpu_memory_per_rack",
+      "kind": "requirement",
+      "label": "랙당 CPU 메모리 요구 (Vera 1.5TB LPDDR5X, SOCAMM2)",
+      "ecosystem": "hbm"
+    },
+    {
+      "id": "req:context_storage_tier",
+      "kind": "requirement",
+      "label": "컨텍스트 저장 계층 요구 (KV 캐시용 SSD POD, 랙당 ~9,600TB)",
+      "ecosystem": "hbm"
+    },
+    {
+      "id": "bottleneck:hbm_bit_supply",
+      "kind": "bottleneck",
+      "label": "HBM 비트 공급 부족 (수요가 공급의 2배, 2029년까지 매진)",
+      "ecosystem": "hbm"
+    },
+    {
+      "id": "bottleneck:dram_bit_supply",
+      "kind": "bottleneck",
+      "label": "DRAM·LPDRAM 비트 공급 부족 (2027 할당 부족으로 SOCAMM 용량 반감)",
+      "ecosystem": "hbm"
+    },
+    {
+      "id": "component:hbm_stack",
+      "kind": "component",
+      "label": "HBM 스택 (세대 불문 BOM 부품 — HBM3E·HBM4)",
+      "ecosystem": "hbm"
+    },
+    {
+      "id": "component:server_dram_lpdram",
+      "kind": "component",
+      "label": "서버 DRAM·LPDRAM 모듈 (RDIMM·SOCAMM2)",
+      "ecosystem": "hbm"
+    },
+    {
+      "id": "component:kv_cache_ssd",
+      "kind": "component",
+      "label": "KV 캐시·컨텍스트 저장용 고용량 eSSD (QLC)",
+      "ecosystem": "hbm"
     }
   ],
   "edges": [
@@ -39372,6 +39438,340 @@
         }
       ],
       "confidence": 0.6
+    },
+    {
+      "id": "d1029-001",
+      "from": "demand_driver:long_context",
+      "to": "req:memory_per_accelerator",
+      "relation": "drives_requirement",
+      "evidence_tier": "third_party_report",
+      "polarity": "positive",
+      "evidence": [
+        {
+          "url": "https://www.trendforce.com/insights/ai-inference-drives-memory-demand",
+          "source_type": "third_party_report",
+          "published_at": "2026-07-07",
+          "excerpt": "average output tokens per question have grown more than 5x per year since 2H 2024, reaching roughly 30,000-40,000 tokens; Dynamo (March 2025) moves infrequently used KV cache to CPU RAM and SSD; CMX Context Memory Storage Platform (January 2026) ~9,600 TB per rack; CPU-to-GPU ratio for agentic AI expected to shift from 1:4 or 1:8 to about 1:1; Vera CPU supports up to 1.5 TB of LPDDR5X; Nvidia reportedly halving SOCAMM capacity on Vera Rubin due to insufficient LPDRAM allocation under suppliers' preliminary 2027 production plans"
+        }
+      ],
+      "note": "KV 캐시 = 2 × layers × KV heads × head dim × sequence length × batch × bytes — 출력 토큰이 늘면 가속기당 메모리가 는다",
+      "confidence": 0.6
+    },
+    {
+      "id": "d1029-002",
+      "from": "demand_driver:agentic_inference",
+      "to": "req:cpu_memory_per_rack",
+      "relation": "drives_requirement",
+      "evidence_tier": "third_party_report",
+      "polarity": "positive",
+      "evidence": [
+        {
+          "url": "https://www.trendforce.com/insights/ai-inference-drives-memory-demand",
+          "source_type": "third_party_report",
+          "published_at": "2026-07-07",
+          "excerpt": "average output tokens per question have grown more than 5x per year since 2H 2024, reaching roughly 30,000-40,000 tokens; Dynamo (March 2025) moves infrequently used KV cache to CPU RAM and SSD; CMX Context Memory Storage Platform (January 2026) ~9,600 TB per rack; CPU-to-GPU ratio for agentic AI expected to shift from 1:4 or 1:8 to about 1:1; Vera CPU supports up to 1.5 TB of LPDDR5X; Nvidia reportedly halving SOCAMM capacity on Vera Rubin due to insufficient LPDRAM allocation under suppliers' preliminary 2027 production plans"
+        }
+      ],
+      "note": "에이전트 AI 에서 CPU:GPU 1:4~1:8 → 1:1, Vera 1.5TB LPDDR5X",
+      "confidence": 0.6
+    },
+    {
+      "id": "d1029-003",
+      "from": "demand_driver:kv_cache_residency",
+      "to": "req:context_storage_tier",
+      "relation": "drives_requirement",
+      "evidence_tier": "third_party_report",
+      "polarity": "positive",
+      "evidence": [
+        {
+          "url": "https://www.trendforce.com/insights/ai-inference-drives-memory-demand",
+          "source_type": "third_party_report",
+          "published_at": "2026-07-07",
+          "excerpt": "average output tokens per question have grown more than 5x per year since 2H 2024, reaching roughly 30,000-40,000 tokens; Dynamo (March 2025) moves infrequently used KV cache to CPU RAM and SSD; CMX Context Memory Storage Platform (January 2026) ~9,600 TB per rack; CPU-to-GPU ratio for agentic AI expected to shift from 1:4 or 1:8 to about 1:1; Vera CPU supports up to 1.5 TB of LPDDR5X; Nvidia reportedly halving SOCAMM capacity on Vera Rubin due to insufficient LPDRAM allocation under suppliers' preliminary 2027 production plans"
+        }
+      ],
+      "note": "Dynamo(2025-03) KV 캐시 오프로딩, CMX(2026-01) 랙당 ~9,600TB 컨텍스트 계층",
+      "confidence": 0.6
+    },
+    {
+      "id": "d1029-004",
+      "from": "demand_driver:agentic_inference",
+      "to": "req:memory_per_accelerator",
+      "relation": "drives_requirement",
+      "evidence_tier": "technical_inference",
+      "polarity": "positive",
+      "evidence": [
+        {
+          "url": "https://www.trendforce.com/insights/ai-inference-drives-memory-demand",
+          "source_type": "third_party_report",
+          "published_at": "2026-07-07",
+          "excerpt": "average output tokens per question have grown more than 5x per year since 2H 2024, reaching roughly 30,000-40,000 tokens; Dynamo (March 2025) moves infrequently used KV cache to CPU RAM and SSD; CMX Context Memory Storage Platform (January 2026) ~9,600 TB per rack; CPU-to-GPU ratio for agentic AI expected to shift from 1:4 or 1:8 to about 1:1; Vera CPU supports up to 1.5 TB of LPDDR5X; Nvidia reportedly halving SOCAMM capacity on Vera Rubin due to insufficient LPDRAM allocation under suppliers' preliminary 2027 production plans"
+        }
+      ],
+      "note": "장시간 세션은 KV 캐시를 더 오래 상주시킨다 (추론)",
+      "confidence": 0.4
+    },
+    {
+      "id": "d1029-005",
+      "from": "req:memory_per_accelerator",
+      "to": "req:hbm_stack",
+      "relation": "drives_requirement",
+      "evidence_tier": "technical_inference",
+      "polarity": "positive",
+      "evidence": [
+        {
+          "url": "https://www.trendforce.com/insights/ai-inference-drives-memory-demand",
+          "source_type": "third_party_report",
+          "published_at": "2026-07-07",
+          "excerpt": "average output tokens per question have grown more than 5x per year since 2H 2024, reaching roughly 30,000-40,000 tokens; Dynamo (March 2025) moves infrequently used KV cache to CPU RAM and SSD; CMX Context Memory Storage Platform (January 2026) ~9,600 TB per rack; CPU-to-GPU ratio for agentic AI expected to shift from 1:4 or 1:8 to about 1:1; Vera CPU supports up to 1.5 TB of LPDDR5X; Nvidia reportedly halving SOCAMM capacity on Vera Rubin due to insufficient LPDRAM allocation under suppliers' preliminary 2027 production plans"
+        }
+      ],
+      "note": "가속기당 메모리 요구가 HBM 적층 수·용량 요구로 (추론)",
+      "confidence": 0.4
+    },
+    {
+      "id": "d1029-006",
+      "from": "req:memory_per_accelerator",
+      "to": "bottleneck:hbm_bit_supply",
+      "relation": "creates_bottleneck",
+      "evidence_tier": "third_party_report",
+      "polarity": "positive",
+      "evidence": [
+        {
+          "url": "https://www.eetimes.com/sk-hynix-reports-record-q3-results-driven-by-ai-memory-surge/",
+          "source_type": "third_party_report",
+          "published_at": "2026-10-28",
+          "excerpt": "SK hynix: customers want more than twice the HBM it can supply; DRAM and HBM sold out through 2029 (3Q26 results call)"
+        }
+      ],
+      "note": "SK hynix 3Q26: HBM 요청 물량이 공급의 2배, 2029년까지 매진",
+      "confidence": 0.6
+    },
+    {
+      "id": "d1029-007",
+      "from": "req:cpu_memory_per_rack",
+      "to": "bottleneck:dram_bit_supply",
+      "relation": "creates_bottleneck",
+      "evidence_tier": "third_party_report",
+      "polarity": "positive",
+      "evidence": [
+        {
+          "url": "https://www.trendforce.com/insights/ai-inference-drives-memory-demand",
+          "source_type": "third_party_report",
+          "published_at": "2026-07-07",
+          "excerpt": "average output tokens per question have grown more than 5x per year since 2H 2024, reaching roughly 30,000-40,000 tokens; Dynamo (March 2025) moves infrequently used KV cache to CPU RAM and SSD; CMX Context Memory Storage Platform (January 2026) ~9,600 TB per rack; CPU-to-GPU ratio for agentic AI expected to shift from 1:4 or 1:8 to about 1:1; Vera CPU supports up to 1.5 TB of LPDDR5X; Nvidia reportedly halving SOCAMM capacity on Vera Rubin due to insufficient LPDRAM allocation under suppliers' preliminary 2027 production plans"
+        }
+      ],
+      "note": "2027 LPDRAM 할당 부족으로 Vera Rubin SOCAMM 용량 반감 보도",
+      "confidence": 0.6
+    },
+    {
+      "id": "d1029-008",
+      "from": "bottleneck:hbm_bit_supply",
+      "to": "component:hbm_stack",
+      "relation": "mitigated_by",
+      "evidence_tier": "technical_inference",
+      "polarity": "positive",
+      "evidence": [
+        {
+          "url": "https://www.eetimes.com/sk-hynix-reports-record-q3-results-driven-by-ai-memory-surge/",
+          "source_type": "third_party_report",
+          "published_at": "2026-10-28",
+          "excerpt": "SK hynix: customers want more than twice the HBM it can supply; DRAM and HBM sold out through 2029 (3Q26 results call)"
+        }
+      ],
+      "note": "공급 확대 = HBM 스택 증산",
+      "confidence": 0.4
+    },
+    {
+      "id": "d1029-009",
+      "from": "bottleneck:dram_bit_supply",
+      "to": "component:server_dram_lpdram",
+      "relation": "mitigated_by",
+      "evidence_tier": "technical_inference",
+      "polarity": "positive",
+      "evidence": [
+        {
+          "url": "https://www.trendforce.com/insights/ai-inference-drives-memory-demand",
+          "source_type": "third_party_report",
+          "published_at": "2026-07-07",
+          "excerpt": "average output tokens per question have grown more than 5x per year since 2H 2024, reaching roughly 30,000-40,000 tokens; Dynamo (March 2025) moves infrequently used KV cache to CPU RAM and SSD; CMX Context Memory Storage Platform (January 2026) ~9,600 TB per rack; CPU-to-GPU ratio for agentic AI expected to shift from 1:4 or 1:8 to about 1:1; Vera CPU supports up to 1.5 TB of LPDDR5X; Nvidia reportedly halving SOCAMM capacity on Vera Rubin due to insufficient LPDRAM allocation under suppliers' preliminary 2027 production plans"
+        }
+      ],
+      "note": "공급 확대 = 서버 DRAM·LPDRAM 증산",
+      "confidence": 0.4
+    },
+    {
+      "id": "d1029-010",
+      "from": "req:context_storage_tier",
+      "to": "component:kv_cache_ssd",
+      "relation": "requires",
+      "evidence_tier": "third_party_report",
+      "polarity": "positive",
+      "evidence": [
+        {
+          "url": "https://www.trendforce.com/insights/ai-inference-drives-memory-demand",
+          "source_type": "third_party_report",
+          "published_at": "2026-07-07",
+          "excerpt": "average output tokens per question have grown more than 5x per year since 2H 2024, reaching roughly 30,000-40,000 tokens; Dynamo (March 2025) moves infrequently used KV cache to CPU RAM and SSD; CMX Context Memory Storage Platform (January 2026) ~9,600 TB per rack; CPU-to-GPU ratio for agentic AI expected to shift from 1:4 or 1:8 to about 1:1; Vera CPU supports up to 1.5 TB of LPDDR5X; Nvidia reportedly halving SOCAMM capacity on Vera Rubin due to insufficient LPDRAM allocation under suppliers' preliminary 2027 production plans"
+        }
+      ],
+      "note": "SSD POD 컨텍스트 계층",
+      "confidence": 0.6
+    },
+    {
+      "id": "d1029-011",
+      "from": "component:hbm_stack",
+      "to": "company:skhynix",
+      "relation": "offered_by",
+      "evidence_tier": "third_party_report",
+      "polarity": "positive",
+      "evidence": [
+        {
+          "url": "https://www.eetimes.com/sk-hynix-reports-record-q3-results-driven-by-ai-memory-surge/",
+          "source_type": "third_party_report",
+          "published_at": "2026-10-28",
+          "excerpt": "SK hynix: customers want more than twice the HBM it can supply; DRAM and HBM sold out through 2029 (3Q26 results call)"
+        }
+      ],
+      "confidence": 0.6
+    },
+    {
+      "id": "d1029-012",
+      "from": "component:hbm_stack",
+      "to": "company:samsung",
+      "relation": "offered_by",
+      "evidence_tier": "third_party_report",
+      "polarity": "positive",
+      "evidence": [
+        {
+          "url": "https://www.eetimes.com/sk-hynix-reports-record-q3-results-driven-by-ai-memory-surge/",
+          "source_type": "third_party_report",
+          "published_at": "2026-10-28",
+          "excerpt": "SK hynix: customers want more than twice the HBM it can supply; DRAM and HBM sold out through 2029 (3Q26 results call)"
+        }
+      ],
+      "confidence": 0.6
+    },
+    {
+      "id": "d1029-013",
+      "from": "component:hbm_stack",
+      "to": "company:mu",
+      "relation": "offered_by",
+      "evidence_tier": "third_party_report",
+      "polarity": "positive",
+      "evidence": [
+        {
+          "url": "https://www.trendforce.com/insights/ai-inference-drives-memory-demand",
+          "source_type": "third_party_report",
+          "published_at": "2026-07-07",
+          "excerpt": "average output tokens per question have grown more than 5x per year since 2H 2024, reaching roughly 30,000-40,000 tokens; Dynamo (March 2025) moves infrequently used KV cache to CPU RAM and SSD; CMX Context Memory Storage Platform (January 2026) ~9,600 TB per rack; CPU-to-GPU ratio for agentic AI expected to shift from 1:4 or 1:8 to about 1:1; Vera CPU supports up to 1.5 TB of LPDDR5X; Nvidia reportedly halving SOCAMM capacity on Vera Rubin due to insufficient LPDRAM allocation under suppliers' preliminary 2027 production plans"
+        }
+      ],
+      "confidence": 0.6
+    },
+    {
+      "id": "d1029-014",
+      "from": "component:server_dram_lpdram",
+      "to": "company:skhynix",
+      "relation": "offered_by",
+      "evidence_tier": "third_party_report",
+      "polarity": "positive",
+      "evidence": [
+        {
+          "url": "https://www.trendforce.com/insights/ai-inference-drives-memory-demand",
+          "source_type": "third_party_report",
+          "published_at": "2026-07-07",
+          "excerpt": "average output tokens per question have grown more than 5x per year since 2H 2024, reaching roughly 30,000-40,000 tokens; Dynamo (March 2025) moves infrequently used KV cache to CPU RAM and SSD; CMX Context Memory Storage Platform (January 2026) ~9,600 TB per rack; CPU-to-GPU ratio for agentic AI expected to shift from 1:4 or 1:8 to about 1:1; Vera CPU supports up to 1.5 TB of LPDDR5X; Nvidia reportedly halving SOCAMM capacity on Vera Rubin due to insufficient LPDRAM allocation under suppliers' preliminary 2027 production plans"
+        }
+      ],
+      "note": "SOCAMM2 샘플",
+      "confidence": 0.6
+    },
+    {
+      "id": "d1029-015",
+      "from": "component:server_dram_lpdram",
+      "to": "company:samsung",
+      "relation": "offered_by",
+      "evidence_tier": "technical_inference",
+      "polarity": "positive",
+      "evidence": [
+        {
+          "url": "https://www.trendforce.com/insights/ai-inference-drives-memory-demand",
+          "source_type": "third_party_report",
+          "published_at": "2026-07-07",
+          "excerpt": "average output tokens per question have grown more than 5x per year since 2H 2024, reaching roughly 30,000-40,000 tokens; Dynamo (March 2025) moves infrequently used KV cache to CPU RAM and SSD; CMX Context Memory Storage Platform (January 2026) ~9,600 TB per rack; CPU-to-GPU ratio for agentic AI expected to shift from 1:4 or 1:8 to about 1:1; Vera CPU supports up to 1.5 TB of LPDDR5X; Nvidia reportedly halving SOCAMM capacity on Vera Rubin due to insufficient LPDRAM allocation under suppliers' preliminary 2027 production plans"
+        }
+      ],
+      "confidence": 0.4
+    },
+    {
+      "id": "d1029-016",
+      "from": "component:server_dram_lpdram",
+      "to": "company:mu",
+      "relation": "offered_by",
+      "evidence_tier": "technical_inference",
+      "polarity": "positive",
+      "evidence": [
+        {
+          "url": "https://www.trendforce.com/insights/ai-inference-drives-memory-demand",
+          "source_type": "third_party_report",
+          "published_at": "2026-07-07",
+          "excerpt": "average output tokens per question have grown more than 5x per year since 2H 2024, reaching roughly 30,000-40,000 tokens; Dynamo (March 2025) moves infrequently used KV cache to CPU RAM and SSD; CMX Context Memory Storage Platform (January 2026) ~9,600 TB per rack; CPU-to-GPU ratio for agentic AI expected to shift from 1:4 or 1:8 to about 1:1; Vera CPU supports up to 1.5 TB of LPDDR5X; Nvidia reportedly halving SOCAMM capacity on Vera Rubin due to insufficient LPDRAM allocation under suppliers' preliminary 2027 production plans"
+        }
+      ],
+      "confidence": 0.4
+    },
+    {
+      "id": "d1029-017",
+      "from": "component:kv_cache_ssd",
+      "to": "company:skhynix",
+      "relation": "offered_by",
+      "evidence_tier": "third_party_report",
+      "polarity": "positive",
+      "evidence": [
+        {
+          "url": "https://www.digitimes.com/news/a20261028VL212/sk-hynix-flash-data-hbm-nand.html",
+          "source_type": "third_party_report",
+          "published_at": "2026-10-28",
+          "excerpt": "SK hynix on AI inference lifting NAND/eSSD demand alongside HBM (3Q26)"
+        }
+      ],
+      "confidence": 0.6
+    },
+    {
+      "id": "d1029-018",
+      "from": "component:kv_cache_ssd",
+      "to": "company:samsung",
+      "relation": "offered_by",
+      "evidence_tier": "technical_inference",
+      "polarity": "positive",
+      "evidence": [
+        {
+          "url": "https://www.digitimes.com/news/a20261028VL212/sk-hynix-flash-data-hbm-nand.html",
+          "source_type": "third_party_report",
+          "published_at": "2026-10-28",
+          "excerpt": "SK hynix on AI inference lifting NAND/eSSD demand alongside HBM (3Q26)"
+        }
+      ],
+      "confidence": 0.4
+    },
+    {
+      "id": "d1029-019",
+      "from": "component:kv_cache_ssd",
+      "to": "company:mu",
+      "relation": "offered_by",
+      "evidence_tier": "technical_inference",
+      "polarity": "positive",
+      "evidence": [
+        {
+          "url": "https://www.digitimes.com/news/a20261028VL212/sk-hynix-flash-data-hbm-nand.html",
+          "source_type": "third_party_report",
+          "published_at": "2026-10-28",
+          "excerpt": "SK hynix on AI inference lifting NAND/eSSD demand alongside HBM (3Q26)"
+        }
+      ],
+      "confidence": 0.4
     }
   ],
   "events": [

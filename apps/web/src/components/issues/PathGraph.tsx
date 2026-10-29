@@ -6,7 +6,7 @@ import { colLabel, type IssueGraph } from "@/lib/issues";
 const COL_W = 196, GAP = 46, NODE_W = 168, NODE_H = 30, ROW = 42, PAD_Y = 26;
 const trunc = (s: string, n = 15) => (s.length > n ? `${s.slice(0, n - 1)}…` : s);
 /** 색은 종류로: 병목·요구·기술·세대·표준 (c1) / 부품·소재·공정·장비·제품 (c2). 열은 단계. */
-const KIND_A = new Set(["bottleneck", "requirement", "technology", "product_generation", "standard"]);
+const KIND_A = new Set(["demand_driver", "bottleneck", "requirement", "technology", "product_generation", "standard"]);
 
 export function PathGraph({ g }: { g: IssueGraph }) {
   if (!g.nodes.length) return null;
