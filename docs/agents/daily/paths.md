@@ -18,7 +18,7 @@
 - 공통 §A 의 검사·선택 명령을 돌린다. `hypothesis rejected:` 가 절반 넘으면 사유대로 고쳐 한 번 더 (최대 2번).
 
 ## 3. 저장
-- `s1/sql/zx_issue_hypotheses.sql` 을 Read 해서 그대로 execute_sql 로 실행한다. 결과의 rejected(이슈 없음·claim 10자 미만·paths 1~3개)가 있으면 hypotheses.json 을 고쳐 2 의 검사부터 다시.
+- `s1/sql/zx_issue_hypotheses*.sql` (이슈 5개씩 나뉘어 있다 — 전부) 을 이름순으로 Read 해서 그대로 execute_sql 로 실행한다. 결과의 rejected(이슈 없음·claim 10자 미만·paths 1~3개)가 있으면 hypotheses.json 을 고쳐 2 의 검사부터 다시.
 
 ## 4. 완료 조건과 기록
 - `select count(*) as left_in_queue from public.v_q_issues_needing_paths;` — 0 이어야 한다 (신호 없음으로 남긴 이슈는 note 에).

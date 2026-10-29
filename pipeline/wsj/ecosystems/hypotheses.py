@@ -239,14 +239,21 @@ def by_issue(cands: list[dict[str, Any]], selected: list[dict[str, Any]], now: d
     return rows
 
 
+ISSUES_PER_SQL = 5
+
+
 def write_issue_sql(rows: list[dict[str, Any]], d: Path) -> Path | None:
-    """이슈별 경로 → `select ideas.put_issue_hypotheses(...)` 한 문장 (zx_…: 01_ 아이디어 뒤, zy_ 가치평가 앞 — 순서는 상관없다)."""
+    """이슈별 경로 → `select ideas.put_issue_hypotheses(...)`. 이슈 ISSUES_PER_SQL 개씩 파일을 나눈다 (zx_issue_hypotheses.sql, zx_issue_hypotheses_2.sql …) —
+    execute_sql 이 한 번에 받는 크기가 제한돼 첫 실행(10/29)이 손으로 셋으로 나눠 돌렸다. 첫 파일 경로를 돌려준다."""
     if not rows:
         return None
     d.mkdir(parents=True, exist_ok=True)
-    p = d / "zx_issue_hypotheses.sql"
-    p.write_text("select ideas.put_issue_hypotheses($wsj$" + json.dumps(rows, ensure_ascii=False, default=str) + "$wsj$::jsonb);\n", encoding="utf-8")
-    return p
+    first: Path | None = None
+    for i in range(0, len(rows), ISSUES_PER_SQL):
+        p = d / ("zx_issue_hypotheses.sql" if i == 0 else f"zx_issue_hypotheses_{i // ISSUES_PER_SQL + 1}.sql")
+        p.write_text("select ideas.put_issue_hypotheses($wsj$" + json.dumps(rows[i:i + ISSUES_PER_SQL], ensure_ascii=False, default=str) + "$wsj$::jsonb);\n", encoding="utf-8")
+        first = first or p
+    return first
 
 
 def research_plan(selected: list[dict[str, Any]], graph: dict[str, Any], signals: list[dict[str, Any]]) -> list[dict[str, Any]]:
