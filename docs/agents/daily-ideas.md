@@ -43,7 +43,9 @@
   `hypothesis rejected:` 가 절반 넘으면 사유대로 hypotheses.json 을 고쳐 한 번 더. `s1/sql/zx_issue_hypotheses*.sql` 이 이슈별 경로(≤3, selected·rank·trigger·change 포함) 저장문이다 (이슈 5개씩 파일을 나눈다).
 
 ## B. 원문 확인(기업 소식)의 규칙
-- WebFetch 로 원문을 연다(news.google.com 은 원문 주소로). 안 열리면 WebSearch 로 같은 사건의 다른 기사를 찾는다. 쓰지 않는 출처: 자동 생성 시세 요약, 토론방·블로그·카페·유튜브. 네이버 증권·KIND·DART 본문은 막혀 있다 — 같은 내용을 옮긴 기사를 찾는다.
+- WebFetch 로 원문을 연다(news.google.com 은 원문 주소로). 안 열리면 WebSearch 로 같은 사건의 다른 기사를 찾는다. 네이버 증권·KIND·DART 본문은 막혀 있다 — 같은 내용을 옮긴 기사를 찾는다.
+- 출처의 신뢰도는 **표시하되 문턱은 아니다** (사용자, 10/29): 기업 소식(put_company_events)의 근거는 공식·고객·업계지·언론 원문이 기본이지만, 조사 판정(put_path_research)에는 소문·커뮤니티·채용 공고·전시회 후기 같은 단편 단서도 kind=rumor 로 밝히고 쓴다.
+  빼는 것은 문제 있는 데이터뿐 — 자동 생성 시세 요약, 날짜 없는 글, 출처 없는 숫자.
 - 확인한 사실은 한국어 1~3문장, 400자 이내: 날짜 + 숫자(금액·%·수량·생산능력·가이던스·부문 매출 비중) + 상대방·기간. 원문에서 읽은 것만. 그 기업 이야기가 아니거나 시세 기사면 importance 1, "관련 없음: 이유".
 - 저장: `select ideas.put_company_events($j$[{"event_id":"…","text":"…","importance":2}, …]$j$::jsonb);` — research.json 에 같은 기업의 event_id 가 있으면 그 id 로, 없으면 새 행
   `{"company_id":"company:…","kind":"filing|disclosure|revenue|news","published_at":"YYYY-MM-DD","title":"…","url":"https://…","text":"…","importance":2}` (45일 안의 날짜, https 원문).
