@@ -1,6 +1,6 @@
-# paths (06:20, 월~토) — 새 이슈마다 영향 경로를 최대 3개 세운다 (1단계 가설)
+# paths (06:17, 월~토) — 새 이슈마다 영향 경로를 최대 3개 세운다 (1단계 가설)
 
-예약작업 "WSJ 2/5 이슈 → 영향 경로 (06:20)" 이 따른다. 큐 = `public.v_q_issues_needing_paths` (활성 · 중요도 6+ · 5일 안 · 경로 묶음 없음). 쓰는 함수: `ideas.put_issue_hypotheses`, `ops.put_agent_run`.
+예약작업 "WSJ 2/5 이슈 → 영향 경로 (06:17)" 이 따른다. 큐 = `public.v_q_issues_needing_paths` (활성 · 중요도 6+ · 5일 안 · 경로 묶음 없음). 쓰는 함수: `ideas.put_issue_hypotheses`, `ops.put_agent_run`.
 공통 규칙 `docs/agents/daily-ideas.md` §0 로 시작하고 끝낸다. p26 이 false 면 "0026 미적용" 을 보고·알림하고 `skipped` 로 끝낸다.
 
 ## 1. 큐

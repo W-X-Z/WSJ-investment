@@ -13,11 +13,11 @@
 
    | 시각 | 작업 | 큐 (입력) | 출력 | 완료 조건 |
    |---|---|---|---|---|
-   | 05:30 | collect | Actions `issues` 워크플로 | 이슈·공시·가격·재무·환율 | 오늘 issues·company_feed succeeded |
-   | 06:20 | paths | `v_q_issues_needing_paths` (중요도 6+, 5일 안, 경로 없음) | `ideas.issue_hypotheses` (이슈당 ≤3, 선택 표시) | 큐 0 |
-   | 06:50 | research | `v_q_paths_needing_research` (선택된 기업 경로, 7일 안, 조사 없음) | 기업 소식·관측치·`ideas.path_research`(verdict) | 처리한 경로마다 조사 행 |
-   | 07:30 | report | `v_q_candidates_needing_report` (조사 끝난 경로) + `v_q_ideas_needing_valuation` | 리포트 + **목표주가 (한 몸)** | 두 큐 0, 오늘 valuations ≥ 바뀐 리포트 수 |
-   | 08:05 | verify | `v_q_predictions_due` (기한 지난 예측) | 채점 → ★·종료, 하루 보고 | 큐 0 |
+   | 05:23 | collect | Actions `issues` 워크플로 | 이슈·공시·가격·재무·환율 | 오늘 issues·company_feed succeeded |
+   | 06:17 | paths | `v_q_issues_needing_paths` (중요도 6+, 5일 안, 경로 없음) | `ideas.issue_hypotheses` (이슈당 ≤3, 선택 표시) | 큐 0 |
+   | 06:49 | research | `v_q_paths_needing_research` (선택된 기업 경로, 7일 안, 조사 없음) | 기업 소식·관측치·`ideas.path_research`(verdict) | 처리한 경로마다 조사 행 |
+   | 07:37 | report | `v_q_candidates_needing_report` (조사 끝난 경로) + `v_q_ideas_needing_valuation` | 리포트 + **목표주가 (한 몸)** | 두 큐 0, 오늘 valuations ≥ 바뀐 리포트 수 |
+   | 08:11 | verify | `v_q_predictions_due` (기한 지난 예측) | 채점 → ★·종료, 하루 보고 | 큐 0 |
 
    주 1회 시스템 개선(일요일)은 그대로. ★2 이상 리포트의 심층 리서치(deep-dive)는 토요일 작업으로 뺀다 — 이 PR 에서는 만들지 않고 다음에.
 2. **인계는 DB 로만** (0027). 세션 사이에 파일은 남지 않는다. 경로(`issue_hypotheses.paths`)에 `trigger`·`change` 를 함께 저장해 다음 날 리포트 작업이
@@ -34,5 +34,5 @@
 - 0027: `ideas.path_research` + `put_path_research`, `ops.put_agent_run` + `v_agent_runs`, 큐 뷰 5개.
 - 엔진: `by_issue` 가 trigger·change 를 저장, `hypotheses.from_queue`, `--hypotheses-from-db`, 페이로드 이슈 신호에 `issue_key`.
 - 문서: `docs/agents/daily/{collect,paths,research,report,verify}.md`, `daily-ideas.md` 는 공통 규칙으로.
-- 예약작업: 06:41 하나 → 05:30·06:20·06:50·07:30·08:05 다섯 (0027 적용 뒤 전환; 그 전엔 06:41 이 옛 절차로 돈다).
+- 예약작업: 06:41 하나 → 05:23·06:17·06:49·07:37·08:11 다섯 (0027 적용 뒤 전환; 그 전엔 06:41 이 옛 절차로 돈다).
 - 비용: 세션 수는 늘지만 세션마다 컨텍스트가 비어 있는 상태에서 시작한다. 구독 사용량 한도에 닿으면 수집+경로 / 조사 / 리포트+검증 3회로 묶는다.

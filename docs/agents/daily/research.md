@@ -1,6 +1,6 @@
-# research (06:50, 월~토) — 리포트 후보로 뽑힌 경로를 원문으로 조사한다
+# research (06:49, 월~토) — 리포트 후보로 뽑힌 경로를 원문으로 조사한다
 
-예약작업 "WSJ 3/5 조사 (06:50)" 이 따른다. 큐 = `public.v_q_paths_needing_research` (최근 7일 경로 묶음 중 selected 이고 기업이 있는데 조사 결과가 없는 경로, 점수 순).
+예약작업 "WSJ 3/5 조사 (06:49)" 이 따른다. 큐 = `public.v_q_paths_needing_research` (최근 7일 경로 묶음 중 selected 이고 기업이 있는데 조사 결과가 없는 경로, 점수 순).
 쓰는 함수: `ideas.put_company_events`, `ideas.put_observations`, `ideas.put_path_research`, `ops.put_agent_run`. 공통 규칙 `docs/agents/daily-ideas.md` §0 로 시작하고 끝낸다.
 조사의 목적은 **경로의 마지막 고리를 확인하는 것**이다 — 이 기업이 정말 그 부품·장비·소재를 그 고객에게 공급하는지, 매출 비중이 얼마인지, 변화가 이미 숫자(수주·가이던스·증설)로 나타났는지.
 

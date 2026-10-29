@@ -1,6 +1,6 @@
-# verify (08:05, 월~토) — 기한이 온 예측을 채점해 ★ 를 움직이고, 하루를 보고한다
+# verify (08:11, 월~토) — 기한이 온 예측을 채점해 ★ 를 움직이고, 하루를 보고한다
 
-예약작업 "WSJ 5/5 검증 + 보고 (08:05)" 이 따른다. 큐 = `public.v_q_predictions_due` (활성 리포트의 watch 중 pending 이고 due 가 지난 것).
+예약작업 "WSJ 5/5 검증 + 보고 (08:11)" 이 따른다. 큐 = `public.v_q_predictions_due` (활성 리포트의 watch 중 pending 이고 due 가 지난 것).
 쓰는 함수: `ideas.put_company_events`, `ideas.put_ideas`, `ideas.put_assessments`, `ops.put_agent_run`. 공통 규칙 `docs/agents/daily-ideas.md` §0 로 시작하고 끝낸다.
 채점이 ★ 를 움직인다 (ADR-0022): 적중 1 → ★2, 2 → ★3(문턱 충족 시), 반증 조건 성립 → 종료, 빗나감 2 → ★1. 사람의 확신이 아니라 예측의 결과가 등급을 정한다.
 

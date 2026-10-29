@@ -1,6 +1,6 @@
-# report (07:30, 월~토) — 조사가 끝난 후보로 리포트를 쓰고, 목표주가를 함께 낸다
+# report (07:37, 월~토) — 조사가 끝난 후보로 리포트를 쓰고, 목표주가를 함께 낸다
 
-예약작업 "WSJ 4/5 리포트 + 목표주가 (07:30)" 이 따른다. 큐 두 개: `public.v_q_candidates_needing_report`(조사 끝난 선택 경로 — 그 기업의 활성 리포트가 조사 뒤 갱신되지 않은 것)와
+예약작업 "WSJ 4/5 리포트 + 목표주가 (07:37)" 이 따른다. 큐 두 개: `public.v_q_candidates_needing_report`(조사 끝난 선택 경로 — 그 기업의 활성 리포트가 조사 뒤 갱신되지 않은 것)와
 `public.v_q_ideas_needing_valuation`(평가가 없거나 리포트를 고쳐 쓴 뒤 산출하지 않은 활성 리포트). 쓰는 함수: `ideas.put_ideas`, `ideas.put_valuations`, `ideas.put_assessments`, `ops.put_agent_run`.
 공통 규칙 `docs/agents/daily-ideas.md` §0 로 시작하고 끝낸다. p23 이 false 면 "0024 미적용" 을 보고·알림하고 `failed` 로 끝낸다 — 목표주가 없는 리포트는 쓰지 않는다.
 **리포트와 목표주가는 한 몸이다.** 가격·주식수가 있는 리포트를 목표주가 없이 저장하는 것은 이 작업의 실패다.

@@ -5,11 +5,11 @@
 
 | 작업 | 문서 | 큐 | 쓰는 함수 |
 |---|---|---|---|
-| collect 05:30 | daily/collect.md | Actions `issues` 워크플로 | (없음) |
-| paths 06:20 | daily/paths.md | `v_q_issues_needing_paths` | put_issue_hypotheses |
-| research 06:50 | daily/research.md | `v_q_paths_needing_research` | put_company_events · put_observations · put_path_research |
-| report 07:30 | daily/report.md | `v_q_candidates_needing_report` · `v_q_ideas_needing_valuation` | put_ideas · put_valuations · put_assessments |
-| verify 08:05 | daily/verify.md | `v_q_predictions_due` | put_company_events · put_ideas · put_assessments |
+| collect 05:23 | daily/collect.md | Actions `issues` 워크플로 | (없음) |
+| paths 06:17 | daily/paths.md | `v_q_issues_needing_paths` | put_issue_hypotheses |
+| research 06:49 | daily/research.md | `v_q_paths_needing_research` | put_company_events · put_observations · put_path_research |
+| report 07:37 | daily/report.md | `v_q_candidates_needing_report` · `v_q_ideas_needing_valuation` | put_ideas · put_valuations · put_assessments |
+| verify 08:11 | daily/verify.md | `v_q_predictions_due` | put_company_events · put_ideas · put_assessments |
 
 모든 작업이 `ops.put_agent_run` 으로 실행 기록을 남긴다. 사용자는 자리에 없으니 질문하지 말고 끝까지 진행한다. 이 문서를 바꾸려면 사람이 승인한 PR 이어야 한다.
 
