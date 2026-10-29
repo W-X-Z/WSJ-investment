@@ -573,6 +573,7 @@ def test_hypotheses_validate_score_select_and_plan():
     assert plan[0]["company"] == "Primary" and plan[0]["ticker"] == "P" and plan[0]["confirm"] == ["P 의 3Q IR 에서 X 매출 비중"]
     rows = H.by_issue(cands, sel, NOW, "m", "session")
     assert len(rows) == 1 and rows[0]["issue_key"] == "issue-key-1" and [(p["id"], p["selected"]) for p in rows[0]["paths"]] == [("H1", True), ("H2", False), ("H0", False)]
+    assert rows[0]["paths"][0]["trigger"]["url"] == "https://x/s1" and rows[0]["paths"][0]["change"] == "10/27 병목 B 심화"  # 다음 날 DB 에서 되살릴 재료
     out = H.write_issue_sql(rows, Path(__file__).parent / ".tmp_issue_sql")
     assert out and out.read_text().startswith("select ideas.put_issue_hypotheses($wsj$[")
     out.unlink()
@@ -613,3 +614,32 @@ def test_missing_valuations_lists_rows_with_price_but_no_valuation():
                 "upd1": {"idea_key": "upd1", "status": "active", "primary_company": "company:p"}}
     out = missing_valuations(rows, vals, existing, money, {"keep2": {"idea_key": "keep2"}})
     assert [x.split(" ")[0] for x in out] == ["new1", "keep1"]  # 가격 없는 new2, 평가 있는 upd1·keep2 는 빠진다
+
+
+def test_from_queue_rebuilds_stage2_candidates_from_db_rows():
+    """ADR-0024: 리포트 작업은 어제 저장된 경로(v_issue_hypotheses)와 조사 결과(v_q_candidates_needing_report)로 2단계 후보를 되살린다."""
+    from wsj.ecosystems import hypotheses as H
+    from wsj.ecosystems.ideas import Registry
+
+    path = {"id": "H1", "claim": "병목 B 가 P 매출을 2분기 뒤 +40% 바꾼다 (추론)", "path": ["bottleneck:b", "component:x", "company:p"], "path_labels": ["병목 B", "부품 X", "P"],
+            "company": "company:p", "company_label": "P", "effect_pct": 40, "lead_quarters": 2, "why_unpriced": "조용", "falsifier": "12/10 월매출 < +10%",
+            "research": ["3Q IR 의 X 비중"], "score": 11, "criteria": {"specific": 3}, "flags": [], "extends": None, "selected": True, "rank": 1,
+            "change": "10/27 병목 B 심화", "trigger": {"id": "S1", "url": "https://x/s1", "title": "10/27 병목 B 심화", "date": "2026-10-27"}}
+    other = {**path, "id": "H2", "company": "company:q", "company_label": "Q", "selected": True}
+    hyps = [{"issue_key": "issue-key-1", "as_of": "2026-10-28", "paths": [path, other]},
+            {"issue_key": "issue-key-2", "as_of": "2026-10-28", "paths": [{**path, "id": "H1", "company": "company:r", "company_label": "R", "score": 7}]}]
+    cands = [{"issue_key": "issue-key-1", "issue_title": "이슈 1", "as_of": "2026-10-28", "path_id": "H1", "company": "company:p", "score": 11,
+              "verdict": "confirmed", "research_summary": "IR 에서 X 비중 35% 확인", "event_ids": ["ev-1"], "researched_at": "2026-10-29T06:40:00+00:00", "existing_idea": None},
+             {"issue_key": "issue-key-2", "issue_title": "이슈 2", "as_of": "2026-10-28", "path_id": "H1", "company": "company:r", "score": 7,
+              "verdict": "no_data", "research_summary": "공시 없음", "event_ids": [], "researched_at": "2026-10-29T06:41:00+00:00", "existing_idea": "abcdefabcdef"},
+             {"issue_key": "issue-key-9", "as_of": "2026-10-28", "path_id": "H1", "company": "company:z", "score": 9, "verdict": "confirmed"},  # 경로 상세 없음 → 버린다
+             {"issue_key": "issue-key-1", "as_of": "2026-10-28", "path_id": "H1", "company": "company:p", "score": 11, "verdict": "confirmed"}]  # 중복
+    sel = H.from_queue(cands, hyps)
+    assert [c["id"] for c in sel] == ["Q1", "Q2"] and [c["company"] for c in sel] == ["company:p", "company:r"]  # 점수 순, 이슈별 H1 이 겹쳐도 id 가 다르다
+    assert sel[0]["source"] == {"issue_key": "issue-key-1", "path_id": "H1", "as_of": "2026-10-28"} and sel[0]["research_result"]["verdict"] == "confirmed"
+    assert sel[0]["research_result"]["event_ids"] == ["ev-1"] and sel[0]["claim"] == path["claim"] and sel[0]["falsifier"] == path["falsifier"]
+    assert sel[1]["existing_idea"] == "abcdefabcdef" and sel[1]["research_result"]["verdict"] == "no_data"
+    reg = Registry()
+    s1 = reg.add("S", "https://x/s1", "같은 출처", publisher="P", date="2026-10-27", tier="third_party_report")
+    v = H.stage2_view(sel, reg)
+    assert v[0]["trigger"] == s1 and v[0]["research_result"]["summary"] == "IR 에서 X 비중 35% 확인" and v[0]["source"]["path_id"] == "H1"

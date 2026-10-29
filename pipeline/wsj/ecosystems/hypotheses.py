@@ -230,8 +230,8 @@ def by_issue(cands: list[dict[str, Any]], selected: list[dict[str, Any]], now: d
     for key, xs in groups.items():
         xs = sorted(xs, key=lambda c: (-int(bool(c.get("company"))), -c["score"], c["id"]))[:PER_ISSUE]
         paths = [{k: c.get(k) for k in ("id", "claim", "path", "path_labels", "company", "company_label", "effect_pct", "lead_quarters",
-                                        "why_unpriced", "falsifier", "research", "score", "criteria", "flags", "extends")}
-                 | {"selected": c["id"] in chosen, "rank": c.get("rank")} for c in xs]
+                                        "why_unpriced", "falsifier", "research", "score", "criteria", "flags", "extends", "change", "trigger")}
+                 | {"selected": c["id"] in chosen, "rank": c.get("rank")} for c in xs]  # change·trigger: 다음 날 리포트 작업이 DB 에서 되살린다 (ADR-0024)
         rows.append({"issue_key": key, "as_of": now.date().isoformat(), "paths": paths, "model": model, "method": method})
     return rows
 
@@ -272,6 +272,34 @@ def stage2_view(selected: list[dict[str, Any]], reg: Any) -> list[dict[str, Any]
         t = c.get("trigger") or {}
         tid = by_url.get(t.get("url"))
         out.append({k: c.get(k) for k in ("id", "rank", "score", "change", "path", "company", "claim", "effect_pct", "lead_quarters",
-                                            "why_unpriced", "falsifier", "research", "extends", "flags", "issue_key")}
+                                            "why_unpriced", "falsifier", "research", "extends", "flags", "issue_key",
+                                            "research_result", "existing_idea", "source")}
                    | {"trigger": tid or {"title": t.get("title"), "url": t.get("url")}})
+    return out
+
+
+def from_queue(cands: list[dict[str, Any]], hyps: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    """DB 큐 → 2단계 후보 (ADR-0024). cands = v_q_candidates_needing_report 행(조사가 끝난 선택 경로), hyps = v_issue_hypotheses 행(경로 상세).
+    id 는 Q1, Q2 … 로 새로 매긴다 (이슈마다 H1 부터 세므로 날짜·이슈가 섞이면 겹친다); 출처는 source 에 남긴다.
+    조사 결과(verdict·summary·event_ids)는 research_result 로 붙어 리포트가 근거 id 로 쓴다."""
+    by_issue: dict[tuple[str, str], list[dict[str, Any]]] = {}
+    for h in hyps:
+        by_issue[(str(h.get("issue_key")), str(h.get("as_of"))[:10])] = [p for p in (h.get("paths") or []) if isinstance(p, dict)]
+    out: list[dict[str, Any]] = []
+    seen: set[tuple[str, str, str]] = set()
+    for c in sorted(cands, key=lambda c: (-int(c.get("score") or 0), str(c.get("as_of") or ""), str(c.get("path_id") or ""))):
+        key = (str(c.get("issue_key")), str(c.get("path_id")), str(c.get("as_of"))[:10])
+        if key in seen:
+            continue
+        p = next((p for p in by_issue.get((key[0], key[2]), []) if str(p.get("id")) == key[1]), None)
+        if not p:
+            continue
+        seen.add(key)
+        out.append({k: p.get(k) for k in ("score", "change", "path", "path_labels", "company", "company_label", "claim", "effect_pct", "lead_quarters",
+                                          "why_unpriced", "falsifier", "research", "extends", "flags", "trigger", "criteria")}
+                   | {"id": f"Q{len(out) + 1}", "rank": len(out) + 1, "issue_key": key[0], "issue_title": c.get("issue_title"),
+                      "source": {"issue_key": key[0], "path_id": key[1], "as_of": key[2]},
+                      "research_result": {"verdict": c.get("verdict"), "summary": c.get("research_summary"), "event_ids": c.get("event_ids") or [],
+                                          "researched_at": c.get("researched_at")},
+                      "existing_idea": c.get("existing_idea") or p.get("extends")})
     return out

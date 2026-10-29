@@ -12,6 +12,10 @@ export type LogEntry = { date: string; kind: string; by: string; title: string; 
 export type Problem = { severity: 1 | 2 | 3; area: string; what: string };
 
 const DAILY = ["issues", "company_feed", "prices", "ideas"];
+/** 아침 작업 사슬 (ADR-0024): v_collector_runs 의 'agent:<task>' 행. 순서대로 보여 주고, 빠진 것은 '아직' 으로. */
+export const CHAIN = ["collect", "paths", "research", "report", "verify"] as const;
+export const CHAIN_KO: Record<string, string> = { collect: "수집", paths: "영향 경로", research: "조사", report: "리포트·목표주가", verify: "검증·보고" };
+export type ChainStep = { task: string; status: string | null; started_at: string | null; rows: number | null; error: string | null };
 const STALE_DAYS: Record<string, number> = { daily: 5, weekly: 14, monthly: 75, irregular: 120 };
 const US = new Set(["Nasdaq", "NYSE", "NYSE American"]);
 const MARKET: Record<string, string> = { TWSE: "대만", TPEx: "대만", KRX: "한국", KOSDAQ: "한국", SSE: "중국", SZSE: "중국", BJSE: "중국", HKEX: "홍콩", TSE: "일본" };
@@ -52,9 +56,17 @@ export async function loadSystem() {
     hasDb ? loadFacts() : Promise.resolve(new Map()),
   ]);
   const problems: Problem[] = [];
-  // 수집기
+  // 아침 사슬 (오늘 KST) — 작업 기록은 agent: 접두사로 collector_runs 에 있다
+  const kstDay = (iso: string) => new Date(new Date(iso).getTime() + 9 * 36e5).toISOString().slice(0, 10);
+  const todayKst = kstDay(today.toISOString());
+  const chain: ChainStep[] = CHAIN.map((t) => {
+    const r = runsQ.rows.find((x) => x.collector === `agent:${t}` && kstDay(x.started_at) === todayKst);
+    return { task: t, status: r?.status ?? null, started_at: r?.started_at ?? null, rows: r?.rows_upserted ?? null, error: r?.error ?? null };
+  });
+  for (const c of chain) if (c.status === "failed") problems.push({ severity: 3, area: "운영", what: `오늘 ${CHAIN_KO[c.task]} 작업 실패${c.error ? ` — ${c.error}` : ""}` });
+  // 수집기 (작업 기록은 사슬에 보여 주므로 뺀다)
   const byCollector = new Map<string, Run[]>();
-  for (const r of runsQ.rows) (byCollector.get(r.collector) ?? byCollector.set(r.collector, []).get(r.collector)!).push(r);
+  for (const r of runsQ.rows) if (!r.collector.startsWith("agent:")) (byCollector.get(r.collector) ?? byCollector.set(r.collector, []).get(r.collector)!).push(r);
   const collectors = [...byCollector.entries()].map(([name, rs]) => {
     const ok = rs.find((r) => r.status === "succeeded");
     const fails7 = rs.filter((r) => r.status === "failed" && Date.now() - new Date(r.started_at).getTime() < 7 * 864e5);
@@ -103,7 +115,7 @@ export async function loadSystem() {
   if (undated) problems.push({ severity: 1, area: "판단", what: `날짜 없는 확인 일정 ${undated}개 — 채점할 수 없음` });
   problems.sort((a, b) => b.severity - a.severity);
   return {
-    problems, collectors, runsMissing: runsQ.missing,
+    problems, collectors, chain, runsMissing: runsQ.missing,
     indicators: { total: indQ.rows.length, registered: regQ.rows.length, stale: stale.length, empty: empty.length, byCat: [...byCat.entries()] },
     prices: { covered, listed: listed.length, noSource, byMarket: [...cov.entries()], withCap, tenbaggers },
     graph: { nodes: seed.nodes.length, edges: seed.edges.length, bottlenecks: seed.nodes.filter((n) => n.kind === "bottleneck").length, dead },

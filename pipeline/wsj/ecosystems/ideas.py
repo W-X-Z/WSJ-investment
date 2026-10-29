@@ -516,6 +516,8 @@ LLM_SYSTEM = """너는 AI 공급망(HBM·첨단 패키징 / 800G·1.6T 광통신
 - hypotheses 가 있으면(1단계에서 고른 가설 후보 — id·순위·점수·claim·falsifier·research·flags) 새 아이디어는 그 후보에서 쓴다: 아이디어에 "hypothesis": "H3".
   조사(research)로 확인된 것은 근거 id 로, 확인 못 한 것은 추론으로 적는다. flags 의 경고(경로 끊김·이미 움직임)는 risks 나 bear 에 반영한다.
   extends 가 있는 후보는 그 idea_key 의 update 로. 후보 밖 새 아이디어는 조사에서 새 변화가 드러났을 때만 쓴다.
+  후보에 research_result 가 있으면 그것이 조사 작업의 결론이다 — verdict(confirmed·partial·unconfirmed·no_data)·summary 를 그대로 받고, event_ids 의 소식은
+  이 입력의 기업 근거(E…)에 들어 있으니 그 근거 id 로 chain 에 쓴다. no_data·unconfirmed 는 추론 단계로만. existing_idea 가 있으면 그 idea_key 의 update 로.
 
 가치평가 (결과 — 사람은 이것만 본다)
 - 아이디어마다 valuation 을 쓴다. 질문은 하나다: 이 변화가 이 기업의 숫자를 바꾸면 이 회사는 {horizon}개월 뒤 얼마짜리 회사인가, 지금 주가와 얼마나 다른가.
@@ -617,6 +619,8 @@ def build_payload(signals: list[dict[str, Any]], candidates: list[dict[str, Any]
             d |= {"items": s["items"], "supplies": s.get("supplies") or []}
         else:
             d |= {"what": s.get("what"), "why": s.get("why")}
+            if s["kind"] == "issue":
+                d["issue_key"] = s.get("ref")  # 경로 작업이 큐(v_q_issues_needing_paths)의 이슈만 고르는 열쇠 (ADR-0024)
         sigs.append(d | {"nodes": s["nodes"], "companies": s["companies"]})
     def watch_view(x: dict[str, Any]) -> list[dict[str, Any]]:
         out = []
@@ -1341,27 +1345,32 @@ def public_credentials() -> tuple[str, str]:
     return url, key
 
 
+def fetch_public_view(http: Any, url: str, key: str, view: str, params: dict[str, str] | None = None) -> list[dict[str, Any]]:
+    """공개 뷰 한 개를 1,000행씩 끝까지 읽는다."""
+    headers = {"apikey": key, "Authorization": f"Bearer {key}"}
+    rows: list[dict[str, Any]] = []
+    base = {"select": "*"} | (params or {})
+    while True:
+        page = http.get_json(f"{url.rstrip('/')}/rest/v1/{view}", params={**base, "limit": "1000", "offset": str(len(rows))}, headers=headers)
+        rows += page
+        if len(page) < 1000:
+            return rows
+
+
 def load_public_inputs(url: str, key: str, feed_days: int = FRESH_DAYS) -> dict[str, list[dict[str, Any]]]:
     """공개 읽기 뷰(publishable 키, RLS 읽기 전용)에서 엔진 입력을 읽는다. 쓰기 권한이 필요 없다."""
     from wsj.http import HttpClient
 
-    headers = {"apikey": key, "Authorization": f"Bearer {key}"}
     since = (datetime.now(UTC) - timedelta(days=feed_days + 1)).isoformat()
     out: dict[str, list[dict[str, Any]]] = {}
     http = HttpClient("WSJ-investment ideas session", timeout=30, max_retries=2)
     try:
         for name, view in PUBLIC_VIEWS.items():
-            rows: list[dict[str, Any]] = []
-            params: dict[str, str] = {"select": "*"}
+            params: dict[str, str] = {}
             if name == "events":
-                params |= {"published_at": f"gte.{since}", "order": "published_at.desc"}
+                params = {"published_at": f"gte.{since}", "order": "published_at.desc"}
             try:
-                while True:
-                    page = http.get_json(f"{url.rstrip('/')}/rest/v1/{view}", params={**params, "limit": "1000", "offset": str(len(rows))},
-                                         headers=headers)
-                    rows += page
-                    if len(page) < 1000:
-                        break
+                rows = fetch_public_view(http, url, key, view, params)
             except Exception as exc:  # noqa: BLE001
                 if name not in OPTIONAL_VIEWS:
                     raise
@@ -1374,6 +1383,22 @@ def load_public_inputs(url: str, key: str, feed_days: int = FRESH_DAYS) -> dict[
         r["extra"] = {"verified_by": "claude"} if r.get("verified") else {}
     log.info("public inputs: %s", {k: len(v) for k, v in out.items()})
     return out
+
+
+def load_queue_hypotheses(url: str, key: str) -> dict[str, Any]:
+    """리포트 작업의 2단계 후보를 DB 큐에서 (ADR-0024): v_q_candidates_needing_report(조사 끝난 선택 경로) + v_issue_hypotheses(경로 상세)."""
+    from wsj.ecosystems import hypotheses as H
+    from wsj.http import HttpClient
+
+    http = HttpClient("WSJ-investment ideas session", timeout=30, max_retries=2)
+    try:
+        cands = fetch_public_view(http, url, key, "v_q_candidates_needing_report")
+        hyps = fetch_public_view(http, url, key, "v_issue_hypotheses", {"as_of": f"gte.{(datetime.now(UTC) - timedelta(days=8)).date().isoformat()}"})
+    finally:
+        http.close()
+    selected = H.from_queue(cands, hyps)
+    log.info("queue hypotheses: %d candidates → %d selected", len(cands), len(selected))
+    return {"as_of": datetime.now(UTC).isoformat(), "source": "db", "selected": selected, "queue": len(cands)}
 
 
 def write_snapshot(d: Path, inputs: dict[str, list[dict[str, Any]]], now: datetime) -> None:
@@ -1441,6 +1466,7 @@ def main(argv: list[str] | None = None) -> int:
     ap.add_argument("--hypotheses-out", type=Path, help="--from-hypotheses 결과(selected·all·rejected)를 쓴다")
     ap.add_argument("--emit-research-plan", type=Path, help="고른 후보의 조사 계획을 JSON 으로 쓴다")
     ap.add_argument("--hypotheses", type=Path, help="2단계: 고른 후보(--hypotheses-out 파일)를 아이디어 입력에 넣는다")
+    ap.add_argument("--hypotheses-from-db", type=Path, help="2단계: 고른 후보를 DB 큐(v_q_candidates_needing_report)에서 읽어 이 파일에 쓰고 --hypotheses 로 쓴다 (--from-public 필요)")
     ap.add_argument("--allow-missing-valuations", action="store_true", help="세션 모드에서 목표주가 누락을 오류(exit 2)로 보지 않는다")
     args = ap.parse_args(argv)
     logging.basicConfig(level=logging.INFO, format="%(levelname)-7s %(name)s: %(message)s")
@@ -1462,6 +1488,11 @@ def main(argv: list[str] | None = None) -> int:
         now = datetime.now(UTC)
         if args.from_public:
             inputs = load_public_inputs(*public_credentials(), args.feed_days)
+            if args.hypotheses_from_db:  # 리포트 작업 (ADR-0024): 조사가 끝난 후보를 DB 큐에서
+                q = load_queue_hypotheses(*public_credentials())
+                args.hypotheses_from_db.parent.mkdir(parents=True, exist_ok=True)
+                args.hypotheses_from_db.write_text(json.dumps(q, ensure_ascii=False, indent=1, default=str), encoding="utf-8")
+                args.hypotheses = args.hypotheses_from_db
             if args.snapshot_out:
                 write_snapshot(args.snapshot_out, inputs, now)
                 args.snapshot = args.snapshot_out
