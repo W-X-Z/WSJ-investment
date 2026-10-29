@@ -34,3 +34,15 @@ p28 확인: `select to_regprocedure('ideas.put_theses(jsonb)') is not null as p2
 ## 6. 보고와 알림
 - 보고 7줄 이내: 테제마다 (stage · 드라이버 최신값 · 이번 주 근거 ± · 바뀐 것) · 새 테제 · 닫은 테제.
 - 알림은 매주: 첫 문장에 stage 가 바뀐 테제, 이어서 드라이버가 임계를 넘은 것, 반증이 성립한 것.
+
+## 부록 — 예약작업 프롬프트 (등록용, 토 09:17 KST)
+```
+개인 투자 연구 웹 WSJ-investment(저장소 W-X-Z/WSJ-investment, https://wsj-investment.vercel.app)의 주간 thesis(구조 가설) 작업이다 (ADR-0025). 리포트가 "이 기업 + 이 이슈" 라면 테제는 "사용 방식의 변화 → 자원 요구 → 공급 병목 → 누가 리레이팅되나" 를 여러 달에 걸쳐 쌓는 단위다. 뉴스 제목이 아니라 누가 무엇을 다르게 쓰기 시작했나에서 출발하고, 대형주도 받는다. 사용자는 자리에 없으니 질문하지 말고 끝까지 진행한다.
+
+1. `date` 로 KST(UTC+9) 오늘 날짜를 확인한다.
+2. Supabase MCP execute_sql (project_id dcatgfivsvbktylmtvgf): `select to_regprocedure('ideas.put_theses(jsonb)') is not null as p28;` — false 면 "0028 미적용" 한 줄로 끝낸다 (알림 없음).
+3. add_repo 로 W-X-Z/WSJ-investment 를 push 권한으로 붙이고 안내된 clone 명령으로 `--depth 20` clone 한다. `docs/agents/thesis.md` 를 처음부터 끝까지 읽고 그 절차를 그대로 따른다. 공통 규칙은 `docs/agents/daily-ideas.md` §0·§B·§C. 세부 규칙은 이 프롬프트가 아니라 문서가 기준이다.
+4. 경계: Supabase 쓰기는 ideas.put_theses, ideas.put_thesis_evidence, ideas.put_observations, ideas.put_company_events, ops.put_agent_run 과 읽기용 select 뿐이다. secret 키는 쓰지 않고 publishable 키만 쓴다. 저장소 변경은 research/theses/ 안의 테제 JSON 뿐이며 브랜치 auto/thesis-YYYYMMDD 로 PR 을 올리고 CI 통과 + 바뀐 파일이 전부 research/ 안이면 스스로 병합한다. 그 밖의 경로는 바꾸지 않는다. main 직접 push·강제 push 금지. 근거는 WebFetch 로 직접 연 원문만. 매수/매도 권유·시점 예측은 쓰지 않는다.
+5. 커밋 메시지 끝에 `Co-Authored-By: Claude <noreply@anthropic.com>` 를, PR 본문 끝에 `🤖 Generated with [Claude Code](https://claude.com/claude-code)` 를 붙인다.
+6. 문서를 읽을 수 없으면 무엇이 실패했는지 보고하고 알림을 보낸 뒤 끝낸다. 알림은 매주: 첫 문장에 stage 가 바뀐 테제, 이어서 드라이버가 임계를 넘은 것·반증이 성립한 것·새 테제.
+```
