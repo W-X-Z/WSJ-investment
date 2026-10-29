@@ -116,7 +116,47 @@ def leads(graph: dict[str, Any], issues: list[dict[str, Any]], indicators: list[
                 for i in issues if not (i.get("nodes") or [])]
     second = second_order(graph, st, issues, recent_co, covered, prices, cut14)
     return {"as_of": now.isoformat(timespec="seconds"), "company_leads": company_leads[:12], "bottlenecks": board[:12],
-            "price_leads": price_leads[:10], "untagged_issues": untagged, "second_order": second[:15]}
+            "price_leads": price_leads[:10], "untagged_issues": untagged, "second_order": second[:15],
+            "peer_leads": peer_leads(graph, st, indicators, prices, covered, recent_co)}
+
+
+def peer_leads(graph: dict[str, Any], st: Structure, indicators: list[dict[str, Any]], prices: dict[str, dict[str, Any]],
+               covered: set[str], recent_co: set[str], min_yoy: float = 40.0, limit: int = 12) -> list[dict[str, Any]]:
+    """대만 월매출 → 미국·한국 동종사 선행 단서 (백로그 K-1). 대만 상장사는 매달 10일에 월매출을 공시해 공급망에서 가장 빠른 공개 숫자다.
+    같은 노드(offered_by·develops)를 공급하는 미국·한국 상장사는 분기 실적까지 1~2개월 늦게 같은 수요를 보여 준다.
+    대만사의 최신 월매출 YoY 가 min_yoy 이상이면, 같은 노드의 미국·한국 동종사(아이디어 없음·최근 소식 없음 우선)를 단서로 — 주가가 아직 안 움직였으면(quiet) 앞으로."""
+    nodes = st.nodes
+    by_code = {(n.get("listing") or {}).get("ticker"): n["id"] for n in graph["nodes"]
+               if n.get("kind") == "company" and (n.get("listing") or {}).get("exchange") in ("TWSE", "TPEx")}
+    latest: dict[str, dict[str, Any]] = {}
+    for i in indicators:
+        if i.get("category") != "tw_revenue" or i.get("yoy_pct") is None:
+            continue
+        code = str(i.get("indicator_id") or "").removeprefix("tw:")
+        cid = by_code.get(code)
+        if not cid:
+            continue
+        if cid not in latest or _date(i.get("as_of")) > _date(latest[cid].get("as_of")):
+            latest[cid] = i
+    out: dict[str, dict[str, Any]] = {}
+    for cid, i in latest.items():
+        yoy = float(i["yoy_pct"])
+        if yoy < min_yoy:
+            continue
+        for node in st.supplies.get(cid, ()):
+            for peer in st.suppliers.get(node, ()):
+                if peer == cid or not in_scope(nodes.get(peer)):
+                    continue
+                pc = price_context(prices, nodes[peer]) or {}
+                quiet = (pc.get("r1m") is None or abs(pc["r1m"]) < 15) and peer not in recent_co
+                row = out.get(peer)
+                cand = {"company_id": peer, "company": st.label(peer), "size_band": nodes[peer].get("size_band"), "exchange": (nodes[peer].get("listing") or {}).get("exchange"),
+                        "node": node, "node_label": st.label(node), "tw_company": st.label(cid), "tw_yoy": round(yoy, 1), "tw_as_of": _date(i.get("as_of")),
+                        "tw_mom": i.get("change_pct"), "price": pc or None, "quiet": quiet, "covered": peer in covered}
+                if not row or yoy > row["tw_yoy"]:
+                    out[peer] = cand
+    size_rank = {"micro": 0, "small": 1, "mid": 2, "large": 3, "mega": 4}
+    return sorted(out.values(), key=lambda x: (-int(x["quiet"]), int(x["covered"]), size_rank.get(x["size_band"] or "", 3), -x["tw_yoy"]))[:limit]
 
 
 def second_order(graph: dict[str, Any], st: Structure, issues: list[dict[str, Any]], recent_co: set[str], covered: set[str],
@@ -182,6 +222,8 @@ def compact(ld: dict[str, Any]) -> dict[str, Any]:
         "price_leads": [{"company_id": p["company_id"], "r1m": p["price"].get("r1m"), "vol_ratio": p["price"].get("vol_ratio")} for p in ld["price_leads"][:6]],
         "second_order": [{k: x[k] for k in ("company_id", "company", "size_band", "hops", "path", "confidence", "trigger", "quiet", "price") if x.get(k) is not None}
                          for x in ld.get("second_order", [])[:10]],
+        "peer_leads": [{k: x[k] for k in ("company_id", "company", "size_band", "node_label", "tw_company", "tw_yoy", "tw_as_of", "quiet", "covered") if x.get(k) is not None}
+                       | {"r1m": (x.get("price") or {}).get("r1m")} for x in ld.get("peer_leads", [])[:10]],
     }
 
 

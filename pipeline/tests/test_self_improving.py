@@ -672,3 +672,29 @@ def test_restrict_payload_keeps_only_queue_issues_and_what_they_touch():
     # 노드로만 닿는 후보도 남는다
     out2 = H.restrict_payload(payload, {"k2"})
     assert [c["company_id"] for c in out2["candidates"]] == ["company:q"] and [e["id"] for e in out2["evidence"]] == ["S2", "S5"]
+
+
+def test_peer_leads_pairs_taiwan_monthly_revenue_with_quiet_us_kr_peers():
+    """백로그 K-1: 같은 노드를 공급하는 대만사 월매출 YoY 가 크면 미국·한국 동종사가 선행 단서 — 조용한(주가·소식 없음) 소형사가 앞에 온다."""
+    from wsj.ecosystems import scan
+    from wsj.ecosystems.assess import Structure
+
+    g = {"nodes": [
+        {"id": "component:x", "kind": "component", "label": "부품 X"},
+        {"id": "company:tw", "kind": "company", "label": "TW Co", "listing": {"exchange": "TWSE", "ticker": "1234"}},
+        {"id": "company:kr", "kind": "company", "label": "KR Co", "listing": {"exchange": "KOSDAQ", "ticker": "000001"}, "size_band": "small"},
+        {"id": "company:us", "kind": "company", "label": "US Co", "listing": {"exchange": "Nasdaq", "ticker": "USCO"}, "size_band": "mid"},
+        {"id": "company:jp", "kind": "company", "label": "JP Co", "listing": {"exchange": "TSE", "ticker": "7777"}}],
+        "edges": [{"from": "component:x", "to": c, "relation": "offered_by"} for c in ("company:tw", "company:kr", "company:us", "company:jp")]}
+    st = Structure(g)
+    ind = [{"indicator_id": "tw:1234", "category": "tw_revenue", "yoy_pct": 120.0, "as_of": "2026-09-01", "change_pct": 10.0},
+           {"indicator_id": "tw:1234", "category": "tw_revenue", "yoy_pct": 30.0, "as_of": "2026-08-01"},
+           {"indicator_id": "tw:9999", "category": "tw_revenue", "yoy_pct": 500.0, "as_of": "2026-09-01"}]  # 그래프에 없는 코드는 무시
+    from wsj.ecosystems.prices import px_key
+
+    prices = {px_key("Nasdaq", "USCO"): {"r1m": 40.0, "close": 10}, px_key("KOSDAQ", "000001"): {"r1m": 3.0, "close": 100}}
+    rows = scan.peer_leads(g, st, ind, prices, covered={"company:us"}, recent_co=set())
+    assert [r["company_id"] for r in rows] == ["company:kr", "company:us"]            # 일본사는 범위 밖, 대만사 자신은 제외
+    assert rows[0]["quiet"] and rows[0]["tw_yoy"] == 120.0 and rows[0]["tw_as_of"] == "2026-09-01" and rows[0]["node_label"] == "부품 X"
+    assert not rows[1]["quiet"] and rows[1]["covered"]
+    assert scan.peer_leads(g, st, ind, prices, set(), set(), min_yoy=200) == []
