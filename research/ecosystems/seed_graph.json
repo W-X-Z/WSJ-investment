@@ -10202,6 +10202,129 @@
       "kind": "component",
       "label": "KV 캐시·컨텍스트 저장용 고용량 eSSD (QLC)",
       "ecosystem": "hbm"
+    },
+    {
+      "id": "demand_driver:video_generation",
+      "kind": "demand_driver",
+      "label": "영상 생성 워크로드 (영상 토큰 ≫ 텍스트 — 영상당 Wh·GPU 시간)",
+      "ecosystem": "hbm"
+    },
+    {
+      "id": "tech:hbf",
+      "kind": "technology",
+      "label": "고대역폭 플래시 (HBF: XPU 옆 TSV 적층 NAND, HBM 아래 용량 계층)",
+      "ecosystem": "hbm"
+    },
+    {
+      "id": "component:nand_3d",
+      "kind": "component",
+      "label": "3D NAND (TLC/QLC 셀 — eSSD·HBF 의 저장 매체)",
+      "ecosystem": "hbm"
+    },
+    {
+      "id": "tech:cxl_memory_pool",
+      "kind": "technology",
+      "label": "CXL 풀 메모리·메모리 패브릭 (노드 간 KV 캐시 공유 계층)",
+      "ecosystem": "hbm"
+    },
+    {
+      "id": "component:cxl_controller",
+      "kind": "component",
+      "label": "CXL 컨트롤러·스위치·메모리 확장 장치 (CMM·Structera·Leo)",
+      "ecosystem": "hbm"
+    },
+    {
+      "id": "tech:pim",
+      "kind": "technology",
+      "label": "프로세싱 인 메모리 (PIM/PNM: LPDDR-PIM·CMM-Ax·베이스 다이 PNM)",
+      "ecosystem": "hbm"
+    },
+    {
+      "id": "tech:3d_dram",
+      "kind": "technology",
+      "label": "3D DRAM·산화물 채널 DRAM (OCTRAM/IGZO, 연산 위 DRAM 적층 — 6F² 벽의 출구)",
+      "ecosystem": "hbm"
+    },
+    {
+      "id": "standard:uec",
+      "kind": "standard",
+      "label": "Ultra Ethernet 1.1 (스케일아웃 + ULP 스케일업 프로파일)",
+      "ecosystem": "optics"
+    },
+    {
+      "id": "standard:ualink",
+      "kind": "standard",
+      "label": "UALink 2.0 (스케일업, 인네트워크 컴퓨트, UCIe 칩렛 1.0)",
+      "ecosystem": "optics"
+    },
+    {
+      "id": "standard:scaleup_ethernet",
+      "kind": "standard",
+      "label": "스케일업 이더넷 SUE-T 1.0 · ESUN 1.0 (OCP)",
+      "ecosystem": "optics"
+    },
+    {
+      "id": "req:open_scaleup_fabric",
+      "kind": "requirement",
+      "label": "개방형 스케일업 패브릭 요구 (2군 XPU 의 표준 링크 — 16K XPU·1홉 <2µs)",
+      "ecosystem": "optics"
+    },
+    {
+      "id": "standard:ocp_grid_interface",
+      "kind": "standard",
+      "label": "OCP 하이퍼스케일러↔유틸리티 외란 성능 인터페이스 v1.0 (램프레이트 후속 예고)",
+      "ecosystem": "power"
+    },
+    {
+      "id": "req:grid_disturbance_ridethrough",
+      "kind": "requirement",
+      "label": "계통 외란 라이드스루·램프레이트 요구 (sag 에 트립 금지 → 홀드업·평활을 랙·MV-UPS 로)",
+      "ecosystem": "power"
+    },
+    {
+      "id": "component:grid_forming_inverter",
+      "kind": "component",
+      "label": "그리드포밍 인버터·E-STATCOM (데이터센터 측 계통 안정화 설비)",
+      "ecosystem": "power"
+    },
+    {
+      "id": "bottleneck:rack_busbar_losses",
+      "kind": "bottleneck",
+      "label": "랙당 >1MW 에서 구리 버스웨이의 I²R 손실·중량",
+      "ecosystem": "power"
+    },
+    {
+      "id": "tech:hts_busway",
+      "kind": "technology",
+      "label": "초전도(HTS) 버스웨이·케이블 (REBCO 테이프, 극저온 루프)",
+      "ecosystem": "power"
+    },
+    {
+      "id": "material:multicore_fiber",
+      "kind": "material",
+      "label": "멀티코어 파이버 (MCF, 19코어·공간분할다중화)",
+      "ecosystem": "optics"
+    },
+    {
+      "id": "material:tflt",
+      "kind": "material",
+      "label": "박막 리튬탄탈레이트 (TFLT — TFLN 대안 변조기·콤 플랫폼)",
+      "ecosystem": "optics"
+    },
+    {
+      "id": "company:ls_cable",
+      "kind": "company",
+      "label": "LS Cable & System (비상장, LS 006260 자회사)",
+      "ecosystem": "power",
+      "role": "supplier",
+      "listing": {
+        "ticker": null,
+        "exchange": null,
+        "cik": null,
+        "filer_type": "private"
+      },
+      "size_band": "large",
+      "in_universe": false
     }
   ],
   "edges": [
@@ -39772,6 +39895,945 @@
         }
       ],
       "confidence": 0.4
+    },
+    {
+      "id": "w1030-001",
+      "from": "demand_driver:video_generation",
+      "to": "req:memory_per_accelerator",
+      "relation": "drives_requirement",
+      "evidence_tier": "official_issuer",
+      "polarity": "positive",
+      "evidence": [
+        {
+          "url": "https://blog.vllm.ai/blog/2026-08-17-distributed-layerwise-offload",
+          "source_type": "official_issuer",
+          "published_at": "2026-08-17",
+          "excerpt": "vLLM-Omni distributed layerwise offload: 8xB300 MiniMax-H3 183.78 videos/h, 43.97 Wh per video; video models exceed single-GPU HBM"
+        },
+        {
+          "url": "https://ai.google.dev/gemini-api/docs/changelog",
+          "source_type": "official_issuer",
+          "published_at": "2026-08-27",
+          "excerpt": "Gemini Omni Flash GA: video generation and editing 360p-4K, video extension, first/last-frame interpolation"
+        }
+      ],
+      "note": "영상 모델은 GPU 하나의 HBM 을 넘어 레이어 분산 오프로드가 필요; 영상당 43.97Wh",
+      "confidence": 0.825
+    },
+    {
+      "id": "w1030-002",
+      "from": "bottleneck:hbm_bit_supply",
+      "to": "tech:hbf",
+      "relation": "mitigated_by",
+      "evidence_tier": "third_party_report",
+      "polarity": "positive",
+      "evidence": [
+        {
+          "url": "https://arxiv.org/abs/2609.25782",
+          "source_type": "paper",
+          "published_at": "2026-09-22",
+          "excerpt": "HBF hot-cold KV tiering: 24x concurrent sessions per GPU, HBM confined to hot set cuts read power 7.6 kW per 8-GPU node"
+        },
+        {
+          "url": "https://hotchips.org/",
+          "source_type": "conference",
+          "published_at": "2026-08-23",
+          "excerpt": "Hot Chips 2026 tutorial: HBF in AI Compute - A System Architect's view (Oxmiq Labs, PRAXMATI)"
+        },
+        {
+          "url": "https://news.skhynix.com/en/q3-2026-business-results/",
+          "source_type": "official_issuer",
+          "published_at": "2026-10-28",
+          "excerpt": "SK hynix 3Q26: NAND roadmap built on HBF (high-bandwidth flash); expects memory shortages through 2030"
+        }
+      ],
+      "note": "hot KV 는 HBM, cold 세션·가중치는 HBF — GPU 당 세션 24×; 반증 논문: write-heavy KV 는 2~5.5× 느림",
+      "confidence": 0.65
+    },
+    {
+      "id": "w1030-003",
+      "from": "req:context_storage_tier",
+      "to": "component:nand_3d",
+      "relation": "requires",
+      "evidence_tier": "technical_inference",
+      "polarity": "positive",
+      "evidence": [
+        {
+          "url": "https://news.skhynix.com/en/q3-2026-business-results/",
+          "source_type": "official_issuer",
+          "published_at": "2026-10-28",
+          "excerpt": "SK hynix 3Q26: NAND roadmap built on HBF (high-bandwidth flash); expects memory shortages through 2030"
+        }
+      ],
+      "note": "컨텍스트 저장 계층(eSSD)의 매체",
+      "confidence": 0.4
+    },
+    {
+      "id": "w1030-004",
+      "from": "tech:hbf",
+      "to": "component:nand_3d",
+      "relation": "requires",
+      "evidence_tier": "technical_inference",
+      "polarity": "positive",
+      "evidence": [
+        {
+          "url": "https://hotchips.org/",
+          "source_type": "conference",
+          "published_at": "2026-08-23",
+          "excerpt": "Hot Chips 2026 tutorial: HBF in AI Compute - A System Architect's view (Oxmiq Labs, PRAXMATI)"
+        }
+      ],
+      "note": "TSV 적층 NAND",
+      "confidence": 0.4
+    },
+    {
+      "id": "w1030-005",
+      "from": "tech:hbf",
+      "to": "component:hbm_base_die",
+      "relation": "requires",
+      "evidence_tier": "technical_inference",
+      "polarity": "positive",
+      "evidence": [
+        {
+          "url": "https://arxiv.org/abs/2610.26131",
+          "source_type": "paper",
+          "published_at": "2026-10-19",
+          "excerpt": "DuoPD: PNM units in the HBM logic die run the entire decode phase sharing the HBM interface"
+        }
+      ],
+      "note": "HBM 베이스 다이를 경유하는 GPU↔HBF 경로 (2608.14333)",
+      "confidence": 0.4
+    },
+    {
+      "id": "w1030-006",
+      "from": "tech:hbf",
+      "to": "component:server_dram_lpdram",
+      "relation": "displaces",
+      "evidence_tier": "technical_inference",
+      "polarity": "negative",
+      "evidence": [
+        {
+          "url": "https://arxiv.org/abs/2608.11668",
+          "source_type": "paper",
+          "published_at": "2026-08-12",
+          "excerpt": "HBF as SSD-style KV offload: E2E latency 2-5.5x worse; KV traffic is write-heavy, stack hits thermal limit"
+        }
+      ],
+      "note": "KV 용 호스트 DRAM 일부를 대체할 수 있음 — 단 write-heavy 에선 반대 (반증 논문)",
+      "confidence": 0.4
+    },
+    {
+      "id": "w1030-007",
+      "from": "tech:hbf",
+      "to": "company:skhynix",
+      "relation": "offered_by",
+      "evidence_tier": "official_issuer",
+      "polarity": "positive",
+      "evidence": [
+        {
+          "url": "https://news.skhynix.com/en/q3-2026-business-results/",
+          "source_type": "official_issuer",
+          "published_at": "2026-10-28",
+          "excerpt": "SK hynix 3Q26: NAND roadmap built on HBF (high-bandwidth flash); expects memory shortages through 2030"
+        }
+      ],
+      "note": "3Q26: NAND 로드맵을 HBF 위에",
+      "confidence": 0.8
+    },
+    {
+      "id": "w1030-008",
+      "from": "component:nand_3d",
+      "to": "company:skhynix",
+      "relation": "offered_by",
+      "evidence_tier": "official_issuer",
+      "polarity": "positive",
+      "evidence": [
+        {
+          "url": "https://news.skhynix.com/en/q3-2026-business-results/",
+          "source_type": "official_issuer",
+          "published_at": "2026-10-28",
+          "excerpt": "SK hynix 3Q26: NAND roadmap built on HBF (high-bandwidth flash); expects memory shortages through 2030"
+        }
+      ],
+      "confidence": 0.8
+    },
+    {
+      "id": "w1030-009",
+      "from": "component:nand_3d",
+      "to": "company:samsung",
+      "relation": "offered_by",
+      "evidence_tier": "technical_inference",
+      "polarity": "positive",
+      "evidence": [
+        {
+          "url": "https://news.skhynix.com/en/q3-2026-business-results/",
+          "source_type": "official_issuer",
+          "published_at": "2026-10-28",
+          "excerpt": "SK hynix 3Q26: NAND roadmap built on HBF (high-bandwidth flash); expects memory shortages through 2030"
+        }
+      ],
+      "confidence": 0.4
+    },
+    {
+      "id": "w1030-010",
+      "from": "component:nand_3d",
+      "to": "company:mu",
+      "relation": "offered_by",
+      "evidence_tier": "technical_inference",
+      "polarity": "positive",
+      "evidence": [
+        {
+          "url": "https://news.skhynix.com/en/q3-2026-business-results/",
+          "source_type": "official_issuer",
+          "published_at": "2026-10-28",
+          "excerpt": "SK hynix 3Q26: NAND roadmap built on HBF (high-bandwidth flash); expects memory shortages through 2030"
+        }
+      ],
+      "confidence": 0.4
+    },
+    {
+      "id": "w1030-011",
+      "from": "bottleneck:dram_bit_supply",
+      "to": "tech:cxl_memory_pool",
+      "relation": "mitigated_by",
+      "evidence_tier": "official_issuer",
+      "polarity": "positive",
+      "evidence": [
+        {
+          "url": "https://investor.marvell.com/news-events/press-releases/",
+          "source_type": "official_issuer",
+          "published_at": "2026-10-12",
+          "excerpt": "Marvell Structera X 3406/3506 six-channel CXL 3.2 memory expanders for AI inference; memory shortage driving IT managers to use CXL to re-deploy used DDR4 DIMMs into DDR5 systems; sampling Q1 2027"
+        },
+        {
+          "url": "https://news.skhynix.com/en/ocp-global-summit-2026/",
+          "source_type": "conference",
+          "published_at": "2026-10-23",
+          "excerpt": "SK hynix OCP 2026: KV-cache transfer/reuse over CXL pooled memory demo; CMM-DDR5 256 GB (CXL 3.x); CMM-Ax; 192 GB SOCAMM2; 128 GB MRDIMM"
+        },
+        {
+          "url": "https://arxiv.org/abs/2610.22716",
+          "source_type": "paper",
+          "published_at": "2026-10-15",
+          "excerpt": "CMM-MP: CXL + Ethernet memory pool device, hundreds of TB logical memory, 2.7 us latency, 23 GB/s"
+        }
+      ],
+      "note": "메모리 부족이 중고 DDR4 를 CXL 로 재배치하게 한다 (Marvell); KV-over-CXL 데모 (SK hynix)",
+      "confidence": 0.85
+    },
+    {
+      "id": "w1030-012",
+      "from": "req:context_storage_tier",
+      "to": "component:cxl_controller",
+      "relation": "requires",
+      "evidence_tier": "technical_inference",
+      "polarity": "positive",
+      "evidence": [
+        {
+          "url": "https://news.skhynix.com/en/ocp-global-summit-2026/",
+          "source_type": "conference",
+          "published_at": "2026-10-23",
+          "excerpt": "SK hynix OCP 2026: KV-cache transfer/reuse over CXL pooled memory demo; CMM-DDR5 256 GB (CXL 3.x); CMM-Ax; 192 GB SOCAMM2; 128 GB MRDIMM"
+        }
+      ],
+      "note": "풀 메모리 계층의 컨트롤러·스위치",
+      "confidence": 0.4
+    },
+    {
+      "id": "w1030-013",
+      "from": "tech:cxl_memory_pool",
+      "to": "component:cxl_controller",
+      "relation": "requires",
+      "evidence_tier": "standard_body",
+      "polarity": "positive",
+      "evidence": [
+        {
+          "url": "https://computeexpresslink.org/wp-content/uploads/2025/11/CXL_4.0-Specification-Release_FINAL_Website-Copy.pdf",
+          "source_type": "standard",
+          "published_at": "2025-11-18",
+          "excerpt": "CXL 4.0: 128 GT/s, bundled ports, up to 4 retimers, memory RAS"
+        }
+      ],
+      "confidence": 0.9
+    },
+    {
+      "id": "w1030-014",
+      "from": "tech:cxl_memory_pool",
+      "to": "component:server_dram_lpdram",
+      "relation": "requires",
+      "evidence_tier": "technical_inference",
+      "polarity": "positive",
+      "evidence": [
+        {
+          "url": "https://arxiv.org/abs/2610.22716",
+          "source_type": "paper",
+          "published_at": "2026-10-15",
+          "excerpt": "CMM-MP: CXL + Ethernet memory pool device, hundreds of TB logical memory, 2.7 us latency, 23 GB/s"
+        }
+      ],
+      "note": "풀 DRAM",
+      "confidence": 0.4
+    },
+    {
+      "id": "w1030-015",
+      "from": "component:cxl_controller",
+      "to": "company:mrvl",
+      "relation": "offered_by",
+      "evidence_tier": "official_issuer",
+      "polarity": "positive",
+      "evidence": [
+        {
+          "url": "https://investor.marvell.com/news-events/press-releases/",
+          "source_type": "official_issuer",
+          "published_at": "2026-10-12",
+          "excerpt": "Marvell Structera X 3406/3506 six-channel CXL 3.2 memory expanders for AI inference; memory shortage driving IT managers to use CXL to re-deploy used DDR4 DIMMs into DDR5 systems; sampling Q1 2027"
+        }
+      ],
+      "note": "Structera X, 2027-1Q 샘플",
+      "confidence": 0.8
+    },
+    {
+      "id": "w1030-016",
+      "from": "component:cxl_controller",
+      "to": "company:alab",
+      "relation": "offered_by",
+      "evidence_tier": "technical_inference",
+      "polarity": "positive",
+      "evidence": [
+        {
+          "url": "https://computeexpresslink.org/wp-content/uploads/2025/11/CXL_4.0-Specification-Release_FINAL_Website-Copy.pdf",
+          "source_type": "standard",
+          "published_at": "2025-11-18",
+          "excerpt": "CXL 4.0: 128 GT/s, bundled ports, up to 4 retimers, memory RAS"
+        }
+      ],
+      "note": "Leo CXL 컨트롤러",
+      "confidence": 0.4
+    },
+    {
+      "id": "w1030-017",
+      "from": "component:cxl_controller",
+      "to": "company:montage",
+      "relation": "offered_by",
+      "evidence_tier": "technical_inference",
+      "polarity": "positive",
+      "evidence": [
+        {
+          "url": "https://computeexpresslink.org/wp-content/uploads/2025/11/CXL_4.0-Specification-Release_FINAL_Website-Copy.pdf",
+          "source_type": "standard",
+          "published_at": "2025-11-18",
+          "excerpt": "CXL 4.0: 128 GT/s, bundled ports, up to 4 retimers, memory RAS"
+        }
+      ],
+      "confidence": 0.4
+    },
+    {
+      "id": "w1030-018",
+      "from": "component:cxl_controller",
+      "to": "company:skhynix",
+      "relation": "offered_by",
+      "evidence_tier": "official_issuer",
+      "polarity": "positive",
+      "evidence": [
+        {
+          "url": "https://news.skhynix.com/en/ocp-global-summit-2026/",
+          "source_type": "conference",
+          "published_at": "2026-10-23",
+          "excerpt": "SK hynix OCP 2026: KV-cache transfer/reuse over CXL pooled memory demo; CMM-DDR5 256 GB (CXL 3.x); CMM-Ax; 192 GB SOCAMM2; 128 GB MRDIMM"
+        }
+      ],
+      "note": "CMM-DDR5·CMM-Ax",
+      "confidence": 0.8
+    },
+    {
+      "id": "w1030-019",
+      "from": "component:cxl_controller",
+      "to": "company:samsung",
+      "relation": "offered_by",
+      "evidence_tier": "technical_inference",
+      "polarity": "positive",
+      "evidence": [
+        {
+          "url": "https://news.skhynix.com/en/ocp-global-summit-2026/",
+          "source_type": "conference",
+          "published_at": "2026-10-23",
+          "excerpt": "SK hynix OCP 2026: KV-cache transfer/reuse over CXL pooled memory demo; CMM-DDR5 256 GB (CXL 3.x); CMM-Ax; 192 GB SOCAMM2; 128 GB MRDIMM"
+        }
+      ],
+      "note": "CMM-D",
+      "confidence": 0.4
+    },
+    {
+      "id": "w1030-020",
+      "from": "bottleneck:hbm_bit_supply",
+      "to": "tech:pim",
+      "relation": "mitigated_by",
+      "evidence_tier": "third_party_report",
+      "polarity": "positive",
+      "evidence": [
+        {
+          "url": "https://hotchips.org/",
+          "source_type": "conference",
+          "published_at": "2026-08-25",
+          "excerpt": "Hot Chips 2026: Samsung LPDDR5X-PIM, world's first LPDDR-based processing in memory, up to 8x effective bandwidth"
+        },
+        {
+          "url": "https://arxiv.org/abs/2610.26131",
+          "source_type": "paper",
+          "published_at": "2026-10-19",
+          "excerpt": "DuoPD: PNM units in the HBM logic die run the entire decode phase sharing the HBM interface"
+        }
+      ],
+      "note": "뱅크 안 연산으로 유효 대역폭 8× — HBM 대신 LPDDR 로 추론",
+      "confidence": 0.625
+    },
+    {
+      "id": "w1030-021",
+      "from": "tech:pim",
+      "to": "company:samsung",
+      "relation": "offered_by",
+      "evidence_tier": "vendor_claim",
+      "polarity": "positive",
+      "evidence": [
+        {
+          "url": "https://hotchips.org/",
+          "source_type": "conference",
+          "published_at": "2026-08-25",
+          "excerpt": "Hot Chips 2026: Samsung LPDDR5X-PIM, world's first LPDDR-based processing in memory, up to 8x effective bandwidth"
+        }
+      ],
+      "note": "LPDDR5X-PIM",
+      "confidence": 0.55
+    },
+    {
+      "id": "w1030-022",
+      "from": "tech:pim",
+      "to": "company:skhynix",
+      "relation": "offered_by",
+      "evidence_tier": "vendor_claim",
+      "polarity": "positive",
+      "evidence": [
+        {
+          "url": "https://news.skhynix.com/en/ocp-global-summit-2026/",
+          "source_type": "conference",
+          "published_at": "2026-10-23",
+          "excerpt": "SK hynix OCP 2026: KV-cache transfer/reuse over CXL pooled memory demo; CMM-DDR5 256 GB (CXL 3.x); CMM-Ax; 192 GB SOCAMM2; 128 GB MRDIMM"
+        }
+      ],
+      "note": "CMM-Ax",
+      "confidence": 0.55
+    },
+    {
+      "id": "w1030-023",
+      "from": "bottleneck:dram_bit_supply",
+      "to": "tech:3d_dram",
+      "relation": "mitigated_by",
+      "evidence_tier": "third_party_report",
+      "polarity": "positive",
+      "evidence": [
+        {
+          "url": "https://ieee-iedm.org/program/short-courses/",
+          "source_type": "conference",
+          "published_at": "2026-12-13",
+          "excerpt": "IEDM 2026 short course: Kioxia OCTRAM (oxide-semiconductor channel transistor DRAM) for sub-10nm nodes and beyond"
+        },
+        {
+          "url": "https://hotchips.org/",
+          "source_type": "conference",
+          "published_at": "2026-08-23",
+          "excerpt": "Hot Chips 2026: 3D DRAM based accelerator for generative inference (d-Matrix, Meta)"
+        },
+        {
+          "url": "https://arxiv.org/abs/2609.24343",
+          "source_type": "paper",
+          "published_at": "2026-09-21",
+          "excerpt": "3D volumetric DRAM stacked above GPU with interleaved cooling cavities; stack height dominates peak temperature"
+        }
+      ],
+      "note": "평면 커패시터 스케일링 한계(6F² 벽)의 출구 — 36~60개월",
+      "confidence": 0.65
+    },
+    {
+      "id": "w1030-024",
+      "from": "tech:3d_dram",
+      "to": "equipment:hybrid_bonder",
+      "relation": "requires",
+      "evidence_tier": "technical_inference",
+      "polarity": "positive",
+      "evidence": [
+        {
+          "url": "https://arxiv.org/abs/2609.24343",
+          "source_type": "paper",
+          "published_at": "2026-09-21",
+          "excerpt": "3D volumetric DRAM stacked above GPU with interleaved cooling cavities; stack height dominates peak temperature"
+        }
+      ],
+      "note": "웨이퍼 본딩",
+      "confidence": 0.4
+    },
+    {
+      "id": "w1030-025",
+      "from": "tech:3d_dram",
+      "to": "company:samsung",
+      "relation": "offered_by",
+      "evidence_tier": "vendor_claim",
+      "polarity": "positive",
+      "evidence": [
+        {
+          "url": "https://2026ocpglobal.fnvirtual.app/a/schedule/",
+          "source_type": "conference",
+          "published_at": "2026-10-14",
+          "excerpt": "OCP Global Summit 2026 schedule: HTS workshop (Tokamak Energy 3.8 MW 800VDC-HTS busway, VEIR 250 MW, LS Cable, Nexans SFCL, Vision Electric); Google hardware mitigations with supercapacitor and battery; Panasonic BBU/CBU"
+        }
+      ],
+      "note": "OCP FTS 키노트: 메모리 포드·3D DRAM",
+      "confidence": 0.55
+    },
+    {
+      "id": "w1030-026",
+      "from": "tech:3d_dram",
+      "to": "company:skhynix",
+      "relation": "offered_by",
+      "evidence_tier": "vendor_claim",
+      "polarity": "positive",
+      "evidence": [
+        {
+          "url": "https://ieee-iedm.org/program/short-courses/",
+          "source_type": "conference",
+          "published_at": "2026-12-13",
+          "excerpt": "IEDM 2026 short course: Kioxia OCTRAM (oxide-semiconductor channel transistor DRAM) for sub-10nm nodes and beyond"
+        }
+      ],
+      "note": "IEDM 기조: 2D→3D 메모리·웨이퍼 본딩",
+      "confidence": 0.55
+    },
+    {
+      "id": "w1030-027",
+      "from": "standard:uec",
+      "to": "req:open_scaleup_fabric",
+      "relation": "drives_requirement",
+      "evidence_tier": "standard_body",
+      "polarity": "positive",
+      "evidence": [
+        {
+          "url": "https://ultraethernet.org/specification-history/",
+          "source_type": "standard",
+          "published_at": "2026-10-12",
+          "excerpt": "Ultra Ethernet Specification 1.1: Unified Local Profile for scale-up (RODL, UFH header, CSIG, in-network collectives)"
+        }
+      ],
+      "confidence": 0.9
+    },
+    {
+      "id": "w1030-028",
+      "from": "standard:ualink",
+      "to": "req:open_scaleup_fabric",
+      "relation": "drives_requirement",
+      "evidence_tier": "standard_body",
+      "polarity": "positive",
+      "evidence": [
+        {
+          "url": "https://ualinkconsortium.org/wp-content/uploads/2026/04/UALink-2.0-Specification-PR_FINAL.pdf",
+          "source_type": "standard",
+          "published_at": "2026-04-07",
+          "excerpt": "UALink 2.0 family ratified: common spec with in-network compute, 200G DL/PL 2.0, manageability 1.0, chiplet spec 1.0 (UCIe 3.0-compliant)"
+        }
+      ],
+      "confidence": 0.9
+    },
+    {
+      "id": "w1030-029",
+      "from": "standard:scaleup_ethernet",
+      "to": "req:open_scaleup_fabric",
+      "relation": "drives_requirement",
+      "evidence_tier": "standard_body",
+      "polarity": "positive",
+      "evidence": [
+        {
+          "url": "https://www.opencompute.org/wp-content/uploads/2026/10/Scale-Up-Ethernet-Transport-SUE-T-Base-Specification-v1.0.0.pdf",
+          "source_type": "standard",
+          "published_at": "2026-10-08",
+          "excerpt": "OCP SUE-T base spec v1.0.0: up to 16K XPUs, 1-hop < 2 us, 256 B transactions, lossless Ethernet (PFC/CBFC/LLR)"
+        },
+        {
+          "url": "https://www.opencompute.org/documents/ocp-esun-network-operator-requirements-base-specification-rev-1-0-final-pdf/",
+          "source_type": "standard",
+          "published_at": "2026-02-09",
+          "excerpt": "OCP ESUN network operator requirements v1.0: 4-byte ESUN header replaces IP, LLR/CBFC on switches, MACsec"
+        }
+      ],
+      "confidence": 0.9
+    },
+    {
+      "id": "w1030-030",
+      "from": "req:open_scaleup_fabric",
+      "to": "req:scaleup_optical",
+      "relation": "drives_requirement",
+      "evidence_tier": "technical_inference",
+      "polarity": "positive",
+      "evidence": [
+        {
+          "url": "https://ualinkconsortium.org/wp-content/uploads/2026/04/UALink-2.0-Specification-PR_FINAL.pdf",
+          "source_type": "standard",
+          "published_at": "2026-04-07",
+          "excerpt": "UALink 2.0 family ratified: common spec with in-network compute, 200G DL/PL 2.0, manageability 1.0, chiplet spec 1.0 (UCIe 3.0-compliant)"
+        }
+      ],
+      "note": "도메인이 1,152 XPU 로 가면 구리 밖",
+      "confidence": 0.4
+    },
+    {
+      "id": "w1030-031",
+      "from": "req:open_scaleup_fabric",
+      "to": "component:retimer",
+      "relation": "requires",
+      "evidence_tier": "official_issuer",
+      "polarity": "positive",
+      "evidence": [
+        {
+          "url": "https://investor.marvell.com/news-events/press-releases/",
+          "source_type": "official_issuer",
+          "published_at": "2026-10-13",
+          "excerpt": "Marvell Alaska E 3.2T protocol-aware Ethernet/UALink/ESUN retimer (16x224G PAM4)"
+        }
+      ],
+      "note": "멀티프로토콜 3.2T 리타이머",
+      "confidence": 0.8
+    },
+    {
+      "id": "w1030-032",
+      "from": "component:retimer",
+      "to": "company:mrvl",
+      "relation": "offered_by",
+      "evidence_tier": "official_issuer",
+      "polarity": "positive",
+      "evidence": [
+        {
+          "url": "https://investor.marvell.com/news-events/press-releases/",
+          "source_type": "official_issuer",
+          "published_at": "2026-10-13",
+          "excerpt": "Marvell Alaska E 3.2T protocol-aware Ethernet/UALink/ESUN retimer (16x224G PAM4)"
+        }
+      ],
+      "confidence": 0.8
+    },
+    {
+      "id": "w1030-033",
+      "from": "standard:ocp_grid_interface",
+      "to": "req:grid_disturbance_ridethrough",
+      "relation": "drives_requirement",
+      "evidence_tier": "standard_body",
+      "polarity": "positive",
+      "evidence": [
+        {
+          "url": "https://www.opencompute.org/wp-content/uploads/2026/10/OCP-Base-Spec-Interface-Specification-Between-Hyperscalers-and-Utility-Grid-for-Disturbance-Performance.pdf",
+          "source_type": "standard",
+          "published_at": "2026-09-17",
+          "excerpt": "OCP interface specification between hyperscalers and utility grid for disturbance performance v1.0.0; follow-on spec on ramp-rate/oscillation limits announced"
+        }
+      ],
+      "confidence": 0.9
+    },
+    {
+      "id": "w1030-034",
+      "from": "req:grid_disturbance_ridethrough",
+      "to": "component:supercapacitor",
+      "relation": "requires",
+      "evidence_tier": "standard_body",
+      "polarity": "positive",
+      "evidence": [
+        {
+          "url": "https://www.opencompute.org/wp-content/uploads/2026/10/OCP-Base-Spec-Interface-Specification-Between-Hyperscalers-and-Utility-Grid-for-Disturbance-Performance.pdf",
+          "source_type": "standard",
+          "published_at": "2026-09-17",
+          "excerpt": "OCP interface specification between hyperscalers and utility grid for disturbance performance v1.0.0; follow-on spec on ramp-rate/oscillation limits announced"
+        },
+        {
+          "url": "https://2026ocpglobal.fnvirtual.app/a/schedule/",
+          "source_type": "conference",
+          "published_at": "2026-10-14",
+          "excerpt": "OCP Global Summit 2026 schedule: HTS workshop (Tokamak Energy 3.8 MW 800VDC-HTS busway, VEIR 250 MW, LS Cable, Nexans SFCL, Vision Electric); Google hardware mitigations with supercapacitor and battery; Panasonic BBU/CBU"
+        }
+      ],
+      "note": "홀드업·평활을 랙으로",
+      "confidence": 0.925
+    },
+    {
+      "id": "w1030-035",
+      "from": "req:grid_disturbance_ridethrough",
+      "to": "component:bbu",
+      "relation": "requires",
+      "evidence_tier": "standard_body",
+      "polarity": "positive",
+      "evidence": [
+        {
+          "url": "https://www.opencompute.org/wp-content/uploads/2026/10/OCP-Base-Spec-Interface-Specification-Between-Hyperscalers-and-Utility-Grid-for-Disturbance-Performance.pdf",
+          "source_type": "standard",
+          "published_at": "2026-09-17",
+          "excerpt": "OCP interface specification between hyperscalers and utility grid for disturbance performance v1.0.0; follow-on spec on ramp-rate/oscillation limits announced"
+        }
+      ],
+      "confidence": 0.9
+    },
+    {
+      "id": "w1030-036",
+      "from": "req:grid_disturbance_ridethrough",
+      "to": "component:facility_bess",
+      "relation": "requires",
+      "evidence_tier": "technical_inference",
+      "polarity": "positive",
+      "evidence": [
+        {
+          "url": "https://www.opencompute.org/wp-content/uploads/2026/10/OCP-Base-Spec-Interface-Specification-Between-Hyperscalers-and-Utility-Grid-for-Disturbance-Performance.pdf",
+          "source_type": "standard",
+          "published_at": "2026-09-17",
+          "excerpt": "OCP interface specification between hyperscalers and utility grid for disturbance performance v1.0.0; follow-on spec on ramp-rate/oscillation limits announced"
+        },
+        {
+          "url": "https://job-boards.greenhouse.io/anthropic/jobs/5409569008",
+          "source_type": "hiring",
+          "published_at": "2026-08-19",
+          "excerpt": "Anthropic NPI sourcing manager, data center power & cooling: BESS, grid-forming and grid-following inverters, solid-state transformers, E-STATCOM, MV switchgear"
+        }
+      ],
+      "note": "MV-UPS·BESS",
+      "confidence": 0.425
+    },
+    {
+      "id": "w1030-037",
+      "from": "req:grid_disturbance_ridethrough",
+      "to": "component:grid_forming_inverter",
+      "relation": "requires",
+      "evidence_tier": "technical_inference",
+      "polarity": "positive",
+      "evidence": [
+        {
+          "url": "https://job-boards.greenhouse.io/anthropic/jobs/5409569008",
+          "source_type": "hiring",
+          "published_at": "2026-08-19",
+          "excerpt": "Anthropic NPI sourcing manager, data center power & cooling: BESS, grid-forming and grid-following inverters, solid-state transformers, E-STATCOM, MV switchgear"
+        },
+        {
+          "url": "https://arxiv.org/abs/2610.22572",
+          "source_type": "paper",
+          "published_at": "2026-10-15",
+          "excerpt": "DC-TORQ: closed-form transfer functions from data-center power perturbation to generator shaft torque; frequency-dependent limits on allowed oscillation"
+        }
+      ],
+      "note": "모델 랩의 소싱 공고에 그리드포밍 인버터·E-STATCOM; 발전기 비틀림 진동 한계",
+      "confidence": 0.425
+    },
+    {
+      "id": "w1030-038",
+      "from": "component:grid_forming_inverter",
+      "to": "company:abb",
+      "relation": "offered_by",
+      "evidence_tier": "technical_inference",
+      "polarity": "positive",
+      "evidence": [
+        {
+          "url": "https://job-boards.greenhouse.io/anthropic/jobs/5409569008",
+          "source_type": "hiring",
+          "published_at": "2026-08-19",
+          "excerpt": "Anthropic NPI sourcing manager, data center power & cooling: BESS, grid-forming and grid-following inverters, solid-state transformers, E-STATCOM, MV switchgear"
+        }
+      ],
+      "confidence": 0.4
+    },
+    {
+      "id": "w1030-039",
+      "from": "component:grid_forming_inverter",
+      "to": "company:schneider",
+      "relation": "offered_by",
+      "evidence_tier": "technical_inference",
+      "polarity": "positive",
+      "evidence": [
+        {
+          "url": "https://job-boards.greenhouse.io/anthropic/jobs/5409569008",
+          "source_type": "hiring",
+          "published_at": "2026-08-19",
+          "excerpt": "Anthropic NPI sourcing manager, data center power & cooling: BESS, grid-forming and grid-following inverters, solid-state transformers, E-STATCOM, MV switchgear"
+        }
+      ],
+      "confidence": 0.4
+    },
+    {
+      "id": "w1030-040",
+      "from": "component:grid_forming_inverter",
+      "to": "company:hyosung_hi",
+      "relation": "offered_by",
+      "evidence_tier": "technical_inference",
+      "polarity": "positive",
+      "evidence": [
+        {
+          "url": "https://job-boards.greenhouse.io/anthropic/jobs/5409569008",
+          "source_type": "hiring",
+          "published_at": "2026-08-19",
+          "excerpt": "Anthropic NPI sourcing manager, data center power & cooling: BESS, grid-forming and grid-following inverters, solid-state transformers, E-STATCOM, MV switchgear"
+        }
+      ],
+      "note": "STATCOM",
+      "confidence": 0.4
+    },
+    {
+      "id": "w1030-041",
+      "from": "component:grid_forming_inverter",
+      "to": "company:ls_electric",
+      "relation": "offered_by",
+      "evidence_tier": "technical_inference",
+      "polarity": "positive",
+      "evidence": [
+        {
+          "url": "https://job-boards.greenhouse.io/anthropic/jobs/5409569008",
+          "source_type": "hiring",
+          "published_at": "2026-08-19",
+          "excerpt": "Anthropic NPI sourcing manager, data center power & cooling: BESS, grid-forming and grid-following inverters, solid-state transformers, E-STATCOM, MV switchgear"
+        }
+      ],
+      "confidence": 0.4
+    },
+    {
+      "id": "w1030-042",
+      "from": "tech:gpu_power_smoothing",
+      "to": "component:supercapacitor",
+      "relation": "displaces",
+      "evidence_tier": "technical_inference",
+      "polarity": "negative",
+      "evidence": [
+        {
+          "url": "https://arxiv.org/abs/2610.36441",
+          "source_type": "paper",
+          "published_at": "2026-10-27",
+          "excerpt": "Phase-coordinated job launch: -74.39% mean-square fluctuation in 0.2-2 Hz band without smoothing hardware"
+        }
+      ],
+      "note": "잡 위상 조정으로 0.2~2Hz 변동 −74% — 평활 하드웨어 용량 일부 대체",
+      "confidence": 0.4
+    },
+    {
+      "id": "w1030-043",
+      "from": "req:800v",
+      "to": "bottleneck:rack_busbar_losses",
+      "relation": "creates_bottleneck",
+      "evidence_tier": "technical_inference",
+      "polarity": "positive",
+      "evidence": [
+        {
+          "url": "https://www.opencompute.org/wp-content/uploads/2026/10/MGX-Accelerated-Computing-Rack-and-Trays-Specification-1.2.0-Final.pdf",
+          "source_type": "standard",
+          "published_at": "2026-10-06",
+          "excerpt": "MGX rack & trays 1.2.0: liquid-cooled 48 V busbar rated 5,000 A, 250 kW/350 LPM racks"
+        }
+      ],
+      "note": "5,000A 수냉 버스바가 이미 필요",
+      "confidence": 0.4
+    },
+    {
+      "id": "w1030-044",
+      "from": "bottleneck:rack_busbar_losses",
+      "to": "component:liquid_cooled_busbar",
+      "relation": "mitigated_by",
+      "evidence_tier": "standard_body",
+      "polarity": "positive",
+      "evidence": [
+        {
+          "url": "https://www.opencompute.org/wp-content/uploads/2026/10/MGX-Accelerated-Computing-Rack-and-Trays-Specification-1.2.0-Final.pdf",
+          "source_type": "standard",
+          "published_at": "2026-10-06",
+          "excerpt": "MGX rack & trays 1.2.0: liquid-cooled 48 V busbar rated 5,000 A, 250 kW/350 LPM racks"
+        }
+      ],
+      "confidence": 0.9
+    },
+    {
+      "id": "w1030-045",
+      "from": "bottleneck:rack_busbar_losses",
+      "to": "tech:hts_busway",
+      "relation": "mitigated_by",
+      "evidence_tier": "third_party_report",
+      "polarity": "positive",
+      "evidence": [
+        {
+          "url": "https://2026ocpglobal.fnvirtual.app/a/schedule/",
+          "source_type": "conference",
+          "published_at": "2026-10-14",
+          "excerpt": "OCP Global Summit 2026 schedule: HTS workshop (Tokamak Energy 3.8 MW 800VDC-HTS busway, VEIR 250 MW, LS Cable, Nexans SFCL, Vision Electric); Google hardware mitigations with supercapacitor and battery; Panasonic BBU/CBU"
+        },
+        {
+          "url": "https://www.opencompute.org/events/future-tech-symposium/ocp-future-technologies-symposium/",
+          "source_type": "conference",
+          "published_at": "2026-04-29",
+          "excerpt": "OCP EMEA 2026 FTS best paper: Rittal + Vision Electric, superconducting distribution for multi-MW data halls"
+        }
+      ],
+      "note": "Tokamak Energy 3.8MW 800VDC-HTS: 저압 손실 −98%·도체 중량 −94%",
+      "confidence": 0.625
+    },
+    {
+      "id": "w1030-046",
+      "from": "tech:hts_busway",
+      "to": "company:ls_cable",
+      "relation": "offered_by",
+      "evidence_tier": "third_party_report",
+      "polarity": "positive",
+      "evidence": [
+        {
+          "url": "https://2026ocpglobal.fnvirtual.app/a/schedule/",
+          "source_type": "conference",
+          "published_at": "2026-10-14",
+          "excerpt": "OCP Global Summit 2026 schedule: HTS workshop (Tokamak Energy 3.8 MW 800VDC-HTS busway, VEIR 250 MW, LS Cable, Nexans SFCL, Vision Electric); Google hardware mitigations with supercapacitor and battery; Panasonic BBU/CBU"
+        }
+      ],
+      "note": "OCP HTS 워크숍 발표사",
+      "confidence": 0.6
+    },
+    {
+      "id": "w1030-047",
+      "from": "tech:microled_link",
+      "to": "material:multicore_fiber",
+      "relation": "requires",
+      "evidence_tier": "technical_inference",
+      "polarity": "positive",
+      "evidence": [
+        {
+          "url": "https://2026ocpglobal.fnvirtual.app/a/schedule/",
+          "source_type": "conference",
+          "published_at": "2026-10-14",
+          "excerpt": "LightXcelerate: micro-VCSEL arrays + 19-core multicore fiber, 608 Gb/s per fiber, > 6 Tb/s/mm2 beachfront"
+        },
+        {
+          "url": "https://arxiv.org/abs/2609.20686",
+          "source_type": "paper",
+          "published_at": "2026-09-17",
+          "excerpt": "Volumetric evanescent edge coupling to multicore fiber: 88% (-0.56 dB) coupling, 86 nm 1-dB bandwidth"
+        }
+      ],
+      "note": "slow-and-wide: µVCSEL/µLED 어레이 ↔ 멀티코어 파이버",
+      "confidence": 0.425
+    },
+    {
+      "id": "w1030-048",
+      "from": "bottleneck:modulator_bw_400g",
+      "to": "material:tflt",
+      "relation": "mitigated_by",
+      "evidence_tier": "third_party_report",
+      "polarity": "positive",
+      "evidence": [
+        {
+          "url": "https://arxiv.org/abs/2610.26674",
+          "source_type": "paper",
+          "published_at": "2026-10-19",
+          "excerpt": "Thin-film lithium tantalate 8-wavelength monolithic transmitter, 1.6 Tb/s aggregate, two-fiber interface"
+        },
+        {
+          "url": "https://www.ecoc2026.org/ECOC2026/programme/invited-speakers",
+          "source_type": "conference",
+          "published_at": "2026-09-21",
+          "excerpt": "ECOC 2026 invited (Kippenberg): thin-film lithium tantalate PICs for high-speed comms and lasers"
+        }
+      ],
+      "note": "TFLT 8λ 1.6T 송신기",
+      "confidence": 0.625
     }
   ],
   "events": [

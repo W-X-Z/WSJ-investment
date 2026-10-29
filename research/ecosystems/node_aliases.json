@@ -420,7 +420,13 @@
       "iii-v on si"
     ],
     "tech:microled_link": [
-      "microled link"
+      "microled link",
+      "microLED",
+      "micro-LED",
+      "µLED",
+      "slow-and-wide",
+      "slow and wide",
+      "wide-and-slow"
     ],
     "tech:tfln_modulator": [
       "tfln modulator",
@@ -649,7 +655,10 @@
       "retimer"
     ],
     "component:hs_copper_cable": [
-      "flyover"
+      "flyover",
+      "co-packaged copper",
+      "CPC",
+      "flyover cable"
     ],
     "component:ocs_mems": [
       "mems mirror array"
@@ -739,7 +748,10 @@
       "mcfc stationary fuel cell"
     ],
     "component:facility_bess": [
-      "facility bess"
+      "facility bess",
+      "BESS",
+      "battery energy storage",
+      "에너지저장장치"
     ],
     "tech:dlc_single_phase": [
       "single-phase dlc"
@@ -782,7 +794,9 @@
       "single-phase immersion"
     ],
     "tech:immersion_two_phase": [
-      "two-phase immersion"
+      "two-phase immersion",
+      "immersion cooling",
+      "침지냉각"
     ],
     "component:rdhx": [
       "rear-door heat exchanger",
@@ -883,7 +897,10 @@
       "glass core"
     ],
     "tech:panel_organic_interposer": [
-      "panel organic interposer"
+      "panel organic interposer",
+      "panel interposer",
+      "panel-level interposer",
+      "organic interposer"
     ],
     "component:silicon_interposer": [
       "si interposer"
@@ -1112,6 +1129,155 @@
       "SSD POD",
       "QLC eSSD",
       "context storage"
+    ],
+    "tech:hbf": [
+      "HBF",
+      "high-bandwidth flash",
+      "high bandwidth flash",
+      "고대역폭 플래시"
+    ],
+    "component:nand_3d": [
+      "3D NAND",
+      "NAND",
+      "QLC",
+      "TLC",
+      "낸드"
+    ],
+    "tech:cxl_memory_pool": [
+      "CXL memory pool",
+      "CXL pooled memory",
+      "memory fabric",
+      "CMS",
+      "CXL 풀 메모리"
+    ],
+    "component:cxl_controller": [
+      "CXL controller",
+      "CXL switch",
+      "CXL memory expander",
+      "CMM-DDR5",
+      "Structera",
+      "CXL 컨트롤러"
+    ],
+    "tech:pim": [
+      "PIM",
+      "PNM",
+      "processing in memory",
+      "processing-in-memory",
+      "near-memory processing",
+      "LPDDR-PIM",
+      "CMM-Ax"
+    ],
+    "tech:3d_dram": [
+      "3D DRAM",
+      "vertical DRAM",
+      "OCTRAM",
+      "IGZO DRAM",
+      "oxide semiconductor DRAM",
+      "DRAM-on-compute"
+    ],
+    "standard:uec": [
+      "Ultra Ethernet",
+      "UEC",
+      "UET"
+    ],
+    "standard:ualink": [
+      "UALink",
+      "Ultra Accelerator Link"
+    ],
+    "standard:scaleup_ethernet": [
+      "SUE-T",
+      "ESUN",
+      "scale-up Ethernet",
+      "Scale-Up Ethernet Transport"
+    ],
+    "req:open_scaleup_fabric": [
+      "open scale-up fabric",
+      "scale-up fabric"
+    ],
+    "standard:ocp_grid_interface": [
+      "grid disturbance performance",
+      "hyperscaler utility interface"
+    ],
+    "req:grid_disturbance_ridethrough": [
+      "ride-through",
+      "ride through",
+      "ramp-rate limit",
+      "fault ride through"
+    ],
+    "component:grid_forming_inverter": [
+      "grid-forming inverter",
+      "grid forming",
+      "E-STATCOM",
+      "STATCOM",
+      "그리드포밍"
+    ],
+    "tech:hts_busway": [
+      "HTS",
+      "superconducting busway",
+      "superconducting cable",
+      "high-temperature superconducting",
+      "REBCO",
+      "초전도"
+    ],
+    "material:multicore_fiber": [
+      "multicore fiber",
+      "multi-core fiber",
+      "MCF",
+      "멀티코어 광섬유"
+    ],
+    "material:tflt": [
+      "lithium tantalate",
+      "TFLT",
+      "LiTaO3",
+      "리튬탄탈레이트"
+    ],
+    "demand_driver:video_generation": [
+      "video generation",
+      "text-to-video",
+      "영상 생성"
+    ],
+    "tech:npo": [
+      "NPO",
+      "near-package optics",
+      "near package optics",
+      "CPX",
+      "OpenCPX",
+      "XPO"
+    ],
+    "tech:custom_hbm": [
+      "cHBM",
+      "custom HBM",
+      "custom base die",
+      "NVHBM",
+      "SPHBM4",
+      "SPHBM"
+    ],
+    "component:hbm_base_die": [
+      "HBM base die",
+      "base die",
+      "logic base die"
+    ],
+    "req:400g_lane": [
+      "400G/lane",
+      "400G per lane",
+      "448G",
+      "802.3dv"
+    ],
+    "component:sst": [
+      "SST",
+      "solid-state transformer",
+      "solid state transformer",
+      "고체 변압기"
+    ],
+    "req:rack_energy_storage": [
+      "CBU",
+      "capacitor backup unit",
+      "in-rack power filtering"
+    ],
+    "tech:heat_reuse": [
+      "heat reuse",
+      "waste heat",
+      "폐열"
     ]
   }
 }
