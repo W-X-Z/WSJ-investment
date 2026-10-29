@@ -23,5 +23,6 @@
 - 0029: `ideas.theses` 에 kind · novelty · novelty_reason · what_market_misses · lag_months · first_signal · quiet_check; `put_theses` 검증(신규는 stage ≤ 1, kind=thesis 는 novelty·what_market_misses 필수); `ideas.weak_signals` + `put_weak_signals`(같은 용어는 횟수·출처 누적); `ideas.unmapped_terms` + `put_unmapped_terms`; 뷰 `v_theses`(재생성) · `v_weak_signals` · `v_unmapped_terms`.
 - 수집기: `llm_curate` 출력에 `unmapped` 추가 → `put_unmapped_terms`.
 - 문서: `docs/agents/thesis.md` 를 1부(약한 신호 스캔) · 2부(테제) 로 재구성, 출처 목록과 승격 규칙.
-- 첫 스캔(2026-10-29 밤, 세션에서 네 갈래 병렬): 결과는 `research/weak_signals/20261029.md` 와 `ideas.weak_signals`.
+- 첫 스캔(2026-10-29 밤, 세션에서 네 갈래 병렬 — 논문 ~470건·표준 36·학회 43(OCP 626세션 전수)·릴리스/API/채용/공시 61): 온톨로지와 대조해 **출처 유형 3개 이상에서 동시에 나온 미매핑 9개**(HBF, CXL 풀 메모리=KV 계층, 커스텀 베이스 다이/SPHBM4, 스케일업 패브릭 개방, NPO/CPX/XPO+fiber-to-chip, 계통 외란 사양→BESS/그리드포밍, 3D DRAM/OCTRAM, 메모리 계층이 엔진·가격에 박힘, CPU 계층 랙) + 2개 유형 6개 + 전례 없는 구조·데이터 6개(벤더·고객 캐파 금융, API 용량 배급, 모델 랩=칩 설계자, HTS 버스웨이, 마이크로링 열 실속, 부족이 만든 CXL 채택). 구조적 발견: 온톨로지에 **CXL·NAND 노드가 0개**, 스케일업 인터커넥트 층이 거의 비어 있었다 — 메모리 생태계가 HBM·DRAM 으로만, 광 생태계가 모듈·부품으로만 그려져 있었다. 결과 `research/weak_signals/20261029.md`, `weak_signals_20261029.sql`(21행), 패치 `p20261030_weak_signals`(노드 19·간선 48·별칭 29 노드).
+- 첫 스캔의 교훈: (1) 어휘 사전의 "미매핑" 과 온톨로지의 "없음" 은 다르다 — 있는데 별칭이 없던 노드가 12개(NPO·custom_hbm·SST·BESS 등), 수집기가 그동안 못 잡고 있었다. (2) 네 번째 갈래 에이전트가 WebFetch 거부를 curl 로 우회했다 — 다음 실행부터 스캔 지시에 "거부된 URL 은 건너뛰고 기록만" 을 명시한다. (3) 원자료는 세션 임시 폴더에 남아 사라진다 — `research/weak_signals/raw/YYYYMMDD/` 에 둔다.
 - 다음: T-1 테제 화면에 weak_signals 탭(관찰 → 승격 흐름), T-3 재현 하네스, 온톨로지 노드 나이·간선 증가 지표.

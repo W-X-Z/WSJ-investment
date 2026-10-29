@@ -32,7 +32,7 @@ select ideas.put_weak_signals($j$[{"signal_key":"hbf","term":"HBF (high-bandwidt
  "mechanism":"NAND 를 TSV 적층해 HBM 아래 용량 계층 — 컨텍스트·KV 캐시 상주용 (SanDisk·SK hynix)","consumes_more":["NAND TSV","하이브리드 본딩"],"consumes_less":["서버 DRAM 일부"],
  "mapped_node":null,"lead_months":18,"sources":[{"url":"https://…","title":"…","date":"2026-08-25","source_type":"conference"}],"seen_on":"2026-11-01"}]$j$::jsonb);
 ```
-같은 `signal_key` 는 횟수·출처·출처 유형이 누적된다. 지난주에 본 것을 다시 봤으면 다시 넣는다 (재등장이 신호다). 주당 10~30개.
+같은 `signal_key` 는 횟수·출처·출처 유형이 누적된다. 원자료(목록·초록·세션 덤프)는 `research/weak_signals/raw/YYYYMMDD/` 에 남긴다. **WebFetch 가 거부한 URL 은 다른 수단(curl 등)으로 우회하지 않는다 — 건너뛰고 note 에 적는다.** 지난주에 본 것을 다시 봤으면 다시 넣는다 (재등장이 신호다). 주당 10~30개.
 - **승격**: `select * from public.v_weak_signals where status='watch' and promotable;` — 출처 유형 둘 이상 또는 3주 안 재등장. 승격된 것은 2부의 테제 후보가 되거나(`status=promoted, promoted_to=<thesis_key>`), 온톨로지 패치 후보가 된다(`promoted_to=<node id>`; 주간 개선 작업에 넘긴다).
 - 두 달 넘게 혼자인 것은 `dropped`.
 
