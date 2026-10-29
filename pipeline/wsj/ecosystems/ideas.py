@@ -525,6 +525,8 @@ LLM_SYSTEM = """너는 AI 공급망(HBM·첨단 패키징 / 800G·1.6T 광통신
   extends 가 있는 후보는 그 idea_key 의 update 로. 후보 밖 새 아이디어는 조사에서 새 변화가 드러났을 때만 쓴다.
   후보에 research_result 가 있으면 그것이 조사 작업의 결론이다 — verdict(confirmed·partial·unconfirmed·no_data)·summary 를 그대로 받고, event_ids 의 소식은
   이 입력의 기업 신호(E…)의 items 에 event_id 로 들어 있다 → 그 item 의 ev(S…)를 chain 의 근거 id 로 쓴다. no_data·unconfirmed 는 추론 단계로만. existing_idea 가 있으면 그 idea_key 의 update 로.
+  source.thesis_key 가 있는 후보는 작은 테제(micro, ADR-0027)에서 왔다 — research(가장 약한 고리)는 조사에서 살아남았다. 리포트의 watch 반증 조건(weaken)에 후보의 falsifier 를 기한 그대로 넣고,
+  flags 의 리레이팅(내재 지속 마진 → 정상화) 숫자를 valuation 의 가정과 맞춘다. 이 기업이 소형주라 근거가 단편적이면 ★1 로 쓴다 — ★1 은 결함이 아니다.
 
 가치평가 (결과 — 사람은 이것만 본다)
 - 아이디어마다 valuation 을 쓴다. 질문은 하나다: 이 변화가 이 기업의 숫자를 바꾸면 이 회사는 {horizon}개월 뒤 얼마짜리 회사인가, 지금 주가와 얼마나 다른가.
@@ -1454,14 +1456,21 @@ def load_queue_hypotheses(url: str, key: str) -> dict[str, Any]:
     from wsj.http import HttpClient
 
     http = HttpClient("WSJ-investment ideas session", timeout=30, max_retries=2)
+    trows: list[dict[str, Any]] = []
     try:
         cands = fetch_public_view(http, url, key, "v_q_candidates_needing_report")
         hyps = fetch_public_view(http, url, key, "v_issue_hypotheses", {"as_of": f"gte.{(datetime.now(UTC) - timedelta(days=8)).date().isoformat()}"})
+        try:  # 작은 테제의 primary (ADR-0027, 0030 뒤)
+            trows = fetch_public_view(http, url, key, "v_q_thesis_candidates_needing_report")
+        except Exception as exc:  # noqa: BLE001 - 0030 전이면 뷰가 없다
+            log.warning("thesis queue unavailable: %s", exc)
     finally:
         http.close()
     selected = H.from_queue(cands, hyps)
-    log.info("queue hypotheses: %d candidates → %d selected", len(cands), len(selected))
-    return {"as_of": datetime.now(UTC).isoformat(), "source": "db", "selected": selected, "queue": len(cands)}
+    from_theses = H.from_thesis_queue(trows, len(selected))
+    log.info("queue hypotheses: %d path candidates → %d selected, %d thesis candidates", len(cands), len(selected), len(from_theses))
+    return {"as_of": datetime.now(UTC).isoformat(), "source": "db", "selected": selected + from_theses, "queue": len(cands) + len(trows),
+            "queue_paths": len(cands), "queue_theses": len(trows)}
 
 
 def write_snapshot(d: Path, inputs: dict[str, list[dict[str, Any]]], now: datetime) -> None:

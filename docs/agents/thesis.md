@@ -1,15 +1,19 @@
-# thesis (토요일 09:17) — 약한 신호를 모으고, 구조 가설을 세우고, 드라이버를 재고, 단계를 옮긴다
+# thesis — 테제 절차서 (참고서; 매일 사슬이 쓴다, ADR-0027)
 
-예약작업 "WSJ 구조 가설 (토 09:17)" 이 따른다 (ADR-0025 → ADR-0026). 리포트가 "이 기업 + 이 이슈" 라면 테제는 "사용 방식의 변화 → 자원 요구 → 공급 병목 → 누가 리레이팅되나" 를 여러 달에 걸쳐 쌓는 단위다. 대형주도 받는다.
-공통 규칙 `docs/agents/daily-ideas.md` §0 로 시작하고 끝낸다 (작업명 `thesis`). 쓰는 함수: `ideas.put_weak_signals`, `ideas.put_theses`, `ideas.put_thesis_evidence`, `ideas.put_observations`, `ideas.put_company_events`, `ops.put_agent_run`.
-p29 확인: `select to_regprocedure('ideas.put_weak_signals(jsonb)') is not null as p29;` — false 면 "0029 미적용" 보고·알림 후 끝.
+주간 thesis 예약작업은 없다. 이 문서는 매일 사슬이 따르는 테제 절차의 기준이다 (ADR-0025 → 0026 → 0027):
+- **1부 약한 신호** → discover §B 가 요일별 출처로 매일 (토요일은 전 유형 + 1-1′ 계수표).
+- **2부 2-1 ~ 2-3 큰 테제 점검**(드라이버·근거·조용함·단계) → 토요일 verify §3-3.
+- **2부 2-4 새 테제** → 작은 테제(micro)는 discover §C 가 매일 최대 3개, 큰 테제(macro)는 토요일 discover §C 에서 주 1개까지.
+리포트가 "이 기업 + 이 이슈" 라면 테제는 "사용 방식의 변화 → 자원 요구 → 공급 병목 → 누가 리레이팅되나" 다. macro 는 여러 달에 걸쳐 쌓고 대형주도 받는다; micro 는 한 기업의 한 제품·고객·계약을 6개월 안에 판정한다.
+쓰는 함수(작업 문서가 나눠 쓴다): `ideas.put_weak_signals`, `ideas.put_theses`, `ideas.put_thesis_evidence`, `ideas.put_thesis_research`, `ideas.put_observations`, `ideas.put_company_events`.
 
-**원칙 (ADR-0026)**: 새 테제는 과거 사례의 다음 판이 아니라 **새 기술·새 데이터·새 이슈** 에서 나온다. 벤치마크는 크기·시차를 보정할 때만 쓴다. 뉴스(`issues` 테이블)는 새 테제의 출발점으로 쓰지 않는다 — 시장이 지금 읽고 있는 것이기 때문이다. 거꾸로 "이미 읽힌 것" 을 걸러내는 데 쓴다. 알아차리는 것(1부)과 이론화하는 것(2부)을 분리한다.
+**원칙 (ADR-0026)**: 새 테제는 과거 사례의 다음 판이 아니라 **새 기술·새 데이터·새 이슈** 에서 나온다. 벤치마크는 크기·시차를 보정할 때만 쓴다. 뉴스(`issues` 테이블)는 **macro** 의 출발점으로 쓰지 않는다 — 시장이 지금 읽고 있는 것이기 때문이다.
+**micro 는 예외가 하나 있다** (ADR-0027): 뉴스가 이름을 부르지 않은 2단계 아래 소·중형 공급사가 primary 이면 뉴스에서 출발해도 된다 — 시장이 읽는 것은 헤드라인 기업이다. 알아차리는 것(1부)과 이론화하는 것(2부)을 분리한다.
 
-## 1부 — 약한 신호 스캔 (60~90분)
+## 1부 — 약한 신호 스캔 (discover §B, 하루 한 유형 15~20분)
 선행 시간이 긴 출처만 훑어 **온톨로지에 없거나 새로 빨라지는 것** 을 관찰로 남긴다. 테제를 쓰려 하지 않는다.
 
-### 1-1. 출처 (매주 전부, 각 10~20분)
+### 1-1. 출처 (요일별로 하나씩 — discover §B 의 표; 토요일은 전부 가볍게)
 | 출처 유형 | source_type | 선행 | 어디를 보나 |
 |---|---|---|---|
 | 논문 | paper | 24~48개월 | arXiv cs.AR·cs.DC·cs.ET 최근 2주 (`https://export.arxiv.org/api/query?search_query=…&sortBy=submittedDate`): 추론 서빙 메모리·KV 캐시·CXL·PIM·플래시 계층, 광 스케일업, 800V·SST·전력 평활, 2상 냉각 |
@@ -36,11 +40,11 @@ select ideas.put_weak_signals($j$[{"signal_key":"hbf","term":"HBF (high-bandwidt
  "mechanism":"NAND 를 TSV 적층해 HBM 아래 용량 계층 — 컨텍스트·KV 캐시 상주용 (SanDisk·SK hynix)","consumes_more":["NAND TSV","하이브리드 본딩"],"consumes_less":["서버 DRAM 일부"],
  "mapped_node":null,"lead_months":18,"sources":[{"url":"https://…","title":"…","date":"2026-08-25","source_type":"conference"}],"seen_on":"2026-11-01"}]$j$::jsonb);
 ```
-같은 `signal_key` 는 횟수·출처·출처 유형이 누적된다. 원자료(목록·초록·세션 덤프)는 `research/weak_signals/raw/YYYYMMDD/` 에 남긴다. **WebFetch 가 거부한 URL 은 다른 수단(curl 등)으로 우회하지 않는다 — 건너뛰고 note 에 적는다.** 지난주에 본 것을 다시 봤으면 다시 넣는다 (재등장이 신호다). 주당 10~30개.
+같은 `signal_key` 는 횟수·출처·출처 유형이 누적된다. 원자료(목록·초록·세션 덤프)는 `research/weak_signals/raw/YYYYMMDD/` 에 남긴다. **WebFetch 가 거부한 URL 은 다른 수단(curl 등)으로 우회하지 않는다 — 건너뛰고 note 에 적는다.** 지난주에 본 것을 다시 봤으면 다시 넣는다 (재등장이 신호다). 하루 3~10개.
 - **승격**: `select * from public.v_weak_signals where status='watch' and promotable;` — 출처 유형 둘 이상 또는 3주 안 재등장. 승격된 것은 2부의 테제 후보가 되거나(`status=promoted, promoted_to=<thesis_key>`), 온톨로지 패치 후보가 된다(`promoted_to=<node id>`; 주간 개선 작업에 넘긴다).
 - 두 달 넘게 혼자인 것은 `dropped`.
 
-## 2부 — 테제 (60분)
+## 2부 — 테제 (2-1 ~ 2-3: 토요일 verify · 2-4: discover)
 
 ### 2-1. 읽기
 - 활성 테제: `select thesis_key, kind, title, stage, stage_reason, novelty, drivers, falsifiers, n_support, n_against, last_evidence_at from public.v_theses where status='active' order by kind, stage desc;` — `kind=thesis` 가 발굴 대상, `kind=regime` 은 체제 기록(맥락).
@@ -64,8 +68,8 @@ select ideas.put_weak_signals($j$[{"signal_key":"hbf","term":"HBF (high-bandwidt
 - 2 → 3: 시장이 반영 — 수혜 기업의 배수가 사이클 밴드를 벗어남. 3 은 '맞았다' 지 '사라' 가 아니다. 이때 하류(2차 파동)의 새 테제 후보를 적는다.
 - 내려가는 쪽도 같은 규칙. 갱신은 `put_theses` 로 전체를 다시 보낸다 (ADR-0026 항목은 빠뜨려도 지워지지 않는다).
 
-### 2-4. 새 테제 (주 최대 1개, `kind=thesis`)
-- 후보는 **1부에서 승격된 약한 신호** 또는 수집기 잔차에서만. 뉴스 제목에서 출발하지 않는다.
+### 2-4. 새 테제 (`kind=thesis` — macro 는 토요일 주 1개, micro 는 매일 ≤3: discover §C 의 형식이 더 붙는다)
+- macro 후보는 **1부에서 승격된 약한 신호** 또는 수집기 잔차에서만. 뉴스 제목에서 출발하지 않는다. micro 후보의 출발점은 discover §C-1.
 - `novelty` 를 정한다: `new_technology`(온톨로지에 없던 기술·부품) · `new_data`(2년 전엔 없던 데이터가 처음 보여주는 것) · `new_issue`(규제·수출통제·관세·사고) · `new_structure`(거래·계약 구조의 변화) · `analog`(과거 사례의 재현 — 이것만으로는 약하다). `novelty_reason` 에 왜 전례가 없는지(또는 어떤 전례의 재현인지).
 - `what_market_misses` 한 문장. `lag_months`(벤치마크 또는 추정 + 근거). `first_signal` {metric, where, expected_by} — 첫 공급망 신호가 어디에 언제 나타날지.
 - `quiet_check`: `cd pipeline && .venv/bin/python -m wsj.ecosystems.quiet --companies company:a,company:b` 로 잰다 (그래프 listing → v_price_context, 우주 중앙값 포함). 판정: `moved`(12개월 +100%↑ 또는 +50%↑·고점 −20% 안) → 테제가 아니라 `kind=regime` · `moved_reset`(+50%↑ 후 고점 −35% 이하 — 시장이 반영했다가 되돌림) → 테제로 둘 수 있지만 what_market_misses 를 "재평가가 지속되나/2차 파동" 으로 좁히고 stage_reason 에 적는다 · `sold_off`(고점 −50% 이하 — 시장이 보고 버린 것) → 왜 버렸는지를 반증 후보로 먼저 적는다 · `quiet` · `mixed` · `unmeasured`(가격 미수집 — note 그대로). 우주 중앙값이 고점 −40% 같은 때는 절대 판정만 읽지 않는다. 기존 테제 전부는 `--sql` 이 내는 한 줄(`put_theses` 로 quiet_check 만 갈아 끼움)을 그대로 실행한다.
@@ -73,24 +77,8 @@ select ideas.put_weak_signals($j$[{"signal_key":"hbf","term":"HBF (high-bandwidt
 - **하류를 훑는다** (재현 교훈, 2026-10-30): 수혜 기업을 정하기 전에 chain 의 부품 노드에서 그래프 하류(`requires`·`offered_by`)를 두 단계 더 내려가 기판·패키징·장비·소재 병목을 확인한다. 2025-09-30 재현에서 메모리 테제는 맞혔지만 삼성전기 FC-BGA(+1,015%)를 놓쳤다 — 수요측 스캔은 하류 병목을 자연히 보지 않는다.
 - **새 테제는 stage 0~1 만** 받는다. 공급 반응이 이미 보이면 `kind=regime`.
 - 형식은 `research/theses/memory_inference_rerating_2026.json` 과 같다: statement 80자 이상, chain 3단계 이상(수요 동인 → 요구 → 병목 → 부품 → 기업, 노드 id — 없는 노드는 먼저 온톨로지 패치 후보로), drivers 1개 이상(수치·출처·임계치), beneficiaries(리레이팅 근거 from→to), losers, falsifiers(due 날짜), benchmark(선택).
-- `select ideas.put_theses($j$[{…}]$j$::jsonb);` 거부되면 사유대로 고쳐 한 번 더. 저장한 테제는 `research/theses/<key>.json` 에 같은 내용으로, 1부 결과는 `research/weak_signals/YYYYMMDD.md` 에 남기고 PR 로 올린다 (research/ 안만 스스로 병합). 승격된 신호는 `put_weak_signals` 로 `status=promoted, promoted_to` 를 적는다.
+- `select ideas.put_theses($j$[{…}]$j$::jsonb);` 거부되면 사유대로 고쳐 한 번 더. 저장한 테제는 `research/theses/<key>.json` 에 같은 내용으로, 1부 결과는 `research/weak_signals/YYYYMMDD.md` 에 남기고 discover §D 의 PR 로 올린다. 승격된 신호는 `put_weak_signals` 로 `status=promoted, promoted_to` 를 적는다.
 
-## 3. 완료 조건과 기록
-- `select kind, count(*), sum(n_support), sum(n_against) from public.v_theses where status='active' group by kind;` 와 이번 주 근거 수, `select count(*) filter (where last_seen = current_date), count(*) filter (where promotable and status='watch') from public.v_weak_signals;`
-- `select ops.put_agent_run('{"task":"thesis","status":"succeeded","rows":<근거 수>,"counts":{"theses":…,"regimes":…,"evidence":…,"stage_changes":…,"new":…,"weak_signals":…,"promotable":…},"note":"…"}'::jsonb);`
-
-## 4. 보고와 알림
-- 보고 9줄 이내: 약한 신호(새로 본 것·승격 후보) 2줄 · 테제마다 (stage · 드라이버 최신값 · 이번 주 근거 ± · 바뀐 것) · 새 테제 · 닫은 테제.
-- 알림은 매주: 첫 문장에 stage 가 바뀐 테제 또는 승격된 약한 신호, 이어서 드라이버가 임계를 넘은 것, 반증이 성립한 것.
-
-## 부록 — 예약작업 프롬프트 (등록용, 토 09:17 KST)
-```
-개인 투자 연구 웹 WSJ-investment(저장소 W-X-Z/WSJ-investment, https://wsj-investment.vercel.app)의 주간 thesis(구조 가설) 작업이다 (ADR-0025·0026). 리포트가 "이 기업 + 이 이슈" 라면 테제는 "사용 방식의 변화 → 자원 요구 → 공급 병목 → 누가 리레이팅되나" 를 여러 달에 걸쳐 쌓는 단위다. 새 테제는 과거 사례의 다음 판이 아니라 새 기술·새 데이터·새 이슈에서 나온다 — 1부에서 선행 시간이 긴 출처(논문·표준·학회·채용·플랫폼 릴리스·모델 API·공시)만 훑어 약한 신호를 모으고, 2부에서 승격된 신호로만 테제를 세운다. 뉴스는 출발점이 아니다. 대형주도 받는다. 사용자는 자리에 없으니 질문하지 말고 끝까지 진행한다.
-
-1. `date` 로 KST(UTC+9) 오늘 날짜를 확인한다.
-2. Supabase MCP execute_sql (project_id dcatgfivsvbktylmtvgf): `select to_regprocedure('ideas.put_weak_signals(jsonb)') is not null as p29;` — false 면 "0029 미적용" 한 줄로 끝낸다 (알림 없음).
-3. add_repo 로 W-X-Z/WSJ-investment 를 push 권한으로 붙이고 안내된 clone 명령으로 `--depth 20` clone 한다. `docs/agents/thesis.md` 를 처음부터 끝까지 읽고 그 절차를 그대로 따른다. 공통 규칙은 `docs/agents/daily-ideas.md` §0·§B·§C. 세부 규칙은 이 프롬프트가 아니라 문서가 기준이다.
-4. 경계: Supabase 쓰기는 ideas.put_weak_signals, ideas.put_theses, ideas.put_thesis_evidence, ideas.put_observations, ideas.put_company_events, ops.put_agent_run 과 읽기용 select 뿐이다. secret 키는 쓰지 않고 publishable 키만 쓴다. 저장소 변경은 research/theses/ 와 research/weak_signals/ 안뿐이며 브랜치 auto/thesis-YYYYMMDD 로 PR 을 올리고 CI 통과 + 바뀐 파일이 전부 research/ 안이면 스스로 병합한다. 그 밖의 경로는 바꾸지 않는다. main 직접 push·강제 push 금지. 근거는 WebFetch 로 직접 연 원문만. 매수/매도 권유·시점 예측은 쓰지 않는다.
-5. 커밋 메시지 끝에 `Co-Authored-By: Claude <noreply@anthropic.com>` 를, PR 본문 끝에 `🤖 Generated with [Claude Code](https://claude.com/claude-code)` 를 붙인다.
-6. 문서를 읽을 수 없으면 무엇이 실패했는지 보고하고 알림을 보낸 뒤 끝낸다. 알림은 매주: 첫 문장에 stage 가 바뀐 테제 또는 승격된 약한 신호, 이어서 드라이버가 임계를 넘은 것·반증이 성립한 것·새 테제.
-```
+## 3. 기록
+- 약한 신호의 하루 결과는 `research/weak_signals/YYYYMMDD.md`, 테제는 `research/theses/<key>.json`, 새 기업은 `research/ecosystems/patches/YYYYMMDD_discover.json` — discover §D 의 PR 로 올린다.
+- 실행 기록·보고·알림은 그 일을 한 작업(discover · verify)의 문서를 따른다.
