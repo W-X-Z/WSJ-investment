@@ -10358,6 +10358,72 @@
       },
       "size_band": "mid",
       "in_universe": false
+    },
+    {
+      "id": "component:memory_module_pcb",
+      "kind": "component",
+      "label": "메모리 모듈 PCB (RDIMM·SOCAMM2·CXL AIC 기판 — 모듈·슬롯 수에 묶임)",
+      "ecosystem": "hbm"
+    },
+    {
+      "id": "company:tlb",
+      "kind": "company",
+      "label": "TLB (KOSDAQ 356860, 비SEC)",
+      "ecosystem": "hbm",
+      "role": "supplier",
+      "listing": {
+        "ticker": "356860",
+        "exchange": "KOSDAQ",
+        "cik": null,
+        "filer_type": "non_sec_listed"
+      },
+      "size_band": "small",
+      "in_universe": false
+    },
+    {
+      "id": "company:simmtech",
+      "kind": "company",
+      "label": "Simmtech (KOSDAQ 222800, 비SEC)",
+      "ecosystem": "hbm",
+      "role": "supplier",
+      "listing": {
+        "ticker": "222800",
+        "exchange": "KOSDAQ",
+        "cik": null,
+        "filer_type": "non_sec_listed"
+      },
+      "size_band": "mid",
+      "in_universe": false
+    },
+    {
+      "id": "company:vinatech",
+      "kind": "company",
+      "label": "Vina Tech (KOSDAQ 126340, 비SEC)",
+      "ecosystem": "power",
+      "role": "supplier",
+      "listing": {
+        "ticker": "126340",
+        "exchange": "KOSDAQ",
+        "cik": null,
+        "filer_type": "non_sec_listed"
+      },
+      "size_band": "small",
+      "in_universe": false
+    },
+    {
+      "id": "company:gold_circuit",
+      "kind": "company",
+      "label": "Gold Circuit Electronics (TWSE 2368, 비SEC)",
+      "ecosystem": "hbm",
+      "role": "supplier",
+      "listing": {
+        "ticker": "2368",
+        "exchange": "TWSE",
+        "cik": null,
+        "filer_type": "non_sec_listed"
+      },
+      "size_band": "large",
+      "in_universe": false
     }
   ],
   "edges": [
@@ -41104,6 +41170,126 @@
         }
       ],
       "note": "e-STATCOM 의 저장 소자",
+      "confidence": 0.6
+    },
+    {
+      "id": "d1030-001",
+      "from": "component:server_dram_lpdram",
+      "to": "component:memory_module_pcb",
+      "relation": "requires",
+      "evidence_tier": "third_party_report",
+      "polarity": "positive",
+      "evidence": [
+        {
+          "url": "https://core.asiae.co.kr/article/2026082613254773558",
+          "source_type": "third_party_report",
+          "published_at": "2026-08-27",
+          "excerpt": "IBK: 쏘캠 판가는 일반 서버용 메모리 기판 대비 3배 수준; 2026 SOCAMM 가이던스 200억→500억→700억원; 2Q 수주잔고 1,318억원; SOCAMM 기판 공급 가능 5개사, 티엘비 점유율 약 20%"
+        }
+      ],
+      "note": "SOCAMM2 기판은 일반 서버 모듈 기판의 약 3배 판가 — 비트가 아니라 CPU당 슬롯 수에 묶인다",
+      "confidence": 0.6
+    },
+    {
+      "id": "d1030-002",
+      "from": "component:memory_module_pcb",
+      "to": "company:tlb",
+      "relation": "offered_by",
+      "evidence_tier": "third_party_report",
+      "polarity": "positive",
+      "evidence": [
+        {
+          "url": "https://core.asiae.co.kr/article/2026082613254773558",
+          "source_type": "third_party_report",
+          "published_at": "2026-08-27",
+          "excerpt": "IBK: 쏘캠 판가는 일반 서버용 메모리 기판 대비 3배 수준; 2026 SOCAMM 가이던스 200억→500억→700억원; 2Q 수주잔고 1,318억원; SOCAMM 기판 공급 가능 5개사, 티엘비 점유율 약 20%"
+        },
+        {
+          "url": "https://etoday.co.kr/news/view/2614327",
+          "source_type": "third_party_report",
+          "published_at": "2026-08-25",
+          "excerpt": "티엘비 소캠 공급 확대 — 1Q 소량, 2Q 주문 증가, 3Q 증가세; SOCAMM 관련 연 600억~700억원 생산능력; CXL PCB 개발 완료·수요 대기"
+        }
+      ],
+      "note": "SOCAMM 기판 점유율 약 20% (IBK 추정)",
+      "confidence": 0.625
+    },
+    {
+      "id": "d1030-003",
+      "from": "component:memory_module_pcb",
+      "to": "company:simmtech",
+      "relation": "offered_by",
+      "evidence_tier": "third_party_report",
+      "polarity": "positive",
+      "evidence": [
+        {
+          "url": "https://www.fnnews.com/news/202606080748297422",
+          "source_type": "third_party_report",
+          "published_at": "2026-06-08",
+          "excerpt": "심텍은 올해 SOCAMM용 PCB 시장 규모를 3000억원으로 보고 50% 점유율 확보를 목표"
+        }
+      ],
+      "note": "SOCAMM PCB 50% 점유 목표",
+      "confidence": 0.6
+    },
+    {
+      "id": "d1030-004",
+      "from": "component:fuel_cell",
+      "to": "component:supercapacitor",
+      "relation": "requires",
+      "evidence_tier": "third_party_report",
+      "polarity": "positive",
+      "evidence": [
+        {
+          "url": "https://core.asiae.co.kr/article/2026101310052724755",
+          "source_type": "third_party_report",
+          "published_at": "2026-10-13",
+          "excerpt": "미국 수소연료전지 기업에 AIDC 전력 인프라용 UC 약 $51.5M — 연료전지가 따라가기 어려운 급격한 부하 변동을 UC 가 흡수; 초도 $4.7M 7월 계약"
+        },
+        {
+          "url": "https://sateconomy.co.kr/news/view/1065575480990207",
+          "source_type": "third_party_report",
+          "published_at": "2026-10-27",
+          "excerpt": "직접 계약 상대방은 싱가포르 유통업체 iConnexion Asia; 계약금액은 지난해 연결 매출의 44.85%; 2027-04-16~2028-03-17; 선급금 없음"
+        }
+      ],
+      "note": "AI 데이터센터 현장 발전 연료전지의 부하 급변 흡수",
+      "confidence": 0.625
+    },
+    {
+      "id": "d1030-005",
+      "from": "component:supercapacitor",
+      "to": "company:vinatech",
+      "relation": "offered_by",
+      "evidence_tier": "third_party_report",
+      "polarity": "positive",
+      "evidence": [
+        {
+          "url": "https://biz.sbs.co.kr/amp/article/20000341686",
+          "source_type": "third_party_report",
+          "published_at": "2026-10-23",
+          "excerpt": "비나텍, 데이터센터용 슈퍼커패시터 아크벨 폴리테크 1,230억원·산미나 1,195억원 공급계약"
+        }
+      ],
+      "note": "데이터센터용 슈퍼커패시터 대형 수주(2026-10)",
+      "confidence": 0.6
+    },
+    {
+      "id": "d1030-006",
+      "from": "component:mlb_pcb",
+      "to": "company:gold_circuit",
+      "relation": "offered_by",
+      "evidence_tier": "third_party_report",
+      "polarity": "positive",
+      "evidence": [
+        {
+          "url": "https://money.udn.com/money/story/5607/9833568",
+          "source_type": "third_party_report",
+          "published_at": "2026-10-23",
+          "excerpt": "金像電已切入Google TPU v8供應鏈, 預期金像電市佔率可達15～20%"
+        }
+      ],
+      "note": "TPU v8 진입, 점유율 15~20% 전망 — 이수페타시스의 경쟁",
       "confidence": 0.6
     }
   ],

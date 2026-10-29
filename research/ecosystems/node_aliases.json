@@ -1306,6 +1306,30 @@
     "company:isu_petasys": [
       "ISU Petasys",
       "이수페타시스"
+    ],
+    "component:memory_module_pcb": [
+      "SOCAMM PCB",
+      "SOCAMM 기판",
+      "메모리 모듈 PCB",
+      "module PCB"
+    ],
+    "company:tlb": [
+      "티엘비",
+      "TLB"
+    ],
+    "company:simmtech": [
+      "심텍",
+      "Simmtech"
+    ],
+    "company:vinatech": [
+      "비나텍",
+      "Vina Tech",
+      "VINATech"
+    ],
+    "company:gold_circuit": [
+      "金像電",
+      "Gold Circuit",
+      "GCE"
     ]
   }
 }

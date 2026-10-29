@@ -1,0 +1,136 @@
+{
+ "kind": "thesis",
+ "scale": "micro",
+ "stage": 0,
+ "model": "claude-opus-5-5",
+ "method": "session",
+ "losers": [],
+ "thesis_key": "isu_petasys_tpu_v8_mlb_2027",
+ "parent_key": "tpu_merchant_volume_2027",
+ "origin": "decompose",
+ "ecosystem": "hbm",
+ "title": "TPU v8 기판은 점유율이 줄어도 금액이 는다 — 이수페타시스",
+ "statement": "구글 TPU v8(34~40층, M8+ 소재·HVLP4 동박)은 보드당 PCB 가치가 v7 대비 70~80% 높고 2027년 출하가 크게 는다. 시장은 대만 Gold Circuit 의 v8 진입(점유율 15~20% 전망)을 이수페타시스의 매출 감소로 할인하지만, 판가 인상(평균 15% 안팎, 4분기부터 협의)과 다중적층 비중 확대(1Q 11% → 2Q 23%)가 겹치면 점유율이 70%대로 내려가도 TPU향 매출 금액은 는다. 3Q26 실적(11월)부터 4Q26·1Q27 실적이 판정한다.",
+ "weakest_link": "이수페타시스가 2026년 4분기부터 램프하는 구글 TPU v8 보드 MLB 의 주 공급사(점유율 50% 이상)로 남는다 — 대만 업체 몫이 20% 를 넘지 않는다",
+ "chain": [
+  {
+   "node": "product:google_tpu_system",
+   "claim": "v8 은 34~40층·M8+·HVLP4 로 PCB 가치 +70~80%, 2027 출하 급증 전망 (대만 보도)",
+   "evidence": [
+    {
+     "url": "https://money.udn.com/money/story/5607/9833568",
+     "title": "經濟日報 — 金像電 TPU v8 진입(점유율 15~20%), v8 34~40층·PCB 가치 +70~80%, 2027 v8 9.1M(+126%)",
+     "date": "2026-10-23",
+     "kind": "trade_press"
+    }
+   ]
+  },
+  {
+   "node": "component:mlb_pcb",
+   "claim": "판가 평균 15% 안팎 인상 협의, 4분기 적용 · 다중적층 비중 23%",
+   "evidence": [
+    {
+     "url": "https://www.tokenpost.kr/news/market/401739",
+     "title": "토큰포스트 — 이수페타시스 2Q26 매출 3,799억·영업이익 771억, 다중적층 11%→23%, 판가 15% 안팎 4Q 적용 협의",
+     "date": "2026-09-02",
+     "kind": "news"
+    }
+   ]
+  },
+  {
+   "node": "company:isu_petasys",
+   "claim": "2Q26 매출 ₩3,799억·영업이익 ₩771억(20.3%) 분기 최대, 최대 고객 비중 약 45%",
+   "evidence": [
+    {
+     "url": "https://www.tokenpost.kr/news/market/401739",
+     "title": "토큰포스트 — 이수페타시스 2Q26 매출 3,799억·영업이익 771억, 다중적층 11%→23%, 판가 15% 안팎 4Q 적용 협의",
+     "date": "2026-09-02",
+     "kind": "news"
+    },
+    {
+     "url": "https://www.etoday.co.kr/news/view/2550562",
+     "title": "이투데이 — 키움: 이수페타시스 점유율·판가 우려 해소 (최대 고객 비중)",
+     "date": "2026-01-29",
+     "kind": "news"
+    }
+   ]
+  }
+ ],
+ "drivers": [
+  {
+   "id": "tpu_v8_volume_2027",
+   "metric": "2027 TPU 출하 전망",
+   "latest": "v8 9.1M(+126%, 經濟日報 2026-10-23) vs 모건스탠리 2027 5M — 기준이 다르다",
+   "threshold": "≥ 5M",
+   "source": "https://money.udn.com/money/story/5607/9833568"
+  },
+  {
+   "id": "isu_multilam_share",
+   "metric": "다중적층 매출 비중",
+   "latest": "23% (2Q26)",
+   "threshold": "≥ 30% (4Q26)",
+   "source": "https://www.tokenpost.kr/news/market/401739"
+  },
+  {
+   "id": "isu_opm",
+   "metric": "분기 영업이익률 (판가 반영)",
+   "latest": "20.3% (2Q26)",
+   "threshold": "≥ 18% 유지 (4Q26)",
+   "source": "https://www.tokenpost.kr/news/market/401739"
+  }
+ ],
+ "beneficiaries": [
+  {
+   "company": "company:isu_petasys",
+   "role": "primary",
+   "size_band": "mid",
+   "basis": "AI 가속기·스위치용 고다층 MLB — 최대 고객 비중 약 45%(키움 2026-01), 증권가는 구글 TPU 로 지목(회사는 고객명을 밝히지 않음)",
+   "rerating": {
+    "from": "시총 약 ₩7.1조(2026-10-29 외부 시세) · 2Q 연환산 매출 ₩1.52조·영업이익률 20% → 세후 OP 약 30배, 내재 지속 마진 약 50% @12배",
+    "to": "매출 ×2.5 @20%·12배 또는 ×1.9 @16배가 필요 — v8 금액 증가가 그만큼인지가 리레이팅",
+    "why": "가격 DB 미수집이라 공개 시세·실적으로 계산 (확인 안 됨)"
+   }
+  }
+ ],
+ "falsifiers": [
+  {
+   "what": "3Q26 매출이 2Q26(₩3,799억)보다 적다",
+   "metric": "분기 실적",
+   "threshold": "< ₩3,799억",
+   "due": "2026-11-20"
+  },
+  {
+   "what": "4Q26 영업이익률 < 18% — 판가 인상이 반영되지 않음",
+   "metric": "분기 실적",
+   "threshold": "< 18%",
+   "due": "2027-02-28"
+  },
+  {
+   "what": "4Q26 다중적층 매출 비중 < 30%",
+   "metric": "IR 자료",
+   "threshold": "< 30%",
+   "due": "2027-02-28"
+  },
+  {
+   "what": "회사 또는 신뢰할 매체가 v8 MLB 점유율 50% 미만을 확인",
+   "metric": "보도·IR",
+   "threshold": "< 50%",
+   "due": "2027-04-28"
+  }
+ ],
+ "first_signal": {
+  "metric": "3Q26 영업이익률 ≥ 20%·다중적층 ≥ 25%·4Q 신제품 양산과 판가 적용 언급",
+  "where": "3Q26 실적 공시·IR",
+  "expected_by": "2026-11-20"
+ },
+ "novelty": "new_structure",
+ "novelty_reason": "TPU 가 외부에 팔리면서(2027) 기판 공급이 다중 소싱으로 바뀌는 첫 세대 — '점유율 하락 = 매출 하락' 이라는 등식이 보드당 가치·물량 증가로 깨질 수 있는 구조는 v7 까지 없었다.",
+ "what_market_misses": "시장은 v8 의 대만 업체 진입을 매출 감소로 할인했지만(2026-06 점유율 우려 급락, 7월 연저점), 보드당 PCB 가치 +70~80% 에 판가 인상·다중적층 비중을 곱하면 점유율이 70%대로 내려가도 TPU향 매출 금액은 는다.",
+ "lag_months": 4,
+ "stage_reason": "발굴 (2026-10-30 세션, ADR-0027 첫 micro) — weakest_link 미확인: 대만 업체 점유율·v8 물량은 기자·애널리스트 전망",
+ "quiet_check": {
+  "verdict": "unmeasured",
+  "as_of": "2026-10-29",
+  "note": "가격 미수집(KRX:007660 백필 대기) — 외부 시세 ₩92,100, 52주 ₩57,900~164,400(고점 −44%), 2025-11-14 ₩111,100 대비 약 −17% (조사 보고, 확인 안 됨). 같은 공급망 대덕전자 +292%(moved)."
+ }
+}

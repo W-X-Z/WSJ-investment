@@ -1,0 +1,165 @@
+{
+ "kind": "thesis",
+ "scale": "micro",
+ "stage": 0,
+ "model": "claude-opus-5-5",
+ "method": "session",
+ "losers": [],
+ "thesis_key": "ls_materials_aidc_uc_2027",
+ "parent_key": "onsite_power_grid_bypass_2026",
+ "origin": "decompose",
+ "ecosystem": "power",
+ "title": "연료전지 데이터센터의 부하 평활이 작은 커패시터 회사로 — LS머트리얼즈",
+ "statement": "AI 데이터센터가 계통 대신 현장 연료전지로 전력을 만들면, 연료전지가 따라가지 못하는 부하 급변을 울트라커패시터(UC)가 받는다. LS머트리얼즈는 미국 수소연료전지사(유통사 iConnexion Asia 경유)에 초도 $4.7M(2026-11 출하)에 이어 ₩689억 본계약(2027-04-16~2028-03-17, 2025 연결매출의 44.85%, UC 연매출 ₩291억의 약 2.4배)을 받았고, 연내 추가 계약이면 누적 $100M 을 넘는다고 했다. 2027년 UC 매출이 두세 배가 되고 UC 부문이 흑자로 돌아서는지가 테제다.",
+ "weakest_link": "₩689억 계약은 최종고객(미국 수소연료전지사)의 확정 발주이고, 2027-04-28까지 해지·20% 이상 감액·개시 연기 정정공시 없이 유지된다",
+ "chain": [
+  {
+   "node": "component:fuel_cell",
+   "claim": "AI 데이터센터 현장 발전 연료전지는 급격한 부하 변동을 혼자 따라가기 어렵다 — UC 가 흡수",
+   "evidence": [
+    {
+     "url": "https://core.asiae.co.kr/article/2026101310052724755",
+     "title": "아시아경제 — 美 수소연료전지사에 AIDC용 UC $51.5M, 초도 $4.7M",
+     "date": "2026-10-13",
+     "kind": "news"
+    }
+   ]
+  },
+  {
+   "node": "component:supercapacitor",
+   "claim": "같은 용도 수주가 업계 단위로 나온다 — 비나텍 ₩1,230억·₩1,195억 (2026-10)",
+   "evidence": [
+    {
+     "url": "https://biz.sbs.co.kr/amp/article/20000341686",
+     "title": "SBS Biz — 비나텍 데이터센터 슈퍼커패시터 아크벨 1,230억·산미나 1,195억",
+     "date": "2026-10-23",
+     "kind": "news"
+    }
+   ]
+  },
+  {
+   "node": "company:ls_materials",
+   "claim": "₩689억 본계약(연결매출 44.85%) + 초도 $4.7M, 연내 추가 시 누적 $100M+ 기대",
+   "evidence": [
+    {
+     "url": "https://sateconomy.co.kr/news/view/1065575480990207",
+     "title": "토요경제 — iConnexion Asia 경유, 연결매출 44.85%, 2027-04-16~2028-03-17, 선급금 없음, UC 1H26 매출 172억·OPM -1.5%",
+     "date": "2026-10-27",
+     "kind": "news"
+    },
+    {
+     "url": "https://ceoscoredaily.com/page/view/2026101416153725466",
+     "title": "CEO스코어데일리 — 연내 추가 계약 시 1억달러 돌파 기대, UC 매출 2025 291억(19%)",
+     "date": "2026-10-14",
+     "kind": "news"
+    }
+   ]
+  }
+ ],
+ "drivers": [
+  {
+   "id": "ls_aidc_uc_orders",
+   "metric": "공시된 AIDC UC 누적 수주",
+   "latest": "약 $56M (초도 $4.7M + 본계약 $51.5M, 2026-10)",
+   "threshold": "≥ $100M (회사가 연내 기대)",
+   "source": "https://ceoscoredaily.com/page/view/2026101416153725466"
+  },
+  {
+   "id": "ls_uc_margin",
+   "metric": "UC 부문 영업이익률",
+   "latest": "-1.5% (1H26, 매출 ₩172억 +37%)",
+   "threshold": "> 0% (2H26)",
+   "source": "https://sateconomy.co.kr/news/view/1065575480990207"
+  },
+  {
+   "id": "ls_midcell_util",
+   "metric": "UC 중형셀 가동률",
+   "latest": "67.5% (1H26)",
+   "threshold": "≥ 85%",
+   "source": "https://sateconomy.co.kr/news/view/1065575480990207"
+  }
+ ],
+ "beneficiaries": [
+  {
+   "company": "company:ls_materials",
+   "role": "primary",
+   "size_band": "small",
+   "basis": "UC 셀·모듈 — UC 매출 ₩291억(2025, 연결의 19%; 나머지는 알루미늄 자회사 LS알스코 약 82%). 본계약은 UC 연매출의 약 2.4배",
+   "rerating": {
+    "from": "내재 지속 마진 48% @12배 (TTM 영업이익률 0.2%) — 고점 −63% 인데도 배수로는 성장이 이미 들어 있다",
+    "to": "mid 밴드(15%×18배) ₩5,401 = 현재가 −53% · 필요 매출 ×2.1 — 추가 수주와 UC 흑자 없이는 리레이팅이 아니라 디레이팅 위험",
+    "why": "sold_off 는 핵융합 테마(2026-04, PER 169배 추정)의 되돌림 — 테제가 맞아도 오르려면 $100M+ 와 흑자 전환이 숫자로 나와야"
+   }
+  },
+  {
+   "company": "company:vinatech",
+   "role": "secondary",
+   "size_band": "small",
+   "basis": "같은 용도 슈퍼커패시터 대형 수주 — 이미 재평가(조사 보고: ₩82,000 → ₩114,900)"
+  }
+ ],
+ "falsifiers": [
+  {
+   "what": "₩689억 계약 정정공시 (해지·20% 이상 감액·개시 연기)",
+   "metric": "KIND 정정공시",
+   "threshold": "1건",
+   "due": "2027-04-28"
+  },
+  {
+   "what": "추가 AIDC UC 공급계약이 없어 누적 수주가 $80M 미만",
+   "metric": "공급계약 공시",
+   "threshold": "누적 < $80M",
+   "due": "2027-01-31"
+  },
+  {
+   "what": "2026 사업보고서 UC 부문 매출 < ₩380억 또는 2H26 UC 영업적자",
+   "metric": "사업보고서 부문 정보",
+   "threshold": "< ₩380억 / 적자",
+   "due": "2027-03-31"
+  }
+ ],
+ "first_signal": {
+  "metric": "3Q26 분기보고서 수주잔고에 AIDC UC 기재·3Q UC 매출, 또는 추가 공급계약 공시",
+  "where": "DART 분기보고서(~2026-11-16)·KIND",
+  "expected_by": "2026-12"
+ },
+ "novelty": "new_structure",
+ "novelty_reason": "AI 데이터센터가 계통 접속을 기다리지 않고 현장 연료전지로 전력을 만들면서, 연료전지가 못 따라가는 부하 급변을 UC 가 받는 구성이 처음 대량 발주로 나타났다 (2026-07 초도, 2026-10 본계약·비나텍 동시 수주).",
+ "what_market_misses": "같은 용도로 비나텍은 재평가됐지만 LS머트리얼즈는 '익명 고객·유통사 경유·계열사 OEM' 할인으로 수주 직후 상승(+14%)을 2주 만에 다 반납했다 — 연내 추가 수주로 누적 $100M 이 넘는지와 UC 흑자 전환은 가격에 없다 (다만 배수로는 싸지 않다).",
+ "lag_months": 5,
+ "stage_reason": "발굴 (2026-10-30 세션, ADR-0027 첫 micro) — weakest_link 미확인: 유통사 경유·선급금 없음, 최종고객 실명 미공개(Bloom 추정은 확인 안 됨)",
+ "quiet_check": {
+  "as_of": "2026-10-29",
+  "method": "wsj.ecosystems.quiet v2",
+  "verdict": "sold_off",
+  "counts": {
+   "quiet": 0,
+   "mixed": 0,
+   "moved": 0,
+   "moved_reset": 0,
+   "sold_off": 1,
+   "unmeasured": 0
+  },
+  "companies": [
+   {
+    "company": "company:ls_materials",
+    "role": null,
+    "px_key": "KOSDAQ:417200",
+    "px_as_of": "2026-10-29",
+    "px_1m_pct": -10.7,
+    "px_3m_pct": -0.9,
+    "px_12m_pct": 4.0,
+    "from_high_pct": -63.0,
+    "verdict": "sold_off"
+   }
+  ],
+  "universe": {
+   "n": 310,
+   "median_1m_pct": -13.7,
+   "median_3m_pct": -9.6,
+   "median_12m_pct": 26.9,
+   "median_from_high_pct": -43.1,
+   "share_from_high_le_40": 0.56
+  }
+ }
+}

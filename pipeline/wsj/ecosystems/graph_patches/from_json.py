@@ -29,7 +29,7 @@ from wsj.ecosystems.graph_patches import Edge, Node, apply
 from wsj.ecosystems.ontology import GRAPH_PATH
 
 PATCH_DIR = GRAPH_PATH.parent / "patches"
-SIZE_BANDS = {"micro", "small", "mid", "large", "mega", "unknown"}
+SIZE_BANDS = {"micro", "small", "mid", "large", "mega"}  # 온톨로지 company_fields.size_band (상장사만 — private 제외)
 
 
 def parse(doc: dict[str, Any]) -> tuple[list[Node], list[Edge], str, dict[str, list[str]], dict[str, str]]:
@@ -45,7 +45,7 @@ def parse(doc: dict[str, Any]) -> tuple[list[Node], list[Edge], str, dict[str, l
         if kind == "company":
             if not nid.startswith("company:"):
                 raise ValueError(f"nodes[{i}]: 기업 id 는 company: 로 시작")
-            band = n.get("size_band") or "unknown"
+            band = n.get("size_band")
             if band not in SIZE_BANDS:
                 raise ValueError(f"nodes[{i}]: size_band 는 {sorted(SIZE_BANDS)}")
             if not (n.get("ticker") and n.get("exchange")):
