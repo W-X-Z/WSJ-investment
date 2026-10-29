@@ -317,6 +317,42 @@ def from_queue(cands: list[dict[str, Any]], hyps: list[dict[str, Any]]) -> list[
     return out
 
 
+def from_thesis_queue(rows: list[dict[str, Any]], start: int = 0) -> list[dict[str, Any]]:
+    """작은 테제(micro) 큐 → 2단계 후보 (ADR-0027). rows = v_q_thesis_candidates_needing_report 행(조사에서 살아남은 micro 테제의 primary 기업 하나씩).
+    이슈 경로 후보(from_queue)와 같은 모양으로 만들어 리포트 작성기가 같은 규칙으로 쓴다 — id 는 이어서 Q{start+1} …, 출처는 source.thesis_key."""
+    out: list[dict[str, Any]] = []
+    seen: set[str] = set()
+    for r in rows:
+        key, company = str(r.get("thesis_key") or ""), r.get("company")
+        if not key or not isinstance(company, str) or not company.startswith("company:") or key in seen:
+            continue
+        seen.add(key)
+        chain = [c for c in (r.get("chain") or []) if isinstance(c, dict)]
+        path = [str(c["node"]) for c in chain if c.get("node")]
+        fals = [f for f in (r.get("falsifiers") or []) if isinstance(f, dict)]
+        first = min(fals, key=lambda f: str(f.get("due") or "9999")) if fals else {}
+        lag = r.get("lag_months")
+        sources = [s for s in (r.get("sources") or []) if isinstance(s, dict)]
+        why = r.get("what_market_misses") or ""
+        flags = ["micro 테제"] + ([f"리레이팅: {r['rerating'].get('from')} → {r['rerating'].get('to')}"]
+                                  if isinstance(r.get("rerating"), dict) and r["rerating"].get("from") else [])
+        n = start + len(out) + 1
+        out.append({
+            "id": f"Q{n}", "rank": n, "score": None, "change": r.get("statement"), "path": path, "path_labels": None,
+            "company": company, "company_label": r.get("company_label"), "claim": f"{r.get('title') or key} — {why}".strip(" —"),
+            "effect_pct": None, "lead_quarters": max(1, -(-int(lag) // 3)) if isinstance(lag, int | float) and lag else None,
+            "why_unpriced": why, "falsifier": f"{first.get('what')} (기한 {first.get('due')})" if first else None,
+            "research": [r.get("weakest_link")] if r.get("weakest_link") else [], "extends": r.get("existing_idea"),
+            "flags": flags, "criteria": None, "issue_key": None, "issue_title": None,
+            "trigger": {"title": r.get("title"), "url": sources[0].get("url") if sources else None},
+            "source": {"thesis_key": key, "parent_key": r.get("parent_key"), "basis": r.get("basis")},
+            "research_result": {"verdict": r.get("verdict"), "summary": r.get("research_summary"), "event_ids": r.get("event_ids") or [],
+                                "researched_at": r.get("researched_at")},
+            "existing_idea": r.get("existing_idea"),
+        })
+    return out
+
+
 def restrict_payload(payload: dict[str, Any], issue_keys: set[str]) -> dict[str, Any]:
     """경로 작업의 1단계 입력을 큐의 이슈로 줄인다 (ADR-0024): 이슈 신호는 큐에 있는 것만, 기업·지표 신호는 뺀다(기업 사실은 조사 작업이, 지표는 아직 큐에 들어오지 않는다),
     후보 기업은 남긴 이슈 신호에 닿는 것만, 근거는 남긴 신호·후보가 쓰는 것만, 가격은 남긴 후보·기존 리포트의 기업만. existing·states·leads 는 그대로.

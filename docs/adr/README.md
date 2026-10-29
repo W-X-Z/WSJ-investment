@@ -29,3 +29,7 @@
 | [0021](0021-market-scope-us-kr.md) | 시장 범위 — 주 기업은 미국·한국 상장사, 다른 시장은 신호·맥락으로만 | accepted | 2026-10-29 |
 | [0022](0022-hypothesis-verification-loop.md) | 가설 검증 루프 — 2단계 생성(후보 → 선택·조사 → 작성)과 예측 채점이 움직이는 ★ | accepted | 2026-10-29 |
 | [0023](0023-product-shape-reports-and-issues.md) | 제품 형태 — 기업 리서치 리포트 피드(목표주가·아이디어·근거)와 이슈 피드(이슈당 영향 경로 ≤3), 나머지는 수납 | accepted | 2026-10-29 |
+| [0024](0024-task-modules.md) | 아침 작업의 분업 — 한 세션 대신 DB 큐로 이어지는 다섯 예약작업 | accepted | 2026-10-29 |
+| [0025](0025-regime-theses.md) | 구조 가설 트랙 — 사용 방식의 변화에서 리레이팅까지 | accepted | 2026-10-29 |
+| [0026](0026-novelty-first-theses.md) | 생성과 보정의 분리 — 새로움에서 출발하는 테제 (약한 신호·잔차) | accepted | 2026-10-30 |
+| [0027](0027-daily-thesis-chain.md) | 매일 테제 사슬 — 큰 테제를 작은 테제(micro)로 쪼개고 소형주까지 매일 발굴 | accepted | 2026-10-30 |

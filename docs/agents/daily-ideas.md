@@ -1,4 +1,4 @@
-# 공통 규칙 — 아침 작업 다섯 개가 공유하는 전제·형식·엔진 명령 (ADR-0024)
+# 공통 규칙 — 아침 작업 다섯 개가 공유하는 전제·형식·엔진 명령 (ADR-0024 · ADR-0027)
 
 아침 일은 한 세션이 아니라 다섯 예약작업이 나눠 한다 — 절차는 작업마다 `docs/agents/daily/<task>.md` 에 있고, 이 문서는 그 다섯이 공유하는 **전제·입력 형식·작성 규칙·검증·저장·알림 규칙**이다.
 작업 문서가 "공통 §X" 라고 가리키면 여기의 그 절을 그대로 따른다. 두 곳이 어긋나면 작업 문서보다 이 문서가, 이 문서보다 사람이 승인한 PR 이 이긴다.
@@ -6,11 +6,13 @@
 | 작업 | 문서 | 큐 | 쓰는 함수 |
 |---|---|---|---|
 | collect 05:23 | daily/collect.md | Actions `issues` 워크플로 | (없음) |
-| paths 06:17 | daily/paths.md | `v_q_issues_needing_paths` | put_issue_hypotheses |
-| research 06:49 | daily/research.md | `v_q_paths_needing_research` | put_company_events · put_observations · put_path_research |
-| report 07:37 | daily/report.md | `v_q_candidates_needing_report` · `v_q_ideas_needing_valuation` | put_ideas · put_valuations · put_assessments |
-| verify 08:11 | daily/verify.md | `v_q_predictions_due` | put_company_events · put_ideas · put_assessments · put_thesis_evidence |
-| thesis 토 09:17 | thesis.md | `v_weak_signals` · `v_unmapped_terms` · `v_theses` (1부 약한 신호 → 2부 구조 가설) | put_weak_signals · put_theses · put_thesis_evidence · put_observations · put_company_events |
+| discover 06:17 (옛 paths) | daily/discover.md | `v_q_issues_needing_paths` · `v_weak_signals` · `v_unmapped_terms` · `v_theses` | put_issue_hypotheses · put_weak_signals · put_theses (+ 저장소 §D) |
+| research 06:49 | daily/research.md | `v_q_theses_needing_research` · `v_q_paths_needing_research` | put_company_events · put_observations · put_thesis_research · put_path_research |
+| report 07:37 | daily/report.md | `v_q_candidates_needing_report` · `v_q_thesis_candidates_needing_report` · `v_q_ideas_needing_valuation` | put_ideas · put_valuations · put_assessments |
+| verify 08:11 | daily/verify.md | `v_q_predictions_due` · `v_q_thesis_watch` (토: 큰 테제 점검) | put_company_events · put_ideas · put_assessments · put_thesis_evidence · put_theses · put_observations |
+
+주간 thesis 작업(토 09:17)은 없다 (ADR-0027): 약한 신호 스캔은 discover 가 요일별 출처로 매일, 작은 테제(micro)는 discover 가 매일 최대 3개, 큰 테제 점검은 토요일 verify 가 한다.
+`thesis.md` 는 그 둘이 참고하는 절차서(출처 목록·네 질문·조용함·리레이팅·단계 규칙)로 남는다.
 
 모든 작업이 `ops.put_agent_run` 으로 실행 기록을 남긴다. 사용자는 자리에 없으니 질문하지 말고 끝까지 진행한다. 이 문서를 바꾸려면 사람이 승인한 PR 이어야 한다.
 
@@ -26,14 +28,19 @@
 - Supabase MCP execute_sql (project_id: dcatgfivsvbktylmtvgf):
   `select to_regprocedure('ops.put_agent_run(jsonb)') is not null as p27, to_regprocedure('ideas.put_issue_hypotheses(jsonb)') is not null as p26, to_regprocedure('ideas.put_valuations(jsonb)') is not null as p23;`
   p27 이 false 면 "0027 미적용" 을 보고하고 알림을 보낸 뒤 끝낸다 (큐가 없다). p26·p23 은 작업 문서가 말하는 대로.
+  테제 사슬(ADR-0027)은 `select to_regprocedure('ideas.put_thesis_research(jsonb)') is not null as p30;` — false 면 작업 문서의 "0030 전" 규칙대로(테제 부분을 건너뛴다).
+- **앞 작업을 기다린다** (discover 다음부터): 앞 작업(collect → discover → research → report → verify 순)의 오늘 행이 `running` 이면 최대 30분 기다린다 —
+  `timeout 590 bash -c 'until curl -s "$SUPABASE_URL/rest/v1/v_agent_runs?select=status&task=eq.<앞 작업>&run_date=eq.$(TZ=Asia/Seoul date +%F)" -H "apikey: $SUPABASE_PUBLISHABLE_KEY" -H "Authorization: Bearer $SUPABASE_PUBLISHABLE_KEY" | grep -qv running; do sleep 30; done'` 를 세 번까지.
+  그래도 running 이면 쌓인 큐로 진행하고 note 에 "앞 작업 미완료". (앞 작업 행이 아예 없으면 기다리지 않는다.)
 - `select ops.put_agent_run('{"task":"<작업>","status":"running"}'::jsonb);`
 끝:
 - 작업 문서의 **완료 조건** 쿼리를 실행해 결과를 보고에 적는다. 큐가 비어 할 일이 없었으면 status 는 `skipped`.
 - `select ops.put_agent_run('{"task":"<작업>","status":"succeeded|skipped|failed","rows":N,"counts":{…,"skipped":[…],"denied":[…],"unverified":[…]},"note":"한 줄"}'::jsonb);` — 같은 날 같은 작업은 한 행(다시 돌리면 덮어쓴다).
 - 보고는 작업 문서의 줄 수 안에서. 알림은 작업 문서의 규칙일 때만.
 - **하지 않은 것을 기록한다** (2026-10-30): note 와 보고에 이번 실행에서 건너뛴 것·거부된 것·확인 못 한 것을 적는다 — `"skipped":[…]`(큐에 있었지만 손대지 않은 항목과 이유), `"denied":[…]`(도구·URL 이 거부된 것), `"unverified":[…]`(원문을 열지 못해 추론으로 쓴 주장). 비어 있으면 빈 배열로 적는다. 했다고 쓰지 않은 것은 하지 않은 것이다.
+- **프롬프트의 경계가 문서보다 좁으면 프롬프트를 따른다** (2026-10-31): 예약작업 프롬프트가 허용하지 않는 함수·저장소 쓰기가 작업 문서에 있으면 그 단계는 하지 않고 `skipped` 에 "프롬프트 경계: …" 로 적는다. 새 프롬프트는 `docs/agents/daily/PROMPTS.md`.
 - **거부를 우회하지 않는다**: WebFetch·도구·권한이 거부되면 다른 수단(curl·다른 URL 로 같은 문서·캐시·미러)으로 같은 것을 가져오지 않는다. 건너뛰고 `denied` 에 적는다. 거부된 원문에 기대야 하는 주장은 쓰지 않거나 `unverified` 로 둔다.
-- 공통 경계: DB 쓰기는 작업 문서에 적힌 함수와 `ops.put_agent_run`, 읽기용 select 뿐이다. 저장소는 수정·커밋하지 않는다. 주가에 대한 판단은 valuation 의 시나리오로만 — 매수/매도 권유·시점 예측은 쓰지 않는다 (목표주가는 모형 산출이지 권유가 아니다).
+- 공통 경계: DB 쓰기는 작업 문서에 적힌 함수와 `ops.put_agent_run`, 읽기용 select 뿐이다. 저장소는 수정·커밋하지 않는다 — **discover 만 예외**로 `research/` 와 생성 파일 `apps/web/src/data/` 를 PR 로 바꾸고, CI 가 통과하면 스스로 병합한다 (discover.md §D). 주가에 대한 판단은 valuation 의 시나리오로만 — 매수/매도 권유·시점 예측은 쓰지 않는다 (목표주가는 모형 산출이지 권유가 아니다).
 
 ## A. 1단계 — 가설 후보(이슈별 영향 경로)의 형식
 - 입력은 `.venv/bin/python -m wsj.ecosystems.ideas --from-public --snapshot-out ../.ideas_run/s1 --emit-prompt ../.ideas_run/s1/prompt.json --emit-research ../.ideas_run/s1/research.json --leads-out ../.ideas_run/s1/leads.json --emit-hypotheses ../.ideas_run/s1/hypo.json`
@@ -89,9 +96,9 @@
 ## F. 저장 (엔진이 만든 SQL 을 그대로)
 - `s2/sql/` 의 파일을 이름순으로 Read 해서 그대로 execute_sql 로 실행한다: `01_…`(아이디어) → `zy_valuations.sql`(가치평가; rejected 가 있으면 raw.json 의 그 valuation 을 고쳐 E 부터 다시) → `zz_assessments.sql`(손대지 않은 아이디어의 판단·채점 갱신). SQL 을 손으로 고치지 않는다.
 - zy_valuations.sql 뒤 **확인**: `select count(*) from ideas.valuations where as_of = current_date;` 가 rows.valuations.json 의 건수와 같아야 한다. 적으면 E 부터 다시 — 목표주가 없이 리포트만 저장하고 끝내지 않는다.
-- `s1/sql/zx_issue_hypotheses.sql`(이슈별 경로)은 paths 작업이 실행한다 (p26 일 때).
+- `s1/sql/zx_issue_hypotheses.sql`(이슈별 경로)은 discover 작업이 실행한다 (p26 일 때).
 
 ## G. 알림 규칙 (작업별 문서가 가리킨다)
 - 실패 알림: 0027 미적용, 수집 미완료, DB 쓰기 실패, 큐가 있는데 하나도 처리하지 못했을 때.
 - 결과 알림(report): **기대 상승여력 +50% 이상이고 확신 mid 이상이며 시총 $3B 이하인 새 가치평가**(제목·현재 → 기대 주가·여력·확신·verdict 첫 문장), 기존 평가의 기대 상승여력이 ±30%p 넘게 바뀐 아이디어. 첫 문장에 `목표주가 저장 N/M`.
-- 결과 알림(verify): 반증 성립으로 종료된 리포트, ★3 의 예측이 빗나갔을 때, 하루 사슬 요약(어느 작업이 skipped·failed 인지).
+- 결과 알림(verify): 반증 성립으로 종료된 리포트·테제, ★3 의 예측이 빗나갔을 때, **오늘 새 작은 테제와 조사 판정**, stage 가 바뀐 테제, 하루 사슬 요약(어느 작업이 skipped·failed 인지).

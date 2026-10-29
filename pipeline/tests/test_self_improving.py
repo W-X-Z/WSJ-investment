@@ -645,6 +645,32 @@ def test_from_queue_rebuilds_stage2_candidates_from_db_rows():
     assert v[0]["trigger"] == s1 and v[0]["research_result"]["summary"] == "IR 에서 X 비중 35% 확인" and v[0]["source"]["path_id"] == "H1"
 
 
+def test_from_thesis_queue_turns_micro_theses_into_stage2_candidates():
+    """ADR-0027: 조사에서 살아남은 작은 테제의 primary 는 이슈 경로 후보와 같은 모양으로 리포트 큐에 들어간다 (id 는 이어서)."""
+    from wsj.ecosystems import hypotheses as H
+    from wsj.ecosystems.ideas import Registry
+
+    row = {"thesis_key": "tpu_mlb_isu_2027", "parent_key": "tpu_merchant_volume_2027", "title": "TPU 외부 판매가 고다층 기판 공급사로",
+           "statement": "구글 TPU 외부 판매가 2027년에 몰리며 TPU 보드용 고다층 MLB 수요가 늘어난다", "what_market_misses": "TPU 외부 판매의 기판 몫",
+           "chain": [{"node": "product:google_tpu_system"}, {"node": "component:mlb_pcb"}, {"claim": "노드 없음"}, {"node": "company:isu_petasys"}],
+           "weakest_link": "이수페타시스가 TPU v8 보드 MLB 의 주 공급사로 남는가", "lag_months": 7,
+           "falsifiers": [{"what": "4Q26 매출 YoY < +20%", "due": "2027-02-28"}, {"what": "TPU 출하 전망 하향", "due": "2026-12-31"}],
+           "company": "company:isu_petasys", "company_label": None, "basis": "TPU·스위치 MLB", "size_band": "mid",
+           "rerating": {"from": "내재 지속 마진 18% @12배", "to": "regime 14%×14배"},
+           "verdict": "partial", "research_summary": "보도로 공급 확인, 비중은 못 찾음", "event_ids": ["ev-9"],
+           "sources": [{"url": "https://dealsite.co.kr/articles/150410", "kind": "trade_press"}], "researched_at": "2026-10-31T07:20:00+00:00",
+           "existing_idea": None}
+    out = H.from_thesis_queue([row, {**row}, {**row, "thesis_key": "no_company", "company": None}], start=2)
+    assert len(out) == 1 and out[0]["id"] == "Q3" and out[0]["company"] == "company:isu_petasys"
+    c = out[0]
+    assert c["path"] == ["product:google_tpu_system", "component:mlb_pcb", "company:isu_petasys"] and c["lead_quarters"] == 3
+    assert c["falsifier"] == "TPU 출하 전망 하향 (기한 2026-12-31)" and c["research"] == [row["weakest_link"]]
+    assert c["source"]["thesis_key"] == "tpu_mlb_isu_2027" and c["research_result"]["verdict"] == "partial" and "micro 테제" in c["flags"]
+    reg = Registry()
+    s1 = reg.add("S", "https://dealsite.co.kr/articles/150410", "딜사이트", publisher="딜사이트", date="2025-10-31", tier="third_party_report")
+    assert H.stage2_view(out, reg)[0]["trigger"] == s1
+
+
 def test_restrict_payload_keeps_only_queue_issues_and_what_they_touch():
     """ADR-0024: 경로 작업의 1단계 입력은 큐의 이슈만 — 기업·지표 신호는 빠지고, 후보·근거·가격은 남긴 이슈에 닿는 것만."""
     from wsj.ecosystems import hypotheses as H
