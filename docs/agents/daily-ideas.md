@@ -29,8 +29,10 @@
 - `select ops.put_agent_run('{"task":"<작업>","status":"running"}'::jsonb);`
 끝:
 - 작업 문서의 **완료 조건** 쿼리를 실행해 결과를 보고에 적는다. 큐가 비어 할 일이 없었으면 status 는 `skipped`.
-- `select ops.put_agent_run('{"task":"<작업>","status":"succeeded|skipped|failed","rows":N,"counts":{…},"note":"한 줄"}'::jsonb);` — 같은 날 같은 작업은 한 행(다시 돌리면 덮어쓴다).
+- `select ops.put_agent_run('{"task":"<작업>","status":"succeeded|skipped|failed","rows":N,"counts":{…,"skipped":[…],"denied":[…],"unverified":[…]},"note":"한 줄"}'::jsonb);` — 같은 날 같은 작업은 한 행(다시 돌리면 덮어쓴다).
 - 보고는 작업 문서의 줄 수 안에서. 알림은 작업 문서의 규칙일 때만.
+- **하지 않은 것을 기록한다** (2026-10-30): note 와 보고에 이번 실행에서 건너뛴 것·거부된 것·확인 못 한 것을 적는다 — `"skipped":[…]`(큐에 있었지만 손대지 않은 항목과 이유), `"denied":[…]`(도구·URL 이 거부된 것), `"unverified":[…]`(원문을 열지 못해 추론으로 쓴 주장). 비어 있으면 빈 배열로 적는다. 했다고 쓰지 않은 것은 하지 않은 것이다.
+- **거부를 우회하지 않는다**: WebFetch·도구·권한이 거부되면 다른 수단(curl·다른 URL 로 같은 문서·캐시·미러)으로 같은 것을 가져오지 않는다. 건너뛰고 `denied` 에 적는다. 거부된 원문에 기대야 하는 주장은 쓰지 않거나 `unverified` 로 둔다.
 - 공통 경계: DB 쓰기는 작업 문서에 적힌 함수와 `ops.put_agent_run`, 읽기용 select 뿐이다. 저장소는 수정·커밋하지 않는다. 주가에 대한 판단은 valuation 의 시나리오로만 — 매수/매도 권유·시점 예측은 쓰지 않는다 (목표주가는 모형 산출이지 권유가 아니다).
 
 ## A. 1단계 — 가설 후보(이슈별 영향 경로)의 형식

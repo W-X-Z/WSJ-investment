@@ -44,6 +44,9 @@ select ideas.put_weak_signals($j$[{"signal_key":"hbf","term":"HBF (high-bandwidt
 - 승격된 약한 신호: `select * from public.v_weak_signals where promotable and status='watch';`
 - 벤치마크: `research/benchmarks/regime_cases.json` — 크기·시차를 잴 때만.
 
+### 2-1′. 조용함 다시 재기
+- `cd pipeline && .venv/bin/python -m wsj.ecosystems.quiet --sql` 의 출력 한 줄을 execute_sql 로 실행한다 (활성 테제 전부의 quiet_check 갱신). 판정이 바뀐 테제는 보고에 적는다.
+
 ### 2-2. 테제마다 드라이버 갱신 — 출처는 수요가 만들어지는 곳
 각 driver 의 최신값을 1부 출처와 메모리 3사·하이퍼스케일러 컨콜, TrendForce 류 데이터에서 찾는다.
 - 찾은 값은 관측치로도 저장한다 (공통 §C, nodes 에 demand_driver·bottleneck 노드 id).
@@ -61,7 +64,7 @@ select ideas.put_weak_signals($j$[{"signal_key":"hbf","term":"HBF (high-bandwidt
 - 후보는 **1부에서 승격된 약한 신호** 또는 수집기 잔차에서만. 뉴스 제목에서 출발하지 않는다.
 - `novelty` 를 정한다: `new_technology`(온톨로지에 없던 기술·부품) · `new_data`(2년 전엔 없던 데이터가 처음 보여주는 것) · `new_issue`(규제·수출통제·관세·사고) · `new_structure`(거래·계약 구조의 변화) · `analog`(과거 사례의 재현 — 이것만으로는 약하다). `novelty_reason` 에 왜 전례가 없는지(또는 어떤 전례의 재현인지).
 - `what_market_misses` 한 문장. `lag_months`(벤치마크 또는 추정 + 근거). `first_signal` {metric, where, expected_by} — 첫 공급망 신호가 어디에 언제 나타날지.
-- `quiet_check`: 수혜 기업마다 `select * from public.v_price_context where ticker in (…)` 의 r3m·r12m 과 from_high, 그리고 최근 이익 컨센서스 수정(있으면). 이미 움직였으면(12개월 +50% 이상이고 되돌림 없음) 테제가 아니라 `kind=regime` 으로 저장한다. 한국 종목은 v_price_context 에 없으면 `note` 에 "미수집" 이라 적는다.
+- `quiet_check`: `cd pipeline && .venv/bin/python -m wsj.ecosystems.quiet --companies company:a,company:b` 로 잰다 (그래프 listing → v_price_context, 우주 중앙값 포함). 판정: `moved`(12개월 +100%↑ 또는 +50%↑·고점 −20% 안) → 테제가 아니라 `kind=regime` · `moved_reset`(+50%↑ 후 고점 −35% 이하 — 시장이 반영했다가 되돌림) → 테제로 둘 수 있지만 what_market_misses 를 "재평가가 지속되나/2차 파동" 으로 좁히고 stage_reason 에 적는다 · `sold_off`(고점 −50% 이하 — 시장이 보고 버린 것) → 왜 버렸는지를 반증 후보로 먼저 적는다 · `quiet` · `mixed` · `unmeasured`(가격 미수집 — note 그대로). 우주 중앙값이 고점 −40% 같은 때는 절대 판정만 읽지 않는다. 기존 테제 전부는 `--sql` 이 내는 한 줄(`put_theses` 로 quiet_check 만 갈아 끼움)을 그대로 실행한다.
 - **새 테제는 stage 0~1 만** 받는다. 공급 반응이 이미 보이면 `kind=regime`.
 - 형식은 `research/theses/memory_inference_rerating_2026.json` 과 같다: statement 80자 이상, chain 3단계 이상(수요 동인 → 요구 → 병목 → 부품 → 기업, 노드 id — 없는 노드는 먼저 온톨로지 패치 후보로), drivers 1개 이상(수치·출처·임계치), beneficiaries(리레이팅 근거 from→to), losers, falsifiers(due 날짜), benchmark(선택).
 - `select ideas.put_theses($j$[{…}]$j$::jsonb);` 거부되면 사유대로 고쳐 한 번 더. 저장한 테제는 `research/theses/<key>.json` 에 같은 내용으로, 1부 결과는 `research/weak_signals/YYYYMMDD.md` 에 남기고 PR 로 올린다 (research/ 안만 스스로 병합). 승격된 신호는 `put_weak_signals` 로 `status=promoted, promoted_to` 를 적는다.
