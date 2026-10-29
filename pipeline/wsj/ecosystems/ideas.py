@@ -513,6 +513,7 @@ LLM_SYSTEM = """너는 AI 공급망(HBM·첨단 패키징 / 800G·1.6T 광통신
 - prices: 주요 기업의 종가(close, currency)·발행주식수(shares)·시가총액(market_cap_usd)·이미 움직인 폭(1·12개월, 고점·저점 대비)·tenbagger 와
   fundamentals(TTM 매출 revenue·영업이익률 op_margin_pct·순이익률 net_margin_pct·매출 성장률 revenue_yoy_pct·P/S ps·P/E pe, 현지 통화 원 단위). 가치평가의 재료다.
   근거로 인용하지는 않는다. 저점 대비 3배 이상 오른 기업은 risks 에 "이미 알려진 정도"를 적고, 같은 논리에 시총이 작고 덜 오른 공급사가 있으면 그쪽을 primary 로 고려한다.
+  node_peers 는 같은 노드를 공급하는 미국·한국 동종사의 P/S·P/E·성장·시총(싼 순) — 같은 노출인데 훨씬 싼 동종사가 있으면 그쪽을 primary 로 고려하고, 비싸면 bear 에 "동종사 대비 배수" 를 적는다.
 - 숫자·날짜는 입력에 있는 것만 쓴다. 매수/매도 권유·시점 예측 금지. 주가에 대한 판단은 아래 valuation 의 시나리오로만 말한다.
 - 서로 다른 아이디어가 같은 기업·같은 논리를 반복하지 않게 묶는다. 근거가 빈약하면 만들지 않는다 — 개수보다 질.
 - hypotheses 가 있으면(1단계에서 고른 가설 후보 — id·순위·점수·claim·falsifier·research·flags) 새 아이디어는 그 후보에서 쓴다: 아이디어에 "hypothesis": "H3".
@@ -1128,9 +1129,49 @@ def prepare(issues: list[dict[str, Any]], indicators: list[dict[str, Any]], grap
                 row |= {k: m.get(k) for k in ("close", "currency", "as_of", "shares")}
                 if m.get("fundamentals"):
                     row["fundamentals"] = m["fundamentals"]
+            peers = node_peer_valuations(graph, cid, money)
+            if peers:  # 같은 노드 동종사의 P/S·성장·시총 (백로그 K-7): "같은 논리에 더 싼 기업" 을 숫자로
+                row["node_peers"] = peers
             extras["prices"][cid] = row
     payload = build_payload(signals, candidates, reg, existing, max_ideas, now, extras)
     return reg, signals, candidates, payload
+
+
+_PEER_INDEX: dict[int, tuple[dict[str, set[str]], dict[str, set[str]]]] = {}
+
+
+def node_peer_valuations(graph: dict[str, Any], cid: str, money: dict[str, dict[str, Any]], limit: int = 6) -> list[dict[str, Any]]:
+    """같은 노드(offered_by·develops)를 공급하는 미국·한국 상장 동종사의 가치평가 숫자 — P/S·P/E·매출 성장·시총. 싼 순(P/S)으로.
+    리포트가 '같은 노출인데 더 싼 기업' 을 고르거나 bear 에 '동종사 대비 비싸다' 를 적을 재료다 (백로그 K-7)."""
+    from wsj.ecosystems.scope import in_scope
+
+    key = id(graph)
+    if key not in _PEER_INDEX:
+        supplies: dict[str, set[str]] = defaultdict(set)
+        suppliers: dict[str, set[str]] = defaultdict(set)
+        nodes = {n["id"]: n for n in graph["nodes"]}
+        for e in graph["edges"]:
+            rel = e.get("relation")
+            if rel == "offered_by" and nodes.get(e["to"], {}).get("kind") == "company":
+                supplies[e["to"]].add(e["from"]); suppliers[e["from"]].add(e["to"])
+            elif rel in ("develops", "holds_ip") and nodes.get(e["from"], {}).get("kind") == "company":
+                supplies[e["from"]].add(e["to"]); suppliers[e["to"]].add(e["from"])
+        _PEER_INDEX[key] = (supplies, suppliers)
+    supplies, suppliers = _PEER_INDEX[key]
+    nodes = {n["id"]: n for n in graph["nodes"]}
+    out: dict[str, dict[str, Any]] = {}
+    for node in supplies.get(cid, ()):
+        for peer in suppliers.get(node, ()):
+            if peer == cid or peer in out or not in_scope(nodes.get(peer)):
+                continue
+            m = money.get(peer)
+            if not m:
+                continue
+            f = m.get("fundamentals") or {}
+            out[peer] = {"company_id": peer, "node": node, "market_cap_usd": m.get("market_cap_usd"),
+                         "ps": f.get("ps"), "pe": f.get("pe"), "revenue_yoy_pct": f.get("revenue_yoy_pct"), "op_margin_pct": f.get("op_margin_pct")}
+    rows = sorted(out.values(), key=lambda r: (r["ps"] is None, r["ps"] if r["ps"] is not None else 0))
+    return rows[:limit]
 
 
 def merge_facts(prices: list[dict[str, Any]] | None, facts: list[dict[str, Any]] | None) -> dict[str, dict[str, Any]]:
