@@ -20,6 +20,11 @@
 - `.venv/bin/python -m wsj.ecosystems.ideas --snapshot ../.ideas_run/s3 --from-llm-json ../.ideas_run/s3/raw.json --method session --model claude-opus-5-5 --out ../.ideas_run/s3/rows.json --emit-sql ../.ideas_run/s3/sql --allow-missing-valuations`
   `verification:` 줄이 ★·종료의 기록이다. `s3/sql/` 의 `01_…`(★ 가 바뀌거나 종료된 리포트 — 있을 때만) → `zz_assessments.sql`(채점이 반영된 watch·판단) 을 그대로 실행한다.
 
+## 3-1. 테제 근거 (0028 뒤, ADR-0025)
+- 오늘 경로 중 `thesis` 가 붙은 것: `select h.issue_key, p->>'id' as path_id, p->'thesis' as thesis, p->>'claim' as claim from ideas.issue_hypotheses h cross join lateral jsonb_array_elements(h.paths) p where h.as_of = current_date and p->'thesis' is not null and p->'thesis' <> 'null'::jsonb;`
+  → 경로마다 `select ideas.put_thesis_evidence($j$[{"thesis_key":"…","direction":"+","what":"<claim 한 줄>","ref":{"issue_key":"…","path_id":"…"},"weight":1}]$j$::jsonb);` (조사 verdict 가 refuted 인 경로는 direction '-', weight 2).
+- 오늘 채점한 예측이 테제 수혜 기업의 것이면 hit=+ · miss=- 로 같은 함수에 기록한다.
+
 ## 4. 하루 보고
 - 사슬: `select task, status, rows, counts, note, started_at, finished_at from public.v_agent_runs where run_date = (now() at time zone 'Asia/Seoul')::date order by started_at;`
 - 피드: `select idea_key, title, stars, trend, updated_at from public.v_investment_ideas where status='active' and updated_at > now() - interval '24 hours' order by updated_at desc;` 와 `select idea_key, expected_upside_pct, confidence from public.v_valuations where as_of = current_date;`

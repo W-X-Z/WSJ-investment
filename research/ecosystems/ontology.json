@@ -62,6 +62,11 @@
       "layer": 6,
       "label_ko": "기업",
       "description": "공급·수요 기업. role 필수: supplier | customer | both. 상장사는 listing 필수. 여러 생태계에 걸치면 also_in: [eco,...]"
+    },
+    "demand_driver": {
+      "layer": 0,
+      "label_ko": "수요 동인",
+      "description": "워크로드·사용 방식의 변화가 만드는 수요 (에이전트 추론, 긴 컨텍스트, KV 캐시 상주). 세대·표준보다 앞선 층 — 관측치(obs:*)로 크기를 재고 구조 가설(ADR-0025)의 출발점이 된다"
     }
   },
   "company_fields": {
@@ -89,6 +94,7 @@
   "predicates": {
     "drives_requirement": {
       "domain": [
+        "demand_driver",
         "ecosystem",
         "product_generation",
         "standard",
@@ -123,6 +129,7 @@
     },
     "creates_bottleneck": {
       "domain": [
+        "demand_driver",
         "requirement",
         "technology",
         "bottleneck"

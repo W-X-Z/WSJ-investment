@@ -49,6 +49,7 @@ HYPOTHESIS_SYSTEM = """너는 AI 공급망(HBM·첨단 패키징 / 800G·1.6T �
 - research: 이 경로를 확인하려면 어떤 원문을 봐야 하나 1~3개 (예: "C 의 3Q IR 자료에서 HBM 장비 매출 비중", "고객 X 의 증설 공시에서 장비 발주처").
   이미 입력에 있는 것(E 신호·evidence)은 다시 적지 않는다.
 - existing 과 같은 기업·같은 논리면 extends 에 그 idea_key (갱신 후보). 다른 고리면 null.
+- 입력에 theses(활성 구조 가설)가 있으면, 경로가 그중 하나를 지지하거나 반박할 때 thesis 에 {{"key": "...", "direction": "+"|"-"}} 를 적는다. 아니면 null.
 - 숫자·날짜는 입력에 있는 것과 네 추정만. 매수/매도 권유 없음.
 
 출력: JSON 하나만. 이슈 단위로 묶는다.
@@ -185,6 +186,7 @@ def validate_candidates(raw: Any, graph: dict[str, Any], reg: Any, signals: list
                     "size_band": n.get("size_band") if n else None,
                     "claim": claim[:300], "effect_pct": effect, "lead_quarters": lead, "why_unpriced": why[:200], "falsifier": falsifier[:200],
                     "research": [str(r)[:160] for r in (c.get("research") or []) if str(r).strip()][:3], "extends": extends,
+                    "thesis": c.get("thesis") if isinstance(c.get("thesis"), dict) and c["thesis"].get("key") else None,
                     "price": {k: pc.get(k) for k in ("r1m", "from_low", "market_cap_usd")} if pc else None,
                     "criteria": crit, "penalty": penalty, "score": score, "flags": flags})
     return out, rejects
@@ -233,7 +235,7 @@ def by_issue(cands: list[dict[str, Any]], selected: list[dict[str, Any]], now: d
     for key, xs in groups.items():
         xs = sorted(xs, key=lambda c: (-int(bool(c.get("company"))), -c["score"], c["id"]))[:PER_ISSUE]
         paths = [{k: c.get(k) for k in ("id", "claim", "path", "path_labels", "company", "company_label", "effect_pct", "lead_quarters",
-                                        "why_unpriced", "falsifier", "research", "score", "criteria", "flags", "extends", "change", "trigger")}
+                                        "why_unpriced", "falsifier", "research", "score", "criteria", "flags", "extends", "change", "trigger", "thesis")}
                  | {"selected": c["id"] in chosen, "rank": c.get("rank")} for c in xs]  # change·trigger: 다음 날 리포트 작업이 DB 에서 되살린다 (ADR-0024)
         rows.append({"issue_key": key, "as_of": now.date().isoformat(), "paths": paths, "model": model, "method": method})
     return rows
