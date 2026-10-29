@@ -1001,3 +1001,13 @@ tr:hover td{background:#f8faff}
 .sys-chain li.st-failed span{color:var(--down)}
 .sys-chain li.st-running span{color:var(--blue)}
 @media (max-width:720px){.sys-chain{grid-template-columns:repeat(2,1fr)}}
+
+/* 경로의 조사 판정 (ADR-0024) */
+.fd-ip-research{margin:4px 0 0;font-size:12.5px;line-height:1.6;color:var(--muted)}
+.fd-ip-research b{font-weight:700;margin-right:6px;color:var(--ink)}
+.fd-ip-research a{margin-left:6px;font-size:11.5px;color:var(--blue)}
+.fd-ip.v-confirmed .fd-ip-research b{color:var(--up)}
+.fd-ip.v-partial .fd-ip-research b{color:#9a6b00}
+.fd-ip.v-refuted .fd-ip-research b{color:var(--down)}
+.fd-ip.v-refuted .fd-ip-claim{text-decoration:line-through;color:var(--muted2)}
+.fd-ip-neg{font-style:normal;font-size:11px;font-weight:700;color:var(--down);margin-left:6px}
