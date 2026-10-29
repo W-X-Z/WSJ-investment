@@ -27,3 +27,7 @@
 - 문서: `docs/agents/thesis.md`(주간 테제 작업), paths·verify 문서에 thesis 기록 규칙.
 - 첫 세션 실행(2026-10-29, 사람이 돌림): 테제 5개 추가 — `packaging_capacity_premium_2026`(stage 2, ABF 2020 닮음) · `rack_power_800vdc_2027`(2) · `onsite_power_grid_bypass_2026`(2) · `inp_laser_supply_regime_2026`(2, AXT 는 이미 반영) · `test_intensity_stacking_2026`(1, HBM 2023 의 2차 파동) — 근거 10건. 모두 `research/theses/<key>.json` + `theses_20261029*.sql`.
 - 다음: 테제 화면(/theses: statement·드라이버 현재값·근거 타임라인·stage), 리레이팅 가치평가, point-in-time 재현 하네스(hbm_2023 부터), 드라이버 관측치의 정기 수집(출력 토큰·계약가·HBM 수급비).
+
+## 개정 1 (2026-10-30) — 리레이팅 가치평가 구현 (결정 6)
+`wsj.ecosystems.rerating`: 세후 영업이익 기준으로 (1) 시장 내재 지속 마진 = 시총 / (배수 × 매출 × (1−세율)) (2) 업종 밴드(memory·substrate·equipment — 가정)별 trough·mid·regime 가격 (3) 그 밴드로 지금 시총을 정당화하는 필요 매출 배수. 확률은 정하지 않는다.
+첫 측정(2026-10-28 가격, TTM 2026-06): SK hynix 영업이익률 68%, 세후 영업이익 10.9배 — 배수 12배면 **62% 마진이 영원히 간다** 고 가격에 넣고 있다(반토막 뒤에도). 삼성전기 102.7배·테크윙 65.8배·한미반도체 107.2배 — 마진이 아니라 매출 성장(regime 밴드에서도 필요 매출 ×2.5·×1.7·×7.3)을 가격에 넣었다. 가격 기준으로 '조용한'(quiet) 테크윙도 배수로는 조용하지 않다.
