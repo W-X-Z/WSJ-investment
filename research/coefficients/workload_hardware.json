@@ -1,0 +1,259 @@
+{
+ "schema_version": 1,
+ "as_of": "2026-10-30",
+ "purpose": "워크로드 → 하드웨어 계수표 (ADR-0026 T-4). 테제가 '얼마나 더' 를 말하려면 사용량 × 토큰당 하드웨어 강도가 필요하다. 계산은 wsj.ecosystems.coefficients.",
+ "verification": "verified = 이 파일 작성자가 원문을 직접 열어 숫자를 확인. agent_reported = 스캔 에이전트가 가져왔고 작성자가 재확인하지 않음(근거로 쓰기 전에 연다). derived = 아래 수식으로 계산.",
+ "kv_formula": {
+  "gqa": "bytes/token = 2 (K,V) × layers × kv_heads × head_dim × bytes_per_elem",
+  "mla": "bytes/token = layers × (kv_lora_rank + qk_rope_head_dim) × bytes_per_elem",
+  "resident_kv": "상주 KV 바이트 = 동시 살아 있는 세션 수 × 평균 컨텍스트 토큰 × bytes/token. 에이전트 세션은 대부분의 시간이 유휴라(M365 추적: 보존 시간 중 추론 5.6%) HBM 이 아니라 싼 계층(DRAM·CXL·SSD)에 산다."
+ },
+ "arch_kv": [
+  {
+   "model": "Qwen3-235B-A22B",
+   "date": "2025-04-29",
+   "attention": "gqa",
+   "layers": 94,
+   "kv_heads": 4,
+   "head_dim": 128,
+   "bytes_per_elem": 2,
+   "source": "https://huggingface.co/Qwen/Qwen3-235B-A22B/raw/main/config.json",
+   "verification": "verified"
+  },
+  {
+   "model": "DeepSeek-V3",
+   "date": "2024-12-26",
+   "attention": "mla",
+   "layers": 61,
+   "kv_lora_rank": 512,
+   "qk_rope_head_dim": 64,
+   "bytes_per_elem": 2,
+   "source": "https://huggingface.co/deepseek-ai/DeepSeek-V3/raw/main/config.json",
+   "verification": "verified"
+  },
+  {
+   "model": "DeepSeek-V3 (FP8 KV)",
+   "date": "2024-12-26",
+   "attention": "mla",
+   "layers": 61,
+   "kv_lora_rank": 512,
+   "qk_rope_head_dim": 64,
+   "bytes_per_elem": 1,
+   "source": "https://huggingface.co/deepseek-ai/DeepSeek-V3/raw/main/config.json",
+   "verification": "derived"
+  },
+  {
+   "model": "Llama-3-70B (BF16)",
+   "date": "2024-04-18",
+   "attention": "gqa",
+   "bytes_per_token_reported": 327680,
+   "note": "논문 주장: 128k 시퀀스당 KV 42GB (= 320KB/token). config 원문은 게이트로 못 열었다.",
+   "source": "https://arxiv.org/abs/2609.30854",
+   "verification": "agent_reported"
+  },
+  {
+   "model": "Kimi K3 (MLA 층)",
+   "date": "2026-10-16",
+   "attention": "hybrid",
+   "bytes_per_token_reported": 27648,
+   "note": "MLA KV ≈27KB/token/GPU (KDA 69층 + MLA 24층)",
+   "source": "https://blog.vllm.ai/blog/2026-10-16-kimi-k3-mi355x",
+   "verification": "agent_reported"
+  },
+  {
+   "model": "DeepSeek-V4.1-Flash",
+   "date": "2026-09-10",
+   "attention": "csa2",
+   "bytes_per_token_reported": 890,
+   "note": "원문: 'Only 890 bytes per token for global KV cache, thanks to cross-layer KV sharing and FP4 compression'; 'Going from 128K to 855K, 6.7x the context only adds 0.6 ms (+7%)'; 'KV capacity rarely limits batch size'; 'MoE takes 62% of the target step, while attention and the indexer together take only 13%'. 주의: 'global' KV 만의 수치 — 로컬(슬라이딩 윈도) KV 가 따로 있으면 실제 토큰당 바이트는 더 크다. 이전 세대 3,514B 는 원문에 없어 뺐다.",
+   "source": "https://vllm.ai/blog/2026-10-23-deepseek-v41-flash-pd-wide-ep",
+   "verification": "verified"
+  }
+ ],
+ "usage_series": [
+  {
+   "metric": "google_tokens_per_month",
+   "unit": "tokens/month",
+   "date": "2024-05",
+   "value": 9700000000000.0,
+   "source": "https://blog.google/innovation-and-ai/sundar-pichai-io-2026/",
+   "verification": "verified",
+   "note": "I/O 2026 글이 2년 전 수치로 인용"
+  },
+  {
+   "metric": "google_tokens_per_month",
+   "unit": "tokens/month",
+   "date": "2025-05",
+   "value": 480000000000000.0,
+   "source": "https://blog.google/innovation-and-ai/sundar-pichai-io-2026/",
+   "verification": "verified"
+  },
+  {
+   "metric": "google_tokens_per_month",
+   "unit": "tokens/month",
+   "date": "2025-07",
+   "value": 980000000000000.0,
+   "source": "https://www.implicator.ai/googles-quadrillion-tokens-brag-hides-a-slower-story.md",
+   "verification": "verified",
+   "note": "제3자 정리 (Google 발표 인용)"
+  },
+  {
+   "metric": "google_tokens_per_month",
+   "unit": "tokens/month",
+   "date": "2025-10",
+   "value": 1300000000000000.0,
+   "source": "https://www.implicator.ai/googles-quadrillion-tokens-brag-hides-a-slower-story.md",
+   "verification": "verified",
+   "note": "제3자 정리; 같은 글: 월 증가분이 봄 +250T → 7월 이후 +107T 로 반감"
+  },
+  {
+   "metric": "google_tokens_per_month",
+   "unit": "tokens/month",
+   "date": "2026-05",
+   "value": 3200000000000000.0,
+   "source": "https://blog.google/innovation-and-ai/sundar-pichai-io-2026/",
+   "verification": "verified",
+   "note": "7x Y/Y"
+  },
+  {
+   "metric": "google_internal_devtool_tokens_per_day",
+   "unit": "tokens/day",
+   "date": "2026-03",
+   "value": 500000000000.0,
+   "source": "https://blog.google/innovation-and-ai/sundar-pichai-io-2026/",
+   "verification": "verified"
+  },
+  {
+   "metric": "google_internal_devtool_tokens_per_day",
+   "unit": "tokens/day",
+   "date": "2026-05",
+   "value": 3000000000000.0,
+   "source": "https://blog.google/innovation-and-ai/sundar-pichai-io-2026/",
+   "verification": "verified",
+   "note": "'몇 주마다 두 배'"
+  },
+  {
+   "metric": "output_tokens_per_query",
+   "unit": "tokens",
+   "date": "2026-07",
+   "value": 35000,
+   "source": "https://www.trendforce.com/insights/ai-inference-drives-memory-demand",
+   "verification": "verified",
+   "note": "2H24 이후 연 5배↑, 3~4만 (Nvidia 자료 인용)"
+  },
+  {
+   "metric": "agent_session_context_tokens_p50_at_call30",
+   "unit": "tokens",
+   "date": "2026-10",
+   "value": 68000,
+   "source": "https://arxiv.org/abs/2610.22863",
+   "verification": "agent_reported",
+   "note": "M365 Deep Research: 30번째 호출 때 중앙값 10K→68K, 토큰의 80% 가 프리픽스 캐시에서"
+  }
+ ],
+ "cache_price_ratio": [
+  {
+   "provider": "Anthropic",
+   "model": "Fable 5.1 / Mythos 5.1",
+   "date": "2026-09-01",
+   "ratio": 0.025,
+   "source": "https://docs.claude.com/en/release-notes/overview",
+   "verification": "agent_reported"
+  },
+  {
+   "provider": "Anthropic",
+   "model": "Sonnet 5.5",
+   "date": "2026-10-07",
+   "ratio": 0.05,
+   "note": "0.1× → 0.05× 인하",
+   "source": "https://docs.claude.com/en/release-notes/overview",
+   "verification": "agent_reported"
+  },
+  {
+   "provider": "OpenAI",
+   "model": "GPT-6.1 Sol",
+   "date": "2026-09-29",
+   "ratio": 0.05,
+   "source": "https://platform.openai.com/docs/changelog",
+   "verification": "agent_reported"
+  },
+  {
+   "provider": "OpenAI",
+   "model": "GPT-6 Astra",
+   "date": "2026-09-03",
+   "ratio": 0.1,
+   "note": "12시간 캐시 쓰기 2.5×",
+   "source": "https://developers.openai.com/api/docs/pricing",
+   "verification": "agent_reported"
+  },
+  {
+   "provider": "DeepSeek",
+   "model": "deepseek-flash (V4.1-Flash)",
+   "date": "2026-10-17",
+   "ratio": 0.02,
+   "note": "적중 $0.003 / 미스 $0.15",
+   "source": "https://api-docs.deepseek.com/quick_start/pricing/",
+   "verification": "agent_reported"
+  }
+ ],
+ "scarcity_events": {
+  "definition": "컴퓨트 희소성 지수 = 한 달 안에 공개된 (a) 가격 인상 예고 (b) 접근 제한·배급 (c) 시간대·우선순위 가격 (d) 용량 부족을 이유로 든 모델 퇴역의 건수. 가격 인하·무료 확대는 음수로 센다. 2년 전엔 없던 데이터 — 공급이 수요를 못 따라갈 때 가장 먼저 움직인다.",
+  "events": [
+   {
+    "date": "2026-09-18",
+    "provider": "Google",
+    "kind": "rationing",
+    "what": "Gemini 2.5 접근을 기존 사용자로 제한 '용량 유지 위해'",
+    "source": "https://ai.google.dev/gemini-api/docs/changelog",
+    "verification": "agent_reported"
+   },
+   {
+    "date": "2026-10-13",
+    "provider": "Google",
+    "kind": "price_up",
+    "what": "Gemini 4 Argon $2/$10 → 12/1 부터 $4/$20",
+    "source": "https://ai.google.dev/gemini-api/docs/changelog",
+    "verification": "agent_reported"
+   },
+   {
+    "date": "2026-09-02",
+    "provider": "Google",
+    "kind": "price_up",
+    "what": "Gemini 3.8 Flash 1/1 부터 2배, 컨텍스트 캐시 보관료 2배",
+    "source": "https://ai.google.dev/gemini-api/docs/pricing",
+    "verification": "agent_reported"
+   },
+   {
+    "date": "2026-10-17",
+    "provider": "DeepSeek",
+    "kind": "time_of_day",
+    "what": "피크/오프피크 2× 시간대 가격",
+    "source": "https://api-docs.deepseek.com/news/news261017",
+    "verification": "agent_reported"
+   },
+   {
+    "date": "2026-09-03",
+    "provider": "OpenAI",
+    "kind": "priority_tier",
+    "what": "Ultrafast 6× 티어",
+    "source": "https://developers.openai.com/api/docs/pricing",
+    "verification": "agent_reported"
+   },
+   {
+    "date": "2026-07-30",
+    "provider": "OpenAI",
+    "kind": "price_down",
+    "what": "GPT-5.6 Luna −80%, Terra −20%",
+    "source": "https://platform.openai.com/docs/changelog",
+    "verification": "agent_reported"
+   }
+  ]
+ },
+ "removed": [
+  {
+   "model": "DeepSeek-V4-Flash",
+   "bytes_per_token_reported": 3514,
+   "why": "에이전트 보고였으나 인용된 원문(vLLM 2026-10-23)에 그 숫자가 없음 — 2026-10-30 확인"
+  }
+ ]
+}
