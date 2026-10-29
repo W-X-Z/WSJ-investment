@@ -717,3 +717,23 @@ def test_node_peer_valuations_lists_in_scope_peers_cheapest_first():
     rows = node_peer_valuations(g, "company:a", money)
     assert [r["company_id"] for r in rows] == ["company:b"] and rows[0]["ps"] == 1.5 and rows[0]["node"] == "component:x"  # c 는 가격 없음, j 는 범위 밖
     assert [r["company_id"] for r in node_peer_valuations(g, "company:b", money)] == ["company:a"]
+
+
+def test_company_signals_keep_focus_companies_past_the_cap_and_expose_event_id():
+    """ADR-0024 (10/29 첫 실행에서 드러난 구멍): 리포트 후보 기업의 소식은 신호 상한에 잘리면 안 되고, items 에 event_id 가 있어야 조사 결과(event_ids)를 근거 id 로 잇는다."""
+    from datetime import datetime, timedelta
+
+    from wsj.ecosystems.company_feed import CompanyEvent
+    from wsj.ecosystems.ideas import Registry, company_signals
+
+    g = {"nodes": [{"id": f"company:c{i}", "kind": "company", "label": f"C{i}", "listing": {"ticker": f"C{i}", "exchange": "Nasdaq"}, "size_band": "small"} for i in range(5)], "edges": []}
+    now = datetime(2026, 10, 29, tzinfo=UTC)
+    events = []
+    for i in range(5):  # c0 가 가장 중요, c4 가 가장 덜 중요
+        events.append(CompanyEvent(company_id=f"company:c{i}", kind="news", published_at=now - timedelta(days=1), title=f"C{i} 수주 공시 {i}",
+                                   url=f"https://x/{i}", publisher="P", tier="third_party_report", importance=3 if i == 0 else 2, lang="ko", text="확인한 사실",
+                                   extra={"event_id": f"ev{i}"}))
+    reg = Registry()
+    sigs = company_signals(events, g, reg, now, focus={"company:c4"}, max_signals=1)
+    assert [s["subject"] for s in sigs] == ["company:c0", "company:c4"]   # 상한 1 + focus 1 (focus 는 순위와 상관없이 남는다)
+    assert sigs[1]["items"][0]["event_id"] == "ev4" and sigs[1]["items"][0]["ev"].startswith("S")
