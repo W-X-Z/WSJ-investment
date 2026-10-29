@@ -40,7 +40,7 @@
   적당한 미국·한국 기업이 없으면 company 를 null 로 두고 경로만 — 이슈 탭에 '업계 영향'으로 남는다. 안전한 것만 모으지 말고 대담한 2차·3차 고리를 섞는다; 걸러내는 것은 엔진의 일이다. existing 과 같은 논리면 extends 에 idea_key.
 - 검사·선택: `.venv/bin/python -m wsj.ecosystems.ideas --snapshot ../.ideas_run/s1 --from-hypotheses ../.ideas_run/s1/hypotheses.json --hypotheses-out ../.ideas_run/s1/selected.json --emit-research-plan ../.ideas_run/s1/research_plan.json --emit-sql ../.ideas_run/s1/sql`
   엔진이 검사(근거 id·노드·시장 범위)하고 채점(구체·대담·반증 가능·설명력 각 3점, 경로 끊김·기업 중복 감점)해 기업이 있는 경로 중 상위 max_ideas 개를 리포트 후보로 고른다(기업당 1개, 생태계마다 1개 이상).
-  `hypothesis rejected:` 가 절반 넘으면 사유대로 hypotheses.json 을 고쳐 한 번 더. `s1/sql/zx_issue_hypotheses.sql` 이 이슈별 경로(≤3, selected·rank·trigger·change 포함) 저장문이다.
+  `hypothesis rejected:` 가 절반 넘으면 사유대로 hypotheses.json 을 고쳐 한 번 더. `s1/sql/zx_issue_hypotheses*.sql` 이 이슈별 경로(≤3, selected·rank·trigger·change 포함) 저장문이다 (이슈 5개씩 파일을 나눈다).
 
 ## B. 원문 확인(기업 소식)의 규칙
 - WebFetch 로 원문을 연다(news.google.com 은 원문 주소로). 안 열리면 WebSearch 로 같은 사건의 다른 기사를 찾는다. 쓰지 않는 출처: 자동 생성 시세 요약, 토론방·블로그·카페·유튜브. 네이버 증권·KIND·DART 본문은 막혀 있다 — 같은 내용을 옮긴 기사를 찾는다.
