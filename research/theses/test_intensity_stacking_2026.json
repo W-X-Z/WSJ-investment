@@ -1,0 +1,193 @@
+{
+ "thesis_key": "test_intensity_stacking_2026",
+ "title": "적층이 늘수록 칩당 테스트·번인 시간이 늘어 테스트 장비·소모품이 메모리 비트보다 빨리 큰다",
+ "statement": "HBM 이 12단·16단으로, 가속기가 2.5D/3D 로 쌓이면 불량 다이 하나가 패키지 전체를 버리게 되므로 적층 전 KGD 검사와 적층 후 KGSD·번인 시간이 비트 성장보다 빠르게 는다. 대만 테스트 소모품사의 9월 매출이 그것을 먼저 보여 준다 — WinWay(소켓) +88%, MPI(프로브카드) +82%, Chroma(ATE) +206%. 메모리 테스터 시장은 2025년 $21억(Advantest 61%)이고, SK hynix 가 HBM 요청이 공급의 2배라고 밝힌 뒤 HBM4 12단 수율·발열 문제가 이어진다는 보도는 검사 강도를 더 올린다. 2023~24 HBM 사례에서 메모리사 다음에 장비사(한미반도체 6배)가 왔듯, 이번엔 테스트·번인 고리(테크윙·ISC·리노공업·FormFactor·Cohu·Aehr)가 2차 파동이라는 내기다.",
+ "ecosystem": "hbm",
+ "chain": [
+  {
+   "node": "req:hbm_stack",
+   "claim": "12단·16단 적층, HBM4 12단 수율·발열 문제 지속 보도",
+   "evidence": [
+    {
+     "url": "https://news.google.com/rss/articles/CBMirgFBVV95cUxOaENzeGF6NkFYUU9Tc2JYc0lSZnBIUkE5THVXWndhT0ExSV9oc3ZJLXRVRkxkdXBLT09xNHA5eTdxamNfcnVUYWNnd3ZXWExOcURhWW9aU1c1YjVIVTMxaWJObkl3dkdHRjRkbkR2X0EzQmZRMUFMREIxaVYzczFIdUZCMVBYazRPaGxzWjFwNVAzcVVaZURiRDdNMWVoN2Q5c0NCUjUtRmE5TEhuUXc?oc=5",
+     "title": "Vera Rubin HBM4 보도",
+     "date": "2026-10-27",
+     "kind": "news"
+    }
+   ]
+  },
+  {
+   "node": "bottleneck:hbm_kged",
+   "claim": "적층 전 KGD·적층 후 KGSD 검사가 병목 — 불량 1개가 패키지 전체를 버림",
+   "evidence": []
+  },
+  {
+   "node": "component:memory_test_socket",
+   "claim": "대만 소모품사 9월 매출: WinWay +88%, MPI +82%, Chroma ATE +206%",
+   "evidence": [
+    {
+     "url": "https://mops.twse.com.tw/mops/#/web/t146sb05?companyId=6515",
+     "title": "WinWay 월매출",
+     "date": "2026-10-10",
+     "kind": "official"
+    }
+   ]
+  },
+  {
+   "node": "equipment:memory_ate",
+   "claim": "메모리 테스터 시장 2025 $21억, Advantest 61%",
+   "evidence": [
+    {
+     "url": "https://xenospectrum.com/en/china-memory-testing-hbm-equipment/",
+     "title": "memory tester market",
+     "date": "2026-10-01",
+     "kind": "trade_press"
+    }
+   ]
+  },
+  {
+   "node": "company:techwing",
+   "claim": "테스트·번인 장비·소모품사의 2차 파동 (추론; 2024 한미반도체 사례)",
+   "evidence": []
+  }
+ ],
+ "drivers": [
+  {
+   "id": "tw_test_consumables_yoy",
+   "label": "대만 테스트 소모품·ATE 월매출 YoY (WinWay·MPI·Chroma)",
+   "metric": "% YoY",
+   "latest": {
+    "value": "+88 / +82 / +206",
+    "as_of": "2026-09-30",
+    "source": "MOPS 9월 월매출"
+   },
+   "threshold": "두 달 연속 +20% 미만이면 약화",
+   "direction": "up"
+  },
+  {
+   "id": "hbm_demand_supply_multiple",
+   "label": "SK hynix HBM 요청/공급 배수",
+   "metric": "x",
+   "latest": {
+    "value": 2,
+    "as_of": "2026-10-28",
+    "source": "obs:hbm_demand_supply_multiple_skhynix"
+   },
+   "threshold": "1.2 이하면 약화",
+   "direction": "up",
+   "indicator_id": "obs:hbm_demand_supply_multiple_skhynix"
+  },
+  {
+   "id": "hbm_stack_height_mainstream",
+   "label": "주류 HBM 적층 수 (Rubin 세대)",
+   "metric": "단",
+   "latest": {
+    "value": "8단 먼저, 12단 지연 (보도)",
+    "as_of": "2026-10-27",
+    "source": "Wccftech 보도"
+   },
+   "threshold": "12단 수율 안정 발표면 검사 강도 완화",
+   "direction": "up"
+  },
+  {
+   "id": "memory_tester_market",
+   "label": "메모리 테스터 시장",
+   "metric": "USD bn",
+   "latest": {
+    "value": 2.1,
+    "as_of": "2025-12-31",
+    "source": "Advantest 추정"
+   },
+   "threshold": "",
+   "direction": "up"
+  }
+ ],
+ "beneficiaries": [
+  {
+   "company": "company:techwing",
+   "role": "primary",
+   "basis": "HBM 핸들러·프로버 (한국)",
+   "size_band": "mid",
+   "rerating": {
+    "from": "메모리 핸들러 사이클",
+    "to": "HBM 검사 강도 구조주",
+    "why": "10/28 공시는 SSD 테스터 — HBM 수주 공시가 trigger"
+   }
+  },
+  {
+   "company": "company:leeno",
+   "role": "secondary",
+   "basis": "테스트 소켓·핀 — 메모리 노출 미확인",
+   "size_band": "large",
+   "rerating": {
+    "from": "",
+    "to": "",
+    "why": "11/16 IR 에서 메모리 비중 확인"
+   }
+  },
+  {
+   "company": "company:form",
+   "role": "secondary",
+   "basis": "DRAM 프로브카드 (미국) — MPI 와 같은 노드",
+   "size_band": "mid",
+   "rerating": {
+    "from": "",
+    "to": "",
+    "why": ""
+   }
+  },
+  {
+   "company": "company:cohu",
+   "role": "secondary",
+   "basis": "핸들러·테스트 (미국)",
+   "size_band": "mid",
+   "rerating": {
+    "from": "",
+    "to": "",
+    "why": ""
+   }
+  },
+  {
+   "company": "company:aehr",
+   "role": "secondary",
+   "basis": "웨이퍼 레벨 번인 — Chroma 와 같은 노드",
+   "size_band": "small",
+   "rerating": {
+    "from": "",
+    "to": "",
+    "why": "1개월 -35%"
+   }
+  },
+  {
+   "company": "company:hanmi_semi",
+   "role": "secondary",
+   "basis": "TC 본더 (2024 사례)",
+   "size_band": "mid",
+   "rerating": {
+    "from": "",
+    "to": "",
+    "why": ""
+   }
+  }
+ ],
+ "losers": [],
+ "falsifiers": [
+  {
+   "what": "WinWay·MPI 월매출 YoY 가 두 달 연속 +20% 미만",
+   "metric": "MOPS 월매출",
+   "threshold": "< +20%",
+   "due": "2027-03-10"
+  },
+  {
+   "what": "SK hynix·삼성이 12단 HBM4 수율 안정·검사 공정 단축을 발표",
+   "metric": "컨콜·보도",
+   "threshold": "",
+   "due": "2027-06-30"
+  }
+ ],
+ "stage": 1,
+ "stage_reason": "동인(적층·수율 문제·대만 소모품 매출)은 움직이지만 한국·미국 장비사의 수주·증설 반응은 아직 원문으로 확인 안 됨",
+ "benchmark": "hbm_2023",
+ "model": "claude-fable-5-1",
+ "method": "session"
+}

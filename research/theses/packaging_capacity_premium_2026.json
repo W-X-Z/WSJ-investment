@@ -1,0 +1,209 @@
+{
+ "thesis_key": "packaging_capacity_premium_2026",
+ "title": "AI 가속기의 병목이 웨이퍼에서 패키징으로 옮겨가 패키징이 가격 결정력을 갖는다",
+ "statement": "CoWoS·대면적 ABF 기판·하이브리드 본딩이 AI 가속기 출하의 상한이 되면서 패키징이 더 이상 원가 항목이 아니라 가격 결정자가 된다. TSMC 는 CoWoS 가격 최대 20% 인상을 검토하고(2026-10-28) 장비 리드타임은 8개월, Unimicron 은 NT$509억 장기 리드타임 장비를 선주문했으며, 삼성전기는 세종 FC-BGA 에 4.27조원을 넣고 서버 CPU 기판 공급을 4분기 QoQ 2배로 늘린다. NVIDIA 는 기판·CPO·패키징·테스트 6개 공급사에 수십억 달러를 선투자해 캐파를 예약했다(2026-10-27). 2020~21 ABF 사례와 같은 구조 — 공급사의 과거 손실 기억이 증설을 늦추고 고객이 선투자로 캐파를 산다 — 이고, 이때 가격·배수가 함께 오르는 쪽은 캐파를 가진 패키징·기판사와 리드타임이 긴 장비·소재사다.",
+ "ecosystem": "hbm",
+ "chain": [
+  {
+   "node": "req:ai_large_package",
+   "claim": "가속기 패키지 면적·층수 증가",
+   "evidence": []
+  },
+  {
+   "node": "bottleneck:cowos_capacity",
+   "claim": "TSMC CoWoS 가격 최대 20% 인상 검토, 장비 리드타임 8개월",
+   "evidence": [
+    {
+     "url": "https://www.tomshardware.com/tech-industry/semiconductors/tsmc-reportedly-weighs-20-percent-cowos-price-increase-as-nvidia-blackwell-and-rubin-chips-put-pressure-on-packaging-capacity-equipment-lead-times-stretch-to-eight-months",
+     "title": "TSMC CoWoS +20%",
+     "date": "2026-10-28",
+     "kind": "news"
+    }
+   ]
+  },
+  {
+   "node": "bottleneck:substrate_capacity",
+   "claim": "Unimicron NT$509억 장기 리드타임 장비 선주문, 삼성전기 세종 4.27조·서버 CPU 기판 QoQ 2배",
+   "evidence": [
+    {
+     "url": "https://www.digitimes.com/news/a20261028PD222/unimicron-equipment-capacity-demand-production.html",
+     "title": "Unimicron 장비 발주",
+     "date": "2026-10-28",
+     "kind": "trade_press"
+    },
+    {
+     "url": "https://www.thelec.kr/news/articleView.html?idxno=64447",
+     "title": "삼성전기 3Q 컨콜",
+     "date": "2026-10-28",
+     "kind": "trade_press"
+    }
+   ]
+  },
+  {
+   "node": "company:nvda",
+   "claim": "고객이 선투자로 캐파를 예약 — 6개 공급사에 수십억 달러",
+   "evidence": [
+    {
+     "url": "https://www.tomshardware.com/tech-industry/semiconductors/nvidia-is-bankrolling-ai-accelerator-supply-chain-buildout-to-reserve-production-capacity-announces-billion-dollar-deals-with-six-major-suppliers-across-substrates-advanced-packaging-semiconductor-testing-and-optical-engines",
+     "title": "NVIDIA 캐파 선투자",
+     "date": "2026-10-27",
+     "kind": "news"
+    }
+   ]
+  },
+  {
+   "node": "company:semco",
+   "claim": "캐파를 가진 기판·패키징사와 리드타임 긴 장비사의 가격·배수 상승 (추론; ABF 2020~21 재현)",
+   "evidence": []
+  }
+ ],
+ "drivers": [
+  {
+   "id": "cowos_price_hike",
+   "label": "CoWoS 가격 인상 폭 (검토)",
+   "metric": "%",
+   "latest": {
+    "value": 20,
+    "as_of": "2026-10-27",
+    "source": "obs:cowos_price_hike_pct"
+   },
+   "threshold": "인상 철회면 약화",
+   "direction": "up",
+   "indicator_id": "obs:cowos_price_hike_pct"
+  },
+  {
+   "id": "cowos_equipment_leadtime",
+   "label": "CoWoS 장비 리드타임",
+   "metric": "months",
+   "latest": {
+    "value": 8,
+    "as_of": "2026-10-27",
+    "source": "obs:cowos_equipment_leadtime_months"
+   },
+   "threshold": "4개월 이하면 완화",
+   "direction": "up",
+   "indicator_id": "obs:cowos_equipment_leadtime_months"
+  },
+  {
+   "id": "semco_server_cpu_substrate_supply",
+   "label": "삼성전기 서버 CPU 기판 공급 배수 (QoQ)",
+   "metric": "x",
+   "latest": {
+    "value": 2,
+    "as_of": "2026-10-28",
+    "source": "obs:semco_fcbga_server_cpu_supply_multiple"
+   },
+   "threshold": "",
+   "direction": "up",
+   "indicator_id": "obs:semco_fcbga_server_cpu_supply_multiple"
+  },
+  {
+   "id": "substrate_equipment_backlog",
+   "label": "기판 장비사 수주잔고 (Group Up)",
+   "metric": "NT$ 억",
+   "latest": {
+    "value": 60,
+    "as_of": "2026-10-21",
+    "source": "obs:substrate_equipment_backlog_groupup"
+   },
+   "threshold": "",
+   "direction": "up",
+   "indicator_id": "obs:substrate_equipment_backlog_groupup"
+  },
+  {
+   "id": "osat_utilization",
+   "label": "Powertech 가동률",
+   "metric": "%",
+   "latest": {
+    "value": 90,
+    "as_of": "2026-10-27",
+    "source": "obs:powertech_utilization_pct"
+   },
+   "threshold": "80% 아래면 완화",
+   "direction": "up",
+   "indicator_id": "obs:powertech_utilization_pct"
+  }
+ ],
+ "beneficiaries": [
+  {
+   "company": "company:semco",
+   "role": "primary",
+   "basis": "FC-BGA 캐파 보유 + NVIDIA 전용 라인",
+   "size_band": "large",
+   "rerating": {
+    "from": "MLCC·카메라 모듈 부품사 배수",
+    "to": "AI 기판 캐파 보유사 배수",
+    "why": "2020~21 Unimicron·Nan Ya 의 재현"
+   }
+  },
+  {
+   "company": "company:amkr",
+   "role": "secondary",
+   "basis": "OSAT 첨단 패키징",
+   "size_band": "mid",
+   "rerating": {
+    "from": "",
+    "to": "",
+    "why": ""
+   }
+  },
+  {
+   "company": "company:hanmi_semi",
+   "role": "secondary",
+   "basis": "TC 본더 (리드타임 긴 장비)",
+   "size_band": "mid",
+   "rerating": {
+    "from": "",
+    "to": "",
+    "why": "2024 사례 2차 파동"
+   }
+  },
+  {
+   "company": "company:intekplus",
+   "role": "secondary",
+   "basis": "기판·패키지 검사 장비",
+   "size_band": "small",
+   "rerating": {
+    "from": "",
+    "to": "",
+    "why": ""
+   }
+  },
+  {
+   "company": "company:duksan_himetal",
+   "role": "secondary",
+   "basis": "마이크로 솔더볼 (소재)",
+   "size_band": "small",
+   "rerating": {
+    "from": "",
+    "to": "",
+    "why": ""
+   }
+  }
+ ],
+ "losers": [
+  {
+   "node": "company:nvda",
+   "why": "패키징 단가 인상은 가속기 원가 상승 — 가속기사의 총마진 압박 (크기는 작음)"
+  }
+ ],
+ "falsifiers": [
+  {
+   "what": "CoWoS 가격 인상 철회 또는 장비 리드타임 4개월 이하",
+   "metric": "보도·컨콜",
+   "threshold": "",
+   "due": "2027-03-31"
+  },
+  {
+   "what": "삼성전기 FC-BGA 매출이 두 분기 연속 QoQ 감소",
+   "metric": "분기 실적",
+   "threshold": "< 0 두 분기",
+   "due": "2027-08-15"
+  }
+ ],
+ "stage": 2,
+ "stage_reason": "가격 인상 검토·리드타임·고객 선투자·증설(공급 반응) 모두 원문 확인 — 시장 반영(배수)은 기판사별로 다름",
+ "benchmark": "abf_substrate_2020",
+ "model": "claude-fable-5-1",
+ "method": "session"
+}
