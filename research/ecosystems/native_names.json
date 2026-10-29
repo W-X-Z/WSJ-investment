@@ -138,7 +138,11 @@
     "company:innoscience": "英诺赛科",
     "company:taihan_fiberoptics": "대한광통신",
     "company:csun": "志聖",
-    "company:group_up": "群翊"
+    "company:group_up": "群翊",
+    "company:tlb": "티엘비",
+    "company:simmtech": "심텍",
+    "company:vinatech": "비나텍",
+    "company:gold_circuit": "金像電"
   },
   "news_context": {
     "_note": "현지어 이름이 흔한 낱말이라 다른 기사(게임·인물)가 섞이는 기업 — 현지 뉴스 검색에 이 문맥을 붙인다",

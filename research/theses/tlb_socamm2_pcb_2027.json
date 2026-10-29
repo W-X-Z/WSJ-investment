@@ -1,0 +1,142 @@
+{
+ "kind": "thesis",
+ "scale": "micro",
+ "stage": 0,
+ "model": "claude-opus-5-5",
+ "method": "session",
+ "losers": [],
+ "thesis_key": "tlb_socamm2_pcb_2027",
+ "parent_key": "memory_module_chips_decouple_2027",
+ "origin": "decompose",
+ "ecosystem": "hbm",
+ "title": "SOCAMM2 기판은 비트가 아니라 슬롯 수로 팔린다 — 티엘비",
+ "statement": "NVIDIA Vera CPU 의 SOCAMM2(LPDDR 모듈)는 CPU당 슬롯 수가 정해져 있어, 모듈당 비트가 줄어도 기판 수량은 줄지 않고 기판 판가는 일반 서버 모듈 기판의 약 3배다. 티엘비의 2026 SOCAMM 매출 가이던스는 ₩200억 → ₩500억 → ₩700억으로 세 번 올랐고 2분기 말 수주잔고는 ₩1,318억이다. 그런데 주가는 메모리 비트 우려로 고점 대비 약 38% 할인됐다 — 3Q26 수주잔고와 4Q26 SOCAMM 매출이 판정한다.",
+ "weakest_link": "티엘비의 SOCAMM2 기판 매출이 4Q26 에 3Q26 보다 늘고 2026 연간 SOCAMM 가이던스가 ₩600억 이상으로 유지된다 — 5개 공급사 중 약 20% 점유가 지켜진다",
+ "chain": [
+  {
+   "node": "component:server_dram_lpdram",
+   "claim": "Vera CPU 가 MS·SpaceXAI 데이터센터에 채택되며 SOCAMM2 수요 (IBK)",
+   "evidence": [
+    {
+     "url": "https://core.asiae.co.kr/article/2026082613254773558",
+     "title": "아시아경제(IBK) — 티엘비 SOCAMM 가이던스 200→500→700억, 판가 일반 기판 3배, 2Q 수주잔고 1,318억, 점유율 약 20%",
+     "date": "2026-08-27",
+     "kind": "news"
+    }
+   ]
+  },
+  {
+   "node": "component:memory_module_pcb",
+   "claim": "SOCAMM 기판 판가는 일반 서버 모듈 기판의 약 3배, 공급 가능 5개사",
+   "evidence": [
+    {
+     "url": "https://core.asiae.co.kr/article/2026082613254773558",
+     "title": "아시아경제(IBK) — 티엘비 SOCAMM 가이던스 200→500→700억, 판가 일반 기판 3배, 2Q 수주잔고 1,318억, 점유율 약 20%",
+     "date": "2026-08-27",
+     "kind": "news"
+    },
+    {
+     "url": "https://www.fnnews.com/news/202606080748297422",
+     "title": "파이낸셜뉴스 — 심텍 SOCAMM PCB 시장 3,000억, 점유율 50% 목표",
+     "date": "2026-06-08",
+     "kind": "news"
+    }
+   ]
+  },
+  {
+   "node": "company:tlb",
+   "claim": "가이던스 ₩700억(2026), 2Q 수주잔고 ₩1,318억, 2Q 매출 ₩882억(+37.8%)·영업이익 ₩128억",
+   "evidence": [
+    {
+     "url": "https://core.asiae.co.kr/article/2026082613254773558",
+     "title": "아시아경제(IBK) — 티엘비 SOCAMM 가이던스 200→500→700억, 판가 일반 기판 3배, 2Q 수주잔고 1,318억, 점유율 약 20%",
+     "date": "2026-08-27",
+     "kind": "news"
+    },
+    {
+     "url": "https://etoday.co.kr/news/view/2614327",
+     "title": "이투데이 — 티엘비 소캠 공급 확대, 2Q 매출 882억(+37.8%)·OP 128억, CXL PCB 수요 대기",
+     "date": "2026-08-25",
+     "kind": "news"
+    }
+   ]
+  }
+ ],
+ "drivers": [
+  {
+   "id": "tlb_socamm_guide",
+   "metric": "2026 SOCAMM 매출 가이던스",
+   "latest": "₩700억 (2Q 실적 후, IBK 2026-08-27)",
+   "threshold": "≥ ₩600억 유지",
+   "source": "https://core.asiae.co.kr/article/2026082613254773558"
+  },
+  {
+   "id": "tlb_backlog",
+   "metric": "분기말 수주잔고",
+   "latest": "₩1,318억 (2Q26말)",
+   "threshold": "≥ ₩1,000억 (3Q26말)",
+   "source": "https://core.asiae.co.kr/article/2026082613254773558"
+  },
+  {
+   "id": "vera_socamm_slots",
+   "metric": "Vera CPU당 SOCAMM2 슬롯·용량",
+   "latest": "기본 탑재 96GB×8 로 하향 (SemiAnalysis 2차 인용, 2026-06)",
+   "threshold": "슬롯 8 유지",
+   "source": "https://www.kucoin.com/news/flash/nvidia-rubin-socamm-memory-cut-sparks-market-panic-and-mu-drop"
+  }
+ ],
+ "beneficiaries": [
+  {
+   "company": "company:tlb",
+   "role": "primary",
+   "size_band": "small",
+   "basis": "메모리 모듈·SSD PCB 전업 — SOCAMM 비중 2026 약 16% → 2027 약 30% (IBK). 2025 매출 중 DRAM 모듈 PCB 약 60% (키움, 조사 보고)",
+   "rerating": {
+    "from": "시총 약 ₩9,255억(키움 2026-10-22, 조사 보고) · 2026E 영업이익 ₩575억(15%, IBK) → 세후 OP 약 21배, 내재 지속 마진 약 27% @12배",
+    "to": "매출 ×1.8 @15%·12배 또는 ×1.3 @16배 — SOCAMM 30% 비중이면 닿는 거리",
+    "why": "₩1,200억 유상증자(희석)·1:1 무상증자(조사 보고) — 주식수 확인 전 추정"
+   }
+  },
+  {
+   "company": "company:simmtech",
+   "role": "secondary",
+   "size_band": "mid",
+   "basis": "SOCAMM PCB 점유 50% 목표 — 52주 약 4배로 이미 반영(조사 보고)"
+  }
+ ],
+ "falsifiers": [
+  {
+   "what": "3Q26말 수주잔고 < ₩1,000억 (2Q 말 ₩1,318억)",
+   "metric": "분기보고서 수주현황",
+   "threshold": "< ₩1,000억",
+   "due": "2026-11-30"
+  },
+  {
+   "what": "2026 SOCAMM 가이던스 ₩600억 미만으로 하향",
+   "metric": "3Q IR·NDR",
+   "threshold": "< ₩600억",
+   "due": "2026-12-15"
+  },
+  {
+   "what": "4Q26 SOCAMM 매출이 3Q26 이하 또는 4Q26 매출 < ₩1,000억",
+   "metric": "4Q 실적·IR",
+   "threshold": "≤ 3Q / < ₩1,000억",
+   "due": "2027-03-31"
+  }
+ ],
+ "first_signal": {
+  "metric": "3Q26 수주잔고 ≥ ₩1,300억, SOCAMM(기타) 매출 ≥ ₩200억",
+  "where": "DART 3Q26 분기보고서·IR",
+  "expected_by": "2026-11-30"
+ },
+ "novelty": "new_technology",
+ "novelty_reason": "LPDDR 를 서버 CPU 옆 탈착식 모듈(SOCAMM2)로 쓰는 형태는 2025~26년에 처음 양산 — 모듈 기판 수요가 DRAM 비트 사이클과 다른 변수(CPU 출하 × 슬롯 수)를 갖게 됐다.",
+ "what_market_misses": "SOCAMM2 기판 수량은 LPDDR 비트가 아니라 CPU당 슬롯 수에 묶여 비트 하향(96GB×8)이나 DRAM 부족이 기판 수량을 줄이지 않는데, 주가는 메모리 비트 베타처럼 할인됐다 (해석 — 2025년에 이미 약 5배 오른 이야기라는 점은 반대 근거).",
+ "lag_months": 3,
+ "stage_reason": "발굴 (2026-10-30 세션, ADR-0027 첫 micro) — weakest_link 미확인: SOCAMM 매출은 공시 항목이 아니라 IR·증권사 자료에 의존",
+ "quiet_check": {
+  "verdict": "unmeasured",
+  "as_of": "2026-10-22",
+  "note": "그래프·가격 신규(2026-10-30 패치) — 외부: 고점 대비 −37.9%, 12개월 +25% (키움 2026-10-22, 조사 보고, 확인 안 됨). 2025년에 이미 약 5배(분할 전)."
+ }
+}
