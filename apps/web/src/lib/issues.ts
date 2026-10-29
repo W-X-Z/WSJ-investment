@@ -129,7 +129,8 @@ export function issueGraph(issue: Issue, hyPaths: IssuePath[], reportByCompany: 
   for (const p of hyPaths) {
     const ids = (p.path ?? []).filter((n) => NODES_FULL.has(n));
     if (ids.length < 2) continue;
-    picked.push({ ids, weight: Math.min(1, ((p.score ?? 6) / 12)), kind: "hypothesis", company: p.company ?? null, label: p.claim });
+    picked.push({ ids, weight: Math.min(1, ((p.score ?? 6) / 12)), kind: "hypothesis", company: p.company ?? null, label: p.claim,
+      direction: p.effect_pct != null && p.effect_pct < 0 ? "negative" : undefined });  // 지는 쪽 경로 (effect_pct 음수) 는 기업 칸에 − 표시
   }
   // 3) 노드·간선 (가중치 = 그 간선을 지나는 경로 중 최대)
   const nodeW = new Map<string, number>(); const onPath = new Set<string>(); const depth = new Map<string, number>();

@@ -698,3 +698,22 @@ def test_peer_leads_pairs_taiwan_monthly_revenue_with_quiet_us_kr_peers():
     assert rows[0]["quiet"] and rows[0]["tw_yoy"] == 120.0 and rows[0]["tw_as_of"] == "2026-09-01" and rows[0]["node_label"] == "부품 X"
     assert not rows[1]["quiet"] and rows[1]["covered"]
     assert scan.peer_leads(g, st, ind, prices, set(), set(), min_yoy=200) == []
+
+
+def test_node_peer_valuations_lists_in_scope_peers_cheapest_first():
+    """백로그 K-7: 같은 노드 동종사의 P/S·성장·시총을 싼 순으로 — 범위 밖(일본)과 가격 없는 기업은 뺀다."""
+    from wsj.ecosystems.ideas import node_peer_valuations
+
+    g = {"nodes": [
+        {"id": "component:x", "kind": "component", "label": "X"},
+        {"id": "company:a", "kind": "company", "label": "A", "listing": {"exchange": "Nasdaq", "ticker": "A"}},
+        {"id": "company:b", "kind": "company", "label": "B", "listing": {"exchange": "KOSDAQ", "ticker": "000002"}},
+        {"id": "company:c", "kind": "company", "label": "C", "listing": {"exchange": "NYSE", "ticker": "C"}},
+        {"id": "company:j", "kind": "company", "label": "J", "listing": {"exchange": "TSE", "ticker": "7"}}],
+        "edges": [{"from": "component:x", "to": c, "relation": "offered_by"} for c in ("company:a", "company:b", "company:j")] + [{"from": "company:c", "to": "component:x", "relation": "develops"}]}
+    money = {"company:a": {"market_cap_usd": 1e9, "fundamentals": {"ps": 8.0, "revenue_yoy_pct": 50}},
+             "company:b": {"market_cap_usd": 2e8, "fundamentals": {"ps": 1.5, "pe": 12, "revenue_yoy_pct": 20}},
+             "company:j": {"market_cap_usd": 5e9, "fundamentals": {"ps": 0.5}}}
+    rows = node_peer_valuations(g, "company:a", money)
+    assert [r["company_id"] for r in rows] == ["company:b"] and rows[0]["ps"] == 1.5 and rows[0]["node"] == "component:x"  # c 는 가격 없음, j 는 범위 밖
+    assert [r["company_id"] for r in node_peer_valuations(g, "company:b", money)] == ["company:a"]
