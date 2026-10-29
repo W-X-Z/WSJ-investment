@@ -1,4 +1,5 @@
 import "server-only";
+import impactJson from "@/data/impact-index.json";
 import seedJson from "@/data/ecosystem-seed.json";
 import { db } from "@/lib/supabase";
 import { type InvestmentIdea } from "@/lib/ideas";
@@ -74,8 +75,8 @@ export async function loadIssueHypotheses(keys?: string[]): Promise<Map<string, 
 }
 
 /** 이슈 → 그 이슈를 근거로 쓴 활성 리포트(아이디어). signal_refs 에 issue_key 가 있으면 연결. */
-export function ideasByIssue(ideas: InvestmentIdea[]): Map<string, InvestmentIdea[]> {
-  const m = new Map<string, InvestmentIdea[]>();
+export function ideasByIssue<T extends InvestmentIdea>(ideas: T[]): Map<string, T[]> {
+  const m = new Map<string, T[]>();
   for (const x of ideas) for (const k of x.signal_refs ?? []) {
     if (k.startsWith("events:")) continue;
     m.set(k, [...(m.get(k) ?? []), x]);
@@ -86,91 +87,75 @@ export function ideasByIssue(ideas: InvestmentIdea[]): Map<string, InvestmentIde
 /** 이슈의 짧은 날짜 (최신 보도일 → 처음 본 날). */
 export const issueDate = (i: Issue): string | null => (i.latest_published_at ?? i.first_seen ?? null)?.slice(0, 10) ?? null;
 
-/* ------------------------------------------------------------------ 이슈의 온톨로지 그래프 (ADR-0023 개정)
- * 이슈 상세에 그리는 국소 그래프: 변화(이슈가 태깅한 노드) → 병목·요구·기술 → 부품·소재·공정·장비 → 기업. 1단계 가설의 경로는 굵게.
- * 시드 그래프(ecosystem-seed.json)에서 태깅 노드로부터 2단계까지 BFS 로 모으고, 열마다 상한을 두어 읽을 수 있는 크기로 줄인다. */
-type SeedEdge = { id: string; from: string; to: string; relation: string };
+/* ------------------------------------------------------------------ 이슈의 영향 그래프 (ADR-0023 개정 2)
+ * 이슈 상세에 그리는 것은 '이웃 전부'가 아니라 **가중치가 높은 흐름**이다. 가중치 = 엔진의 경로 신뢰도(impact-index: 간선 근거 등급의 곱, 0~1) —
+ * 이슈가 태깅한 노드에서 기업까지의 경로 중 상위 K 개만 그리고, 1단계 가설의 경로(LLM 이 세운 영향 경로)는 그 위에 굵게 얹는다.
+ * 신뢰도는 '근거가 얼마나 단단한가'이지 '영향이 얼마나 큰가'가 아니다 — 크기는 가설 경로의 effect_pct 가 말한다. */
+type ImpactEntry = { company_id: string; direction?: string; confidence: number; band?: string; path: string[]; size_band?: string | null; ticker?: string | null };
+const IMPACT = (impactJson as unknown as { nodes: Record<string, { companies: ImpactEntry[] }> }).nodes ?? {};
 type SeedNodeFull = SeedNode & { ecosystem?: string; listing?: { exchange?: string; ticker?: string } | null; size_band?: string | null };
-const EDGES = ((seedJson as unknown as { edges: SeedEdge[] }).edges ?? []);
 const NODES_FULL = new Map<string, SeedNodeFull>(((seedJson as unknown as { nodes: SeedNodeFull[] }).nodes ?? []).map((n) => [n.id, n]));
-const DRAW_RELS = new Set(["requires", "mitigated_by", "creates_bottleneck", "drives_requirement", "offered_by", "develops", "implements", "substitutes_for", "displaces", "adopts", "supplied_to", "holds_ip", "succeeds", "specified_by"]);
+const ID_BY_LABEL = new Map<string, string>([...NODES_FULL.values()].map((n) => [n.label, n.id]));
 const SCOPE_EXCHANGES = new Set(["NYSE", "Nasdaq", "NYSE American", "KRX", "KOSDAQ"]);
 export const inScope = (id: string) => SCOPE_EXCHANGES.has(NODES_FULL.get(id)?.listing?.exchange ?? "");
-/** 열: 0 변화(태깅 노드) · 1 병목·요구·기술·세대 · 2 부품·소재·공정·장비·제품 · 3 기업 */
-const COL_OF: Record<string, number> = { requirement: 1, bottleneck: 1, technology: 1, product_generation: 1, standard: 1, component: 2, material: 2, process: 2, equipment: 2, product: 2, company: 3 };
-const KIND_PRIO: Record<string, number> = { bottleneck: 6, technology: 5, requirement: 4, product_generation: 3, process: 5, equipment: 5, component: 4, material: 4, product: 2, company: 3 };
-export const COL_LABEL = ["변화", "병목·기술", "부품·공정·장비", "기업"];
-export type GraphNode = { id: string; label: string; kind: string; col: number; onPath: boolean; tagged: boolean; company?: { inScope: boolean; ticker?: string | null; ideaKey?: string | null; selected?: boolean } };
-export type GraphEdge = { from: string; to: string; relation: string; onPath: boolean; inferred?: boolean };
-export type IssueGraph = { nodes: GraphNode[]; edges: GraphEdge[]; truncated: boolean };
+/** 열 = 흐름의 단계: 0 이슈가 태깅한 변화 → 1차 영향 → 2차 → … (경로에서의 자리 중 가장 깊은 것). 종류별 열이 아니라 단계별 열이라
+ *  기업 → 공급사 같은 고리도 왼쪽에서 오른쪽으로 읽힌다. */
+export const MAX_COL = 4;
+export const colLabel = (i: number) => (i === 0 ? "변화" : `${i}차 영향`);
+export type GraphNode = { id: string; label: string; kind: string; col: number; weight: number; onPath: boolean; tagged: boolean;
+  company?: { inScope: boolean; ticker?: string | null; ideaKey?: string | null; direction?: string; confidence: number } };
+export type GraphEdge = { from: string; to: string; weight: number; onPath: boolean; inferred?: boolean };
+export type GraphPath = { ids: string[]; weight: number; kind: "index" | "hypothesis"; company: string | null; direction?: string; label?: string };
+export type IssueGraph = { nodes: GraphNode[]; edges: GraphEdge[]; paths: GraphPath[]; dropped: number };
 
-export function issueGraph(issue: Issue, paths: IssuePath[], reportByCompany: Map<string, string>, caps = [4, 8, 9, 8]): IssueGraph {
-  const tagged = (issue.nodes ?? []).filter((n) => NODES_FULL.has(n) && NODES_FULL.get(n)!.kind !== "ecosystem").slice(0, caps[0]);
-  const onPath = new Set<string>();
-  const pathPairs = new Set<string>();
-  for (const p of paths) {
-    const ids = (p.path ?? []).filter((n) => NODES_FULL.has(n));
-    ids.forEach((n) => onPath.add(n));
-    for (let i = 1; i < ids.length; i++) pathPairs.add(`${ids[i - 1]}>${ids[i]}`);
-  }
-  const adj = new Map<string, { other: string; e: SeedEdge }[]>();
-  for (const e of EDGES) {
-    if (!DRAW_RELS.has(e.relation)) continue;
-    adj.set(e.from, [...(adj.get(e.from) ?? []), { other: e.to, e }]);
-    adj.set(e.to, [...(adj.get(e.to) ?? []), { other: e.from, e }]);
-  }
-  // BFS: 태깅 노드 → 2단계. 부모를 기억해 두면 자식을 넣을 때 부모도 넣을 수 있다.
-  const hop = new Map<string, number>(); const parent = new Map<string, string>();
-  const queue: string[] = [];
-  for (const t of tagged) { hop.set(t, 0); queue.push(t); }
-  while (queue.length) {
-    const cur = queue.shift()!;
-    const h = hop.get(cur)!;
-    if (h >= 2) continue;
-    for (const { other } of adj.get(cur) ?? []) {
-      if (hop.has(other)) continue;
-      const n = NODES_FULL.get(other);
-      if (!n || n.kind === "ecosystem") continue;
-      if (n.kind === "company" && !inScope(other) && !onPath.has(other)) continue;  // 범위 밖 기업은 경로에 있을 때만
-      hop.set(other, h + 1); parent.set(other, cur); queue.push(other);
+export function issueGraph(issue: Issue, hyPaths: IssuePath[], reportByCompany: Map<string, string>, k = 8): IssueGraph {
+  const tagged = (issue.nodes ?? []).filter((n) => NODES_FULL.has(n) && NODES_FULL.get(n)!.kind !== "ecosystem").slice(0, 4);
+  // 1) 엔진 경로: 태깅 노드마다 impact-index 의 기업 경로 (라벨 → id). 같은 기업은 가장 센 경로 하나만.
+  const cand = new Map<string, GraphPath>();
+  let total = 0;
+  for (const t of tagged) {
+    for (const e of IMPACT[t]?.companies ?? []) {
+      const ids = e.path.map((l) => ID_BY_LABEL.get(l)).filter((x): x is string => !!x);
+      if (ids.length < 2 || ids[ids.length - 1] !== e.company_id) continue;
+      total++;
+      const bonus = (inScope(e.company_id) ? 0.08 : 0) + (reportByCompany.has(e.company_id) ? 0.15 : 0);
+      const w = Math.min(1, e.confidence + bonus);
+      const cur = cand.get(e.company_id);
+      if (!cur || w > cur.weight) cand.set(e.company_id, { ids, weight: w, kind: "index", company: e.company_id, direction: e.direction });
     }
   }
-  const score = (id: string) => {
-    const n = NODES_FULL.get(id)!;
-    return (onPath.has(id) ? 100 : 0) + (KIND_PRIO[n.kind ?? ""] ?? 1) + (reportByCompany.has(id) ? 30 : 0) + (n.kind === "company" && inScope(id) ? 5 : 0) - 6 * (hop.get(id) ?? 3);
-  };
-  const colOf = (id: string) => (tagged.includes(id) ? 0 : COL_OF[NODES_FULL.get(id)!.kind ?? ""] ?? 2);
-  const chosen = new Set<string>(tagged);
-  for (const id of onPath) if (NODES_FULL.has(id)) chosen.add(id);
-  let truncated = false;
-  for (const col of [1, 2, 3]) {
-    const pool = [...hop.keys()].filter((id) => !chosen.has(id) && colOf(id) === col).sort((a, b) => score(b) - score(a));
-    const room = Math.max(0, caps[col] - [...chosen].filter((id) => colOf(id) === col).length);
-    pool.slice(0, room).forEach((id) => chosen.add(id));
-    if (pool.length > room) truncated = true;
+  const picked = [...cand.values()].sort((a, b) => b.weight - a.weight).slice(0, k);
+  // 2) 가설 경로: 점수(12점) → 0~1. 기업이 없으면 끝 노드까지만.
+  for (const p of hyPaths) {
+    const ids = (p.path ?? []).filter((n) => NODES_FULL.has(n));
+    if (ids.length < 2) continue;
+    picked.push({ ids, weight: Math.min(1, ((p.score ?? 6) / 12)), kind: "hypothesis", company: p.company ?? null, label: p.claim });
   }
-  for (let guard = 0; guard < 4; guard++) for (const id of [...chosen]) { const p = parent.get(id); if (p && !chosen.has(p)) chosen.add(p); }  // 부모 사슬 보장
-  const nodes: GraphNode[] = [...chosen].map((id) => {
+  // 3) 노드·간선 (가중치 = 그 간선을 지나는 경로 중 최대)
+  const nodeW = new Map<string, number>(); const onPath = new Set<string>(); const depth = new Map<string, number>();
+  const edges = new Map<string, GraphEdge>();
+  for (const pth of picked) {
+    pth.ids.forEach((id, i) => { nodeW.set(id, Math.max(nodeW.get(id) ?? 0, pth.weight)); depth.set(id, Math.min(MAX_COL, Math.max(depth.get(id) ?? 0, i))); });
+    if (pth.kind === "hypothesis") pth.ids.forEach((id) => onPath.add(id));
+    for (let i = 1; i < pth.ids.length; i++) {
+      const a = pth.ids[i - 1], b = pth.ids[i];
+      const cur = edges.get(`${a}>${b}`);
+      edges.set(`${a}>${b}`, { from: a, to: b, weight: Math.max(cur?.weight ?? 0, pth.weight), onPath: (cur?.onPath ?? false) || pth.kind === "hypothesis",
+        inferred: !hasEdge(a, b) });  // 그래프에 없는 고리 = 가설이 건너뛴 추론
+    }
+  }
+  for (const t of tagged) if (!nodeW.has(t)) nodeW.set(t, 1);
+  const bestFor = (id: string) => picked.find((p) => p.company === id);
+  const nodes: GraphNode[] = [...nodeW.keys()].map((id) => {
     const n = NODES_FULL.get(id)!;
     const label = n.kind === "company" ? shortName({ id, name: nodeLabel(id), ticker: n.listing?.ticker ?? null }) : nodeLabel(id);
-    const node: GraphNode = { id, label, kind: n.kind ?? "", col: colOf(id), onPath: onPath.has(id), tagged: tagged.includes(id) };
-    if (n.kind === "company") node.company = { inScope: inScope(id), ticker: n.listing?.ticker ?? null, ideaKey: reportByCompany.get(id) ?? null, selected: paths.some((p) => p.company === id && p.selected) };
+    const node: GraphNode = { id, label, kind: n.kind ?? "", col: depth.get(id) ?? 0, weight: nodeW.get(id) ?? 0, onPath: onPath.has(id), tagged: tagged.includes(id) };
+    if (n.kind === "company") node.company = { inScope: inScope(id), ticker: n.listing?.ticker ?? null, ideaKey: reportByCompany.get(id) ?? null, direction: bestFor(id)?.direction, confidence: bestFor(id)?.weight ?? 0 };
     return node;
   });
-  const order = (a: GraphNode, b: GraphNode) => Number(b.onPath) - Number(a.onPath) || Number(!!b.company?.ideaKey) - Number(!!a.company?.ideaKey) || (KIND_PRIO[b.kind] ?? 0) - (KIND_PRIO[a.kind] ?? 0) || a.label.localeCompare(b.label);
-  nodes.sort((a, b) => a.col - b.col || order(a, b));
-  const edges: GraphEdge[] = [];
-  const seen = new Set<string>();
-  for (const e of EDGES) {
-    if (!DRAW_RELS.has(e.relation) || !chosen.has(e.from) || !chosen.has(e.to)) continue;
-    const k = `${e.from}>${e.to}`;
-    if (seen.has(k)) continue;
-    seen.add(k);
-    edges.push({ from: e.from, to: e.to, relation: e.relation, onPath: pathPairs.has(k) || pathPairs.has(`${e.to}>${e.from}`) });
-  }
-  for (const pair of pathPairs) {  // 경로가 그래프 간선 없이 건너뛴 고리는 점선(추론)
-    const [a, b] = pair.split(">");
-    if (chosen.has(a) && chosen.has(b) && !seen.has(pair) && !seen.has(`${b}>${a}`)) { edges.push({ from: a, to: b, relation: "inferred", onPath: true, inferred: true }); seen.add(pair); }
-  }
-  return { nodes, edges, truncated };
+  nodes.sort((a, b) => a.col - b.col || b.weight - a.weight || a.label.localeCompare(b.label));
+  return { nodes, edges: [...edges.values()], paths: picked, dropped: Math.max(0, total - cand.size) + Math.max(0, cand.size - k) };
 }
+
+const EDGE_SET = new Set(((seedJson as unknown as { edges: { from: string; to: string }[] }).edges ?? []).flatMap((e) => [`${e.from}>${e.to}`, `${e.to}>${e.from}`]));
+const hasEdge = (a: string, b: string) => EDGE_SET.has(`${a}>${b}`);

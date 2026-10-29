@@ -79,7 +79,8 @@ export function Shell({ children }: { children: React.ReactNode }) {
   const section = path === "/" ? "/" : [...NAV, ...MORE_ROUTES].find(item=>item.href!=="/" && path.startsWith(item.href.split("?")[0]))?.href.split("?")[0] ?? path;
   const currentLabel = LABELS[section] ?? (path.startsWith("/ideas")?"리서치 리포트":path.startsWith("/issues/")?"이슈":path.startsWith("/ecosystems/")?"기술 생태계":path.startsWith("/feed/")?"이슈 아카이브":"리서치");
   const moreOpen = MORE_ROUTES.some(i=>path.startsWith(i.href.split("?")[0]));
-  const legacyOpen = ["/review","/history","/data","/candidates","/briefs","/signals","/companies","/filings","/finra","/fda","/trials","/awards","/entities","/insider","/ecosystems","/triggers"].some(p=>path.startsWith(p));
+  const researchPage = path === "/" || path.startsWith("/ideas") || path.startsWith("/companies/");  // 리서치 피드 · 리포트 · 기업 위키
+  const legacyOpen = !researchPage && ["/review","/history","/data","/candidates","/briefs","/signals","/companies","/filings","/finra","/fda","/trials","/awards","/entities","/insider","/ecosystems","/triggers"].some(p=>path.startsWith(p));
   return (
     <div className="workspace">
       {mobileOpen && <button className="mobile-scrim" onClick={()=>setMobileOpen(false)} aria-label="메뉴 닫기"/>}
@@ -88,7 +89,7 @@ export function Shell({ children }: { children: React.ReactNode }) {
         <div className="sidebar-section-title">WORKSPACE <span>01</span></div>
         <nav className="primary-nav" aria-label="주요 화면">
           {NAV.map(item=>{
-            const active = item.href==="/" ? path==="/" : path.startsWith(item.href);
+            const active = item.href==="/" ? researchPage : path.startsWith(item.href);
             return <Link key={item.href} href={item.href} className={`nav-link ${active?"nav-link-active":""}`} aria-current={active?"page":undefined}>
               <Icon name={item.icon} size={17}/><span>{item.label}</span>{active && <i className="active-dot"/>}
             </Link>;

@@ -104,7 +104,8 @@ Claude 예약작업 "WSJ 수집 실행 + 투자 아이디어 작성 (06:41)"이 
     existing 은 지난 실행의 판단이지 사실이 아니다 — 오늘 근거로 다시 판단하고, bear 에 "아이디어 자체가 틀렸다"를 넣는다. 기업 자신의 근거가 없는 아이디어는 confidence high 불가.
     재료는 prices[primary] 의 close·currency·shares·fundamentals(TTM 매출·마진·P/S·P/E). fundamentals 가 없으면 원문(IR·실적 발표)에서 읽은 매출·이익을 가정에 근거 id 와 함께 적는다.
     close 가 없으면 valuation_skipped 에 이유. 검증기가 산수(내재 시총 → 주식수로 나눈 주가 → 확률 가중)를 다시 한다 — 너는 가정을 댄다.
-    keep 인 기존 아이디어도 valuation 을 쓴다 — existing.valuation 이 없으면 반드시(첫날은 전부), 있으면 그 뒤 주가가 ±15% 넘게 움직였거나 새 근거가 매출·마진 가정을 바꿀 때.
+    **가격·주식수가 있는 아이디어는 valuation 을 생략할 수 없다.** new·update·weaken 행은 이번에 다시 쓴다(리포트를 고쳐 썼으면 목표주가도 다시). keep 은 existing.valuation 이 있으면 생략 가능, 없으면 쓴다.
+    검증기가 누락을 `valuation missing:` 으로 적고 exit 2 로 끝낸다 — 그 아이디어에 valuation 을 채워 5 를 다시 돌린다 (10/29 아침 실행이 새 리포트 4건을 목표주가 없이 쓴 뒤 추가된 규칙).
   - 숫자·날짜는 payload 에 있는 것만. 매수/매도 권유·시점 예측 금지. 주가 판단은 valuation 의 시나리오로만 — "목표가"·"매수" 같은 말은 쓰지 않는다 (모형 산출이지 권유가 아니다).
 
 ## 5. 검증
@@ -112,12 +113,14 @@ Claude 예약작업 "WSJ 수집 실행 + 투자 아이디어 작성 (06:41)"이 
 - 검증 명령에 `--hypotheses ../.ideas_run/s1/selected.json` 을 붙인다 (아이디어에 적은 hypothesis id 가 판단에 기록된다).
 - `rejected:` 줄을 보고 raw.json 을 고쳐 다시 돌린다 (최대 2번). `valuation rejected:` 는 아이디어는 받되 가치평가만 거부된 것 — 사유(확률 합·가정 부족·verdict 길이·주식수 없음)대로 고친다.
 - `verification:` 줄은 예측 채점이 ★·상태를 움직인 기록이다(적중 → ★ 상향, 반증 성립 → 종료, 빗나감 2건 → ★1) — 보고에 그대로 적는다.
+- **exit 2 (`valuation missing`)**: 가격·주식수가 있는데 목표주가가 없는 아이디어 목록이다. raw.json 의 그 아이디어에 valuation 을 채우고 다시 돌린다. 끝까지 못 채우면 `--allow-missing-valuations` 로 넘기되 보고에 "목표주가 누락 N건: 사유"를 적는다.
 - 6-1 에서 DB 가 `근거 없는 단계` 로 거부하면 0025 미적용이다 — 위 p24 규칙대로 추론 단계를 합쳐 다시 만든다.
   `valuation skipped:` 는 주가가 없어 평가를 안 쓴 아이디어 — 보고에 적는다.
 
 ## 6. 저장
 ### 6-1. 아이디어
 - `s2/sql/` 의 파일을 이름순으로 Read 해서 그대로 execute_sql 로 실행한다: `01_…`(아이디어) → `zy_valuations.sql`(가치평가 — p23 이 false 면 건너뛴다; 결과의 rejected 가 있으면 raw.json 의 그 valuation 을 고쳐 5 부터 다시) → `zz_assessments.sql`(손대지 않은 아이디어의 점수·확인 일정 채점 갱신; p21 이 false 면 건너뛴다). SQL 을 손으로 고치지 않는다.
+- zy_valuations.sql 을 실행한 뒤 **확인**: `select count(*) from ideas.valuations where as_of = current_date;` 가 rows.valuations.json 의 건수와 같아야 한다. 적으면 결과의 rejected 사유대로 raw.json 을 고쳐 5 부터 다시 — 목표주가 없이 리포트만 저장하고 끝내지 않는다.
 - 그다음 `s1/sql/zx_issue_hypotheses.sql`(이슈별 영향 경로; p26 일 때)을 실행한다. 이슈 탭은 경로의 기업과 그 이슈를 근거로 쓴 리포트를 화면에서 잇는다. rejected 가 있으면(이슈 없음 등) 보고에만 적는다.
 
 ### 6-2. 심층 분석 메모 (p22 일 때만, 하루 최대 2건)
@@ -128,5 +131,5 @@ Claude 예약작업 "WSJ 수집 실행 + 투자 아이디어 작성 (06:41)"이 
 - DB 쓰기는 ideas.put_company_events · ideas.put_observations · ideas.put_ideas · ideas.put_valuations · ideas.put_assessments · ideas.put_idea_notes 여섯 함수뿐이다. 저장소는 수정·커밋하지 않는다. GitHub 에서는 issues 워크플로 실행만 한다.
 
 ## 7. 보고와 알림
-7줄 이내: 수집 상태(가격·시총·재무 포함) · 가설 후보 N개 중 고른 N개(제목 한 줄씩, 미확인 표시) · 확인한 소식 N건 · 관측치 N개 · 아이디어 new/update/weaken/close/keep · **가치평가 N건**과 바뀐 아이디어(제목 · 현재 → 기대 주가 · 기대 상승여력 · 확신 · 시총; 점수는 적지 않는다) · 평가 못 쓴 아이디어(skipped·rejected 사유) · 선행 단서 중 경로 확인/미확인 · 채점 결과(적중·빗나감·반증)와 그로 바뀐 ★·종료 · 심층 메모 N건 · 버린 것.
+7줄 이내: 수집 상태(가격·시총·재무 포함) · 가설 후보 N개 중 고른 N개(제목 한 줄씩, 미확인 표시) · 확인한 소식 N건 · 관측치 N개 · 아이디어 new/update/weaken/close/keep · **목표주가 저장 N/M (확인 쿼리 결과)**과 바뀐 아이디어(제목 · 현재 → 기대 주가 · 기대 상승여력 · 확신 · 시총; 점수는 적지 않는다) · 평가 못 쓴 아이디어(skipped·rejected 사유) · 선행 단서 중 경로 확인/미확인 · 채점 결과(적중·빗나감·반증)와 그로 바뀐 ★·종료 · 심층 메모 N건 · 버린 것.
 알림은 다음일 때만: 0020 미적용, 수집 미완료로 아이디어를 못 썼을 때, DB 쓰기 실패, **기대 상승여력 +50% 이상이고 확신 mid 이상이며 시총 $3B 이하인 새 가치평가**(제목·현재 → 기대 주가·여력·확신·verdict 첫 문장), 기존 평가의 기대 상승여력이 ±30%p 넘게 바뀐 아이디어, ★3 아이디어의 확인 일정이 빗나갔을 때.

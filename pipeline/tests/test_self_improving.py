@@ -596,3 +596,20 @@ def test_validate_records_hypothesis_provenance():
     ctx = {"hypotheses": {"H1": {"id": "H1", "rank": 1, "score": 11, "criteria": {"specific": 3}, "claim": "c", "falsifier": "f"}}}
     rows, rejects = validate(raw, reg, g, signals, {}, datetime(2026, 10, 28, tzinfo=UTC), "m", "session", ctx)
     assert not rejects and rows[0]["assessment"]["hypothesis"] == {"id": "H1", "rank": 1, "score": 11, "criteria": {"specific": 3}, "claim": "c", "falsifier": "f"}
+
+
+# ------------------------------------------------------------------ 목표주가 누락 점검 (ADR-0023 개정 2)
+def test_missing_valuations_lists_rows_with_price_but_no_valuation():
+    from wsj.ecosystems.ideas import missing_valuations
+
+    money = {"company:p": {"close": 10, "shares": 1e6}, "company:q": {"close": None, "shares": None}}
+    rows = [{"idea_key": "new1", "status": "active", "primary_company": "company:p", "title": "P 새 리포트", "trend": "new"},
+            {"idea_key": "new2", "status": "active", "primary_company": "company:q", "title": "Q 가격 없음", "trend": "new"},
+            {"idea_key": "upd1", "status": "active", "primary_company": "company:p", "title": "P 고침", "trend": "weakened"},
+            {"idea_key": "cl1", "status": "closed"}]
+    vals = [{"idea_key": "upd1"}]
+    existing = {"keep1": {"idea_key": "keep1", "status": "active", "primary_company": "company:p", "title": "P keep 평가 없음"},
+                "keep2": {"idea_key": "keep2", "status": "active", "primary_company": "company:p", "title": "P keep 지난 평가 있음"},
+                "upd1": {"idea_key": "upd1", "status": "active", "primary_company": "company:p"}}
+    out = missing_valuations(rows, vals, existing, money, {"keep2": {"idea_key": "keep2"}})
+    assert [x.split(" ")[0] for x in out] == ["new1", "keep1"]  # 가격 없는 new2, 평가 있는 upd1·keep2 는 빠진다

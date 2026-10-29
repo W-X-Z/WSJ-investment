@@ -33,8 +33,11 @@ export function Freshness({ idea }: { idea: IdeaView }) {
 
 /** 값의 띠 (ADR-0023 개정): 목표주가·여력을 숫자로, 약세~강세 범위와 현재·목표의 위치를 막대로. 말은 없다 — 읽는 법은 ? 에.
  *  막대는 로그 눈금: 양 끝이 약세·강세 내재 주가, 속이 빈 점이 현재, 찬 점이 목표, 둘 사이를 여력 색으로 잇는다. */
-export function ValueBand({ v, facts, large }: { v: Valuation | null; facts: CompanyFacts | null; large?: boolean }) {
-  if (!v) return <div className="fd-vb fd-vb-none"><span>목표주가 산출 전</span>{facts?.market_cap_usd != null ? <small>시총 {usdB(facts.market_cap_usd)}</small> : null}</div>;
+export function ValueBand({ v, facts, large, stale }: { v: Valuation | null; facts: CompanyFacts | null; large?: boolean; stale?: Valuation | null }) {
+  if (!v) return <div className="fd-vb fd-vb-none">
+    <span>{stale ? "목표주가 재산출 대기" : "목표주가 산출 전"}</span>
+    {stale ? <small>이전 {money(stale.expected_price, stale.currency)} ({stale.as_of.slice(5).replace("-", "/")})</small> : facts?.market_cap_usd != null ? <small>시총 {usdB(facts.market_cap_usd)}</small> : null}
+  </div>;
   const live = liveUpside(v, facts?.close);
   const up = live.upside;
   const dir = up >= 0 ? "up" : "down";
@@ -64,26 +67,22 @@ export function ValueBand({ v, facts, large }: { v: Valuation | null; facts: Com
   </div>;
 }
 
-/** 리포트 카드 (ADR-0023 개정): 생태계 색 띠 → 기업 → 아이디어 제목·요지 → 값의 띠. 카드 전체가 상세로 가는 하나의 링크. 변화가 있을 때만 작은 표시. */
-const CHANGE_KO: Record<string, string> = { new: "새 리포트", strengthened: "강화", weakened: "약화" };
+/** 리포트 카드 (ADR-0023 개정 2): 기업 → 아이디어 제목·요지 → 값의 띠. 카드 전체가 상세로 가는 하나의 링크. 변화·확신 같은 꼬리표는 없다. */
 const EXCHANGE_KO: Record<string, string> = { KRX: "KOSPI", KOSDAQ: "KOSDAQ", NYSE: "NYSE", Nasdaq: "Nasdaq", "NYSE American": "NYSE" };
-export const ECO_CLASS: Record<string, string> = { hbm: "eco-hbm", optics: "eco-optics", power: "eco-power" };
 
-export function ReportCard({ idea, changed }: { idea: FeedIdea; changed: boolean }) {
+export function ReportCard({ idea }: { idea: FeedIdea }) {
   const p = idea.primary;
-  const tag = changed && idea.shownTrend ? CHANGE_KO[idea.shownTrend] : null;
-  const eco = idea.ecosystems[0];
-  return <Link href={`/ideas/${idea.idea_key}`} className={`fd-rc ${ECO_CLASS[eco] ?? ""}`}>
+  const eco = idea.ecosystems.map((e) => ecoLabel(e)).filter(Boolean).join(" ");
+  return <Link href={`/ideas/${idea.idea_key}`} className="fd-rc">
     <div className="fd-rc-row">
       <span className="fd-rc-name">{p ? shortName(p) : idea.title}</span>
-      <span className="fd-rc-tk">{[p?.ticker, p?.exchange ? EXCHANGE_KO[p.exchange] ?? p.exchange : null].filter(Boolean).join(" ")}</span>
-      {tag ? <b className={`fd-chg fd-chg-${idea.shownTrend}`}>{tag}</b> : null}
+      <span className="fd-rc-tk">{[p?.ticker, p?.exchange ? EXCHANGE_KO[p.exchange] ?? p.exchange : null, eco].filter(Boolean).join(" ")}</span>
       <StarText n={idea.stars}/>
       <span className="fd-rc-go" aria-hidden="true">›</span>
     </div>
     <h3>{idea.title}</h3>
     <p className="fd-rc-thesis">{idea.thesis}</p>
-    <ValueBand v={idea.valuation} facts={idea.facts}/>
+    <ValueBand v={idea.valuation} facts={idea.facts} stale={idea.staleValuation}/>
   </Link>;
 }
 
