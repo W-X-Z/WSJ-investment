@@ -21,7 +21,7 @@ export function PathLine({ p, idea }: { p: IssuePath; idea?: FeedIdea | null }) 
     <p className="fd-ip-claim">{p.claim}</p>
     {r ? <p className="fd-ip-research"><b>{VERDICT_KO[r.verdict]}</b>{kinds(r) ? <small>{kinds(r)}</small> : null}{r.summary}{r.sources?.[0]?.url ? <a href={r.sources[0].url} target="_blank" rel="noreferrer">원문</a> : null}</p> : null}
     {idea ? <Link href={`/ideas/${idea.idea_key}`} className="fd-ip-link">{p.company_label ?? p.company}{idea.valuation ? <b className={idea.valuation.expected_upside_pct >= 0 ? "up" : "down"}>{pct(idea.valuation.expected_upside_pct)}</b> : null}<span>›</span></Link>
-      : p.company ? <Link href={`/companies/${slug(p.company)}`} className="fd-ip-link muted">{p.company_label ?? p.company}{p.selected ? " · 리포트 작성 중" : ""}<span>›</span></Link> : null}
+      : p.company ? <Link href={`/companies/${slug(p.company)}`} className="fd-ip-link muted">{p.company_label ?? p.company}{p.selected && r?.verdict !== "refuted" ? " · 리포트 작성 중" : ""}<span>›</span></Link> : null}
   </li>;
 }
 
