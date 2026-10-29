@@ -226,8 +226,10 @@ def company_signals(events: list[Any], graph: dict[str, Any], reg: Registry, now
                  * (1.3 if official else 1.0) * (1 + 0.2 * min(len(tagged_nodes), 3)) * (1.2 if size in ("micro", "small", "mid") else 0.8))
         scored.append((score, cid, evs, tagged_nodes, tagged_cos, newest))
     scored.sort(key=lambda x: -x[0])
+    # 상위 max_signals 개 + focus 기업(기존 리포트·오늘 리포트 후보)은 순위와 상관없이 남긴다 — 조사 작업이 저장한 소식이 잘리면 리포트가 근거 id 를 못 쓴다 (10/29)
+    chosen = scored[:max_signals] + [x for x in scored[max_signals:] if x[1] in focus]
     out = []
-    for _score, cid, evs, tagged_nodes, tagged_cos, newest in scored[:max_signals]:
+    for _score, cid, evs, tagged_nodes, tagged_cos, newest in chosen:
         picked = sorted(evs[:per_company], key=lambda e: e.published_at, reverse=True)
         items, eids, used_events = [], [], []
         for e in picked:
@@ -235,7 +237,7 @@ def company_signals(events: list[Any], graph: dict[str, Any], reg: Registry, now
             eid = reg.add("S", e.url, e.title, publisher=e.publisher, date=d, tier=e.tier, excerpt=(e.text or None))
             if eid:
                 eids.append(eid)
-                it = {"date": d, "kind": e.kind, "importance": e.importance, "title": e.title[:180], "ev": eid}
+                it = {"date": d, "kind": e.kind, "importance": e.importance, "title": e.title[:180], "ev": eid, "event_id": e.event_id}
                 if (e.extra or {}).get("verified_by"):
                     it["verified"] = True  # 원문을 열어 숫자·날짜를 확인한 소식 (excerpt 에 확인 내용)
                 items.append(it)
@@ -520,7 +522,7 @@ LLM_SYSTEM = """너는 AI 공급망(HBM·첨단 패키징 / 800G·1.6T 광통신
   조사(research)로 확인된 것은 근거 id 로, 확인 못 한 것은 추론으로 적는다. flags 의 경고(경로 끊김·이미 움직임)는 risks 나 bear 에 반영한다.
   extends 가 있는 후보는 그 idea_key 의 update 로. 후보 밖 새 아이디어는 조사에서 새 변화가 드러났을 때만 쓴다.
   후보에 research_result 가 있으면 그것이 조사 작업의 결론이다 — verdict(confirmed·partial·unconfirmed·no_data)·summary 를 그대로 받고, event_ids 의 소식은
-  이 입력의 기업 근거(E…)에 들어 있으니 그 근거 id 로 chain 에 쓴다. no_data·unconfirmed 는 추론 단계로만. existing_idea 가 있으면 그 idea_key 의 update 로.
+  이 입력의 기업 신호(E…)의 items 에 event_id 로 들어 있다 → 그 item 의 ev(S…)를 chain 의 근거 id 로 쓴다. no_data·unconfirmed 는 추론 단계로만. existing_idea 가 있으면 그 idea_key 의 update 로.
 
 가치평가 (결과 — 사람은 이것만 본다)
 - 아이디어마다 valuation 을 쓴다. 질문은 하나다: 이 변화가 이 기업의 숫자를 바꾸면 이 회사는 {horizon}개월 뒤 얼마짜리 회사인가, 지금 주가와 얼마나 다른가.
@@ -1104,12 +1106,12 @@ def focus_companies(existing: list[dict[str, Any]]) -> set[str]:
 
 
 def prepare(issues: list[dict[str, Any]], indicators: list[dict[str, Any]], graph: dict[str, Any], now: datetime, days: int,
-            existing: list[dict[str, Any]], max_ideas: int, top: int, events: list[Any] | None = None, extras: dict[str, Any] | None = None
-            ) -> tuple[Registry, list[dict[str, Any]], list[dict[str, Any]], dict[str, Any]]:
+            existing: list[dict[str, Any]], max_ideas: int, top: int, events: list[Any] | None = None, extras: dict[str, Any] | None = None,
+            focus_extra: set[str] | None = None) -> tuple[Registry, list[dict[str, Any]], list[dict[str, Any]], dict[str, Any]]:
     reg = Registry()
     signals = load_signals(issues, indicators, graph, reg, now, days)
     if events:
-        signals += company_signals(events, graph, reg, now, focus_companies(existing))
+        signals += company_signals(events, graph, reg, now, focus_companies(existing) | (focus_extra or set()))
     candidates = build_candidates(graph, signals, reg, top=top, now=now)
     if extras and extras.get("prices_full"):
         # 후보·기존 아이디어 기업의 '이미 움직인 폭'만 입력에 (전체 가격표는 넣지 않는다)
@@ -1590,7 +1592,15 @@ def main(argv: list[str] | None = None) -> int:
             args.events_out.parent.mkdir(parents=True, exist_ok=True)
             args.events_out.write_text(json.dumps([e.public() for e in events], ensure_ascii=False, indent=1), encoding="utf-8")
         ctx, extras = build_context(graph, issues, indicators, prices, events, existing, now, facts, fundamentals, valuations)
-        reg, signals, candidates, payload = prepare(issues, indicators, graph, now, args.days, existing, args.max_ideas, args.top, events, extras)
+        focus_extra: set[str] = set()
+        if args.hypotheses:  # 리포트 후보 기업의 소식(조사 작업이 저장한 것)은 신호 상한과 상관없이 입력에 넣는다
+            try:
+                _sel = json.loads(args.hypotheses.read_text(encoding="utf-8"))
+                _sel = _sel.get("selected") if isinstance(_sel, dict) else _sel
+                focus_extra = {c["company"] for c in _sel or [] if c.get("company")}
+            except Exception as exc:  # noqa: BLE001
+                log.warning("hypotheses 파일을 미리 읽지 못함: %s", exc)
+        reg, signals, candidates, payload = prepare(issues, indicators, graph, now, args.days, existing, args.max_ideas, args.top, events, extras, focus_extra)
         if args.leads_out:
             args.leads_out.write_text(json.dumps(ctx["leads"], ensure_ascii=False, indent=1, default=str), encoding="utf-8")
         log.info("feed %s", json.dumps(feed_stats, ensure_ascii=False))
