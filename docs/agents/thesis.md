@@ -20,6 +20,10 @@ p29 확인: `select to_regprocedure('ideas.put_weak_signals(jsonb)') is not null
 | 모델·API 변경 | model_release | 3~12개월 | 컨텍스트 길이·캐시 가격비·출력 토큰 한도·에이전트 제품 — 요청당 하드웨어 강도를 바꾸는 숫자 |
 | 공시·컨콜 | filing | 0~6개월 | 하이퍼스케일러 capex, 메모리·패키징·광·전력사의 신제품 범주·공급계약 |
 
+### 1-1′. 계수표 갱신 (`research/coefficients/`)
+- 새 프런티어 모델의 토큰당 KV(config 또는 서빙 엔진 원문), 토큰 처리량 발표, API 가격 인상·배급·시간대 가격·인하를 `workload_hardware.json` 에 더한다 (원문을 열었으면 `verified`).
+- `cd pipeline && .venv/bin/python -m wsj.ecosystems.coefficients` 의 "순 KV 트래픽 방향" 과 희소성 지수를 보고에 적는다. 메모리 테제의 드라이버다 — 1 아래로 내려가 있으면 반박 근거(weight 2)로 기록한다.
+
 ### 1-2. 네 질문
 각 후보에 대해: (a) 10배가 되면 무엇이 묶이나 (b) 무엇이 무가치해지나 (c) 가격 결정력이 어디로 옮겨가나 (d) 누가 비용을 떠안나. 답을 `mechanism`·`consumes_more`·`consumes_less` 에 적는다.
 

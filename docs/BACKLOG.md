@@ -119,7 +119,7 @@
 | T-1 | 테제 화면 `/theses`: statement · 드라이버 현재값 · 근거 타임라인(±) · stage · 수혜/피해 · 벤치마크 사례 링크 | P1 | 0028 뒤 |
 | T-2 | 리레이팅 가치평가 모드: 테제 수혜 기업은 사이클 P/B·P/E 밴드 → 체제 밴드 시나리오 | P1 | ADR-0025 §6 |
 | T-3 | point-in-time 재현 하네스: regime_cases.json 의 hbm_2023 부터 — 그 날짜까지의 공개 정보만으로 테제가 세워지는지 | P1 | 정답지 있음 |
-| T-4 | 드라이버 관측치 정기 수집: 질문당 출력 토큰·서버 DRAM 계약가·HBM 수급비·CPU:GPU 비 (TrendForce·컨콜·키노트) | P1 | obs:* 로 |
+| T-4 | ✅ 1차 (10/30) 워크로드→하드웨어 계수표 `research/coefficients` + `wsj.ecosystems.coefficients` (토큰당 KV·사용량 증가·압축·희소성 지수). 첫 결과: 순 KV 트래픽 연 0.77배(반증 방향). 남은 것: 서버 DRAM 계약가·HBM 수급비 obs:* 정기 수집 | P1 | thesis.md 1-1′ |
 | T-5 | 수요측 출처 수집기: 모델 릴리스 노트(컨텍스트 길이·가격)·추론 플랫폼 발표·하이퍼스케일러 capex 가이던스·추론 인프라 채용 공고 | P2 | |
 | T-6 | 벤치마크 사례의 sourced=false 날짜·수치 확인 (HBM3 양산 2022-06, TrendForce 2023-04, GTC 2023·2024, Vertiv 2022~23) | P2 | |
 | T-7 | **약한 신호 스캔 상설화** (ADR-0026): 1부 출처(논문·표준·학회·채용·플랫폼 릴리스·모델 API·공시)를 토요일 테제 작업 안에서 매주 돌리고 `v_weak_signals` 의 승격 흐름(watch → promoted)을 테제 화면에 탭으로 | P1 | 0029 뒤; 첫 스캔 research/weak_signals/20261029.md |
