@@ -215,6 +215,9 @@
  ],
  "stage": 2,
  "stage_reason": "동인(랙 전력 밀도)·표준(OCP) 움직이고, 공급 반응(GaN 팹·SiC 공급·SST 부품 실증) 둘 이상 원문 확인 — 다만 모듈·차단 단의 매출은 2027년 말",
+ "kind": "regime",
+ "novelty": "analog",
+ "novelty_reason": "전력 밀도 → 배전 전압 상향은 열·전력 2023(Vertiv) 의 재현. 소자(GaN·SiC)와 OCP 표준이 공개돼 stage 2 — 체제 기록. 덜 읽힌 고리(변환·차단·변압기)는 별도 테제 후보.",
  "benchmark": "thermal_power_2023",
  "model": "claude-fable-5-1",
  "method": "session"

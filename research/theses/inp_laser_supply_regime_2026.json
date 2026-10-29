@@ -176,6 +176,9 @@
  ],
  "stage": 2,
  "stage_reason": "가격(기판·인듐)·증설(AXT·스미토모·LandMark)·예약금(Lumentum) 모두 원문 — AXT 주가는 이미 반영(★2, 여력 -37%)이라 '시장 반영' 과 '아직 조용한 고리(MACOM)' 가 공존",
+ "kind": "regime",
+ "novelty": "analog",
+ "novelty_reason": "800G 광모듈 2023 의 재현 + 중국 인듐·갈륨 수출통제라는 새 이슈의 결합. 기판가·증설·예약금이 공개됐고 AXT 는 이미 반영 — 체제 기록. 조용한 고리(MACOM)는 별도 테제 후보.",
  "benchmark": "optical_800g_2023",
  "model": "claude-fable-5-1",
  "method": "session"

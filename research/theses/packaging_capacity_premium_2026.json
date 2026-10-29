@@ -203,6 +203,9 @@
  ],
  "stage": 2,
  "stage_reason": "가격 인상 검토·리드타임·고객 선투자·증설(공급 반응) 모두 원문 확인 — 시장 반영(배수)은 기판사별로 다름",
+ "kind": "regime",
+ "novelty": "analog",
+ "novelty_reason": "ABF 기판 2020~21 의 재현(공급사의 손실 기억이 증설을 늦추고 고객이 캐파를 선투자로 산다). 가격 인상·리드타임·선투자가 모두 공개돼 stage 2 — 발굴 대상이 아니라 체제 기록.",
  "benchmark": "abf_substrate_2020",
  "model": "claude-fable-5-1",
  "method": "session"
