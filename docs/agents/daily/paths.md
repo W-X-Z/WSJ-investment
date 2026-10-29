@@ -10,9 +10,11 @@
   `timeout 590 bash -c 'until …; do sleep 30; done'` 로 최대 20분 기다린 뒤 큐를 다시 읽는다. 그래도 안 끝났으면 쌓인 것으로 진행하고 note 에 "수집 미완료".
 
 ## 2. 1단계 입력과 가설 후보 — 공통 §A
-- 공통 §A 의 첫 명령으로 입력을 만들고 `s1/hypo.system.md`·`s1/hypo.payload.json` 을 끝까지 읽는다.
-- **큐에 있는 이슈만 쓴다**: payload.signals 의 이슈 신호(kind=issue)에서 `issue_key` 가 큐에 있는 것을 고르고, 그 신호의 evidence 첫 id 를 trigger 로 이슈마다 경로 ≤3 을 `s1/hypotheses.json` 에 쓴다.
-  큐의 이슈가 payload 에 없으면(출처 URL 없음 등) 보고에 "신호 없음: issue_key" 로 남긴다 — 5일이 지나면 큐에서 빠진다.
+- 입력은 공통 §A 의 첫 명령에 **`--issues-from-queue`** 를 붙여 만든다:
+  `.venv/bin/python -m wsj.ecosystems.ideas --from-public --snapshot-out ../.ideas_run/s1 --emit-prompt ../.ideas_run/s1/prompt.json --emit-research ../.ideas_run/s1/research.json --leads-out ../.ideas_run/s1/leads.json --emit-hypotheses ../.ideas_run/s1/hypo.json --issues-from-queue`
+  → payload 에는 큐의 이슈 신호와 그 이슈에 닿는 후보·근거만 남는다 (전체의 1/3 안쪽). 출력 JSON 의 `queue` 가 큐 수, payload.queue.without_signal 이 신호가 없는 이슈다.
+- `s1/hypo.system.md`·`s1/hypo.payload.json` 을 끝까지 읽는다. payload.signals 의 이슈 신호(kind=issue)마다 `issue_key` 가 있다 — 그 신호의 evidence 첫 id 를 trigger 로 이슈마다 경로 ≤3 을 `s1/hypotheses.json` 에 쓴다.
+  payload.queue.without_signal 의 이슈(출처 URL 없음 등)는 보고에 "신호 없음: issue_key" 로 남긴다 — 5일이 지나면 큐에서 빠진다.
 - 공통 §A 의 검사·선택 명령을 돌린다. `hypothesis rejected:` 가 절반 넘으면 사유대로 고쳐 한 번 더 (최대 2번).
 
 ## 3. 저장

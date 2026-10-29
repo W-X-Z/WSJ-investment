@@ -303,3 +303,28 @@ def from_queue(cands: list[dict[str, Any]], hyps: list[dict[str, Any]]) -> list[
                                           "researched_at": c.get("researched_at")},
                       "existing_idea": c.get("existing_idea") or p.get("extends")})
     return out
+
+
+def restrict_payload(payload: dict[str, Any], issue_keys: set[str]) -> dict[str, Any]:
+    """경로 작업의 1단계 입력을 큐의 이슈로 줄인다 (ADR-0024): 이슈 신호는 큐에 있는 것만, 기업·지표 신호는 뺀다(기업 사실은 조사 작업이, 지표는 아직 큐에 들어오지 않는다),
+    후보 기업은 남긴 이슈 신호에 닿는 것만, 근거는 남긴 신호·후보가 쓰는 것만, 가격은 남긴 후보·기존 리포트의 기업만. existing·states·leads 는 그대로.
+    같은 입력으로 만든 전체 페이로드가 29만 자였던 것을 큐 이슈만 남겨 1/3 안쪽으로 줄이는 것이 목적이다. 검증은 전체 레지스트리로 하므로 근거 id 는 그대로 유효하다."""
+    sigs = [s for s in payload.get("signals") or [] if s.get("kind") == "issue" and s.get("issue_key") in issue_keys]
+    kept_sids = {s["sid"] for s in sigs}
+    kept_nodes = {n for s in sigs for n in (s.get("nodes") or [])}
+    cands = []
+    for c in payload.get("candidates") or []:
+        touches = kept_sids & set(c.get("signals") or []) or any(kept_sids & {ch.get("signal")} or kept_nodes & set(ch.get("path_ids") or []) for ch in c.get("chains") or [])
+        if touches:
+            cands.append(c)
+    used = {e for s in sigs for e in (s.get("evidence") or [])}
+    for c in cands:
+        for ch in c.get("chains") or []:
+            used.update(st.get("ev") for st in ch.get("steps") or [] if st.get("ev"))
+        used.update(t.get("ev") for t in c.get("transitions") or [] if t.get("ev"))
+    # 그래프 간선 근거(G…)는 후보의 chains.steps 에 이미 from→rel→to 로 풀려 있고, 1단계 출력은 S 근거만 trigger 로 쓴다 → 목록에서 뺀다
+    evidence = [e for e in payload.get("evidence") or [] if e.get("id") in used and not str(e.get("id", "")).startswith("G")]
+    keep_cos = {c.get("company_id") for c in cands} | {x.get("primary_company") for x in payload.get("existing") or []}
+    prices = {k: v for k, v in (payload.get("prices") or {}).items() if k in keep_cos}
+    return payload | {"signals": sigs, "candidates": cands, "evidence": evidence, "prices": prices,
+                      "queue": {"issues": sorted(issue_keys), "note": "이 입력은 큐의 이슈만 담는다 — 경로는 이 이슈들에 대해서만 쓴다"}}
