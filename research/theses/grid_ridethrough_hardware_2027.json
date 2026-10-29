@@ -1,0 +1,260 @@
+{
+ "thesis_key": "grid_ridethrough_hardware_2027",
+ "title": "계통 외란 표준이 데이터센터에 '버티는 하드웨어' 를 붙인다 — STATCOM·슈퍼커패시터·그리드포밍",
+ "statement": "Google·Microsoft·Meta·NVIDIA 가 쓴 OCP '하이퍼스케일러↔유틸리티 외란 성능 인터페이스' v1.0(2026-09-17 발효)은 처음으로 AI 데이터센터에 전압 강하 시 정해진 시간 동안 버티고(0.8~0.9pu 2초, 0.5pu 미만 0.15~0.25초) 2초 안에 부하 90% 로 돌아오라고 요구한다. 문서 스스로 '제로 전력 라이드스루는 지금의 UPS·PSU 로는 불가능' 하다고 적고 램프레이트·강제 진동 한계를 후속 사양으로 예고했다. 같은 시기 Anthropic 은 '시장에 처음 나오는' 장비로 BESS·그리드포밍 인버터·SST·E-STATCOM 을 소싱하는 담당자를 뽑았다. 이 요구는 변압기 수주 사이클과 무관한 새 BOM — 랙 안 커패시터 홀드업, 접속점의 무효전력·에너지 저장(e-STATCOM), 계통형 인버터 — 을 데이터센터 접속 조건으로 만든다. 시장은 전력기기를 변압기 사이클로 보고 2026 하반기에 효성중공업(고점 −59%) 같은 종목을 버렸지만, 효성은 데이터센터용 STATCOM 과 스켈레톤 슈퍼커패시터를 결합한 e-STATCOM 을 2027년까지 개발 중이다.",
+ "ecosystem": "power",
+ "chain": [
+  {
+   "node": "standard:ocp_grid_interface",
+   "claim": "외란 라이드스루·2초 복귀 요구, 후속 사양(램프레이트·진동) 예고",
+   "evidence": [
+    {
+     "url": "https://www.opencompute.org/wp-content/uploads/2026/10/OCP-Base-Spec-Interface-Specification-Between-Hyperscalers-and-Utility-Grid-for-Disturbance-Performance.pdf",
+     "title": "OCP 하이퍼스케일러↔유틸리티 외란 성능 인터페이스 v1.0",
+     "date": "2026-09-17",
+     "kind": "official"
+    }
+   ]
+  },
+  {
+   "node": "req:grid_disturbance_ridethrough",
+   "claim": "'true fault ride-through at zero power is not currently achievable with existing UPS and PSU designs' — 하드웨어 공백",
+   "evidence": [
+    {
+     "url": "https://www.opencompute.org/wp-content/uploads/2026/10/OCP-Base-Spec-Interface-Specification-Between-Hyperscalers-and-Utility-Grid-for-Disturbance-Performance.pdf",
+     "title": "OCP 하이퍼스케일러↔유틸리티 외란 성능 인터페이스 v1.0",
+     "date": "2026-09-17",
+     "kind": "official"
+    }
+   ]
+  },
+  {
+   "node": "component:grid_forming_inverter",
+   "claim": "모델 랩이 BESS·그리드포밍 인버터·SST·E-STATCOM 을 '시장에 처음 나오는' 장비로 소싱",
+   "evidence": [
+    {
+     "url": "https://job-boards.greenhouse.io/anthropic/jobs/5409569008",
+     "title": "Anthropic NPI 소싱 매니저 (BESS·그리드포밍·SST·E-STATCOM)",
+     "date": "2026-08-19",
+     "kind": "official"
+    }
+   ]
+  },
+  {
+   "node": "component:supercapacitor",
+   "claim": "e-STATCOM = 스태콤 + 슈퍼커패시터 저장 (효성·스켈레톤, 2027년까지)",
+   "evidence": [
+    {
+     "url": "https://www.smarttoday.co.kr/ko-kr/articles/101702",
+     "title": "효성중공업·스켈레톤 e-STATCOM 2027년까지 공동개발",
+     "date": "2026-01-20",
+     "kind": "trade_press"
+    }
+   ]
+  },
+  {
+   "node": "company:hyosung_hi",
+   "claim": "데이터센터용 STATCOM·22.9kV SST 서브모듈 출품",
+   "evidence": [
+    {
+     "url": "https://www.kpinews.kr/newsView/1065577251239974",
+     "title": "효성중공업 IEEE PES T&D 2026 — 데이터센터 STATCOM·SST",
+     "date": "2026-04-30",
+     "kind": "trade_press"
+    }
+   ]
+  }
+ ],
+ "drivers": [
+  {
+   "id": "ocp_rampsrate_spec",
+   "label": "OCP 후속 사양(램프레이트·강제 진동 한계) 공개 여부",
+   "metric": "status",
+   "latest": {
+    "value": "예고만 (v1.0 에 future work)",
+    "as_of": "2026-09-17",
+    "source": "OCP 사양 원문"
+   },
+   "threshold": "2027 중반까지 초안 공개면 강화",
+   "direction": "up"
+  },
+  {
+   "id": "hyperscaler_ridethrough_sourcing",
+   "label": "하이퍼스케일러·모델 랩의 BESS/그리드포밍/E-STATCOM 소싱·발주 공개 건수",
+   "metric": "count",
+   "latest": {
+    "value": 1,
+    "as_of": "2026-08-19",
+    "source": "Anthropic 채용 공고"
+   },
+   "threshold": "",
+   "direction": "up"
+  },
+  {
+   "id": "estatcom_commercialization",
+   "label": "효성 e-STATCOM 개발·상용화 일정",
+   "metric": "date",
+   "latest": {
+    "value": "2027년까지 공동개발",
+    "as_of": "2026-01-20",
+    "source": "스마트투데이"
+   },
+   "threshold": "2027 말까지 첫 수주면 stage 2",
+   "direction": "on_time"
+  }
+ ],
+ "beneficiaries": [
+  {
+   "company": "company:hyosung_hi",
+   "role": "primary",
+   "basis": "STATCOM·e-STATCOM·SST — 변압기 밖의 데이터센터 접속 하드웨어",
+   "size_band": "large",
+   "rerating": {
+    "from": "세후 영업이익 25.4배, 배수 16배면 내재 지속 마진 22% (TTM 14%) — 변압기 사이클 할인",
+    "to": "equipment regime 밴드(25%×25배) 현재가 +76% — 가정 밴드",
+    "why": "외란 표준이 BOM 을 만들면 수주가 변압기 사이클과 갈라진다"
+   }
+  },
+  {
+   "company": "company:ls_electric",
+   "role": "secondary",
+   "basis": "전력변환·그리드 장비 (그리드포밍 인버터는 추론)",
+   "size_band": "large",
+   "rerating": {
+    "from": "",
+    "to": "",
+    "why": "이미 12개월 +114% 후 고점 −51%"
+   }
+  },
+  {
+   "company": "company:ls_materials",
+   "role": "secondary",
+   "basis": "울트라커패시터 (홀드업 소자)",
+   "size_band": "small",
+   "rerating": {
+    "from": "영업이익률 0.2% — 이익 없음",
+    "to": "",
+    "why": "투기적 — 데이터센터 매출 확인 전"
+   }
+  },
+  {
+   "company": "company:samsung_sdi",
+   "role": "secondary",
+   "basis": "BBU·ESS 셀",
+   "size_band": "large",
+   "rerating": {
+    "from": "",
+    "to": "",
+    "why": ""
+   }
+  }
+ ],
+ "losers": [
+  {
+   "node": "component:psu_power_shelf",
+   "why": "외란 라이드스루를 못 하는 기존 PSU·UPS 설계는 재설계 압박"
+  }
+ ],
+ "falsifiers": [
+  {
+   "what": "OCP 램프레이트·진동 후속 사양이 2027년 6월까지 초안도 나오지 않음",
+   "metric": "OCP 문서",
+   "threshold": "없음",
+   "due": "2027-06-30"
+  },
+  {
+   "what": "효성중공업이 데이터센터 STATCOM/e-STATCOM 수주를 2027년 말까지 한 건도 공시·발표하지 않음",
+   "metric": "DART·보도",
+   "threshold": "0건",
+   "due": "2027-12-31"
+  },
+  {
+   "what": "라이드스루가 PSU 펌웨어·소프트웨어 평활만으로 충족된다는 하이퍼스케일러 발표 (하드웨어 불필요)",
+   "metric": "OCP·하이퍼스케일러",
+   "threshold": "",
+   "due": "2027-12-31"
+  }
+ ],
+ "stage": 1,
+ "stage_reason": "표준 발효·모델 랩 소싱(동인 둘)은 원문 확인. 공급 반응(수주·증설)은 아직 없음. 효성의 최근 급락 이유는 확인하지 못했다 — 반증 후보로 먼저 볼 것.",
+ "kind": "thesis",
+ "novelty": "new_issue",
+ "novelty_reason": "하이퍼스케일러와 유틸리티 사이의 첫 외란 성능 표준(v1.0, 2026-09) — 데이터센터 접속 조건이 BOM 을 만드는 일은 AI 사이클 안에 전례가 없다.",
+ "what_market_misses": "시장은 전력기기를 변압기 수주 사이클로 보고 버렸지만, 외란 표준은 변압기와 무관한 '버티는 하드웨어'(홀드업 커패시터·e-STATCOM·그리드포밍)를 데이터센터 접속 조건으로 만든다.",
+ "lag_months": 15,
+ "first_signal": {
+  "metric": "하이퍼스케일러·유틸리티의 데이터센터 STATCOM/E-STATCOM·BESS 발주",
+  "where": "DART 단일판매공급계약(효성중공업) · OCP 후속 사양",
+  "expected_by": "2027-06"
+ },
+ "benchmark": "thermal_power_2023",
+ "model": "claude-opus-5-5",
+ "method": "session",
+ "quiet_check": {
+  "as_of": "2026-10-29",
+  "method": "wsj.ecosystems.quiet v2",
+  "verdict": "sold_off",
+  "counts": {
+   "quiet": 0,
+   "mixed": 1,
+   "moved": 0,
+   "moved_reset": 1,
+   "sold_off": 2,
+   "unmeasured": 0
+  },
+  "companies": [
+   {
+    "company": "company:hyosung_hi",
+    "role": "primary",
+    "px_key": "KRX:298040",
+    "px_as_of": "2026-10-29",
+    "px_1m_pct": -31.5,
+    "px_3m_pct": -27.4,
+    "px_12m_pct": 0.2,
+    "from_high_pct": -58.6,
+    "verdict": "sold_off"
+   },
+   {
+    "company": "company:ls_electric",
+    "role": "secondary",
+    "px_key": "KRX:010120",
+    "px_as_of": "2026-10-29",
+    "px_1m_pct": -22.4,
+    "px_3m_pct": -21.3,
+    "px_12m_pct": 113.7,
+    "from_high_pct": -50.5,
+    "verdict": "moved_reset"
+   },
+   {
+    "company": "company:ls_materials",
+    "role": "secondary",
+    "px_key": "KOSDAQ:417200",
+    "px_as_of": "2026-10-29",
+    "px_1m_pct": -10.7,
+    "px_3m_pct": -0.9,
+    "px_12m_pct": 4.0,
+    "from_high_pct": -63.0,
+    "verdict": "sold_off"
+   },
+   {
+    "company": "company:samsung_sdi",
+    "role": "secondary",
+    "px_key": "KRX:006400",
+    "px_as_of": "2026-10-29",
+    "px_1m_pct": 2.1,
+    "px_3m_pct": 25.1,
+    "px_12m_pct": 84.0,
+    "from_high_pct": -24.3,
+    "verdict": "mixed"
+   }
+  ],
+  "universe": {
+   "n": 310,
+   "median_1m_pct": -13.7,
+   "median_3m_pct": -9.6,
+   "median_12m_pct": 26.9,
+   "median_from_high_pct": -43.1,
+   "share_from_high_le_40": 0.56
+  }
+ }
+}
