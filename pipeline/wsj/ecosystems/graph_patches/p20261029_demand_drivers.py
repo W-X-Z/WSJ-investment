@@ -73,5 +73,9 @@ ALIASES = {
     "component:kv_cache_ssd": ["SSD POD", "QLC eSSD", "context storage"],
 }
 
+def main() -> int:
+    return apply(NODES, EDGES, "d1029", aliases=ALIASES)
+
+
 if __name__ == "__main__":
-    raise SystemExit(apply(NODES, EDGES, "d1029", aliases=ALIASES))
+    raise SystemExit(main())
