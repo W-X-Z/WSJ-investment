@@ -989,3 +989,15 @@ tr:hover td{background:#f8faff}
 .cw-peers a:hover{color:var(--blue)}
 .cw-peers small{margin-left:6px;font-size:11px;color:var(--muted2);font-family:ui-monospace,monospace}
 .fd-aside-meta a{color:#3f5f96;font-weight:650}
+
+/* 아침 사슬 (시스템 점검, ADR-0024) */
+.sys-chain{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(5,1fr);gap:8px}
+.sys-chain li{border:1px solid var(--line);border-radius:10px;padding:10px 12px;display:flex;flex-direction:column;gap:3px;background:var(--surface)}
+.sys-chain li b{font-size:13px}
+.sys-chain li span{font-size:12.5px;color:var(--muted)}
+.sys-chain li small{font-size:11.5px;color:var(--muted2)}
+.sys-chain li em{font-style:normal;font-size:11.5px;color:var(--down)}
+.sys-chain li.st-succeeded span{color:var(--up)}
+.sys-chain li.st-failed span{color:var(--down)}
+.sys-chain li.st-running span{color:var(--blue)}
+@media (max-width:720px){.sys-chain{grid-template-columns:repeat(2,1fr)}}

@@ -1,4 +1,4 @@
-import { loadSystem } from "@/lib/system";
+import { CHAIN_KO, loadSystem } from "@/lib/system";
 import { WATCH_STATUS_KO } from "@/lib/ideas";
 import { rel } from "@/lib/feed";
 
@@ -24,6 +24,14 @@ export default async function SystemPage() {
       <h2>고칠 것<small>매주 개선 예약작업이 위에서부터 고칩니다</small></h2>
       {s.problems.length ? <ul className="sys-problems">{s.problems.map((p, i) => <li key={i} className={`sev-${p.severity}`}>
         <span>{SEV[p.severity]}</span><b>{p.area}</b>{p.what}</li>)}</ul> : <p className="fd-empty">지금은 없습니다.</p>}
+    </section>
+
+    <section className="fd-sec">
+      <h2>오늘 아침 사슬<small>수집 → 영향 경로 → 조사 → 리포트·목표주가 → 검증·보고 (KST, ADR-0024)</small></h2>
+      <ol className="sys-chain">{s.chain.map((c) => <li key={c.task} className={`st-${c.status ?? "none"}`}>
+        <b>{CHAIN_KO[c.task]}</b><span>{c.status === "succeeded" ? "완료" : c.status === "skipped" ? "할 일 없음" : c.status === "failed" ? "실패" : c.status === "running" ? "진행 중" : "아직"}</span>
+        {c.rows != null && c.status === "succeeded" ? <small>{c.rows}건</small> : null}{c.started_at ? <small>{rel(c.started_at)}</small> : null}
+        {c.error ? <em>{c.error}</em> : null}</li>)}</ol>
     </section>
 
     <section className="fd-sec">

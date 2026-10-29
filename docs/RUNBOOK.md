@@ -107,9 +107,9 @@ cd apps/web && cp .env.local.example .env.local && npm install && npm run dev
 
   | 워크플로 | 주기 | LLM |
   |---|---|---|
-  | 투자 아이디어 (Claude 예약작업, `docs/agents/daily-ideas.md`) — issues 실행 → 원문 확인·병목 관측치 → 아이디어·판단 | 월~토 06:41 KST | 요금제 안 (API 비용 없음) |
+  | 아침 사슬 다섯 작업 (Claude 예약작업, ADR-0024, `docs/agents/daily/*.md` + 공통 `daily-ideas.md`) — collect 05:23 → paths 06:17 → research 06:49 → report 07:37 → verify 08:11. 인계는 DB 큐 뷰(`v_q_*`), 기록은 `v_agent_runs` | 월~토 KST | 요금제 안 (API 비용 없음) |
   | 시스템 개선 (Claude 예약작업, `docs/agents/weekly-improvement.md`, ADR-0017) — 점검 → 그래프 패치·관측치 → PR → CI → 데이터 PR 은 스스로 병합 | 일 10:23 KST | 요금제 안 |
-  | issues (이슈 선별 + 기업 소식 + 가격, 위 예약작업이 실행) | 월~토 아침 | Sonnet 1회 ≈ $0.1 |
+  | issues (이슈 선별 + 기업 소식 + 가격, collect 작업이 실행) | 월~토 아침 | Sonnet 1회 ≈ $0.1 |
   | issues (기업 소식·가격 수집·저장만) | 매일 18:47 KST | 없음 |
   | source-probe (Actions 러너에서 출처 도달 점검, 저장 없음) | 수동·관련 PR | 없음 |
   | collect (유니버스 + 공시·내부자·공매도·정부 수주) | 토 20:41 KST | 없음 |
