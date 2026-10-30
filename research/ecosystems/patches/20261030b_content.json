@@ -1,0 +1,12 @@
+{"prefix": "c1030",
+ "nodes": [],
+ "edges": [
+  {"from": "product:google_tpu_system", "relation": "raises_content", "to": "component:mlb_pcb", "tier": "third_party_report",
+   "note": "TPU v8 기판 34~40층·M8+ 소재·HVLP4 동박 — 장당 가치 70~80% 상승 (대당 함량 증가)",
+   "evidence": [{"url": "https://money.udn.com/money/story/5607/9833568", "source_type": "third_party_report", "published_at": "2026-10-23",
+                 "excerpt": "v8t、v8i PCB層數約34~40層，CCL材料升級至M8+，搭配HVLP4銅箔，產值因此增加70～80%"}]},
+  {"from": "component:server_dram_lpdram", "relation": "raises_content", "to": "component:memory_module_pcb", "tier": "third_party_report",
+   "note": "SOCAMM2 기판 판가는 일반 서버 모듈 기판의 약 3배 (모듈 폼팩터 전환이 기판 단가를 올린다)",
+   "evidence": [{"url": "https://core.asiae.co.kr/article/2026082613254773558", "source_type": "third_party_report", "published_at": "2026-08-27",
+                 "excerpt": "쏘캠 판가는 티엘비가 제조하는 일반 서버용 메모리 기판 대비 3배 수준으로 추정된다"}]}
+ ]}

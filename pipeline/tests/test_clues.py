@@ -82,7 +82,7 @@ def test_rule_keep_broad_sources_need_vocabulary():
 def test_registry_file_is_valid():
     srcs = C.load_registry()
     assert srcs and not C.check_registry(srcs)
-    assert sum(1 for s in srcs if s.enabled and s.type in C.SUPPORTED) >= 15
+    assert sum(1 for s in srcs if s.enabled and s.type in C.SUPPORTED) >= 40
 
 
 def test_registry_check_catches_duplicates(tmp_path):

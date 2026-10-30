@@ -338,7 +338,8 @@
         "product_generation",
         "technology",
         "standard",
-        "requirement"
+        "requirement",
+        "component"
       ],
       "range": [
         "component",
