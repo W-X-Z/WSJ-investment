@@ -24,6 +24,7 @@ def test_config_files_point_at_real_nodes_and_domains():
     assert set(terms) <= ids
     assert all(len(w) >= 4 for ws in terms.values() for w in ws)
     assert set(topics.values()) <= set(domains)
+    assert set(T.load_context()) <= ids                       # 문맥 규칙도 그래프에 있는 노드만
     assert re.match(T.cpc_regex(p for ps in domains.values() for p in ps), "H01L25/0657")
     assert not re.match(T.cpc_regex(domains["packaging"]), "A61K31/00")
     assert T.domain_of("H05K1/0366", domains) == "substrate" and T.domain_of("G11C11/4096", domains) == "memory"
@@ -159,3 +160,26 @@ def test_sql_uses_parameters():
     sql = T.patents_sql(domains)
     assert all(p in sql for p in ("@since", "@countries", "@cpc_re", "@term_re"))
     assert "STRUCT('packaging' AS domain" in T.domain_series_sql(domains)
+
+
+def test_context_keeps_data_center_meaning_only():
+    lex = _lex()
+    ev = lex.nodes("Liquid cooling plate for a battery module of an electric vehicle")
+    dc = lex.nodes("Liquid cooling cold plate for a GPU in a server rack of a data center")
+    assert not ev & {"bottleneck:liquidcool", "component:coldplate"}
+    assert {"bottleneck:liquidcool", "component:coldplate"} & dc
+    assert "tech:glass_core_substrate" not in lex.nodes("Glass core substrate for a vacuum insulated window")
+    assert "tech:glass_core_substrate" in lex.nodes("Glass core substrate with through glass vias for a semiconductor package")
+    assert "component:photodiode" not in lex.nodes("Image sensor pixel with a photodiode and transfer gate")
+    assert "component:photodiode" in lex.nodes("Germanium photodiode integrated with a silicon photonic waveguide receiver")
+    assert "component:hbm_stack" in lex.nodes("High bandwidth memory stack")      # 문맥 규칙이 없는 노드는 그대로
+
+
+def test_org_names_group_variants():
+    assert T.org_key("TOYOTA MOTOR CO LTD") == T.org_key("TOYOTA MOTOR CORP") == "TOYOTA MOTOR"
+    assert T.org_key("Intel (United States)") == T.org_key("INTEL CORP") == "INTEL"
+    assert T.org_key("SK INNOVATION CO LTD") != T.org_key("SK ON CO LTD")
+    docs = [_doc(1, 2019, "NANJING THIRD GEN CENTER"), _doc(2, 2025, "NANJING THIRD GEN CENTER CO LTD"), _doc(3, 2025, "NANJING THIRD GEN CENTER CO LTD")]
+    _, orgs, _ = T.aggregate(docs)
+    (o,) = [o for o in orgs if o["span"] == "2024~"]
+    assert o["first_year"] == 2019 and o["n"] == 2 and o["org"] == "NANJING THIRD GEN CENTER CO LTD"   # 새 기관이 아니다

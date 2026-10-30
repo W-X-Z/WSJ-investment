@@ -72,12 +72,51 @@ class Lexicon:
     node_pats: list[tuple[re.Pattern, str]]
     comp_pats: list[tuple[re.Pattern, str]]
     phrases: list[str]
+    context: dict[str, tuple[re.Pattern, re.Pattern | None]] = field(default_factory=dict)
 
     def nodes(self, text: str) -> set[str]:
-        return {nid for pat, nid in self.node_pats if pat.search(text)}
+        got = {nid for pat, nid in self.node_pats if pat.search(text)}
+        if self.context and got & self.context.keys():
+            low = text.lower()
+            got = {n for n in got if n not in self.context or in_context(self.context[n], low)}
+        return got
 
     def company(self, name: str) -> str | None:
         return next((cid for pat, cid in self.comp_pats if pat.search(name)), None)
+
+
+def in_context(rule: tuple[re.Pattern, re.Pattern | None], low: str) -> bool:
+    req, exc = rule
+    return bool(req.search(low)) and not (exc is not None and exc.search(low))
+
+
+def load_context(path: Path | None = None) -> dict[str, tuple[re.Pattern, re.Pattern | None]]:
+    """research/techdocs/node_context.json — 다른 산업과 말이 겹치는 노드는 문맥이 맞을 때만 붙인다."""
+    path = path or CONF_DIR / "node_context.json"
+    if not path.exists():
+        return {}
+    out = {}
+    for g in json.loads(path.read_text(encoding="utf-8"))["groups"].values():
+        req = re.compile("|".join(g["require"]))
+        exc = re.compile("|".join(g["exclude"])) if g.get("exclude") else None
+        for nid in g["nodes"]:
+            out[nid] = (req, exc)
+    return out
+
+
+LEGAL = re.compile(r"\b(?:CO LTD|COMPANY LIMITED|CORPORATION|CORP|INCORPORATED|INC|LLC|LTD|LIMITED|GMBH|AG|NV|BV|SA|SAS|PLC|KK|CO|PTE|HOLDINGS?|GROUP)\b")
+
+
+def org_key(name: str) -> str:
+    """기관 이름 묶기: 'TOYOTA MOTOR CO LTD'·'TOYOTA MOTOR CORP' → 'TOYOTA MOTOR', OpenAlex 의 '(China)' 꼬리도 뗀다.
+    이름만 다른 같은 기관이 '새로 나타난 기관' 으로 잘못 잡히지 않게."""
+    s = re.sub(r"\s*\([^)]*\)\s*$", "", name or "").upper().replace("&", " AND ")
+    s = re.sub(r"[^\w ]", " ", s)
+    s = " ".join(s.split())
+    prev = None
+    while prev != s:
+        prev, s = s, " ".join(LEGAL.sub(" ", s).split())
+    return s or (name or "").upper()
 
 
 def build_lex(graph: dict[str, Any], terms: dict[str, list[str]]) -> Lexicon:
@@ -95,7 +134,7 @@ def build_lex(graph: dict[str, Any], terms: dict[str, list[str]]) -> Lexicon:
             if len(w) >= 4:
                 pats.append((_plural(re.compile(r"(?<![a-z0-9])" + re.escape(w).replace(r"\ ", r"[\s-]") + r"(?![a-z])", re.I)), nid))
     phrases = sorted({_plain(p.pattern) for p, _ in pats} - {""}, key=len)
-    return Lexicon(pats, comp_pats, phrases)
+    return Lexicon(pats, comp_pats, phrases, load_context())
 
 
 # 뉴스 어휘 중 특허·논문 문장에서는 흔한 영어 낱말이거나 뜻이 다른 것 — 여기서는 쓰지 않는다 (긴 표현은 patent_terms.json 에)
@@ -437,21 +476,24 @@ def aggregate(docs: list[Doc], top_orgs: int = 25, cap_docs: int = 120, docs_sin
         first: dict[str, int] = {}
         per_window: dict[str, Counter] = defaultdict(Counter)
         company_of: dict[str, str | None] = {}
+        names: dict[str, Counter] = defaultdict(Counter)
         for d in ds:
             if not d.published:
                 continue
             for o in d.orgs:
-                nm = o["name"]
-                first[nm] = min(first.get(nm, 9999), d.published.year)
-                per_window[window_of(d.published.year)][nm] += 1
-                company_of.setdefault(nm, o.get("company"))
+                k = org_key(o["name"])
+                names[k][o["name"]] += 1
+                first[k] = min(first.get(k, 9999), d.published.year)
+                per_window[window_of(d.published.year)][k] += 1
+                if o.get("company") and not company_of.get(k):
+                    company_of[k] = o["company"]
         for w, c in per_window.items():
-            for rank, (nm, n) in enumerate(c.most_common(top_orgs), 1):
-                orgs.append({"node": nid, "source": src, "span": w, "rank": rank, "org": nm[:200], "company": company_of.get(nm),
-                             "n": n, "first_year": first[nm]})
+            for rank, (k, n) in enumerate(c.most_common(top_orgs), 1):
+                orgs.append({"node": nid, "source": src, "span": w, "rank": rank, "org": names[k].most_common(1)[0][0][:200],
+                             "company": company_of.get(k), "n": n, "first_year": first[k]})
         recent = [d for d in ds if d.published and d.published >= docs_since]
         recent.sort(key=lambda d: (not any(o.get("company") for o in d.orgs),
-                                   not any(first.get(o["name"], 0) >= new_from for o in d.orgs),
+                                   not any(first.get(org_key(o["name"]), 0) >= new_from for o in d.orgs),
                                    -len(d.countries) if src == "patent" else -(d.cited_by or 0),
                                    -(d.published.toordinal() if d.published else 0)))
         for d in recent[:cap_docs]:

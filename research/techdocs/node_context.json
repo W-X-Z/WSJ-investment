@@ -1,0 +1,30 @@
+{
+  "_doc": "다른 산업에서 같은 말을 쓰는 노드는 문맥이 맞을 때만 붙인다 (특허·논문 태깅). require 중 하나가 본문(제목+초록, 소문자)에 있고 exclude 가 하나도 없어야 한다. 2026-10-30 첫 백필에서 데이터센터 전력·냉각 노드 문서의 70% 안팎이 전기차·배터리·가전·건축 쪽이었다 — 그 문서들이 '빠르게 늘어난 노드'와 '새로 나타난 기관'을 흐렸다. 정규식(파이썬 re), 소문자 기준.",
+  "groups": {
+    "dc_facility": {
+      "require": ["data ?cent", "datacent", "server", "\\brack", "computing", "data processing", "information technology", "\\bit equipment", "cloud", "artificial intelligence", "\\bai\\b", "\\bgpu", "accelerator", "\\bhpc\\b", "hyperscale", "데이터 ?센터", "서버", "数据中心", "服务器", "算力", "データセンター", "サーバ"],
+      "exclude": ["vehicle", "automotive", "automobile", "electric car", "battery pack", "battery module", "battery cell", "charging pile", "charging station", "aircraft", "turbine blade", "\\bcabin", "车辆", "汽车", "전기차", "차량", "自動車", "車両"],
+      "nodes": ["component:ups", "component:current_sensor", "component:supercapacitor", "component:dc_capacitor", "component:polymer_cap", "component:capacitor_shelf", "component:facility_bess", "component:bbu", "component:li_ion_bbu_cell", "component:dc_breaker", "component:dc_contactor", "component:dc_fuse", "component:sscb", "component:efuse_hotswap", "component:hv_power_connector", "component:ground_fault_detector", "component:distribution_transformer", "component:mv_switchgear", "component:hv_switchgear_breaker", "component:lv_transformer_ups", "component:grid_forming_inverter", "component:gas_turbine", "component:recip_gas_engine", "component:steam_turbine", "component:standby_genset", "component:fuel_cell", "component:sofc_hot_box", "component:chiller", "component:absorption_chiller", "component:dry_cooler", "component:cooling_tower", "bottleneck:liquidcool", "tech:immersion_single", "tech:immersion_two_phase", "tech:dlc_single_phase", "tech:dlc_two_phase", "tech:heat_reuse", "tech:warm_water_cooling", "tech:dc_chiller", "material:immersion_oil", "material:two_phase_fluid", "component:manifold", "component:uqd", "component:leak_detection", "component:brazed_plate_hx", "component:rdhx", "component:dc_cooling_units", "component:cdu_inrow", "tech:cdu", "component:l2a_sidecar"]
+    },
+    "dc_power_conversion": {
+      "require": ["data ?cent", "datacent", "server", "\\brack", "computing", "\\bgpu", "processor", "accelerator", "power supply unit", "\\bpsu\\b", "\\b(48|54|400|800) ?v", "\\bhvdc", "dc bus", "point.of.load", "voltage regulator", "데이터 ?센터", "서버", "数据中心", "服务器"],
+      "exclude": ["vehicle", "automotive", "automobile", "electric car", "battery pack", "charging pile", "charging station", "on.board charger", "traction", "photovoltaic", "solar", "车辆", "汽车", "전기차", "차량", "自動車", "車両"],
+      "nodes": ["component:power_converter"]
+    },
+    "chip_cooling": {
+      "require": ["data ?cent", "server", "computing", "\\bgpu", "processor", "semiconductor", "\\bchip", "\\bdie\\b", "package", "integrated circuit", "electronic component", "데이터 ?센터", "서버", "반도체", "数据中心", "服务器", "芯片", "半導体"],
+      "exclude": ["vehicle", "automotive", "battery pack", "battery module", "battery cell", "车辆", "汽车", "전기차", "차량", "車両"],
+      "nodes": ["component:coldplate", "component:microchannel_coldplate", "component:vapor_chamber", "material:tim"]
+    },
+    "optical_link": {
+      "require": ["optical communication", "transceiver", "optical receiver", "optical module", "waveguide", "silicon photonic", "optical fib", "optical interconnect", "datacom", "data communication", "photonic integrated", "co.packaged optic", "光通信", "광통신", "光模块"],
+      "exclude": ["image sensor", "pixel", "imaging", "camera", "x.ray", "radiation detect", "lidar", "이미지 센서", "图像传感器", "イメージセンサ"],
+      "nodes": ["component:photodiode", "material:germanium"]
+    },
+    "glass_package": {
+      "require": ["semiconductor", "package", "\\bchip", "\\bdie\\b", "interposer", "through.glass via", "\\btgv\\b", "circuit board", "wiring substrate", "redistribution", "반도체", "패키지", "半导体", "封装", "半導体", "パッケージ"],
+      "exclude": ["window", "glazing", "vacuum insulat", "display panel", "liquid crystal", "solar cell", "photovoltaic", "windshield"],
+      "nodes": ["tech:glass_core_substrate", "component:glass_interposer", "material:low_cte_glass"]
+    }
+  }
+}
