@@ -373,7 +373,11 @@ def main(argv: list[str] | None = None) -> int:
     if args.out:
         args.out.parent.mkdir(parents=True, exist_ok=True)
         args.out.write_text(json.dumps({"stats": stats, "clues": [c.row() for c in clues]}, ensure_ascii=False, indent=1, default=str), encoding="utf-8")
-    print(json.dumps({k: v for k, v in stats.items() if k != "sources"} | {"sources_ok": len(stats.get("sources", {}))}, ensure_ascii=False, default=str))
+    summary = {k: v for k, v in stats.items() if k != "sources"} | {"sources_ok": len(stats.get("sources", {}))}
+    if args.dry_run:  # 점검 실행: 출처별 건수와 실패를 모두 보인다 (clues-probe 워크플로)
+        summary["by_source"] = stats.get("sources", {})
+        summary["silent"] = sorted(s.id for s in load_registry(args.registry) if s.enabled and s.type in SUPPORTED and not stats.get("sources", {}).get(s.id))
+    print(json.dumps(summary, ensure_ascii=False, default=str, indent=1 if args.dry_run else None))
     return 0
 
 

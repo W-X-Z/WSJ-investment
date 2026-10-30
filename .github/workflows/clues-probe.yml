@@ -1,0 +1,45 @@
+# 출처 점검 (ADR-0028): 출처 목록(research/sources/registry.json)의 피드를 실제로 받아 본다 — DB 에 쓰지 않는다 (--dry-run).
+# 출처별 건수·실패·조용한 출처를 요약에 남긴다. 주간 개선 작업의 출처 점검과 출처를 더한 뒤 확인용. 수동 실행만.
+name: clues-probe
+
+on:
+  workflow_dispatch:
+    inputs:
+      days:
+        description: "창(일)"
+        required: false
+        default: "3"
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      SEC_USER_AGENT: "WSJ-investment research dnltmdwhd@gmail.com"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: pipeline/pyproject.toml
+      - name: Install
+        working-directory: pipeline
+        run: pip install -e .
+      - name: Probe sources (dry run, no LLM)
+        working-directory: pipeline
+        env:
+          IN_DAYS: ${{ inputs.days || '3' }}
+        run: |
+          set -euo pipefail
+          mkdir -p data/clues
+          python -m wsj.ecosystems.clues run --dry-run --no-llm --days "$IN_DAYS" --out data/clues/probe.json | tee probe.txt
+          { echo '```json'; cat probe.txt; echo '```'; } >> "$GITHUB_STEP_SUMMARY"
+      - name: Upload
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: clues-probe-${{ github.run_id }}
+          path: pipeline/data/clues
+          if-no-files-found: ignore
+          retention-days: 7
