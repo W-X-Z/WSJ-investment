@@ -156,6 +156,12 @@ def validate(graph: dict[str, Any], onto: dict[str, Any]) -> Report:
             rep.errors.append(f"edge {e['id']}: {e['relation']} needs tier >= {p['min_tier']}, got {tier}")
         if e.get("polarity") not in onto["polarity"]:
             rep.errors.append(f"edge {e['id']}: bad polarity {e.get('polarity')!r}")
+        for attr, spec in (onto.get("edge_attributes") or {}).items():
+            if attr in e:
+                if e["relation"] not in spec["applies_to"]:
+                    rep.errors.append(f"edge {e['id']}: {attr} not allowed on {e['relation']}")
+                elif e[attr] not in spec["values"]:
+                    rep.errors.append(f"edge {e['id']}: {attr} must be one of {spec['values']}")
         evs = e.get("evidence") or []
         if not evs:
             rep.errors.append(f"edge {e['id']}: no evidence")

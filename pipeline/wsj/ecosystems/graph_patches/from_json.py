@@ -1,7 +1,8 @@
 """JSON 그래프 패치 — 매일 발굴 작업(ADR-0027)이 작은 테제의 소형 공급사를 그래프에 넣는 길.
 
 예약작업은 파이프라인 코드를 바꾸지 않는다. 대신 `research/ecosystems/patches/YYYYMMDD_<task>.json` 에 노드·간선을 데이터로 적고 이 모듈로 적용한다.
-적용은 파이썬 패치와 같은 apply() — 멱등이고, 온톨로지 검증이 실패하면 파일을 쓰지 않는다. 그 뒤 `python -m wsj.ecosystems.export_web` 로 웹 데이터를 맞춘다.
+적용은 파이썬 패치와 같은 apply() — 멱등이고, 온톨로지 검증이 실패하면 파일을 쓰지 않는다.
+이미 있는 간선(from·relation·to 같음)에 exposure·position·about 을 주면 그 간선에 덧붙이고 근거를 더한다 (새로 만들지 않는다). 그 뒤 `python -m wsj.ecosystems.export_web` 로 웹 데이터를 맞춘다.
 
     python -m wsj.ecosystems.graph_patches.from_json ../research/ecosystems/patches/20261031_discover.json [--dry-run]
     python -m wsj.ecosystems.graph_patches.from_json --all      # 폴더의 패치 전부 (이미 적용된 것은 건너뛴다)
@@ -12,6 +13,7 @@
                 "ticker": "007660", "exchange": "KRX", "size_band": "mid"},
                {"id": "component:mlb_pcb", "kind": "component", "label": "고다층 MLB 기판", "ecosystem": "hbm"}],
      "edges": [{"from": "component:mlb_pcb", "relation": "offered_by", "to": "company:isu_petasys", "tier": "third_party_report", "note": "…",
+                "exposure": "core", "position": "leader",          # 선택: 매출 비중(core·major·minor·unknown)·자리(leader·second_source·entrant·captive)
                 "evidence": [{"url": "https://…", "source_type": "third_party_report", "published_at": "2025-10-31", "excerpt": "원문 한 줄"}]}],
      "aliases": {"company:isu_petasys": ["이수페타시스"]}, "native": {"company:isu_petasys": "이수페타시스"}}
 """
@@ -60,9 +62,10 @@ def parse(doc: dict[str, Any]) -> tuple[list[Node], list[Edge], str, dict[str, l
             raise ValueError(f"edges[{i}]: from·relation·to·tier 필수")
         if not evs or any(not str(v.get("url") or "").startswith("https://") or not v.get("source_type") for v in evs):
             raise ValueError(f"edges[{i}]: evidence 1개 이상, 각각 https url·source_type")
+        attrs = {k: e[k] for k in ("exposure", "position", "about") if e.get(k)}
         edges.append(Edge(e["from"], e["relation"], e["to"],
                           [(v["url"], v["source_type"], v.get("published_at"), v.get("excerpt")) for v in evs],
-                          e["tier"], e.get("polarity") or "positive", e.get("note") or ""))
+                          e["tier"], e.get("polarity") or "positive", e.get("note") or "", attrs or None))
     aliases = {k: [str(w) for w in v] for k, v in (doc.get("aliases") or {}).items()}
     native = {k: str(v) for k, v in (doc.get("native") or {}).items()}
     return nodes, edges, prefix, aliases, native

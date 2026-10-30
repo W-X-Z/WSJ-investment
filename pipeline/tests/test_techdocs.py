@@ -183,3 +183,52 @@ def test_org_names_group_variants():
     _, orgs, _ = T.aggregate(docs)
     (o,) = [o for o in orgs if o["span"] == "2024~"]
     assert o["first_year"] == 2019 and o["n"] == 2 and o["org"] == "NANJING THIRD GEN CENTER CO LTD"   # 새 기관이 아니다
+
+
+def test_orgs_group_by_graph_company_across_old_names():
+    lex = _lex()
+    assert lex.company("INVENSAS BONDING TECHNOLOGIES INC") == lex.company("ADEIA SEMICONDUCTOR BONDING TECHNOLOGIES INC") == "company:adea"
+    docs = [_doc(1, 2020, "INVENSAS BONDING TECHNOLOGIES INC", "company:adea"), _doc(2, 2025, "ADEIA SEMICONDUCTOR BONDING TECHNOLOGIES INC", "company:adea")]
+    _, orgs, _ = T.aggregate(docs)
+    (o,) = [o for o in orgs if o["span"] == "2024~"]
+    assert o["company"] == "company:adea" and o["first_year"] == 2020     # 이름이 바뀌었을 뿐 새 기관이 아니다
+
+
+def test_signals_pick_new_or_accelerating_us_kr_small_players():
+    g = {"nodes": [{"id": "component:tsv", "kind": "component", "label": "TSV (실리콘 관통 전극)"},
+                   {"id": "company:tiny", "kind": "company", "label": "Tiny Corp (Nasdaq TINY)", "size_band": "small", "listing": {"ticker": "TINY", "exchange": "Nasdaq"}},
+                   {"id": "company:big", "kind": "company", "label": "Big Corp", "size_band": "mega", "listing": {"ticker": "BIG", "exchange": "Nasdaq"}}],
+         "edges": []}
+    series = [{"node": "component:tsv", "source": "patent", "period": f"{y}-01-01", "n": n} for y, n in ((2022, 5), (2023, 5), (2024, 20), (2025, 20))]
+    orgs = [{"node": "component:tsv", "source": "patent", "span": "2024~", "org": "TINY CORP", "company": "company:tiny", "n": 6, "first_year": 2024},
+            {"node": "component:tsv", "source": "patent", "span": "2024~", "org": "BIG CORP", "company": "company:big", "n": 30, "first_year": 2024},
+            {"node": "component:tsv", "source": "patent", "span": "2024~", "org": "SEOUL NATIONAL UNIVERSITY", "company": None, "n": 9, "first_year": 2024},
+            {"node": "component:tsv", "source": "patent", "span": "2024~", "org": "KIM CHUL SOO", "company": None, "n": 4, "first_year": 2025},
+            {"node": "component:tsv", "source": "patent", "span": "2024~", "org": "VIA KOREA CO LTD", "company": None, "n": 8, "first_year": 2019},
+            {"node": "component:tsv", "source": "patent", "span": "2022-2023", "org": "VIA KOREA CO LTD", "company": None, "n": 2, "first_year": 2019},
+            {"node": "component:tsv", "source": "patent", "span": "2024~", "org": "STEADY CO LTD", "company": None, "n": 6, "first_year": 2019},
+            {"node": "component:tsv", "source": "patent", "span": "2022-2023", "org": "STEADY CO LTD", "company": None, "n": 5, "first_year": 2019}]
+    docs = [{"source": "patent", "title": "Via fill", "published_on": "2025-05-01", "url": "https://p/1", "nodes": ["component:tsv"],
+             "orgs": [{"name": "VIA KOREA CO LTD", "country": "KR"}]},
+            {"source": "patent", "title": "Steady", "published_on": "2025-05-01", "url": "https://p/2", "nodes": ["component:tsv"],
+             "orgs": [{"name": "STEADY CO LTD", "country": "KR"}]}]
+    got = T.signals(series, orgs, docs, g, today=date(2026, 3, 1))
+    assert [(s["org"], s["new"]) for s in got] == [("TINY CORP", True), ("VIA KOREA CO LTD", False)]   # 대형·대학·개인·완만한 곳은 뺀다
+    assert got[1]["url"] == "https://p/1" and got[1]["country"] == "KR"
+    title, summary = T.signal_text(got[0])
+    assert title.startswith("[특허 흐름] TSV: TINY CORP 2024년 이후 6건 — 새로 들어옴") and "×4.0" in title
+
+
+def test_tech_signal_clues_are_weekly_and_capped():
+    from datetime import UTC, datetime
+
+    from wsj.ecosystems import clues as C
+
+    assert C.tech_signals_due(datetime(2026, 11, 1, 16, 0, tzinfo=UTC))        # 일요일 16시 UTC = 월요일 01시 KST
+    assert not C.tech_signals_due(datetime(2026, 11, 2, 16, 0, tzinfo=UTC))
+
+    class Store:
+        def select(self, table, columns=None, filters=None, limit=None, order=None):
+            raise RuntimeError("relation does not exist")
+
+    assert C.tech_signal_clues(Store(), GRAPH) == []                           # 0033·백필 전에도 수집은 돈다

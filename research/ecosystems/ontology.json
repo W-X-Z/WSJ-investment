@@ -440,7 +440,9 @@
   "edge_optional_fields": [
     "note",
     "about (기업↔기업 관계가 관한 기술/세대 노드 id — 영향 전파는 about 노드를 지난 경로에서만 이 관계를 탄다)",
-    "confidence (검증기가 계산)"
+    "confidence (검증기가 계산)",
+    "exposure (offered_by·supplied_to: 그 제품·거래가 공급사 매출에서 차지하는 비중 — core ≥50% · major 10~50% · minor <10% · unknown. 해석·보강 작업이 원문으로 확인할 때만 채운다)",
+    "position (offered_by: 그 제품에서 공급사의 자리 — leader 선두 · second_source 2순위 공급사 · entrant 진입·인증 중 · captive 자체 생산(외부 판매 없음))"
   ],
   "maturity_stages": {
     "early": "연구·시연·시제품",
@@ -465,5 +467,30 @@
       "note": "string|null"
     },
     "rule": "현재 단계 1개만, 3단계로 거칠게. 근거 사실은 DB ideas.tech_evidence (ADR-0015 §3-1)"
+  },
+  "edge_attributes": {
+    "exposure": {
+      "applies_to": [
+        "offered_by",
+        "supplied_to"
+      ],
+      "values": [
+        "core",
+        "major",
+        "minor",
+        "unknown"
+      ]
+    },
+    "position": {
+      "applies_to": [
+        "offered_by"
+      ],
+      "values": [
+        "leader",
+        "second_source",
+        "entrant",
+        "captive"
+      ]
+    }
   }
 }

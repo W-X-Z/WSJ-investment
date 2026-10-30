@@ -36,6 +36,10 @@ REL_KO = {"requires": "필요로 한다", "implements": "구현한다", "mitigat
           "raises_content": "대당 함량을 늘린다"}
 
 
+EXPOSURE_KO = {"core": "매출 핵심", "major": "매출 주요", "minor": "매출 작음"}
+POSITION_KO = {"leader": "선두", "second_source": "2순위 공급", "entrant": "진입 중", "captive": "자체 생산"}
+
+
 class Graph:
     def __init__(self, graph: dict[str, Any]):
         self.nodes = {n["id"]: n for n in graph["nodes"]}
@@ -92,6 +96,15 @@ class Graph:
                 uniq.append((p, c))
         return uniq
 
+    def supply_tag(self, nid: str, cid: str) -> str:
+        """공급 간선의 노출도·자리 (있으면) — '매출 비중이 가장 큰 회사' 를 고를 때 본다."""
+        e = next((e for e in self.out.get(nid, []) if e["relation"] in SUPPLY and e["to"] == cid), None)
+        if not e:
+            return ""
+        tags = [EXPOSURE_KO.get(e.get("exposure"), ""), POSITION_KO.get(e.get("position"), "")]
+        tags = [t for t in tags if t]
+        return f" ({'·'.join(tags)})" if tags else ""
+
     def listed_kr_us(self, cid: str) -> bool:
         ex = ((self.nodes.get(cid) or {}).get("listing") or {}).get("exchange")
         return ex in {"KRX", "KOSDAQ", "NYSE", "Nasdaq", "NYSE American"}
@@ -141,9 +154,11 @@ def neighborhood(g: Graph, companies: list[str], nodes: list[str]) -> dict[str, 
             for frm, rel, to in g.demanders(y):
                 touched.add(frm)
                 lines.append(f"  - {g.label(frm)} —{REL_KO.get(rel, rel)}→ {g.label(to)}")
+            if g.supply_tag(y, cid):
+                lines[-1] += g.supply_tag(y, cid)
             peers = [c for c in g.suppliers(y) if c != cid]
             if peers:
-                lines.append("  - 같이 파는 회사: " + ", ".join(g.label(c) for c in peers[:12]))
+                lines.append("  - 같이 파는 회사: " + ", ".join(g.label(c) + g.supply_tag(y, c) for c in peers[:12]))
     for nid in nodes:
         lines.append(f"## {g.label(nid)} ({nid})")
         for frm, rel, to in g.demanders(nid):
@@ -152,7 +167,7 @@ def neighborhood(g: Graph, companies: list[str], nodes: list[str]) -> dict[str, 
         down = [(p, c) for p, c in g.downstream_suppliers(nid) if g.listed_kr_us(c)]
         for p, c in down[:20]:
             size = (g.nodes.get(c) or {}).get("size_band") or "?"
-            lines.append(f"- 아래 공급사(미국·한국): {g.label(c)} [{size}] ← " + " → ".join(g.label(x) for x in p))
+            lines.append(f"- 아래 공급사(미국·한국): {g.label(c)} [{size}]{g.supply_tag(p[-1], c)} ← " + " → ".join(g.label(x) for x in p))
             touched |= set(p)
     return {"text": "\n".join(lines), "touched": touched}
 

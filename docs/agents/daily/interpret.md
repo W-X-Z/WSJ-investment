@@ -22,6 +22,8 @@
 - **작은 단서를 먼저 본다** (공통 §B): 제품 출시·시연, 협약·공동개발, 샘플·인증, 초도 수주, 협력사 명단, 전시회, 채용, 특허·논문, 소형사 증설, 업계 소문.
   **공시·실적은 후행 데이터다 — 맨 나중에 본다** (사용자, 2026-10-30). `source_kind` 가 `disclosure` 인 단서는 작은 단서를 다 읽고 시간이 남을 때만,
   그것도 이미 있는 아이디어를 고치는 데만 쓴다 (예: 공급계약 공시가 나오면 그 회사의 아이디어를 갱신). 공시에서 새 아이디어를 시작하지 않는다.
+- **기술 흐름 단서** (`source_kind = 'tech_signal'`, 매주 월요일 몇 개): 특허·논문에서 '빠르게 늘어나는 기술에 새로 들어왔거나 빨라진 미국·한국 기관'이다. 뉴스가 아니라 **누가 무엇을 준비하고 있나**이므로,
+  그 기관이 상장 소·중형이면 그 회사를, 비상장·개인이면 그 기술의 미국·한국 상장 공급망(장비·소재·부품)을 본다. 특허 수는 재료일 뿐 — §3 의 결정적 사실(실제 제품·고객·매출로 이어지나)로 판단한다.
 - 큰 회사 뉴스는 그 자체보다 **두 단계 아래** — 그 회사의 공급사·장비사·소재사 중 미국·한국 소·중형사에게 무엇을 뜻하나로 읽는다. 시장이 읽는 것은 헤드라인 기업이다.
 - 고르는 기준은 하나: "이 단서가 어느 회사의 매출·이익을 시장이 아직 모르게 바꾸는가." 그렇다고 볼 이유가 없으면 넘긴다.
 
@@ -35,7 +37,11 @@
    **없는 고리는 §5 에서 그래프에 더한다** (누적). 원문이 있으면 그 근거로, 추론뿐이면 `hypothesis` 등급으로. 세대 전환이 부품의 대당 함량(층수·면적·개수·등급)을 늘리면 `raises_content` 관계로.
 3. **렌즈** (`lenses.md`)에서 그 단서에 맞는 것만 골라 생각한다: 매출 분해 · 병목과 이익 이동 · 대체 · 파이 · 단서의 다른 설명 · 부족기 증폭 · 시장 기대 · 누가 지키나. 관련 패턴 카드가 있으면 그 사례와 **반대 신호**를 먼저 대 본다.
 4. **누구인가**: 이 변화가 **매출에서 가장 큰 비중**을 차지하는 미국·한국 상장사를 primary 로 (소·중형 먼저). 그래프 밖 회사여도 된다(§5 에서 더한다). 관련 회사는 role=related.
-5. **가격**: 있으면 `select * from public.v_price_context where ticker = '…';`(미국 `RMBS`, 한국 `KRX:007660`·`KOSDAQ:…`), 없으면 기사. 같은 이야기로 이미 크게 오른 회사는 ★ 를 낮게 매기거나 쓰지 않는다.
+   recall 의 공급사 옆 괄호(매출 핵심·주요·작음 / 선두·2순위 공급·진입 중·자체 생산)가 있으면 그것부터 본다. 그 회사가 **파는 쪽인지 사는 쪽인지·자체 생산인지**는 그래프가 아니라 원문으로 확인한다.
+5. **결정적 사실** (2026-10-30 PoC 에서 판단을 실제로 가른 단계): 고른 회사·길에 대해 **"이 길을 죽일 수 있는 질문" 1~2개**를 적고 원문으로 답을 찾는다. 예: 실제 공급 관계가 있나 · 이 사업이 매출의 몇 %인가 · 계약 기반인가(장기계약·선급금) · 양산인가 개발 단계인가 · 경쟁사가 이미 그 자리를 가져갔나.
+   같은 사건의 원문 언어 보도(대만 번체·일본어·한국어)를 함께 찾는다 — 핵심 숫자는 그쪽에 먼저 나온다. 답이 길을 죽이면 쓰지 않는다(그래도 §5 의 그래프·패턴에는 남긴다).
+6. **시장 기대와의 차이**: 가격 `select * from public.v_price_context where ticker = '…';`(미국 `RMBS`, 한국 `KRX:007660`·`KOSDAQ:…`), 없으면 기사.
+   12개월 수익률 하나로 '이미 반영'을 판정하지 않는다 — 고점 대비 낙폭·최근 1개월 흐름을 같이 보고, **시장(증권사·기사)이 지금 이 회사에 무엇을 기대하는지 한 문장**으로 적는다. 우리 해석이 그 기대와 **어디서 다른가**가 아이디어의 핵심이다. 다르지 않으면 ★ 를 낮추거나 쓰지 않는다.
 
 ## 4. 초안 쓰기
 `select ideas.put_opportunities($j$[{…}]$j$::jsonb);`
@@ -58,6 +64,9 @@
 - **패턴 카드**: 오늘 해석이 기존 패턴에 들어맞으면 그 카드의 '사례' 줄에 아이디어 key·날짜를 더한다. 새 메커니즘이면 `research/playbook/patterns/<영문_이름>.md` 초안을 쓴다(형식은 `research/playbook/README.md`). 같은 PR 에 넣는다.
 - 오늘 해석에서 그래프에 없던 고리·기업을 `research/ecosystems/patches/YYYYMMDD_interpret.json` 에 적는다 (형식은 `pipeline/wsj/ecosystems/graph_patches/from_json.py` 맨 위).
   기업은 상장사만(ticker·exchange·size_band micro|small|mid|large|mega), 간선마다 https 근거 1개 이상. 추론뿐인 고리는 tier `hypothesis`.
+- **확인한 사실은 그래프에 쌓는다** (해석이 매번 같은 것을 다시 찾지 않게):
+  - 공급사의 **매출 비중·자리**를 원문으로 확인했으면 그 `offered_by` 간선에 `exposure`(core ≥50% · major 10~50% · minor <10%)·`position`(leader · second_source · entrant · captive)을 근거와 함께 적는다. 이미 있는 간선이면 같은 from·relation·to 로 보내면 덧붙는다.
+  - **누가 누구에게 납품하는지** 확인했으면 `supplied_to`(공급사 → 고객)를 `about`(무엇에 관한 납품인지, 노드 id)과 함께 더한다. 예: 이수페타시스 → 구글, about `product:google_tpu_system`.
 - `cd pipeline && .venv/bin/python -m wsj.ecosystems.graph_patches.from_json ../research/ecosystems/patches/YYYYMMDD_interpret.json && .venv/bin/python -m wsj.ecosystems.export_web && .venv/bin/python -m wsj.ecosystems.ontology --check`
 - 브랜치 `auto/interpret-YYYYMMDD` → 커밋(끝에 `Co-Authored-By: Claude <noreply@anthropic.com>`) → PR(`gh api repos/W-X-Z/WSJ-investment/pulls -f base=main -f head=… -f title=… -F body=@…`, 본문 끝 `🤖 Generated with [Claude Code](https://claude.com/claude-code)`).
   CI 를 최대 15분 기다리고(`gh api repos/W-X-Z/WSJ-investment/commits/<sha>/check-runs`), 모두 통과하고 바뀐 파일이 전부 `research/`·`apps/web/src/data/` 안이면 `gh api -X PUT repos/W-X-Z/WSJ-investment/pulls/<n>/merge -f merge_method=squash`.

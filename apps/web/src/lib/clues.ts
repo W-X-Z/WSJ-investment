@@ -49,7 +49,7 @@ export function tidyCompanies(list: ClueCompany[]): ClueCompany[] {
 
 export const KIND_KO: Record<string, string> = {
   trade_press: "업계지", company_newsroom: "기업 발표", disclosure: "공시", standards: "표준", conference: "학회", research: "논문",
-  release_notes: "릴리스", market_data: "시장 자료", policy: "정책", company_feed: "기업 소식", issue: "공급망 이슈",
+  release_notes: "릴리스", market_data: "시장 자료", policy: "정책", company_feed: "기업 소식", issue: "공급망 이슈", tech_signal: "기술 흐름",
 };
 
 /** KST 날짜 (YYYY-MM-DD) — 묶음 제목용. */

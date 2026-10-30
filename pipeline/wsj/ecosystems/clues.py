@@ -332,6 +332,44 @@ def mark_duplicates(clues: list[Clue], seen: set[str] | frozenset[str] = frozens
     return n
 
 
+def tech_signals_due(now: datetime | None = None) -> bool:
+    """기술 흐름 단서는 주 1회 (월요일 KST) — 특허·논문 자료는 분기에 한 번 바뀌므로 한꺼번에 쏟지 않고 매주 몇 개씩."""
+    now = now or datetime.now(UTC)
+    return (now + timedelta(hours=9)).weekday() == 0
+
+
+def tech_signal_clues(store: Any, graph: dict[str, Any], cap: int = 6, seen: set[str] | None = None) -> list[Clue]:
+    """techdocs 의 노드별 시계열·기관·대표 문서 → '빠르게 늘어나는 기술 × 새로 들어온 미국·한국 기관' 단서 (이미 본 것은 빼고 cap 개)."""
+    from wsj.ecosystems.techdocs import signal_text, signals
+
+    try:
+        series = store.select("ideas.tech_series", ["node", "source", "period", "n"])
+        orgs = store.select("ideas.tech_orgs", ["node", "source", "span", "org", "company", "n", "first_year"])
+        docs = store.select("ideas.tech_docs", ["source", "title", "published_on", "orgs", "nodes", "url"], {"published_on": ("gte", "2023-01-01")})
+    except Exception as exc:  # noqa: BLE001 - 0033 전이거나 백필 전
+        log.warning("techdocs 를 읽지 못함: %s", exc)
+        return []
+    out: list[Clue] = []
+    now = datetime.now(UTC)
+    labels = {n["id"]: n for n in graph["nodes"]}
+    for sgl in signals(series, orgs, docs, graph):
+        if sgl["url"] in (seen or set()) or any(c.url == sgl["url"] for c in out):
+            continue
+        title, summary = signal_text(sgl)
+        short = re.sub(r"\s+\(.*$", "", sgl["label"])
+        comp = labels.get(sgl["company"] or "") or {}
+        lst = comp.get("listing") or {}
+        companies = [{"company": sgl["company"], "name": comp.get("label", sgl["org"]) if comp else sgl["org"],
+                      "ticker": lst.get("ticker"), "exchange": lst.get("exchange")}]
+        out.append(Clue(sgl["url"], title, summary, now, "techdocs", "특허·논문 흐름", "tech_signal", lang="ko", region=sgl["country"] or None,
+                        companies=companies, nodes={sgl["node"]}, relevant=True,
+                        note=f"기술 흐름 신호 — {short}",
+                        extra={"n_2024": sgl["n24"], "n_2022_23": sgl["n22"], "first_year": sgl["first_year"], "ratio": sgl["ratio"]}))
+        if len(out) >= cap:
+            break
+    return out
+
+
 def already_seen(store: Any, urls: list[str]) -> set[str]:
     try:
         return {r["url"] for r in store.select("ideas.clues", ["url"], {"url": urls})}
@@ -340,7 +378,8 @@ def already_seen(store: Any, urls: list[str]) -> set[str]:
         return set()
 
 
-def run(http: Any, store: Any | None, days: int, use_llm: bool, model: str, api_key: str | None, registry: Path = REGISTRY_PATH) -> dict[str, Any]:
+def run(http: Any, store: Any | None, days: int, use_llm: bool, model: str, api_key: str | None, registry: Path = REGISTRY_PATH,
+        tech_signals: bool | None = None) -> dict[str, Any]:
     graph = load_graph()
     sources = load_registry(registry)
     since = datetime.now(UTC) - timedelta(days=days)
@@ -355,6 +394,11 @@ def run(http: Any, store: Any | None, days: int, use_llm: bool, model: str, api_
     else:
         for c in todo:
             c.relevant = rule_keep(c)
+    if store is not None and (tech_signals if tech_signals is not None else tech_signals_due()):
+        sig = tech_signal_clues(store, graph)
+        sig = [c for c in sig if c.url not in already_seen(store, [c.url for c in sig])]
+        new += sig
+        stats["tech_signals"] = len(sig)
     stats.update({"new": len(new), "kept": sum(1 for c in new if c.relevant), "dropped": sum(1 for c in new if not c.relevant)})
     if store is not None and new:
         try:
@@ -377,6 +421,7 @@ def main(argv: list[str] | None = None) -> int:
         p.add_argument("--out", type=Path)
         p.add_argument("--dry-run", action="store_true", help="저장하지 않는다 (DB 도 읽지 않는다)")
         p.add_argument("--registry", type=Path, default=REGISTRY_PATH)
+        p.add_argument("--tech-signals", action="store_true", default=None, help="기술 흐름 단서를 오늘 넣는다 (기본: 월요일 KST 만)")
     s = sub.add_parser("sources")
     s.add_argument("--registry", type=Path, default=REGISTRY_PATH)
     args = ap.parse_args(argv)
@@ -405,7 +450,8 @@ def main(argv: list[str] | None = None) -> int:
     try:
         if store is not None:
             run_id = store.run_started("clues", {"days": args.days, "llm": not args.no_llm})
-        stats = run(http, store, args.days, not args.no_llm, args.model, settings.anthropic_api_key or None, args.registry)
+        stats = run(http, store, args.days, not args.no_llm, args.model, settings.anthropic_api_key or None, args.registry,
+                    tech_signals=getattr(args, "tech_signals", None))
         if store is not None and run_id is not None:
             store.run_finished(run_id, "succeeded", int(stats.get("saved") or 0), json.loads(json.dumps({k: v for k, v in stats.items() if k != "clues"}, default=str)), None)
     except Exception as exc:
