@@ -1018,7 +1018,7 @@ tr:hover td{background:#f8faff}
 .op-list{display:flex;flex-direction:column;gap:12px}
 .op-card{display:block;background:#fff;border:1px solid #e3e8ef;border-radius:14px;padding:16px 20px 15px;transition:border-color .15s,box-shadow .15s}
 .op-card:hover{border-color:#b9c6da;box-shadow:0 2px 10px rgba(20,36,59,.06)}
-.op-card h3{margin:8px 0 6px;font-size:17px;line-height:1.45;letter-spacing:-.3px;color:#14243b;word-break:keep-all;text-wrap:balance}
+.op-card h3{margin:8px 0 6px;font-size:17px;font-weight:750;line-height:1.45;letter-spacing:-.3px;color:#14243b;word-break:keep-all;text-wrap:balance}
 .op-card p{margin:0;font-size:13.5px;line-height:1.7;color:#4a5a70}
 .op-card-top{display:flex;align-items:center;gap:10px;flex-wrap:wrap;font-size:12.5px;color:#6b788b}
 .op-card-top time{margin-left:auto;color:#8a96a8;font-size:12px}
@@ -1031,9 +1031,9 @@ tr:hover td{background:#f8faff}
 .op-back{margin:0 0 10px;font-size:12.5px}
 .op-back a{color:#3f5f96;font-weight:650}
 .op-dhead{background:#fff;border:1px solid #e3e8ef;border-radius:14px;padding:20px 24px 16px;margin:0 0 22px}
-.op-dhead h1{font-size:24px;line-height:1.4;letter-spacing:-.6px;color:#14243b;margin:10px 0 0;word-break:keep-all;text-wrap:balance}
+.op-dhead h1{font-size:24px;font-weight:780;line-height:1.4;letter-spacing:-.6px;color:#14243b;margin:10px 0 0;word-break:keep-all;text-wrap:balance}
 .op-sec{margin:0 0 26px}
-.op-sec h2{font-size:15px;color:#14243b;margin:0 0 9px;letter-spacing:-.2px}
+.op-sec h2{font-size:15px;font-weight:780;color:#14243b;margin:0 0 9px;letter-spacing:-.2px}
 .op-text{margin:0;font-size:15px;line-height:1.85;color:#22324a;word-break:keep-all}
 .op-cos,.op-rel,.op-ev{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:8px}
 .op-cos li{font-size:14px;color:#22324a;display:flex;gap:8px;align-items:baseline}
@@ -1048,7 +1048,7 @@ tr:hover td{background:#f8faff}
 @media (max-width:640px){.op-card{padding:14px 16px}.op-dhead{padding:16px 16px 14px}.op-dhead h1{font-size:20px}.op-text{font-size:14.5px}}
 
 /* 단서 (ADR-0028) */
-.cl-day{display:flex;gap:8px;align-items:baseline}
+.cl-day{display:flex;gap:8px;align-items:baseline;font-weight:780}
 .cl-day small{font-size:12px;color:#8a96a8;font-weight:500}
 .cl-list{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:2px;background:#fff;border:1px solid #e3e8ef;border-radius:12px}
 .cl-list li{padding:11px 16px;border-bottom:1px solid #eef1f5}
