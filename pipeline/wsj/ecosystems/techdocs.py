@@ -278,10 +278,13 @@ def resolve_topics(oa: OpenAlex, phrases: dict[str, str]) -> list[dict[str, Any]
 
 def run_papers(args: argparse.Namespace) -> int:
     _, phrases, _ = load_conf()
-    key = os.environ.get("OPENALEX_API_KEY")
+    from wsj.config import load_settings
+
+    settings = load_settings()                              # pipeline/.env 도 읽는다
+    key = os.environ.get("OPENALEX_API_KEY") or settings.openalex_api_key
     if not key:
         print("OPENALEX_API_KEY 가 없습니다 (openalex.org 에서 무료 발급). 키 없이는 하루 사용량이 매우 작습니다.", file=sys.stderr)
-    oa = OpenAlex(key, os.environ.get("OPENALEX_MAILTO"))
+    oa = OpenAlex(key, os.environ.get("OPENALEX_MAILTO") or settings.openalex_mailto or None)
     RAW.mkdir(parents=True, exist_ok=True)
     topics = resolve_topics(oa, phrases)
     (RAW / "openalex_topics.json").write_text(json.dumps(topics, ensure_ascii=False, indent=1), encoding="utf-8")
