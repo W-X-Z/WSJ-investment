@@ -16,10 +16,35 @@ export async function loadClues(days = 7, limit = 300): Promise<Clue[]> {
       .select("clue_id,url,title,summary,published_at,seen_at,source_name,source_kind,region,companies,note")
       .gte("seen_at", since).order("seen_at", { ascending: false }).limit(limit);
     if (error || !data) return [];
-    return (data as Clue[]).map((c) => ({ ...c, companies: Array.isArray(c.companies) ? c.companies : [] }));
+    return (data as Clue[]).map((c) => ({ ...c, companies: tidyCompanies(Array.isArray(c.companies) ? c.companies : []) }));
   } catch {
     return [];
   }
+}
+
+const TAIL = /\s+\(([^()]*)\)\s*$/;
+const TICKER = /^[A-Z0-9][A-Z0-9.\-]{0,9}$/;
+
+/** 기업 표시를 정리한다: 그래프 라벨의 괄호 꼬리("(TPEx 3324, 비SEC)")를 떼고, 같은 회사(같은 티커·같은/포함되는 이름)는 한 번만. */
+export function tidyCompanies(list: ClueCompany[]): ClueCompany[] {
+  const out: ClueCompany[] = [];
+  const names: string[] = [];
+  const tickers = new Set<string>();
+  for (const x of list) {
+    const raw = (x?.name ?? "").trim();
+    if (!raw) continue;
+    const tail = raw.match(TAIL)?.[1]?.split(",")[0]?.trim().split(/\s+/).pop() ?? "";
+    const name = raw.replace(TAIL, "") || raw;
+    const own = (x.ticker ?? "").trim().replace(/^[A-Za-z]+:/, "").toUpperCase();
+    const ticker = own || (TICKER.test(tail) ? tail : "");
+    const key = name.toLowerCase();
+    const dupName = names.some((n) => n === key || (Math.min(n.length, key.length) >= 2 && (n.includes(key) || key.includes(n))));
+    if ((ticker && tickers.has(ticker)) || dupName) continue;
+    if (ticker) tickers.add(ticker);
+    names.push(key);
+    out.push({ ...x, name, ticker: ticker || null });
+  }
+  return out;
 }
 
 export const KIND_KO: Record<string, string> = {
