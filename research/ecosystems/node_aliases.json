@@ -1330,6 +1330,20 @@
       "金像電",
       "Gold Circuit",
       "GCE"
+    ],
+    "company:mirae_corp": [
+      "미래산업",
+      "MIRAE CORP",
+      "Mirae Corporation"
+    ],
+    "company:haesung_ds": [
+      "해성디에스",
+      "Haesung DS",
+      "HAESUNG DS"
+    ],
+    "company:enph": [
+      "Enphase",
+      "엔페이즈"
     ]
   }
 }

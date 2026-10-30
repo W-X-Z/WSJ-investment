@@ -154,3 +154,18 @@ def test_llm_screen_runs_batches_concurrently_and_keeps_order(monkeypatch):
     C.llm_screen(cs, "k", batch=2, workers=3)
     assert [c.relevant for c in cs] == [False, True, False, True, False, True, False]
     assert cs[3].note == "keep 3"
+
+
+def test_llm_companies_resolve_to_graph_ids():
+    from wsj.ecosystems.ontology import load_graph
+
+    resolve = C.company_resolver(load_graph())
+    assert resolve("테크윙", "089030", "KOSDAQ") == "company:techwing"
+    assert resolve("Techwing", "089030", "KRX") == "company:techwing"             # 한국 안에서는 거래소 표기가 달라도
+    assert resolve("Samsung Electronics", "005930", "KRX") == "company:samsung"
+    assert resolve("Unknown Tiny", "999999", "KOSDAQ") is None
+    c = _clue("https://r.test", "테크윙 공급계약")
+    c.companies.append({"company": "company:techwing", "name": "Techwing (KOSDAQ 089030)"})
+    C.apply_screen([c], {"items": [{"i": 0, "keep": True, "note": "n", "companies": [
+        {"name": "테크윙", "ticker": "089030", "exchange": "KOSDAQ"}, {"name": "마이크론", "ticker": "MU", "exchange": "NASDAQ"}]}]}, resolve)
+    assert [x["company"] for x in c.companies] == ["company:techwing", "company:mu"]   # 같은 회사는 한 번, 다른 회사는 id 로

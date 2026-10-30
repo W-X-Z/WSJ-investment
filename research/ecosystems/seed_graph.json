@@ -10424,6 +10424,51 @@
       },
       "size_band": "large",
       "in_universe": false
+    },
+    {
+      "id": "company:mirae_corp",
+      "kind": "company",
+      "label": "Mirae Corp 미래산업 (KRX 025560, 비SEC)",
+      "ecosystem": "hbm",
+      "role": "supplier",
+      "listing": {
+        "ticker": "025560",
+        "exchange": "KRX",
+        "cik": null,
+        "filer_type": "non_sec_listed"
+      },
+      "size_band": "micro",
+      "in_universe": false
+    },
+    {
+      "id": "company:haesung_ds",
+      "kind": "company",
+      "label": "Haesung DS 해성디에스 (KRX 195870, 비SEC)",
+      "ecosystem": "hbm",
+      "role": "supplier",
+      "listing": {
+        "ticker": "195870",
+        "exchange": "KRX",
+        "cik": null,
+        "filer_type": "non_sec_listed"
+      },
+      "size_band": "small",
+      "in_universe": false
+    },
+    {
+      "id": "company:enph",
+      "kind": "company",
+      "label": "Enphase Energy (ENPH)",
+      "ecosystem": "power",
+      "role": "supplier",
+      "listing": {
+        "ticker": "ENPH",
+        "exchange": "Nasdaq",
+        "cik": null,
+        "filer_type": "non_sec_listed"
+      },
+      "size_band": "mid",
+      "in_universe": false
     }
   ],
   "edges": [
@@ -41326,6 +41371,60 @@
         }
       ],
       "note": "SOCAMM2 기판 판가는 일반 서버 모듈 기판의 약 3배 (모듈 폼팩터 전환이 기판 단가를 올린다)",
+      "confidence": 0.6
+    },
+    {
+      "id": "c1030-003",
+      "from": "equipment:hbm_prober_handler",
+      "to": "company:mirae_corp",
+      "relation": "offered_by",
+      "evidence_tier": "third_party_report",
+      "polarity": "positive",
+      "evidence": [
+        {
+          "url": "https://view.asiae.co.kr/article/2024112815402492055",
+          "source_type": "third_party_report",
+          "published_at": "2024-11-28",
+          "excerpt": "미래산업(대표이사 이창재)은 SK하이닉스와 23억6000만원 규모 반도체 검사장비 관련 수주계약을 체결했다고 28일 밝혔다."
+        }
+      ],
+      "note": "메모리 테스트 핸들러 제조사. SK하이닉스와 23.6억원 반도체 검사장비 수주(전년 매출의 10.8%). 2024년 이후 테스트 핸들러 특허 2→7건(techdocs).",
+      "confidence": 0.6
+    },
+    {
+      "id": "c1030-004",
+      "from": "component:package_substrate",
+      "to": "company:haesung_ds",
+      "relation": "offered_by",
+      "evidence_tier": "third_party_report",
+      "polarity": "positive",
+      "evidence": [
+        {
+          "url": "https://www.smarttoday.co.kr/ko-kr/articles/62821",
+          "source_type": "third_party_report",
+          "published_at": "2024-10-28",
+          "excerpt": "패키지기판 DDR5 신제품 시양산"
+        }
+      ],
+      "note": "메모리용 DDR4·DDR5 패키지 기판과 차량용 리드프레임. DDR5 패키지 기판 신제품 시양산.",
+      "confidence": 0.6
+    },
+    {
+      "id": "c1030-005",
+      "from": "company:enph",
+      "to": "component:sst",
+      "relation": "develops",
+      "evidence_tier": "third_party_report",
+      "polarity": "positive",
+      "evidence": [
+        {
+          "url": "https://electronicdesign.com/technologies/power/article/55393675/electronic-design-enphase-energy-announces-scalable-iq-solid-state-transformer-architecture-for-ai-data-centers",
+          "source_type": "third_party_report",
+          "published_at": "2026-07-27",
+          "excerpt": "Enphase Energy has begun development of the IQ Solid-State Transformer (IQ SST)"
+        }
+      ],
+      "note": "IQ 고체변압기(중전압 AC → 800V DC) 개발 중. 고객 파일럿 2027, 양산 출하 2028. 인피니언 900V GaN 양방향 스위치 채택(2026-10).",
       "confidence": 0.6
     }
   ],
