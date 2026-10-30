@@ -600,7 +600,7 @@ def looks_like_person(name: str) -> bool:
 def signals(series: list[dict[str, Any]], orgs: list[dict[str, Any]], docs: list[dict[str, Any]], graph: dict[str, Any],
             today: date | None = None, min_ratio: float = 1.5, max_breadth: int = 6) -> list[dict[str, Any]]:
     """빠르게 늘어나는 기술 × 새로 들어왔거나 빨라진 미국·한국 기관 → 해석 작업이 읽을 단서 후보.
-    대형·초대형 그래프 기업과 대학·연구소는 뺀다 (목표는 시장이 덜 본 소·중형). 정렬: 새로 들어옴 → 그래프의 소형 → 건수."""
+    대형·초대형 그래프 기업과 대학·연구소는 뺀다 (목표는 시장이 덜 본 소·중형). 정렬: 미국 → 새로 들어옴 → 그래프의 소형 → 건수."""
     nodes = {n["id"]: n for n in graph["nodes"]}
     country: dict[str, Counter] = defaultdict(Counter)
     by_node_docs: dict[tuple[str, str], list[dict[str, Any]]] = defaultdict(list)
@@ -649,7 +649,7 @@ def signals(series: list[dict[str, Any]], orgs: list[dict[str, Any]], docs: list
                         "first_year": o.get("first_year"), "new": new, "ratio": r["ratio"], "prior": r["prior"], "recent": r["recent"],
                         "url": url, "docs": [d.get("title") for d in mine[:3]],
                         "size": (comp or {}).get("size_band"), "label": (nodes.get(nid) or {}).get("label", nid)})
-    out.sort(key=lambda s: (not s["new"], s["size"] not in ("small", "micro"), -s["n24"]))
+    out.sort(key=lambda s: (s["country"] != "US", not s["new"], s["size"] not in ("small", "micro"), -s["n24"]))   # 미국 먼저 (사용자, 2026-10-30)
     return out
 
 
