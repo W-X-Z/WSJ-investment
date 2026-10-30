@@ -10,6 +10,7 @@
   3. 지난 사례: 같은 기업·노드를 지난 투자 아이디어 (v_opportunities; 내린 것은 해석 작업이 execute_sql 로 따로 본다).
   4. 지난 단서: 같은 기업·노드의 최근 90일 단서 (v_clues) — 횟수가 아니라 이야기의 연결을 보라고.
   5. 가격: 그래프 상장사면 v_price_context 한 줄.
+  6. 논문·특허: 이 노드의 연도별 특허·기업 논문 수, 최근 많이 낸 기관과 새로 나타난 기관, 최근 대표 문서 (0033 + techdocs 백필 뒤).
 읽기는 공개 뷰(publishable 키)와 저장소 파일뿐이다. 점수는 없다.
 """
 
@@ -19,7 +20,7 @@ import argparse
 import json
 import os
 import re
-from collections import defaultdict
+from collections import Counter, defaultdict
 from pathlib import Path
 from typing import Any
 
@@ -175,7 +176,7 @@ def fetch_public(view: str, params: dict[str, str]) -> list[dict[str, Any]]:
 
 def recall(graph: dict[str, Any], companies: list[str], nodes: list[str], names: list[str], text: str = "",
            opportunities: list[dict[str, Any]] | None = None, clues: list[dict[str, Any]] | None = None,
-           prices: list[dict[str, Any]] | None = None) -> str:
+           prices: list[dict[str, Any]] | None = None, tech_fetch: Any = None) -> str:
     g = Graph(graph)
     for nm in names:
         companies += [c for c in find_companies(g, nm) if c not in companies]
@@ -209,7 +210,49 @@ def recall(graph: dict[str, Any], companies: list[str], nodes: list[str], names:
         parts.append("\n# 가격 (최근)")
         parts += [f"- {g.label(cid)}: 12개월 {p.get('r12m')}% · 3개월 {p.get('r3m')}% · 고점 대비 {p.get('from_high')}% ({p.get('as_of')})" if p
                   else f"- {g.label(cid)}: 가격 없음" for cid, p in rows] or ["- 없음"]
+    if tech_fetch is not None:
+        focus = list(dict.fromkeys(nodes + [n for c in companies for n in g.offers(c)]))[:6]
+        parts += tech_section(g, focus, tech_fetch(focus) if focus else {})
     return "\n".join(parts)
+
+
+def tech_section(g: Graph, focus: list[str], tech: dict[str, list[dict[str, Any]]]) -> list[str]:
+    """논문·특허 백필(techdocs)에서 이 노드들의 흐름. 건수는 판단 기준이 아니라 '어디서 무엇이 움직이나'를 보는 재료다."""
+    out = ["\n# 논문·특허 (노드별, techdocs 백필)"]
+    if not any(tech.values()):
+        return out + ["- 없음 (백필 전이거나 이 노드에 붙은 문서가 없다)"]
+    by = defaultdict(lambda: defaultdict(Counter))
+    for r in tech.get("series") or []:
+        by[r["node"]][r["source"]][str(r["period"])[:4]] += int(r.get("n") or 0)
+    for nid in focus:
+        lines = []
+        for src, ko in (("patent", "특허"), ("paper", "기업 논문")):
+            years = by[nid][src]
+            if years:
+                lines.append(f"- {ko} 연도별: " + " · ".join(f"{y} {n}" for y, n in sorted(years.items())[-7:]))
+            orgs = [o for o in tech.get("orgs") or [] if o["node"] == nid and o["source"] == src and o.get("span") == "2024~"]
+            orgs.sort(key=lambda o: o.get("rank") or 99)
+            if orgs:
+                lines.append("  - 2024~ 많이 낸 곳: " + ", ".join(f"{g.label(o['company']) if o.get('company') else o['org']} {o['n']}" for o in orgs[:6]))
+                new = [o for o in orgs if (o.get("first_year") or 0) >= 2024 and o["n"] >= 2]
+                if new:
+                    lines.append("  - 2024~ 새로 나타난 곳: " + ", ".join(f"{o['org']} {o['n']}" for o in new[:6]))
+        docs = [d for d in tech.get("docs") or [] if nid in (d.get("nodes") or [])]
+        docs.sort(key=lambda d: str(d.get("published_on") or ""), reverse=True)
+        for d in docs[:4]:
+            who = ", ".join(o.get("name") or "" for o in (d.get("orgs") or [])[:2])
+            lines.append(f"  - {str(d.get('published_on'))[:10]} [{'특허' if d['source'] == 'patent' else '논문'}] {who} — {d.get('title')} {d.get('url') or ''}".rstrip())
+        if lines:
+            out += [f"\n## {g.label(nid)} ({nid})"] + lines
+    return out if len(out) > 1 else out + ["- 이 노드들에 붙은 문서가 없다"]
+
+
+def fetch_tech(nodes: list[str]) -> dict[str, list[dict[str, Any]]]:
+    inn = "in.(" + ",".join(f'"{n}"' for n in nodes) + ")"
+    ov = "ov.{" + ",".join(f'"{n}"' for n in nodes) + "}"
+    return {"series": fetch_public("v_tech_series", {"node": inn}),
+            "orgs": fetch_public("v_tech_orgs", {"node": inn, "span": "eq.2024~"}),
+            "docs": fetch_public("v_tech_docs", {"nodes": ov, "order": "published_on.desc", "published_on": "gte.2024-01-01"})}
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -226,7 +269,8 @@ def main(argv: list[str] | None = None) -> int:
         opps = fetch_public("v_opportunities", {})
         clues = fetch_public("v_clues", {"order": "seen_at.desc"})
         prices = fetch_public("v_price_context", {})
-    print(recall(graph, list(args.company), list(args.node), list(args.name), args.text, opps, clues, prices))
+    print(recall(graph, list(args.company), list(args.node), list(args.name), args.text, opps, clues, prices,
+                 tech_fetch=None if args.offline else fetch_tech))
     return 0
 
 
