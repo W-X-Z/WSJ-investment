@@ -217,40 +217,56 @@ LLM_SYSTEM = """너는 AI 데이터센터 공급망 리서치의 단서 분류�
   주가·시세 해설, 투자 권유, 실적 일정 안내, 일반 거시·정치, 소비자 제품 리뷰, 광고·이벤트 홍보는 false.
 - companies: 글에 이름이 나온 상장 기업 (아는 경우 ticker, exchange: KRX|KOSDAQ|NYSE|Nasdaq|TWSE|TSE 등). 비상장·정부기관은 빼라. 모르면 빈 배열.
 - note: 무엇에 관한 글인지 한국어 한 줄(60자 안). 판단·전망은 쓰지 마라.
-출력은 JSON 하나: {"items": [{"i": 0, "keep": true, "companies": [{"name": "…", "ticker": "…", "exchange": "…"}], "note": "…"}]}"""
+- keep 이 false 인 글은 {"i": n, "keep": false} 만 쓴다 (companies·note 없이). 모든 i 를 빠짐없이 쓴다.
+출력은 JSON 하나: {"items": [{"i": 0, "keep": true, "companies": [{"name": "…", "ticker": "…", "exchange": "…"}], "note": "…"}, {"i": 1, "keep": false}]}"""
 
 
-def llm_screen(clues: list[Clue], api_key: str, model: str = "haiku", batch: int = 50) -> dict[str, Any]:
+def llm_screen(clues: list[Clue], api_key: str, model: str = "haiku", batch: int = 50, workers: int = 4) -> dict[str, Any]:
+    """Haiku 로 주제 밖 글을 거른다. 묶음(batch)마다 한 번 부르고, 묶음들은 workers 개씩 동시에 보낸다."""
+    from concurrent.futures import ThreadPoolExecutor
+
     from wsj.briefs.llm import LLM, resolve_model, sum_usage
 
     llm = LLM(api_key)
-    comps_all = []
-    for start in range(0, len(clues), batch):
-        part = clues[start:start + batch]
+    mdl = resolve_model(model)
+    parts = [clues[start:start + batch] for start in range(0, len(clues), batch)]
+
+    def screen(part: list[Clue]) -> tuple[list[Clue], dict[str, Any] | None, list[Any]]:
         payload = [{"i": i, "title": c.title, "summary": (c.summary or "")[:280], "source": c.source_name} for i, c in enumerate(part)]
         try:
-            out, comps = llm.complete_json(LLM_SYSTEM, json.dumps(payload, ensure_ascii=False), resolve_model(model),
+            out, comps = llm.complete_json(LLM_SYSTEM, json.dumps(payload, ensure_ascii=False), mdl,
                                            "직전 응답을 유효한 JSON 하나로 다시 출력하라. 오류: {error}", max_tokens=8000)
         except Exception as exc:  # noqa: BLE001 - 분류가 실패하면 규칙으로 (아래)
-            log.warning("llm screen batch %d failed: %s", start, exc)
-            for c in part:
-                c.relevant = rule_keep(c)
-            continue
+            log.warning("llm screen batch failed (%d items): %s", len(part), exc)
+            return part, None, []
+        return part, out, comps
+
+    comps_all: list[Any] = []
+    with ThreadPoolExecutor(max_workers=max(1, workers)) as pool:
+        results = list(pool.map(screen, parts))
+    for part, out, comps in results:
         comps_all += comps
-        by_i = {int(x.get("i", -1)): x for x in out.get("items") or [] if isinstance(x, dict)}
-        for i, c in enumerate(part):
-            x = by_i.get(i)
-            if x is None:
-                c.relevant = rule_keep(c)
-                continue
-            c.relevant = bool(x.get("keep"))
-            c.note = (x.get("note") or "")[:120] or None
-            have = {(y.get("name") or "").lower() for y in c.companies}
-            for y in x.get("companies") or []:
-                if isinstance(y, dict) and y.get("name") and y["name"].lower() not in have:
-                    c.companies.append({"company": None, "name": y["name"], "ticker": y.get("ticker"), "exchange": y.get("exchange")})
-                    have.add(y["name"].lower())
+        apply_screen(part, out)
     return sum_usage(comps_all) if comps_all else {}
+
+
+def apply_screen(part: list[Clue], out: dict[str, Any] | None) -> None:
+    """LLM 응답을 단서에 옮긴다. 응답이 없거나 빠진 글은 규칙(rule_keep)으로."""
+    by_i = {int(x.get("i", -1)): x for x in (out or {}).get("items") or [] if isinstance(x, dict)}
+    for i, c in enumerate(part):
+        x = by_i.get(i)
+        if x is None:
+            c.relevant = rule_keep(c)
+            continue
+        c.relevant = bool(x.get("keep"))
+        if not c.relevant:
+            continue
+        c.note = (x.get("note") or "")[:120] or None
+        have = {(y.get("name") or "").lower() for y in c.companies}
+        for y in x.get("companies") or []:
+            if isinstance(y, dict) and y.get("name") and y["name"].lower() not in have:
+                c.companies.append({"company": None, "name": y["name"], "ticker": y.get("ticker"), "exchange": y.get("exchange")})
+                have.add(y["name"].lower())
 
 
 def rule_keep(c: Clue) -> bool:
@@ -288,6 +304,34 @@ def collect(http: Any, store: Any | None, sources: list[Source], since: datetime
     return clues, stats
 
 
+def title_key(title: str) -> str:
+    """같은 글인지 보는 제목 열쇠: 끝의 ' - 매체명' 을 떼고, 글자·숫자만 소문자로."""
+    t = re.sub(r"\s+[-–—|]\s+[^-–—|]{1,40}$", "", title.strip())
+    return re.sub(r"[\W_]+", "", t.lower())
+
+
+def mark_duplicates(clues: list[Clue], seen: set[str] | frozenset[str] = frozenset()) -> int:
+    """제목이 같은 글은 하나만 남긴다 (구글 뉴스가 같은 기사를 주소만 바꿔 다시 내는 경우, 연재물 등).
+    남기는 쪽: 이미 저장한 것(seen) → 시세 기사로 버리지 않은 것 → 원문 주소(news.google.com 이 아닌 것) → 먼저 본 것.
+    나머지 새 글은 relevant=false 로 저장만 해서 다음 날 다시 보지 않게 한다. 돌려주는 값은 그렇게 표시한 수."""
+    groups: dict[str, list[Clue]] = {}
+    for c in clues:
+        k = title_key(c.title)
+        if len(k) >= 8:
+            groups.setdefault(k, []).append(c)
+    n = 0
+    for same in groups.values():
+        if len(same) < 2:
+            continue
+        keep = min(same, key=lambda c: (c.url not in seen, not c.relevant, "news.google.com" in c.url))
+        for c in same:
+            if c is not keep and c.relevant and c.url not in seen:
+                c.relevant = False
+                c.note = "같은 제목 중복"
+                n += 1
+    return n
+
+
 def already_seen(store: Any, urls: list[str]) -> set[str]:
     try:
         return {r["url"] for r in store.select("ideas.clues", ["url"], {"url": urls})}
@@ -302,6 +346,7 @@ def run(http: Any, store: Any | None, days: int, use_llm: bool, model: str, api_
     since = datetime.now(UTC) - timedelta(days=days)
     clues, stats = collect(http, store, sources, since, graph)
     seen = already_seen(store, [c.url for c in clues]) if store is not None else set()
+    stats["duplicate"] = mark_duplicates(clues, seen)
     new = [c for c in clues if c.url not in seen]
     tag(new, graph)
     todo = [c for c in new if c.relevant]

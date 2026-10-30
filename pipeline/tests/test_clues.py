@@ -100,3 +100,57 @@ def test_parse_feed_reads_rss1_rdf():
            '<link>https://x.jp/a</link><dc:date>2026-10-29T10:00:00+09:00</dc:date><description>d</description></item></rdf:RDF>')
     got = parse_feed(rdf)
     assert got and got[0][0] == "https://x.jp/a" and got[0][1] == "HBM 新工場" and got[0][2] is not None
+
+
+def _clue(url, title, relevant=True, broad=False):
+    return C.Clue(url, title, "", None, "s", "S", "trade_press", broad=broad, relevant=relevant)
+
+
+def test_mark_duplicates_keeps_one_copy_per_title():
+    a = _clue("https://news.google.com/rss/articles/AAA", "SKC, 3분기 영업손실 496억원…전년比 9.7% 줄여 - 전자신문")
+    b = _clue("https://www.etnews.com/1", "SKC, 3분기 영업손실 496억원…전년比 9.7% 줄여")
+    c = _clue("https://news.google.com/rss/articles/BBB", "SKC, 3분기 영업손실 496억원…전년比 9.7% 줄여 - 뉴스1")
+    other = _clue("https://x.test/z", "SKC, 유리기판 고객 인증 통과")
+    assert C.mark_duplicates([a, b, c, other]) == 2
+    assert b.relevant and not a.relevant and not c.relevant and other.relevant   # 원문 주소를 남긴다
+    assert a.note == "같은 제목 중복"
+
+
+def test_mark_duplicates_prefers_already_saved_copy():
+    old = _clue("https://news.google.com/rss/articles/OLD", "Samsung Electronics Announces Third Quarter 2026 Results")
+    new = _clue("https://news.samsung.com/global/q3", "Samsung Electronics Announces Third Quarter 2026 Results")
+    assert C.mark_duplicates([new, old], seen={old.url}) == 1
+    assert not new.relevant          # 어제 이미 저장한 글과 같은 제목이면 새 주소는 저장만 하고 보이지 않게
+    short = [_clue("https://a.test/1", "속보"), _clue("https://a.test/2", "속보")]
+    assert C.mark_duplicates(short) == 0   # 너무 짧은 제목은 비교하지 않는다
+
+
+def test_apply_screen_minimal_drop_items_and_rule_fallback():
+    keep, drop, missing = _clue("https://k.test", "Rambus MRDIMM"), _clue("https://d.test", "게임 노트북"), _clue("https://m.test", "디일렉 기사")
+    C.apply_screen([keep, drop, missing], {"items": [
+        {"i": 0, "keep": True, "note": "MRDIMM 칩셋 출시", "companies": [{"name": "Rambus", "ticker": "RMBS", "exchange": "Nasdaq"}]},
+        {"i": 1, "keep": False}]})
+    assert keep.relevant and keep.note == "MRDIMM 칩셋 출시" and keep.companies[0]["ticker"] == "RMBS"
+    assert not drop.relevant and drop.note is None
+    assert missing.relevant          # 응답에 빠진 글은 규칙으로 (전문 출처는 통과)
+    gone = _clue("https://g.test", "아무 글", broad=True)
+    C.apply_screen([gone], None)     # 묶음 호출이 실패하면 규칙으로
+    assert not gone.relevant
+
+
+def test_llm_screen_runs_batches_concurrently_and_keeps_order(monkeypatch):
+    import wsj.briefs.llm as L
+
+    class FakeLLM:
+        def __init__(self, key):
+            pass
+
+        def complete_json(self, system, user, model, repair, **kw):
+            items = json.loads(user)
+            return {"items": [{"i": x["i"], "keep": "keep" in x["title"], "note": x["title"]} for x in items]}, []
+
+    monkeypatch.setattr(L, "LLM", FakeLLM)
+    cs = [_clue(f"https://b.test/{n}", f"{'keep' if n % 2 else 'drop'} {n}") for n in range(7)]
+    C.llm_screen(cs, "k", batch=2, workers=3)
+    assert [c.relevant for c in cs] == [False, True, False, True, False, True, False]
+    assert cs[3].note == "keep 3"
