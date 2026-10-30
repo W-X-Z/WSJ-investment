@@ -136,8 +136,8 @@
 | A-2 | ✅ 2단계: 출처 목록 85개(피드 61) · `wsj.ecosystems.clues` · `ideas.clues`(0032) · 시세 집계 사이트·시세 기사 제거 · issues 워크플로에 단계 추가 | P0 | 사용자 0032 |
 | A-3 | ✅ 3단계: 사례 = 투자 아이디어(내린 것 포함) · 패턴 카드 7장 · `wsj.ecosystems.recall` · `raises_content` 관계 · 주간 반성·사용자 지적(`research/playbook/feedback.md`) | P0 | |
 | A-4 | ✅ 4단계: 메뉴 둘(투자 아이디어·단서) · 방법론 화면은 메뉴에서 뺌(주소로는 열림) | P1 | |
-| A-5 | 피드 없는 중요 출처 수집: 목록 페이지(더구루·MoneyDJ·JEDEC·OIF·UEC·UALink·CXL·ERCOT·Lumentum) 읽기, TWSE 중대공시·鉅亨 JSON API | P1 | |
+| A-5 | 피드 없는 중요 출처 수집: 목록 페이지(더구루·MoneyDJ·JEDEC·OIF·UEC·UALink·CXL·ERCOT·Lumentum) 읽기, 鉅亨 JSON API | P1 | |
 | A-6 | 단서 백필 — 로컬 Python 으로 출처별 지난 글(사이트맵·아카이브) 몇 달치 → 첫 해석의 '지난 단서' 를 채운다 | P2 | |
-| A-7 | 한국 공시(DART) — `DART_API_KEY` 시크릿 등록(사용자) 후 기업 소식 수집기가 이미 받는다 | P1 | 사용자 |
+| A-7 | 공시 수집 확대(한국 DART 키 등록, TWSE 중대공시 API) — **보류**: 공시는 후행 데이터라 뒤로 미룬다 (사용자, 2026-10-30). 지금 있는 SEC 8-K·TWSE·TDnet 수집은 그대로 두고, 해석은 공시를 맨 나중에 본다 | P3 | 보류 |
 위의 T-1·T-10 (테제 화면·micro 성적표)은 ADR-0028 로 폐기.
 
