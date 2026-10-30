@@ -27,6 +27,8 @@ class Settings(BaseSettings):
     sec_user_agent: str = "WSJ-investment research contact@example.com"
     openfda_api_key: str = ""
     dart_api_key: str = ""  # 한국 DART OpenAPI (선택) — 없으면 한국 기업은 뉴스로만 본다
+    openalex_api_key: str = ""  # 논문 백필 (wsj.ecosystems.techdocs papers)
+    openalex_mailto: str = ""
 
     # briefs (Analyst / Risk)
     anthropic_api_key: str = ""

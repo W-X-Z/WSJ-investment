@@ -13,8 +13,9 @@
 2. **저장소**: `git pull` 후
    ```
    cd pipeline
-   python -m venv .venv
-   .venv\Scripts\activate          # macOS·Linux: source .venv/bin/activate
+   python3 --version                # 3.11 이상 (낮으면 macOS: brew install python@3.12 → python3.12 -m venv .venv)
+   python3 -m venv .venv
+   source .venv/bin/activate        # Windows: .venv\Scripts\activate
    pip install -e ".[techdocs]"
    ```
 3. **Google Cloud (특허)** — 카드 등록 없는 BigQuery 샌드박스로 충분하다 (조회 무료 한도 월 1TB).
@@ -27,7 +28,7 @@
    SUPABASE_SECRET_KEY=<Supabase 대시보드의 secret 키>
    OPENALEX_API_KEY=<OpenAlex 키>
    ```
-   PowerShell 에서 OpenAlex 키는 `$env:OPENALEX_API_KEY="…"` 로 넣어도 된다.
+   OpenAlex 키는 터미널에서 `export OPENALEX_API_KEY=…` 로 넣어도 된다.
 
 ## 1. 실행 (pipeline 폴더에서)
 ```
@@ -37,6 +38,7 @@ python -m wsj.ecosystems.techdocs papers                                        
 python -m wsj.ecosystems.techdocs build                                          # 몇 분, data/techdocs/out/ 와 summary.md
 python -m wsj.ecosystems.techdocs upload --replace                               # Supabase 로
 ```
+- 기본 설정의 스캔은 약 280GB 다 (2026-10-30 실측: 특허 258GB + 묶음 시계열 17GB). `patents` 를 다시 돌릴 때마다 그만큼 쓰므로, 어휘를 고친 뒤에는 `build` 만 다시 돌린다.
 - `--dry-run` 에서 합계가 1,000GB 를 넘으면 `--since 2020-01-01` 이나 `--countries US,KR,JP` 로 줄인다 (기본 한도 `--max-gb 900`).
 - 중국(CN) 특허는 양이 많아 기본에서 뺐다. 넣으려면 `--countries US,KR,JP,TW,EP,WO,CN`.
 - 받는 것과 묶는 것이 나뉘어 있어서, 어휘(research/techdocs/patent_terms.json)를 고친 뒤에는 `build` → `upload --replace` 만 다시 돌리면 된다.
