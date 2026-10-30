@@ -82,7 +82,7 @@ export const RELATIONS: Record<string, string> = {
   drives_requirement: "요구를 만든다", specified_by: "규격으로 정의", succeeds: "다음 세대", creates_bottleneck: "병목을 만든다",
   mitigated_by: "완화 수단", requires: "필요로 한다", implements: "제품이 구현", offered_by: "공급 가능(판매 보유)",
   supplied_to: "확인된 납품", qualifying_with: "인증·협업 진행", adopts: "채택", defers: "채택 연기(부정)",
-  substitutes_for: "대체 가능", displaces: "수요 잠식(부정)", competes_with: "경쟁", invests_in: "지분 투자",
+  substitutes_for: "대체 가능", displaces: "수요 잠식(부정)", raises_content: "대당 함량 증가", competes_with: "경쟁", invests_in: "지분 투자",
 };
 export const TIERS: Record<string, string> = {
   independent_measurement: "독립 실측", standard_body: "표준 기구", official_issuer: "당사자 공식", customer_statement: "고객사 진술",

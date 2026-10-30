@@ -331,6 +331,25 @@
       "direction": "supply_to_demand",
       "label_ko": "핵심 특허·라이선스 보유",
       "note": "기술이 상용화되면 로열티·소송으로 해자가 될 수 있는 위치 (예: 하이브리드 본딩 IP)"
+    },
+    "raises_content": {
+      "domain": [
+        "product",
+        "product_generation",
+        "technology",
+        "standard",
+        "requirement",
+        "component"
+      ],
+      "range": [
+        "component",
+        "material",
+        "process",
+        "equipment"
+      ],
+      "direction": "demand_to_supply",
+      "label_ko": "대당 함량을 늘린다 (층수·면적·개수·등급 — 매출 = 대수 × 대당 함량 × 점유율)",
+      "polarity_default": "positive"
     }
   },
   "evidence_tiers": {

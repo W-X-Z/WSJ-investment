@@ -1,0 +1,2182 @@
+{
+ "about": "단서 수집기의 출처 목록 (ADR-0028). 형식은 README.md. 2026-10-30 피드 주소를 하나씩 열어 확인 — verified.ok=false 는 조사 도구에서 열지 못한 것(수집기가 다시 확인).",
+ "sources": [
+  {
+   "id": "thelec_kr",
+   "name": "디일렉 (THE ELEC)",
+   "type": "rss",
+   "url": "https://www.thelec.kr/rss/allArticle.xml",
+   "home": "https://www.thelec.kr",
+   "lang": "ko",
+   "region": "KR",
+   "kinds": [
+    "trade_press"
+   ],
+   "ecosystems": [
+    "semis",
+    "optics"
+   ],
+   "why": "Korean component supply-chain scoops: back-end/test equipment vendors, substrate and socket makers, KOSDAQ listing filings, and earnings-call transcripts.",
+   "paywall": false,
+   "verified": {
+    "ok": true,
+    "checked": "2026-10-30",
+    "latest_item_date": "2026-10-29",
+    "note": "RSS 2.0, all-articles feed. Section feeds use /rss/S1N{n}.xml, but S1N1 (중국산업동향) was last updated 2026-09-15, so poll allArticle."
+   },
+   "enabled": true,
+   "broad": false
+  },
+  {
+   "id": "etnews_electronics",
+   "name": "전자신문 전자면",
+   "type": "rss",
+   "url": "http://rss.etnews.com/06.xml",
+   "home": "https://www.etnews.com",
+   "lang": "ko",
+   "region": "KR",
+   "kinds": [
+    "trade_press"
+   ],
+   "ecosystems": [
+    "semis",
+    "power"
+   ],
+   "why": "Daily Korean electronics and component coverage, including Samsung and SK supplier orders, equipment, materials, and heavy-electric topics.",
+   "paywall": false,
+   "verified": {
+    "ok": true,
+    "checked": "2026-10-30",
+    "latest_item_date": "2026-10-30",
+    "note": "Feed list is at etnews.com/rss. Sub-feeds exist (06061 장비, 06062 부품, 06064 소재, 06065 중공업), but 06061's newest item was 2026-06-25, so use 06.xml. Section901 (오늘의뉴스) also works."
+   },
+   "enabled": true,
+   "broad": true
+  },
+  {
+   "id": "zdnet_kr",
+   "name": "지디넷코리아",
+   "type": "rss",
+   "url": "https://feeds.feedburner.com/zdkorea",
+   "home": "https://zdnet.co.kr",
+   "lang": "ko",
+   "region": "KR",
+   "kinds": [
+    "trade_press"
+   ],
+   "ecosystems": [
+    "semis",
+    "power"
+   ],
+   "why": "Broad Korean IT and semiconductor news with quick earnings items for KOSDAQ equipment and component names.",
+   "paywall": false,
+   "verified": {
+    "ok": true,
+    "checked": "2026-10-30",
+    "latest_item_date": "2026-10-30",
+    "note": "The feed URL is the footer RSS link on zdnet.co.kr. It carries all sections and is noisy (retail and consumer items)."
+   },
+   "enabled": true,
+   "broad": true
+  },
+  {
+   "id": "kipost_kr",
+   "name": "KIPOST",
+   "type": "rss",
+   "url": "https://www.kipost.net/rss/allArticle.xml",
+   "home": "https://www.kipost.net",
+   "lang": "ko",
+   "region": "KR",
+   "kinds": [
+    "trade_press"
+   ],
+   "ecosystems": [
+    "semis"
+   ],
+   "why": "Korean semiconductor and electronics process and material deep dives, plus small supplier coverage.",
+   "paywall": false,
+   "verified": {
+    "ok": true,
+    "checked": "2026-10-30",
+    "latest_item_date": "2026-10-28",
+    "note": "RSS 2.0. The newest items included unrelated wire releases (e.g., XCMG), so filter by keyword or section."
+   },
+   "enabled": true,
+   "broad": true
+  },
+  {
+   "id": "electimes_kr",
+   "name": "전기신문",
+   "type": "rss",
+   "url": "https://www.electimes.com/rss/allArticle.xml",
+   "home": "https://www.electimes.com",
+   "lang": "ko",
+   "region": "KR",
+   "kinds": [
+    "trade_press",
+    "policy"
+   ],
+   "ecosystems": [
+    "power"
+   ],
+   "why": "KEPCO procurement and specs (switchgear, transformers), grid interconnection, and Korean power-equipment makers' orders.",
+   "paywall": false,
+   "verified": {
+    "ok": true,
+    "checked": "2026-10-30",
+    "latest_item_date": "2026-10-30",
+    "note": "RSS 2.0, 전체기사. On 2026-10-30 it carried a KEPCO air-insulated switchgear procurement item."
+   },
+   "enabled": true,
+   "broad": true
+  },
+  {
+   "id": "theguru_kr",
+   "name": "더구루",
+   "type": "html_list",
+   "url": "https://www.theguru.co.kr/news/article_list_all.html",
+   "home": "https://www.theguru.co.kr",
+   "lang": "ko",
+   "region": "KR",
+   "kinds": [
+    "trade_press"
+   ],
+   "ecosystems": [
+    "semis",
+    "power"
+   ],
+   "why": "Overseas contracts and partnerships of Korean firms (K-원전, global supply deals), often ahead of domestic press.",
+   "paywall": false,
+   "verified": {
+    "ok": true,
+    "checked": "2026-10-30",
+    "latest_item_date": "2026-10-30",
+    "note": "No RSS: /rss/allArticle.xml returned a client error and the homepage shows no feed link. Article links follow /news/article.html?no=NNNNNN. Section lists: section_list_all.html?sec_no=33 (산업), sec_no=57 (IT), section.html?sec_no=109 (K-원전)."
+   },
+   "enabled": true,
+   "broad": false
+  },
+  {
+   "id": "dealsite_kr",
+   "name": "딜사이트",
+   "type": "html_list",
+   "url": "https://dealsite.co.kr/newsflash",
+   "home": "https://dealsite.co.kr",
+   "lang": "ko",
+   "region": "KR",
+   "kinds": [
+    "trade_press"
+   ],
+   "ecosystems": [
+    "semis",
+    "power"
+   ],
+   "why": "Capital markets and M&A for Korean mid and small caps: capex financing, rights issues, IPO pipeline.",
+   "paywall": false,
+   "verified": {
+    "ok": false,
+    "checked": "2026-10-30",
+    "latest_item_date": null,
+    "note": "No RSS found. /newsflash returned a client error. The homepage fetched but showed no article timestamps (it renders client-side). It has a members-only /premium section. Needs a browser-based or API scraper."
+   },
+   "enabled": false,
+   "broad": false
+  },
+  {
+   "id": "inews24_it",
+   "name": "아이뉴스24 IT",
+   "type": "rss",
+   "url": "https://rss.inews24.com/rss/news_it.xml",
+   "home": "https://www.inews24.com",
+   "lang": "ko",
+   "region": "KR",
+   "kinds": [
+    "trade_press"
+   ],
+   "ecosystems": [
+    "semis"
+   ],
+   "why": "Korean IT and semiconductor news, including smaller equipment and parts makers.",
+   "paywall": false,
+   "verified": {
+    "ok": false,
+    "checked": "2026-10-30",
+    "latest_item_date": null,
+    "note": "WebFetch 가 302 를 따라가지 못함 — 리다이렉트 대상 주소로 바꿈(수집기 확인 대기) — 조사 도구에서만 막힘(robots·출처 게이트), 수집기에서 확인"
+   },
+   "enabled": true,
+   "broad": false
+  },
+  {
+   "id": "ekn_kr",
+   "name": "에너지경제신문",
+   "type": "rss",
+   "url": "https://www.ekn.kr/rss/allArticle.xml",
+   "home": "https://www.ekn.kr",
+   "lang": "ko",
+   "region": "KR",
+   "kinds": [
+    "trade_press"
+   ],
+   "ecosystems": [
+    "power"
+   ],
+   "why": "Korean energy, power-equipment, and utility news (transformers, ESS, power market).",
+   "paywall": false,
+   "verified": {
+    "ok": false,
+    "checked": "2026-10-30",
+    "latest_item_date": null,
+    "note": "Guessed URL (ndsoft pattern) returned a client error, and the homepage shows no RSS link. The feed is unknown and the poll URL still needs discovering (likely an html_list)."
+   },
+   "enabled": false,
+   "broad": false
+  },
+  {
+   "id": "e2news_kr",
+   "name": "이투뉴스",
+   "type": "rss",
+   "url": "https://www.e2news.com/rss/allArticle.xml",
+   "home": "https://www.e2news.com",
+   "lang": "ko",
+   "region": "KR",
+   "kinds": [
+    "trade_press"
+   ],
+   "ecosystems": [
+    "power"
+   ],
+   "why": "Korean energy trade daily: grid, nuclear/SMR, gas power, and fuel-cell projects.",
+   "paywall": false,
+   "verified": {
+    "ok": false,
+    "checked": "2026-10-30",
+    "latest_item_date": null,
+    "note": "Not fetched: the tool's provenance gate blocked it. The URL follows the ndsoft CMS pattern already confirmed on thelec/kipost/electimes. — 조사 도구에서만 막힘(robots·출처 게이트), 수집기에서 확인"
+   },
+   "enabled": true,
+   "broad": false
+  },
+  {
+   "id": "thelec_en",
+   "name": "THE ELEC (English)",
+   "type": "rss",
+   "url": "https://en.thelec.kr/rss/allArticle.xml",
+   "home": "https://en.thelec.kr",
+   "lang": "en",
+   "region": "KR",
+   "kinds": [
+    "trade_press"
+   ],
+   "ecosystems": [
+    "semis",
+    "optics"
+   ],
+   "why": "English versions of THE ELEC supply-chain scoops; easier entity extraction.",
+   "paywall": false,
+   "verified": {
+    "ok": false,
+    "checked": "2026-10-30",
+    "latest_item_date": null,
+    "note": "WebFetch reported robots_disallowed. The Korean feed (thelec_kr) works. A local collector may still fetch this; check robots policy. — 조사 도구에서만 막힘(robots·출처 게이트), 수집기에서 확인"
+   },
+   "enabled": true,
+   "broad": false
+  },
+  {
+   "id": "skhynix_newsroom_kr",
+   "name": "SK하이닉스 뉴스룸",
+   "type": "rss",
+   "url": "https://news.skhynix.co.kr/feed/",
+   "home": "https://news.skhynix.co.kr",
+   "lang": "ko",
+   "region": "KR",
+   "kinds": [
+    "company_newsroom"
+   ],
+   "ecosystems": [
+    "semis",
+    "optics"
+   ],
+   "why": "First-party HBM, SOCAMM, CXL, and packaging roadmap posts and tech notes (e.g., CPO and silicon photonics) that name partner technologies.",
+   "paywall": false,
+   "verified": {
+    "ok": true,
+    "checked": "2026-10-30",
+    "latest_item_date": "2026-10-29",
+    "note": "WordPress RSS. Multi-part tech notes appear as several items with the same title, so dedupe by link."
+   },
+   "enabled": true,
+   "broad": false
+  },
+  {
+   "id": "skhynix_newsroom_en",
+   "name": "SK hynix Newsroom (EN)",
+   "type": "rss",
+   "url": "https://news.skhynix.com/en/feed/",
+   "home": "https://news.skhynix.com",
+   "lang": "en",
+   "region": "KR",
+   "kinds": [
+    "company_newsroom"
+   ],
+   "ecosystems": [
+    "semis",
+    "optics"
+   ],
+   "why": "English mirror of SK hynix announcements; useful for global entity names.",
+   "paywall": false,
+   "verified": {
+    "ok": true,
+    "checked": "2026-10-30",
+    "latest_item_date": "2026-10-29",
+    "note": "WordPress RSS. Same duplicate-title behavior as the Korean feed."
+   },
+   "enabled": true,
+   "broad": false
+  },
+  {
+   "id": "samsung_newsroom_kr",
+   "name": "삼성전자 뉴스룸",
+   "type": "rss",
+   "url": "https://news.samsung.com/kr/feed",
+   "home": "https://news.samsung.com/kr",
+   "lang": "ko",
+   "region": "KR",
+   "kinds": [
+    "company_newsroom"
+   ],
+   "ecosystems": [
+    "semis"
+   ],
+   "why": "Samsung memory and foundry announcements (HBM4, CXL/CMM, packaging). Mostly consumer, so it needs filtering.",
+   "paywall": false,
+   "verified": {
+    "ok": true,
+    "checked": "2026-10-30",
+    "latest_item_date": "2026-10-29",
+    "note": "WordPress RSS. Very consumer-heavy. Category and tag feeds use the /kr/category/<slug>/feed pattern."
+   },
+   "enabled": true,
+   "broad": true,
+   "title_filter": "HBM|D램|DRAM|메모리|반도체|파운드리|패키징|AI|데이터센터|SOCAMM|CXL|낸드|NAND"
+  },
+  {
+   "id": "samsung_semi_global",
+   "name": "Samsung Semiconductor Newsroom (Global)",
+   "type": "rss",
+   "url": "https://news.samsungsemiconductor.com/global/feed",
+   "home": "https://news.samsungsemiconductor.com/global",
+   "lang": "en",
+   "region": "KR",
+   "kinds": [
+    "company_newsroom"
+   ],
+   "ecosystems": [
+    "semis"
+   ],
+   "why": "DS-division-only news (memory, foundry, packaging), so less noisy than the corporate newsroom.",
+   "paywall": false,
+   "verified": {
+    "ok": false,
+    "checked": "2026-10-30",
+    "latest_item_date": null,
+    "note": "Not fetched: the tool's provenance gate blocked it. URL taken from a Feedspot listing. — 조사 도구에서만 막힘(robots·출처 게이트), 수집기에서 확인"
+   },
+   "enabled": true,
+   "broad": false
+  },
+  {
+   "id": "motir_press_kr",
+   "name": "산업통상부 보도·참고자료",
+   "type": "html_list",
+   "url": "https://www.motir.go.kr/kor/article/ATCL3f49a5a8c",
+   "home": "https://www.motir.go.kr",
+   "lang": "ko",
+   "region": "KR",
+   "kinds": [
+    "policy"
+   ],
+   "ecosystems": [
+    "semis",
+    "power"
+   ],
+   "why": "Korean industrial policy releases: semiconductor and battery support, power-grid plans, export controls, subsidy programs.",
+   "paywall": false,
+   "verified": {
+    "ok": true,
+    "checked": "2026-10-30",
+    "latest_item_date": "2026-10-29",
+    "note": "The ministry was renamed and moved from motie.go.kr to motir.go.kr. The page's RSS link is a dead '#rss' anchor. Items follow /kor/article/ATCL3f49a5a8c/{id}/view, with IDs increasing over time."
+   },
+   "enabled": true,
+   "broad": false
+  },
+  {
+   "id": "dart_list_api",
+   "name": "DART OpenAPI 공시검색",
+   "type": "json_api",
+   "url": "https://opendart.fss.or.kr/api/list.json?crtfc_key={API_KEY}&bgn_de={YYYYMMDD}&end_de={YYYYMMDD}&page_no=1&page_count=100",
+   "home": "https://opendart.fss.or.kr",
+   "lang": "ko",
+   "region": "KR",
+   "kinds": [
+    "disclosure"
+   ],
+   "ecosystems": [
+    "semis",
+    "optics",
+    "power"
+   ],
+   "why": "All Korean filings: supply contracts (단일판매·공급계약), capex (신규시설투자), CB/BW, and patent/tech filings from small caps.",
+   "paywall": false,
+   "verified": {
+    "ok": false,
+    "checked": "2026-10-30",
+    "latest_item_date": null,
+    "note": "Needs an API key and was not called. Documented endpoint; filter with corp_cls=Y/K and pblntf_ty (e.g., B 주요사항, I 거래소공시)."
+   },
+   "enabled": false,
+   "broad": false
+  },
+  {
+   "id": "trendforce_semis",
+   "name": "TrendForce Press Center – Semiconductors",
+   "type": "rss",
+   "url": "https://www.trendforce.com/feed/Semiconductors.html",
+   "home": "https://www.trendforce.com/presscenter/news",
+   "lang": "en",
+   "region": "TW",
+   "kinds": [
+    "research",
+    "market_data"
+   ],
+   "ecosystems": [
+    "semis",
+    "optics"
+   ],
+   "why": "DRAM/HBM/NAND pricing, server and CSP capex forecasts, and fiber/optics price moves (e.g., 2026 fiber spot price surge).",
+   "paywall": false,
+   "verified": {
+    "ok": true,
+    "checked": "2026-10-30",
+    "latest_item_date": "2026-10-22",
+    "note": "Listed on trendforce.com/presscenter/rss.html, which also has Energy, Communication, Display, and other feeds. The Energy feed's latest item was 2026-08-12. The Taiwan site has /feed/Display.html (zh)."
+   },
+   "enabled": true,
+   "broad": false
+  },
+  {
+   "id": "technews_tw",
+   "name": "TechNews 科技新報",
+   "type": "rss",
+   "url": "https://cdn.technews.tw/feed/",
+   "home": "https://technews.tw",
+   "lang": "zh",
+   "region": "TW",
+   "kinds": [
+    "trade_press"
+   ],
+   "ecosystems": [
+    "semis",
+    "optics",
+    "power"
+   ],
+   "why": "Taiwan tech and supply-chain daily: TSMC/ASE packaging, ODM server racks, Taipower and energy policy.",
+   "paywall": false,
+   "verified": {
+    "ok": true,
+    "checked": "2026-10-30",
+    "latest_item_date": "2026-10-29",
+    "note": "technews.tw/feed/ returns a 302 to cdn.technews.tw/feed/. Category pages: /category/semiconductor/, /category/component/. WordPress category feeds (/category/semiconductor/feed/) were not tested."
+   },
+   "enabled": true,
+   "broad": true
+  },
+  {
+   "id": "moneydj_industry",
+   "name": "MoneyDJ 產業情報",
+   "type": "html_list",
+   "url": "https://www.moneydj.com/kmdj/news/newsreallist.aspx?a=mb07",
+   "home": "https://www.moneydj.com",
+   "lang": "zh",
+   "region": "TW",
+   "kinds": [
+    "trade_press",
+    "disclosure"
+   ],
+   "ecosystems": [
+    "semis",
+    "optics",
+    "power"
+   ],
+   "why": "Fast Taiwan small/mid-cap items, including equipment purchase disclosures (e.g., 力成 buying 竑騰 tools), supplier wins, and monthly sales.",
+   "paywall": false,
+   "verified": {
+    "ok": true,
+    "checked": "2026-10-30",
+    "latest_item_date": "2026-10-29",
+    "note": "No RSS found on the page. Rows show only MM/DD HH:MM, so infer the year. Articles: newsviewer.aspx?a={uuid}&c=MB07. Sub-tab 科技脈動: a=mb070100."
+   },
+   "enabled": true,
+   "broad": false
+  },
+  {
+   "id": "twse_material_info",
+   "name": "TWSE OpenAPI 上市公司每日重大訊息",
+   "type": "json_api",
+   "url": "https://openapi.twse.com.tw/v1/opendata/t187ap04_L",
+   "home": "https://openapi.twse.com.tw",
+   "lang": "zh",
+   "region": "TW",
+   "kinds": [
+    "disclosure"
+   ],
+   "ecosystems": [
+    "semis",
+    "optics",
+    "power"
+   ],
+   "why": "Daily material announcements from TWSE-listed firms (capex, orders, M&A, investor conferences): Taiwan's DART equivalent with no key needed.",
+   "paywall": false,
+   "verified": {
+    "ok": true,
+    "checked": "2026-10-30",
+    "latest_item_date": "2026-10-28",
+    "note": "JSON array (~51 rows/day). Fields: 出表日期, 發言日期 (ROC calendar), 發言時間, 公司代號, 公司名稱, 主旨 (key has a trailing space), 符合條款, 事實發生日, 說明. Covers TWSE only; TPEx/OTC needs a separate endpoint."
+   },
+   "enabled": true,
+   "broad": false
+  },
+  {
+   "id": "cnyes_tw_stock",
+   "name": "鉅亨網 台股新聞 API",
+   "type": "json_api",
+   "url": "https://api.cnyes.com/media/api/v1/newslist/category/tw_stock?limit=30",
+   "home": "https://news.cnyes.com",
+   "lang": "zh",
+   "region": "TW",
+   "kinds": [
+    "trade_press"
+   ],
+   "ecosystems": [
+    "semis",
+    "optics",
+    "power"
+   ],
+   "why": "Taiwan equity news with tagged stock codes (items.data[].stock), handy for mapping to tickers.",
+   "paywall": false,
+   "verified": {
+    "ok": true,
+    "checked": "2026-10-30",
+    "latest_item_date": "2026-10-25",
+    "note": "Undocumented public JSON API with pagination (items.total=422). The newest item was 5 days old when checked, so ordering or caching may lag. Treat as secondary."
+   },
+   "enabled": true,
+   "broad": false
+  },
+  {
+   "id": "udn_money_industry",
+   "name": "經濟日報 (money.udn.com)",
+   "type": "rss",
+   "url": "https://money.udn.com/rssfeed/news/1001/5590/5607?ch=money",
+   "home": "https://money.udn.com",
+   "lang": "zh",
+   "region": "TW",
+   "kinds": [
+    "trade_press"
+   ],
+   "ecosystems": [
+    "semis",
+    "optics",
+    "power"
+   ],
+   "why": "Taiwan supply-chain scoops (CoWoS, ABF substrate, optical modules, server power) from the main business daily.",
+   "paywall": false,
+   "verified": {
+    "ok": false,
+    "checked": "2026-10-30",
+    "latest_item_date": null,
+    "note": "Not fetched: the tool's provenance gate blocked it. URL came from a Feeder directory listing. Sibling feeds: /1001/5588/5599, /1001/5593/5621, /1001/5593/5930. Which section is which is unconfirmed. — 조사 도구에서만 막힘(robots·출처 게이트), 수집기에서 확인"
+   },
+   "enabled": true,
+   "broad": false
+  },
+  {
+   "id": "ctee_semi",
+   "name": "工商時報 半導體",
+   "type": "html_list",
+   "url": "https://www.ctee.com.tw/industry/semi",
+   "home": "https://www.ctee.com.tw",
+   "lang": "zh",
+   "region": "TW",
+   "kinds": [
+    "trade_press"
+   ],
+   "ecosystems": [
+    "semis",
+    "optics",
+    "power"
+   ],
+   "why": "Taiwan semiconductor and supply-chain coverage with frequent small-cap order and capacity stories.",
+   "paywall": false,
+   "verified": {
+    "ok": false,
+    "checked": "2026-10-30",
+    "latest_item_date": null,
+    "note": "Client error (likely bot protection). No RSS link found on an article page. Other lists: /livenews/tech, /industry/tech, /livenews."
+   },
+   "enabled": false,
+   "broad": false
+  },
+  {
+   "id": "digitimes",
+   "name": "DIGITIMES",
+   "type": "rss",
+   "url": "https://www.digitimes.com/rss/daily.xml",
+   "home": "https://www.digitimes.com",
+   "lang": "en",
+   "region": "TW",
+   "kinds": [
+    "trade_press"
+   ],
+   "ecosystems": [
+    "semis",
+    "optics",
+    "power"
+   ],
+   "why": "Taiwan supply-chain intelligence (substrates, ODMs, optics, power supplies); headlines alone are useful early signals.",
+   "paywall": true,
+   "verified": {
+    "ok": false,
+    "checked": "2026-10-30",
+    "latest_item_date": null,
+    "note": "Not fetched: the tool's provenance gate blocked it. URL from a Feedspot listing. Most article bodies are paywalled; keep headlines only. — 조사 도구에서만 막힘(robots·출처 게이트), 수집기에서 확인"
+   },
+   "enabled": true,
+   "broad": false
+  },
+  {
+   "id": "eetimes_jp",
+   "name": "EE Times Japan",
+   "type": "rss",
+   "url": "https://rss.itmedia.co.jp/rss/2.0/eetimes.xml",
+   "home": "https://eetimes.itmedia.co.jp",
+   "lang": "ja",
+   "region": "JP",
+   "kinds": [
+    "trade_press"
+   ],
+   "ecosystems": [
+    "semis",
+    "power"
+   ],
+   "why": "Japanese semiconductor, materials, and power-device news (e.g., 900V GaN bidirectional switch for AI DC solid-state transformers).",
+   "paywall": false,
+   "verified": {
+    "ok": true,
+    "checked": "2026-10-30",
+    "latest_item_date": "2026-10-29",
+    "note": "URL from the sidebar of an eetimes.itmedia.co.jp page. RSS 2.0."
+   },
+   "enabled": true,
+   "broad": false
+  },
+  {
+   "id": "monoist_jp",
+   "name": "MONOist",
+   "type": "rss",
+   "url": "https://rss.itmedia.co.jp/rss/2.0/monoist.xml",
+   "home": "https://monoist.itmedia.co.jp",
+   "lang": "ja",
+   "region": "JP",
+   "kinds": [
+    "trade_press"
+   ],
+   "ecosystems": [
+    "semis",
+    "power"
+   ],
+   "why": "Japanese manufacturing, equipment, and materials makers (sensing, factory automation, components).",
+   "paywall": false,
+   "verified": {
+    "ok": true,
+    "checked": "2026-10-30",
+    "latest_item_date": "2026-10-30",
+    "note": "RSS 2.0. Broad manufacturing scope, so it needs keyword filtering."
+   },
+   "enabled": true,
+   "broad": true
+  },
+  {
+   "id": "nikkei_xtech",
+   "name": "日経クロステック (xTECH)",
+   "type": "rss",
+   "url": "https://tech.nikkeibp.co.jp/rss/index.rdf",
+   "home": "https://xtech.nikkei.com",
+   "lang": "ja",
+   "region": "JP",
+   "kinds": [
+    "trade_press"
+   ],
+   "ecosystems": [
+    "semis",
+    "optics",
+    "power"
+   ],
+   "why": "Japanese electronics, materials, and energy engineering coverage; headlines flag Japanese suppliers early.",
+   "paywall": true,
+   "verified": {
+    "ok": false,
+    "checked": "2026-10-30",
+    "latest_item_date": null,
+    "note": "Not fetched: the tool's provenance gate blocked it. URL (all-new-articles RDF) came from a Feeder listing; xtech-it.rdf also exists. Many articles are member-only. — 조사 도구에서만 막힘(robots·출처 게이트), 수집기에서 확인"
+   },
+   "enabled": true,
+   "broad": false
+  },
+  {
+   "id": "datacenter_frontier",
+   "name": "Data Center Frontier",
+   "type": "rss",
+   "url": "https://www.datacenterfrontier.com/__rss/website-scheduled-content.xml?input=%7B%22sectionAlias%22%3A%22home%22%7D",
+   "home": "https://www.datacenterfrontier.com",
+   "lang": "en",
+   "region": "US",
+   "kinds": [
+    "trade_press"
+   ],
+   "ecosystems": [
+    "power"
+   ],
+   "why": "AI-factory build-outs, power and grid constraints, and liquid cooling and modular deployments (e.g., NVIDIA DSX POD).",
+   "paywall": false,
+   "verified": {
+    "ok": true,
+    "checked": "2026-10-30",
+    "latest_item_date": "2026-10-28",
+    "note": "Endeavor BaseCMS pattern. /rss.xml and /feed/ are broken."
+   },
+   "enabled": true,
+   "broad": true
+  },
+  {
+   "id": "datacenter_knowledge",
+   "name": "Data Center Knowledge",
+   "type": "rss",
+   "url": "https://www.datacenterknowledge.com/rss.xml",
+   "home": "https://www.datacenterknowledge.com",
+   "lang": "en",
+   "region": "US",
+   "kinds": [
+    "trade_press"
+   ],
+   "ecosystems": [
+    "power",
+    "semis"
+   ],
+   "why": "Hyperscaler capex and design shifts (cooling tech, TPU and GPU sourcing) with operator-side detail.",
+   "paywall": false,
+   "verified": {
+    "ok": true,
+    "checked": "2026-10-30",
+    "latest_item_date": "2026-10-29",
+    "note": "RSS 2.0."
+   },
+   "enabled": true,
+   "broad": true
+  },
+  {
+   "id": "servethehome",
+   "name": "ServeTheHome",
+   "type": "rss",
+   "url": "https://www.servethehome.com/feed/",
+   "home": "https://www.servethehome.com",
+   "lang": "en",
+   "region": "US",
+   "kinds": [
+    "trade_press",
+    "conference"
+   ],
+   "ecosystems": [
+    "semis",
+    "optics",
+    "power"
+   ],
+   "why": "Hands-on hardware detail (board photos, OCP/Hot Chips coverage) that exposes component suppliers, connectors, power shelves, and 1.6T optics.",
+   "paywall": false,
+   "verified": {
+    "ok": true,
+    "checked": "2026-10-30",
+    "latest_item_date": "2026-10-29",
+    "note": "RSS 2.0 (WordPress)."
+   },
+   "enabled": true,
+   "broad": false
+  },
+  {
+   "id": "nextplatform",
+   "name": "The Next Platform",
+   "type": "rss",
+   "url": "https://www.nextplatform.com/feed/",
+   "home": "https://www.nextplatform.com",
+   "lang": "en",
+   "region": "US",
+   "kinds": [
+    "trade_press"
+   ],
+   "ecosystems": [
+    "semis",
+    "optics"
+   ],
+   "why": "System-architecture analysis of AI clusters, interconnects, and memory hierarchy.",
+   "paywall": false,
+   "verified": {
+    "ok": true,
+    "checked": "2026-10-30",
+    "latest_item_date": "2026-10-30",
+    "note": "RSS 2.0. Includes some sponsored items that link to theregister.com; filter those."
+   },
+   "enabled": true,
+   "broad": true
+  },
+  {
+   "id": "semiengineering",
+   "name": "Semiconductor Engineering",
+   "type": "rss",
+   "url": "https://semiengineering.com/feed/",
+   "home": "https://semiengineering.com",
+   "lang": "en",
+   "region": "US",
+   "kinds": [
+    "trade_press",
+    "research"
+   ],
+   "ecosystems": [
+    "semis"
+   ],
+   "why": "Advanced packaging, test, metrology, and power-delivery technical pieces that surface niche tool and material vendors.",
+   "paywall": false,
+   "verified": {
+    "ok": true,
+    "checked": "2026-10-30",
+    "latest_item_date": "2026-10-28",
+    "note": "RSS 2.0."
+   },
+   "enabled": true,
+   "broad": false
+  },
+  {
+   "id": "eetimes",
+   "name": "EE Times",
+   "type": "rss",
+   "url": "https://www.eetimes.com/feed/",
+   "home": "https://www.eetimes.com",
+   "lang": "en",
+   "region": "US",
+   "kinds": [
+    "trade_press"
+   ],
+   "ecosystems": [
+    "semis",
+    "power"
+   ],
+   "why": "Semiconductor industry and power-electronics news (e.g., 800 VDC architectures, memory earnings).",
+   "paywall": false,
+   "verified": {
+    "ok": true,
+    "checked": "2026-10-30",
+    "latest_item_date": "2026-10-29",
+    "note": "RSS 2.0 (WordPress). Tag feed: /tag/semiconductors/feed/."
+   },
+   "enabled": true,
+   "broad": true
+  },
+  {
+   "id": "tomshardware_semis",
+   "name": "Tom's Hardware – Semiconductors",
+   "type": "rss",
+   "url": "https://www.tomshardware.com/uk/feeds/tag/semiconductors",
+   "home": "https://www.tomshardware.com",
+   "lang": "en",
+   "region": "US",
+   "kinds": [
+    "trade_press"
+   ],
+   "ecosystems": [
+    "semis"
+   ],
+   "why": "Fast pickup of Asian supply-chain reports (CoWoS pricing, PCB shortages, capacity reservations).",
+   "paywall": false,
+   "verified": {
+    "ok": true,
+    "checked": "2026-10-30",
+    "latest_item_date": "2026-10-27",
+    "note": "RSS 2.0, tag feed via the /uk/ path. The all-news feed /feeds/all also works (latest 2026-10-29) but is much noisier."
+   },
+   "enabled": true,
+   "broad": false
+  },
+  {
+   "id": "tomshardware_datacenter",
+   "name": "Tom's Hardware – Data Center",
+   "type": "rss",
+   "url": "https://www.tomshardware.com/feeds/tag/data-center",
+   "home": "https://www.tomshardware.com",
+   "lang": "en",
+   "region": "US",
+   "kinds": [
+    "trade_press"
+   ],
+   "ecosystems": [
+    "power",
+    "semis"
+   ],
+   "why": "Data-center build, power, and policy stories with a hardware angle.",
+   "paywall": false,
+   "verified": {
+    "ok": true,
+    "checked": "2026-10-30",
+    "latest_item_date": "2026-10-16",
+    "note": "RSS 2.0, low frequency."
+   },
+   "enabled": true,
+   "broad": false
+  },
+  {
+   "id": "theregister_dc",
+   "name": "The Register – Data Centre",
+   "type": "atom",
+   "url": "https://www.theregister.com/data_centre/headlines.atom",
+   "home": "https://www.theregister.com",
+   "lang": "en",
+   "region": "global",
+   "kinds": [
+    "trade_press"
+   ],
+   "ecosystems": [
+    "power",
+    "semis"
+   ],
+   "why": "Skeptical takes on DC power, cooling, and hardware vendor news.",
+   "paywall": false,
+   "verified": {
+    "ok": false,
+    "checked": "2026-10-30",
+    "latest_item_date": null,
+    "note": "The data_centre Atom feed returned a client error and /headlines.atom was robots_disallowed for WebFetch. A local collector may work."
+   },
+   "enabled": false,
+   "broad": false
+  },
+  {
+   "id": "hpcwire",
+   "name": "HPCwire",
+   "type": "rss",
+   "url": "https://www.hpcwire.com/feed/",
+   "home": "https://www.hpcwire.com",
+   "lang": "en",
+   "region": "US",
+   "kinds": [
+    "trade_press"
+   ],
+   "ecosystems": [
+    "semis",
+    "optics"
+   ],
+   "why": "HPC/AI system wins, interconnect, and cooling vendor announcements.",
+   "paywall": false,
+   "verified": {
+    "ok": false,
+    "checked": "2026-10-30",
+    "latest_item_date": null,
+    "note": "Not fetched: the tool's provenance gate blocked it. URL from a Feedspot listing. — 조사 도구에서만 막힘(robots·출처 게이트), 수집기에서 확인"
+   },
+   "enabled": true,
+   "broad": false
+  },
+  {
+   "id": "3dincites",
+   "name": "3D InCites",
+   "type": "rss",
+   "url": "https://www.3dincites.com/feed",
+   "home": "https://www.3dincites.com",
+   "lang": "en",
+   "region": "global",
+   "kinds": [
+    "trade_press"
+   ],
+   "ecosystems": [
+    "semis"
+   ],
+   "why": "Advanced packaging, hybrid bonding, and heterogeneous-integration supplier news.",
+   "paywall": false,
+   "verified": {
+    "ok": false,
+    "checked": "2026-10-30",
+    "latest_item_date": null,
+    "note": "Not fetched: the tool's provenance gate blocked it. URL from a Feedspot listing. — 조사 도구에서만 막힘(robots·출처 게이트), 수집기에서 확인"
+   },
+   "enabled": true,
+   "broad": false
+  },
+  {
+   "id": "semianalysis",
+   "name": "SemiAnalysis",
+   "type": "rss",
+   "url": "https://semianalysis.com/feed/",
+   "home": "https://semianalysis.com",
+   "lang": "en",
+   "region": "US",
+   "kinds": [
+    "research"
+   ],
+   "ecosystems": [
+    "semis",
+    "optics",
+    "power"
+   ],
+   "why": "Deep supply-chain analysis (HBM, CoWoS, optics, DC power) whose free intros often name beneficiaries first.",
+   "paywall": true,
+   "verified": {
+    "ok": false,
+    "checked": "2026-10-30",
+    "latest_item_date": null,
+    "note": "Client error from the site. Partially paywalled."
+   },
+   "enabled": false,
+   "broad": false
+  },
+  {
+   "id": "lightwave",
+   "name": "Lightwave",
+   "type": "rss",
+   "url": "https://www.lightwaveonline.com/__rss/website-scheduled-content.xml?input=%7B%22sectionAlias%22%3A%22home%22%7D",
+   "home": "https://www.lightwaveonline.com",
+   "lang": "en",
+   "region": "US",
+   "kinds": [
+    "trade_press"
+   ],
+   "ecosystems": [
+    "optics"
+   ],
+   "why": "Optical components, transceivers, fiber, and CPO, including vendor earnings color (e.g., Corning optical scale-up timing).",
+   "paywall": false,
+   "verified": {
+    "ok": true,
+    "checked": "2026-10-30",
+    "latest_item_date": "2026-10-29",
+    "note": "Endeavor BaseCMS pattern. /rss.xml returned a client error."
+   },
+   "enabled": true,
+   "broad": false
+  },
+  {
+   "id": "lightreading",
+   "name": "Light Reading",
+   "type": "rss",
+   "url": "https://www.lightreading.com/rss.xml",
+   "home": "https://www.lightreading.com",
+   "lang": "en",
+   "region": "US",
+   "kinds": [
+    "trade_press"
+   ],
+   "ecosystems": [
+    "optics"
+   ],
+   "why": "Optical networking and telecom; covers optical silicon and AI-network optics moves.",
+   "paywall": false,
+   "verified": {
+    "ok": true,
+    "checked": "2026-10-30",
+    "latest_item_date": "2026-10-29",
+    "note": "RSS 2.0. Telecom-heavy, so filter for optics and data-center items."
+   },
+   "enabled": true,
+   "broad": true
+  },
+  {
+   "id": "optica_opn",
+   "name": "Optics & Photonics News (Optica)",
+   "type": "rss",
+   "url": "https://www.optica-opn.org/home/rssfeed/?rss=News",
+   "home": "https://www.optica-opn.org",
+   "lang": "en",
+   "region": "global",
+   "kinds": [
+    "trade_press",
+    "research"
+   ],
+   "ecosystems": [
+    "optics"
+   ],
+   "why": "Photonics research and industry news; an early read on laser and modulator technologies.",
+   "paywall": false,
+   "verified": {
+    "ok": true,
+    "checked": "2026-10-30",
+    "latest_item_date": "2026-10-29",
+    "note": "Science-leaning, low supplier specificity. Also available: ?rss=articles."
+   },
+   "enabled": true,
+   "broad": true
+  },
+  {
+   "id": "utilitydive",
+   "name": "Utility Dive",
+   "type": "rss",
+   "url": "https://www.utilitydive.com/feeds/news/",
+   "home": "https://www.utilitydive.com",
+   "lang": "en",
+   "region": "US",
+   "kinds": [
+    "trade_press",
+    "policy"
+   ],
+   "ecosystems": [
+    "power"
+   ],
+   "why": "Utility capex plans, large-load tariffs, transmission policy, and grid-equipment M&A (e.g., GE Vernova buying an HV maker).",
+   "paywall": false,
+   "verified": {
+    "ok": true,
+    "checked": "2026-10-30",
+    "latest_item_date": "2026-10-29",
+    "note": "RSS 2.0."
+   },
+   "enabled": true,
+   "broad": true
+  },
+  {
+   "id": "powermag",
+   "name": "POWER Magazine",
+   "type": "rss",
+   "url": "https://www.powermag.com/feed/",
+   "home": "https://www.powermag.com",
+   "lang": "en",
+   "region": "US",
+   "kinds": [
+    "trade_press"
+   ],
+   "ecosystems": [
+    "power"
+   ],
+   "why": "Gas turbines, fuel cells, nuclear/SMR, and onsite generation for data centers; DOE loans; equipment-maker expansions.",
+   "paywall": false,
+   "verified": {
+    "ok": true,
+    "checked": "2026-10-30",
+    "latest_item_date": "2026-10-29",
+    "note": "RSS 2.0 (WordPress)."
+   },
+   "enabled": true,
+   "broad": true
+  },
+  {
+   "id": "tdworld",
+   "name": "T&D World",
+   "type": "rss",
+   "url": "https://www.tdworld.com/__rss/website-scheduled-content.xml?input=%7B%22sectionAlias%22%3A%22home%22%7D",
+   "home": "https://www.tdworld.com",
+   "lang": "en",
+   "region": "US",
+   "kinds": [
+    "trade_press"
+   ],
+   "ecosystems": [
+    "power"
+   ],
+   "why": "Transmission and distribution equipment (transformers, switchgear), interconnection projects, and utility build programs.",
+   "paywall": false,
+   "verified": {
+    "ok": true,
+    "checked": "2026-10-30",
+    "latest_item_date": "2026-10-29",
+    "note": "Endeavor BaseCMS pattern, same as DCF and Lightwave."
+   },
+   "enabled": true,
+   "broad": true
+  },
+  {
+   "id": "newsfile_semis",
+   "name": "Newsfile – Semiconductors releases",
+   "type": "rss",
+   "url": "https://feeds.newsfilecorp.com/industry/semiconductors",
+   "home": "https://www.newsfilecorp.com",
+   "lang": "en",
+   "region": "global",
+   "kinds": [
+    "company_newsroom"
+   ],
+   "ecosystems": [
+    "semis"
+   ],
+   "why": "Press releases from small and micro-cap North American semiconductor names that big outlets ignore.",
+   "paywall": false,
+   "verified": {
+    "ok": true,
+    "checked": "2026-10-30",
+    "latest_item_date": "2026-10-20",
+    "note": "RSS 2.0, low volume. GlobeNewswire and PR Newswire semiconductor lists were found only as HTML tag pages; their RSS was not verified."
+   },
+   "enabled": true,
+   "broad": false
+  },
+  {
+   "id": "broadcom_ir",
+   "name": "Broadcom IR News Releases",
+   "type": "rss",
+   "url": "https://investors.broadcom.com/rss/news-releases.xml",
+   "home": "https://investors.broadcom.com",
+   "lang": "en",
+   "region": "US",
+   "kinds": [
+    "company_newsroom",
+    "disclosure"
+   ],
+   "ecosystems": [
+    "semis",
+    "optics"
+   ],
+   "why": "Tomahawk/Jericho, CPO, and custom-accelerator announcements that pull through optics and substrate suppliers.",
+   "paywall": false,
+   "verified": {
+    "ok": true,
+    "checked": "2026-10-30",
+    "latest_item_date": "2026-10-27",
+    "note": "Q4-style IR feed. The same page lists /rss/events.xml and /rss/sec-filings.xml. Includes VMware software noise."
+   },
+   "enabled": true,
+   "broad": false
+  },
+  {
+   "id": "marvell_ir",
+   "name": "Marvell IR News",
+   "type": "rss",
+   "url": "https://investor.marvell.com/rss-news-feed",
+   "home": "https://investor.marvell.com",
+   "lang": "en",
+   "region": "US",
+   "kinds": [
+    "company_newsroom"
+   ],
+   "ecosystems": [
+    "semis",
+    "optics"
+   ],
+   "why": "DSPs, AEC/retimers, CXL expanders, and optical acquisitions (e.g., 3.2T retimer, Structera X CXL 3.2).",
+   "paywall": false,
+   "verified": {
+    "ok": true,
+    "checked": "2026-10-30",
+    "latest_item_date": "2026-10-13",
+    "note": "RSS 2.0."
+   },
+   "enabled": true,
+   "broad": false
+  },
+  {
+   "id": "lumentum_news",
+   "name": "Lumentum News Releases",
+   "type": "html_list",
+   "url": "https://www.lumentum.com/en/media-room/news-releases?page=1",
+   "home": "https://www.lumentum.com",
+   "lang": "en",
+   "region": "US",
+   "kinds": [
+    "company_newsroom"
+   ],
+   "ecosystems": [
+    "optics"
+   ],
+   "why": "InP laser and CW/ELSFP sources, VCSEL scale-up demos, and OCS; a bellwether for laser capacity.",
+   "paywall": false,
+   "verified": {
+    "ok": true,
+    "checked": "2026-10-30",
+    "latest_item_date": "2026-10-05",
+    "note": "No RSS on the page. Releases link to investor.lumentum.com."
+   },
+   "enabled": true,
+   "broad": false
+  },
+  {
+   "id": "nvidia_newsroom",
+   "name": "NVIDIA Newsroom",
+   "type": "rss",
+   "url": "https://nvidianews.nvidia.com/releases.xml",
+   "home": "https://nvidianews.nvidia.com",
+   "lang": "en",
+   "region": "US",
+   "kinds": [
+    "company_newsroom"
+   ],
+   "ecosystems": [
+    "semis",
+    "optics",
+    "power"
+   ],
+   "why": "Platform roadmap and partner announcements (800VDC, CPO switches, SOCAMM, DSX) that set supplier demand.",
+   "paywall": false,
+   "verified": {
+    "ok": true,
+    "checked": "2026-10-30",
+    "latest_item_date": "2026-10-29",
+    "note": "URL listed on nvidia.com/en-eu/about-nvidia/rss. Includes GeForce consumer noise. Corporate blog: feeds.feedburner.com/nvidiablog (not tested)."
+   },
+   "enabled": true,
+   "broad": false
+  },
+  {
+   "id": "nvidia_devblog",
+   "name": "NVIDIA Technical Blog",
+   "type": "atom",
+   "url": "https://developer.nvidia.com/blog/feed",
+   "home": "https://developer.nvidia.com/blog",
+   "lang": "en",
+   "region": "US",
+   "kinds": [
+    "company_newsroom",
+    "release_notes"
+   ],
+   "ecosystems": [
+    "semis"
+   ],
+   "why": "Software and stack details (KV-cache offload, Dynamo, NVLink, CUDA) that hint at memory, storage, and interconnect demand.",
+   "paywall": false,
+   "verified": {
+    "ok": true,
+    "checked": "2026-10-30",
+    "latest_item_date": "2026-10-27",
+    "note": "Atom."
+   },
+   "enabled": true,
+   "broad": true
+  },
+  {
+   "id": "google_cloud_blog",
+   "name": "Google Cloud Blog",
+   "type": "rss",
+   "url": "https://cloudblog.withgoogle.com/rss/",
+   "home": "https://cloud.google.com/blog",
+   "lang": "en",
+   "region": "US",
+   "kinds": [
+    "company_newsroom"
+   ],
+   "ecosystems": [
+    "semis",
+    "power"
+   ],
+   "why": "TPU generations, AI Hypercomputer, and data-center infrastructure posts (cooling, power, optical circuit switching).",
+   "paywall": false,
+   "verified": {
+    "ok": true,
+    "checked": "2026-10-30",
+    "latest_item_date": "2026-10-28",
+    "note": "RSS 2.0, all products and very noisy. Product sub-feeds follow /products/<slug>/rss/ (e.g., compute); the infrastructure sub-feed was not tested."
+   },
+   "enabled": true,
+   "broad": true,
+   "title_filter": "TPU|GPU|AI infrastructure|AI Hypercomputer|data cent|accelerat|Ironwood|Axion|cooling|power|network|storage"
+  },
+  {
+   "id": "azure_blog",
+   "name": "Microsoft Azure Blog",
+   "type": "rss",
+   "url": "https://azure.microsoft.com/en-us/blog/feed/",
+   "home": "https://azure.microsoft.com/en-us/blog",
+   "lang": "en",
+   "region": "US",
+   "kinds": [
+    "company_newsroom"
+   ],
+   "ecosystems": [
+    "semis",
+    "power"
+   ],
+   "why": "Maia and Cobalt silicon, DC design (liquid cooling, power), and sovereign-cloud capacity announcements.",
+   "paywall": false,
+   "verified": {
+    "ok": true,
+    "checked": "2026-10-30",
+    "latest_item_date": "2026-10-26",
+    "note": "RSS 2.0. Category feeds exist (e.g., /blog/category/networking/)."
+   },
+   "enabled": true,
+   "broad": true,
+   "title_filter": "GPU|AI infrastructure|datacenter|data center|Maia|Cobalt|cooling|power|network|accelerat|supercomput"
+  },
+  {
+   "id": "meta_engineering",
+   "name": "Engineering at Meta",
+   "type": "rss",
+   "url": "https://engineering.fb.com/feed/",
+   "home": "https://engineering.fb.com",
+   "lang": "en",
+   "region": "US",
+   "kinds": [
+    "company_newsroom"
+   ],
+   "ecosystems": [
+    "semis",
+    "optics",
+    "power"
+   ],
+   "why": "Meta DC hardware (Grand Teton, MTIA, OCP racks, network fabrics) that names component choices.",
+   "paywall": false,
+   "verified": {
+    "ok": false,
+    "checked": "2026-10-30",
+    "latest_item_date": null,
+    "note": "Not fetched: the tool's provenance gate blocked it. This is the standard WordPress feed path. — 조사 도구에서만 막힘(robots·출처 게이트), 수집기에서 확인"
+   },
+   "enabled": true,
+   "broad": false
+  },
+  {
+   "id": "ocp_news",
+   "name": "Open Compute Project – News",
+   "type": "rss",
+   "url": "http://www.opencompute.org/news/feed/",
+   "home": "https://www.opencompute.org/news",
+   "lang": "en",
+   "region": "global",
+   "kinds": [
+    "standards",
+    "conference"
+   ],
+   "ecosystems": [
+    "semis",
+    "optics",
+    "power"
+   ],
+   "why": "OCP specs and summit outputs (rack power and 800VDC, liquid cooling, OCI optics MSA) that shape supplier qualification.",
+   "paywall": false,
+   "verified": {
+    "ok": true,
+    "checked": "2026-10-30",
+    "latest_item_date": "2026-10-20",
+    "note": "The footer link opencompute.org/blog/rss redirects (302) here. Verified over http; https is likely the same."
+   },
+   "enabled": true,
+   "broad": false
+  },
+  {
+   "id": "jedec_news",
+   "name": "JEDEC News",
+   "type": "html_list",
+   "url": "https://www.jedec.org/news",
+   "home": "https://www.jedec.org",
+   "lang": "en",
+   "region": "global",
+   "kinds": [
+    "standards"
+   ],
+   "ecosystems": [
+    "semis"
+   ],
+   "why": "Memory standards (HBM4/4E, LPDDR6 for DC, MRDIMM, SOCAMM-related) that time module and test-socket demand.",
+   "paywall": false,
+   "verified": {
+    "ok": true,
+    "checked": "2026-10-30",
+    "latest_item_date": null,
+    "note": "The page shows month-level dates only (latest: Jun 2026, a SiC power-electronics guideline). It names 'RSS Feed for JEDEC News' but no feed URL appeared in the fetched text. Low frequency."
+   },
+   "enabled": true,
+   "broad": false
+  },
+  {
+   "id": "uec_press",
+   "name": "Ultra Ethernet Consortium – Press Releases",
+   "type": "html_list",
+   "url": "https://ultraethernet.org/press-releases/",
+   "home": "https://ultraethernet.org",
+   "lang": "en",
+   "region": "global",
+   "kinds": [
+    "standards"
+   ],
+   "ecosystems": [
+    "optics"
+   ],
+   "why": "Scale-out Ethernet spec milestones that drive NIC and switch optics.",
+   "paywall": false,
+   "verified": {
+    "ok": true,
+    "checked": "2026-10-30",
+    "latest_item_date": "2025-06-11",
+    "note": "Reachable but stale. Check weekly; the blog category /category/blog/ may be more active."
+   },
+   "enabled": true,
+   "broad": false
+  },
+  {
+   "id": "ualink_news",
+   "name": "UALink Consortium – News",
+   "type": "html_list",
+   "url": "https://ualinkconsortium.org/news/",
+   "home": "https://ualinkconsortium.org",
+   "lang": "en",
+   "region": "global",
+   "kinds": [
+    "standards"
+   ],
+   "ecosystems": [
+    "semis",
+    "optics"
+   ],
+   "why": "Scale-up interconnect specs and member news (switch and IP vendors joining).",
+   "paywall": false,
+   "verified": {
+    "ok": true,
+    "checked": "2026-10-30",
+    "latest_item_date": "2026-05-04",
+    "note": "No RSS link on the page. Mixes press releases, member news, and 'in the news' items. Low frequency."
+   },
+   "enabled": true,
+   "broad": false
+  },
+  {
+   "id": "cxl_news",
+   "name": "CXL Consortium – News",
+   "type": "html_list",
+   "url": "https://computeexpresslink.org/news/",
+   "home": "https://computeexpresslink.org",
+   "lang": "en",
+   "region": "global",
+   "kinds": [
+    "standards"
+   ],
+   "ecosystems": [
+    "semis"
+   ],
+   "why": "CXL spec releases and ecosystem coverage (memory expanders, pooling).",
+   "paywall": false,
+   "verified": {
+    "ok": true,
+    "checked": "2026-10-30",
+    "latest_item_date": "2026-08-25",
+    "note": "No RSS on the page. The latest item is an external article; the last official press release was 2025-11-18 (CXL 4.0)."
+   },
+   "enabled": true,
+   "broad": false
+  },
+  {
+   "id": "oif_press",
+   "name": "OIF Press Room",
+   "type": "html_list",
+   "url": "https://www.oiforum.com/press-room/",
+   "home": "https://www.oiforum.com",
+   "lang": "en",
+   "region": "global",
+   "kinds": [
+    "standards",
+    "conference"
+   ],
+   "ecosystems": [
+    "optics"
+   ],
+   "why": "Optical implementation agreements (1600ZR, CEI-448G, CPO/ELSFP) and interop demos that precede module ramps.",
+   "paywall": false,
+   "verified": {
+    "ok": true,
+    "checked": "2026-10-30",
+    "latest_item_date": "2026-10-01",
+    "note": "No RSS on the page. Paginated: /press-room/page/2."
+   },
+   "enabled": true,
+   "broad": false
+  },
+  {
+   "id": "pcisig_news",
+   "name": "PCI-SIG Newsroom",
+   "type": "html_list",
+   "url": "https://pcisig.com/newsroom",
+   "home": "https://pcisig.com",
+   "lang": "en",
+   "region": "global",
+   "kinds": [
+    "standards"
+   ],
+   "ecosystems": [
+    "semis",
+    "optics"
+   ],
+   "why": "PCIe 7/8 and optical-PCIe milestones that affect retimers, sockets, and test.",
+   "paywall": false,
+   "verified": {
+    "ok": false,
+    "checked": "2026-10-30",
+    "latest_item_date": null,
+    "note": "The site is blocked for this fetch tool (SITE_BLOCKED). Releases also go out on Business Wire."
+   },
+   "enabled": false,
+   "broad": false
+  },
+  {
+   "id": "pjm_insidelines",
+   "name": "PJM Inside Lines",
+   "type": "rss",
+   "url": "https://insidelines.pjm.com/feed/",
+   "home": "https://insidelines.pjm.com",
+   "lang": "en",
+   "region": "US",
+   "kinds": [
+    "policy",
+    "market_data"
+   ],
+   "ecosystems": [
+    "power"
+   ],
+   "why": "Large-load (data center) interconnection, capacity market, and reliability updates from the largest US RTO.",
+   "paywall": false,
+   "verified": {
+    "ok": true,
+    "checked": "2026-10-30",
+    "latest_item_date": "2026-10-22",
+    "note": "Listed on pjm.com/about-pjm/newsroom/rss-feeds. The 'Announcements & News Releases' feed (newsroom.aspx?news=All&rss=1) returned HTML, not RSS."
+   },
+   "enabled": true,
+   "broad": false
+  },
+  {
+   "id": "ercot_news",
+   "name": "ERCOT News Releases",
+   "type": "html_list",
+   "url": "https://www.ercot.com/news/releases",
+   "home": "https://www.ercot.com",
+   "lang": "en",
+   "region": "US",
+   "kinds": [
+    "policy"
+   ],
+   "ecosystems": [
+    "power"
+   ],
+   "why": "Texas large-load interconnection (Batch Zero), long-term load forecasts, and grid reliability.",
+   "paywall": false,
+   "verified": {
+    "ok": true,
+    "checked": "2026-10-30",
+    "latest_item_date": "2026-09-21",
+    "note": "No RSS (only mailing lists at lists.ercot.com). Releases follow /news/release/MMDDYYYY-slug. Low frequency."
+   },
+   "enabled": true,
+   "broad": false
+  },
+  {
+   "id": "ferc_news",
+   "name": "FERC News & Headlines",
+   "type": "html_list",
+   "url": "https://www.ferc.gov/news-events/news",
+   "home": "https://www.ferc.gov",
+   "lang": "en",
+   "region": "US",
+   "kinds": [
+    "policy"
+   ],
+   "ecosystems": [
+    "power"
+   ],
+   "why": "Interconnection and large-load co-location orders and transmission rules affecting DC power timelines.",
+   "paywall": false,
+   "verified": {
+    "ok": false,
+    "checked": "2026-10-30",
+    "latest_item_date": null,
+    "note": "Fetched, but showed only 2024 items (and /news-releases-headlines only 2025-04), so the page is likely cached or rendered client-side. No RSS found; the old /resources/rss.asp is archived."
+   },
+   "enabled": false,
+   "broad": false
+  },
+  {
+   "id": "nerc_news",
+   "name": "NERC Newsroom",
+   "type": "html_list",
+   "url": "https://www.nerc.com/newsroom",
+   "home": "https://www.nerc.com",
+   "lang": "en",
+   "region": "US",
+   "kinds": [
+    "policy"
+   ],
+   "ecosystems": [
+    "power"
+   ],
+   "why": "Reliability assessments and large-load and data-center ride-through guidance.",
+   "paywall": false,
+   "verified": {
+    "ok": false,
+    "checked": "2026-10-30",
+    "latest_item_date": null,
+    "note": "The legacy /news/Pages/HeadlinesArchives.aspx page fetched but held no headlines (its canonical is /newsroom). Fetching /newsroom was blocked by the tool's provenance gate."
+   },
+   "enabled": false,
+   "broad": false
+  },
+  {
+   "id": "eia_todayinenergy",
+   "name": "EIA Today in Energy",
+   "type": "rss",
+   "url": "https://www.eia.gov/rss/todayinenergy.xml",
+   "home": "https://www.eia.gov",
+   "lang": "en",
+   "region": "US",
+   "kinds": [
+    "market_data",
+    "policy"
+   ],
+   "ecosystems": [
+    "power"
+   ],
+   "why": "US electricity demand, generation-mix, and gas-turbine and capacity data points.",
+   "paywall": false,
+   "verified": {
+    "ok": false,
+    "checked": "2026-10-30",
+    "latest_item_date": null,
+    "note": "Listed on eia.gov/tools/rssfeeds, but robots_disallowed for WebFetch (press_rss.xml too). A local collector should work. — 조사 도구에서만 막힘(robots·출처 게이트), 수집기에서 확인"
+   },
+   "enabled": true,
+   "broad": false
+  },
+  {
+   "id": "arxiv_csar_new",
+   "name": "arXiv cs.AR new submissions",
+   "type": "rss",
+   "url": "https://rss.arxiv.org/rss/cs.AR",
+   "home": "https://arxiv.org/list/cs.AR",
+   "lang": "en",
+   "region": "global",
+   "kinds": [
+    "research"
+   ],
+   "ecosystems": [
+    "semis",
+    "optics"
+   ],
+   "why": "Hardware-architecture papers (KV-cache compression, PIM, CXL memory, photonic interconnect) that foreshadow memory and interconnect demand.",
+   "paywall": false,
+   "verified": {
+    "ok": true,
+    "checked": "2026-10-30",
+    "latest_item_date": "2026-10-27",
+    "note": "목록 페이지 대신 공식 RSS (rss.arxiv.org) — 수집기에서 확인"
+   },
+   "enabled": true,
+   "broad": false
+  },
+  {
+   "id": "arxiv_csdc_new",
+   "name": "arXiv cs.DC new submissions",
+   "type": "rss",
+   "url": "https://rss.arxiv.org/rss/cs.DC",
+   "home": "https://arxiv.org/list/cs.DC",
+   "lang": "en",
+   "region": "global",
+   "kinds": [
+    "research"
+   ],
+   "ecosystems": [
+    "semis"
+   ],
+   "why": "Distributed and inference-systems papers (disaggregated serving, KV offload) that signal memory and storage tiers.",
+   "paywall": false,
+   "verified": {
+    "ok": true,
+    "checked": "2026-10-30",
+    "latest_item_date": "2026-10-27",
+    "note": "cs.DC 는 하드웨어 밖 논문이 많다 — broad. 공식 RSS"
+   },
+   "enabled": true,
+   "broad": true
+  },
+  {
+   "id": "arxiv_api_ar_dc",
+   "name": "arXiv API (cs.AR OR cs.DC, newest first)",
+   "type": "atom",
+   "url": "http://export.arxiv.org/api/query?search_query=cat:cs.AR+OR+cat:cs.DC&sortBy=submittedDate&sortOrder=descending&max_results=100",
+   "home": "https://info.arxiv.org/help/api/",
+   "lang": "en",
+   "region": "global",
+   "kinds": [
+    "research"
+   ],
+   "ecosystems": [
+    "semis",
+    "optics"
+   ],
+   "why": "Structured Atom with abstracts and categories for incremental polling.",
+   "paywall": false,
+   "verified": {
+    "ok": false,
+    "checked": "2026-10-30",
+    "latest_item_date": null,
+    "note": "rss.arxiv.org 피드로 대체"
+   },
+   "enabled": false,
+   "broad": false
+  },
+  {
+   "id": "gh_vllm_releases",
+   "name": "vLLM releases",
+   "type": "atom",
+   "url": "https://github.com/vllm-project/vllm/releases.atom",
+   "home": "https://github.com/vllm-project/vllm",
+   "lang": "en",
+   "region": "global",
+   "kinds": [
+    "release_notes"
+   ],
+   "ecosystems": [
+    "semis"
+   ],
+   "why": "New hardware backends, KV-cache offload, and FP4 support that shift memory and accelerator demand.",
+   "paywall": false,
+   "verified": {
+    "ok": false,
+    "checked": "2026-10-30",
+    "latest_item_date": null,
+    "note": "robots_disallowed for WebFetch. Standard GitHub releases Atom; alternative is the REST API api.github.com/repos/{owner}/{repo}/releases. — 조사 도구에서만 막힘(robots·출처 게이트), 수집기에서 확인"
+   },
+   "enabled": true,
+   "broad": false
+  },
+  {
+   "id": "gh_sglang_releases",
+   "name": "SGLang releases",
+   "type": "atom",
+   "url": "https://github.com/sgl-project/sglang/releases.atom",
+   "home": "https://github.com/sgl-project/sglang",
+   "lang": "en",
+   "region": "global",
+   "kinds": [
+    "release_notes"
+   ],
+   "ecosystems": [
+    "semis"
+   ],
+   "why": "Inference-engine features (disaggregated prefill/decode, HiCache) that signal memory-tier demand.",
+   "paywall": false,
+   "verified": {
+    "ok": false,
+    "checked": "2026-10-30",
+    "latest_item_date": null,
+    "note": "robots_disallowed for WebFetch. — 조사 도구에서만 막힘(robots·출처 게이트), 수집기에서 확인"
+   },
+   "enabled": true,
+   "broad": false
+  },
+  {
+   "id": "gh_dynamo_releases",
+   "name": "NVIDIA Dynamo releases",
+   "type": "atom",
+   "url": "https://github.com/ai-dynamo/dynamo/releases.atom",
+   "home": "https://github.com/ai-dynamo/dynamo",
+   "lang": "en",
+   "region": "global",
+   "kinds": [
+    "release_notes"
+   ],
+   "ecosystems": [
+    "semis"
+   ],
+   "why": "KV-cache routing and offload tiers (HBM, DRAM, SSD) in NVIDIA's serving stack.",
+   "paywall": false,
+   "verified": {
+    "ok": false,
+    "checked": "2026-10-30",
+    "latest_item_date": null,
+    "note": "Not fetched individually; the github.com releases.atom path is robots_disallowed for WebFetch (confirmed on vllm and sglang). — 조사 도구에서만 막힘(robots·출처 게이트), 수집기에서 확인"
+   },
+   "enabled": true,
+   "broad": false
+  },
+  {
+   "id": "gh_lmcache_releases",
+   "name": "LMCache releases",
+   "type": "atom",
+   "url": "https://github.com/LMCache/LMCache/releases.atom",
+   "home": "https://github.com/LMCache/LMCache",
+   "lang": "en",
+   "region": "global",
+   "kinds": [
+    "release_notes"
+   ],
+   "ecosystems": [
+    "semis"
+   ],
+   "why": "KV-cache offload to CPU DRAM, CXL, and storage: a direct read on memory-expansion use cases.",
+   "paywall": false,
+   "verified": {
+    "ok": false,
+    "checked": "2026-10-30",
+    "latest_item_date": null,
+    "note": "Not fetched individually; same robots restriction as other GitHub releases.atom paths. — 조사 도구에서만 막힘(robots·출처 게이트), 수집기에서 확인"
+   },
+   "enabled": true,
+   "broad": false
+  },
+  {
+   "id": "gh_trtllm_releases",
+   "name": "TensorRT-LLM releases",
+   "type": "atom",
+   "url": "https://github.com/NVIDIA/TensorRT-LLM/releases.atom",
+   "home": "https://github.com/NVIDIA/TensorRT-LLM",
+   "lang": "en",
+   "region": "global",
+   "kinds": [
+    "release_notes"
+   ],
+   "ecosystems": [
+    "semis"
+   ],
+   "why": "New GPU and precision support and multi-node features in NVIDIA's inference library.",
+   "paywall": false,
+   "verified": {
+    "ok": false,
+    "checked": "2026-10-30",
+    "latest_item_date": null,
+    "note": "Not fetched individually; same robots restriction as other GitHub releases.atom paths. — 조사 도구에서만 막힘(robots·출처 게이트), 수집기에서 확인"
+   },
+   "enabled": true,
+   "broad": false
+  },
+  {
+   "id": "sec_current_8k",
+   "name": "SEC EDGAR Latest Filings – 8-K (Atom)",
+   "type": "atom",
+   "url": "https://www.sec.gov/cgi-bin/browse-edgar?action=getcurrent&type=8-K&company=&dateb=&owner=include&start=0&count=100&output=atom",
+   "home": "https://www.sec.gov/about/secrss.shtml",
+   "lang": "en",
+   "region": "US",
+   "kinds": [
+    "disclosure"
+   ],
+   "ecosystems": [
+    "semis",
+    "optics",
+    "power"
+   ],
+   "why": "Material events (supply agreements, capacity deals, M&A) from US-listed suppliers, often before press coverage.",
+   "paywall": false,
+   "verified": {
+    "ok": false,
+    "checked": "2026-10-30",
+    "latest_item_date": null,
+    "note": "전체 8-K 목록은 제목에 내용이 없어 단서가 안 된다 — 그래프 기업의 8-K 는 기업 소식 수집기가 본문 헤드라인으로 받는다"
+   },
+   "enabled": false,
+   "broad": false
+  },
+  {
+   "id": "sec_company_atom",
+   "name": "SEC EDGAR per-company filings (Atom pattern)",
+   "type": "atom",
+   "url": "https://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&CIK={CIK}&type=8-K&dateb=&owner=include&count=40&output=atom",
+   "home": "https://www.sec.gov/edgar/searchedgar/companysearch.html",
+   "lang": "en",
+   "region": "US",
+   "kinds": [
+    "disclosure"
+   ],
+   "ecosystems": [
+    "semis",
+    "optics",
+    "power"
+   ],
+   "why": "Per-ticker 8-K/10-Q watch on a curated supplier universe; JSON alternative is data.sec.gov/submissions/CIK##########.json.",
+   "paywall": false,
+   "verified": {
+    "ok": false,
+    "checked": "2026-10-30",
+    "latest_item_date": null,
+    "note": "Template, not fetched. Same robots restriction expected as the getcurrent Atom URL. SEC's RSS page points to the RSS link on company search results rather than giving this pattern."
+   },
+   "enabled": false,
+   "broad": false
+  },
+  {
+   "id": "eenews_europe",
+   "name": "eeNews Europe",
+   "type": "rss",
+   "url": "https://www.eenewseurope.com/en/feed/",
+   "lang": "en",
+   "region": "global",
+   "kinds": [
+    "trade_press"
+   ],
+   "ecosystems": [],
+   "broad": false,
+   "title_filter": null,
+   "enabled": true,
+   "why": "기존 이슈 수집기에서 쓰던 출처 (2026-10 운영 확인)",
+   "verified": {
+    "ok": true,
+    "checked": "2026-10-30",
+    "note": "이슈 수집기 운영 중"
+   }
+  },
+  {
+   "id": "power_electronics_news",
+   "name": "Power Electronics News",
+   "type": "rss",
+   "url": "https://www.powerelectronicsnews.com/feed/",
+   "lang": "en",
+   "region": "global",
+   "kinds": [
+    "trade_press"
+   ],
+   "ecosystems": [
+    "power"
+   ],
+   "broad": false,
+   "title_filter": null,
+   "enabled": true,
+   "why": "기존 이슈 수집기에서 쓰던 출처 (2026-10 운영 확인)",
+   "verified": {
+    "ok": true,
+    "checked": "2026-10-30",
+    "note": "이슈 수집기 운영 중"
+   }
+  },
+  {
+   "id": "dcd_rss",
+   "name": "DCD",
+   "type": "rss",
+   "url": "https://www.datacenterdynamics.com/en/rss/",
+   "lang": "en",
+   "region": "global",
+   "kinds": [
+    "trade_press"
+   ],
+   "ecosystems": [],
+   "broad": false,
+   "title_filter": null,
+   "enabled": true,
+   "why": "기존 이슈 수집기에서 쓰던 출처 (2026-10 운영 확인)",
+   "verified": {
+    "ok": true,
+    "checked": "2026-10-30",
+    "note": "이슈 수집기 운영 중"
+   }
+  },
+  {
+   "id": "samsung_newsroom",
+   "name": "Samsung Newsroom",
+   "type": "rss",
+   "url": "https://news.samsung.com/global/feed",
+   "lang": "en",
+   "region": "KR",
+   "kinds": [
+    "company_newsroom"
+   ],
+   "ecosystems": [
+    "hbm"
+   ],
+   "broad": false,
+   "title_filter": "HBM|DRAM|memory|foundry|packaging|semiconductor|chip|AI|data cent",
+   "enabled": true,
+   "why": "기존 이슈 수집기에서 쓰던 출처 (2026-10 운영 확인)",
+   "verified": {
+    "ok": true,
+    "checked": "2026-10-30",
+    "note": "이슈 수집기 운영 중"
+   }
+  },
+  {
+   "id": "pr_newswire_semiconductors",
+   "name": "PR Newswire · Semiconductors",
+   "type": "rss",
+   "url": "https://www.prnewswire.com/rss/consumer-technology-latest-news/semiconductors-list.rss",
+   "lang": "en",
+   "region": "global",
+   "kinds": [
+    "company_newsroom"
+   ],
+   "ecosystems": [],
+   "broad": true,
+   "title_filter": null,
+   "enabled": true,
+   "why": "기존 이슈 수집기에서 쓰던 출처 (2026-10 운영 확인)",
+   "verified": {
+    "ok": true,
+    "checked": "2026-10-30",
+    "note": "이슈 수집기 운영 중"
+   }
+  },
+  {
+   "id": "white_house_presidential_actions",
+   "name": "White House · Presidential Actions",
+   "type": "rss",
+   "url": "https://www.whitehouse.gov/presidential-actions/feed/",
+   "lang": "en",
+   "region": "global",
+   "kinds": [
+    "policy"
+   ],
+   "ecosystems": [
+    "cross"
+   ],
+   "broad": false,
+   "title_filter": "semiconductor|chip|integrated circuit|export control|entity list|tariff|section 232|section 301|critical mineral|gallium|germanium|rare earth|data cent|artificial intelligence|\\bAI\\b|grid|transformer|large load|CHIPS|advanced packaging|photonic|optical|memory",
+   "enabled": true,
+   "why": "기존 이슈 수집기에서 쓰던 출처 (2026-10 운영 확인)",
+   "verified": {
+    "ok": true,
+    "checked": "2026-10-30",
+    "note": "이슈 수집기 운영 중"
+   }
+  },
+  {
+   "id": "nist_news",
+   "name": "NIST News",
+   "type": "rss",
+   "url": "https://www.nist.gov/news-events/news/rss.xml",
+   "lang": "en",
+   "region": "global",
+   "kinds": [
+    "policy"
+   ],
+   "ecosystems": [
+    "cross"
+   ],
+   "broad": false,
+   "title_filter": "CHIPS|semiconductor|advanced packaging|chip",
+   "enabled": true,
+   "why": "기존 이슈 수집기에서 쓰던 출처 (2026-10 운영 확인)",
+   "verified": {
+    "ok": true,
+    "checked": "2026-10-30",
+    "note": "이슈 수집기 운영 중"
+   }
+  },
+  {
+   "id": "semiconductor_today",
+   "name": "Semiconductor Today",
+   "type": "rss",
+   "url": "https://www.semiconductor-today.com/rss/news.xml",
+   "lang": "en",
+   "region": "global",
+   "kinds": [
+    "trade_press"
+   ],
+   "ecosystems": [
+    "semis",
+    "optics"
+   ],
+   "enabled": true,
+   "why": "화합물 반도체·레이저·전력 소자 업계지 (기존 출처)",
+   "verified": {
+    "ok": true,
+    "checked": "2026-10-30",
+    "note": "이슈 수집기 운영 중"
+   },
+   "broad": false
+  }
+ ]
+}

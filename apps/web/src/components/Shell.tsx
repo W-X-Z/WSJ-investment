@@ -6,42 +6,13 @@ import { FormEvent, useEffect, useRef, useState } from "react";
 import { HelpButton } from "@/components/Help";
 import { Icon } from "@/components/Icon";
 
-// 제품 (ADR-0023): 탭 둘 — 리서치(기업 리포트 피드) · 이슈(최근 이슈와 공급망에서의 의미). 나머지는 '더 보기'에 수납한다.
+// 제품 (ADR-0028): 탭 둘 — 투자 아이디어(★·제목·아이디어·해석·근거) · 단서(출처에서 들어온 작은 소식). 결론과 결과만 — 방법론 화면은 메뉴에 두지 않는다
+// (이전 화면들은 주소로는 그대로 열린다).
 const NAV = [
   { href:"/", label:"투자 아이디어", icon:"lightbulb" },
-  { href:"/issues", label:"이슈", icon:"rss" },
+  { href:"/clues", label:"단서", icon:"rss" },
 ] as const;
-const MORE_ROUTES = [
-  { href:"/bottlenecks", label:"병목 보드" },
-  { href:"/indicators", label:"가격·실적 지표" },
-  { href:"/map", label:"공급망 그래프" },
-  { href:"/discovery", label:"공급사 발굴" },
-  { href:"/briefs?kind=moat", label:"해자 카드" },
-  { href:"/system", label:"시스템 점검" },
-  { href:"/feed", label:"이슈 아카이브 (이전 화면)" },
-] as const;
-const RESEARCH_ROUTES = [
-  { href:"/ecosystems", label:"기술 생태계 (이전 화면)" },
-  { href:"/triggers", label:"트리거 추적 (이전 화면)" },
-  { href:"/review", label:"기술 관계 검토 큐" },
-  { href:"/history", label:"기술 자료 백필 아카이브" },
-  { href:"/data", label:"연구 데이터 개요" },
-  { href:"/briefs", label:"기업 분석 브리프" },
-  { href:"/candidates", label:"기존 후보 스크리너" },
-  { href:"/signals", label:"기업별 원천 신호" },
-  { href:"/companies", label:"상장기업 유니버스" },
-] as const;
-const DEEP_ROUTES = [
-  { href:"/filings", label:"SEC 공시" },{ href:"/insider", label:"내부자" },
-  { href:"/finra", label:"공매도·수급" },{ href:"/fda", label:"FDA" },
-  { href:"/trials", label:"임상" },{ href:"/awards", label:"정부 수주" },
-  { href:"/entities", label:"기업명 매칭" },
-] as const;
-const LABELS: Record<string,string> = {
-  "/":"리서치", "/issues":"이슈", "/map":"공급망 그래프", "/history":"과거 기술 아카이브", "/review":"기술 관계 검토", "/ecosystems":"기술 생태계", "/feed":"이슈 아카이브",
-  "/ideas":"리서치 리포트", "/discovery":"공급사 발굴", "/indicators":"가격·실적 지표", "/triggers":"트리거", "/search":"통합 검색",
-  "/data":"Research Data", "/briefs":"기업 브리프", "/bottlenecks":"병목 보드", "/system":"시스템 점검",
-};
+const LABELS: Record<string,string> = { "/":"투자 아이디어", "/clues":"단서", "/search":"통합 검색" };
 function Brand() {
   return (
     <Link href="/" className="brand" aria-label="Signal Atlas 홈">
@@ -76,11 +47,9 @@ export function Shell({ children }: { children: React.ReactNode }) {
     setSearchOpen(false);
     router.push(term ? `/search?q=${encodeURIComponent(term)}` : "/search");
   }
-  const section = path === "/" ? "/" : [...NAV, ...MORE_ROUTES].find(item=>item.href!=="/" && path.startsWith(item.href.split("?")[0]))?.href.split("?")[0] ?? path;
-  const currentLabel = LABELS[section] ?? (path.startsWith("/ideas")?"리서치 리포트":path.startsWith("/issues/")?"이슈":path.startsWith("/ecosystems/")?"기술 생태계":path.startsWith("/feed/")?"이슈 아카이브":"리서치");
-  const moreOpen = MORE_ROUTES.some(i=>path.startsWith(i.href.split("?")[0]));
+  const section = path === "/" || path.startsWith("/opportunities") ? "/" : path.startsWith("/clues") ? "/clues" : path;
+  const currentLabel = LABELS[section] ?? "투자 아이디어";
   const researchPage = path === "/" || path.startsWith("/opportunities");  // 투자 아이디어 (ADR-0028)
-  const legacyOpen = !researchPage && ["/review","/history","/data","/candidates","/briefs","/signals","/companies","/filings","/finra","/fda","/trials","/awards","/entities","/insider","/ecosystems","/triggers"].some(p=>path.startsWith(p));
   return (
     <div className="workspace">
       {mobileOpen && <button className="mobile-scrim" onClick={()=>setMobileOpen(false)} aria-label="메뉴 닫기"/>}
@@ -95,21 +64,6 @@ export function Shell({ children }: { children: React.ReactNode }) {
             </Link>;
           })}
         </nav>
-        <div className="sidebar-divider"/>
-        <div className="sidebar-section-title">MORE <span>02</span></div>
-        <details className="legacy-group" open={moreOpen || legacyOpen || undefined}>
-          <summary className="legacy-trigger"><Icon name="layers" size={17}/><span>더 보기 — 근거·도구</span><Icon name="chevron-down" size={14}/></summary>
-          <div className="legacy-links">
-            {MORE_ROUTES.map(i=><Link key={i.href} href={i.href} className={path.startsWith(i.href.split("?")[0])?"legacy-active":""}>{i.label}</Link>)}
-            <details className="legacy-subgroup" open={legacyOpen || undefined}>
-              <summary>데이터 워크스페이스 <Icon name="chevron-down" size={13}/></summary>
-              <div className="legacy-links nested">
-                {RESEARCH_ROUTES.map(i=><Link key={i.href} href={i.href} className={path===i.href?"legacy-active":""}>{i.label}</Link>)}
-                {DEEP_ROUTES.map(i=><Link key={i.href} href={i.href}>{i.label}</Link>)}
-              </div>
-            </details>
-          </div>
-        </details>
         <div className="sidebar-spacer"/>
       </aside>
       <div className="main-column">

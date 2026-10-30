@@ -124,6 +124,13 @@ HOLDINGS_NOISE = re.compile(
     r"\b(?:acquires|buys|purchases|sells|sold|trims|boosts|cuts|raises|lowers|reduces|grows|increases|decreases|expands|lifts)\s+"
     r"(?:[\d,.]+\s+(?:million\s+)?shares|(?:a\s+)?new\s+(?:stake|position)|(?:its\s+|their\s+)?(?:stake|position|holdings)\s+in)"
     r"|\bstake with [\d.,]+ (?:million )?share|short (?:bet|interest|position)|\$[A-Z]{2,5}\b|\b13F\b", re.I)
+# 시세 집계 사이트 — 주가 해설·종목 요약이 대부분이다 (2026-10-30: 기업 소식 2,550건 중 781건). clues.py 도 이 목록을 쓴다.
+NOISE_PUBLISHERS = {
+    "tradingview", "simply wall st", "simply wall street", "marketbeat", "gurufocus", "moomoo", "ad-hoc-news.de", "www.ad-hoc-news.de",
+    "zacks", "zacks investment research", "the motley fool", "motley fool", "investorplace", "24/7 wall st.", "stocktitan", "stock titan",
+    "marketscreener", "www.marketscreener.com", "marketscreener.com", "investing.com", "finviz", "tipranks", "insidermonkey", "insider monkey",
+    "stockstory", "yahoo!ファイナンス", "kabutan", "株探", "證券之星", "证券之星", "东方财富", "東方財富", "新浪财经",
+}
 COMMON_WORDS = {"zeus", "protec", "comet", "flex", "gates", "nova", "dover", "eaton", "carrier", "meta", "oracle", "apple", "amazon", "corning",
                 "danfoss", "lumentum", "screen", "canon", "nikon", "rohm", "disco", "resonac", "hitachi", "panasonic", "vertiv", "legrand",
                 "agc", "ase", "tel", "mks", "onto", "form", "coherent", "credo", "astera", "fabrinet"}
@@ -595,6 +602,8 @@ def news_events(http, cos: list[dict[str, Any]], days: int, focus: set[str], per
                 up = NEWS_UP.search(title)
                 if HOLDINGS_NOISE.search(title) or (PRICE_CHATTER.search(title) and not up):
                     continue
+                if publisher.strip().lower() in NOISE_PUBLISHERS:  # 시세 집계 사이트 (ADR-0028: 시세 기사는 버린다)
+                    continue
                 try:
                     d = datetime.strptime(it.findtext("pubDate") or "", "%a, %d %b %Y %H:%M:%S %Z").replace(tzinfo=UTC)
                 except ValueError:
@@ -696,6 +705,11 @@ def main(argv: list[str] | None = None) -> int:
                 focus |= {x.get("primary_company")} | {c.get("id") for c in x.get("companies") or []}
         except Exception as exc:  # noqa: BLE001
             log.warning("기존 아이디어를 읽을 수 없음: %s", exc)
+        try:  # 투자 아이디어(ADR-0028)의 기업도
+            for x in store.select("ideas.opportunities", ["companies"], {"status": "active"}):
+                focus |= {c.get("company") for c in x.get("companies") or [] if c.get("company")}
+        except Exception as exc:  # noqa: BLE001 - 0031 전
+            log.warning("투자 아이디어를 읽을 수 없음: %s", exc)
     http = HttpClient(settings.sec_user_agent, timeout=25, max_retries=2)
     try:
         if store is not None:  # 실행 기록 → 아이디어 예약작업이 "오늘 수집이 끝났나" 를 ops.collector_runs 로 확인한다
