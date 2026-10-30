@@ -149,7 +149,7 @@ COMPANY_NAMES = {  # 기사에 실제로 쓰이는 이름 (법인명 접미사 �
     "company:samsung": ["Samsung Electronics", "Samsung"], "company:mu": ["Micron"], "company:nvda": ["NVIDIA", "Nvidia"], "company:besi": ["BE Semiconductor", "Besi"],
     "company:amat": ["Applied Materials"], "company:klac": ["KLA Corp", "KLA"], "company:crdo": ["Credo Technology", "Credo"], "company:fn": ["Fabrinet"],
     "company:nvts": ["Navitas"], "company:on": ["onsemi", "ON Semiconductor"], "company:mpwr": ["Monolithic Power"], "company:txn": ["Texas Instruments"],
-    "company:etn": ["Eaton"], "company:adea": ["Adeia"], "company:klic": ["Kulicke & Soffa", "Kulicke and Soffa", "K&S"], "company:form": ["FormFactor"],
+    "company:etn": ["Eaton"], "company:adea": ["Adeia", "Invensas", "Tessera Technologies", "Ziptronix"], "company:klic": ["Kulicke & Soffa", "Kulicke and Soffa", "K&S"], "company:form": ["FormFactor"],
     "company:cohu": ["Cohu"], "company:nvmi": ["Nova Ltd", "Nova Measuring"], "company:veco": ["Veeco"], "company:ichr": ["Ichor"],
     "company:lwlg": ["Lightwave Logic"], "company:almu": ["Aeluma"], "company:axti": ["AXT Inc", "AXT"], "company:mxl": ["MaxLinear"],
     "company:aaoi": ["Applied Optoelectronics"], "company:belfa": ["Bel Fuse"], "company:aosl": ["Alpha and Omega Semiconductor", "Alpha & Omega Semiconductor"],

@@ -34,7 +34,7 @@ from datetime import date
 from pathlib import Path
 from typing import Any
 from urllib.error import HTTPError, URLError
-from urllib.parse import urlencode
+from urllib.parse import quote, urlencode
 from urllib.request import Request, urlopen
 
 log = logging.getLogger("wsj.techdocs")
@@ -481,7 +481,7 @@ def aggregate(docs: list[Doc], top_orgs: int = 25, cap_docs: int = 120, docs_sin
             if not d.published:
                 continue
             for o in d.orgs:
-                k = org_key(o["name"])
+                k = o.get("company") or org_key(o["name"])     # 그래프 기업이면 그 id 로 (옛 이름·자회사 이름도 한 회사로)
                 names[k][o["name"]] += 1
                 first[k] = min(first.get(k, 9999), d.published.year)
                 per_window[window_of(d.published.year)][k] += 1
@@ -493,7 +493,7 @@ def aggregate(docs: list[Doc], top_orgs: int = 25, cap_docs: int = 120, docs_sin
                              "company": company_of.get(k), "n": n, "first_year": first[k]})
         recent = [d for d in ds if d.published and d.published >= docs_since]
         recent.sort(key=lambda d: (not any(o.get("company") for o in d.orgs),
-                                   not any(first.get(org_key(o["name"]), 0) >= new_from for o in d.orgs),
+                                   not any(first.get(o.get("company") or org_key(o["name"]), 0) >= new_from for o in d.orgs),
                                    -len(d.countries) if src == "patent" else -(d.cited_by or 0),
                                    -(d.published.toordinal() if d.published else 0)))
         for d in recent[:cap_docs]:
@@ -584,6 +584,85 @@ def summary(series, orgs, labels, n_pat, n_pap, n_docs) -> str:
     for o in new[:60]:
         lines.append(f"| {labels.get(o['node'], o['node'])} | {o['source']} | {o['org']} | {o['n']} |")
     return "\n".join(lines) + "\n"
+
+
+# ---------------------------------------------------------------- 기술 흐름 → 단서 (주 1회)
+ACADEMIC = re.compile(r"UNIV|UNIVERSITY|INSTITUTE|\bINST\b|RESEARCH|FOUNDATION|ACADEMY|COLLEGE|LABORATOR|대학|연구원|研究|大学|大學", re.I)
+US_KR = {"NYSE", "Nasdaq", "NYSE American", "KRX", "KOSDAQ"}
+
+
+def looks_like_person(name: str) -> bool:
+    """출원인이 개인인 경우 (법인 꼬리·기관 낱말이 없고 2~3 낱말)."""
+    return org_key(name) == " ".join(re.sub(r"[^\w ]", " ", name.upper()).split()) and 2 <= len(name.split()) <= 3 \
+        and not re.search(r"TECH|SEMI|ELECTR|SYSTEM|NETWORK|LAB|MATERIAL|ENERGY|POWER|OPTIC|PHOTON|DEVICE|INDUSTR|소재|전자|시스템", name, re.I)
+
+
+def signals(series: list[dict[str, Any]], orgs: list[dict[str, Any]], docs: list[dict[str, Any]], graph: dict[str, Any],
+            today: date | None = None, min_ratio: float = 1.5, max_breadth: int = 6) -> list[dict[str, Any]]:
+    """빠르게 늘어나는 기술 × 새로 들어왔거나 빨라진 미국·한국 기관 → 해석 작업이 읽을 단서 후보.
+    대형·초대형 그래프 기업과 대학·연구소는 뺀다 (목표는 시장이 덜 본 소·중형). 정렬: 새로 들어옴 → 그래프의 소형 → 건수."""
+    nodes = {n["id"]: n for n in graph["nodes"]}
+    country: dict[str, Counter] = defaultdict(Counter)
+    by_node_docs: dict[tuple[str, str], list[dict[str, Any]]] = defaultdict(list)
+    for d in docs:
+        for o in d.get("orgs") or []:
+            if o.get("country"):
+                country[(o.get("name") or "").upper()][o["country"]] += 1
+        for nid in d.get("nodes") or []:
+            by_node_docs[(nid, d["source"])].append(d)
+    span = {(o["node"], o["source"], o["org"], o["span"]): o for o in orgs}
+    breadth: dict[str, set[str]] = defaultdict(set)               # 그래프 밖 기관이 여러 기술에 두루 나오면 대형사로 본다
+    for o in orgs:
+        breadth[o["org"].upper()].add(o["node"])
+    out = []
+    for r in rising(series, today, min_recent=20):
+        if (r["ratio"] is not None and r["ratio"] < min_ratio) or r["node"].startswith("demand_driver:"):
+            continue
+        nid, src = r["node"], r["source"]
+        for o in [o for o in orgs if o["node"] == nid and o["source"] == src and o["span"] == "2024~"]:
+            n24 = o["n"]
+            n22 = (span.get((nid, src, o["org"], "2022-2023")) or {}).get("n", 0)
+            new = (o.get("first_year") or 0) >= 2024 and n24 >= 3
+            if not (new or (n24 >= max(5, 2 * n22))):
+                continue
+            comp = nodes.get(o.get("company") or "")
+            if comp:
+                lst = comp.get("listing") or {}
+                if lst.get("exchange") not in US_KR or comp.get("size_band") in ("large", "mega"):
+                    continue
+                cc = "KR" if lst.get("exchange") in ("KRX", "KOSDAQ") else "US"
+            else:
+                if ACADEMIC.search(o["org"]) or len(breadth[o["org"].upper()]) >= max_breadth or looks_like_person(o["org"]):
+                    continue
+                cc = (country.get(o["org"].upper()) or Counter()).most_common(1)
+                cc = cc[0][0] if cc else ""
+                if cc not in ("US", "KR"):
+                    continue
+            mine = [d for d in by_node_docs[(nid, src)]
+                    if any((x.get("company") and x.get("company") == o.get("company")) or (x.get("name") or "").upper() == o["org"].upper()
+                           for x in d.get("orgs") or [])]
+            mine.sort(key=lambda d: str(d.get("published_on") or ""), reverse=True)
+            url = mine[0]["url"] if mine and mine[0].get("url") else (
+                f"https://patents.google.com/?assignee={quote(o['org'])}&after=priority:20220101" if src == "patent"
+                else f"https://openalex.org/works?search={quote(o['org'])}")
+            out.append({"node": nid, "source": src, "org": o["org"], "company": o.get("company"), "country": cc, "n24": n24, "n22": n22,
+                        "first_year": o.get("first_year"), "new": new, "ratio": r["ratio"], "prior": r["prior"], "recent": r["recent"],
+                        "url": url, "docs": [d.get("title") for d in mine[:3]],
+                        "size": (comp or {}).get("size_band"), "label": (nodes.get(nid) or {}).get("label", nid)})
+    out.sort(key=lambda s: (not s["new"], s["size"] not in ("small", "micro"), -s["n24"]))
+    return out
+
+
+def signal_text(s: dict[str, Any]) -> tuple[str, str]:
+    """단서 제목·요약 (한국어)."""
+    what = "특허" if s["source"] == "patent" else "기업 논문"
+    label = re.sub(r"\s+\(.*$", "", s["label"])
+    org = re.sub(r"\s+\(.*$", "", s["org"])
+    move = "새로 들어옴" if s["new"] else f"2022~23년 {s['n22']}건에서 늘어남"
+    trend = f"이 기술 {what} 최근 2년 ×{s['ratio']}" if s["ratio"] else f"이 기술 {what} 최근 2년 {s['recent']}건(새로 생김)"
+    title = f"[{what} 흐름] {label}: {org} 2024년 이후 {s['n24']}건 — {move} ({trend})"
+    summary = " / ".join(t for t in s["docs"] if t)[:480]
+    return title, summary
 
 
 # ---------------------------------------------------------------- 올리기

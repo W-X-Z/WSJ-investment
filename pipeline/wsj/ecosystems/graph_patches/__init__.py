@@ -55,6 +55,7 @@ class Edge:
     tier: str
     polarity: str = "positive"
     note: str = ""
+    attrs: dict[str, Any] | None = None     # exposure · position · about (온톨로지 edge_attributes / edge_optional_fields)
 
     def evidence_rows(self) -> list[dict[str, Any]]:
         evs = self.evidence if isinstance(self.evidence, list) else [self.evidence]
@@ -88,13 +89,25 @@ def apply(nodes: list[Node], edges: list[Edge], prefix: str, native: dict[str, s
     used = {e["id"] for e in graph["edges"]}
     seq = 1 + max([int(i.rsplit("-", 1)[1]) for i in used if i.startswith(prefix + "-") and i.rsplit("-", 1)[1].isdigit()] or [0])
     added_e = 0
+    by_key = {(r["from"], r["relation"], r["to"]): r for r in graph["edges"]}
+    annotated = 0
     for e in edges:
         if (e.frm, e.relation, e.to) in have:
+            # 이미 있는 간선: 속성(노출도·위치·about)을 새로 확인했으면 덧붙이고 근거를 더한다 — 해석이 쌓이는 길
+            if e.attrs:
+                row = by_key[(e.frm, e.relation, e.to)]
+                changed = any(row.get(k) != v for k, v in e.attrs.items())
+                row.update(e.attrs)
+                urls = {ev.get("url") for ev in row.get("evidence") or []}
+                row["evidence"] = (row.get("evidence") or []) + [ev for ev in e.evidence_rows() if ev["url"] not in urls]
+                annotated += changed
             continue
         row: dict[str, Any] = {"id": f"{prefix}-{seq:03d}", "from": e.frm, "to": e.to, "relation": e.relation, "evidence_tier": e.tier,
                                "polarity": e.polarity, "evidence": e.evidence_rows()}
         if e.note:
             row["note"] = e.note
+        if e.attrs:
+            row.update(e.attrs)
         row["confidence"] = edge_confidence(row, onto)
         graph["edges"].append(row)
         have.add((e.frm, e.relation, e.to))
@@ -107,9 +120,9 @@ def apply(nodes: list[Node], edges: list[Edge], prefix: str, native: dict[str, s
         print(f"FAIL: 패치 적용 후 검증 오류 {len(rep.errors)}개 — 파일을 쓰지 않는다", file=sys.stderr)
         return 1
     if dry_run:
-        print(json.dumps({"nodes_added": added_n, "edges_added": added_e, "dry_run": True}))
+        print(json.dumps({"nodes_added": added_n, "edges_added": added_e, "edges_annotated": annotated, "dry_run": True}))
         return 0
-    if added_n or added_e:
+    if added_n or added_e or annotated:
         _dump(GRAPH_PATH, graph, 2)
     if aliases:
         a = json.loads(ALIASES_PATH.read_text(encoding="utf-8"))
@@ -125,7 +138,7 @@ def apply(nodes: list[Node], edges: list[Edge], prefix: str, native: dict[str, s
             cur = nn["node_terms"].setdefault(nid, [])
             cur += [w for w in words if w not in cur]
         _dump(NATIVE_PATH, nn, 2)
-    print(json.dumps({"nodes_added": added_n, "edges_added": added_e, "nodes": len(graph["nodes"]), "edges": len(graph["edges"])}))
+    print(json.dumps({"nodes_added": added_n, "edges_added": added_e, "edges_annotated": annotated, "nodes": len(graph["nodes"]), "edges": len(graph["edges"])}))
     return 0
 
 
