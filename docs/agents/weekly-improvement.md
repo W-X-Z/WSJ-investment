@@ -1,7 +1,7 @@
 # 주간 개선 작업 — 점검 → 고칠 일 고르기 → 근거 찾기 → 패치 PR → CI → 병합
 
 Claude 예약작업 "WSJ 시스템 개선 (주간)"이 매주 일요일 10:23 KST 에 이 문서를 따른다 (ADR-0017).
-목표는 시스템이 **더 많은 근거를 보고, 끊긴 곳 없이 기회를 찾고, 판단을 채점받게** 만드는 것이다. 사용자는 자리에 없으니 질문하지 말고 진행한다.
+목표는 시스템이 **더 많은 출처에서 작은 단서를 보고, 끊긴 곳 없이 해석하고, 해석의 암묵지(패턴)가 쌓이게** 만드는 것이다 (ADR-0028). 사용자는 자리에 없으니 질문하지 말고 진행한다.
 
 ## 권한과 경계
 - DB 쓰기: `ideas.put_observations`(병목 상태 관측치), `ideas.put_company_events`(원문 확인), `ideas.put_idea_notes`(심층 메모)만. 아이디어는 쓰지 않는다 (매일 작업의 일).
@@ -29,14 +29,14 @@ Claude 예약작업 "WSJ 시스템 개선 (주간)"이 매주 일요일 10:23 KS
 3. scan 의 company_leads·bottlenecks.uncovered 중 그래프 밖이거나 관계가 빈약한 기업 → 원문으로 공급 관계를 확인해 노드·간선 추가.
 4. 활동 많은 병목 중 상태 관측치가 없거나 60일 넘은 곳 → 숫자(가격 배수·리드타임·가동률·재고·수주잔고·평균단가·증설 완공 시점)를 찾아 put_observations.
 5. 데이터 공백 (가격·시가총액 출처가 없는 거래소, 값 없는 지표, 막힌 출처) → 무료·공식 대체 출처를 찾아 수집기 코드를 고친다 (사람 승인 PR).
-6. 심층 메모가 30일 넘은 ★3 아이디어 → `docs/agents/deep-dive.md` 대로 다시 쓴다 (`ideas.put_idea_notes`, 주 2건까지).
-7. 모니터 1개 붙이기 — `docs/adr/0018-monitor-registry.md` 우선순위 순 (법설회 IR → 8-K 숫자 추출 → 품목 가격). 출처 도달을 `source-probe` 로 먼저 확인하고, 수집기 코드는 사람 승인 PR.
-8. 가치평가 적중 점검 (ADR-0019) — `select h.idea_key, h.as_of, h.price, h.expected_upside_pct, h.confidence, c.close from public.v_valuation_history h join public.v_company_facts c on c.company_id = h.company_id where h.as_of < current_date - 28 order by h.as_of;`
-   로 4주 넘은 평가의 기대 상승여력과 그 뒤 실제 주가 변화를 비교한다. 방향이 다른 평가가 confidence=high 에서 반복되면 프롬프트의 '가치평가' 절(배수·bear 규칙)을 고치는 PR 을 낸다.
-   재무(v_company_fundamentals)가 없는 주 기업이 있으면 그 시장의 재무 출처를 찾아 `fundamentals.py` 에 붙인다 (시장 범위는 미국·한국 — ADR-0021; 그 밖은 붙이지 않는다).
-9. 가설 적중 점검 (ADR-0022) — `select idea_key, stars, assessment->'verification' as v, assessment->'hypothesis'->>'score' as h_score from public.v_investment_ideas where status='active' and assessment ? 'verification';`
-   로 후보 점수(h_score)와 적중·빗나감(v.hits·v.misses)의 관계를 본다. 점수 높은 후보가 더 자주 빗나가면 `hypotheses.py` 의 채점(구체·대담·반증 가능·설명력 가중)을 고친다 (사람 승인 PR).
-   반증이 성립해 종료된 아이디어(`select idea_key, title, close_reason from ideas.investment_ideas where status='closed' and close_reason like '반증 조건 성립%'`)는 왜 틀렸는지 한 줄씩 `research/improvement_log.json` 에 남긴다 — 다음 가설의 교정 자료다.
+6. **주간 반성 (ADR-0028)** — 지난 7일의 투자 아이디어를 읽는다:
+   `select opportunity_key, title, stars, status, status_note, interpretation, nodes, updated_at from ideas.opportunities where updated_at > now() - interval '7 days' order by updated_at;`
+   그리고 `research/playbook/patterns/` 를 고친다: 같은 메커니즘이 두 번 이상 나왔으면 새 카드, 겹치는 카드는 합치기, 사례 줄 더하기,
+   내린(dropped) 아이디어의 이유는 해당 카드의 '반대 신호' 에. `research/playbook/feedback.md` 에 사용자 지적이 있으면 그것부터 반영하고 반영했다고 그 줄 끝에 적는다.
+   카드의 '관련 노드' 는 그래프에 있는 id 만 (`pytest tests/test_recall.py` 가 확인한다).
+7. **출처 목록 점검** — `select started_at, watermark->'failed' as failed, watermark->>'kept' as kept, watermark->>'noise' as noise from ops.collector_runs where collector = 'clues' order by started_at desc limit 7;`
+   3번 넘게 실패한 출처는 `research/sources/registry.json` 에서 `"enabled": false`, 시세 기사만 내는 출처는 빼고, 지난주 아이디어 근거에 자주 나온 매체가 목록에 없으면 피드 주소를 찾아 더한다.
+8. 모니터 1개 붙이기 — `docs/adr/0018-monitor-registry.md` 우선순위 순 (법설회 IR → 8-K 숫자 추출 → 품목 가격). 출처 도달을 `source-probe` 로 먼저 확인하고, 수집기 코드는 사람 승인 PR.
 
 ## 3. 그래프 패치 쓰는 법
 - `pipeline/wsj/ecosystems/graph_patches/pYYYYMMDD_<주제>.py` 를 새로 만든다 (기존 패치 p20261028_… 를 본보기로). 기존 패치는 고치지 않는다.

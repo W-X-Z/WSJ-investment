@@ -1,0 +1,331 @@
+{
+ "about": "단서 수집기의 출처 목록 (ADR-0028). 형식은 README.md.",
+ "sources": [
+  {
+   "id": "ee_times",
+   "name": "EE Times",
+   "type": "rss",
+   "url": "https://www.eetimes.com/feed/",
+   "lang": "en",
+   "region": "global",
+   "kinds": [
+    "trade_press"
+   ],
+   "ecosystems": [],
+   "broad": false,
+   "title_filter": null,
+   "enabled": true,
+   "why": "기존 이슈 수집기에서 쓰던 출처 (2026-10 운영 확인)",
+   "verified": {
+    "ok": true,
+    "checked": "2026-10-30",
+    "note": "이슈 수집기 운영 중"
+   }
+  },
+  {
+   "id": "semiconductor_engineering",
+   "name": "Semiconductor Engineering",
+   "type": "rss",
+   "url": "https://semiengineering.com/feed/",
+   "lang": "en",
+   "region": "global",
+   "kinds": [
+    "trade_press"
+   ],
+   "ecosystems": [],
+   "broad": false,
+   "title_filter": null,
+   "enabled": true,
+   "why": "기존 이슈 수집기에서 쓰던 출처 (2026-10 운영 확인)",
+   "verified": {
+    "ok": true,
+    "checked": "2026-10-30",
+    "note": "이슈 수집기 운영 중"
+   }
+  },
+  {
+   "id": "eenews_europe",
+   "name": "eeNews Europe",
+   "type": "rss",
+   "url": "https://www.eenewseurope.com/en/feed/",
+   "lang": "en",
+   "region": "global",
+   "kinds": [
+    "trade_press"
+   ],
+   "ecosystems": [],
+   "broad": false,
+   "title_filter": null,
+   "enabled": true,
+   "why": "기존 이슈 수집기에서 쓰던 출처 (2026-10 운영 확인)",
+   "verified": {
+    "ok": true,
+    "checked": "2026-10-30",
+    "note": "이슈 수집기 운영 중"
+   }
+  },
+  {
+   "id": "power_electronics_news",
+   "name": "Power Electronics News",
+   "type": "rss",
+   "url": "https://www.powerelectronicsnews.com/feed/",
+   "lang": "en",
+   "region": "global",
+   "kinds": [
+    "trade_press"
+   ],
+   "ecosystems": [
+    "power"
+   ],
+   "broad": false,
+   "title_filter": null,
+   "enabled": true,
+   "why": "기존 이슈 수집기에서 쓰던 출처 (2026-10 운영 확인)",
+   "verified": {
+    "ok": true,
+    "checked": "2026-10-30",
+    "note": "이슈 수집기 운영 중"
+   }
+  },
+  {
+   "id": "dcd",
+   "name": "DCD",
+   "type": "rss",
+   "url": "https://www.datacenterdynamics.com/en/rss/",
+   "lang": "en",
+   "region": "global",
+   "kinds": [
+    "trade_press"
+   ],
+   "ecosystems": [],
+   "broad": false,
+   "title_filter": null,
+   "enabled": true,
+   "why": "기존 이슈 수집기에서 쓰던 출처 (2026-10 운영 확인)",
+   "verified": {
+    "ok": true,
+    "checked": "2026-10-30",
+    "note": "이슈 수집기 운영 중"
+   }
+  },
+  {
+   "id": "servethehome",
+   "name": "ServeTheHome",
+   "type": "rss",
+   "url": "https://www.servethehome.com/feed/",
+   "lang": "en",
+   "region": "global",
+   "kinds": [
+    "trade_press"
+   ],
+   "ecosystems": [],
+   "broad": false,
+   "title_filter": null,
+   "enabled": true,
+   "why": "기존 이슈 수집기에서 쓰던 출처 (2026-10 운영 확인)",
+   "verified": {
+    "ok": true,
+    "checked": "2026-10-30",
+    "note": "이슈 수집기 운영 중"
+   }
+  },
+  {
+   "id": "tom_s_hardware",
+   "name": "Tom's Hardware",
+   "type": "rss",
+   "url": "https://www.tomshardware.com/feeds/all",
+   "lang": "en",
+   "region": "global",
+   "kinds": [
+    "trade_press"
+   ],
+   "ecosystems": [],
+   "broad": true,
+   "title_filter": null,
+   "enabled": true,
+   "why": "기존 이슈 수집기에서 쓰던 출처 (2026-10 운영 확인)",
+   "verified": {
+    "ok": true,
+    "checked": "2026-10-30",
+    "note": "이슈 수집기 운영 중"
+   }
+  },
+  {
+   "id": "digitimes",
+   "name": "DigiTimes",
+   "type": "rss",
+   "url": "https://www.digitimes.com/rss/daily.xml",
+   "lang": "en",
+   "region": "global",
+   "kinds": [
+    "trade_press"
+   ],
+   "ecosystems": [],
+   "broad": true,
+   "title_filter": null,
+   "enabled": true,
+   "why": "기존 이슈 수집기에서 쓰던 출처 (2026-10 운영 확인)",
+   "verified": {
+    "ok": true,
+    "checked": "2026-10-30",
+    "note": "이슈 수집기 운영 중"
+   }
+  },
+  {
+   "id": "samsung_newsroom",
+   "name": "Samsung Newsroom",
+   "type": "rss",
+   "url": "https://news.samsung.com/global/feed",
+   "lang": "en",
+   "region": "KR",
+   "kinds": [
+    "company_newsroom"
+   ],
+   "ecosystems": [
+    "hbm"
+   ],
+   "broad": false,
+   "title_filter": "HBM|DRAM|memory|foundry|packaging|semiconductor|chip|AI|data cent",
+   "enabled": true,
+   "why": "기존 이슈 수집기에서 쓰던 출처 (2026-10 운영 확인)",
+   "verified": {
+    "ok": true,
+    "checked": "2026-10-30",
+    "note": "이슈 수집기 운영 중"
+   }
+  },
+  {
+   "id": "sk_hynix_newsroom",
+   "name": "SK hynix Newsroom",
+   "type": "rss",
+   "url": "https://news.skhynix.com/feed/",
+   "lang": "en",
+   "region": "KR",
+   "kinds": [
+    "company_newsroom"
+   ],
+   "ecosystems": [
+    "hbm"
+   ],
+   "broad": false,
+   "title_filter": null,
+   "enabled": true,
+   "why": "기존 이슈 수집기에서 쓰던 출처 (2026-10 운영 확인)",
+   "verified": {
+    "ok": true,
+    "checked": "2026-10-30",
+    "note": "이슈 수집기 운영 중"
+   }
+  },
+  {
+   "id": "nvidia_newsroom",
+   "name": "NVIDIA Newsroom",
+   "type": "rss",
+   "url": "https://nvidianews.nvidia.com/releases.xml",
+   "lang": "en",
+   "region": "global",
+   "kinds": [
+    "company_newsroom"
+   ],
+   "ecosystems": [],
+   "broad": false,
+   "title_filter": "data cent|Rubin|Blackwell|NVLink|Spectrum|photonic|800|power|supply|factory|manufactur|partner",
+   "enabled": true,
+   "why": "기존 이슈 수집기에서 쓰던 출처 (2026-10 운영 확인)",
+   "verified": {
+    "ok": true,
+    "checked": "2026-10-30",
+    "note": "이슈 수집기 운영 중"
+   }
+  },
+  {
+   "id": "pr_newswire_semiconductors",
+   "name": "PR Newswire · Semiconductors",
+   "type": "rss",
+   "url": "https://www.prnewswire.com/rss/consumer-technology-latest-news/semiconductors-list.rss",
+   "lang": "en",
+   "region": "global",
+   "kinds": [
+    "company_newsroom"
+   ],
+   "ecosystems": [],
+   "broad": true,
+   "title_filter": null,
+   "enabled": true,
+   "why": "기존 이슈 수집기에서 쓰던 출처 (2026-10 운영 확인)",
+   "verified": {
+    "ok": true,
+    "checked": "2026-10-30",
+    "note": "이슈 수집기 운영 중"
+   }
+  },
+  {
+   "id": "white_house_presidential_actions",
+   "name": "White House · Presidential Actions",
+   "type": "rss",
+   "url": "https://www.whitehouse.gov/presidential-actions/feed/",
+   "lang": "en",
+   "region": "global",
+   "kinds": [
+    "policy"
+   ],
+   "ecosystems": [
+    "cross"
+   ],
+   "broad": false,
+   "title_filter": "semiconductor|chip|integrated circuit|export control|entity list|tariff|section 232|section 301|critical mineral|gallium|germanium|rare earth|data cent|artificial intelligence|\\bAI\\b|grid|transformer|large load|CHIPS|advanced packaging|photonic|optical|memory",
+   "enabled": true,
+   "why": "기존 이슈 수집기에서 쓰던 출처 (2026-10 운영 확인)",
+   "verified": {
+    "ok": true,
+    "checked": "2026-10-30",
+    "note": "이슈 수집기 운영 중"
+   }
+  },
+  {
+   "id": "nist_news",
+   "name": "NIST News",
+   "type": "rss",
+   "url": "https://www.nist.gov/news-events/news/rss.xml",
+   "lang": "en",
+   "region": "global",
+   "kinds": [
+    "policy"
+   ],
+   "ecosystems": [
+    "cross"
+   ],
+   "broad": false,
+   "title_filter": "CHIPS|semiconductor|advanced packaging|chip",
+   "enabled": true,
+   "why": "기존 이슈 수집기에서 쓰던 출처 (2026-10 운영 확인)",
+   "verified": {
+    "ok": true,
+    "checked": "2026-10-30",
+    "note": "이슈 수집기 운영 중"
+   }
+  },
+  {
+   "id": "semiconductor_today",
+   "name": "Semiconductor Today",
+   "type": "rss",
+   "url": "https://www.semiconductor-today.com/rss/news.xml",
+   "lang": "en",
+   "region": "global",
+   "kinds": [
+    "trade_press"
+   ],
+   "ecosystems": [
+    "semis",
+    "optics"
+   ],
+   "enabled": true,
+   "why": "화합물 반도체·레이저·전력 소자 업계지 (기존 출처)",
+   "verified": {
+    "ok": true,
+    "checked": "2026-10-30",
+    "note": "이슈 수집기 운영 중"
+   }
+  }
+ ]
+}

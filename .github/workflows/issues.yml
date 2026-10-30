@@ -85,6 +85,18 @@ jobs:
           set -euo pipefail
           mkdir -p data/issues
           python -m wsj.ecosystems.company_feed --days "$IN_FEED_DAYS" --save --out data/issues/company_events.json | tee -a "$GITHUB_STEP_SUMMARY"
+      # 단서 (ADR-0028): 출처 목록(research/sources/registry.json)의 새 글 + 방금 쌓은 기업 소식·이슈 → ideas.clues.
+      # 시세 기사는 규칙으로, 주제 밖 글은 Haiku 로 거른다 (1회 ≈ 몇 센트). 아침 해석 작업이 v_clues 를 읽는다. 실패해도 다음 단계는 돈다.
+      - name: Collect clues
+        continue-on-error: true
+        working-directory: pipeline
+        env:
+          IN_NO_LLM: ${{ inputs.no_llm || 'false' }}
+        run: |
+          set -euo pipefail
+          args=(run --days 2 --out data/issues/clues.json)
+          [[ "$IN_NO_LLM" == "true" ]] && args+=(--no-llm)
+          python -m wsj.ecosystems.clues "${args[@]}" | tee -a "$GITHUB_STEP_SUMMARY"
       # 그래프 상장사 일봉 → raw.px_daily (ADR-0017). 가격은 '이미 움직인 폭'과 설명 안 된 급변 탐지에만 쓴다.
       # 증분은 매번 전부, 1년 이력 백필은 남은 시간(아침 10분·저녁 15분)만큼 나눠서. 실패해도 다음 단계는 돈다.
       - name: Collect prices
