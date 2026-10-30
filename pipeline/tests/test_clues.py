@@ -90,3 +90,13 @@ def test_registry_check_catches_duplicates(tmp_path):
     p.write_text(json.dumps({"sources": [{"id": "a_b", "url": "https://x"}, {"id": "a_b", "url": "https://x"}]}), encoding="utf-8")
     errs = C.check_registry(C.load_registry(p))
     assert any("id 중복" in e for e in errs) and any("url 중복" in e for e in errs)
+
+
+def test_parse_feed_reads_rss1_rdf():
+    from wsj.ecosystems.sources import parse_feed
+
+    rdf = ('<?xml version="1.0"?><rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns="http://purl.org/rss/1.0/" '
+           'xmlns:dc="http://purl.org/dc/elements/1.1/"><channel><title>x</title></channel><item><title>HBM 新工場</title>'
+           '<link>https://x.jp/a</link><dc:date>2026-10-29T10:00:00+09:00</dc:date><description>d</description></item></rdf:RDF>')
+    got = parse_feed(rdf)
+    assert got and got[0][0] == "https://x.jp/a" and got[0][1] == "HBM 新工場" and got[0][2] is not None

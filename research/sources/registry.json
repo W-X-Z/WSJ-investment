@@ -25,13 +25,13 @@
     "note": "RSS 2.0, all-articles feed. Section feeds use /rss/S1N{n}.xml, but S1N1 (중국산업동향) was last updated 2026-09-15, so poll allArticle."
    },
    "enabled": true,
-   "broad": false
+   "broad": true
   },
   {
    "id": "etnews_electronics",
    "name": "전자신문 전자면",
    "type": "rss",
-   "url": "http://rss.etnews.com/06.xml",
+   "url": "https://rss.etnews.com/06.xml",
    "home": "https://www.etnews.com",
    "lang": "ko",
    "region": "KR",
@@ -48,7 +48,7 @@
     "ok": true,
     "checked": "2026-10-30",
     "latest_item_date": "2026-10-30",
-    "note": "Feed list is at etnews.com/rss. Sub-feeds exist (06061 장비, 06062 부품, 06064 소재, 06065 중공업), but 06061's newest item was 2026-06-25, so use 06.xml. Section901 (오늘의뉴스) also works."
+    "note": "Feed list is at etnews.com/rss. Sub-feeds exist (06061 장비, 06062 부품, 06064 소재, 06065 중공업), but 06061's newest item was 2026-06-25, so use 06.xml. Section901 (오늘의뉴스) also works. · 2026-10-30 Actions 에서 http 시간 초과 → https 로"
    },
    "enabled": true,
    "broad": true
@@ -205,7 +205,7 @@
     "note": "WebFetch 가 302 를 따라가지 못함 — 리다이렉트 대상 주소로 바꿈(수집기 확인 대기) — 조사 도구에서만 막힘(robots·출처 게이트), 수집기에서 확인"
    },
    "enabled": true,
-   "broad": false
+   "broad": true
   },
   {
    "id": "ekn_kr",
@@ -255,7 +255,7 @@
     "note": "Not fetched: the tool's provenance gate blocked it. The URL follows the ndsoft CMS pattern already confirmed on thelec/kipost/electimes. — 조사 도구에서만 막힘(robots·출처 게이트), 수집기에서 확인"
    },
    "enabled": true,
-   "broad": false
+   "broad": true
   },
   {
    "id": "thelec_en",
@@ -278,9 +278,9 @@
     "ok": false,
     "checked": "2026-10-30",
     "latest_item_date": null,
-    "note": "WebFetch reported robots_disallowed. The Korean feed (thelec_kr) works. A local collector may still fetch this; check robots policy. — 조사 도구에서만 막힘(robots·출처 게이트), 수집기에서 확인"
+    "note": "WebFetch reported robots_disallowed. The Korean feed (thelec_kr) works. A local collector may still fetch this; check robots policy. — 조사 도구에서만 막힘(robots·출처 게이트), 수집기에서 확인 · 2026-10-30 Actions 에서 403/SSL 실패 — 끔 (영문 SK hynix 뉴스룸·Broadcom 8-K 로 대신)"
    },
-   "enabled": true,
+   "enabled": false,
    "broad": false
   },
   {
@@ -304,9 +304,9 @@
     "ok": true,
     "checked": "2026-10-30",
     "latest_item_date": "2026-10-29",
-    "note": "WordPress RSS. Multi-part tech notes appear as several items with the same title, so dedupe by link."
+    "note": "WordPress RSS. Multi-part tech notes appear as several items with the same title, so dedupe by link. · 2026-10-30 Actions 에서 403/SSL 실패 — 끔 (영문 SK hynix 뉴스룸·Broadcom 8-K 로 대신)"
    },
-   "enabled": true,
+   "enabled": false,
    "broad": false
   },
   {
@@ -600,7 +600,7 @@
     "note": "Not fetched: the tool's provenance gate blocked it. URL came from a Feeder directory listing. Sibling feeds: /1001/5588/5599, /1001/5593/5621, /1001/5593/5930. Which section is which is unconfirmed. — 조사 도구에서만 막힘(robots·출처 게이트), 수집기에서 확인"
    },
    "enabled": true,
-   "broad": false
+   "broad": true
   },
   {
    "id": "ctee_semi",
@@ -1246,9 +1246,9 @@
     "ok": true,
     "checked": "2026-10-30",
     "latest_item_date": "2026-10-27",
-    "note": "Q4-style IR feed. The same page lists /rss/events.xml and /rss/sec-filings.xml. Includes VMware software noise."
+    "note": "Q4-style IR feed. The same page lists /rss/events.xml and /rss/sec-filings.xml. Includes VMware software noise. · 2026-10-30 Actions 에서 403/SSL 실패 — 끔 (영문 SK hynix 뉴스룸·Broadcom 8-K 로 대신)"
    },
-   "enabled": true,
+   "enabled": false,
    "broad": false
   },
   {
@@ -1403,11 +1403,11 @@
     "ok": true,
     "checked": "2026-10-30",
     "latest_item_date": "2026-10-26",
-    "note": "RSS 2.0. Category feeds exist (e.g., /blog/category/networking/)."
+    "note": "RSS 2.0. Category feeds exist (e.g., /blog/category/networking/). · 제목 필터가 너무 좁아 0건 — 필터 없이 broad"
    },
    "enabled": true,
    "broad": true,
-   "title_filter": "GPU|AI infrastructure|datacenter|data center|Maia|Cobalt|cooling|power|network|accelerat|supercomput"
+   "title_filter": null
   },
   {
    "id": "meta_engineering",

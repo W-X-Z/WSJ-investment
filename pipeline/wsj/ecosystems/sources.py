@@ -95,9 +95,12 @@ def parse_feed(xml_text: str) -> list[tuple[str, str, datetime | None, str]]:
     """RSS 2.0 / Atom → [(link, title, published, summary)]."""
     root = ET.fromstring(xml_text)
     out = []
-    for it in root.iter("item"):
-        out.append((it.findtext("link") or "", _strip(it.findtext("title")), _dt(it.findtext("pubDate") or it.findtext("{http://purl.org/dc/elements/1.1/}date")),
-                    _strip(it.findtext("description"))[:500]))
+    rss1 = "{http://purl.org/rss/1.0/}"  # RSS 1.0 (RDF) — 日経xTECH 등
+    for it in [*root.iter("item"), *root.iter(f"{rss1}item")]:
+        def f(tag: str, it=it) -> str | None:
+            return it.findtext(tag) or it.findtext(rss1 + tag)
+        out.append((f("link") or "", _strip(f("title")), _dt(it.findtext("pubDate") or it.findtext("{http://purl.org/dc/elements/1.1/}date")),
+                    _strip(f("description"))[:500]))
     for e in root.iter(f"{ATOM}entry"):
         link = next((ln.get("href") for ln in e.findall(f"{ATOM}link") if ln.get("rel") in (None, "alternate")), "") or ""
         out.append((link, _strip(e.findtext(f"{ATOM}title")), _dt(e.findtext(f"{ATOM}published") or e.findtext(f"{ATOM}updated")),
