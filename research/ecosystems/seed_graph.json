@@ -10469,6 +10469,27 @@
       },
       "size_band": "mid",
       "in_universe": false
+    },
+    {
+      "id": "company:viatron",
+      "kind": "company",
+      "label": "Viatron 비아트론 (KOSDAQ 141000, 비SEC)",
+      "ecosystem": "hbm",
+      "role": "supplier",
+      "listing": {
+        "ticker": "141000",
+        "exchange": "KOSDAQ",
+        "cik": null,
+        "filer_type": "non_sec_listed"
+      },
+      "size_band": "micro",
+      "in_universe": false
+    },
+    {
+      "id": "equipment:si_sige_epi_3d_dram",
+      "kind": "equipment",
+      "label": "3D DRAM용 Si/SiGe 다층 에피택시 장비 (계측 융합, UPH 5매/hr 이상)",
+      "ecosystem": "hbm"
     }
   ],
   "edges": [
@@ -41425,6 +41446,131 @@
         }
       ],
       "note": "IQ 고체변압기(중전압 AC → 800V DC) 개발 중. 고객 파일럿 2027, 양산 출하 2028. 인피니언 900V GaN 양방향 스위치 채택(2026-10).",
+      "confidence": 0.6
+    },
+    {
+      "id": "i1031-001",
+      "from": "company:infineon",
+      "to": "company:enph",
+      "relation": "supplied_to",
+      "evidence_tier": "official_issuer",
+      "polarity": "positive",
+      "evidence": [
+        {
+          "url": "https://finviz.com/news/407634/enphase-energy-and-infineon-announce-worlds-first-900-v-gan-bidirectional-switch-devices-for-ai-data-center-solid-state-transformers",
+          "source_type": "official_issuer",
+          "published_at": "2026-10-26",
+          "excerpt": "Enphase will deploy the world's first 900 V GaN monolithic bidirectional switch devices, designed for Enphase solid-state transformer power modules"
+        },
+        {
+          "url": "https://semiconductor-today.com/news_items/2026/oct/infineon-261026.shtml",
+          "source_type": "third_party_report",
+          "published_at": "2026-10-26",
+          "excerpt": "Infineon to supply first 900V GaN monolithic bidirectional switches for Enphase's IQ Solid-State Transformer power modules"
+        }
+      ],
+      "note": "Infineon 900V CoolGaN 모놀리식 양방향 스위치(BDS)를 Enphase IQ SST 전력모듈에 공급 — 세계 최초 900V GaN BDS, 650V BDS 는 IQ9 마이크로인버터에서 양산 중",
+      "about": "component:sst",
+      "confidence": 0.825
+    },
+    {
+      "id": "i1031-002",
+      "from": "component:sst",
+      "to": "company:enph",
+      "relation": "offered_by",
+      "evidence_tier": "official_issuer",
+      "polarity": "positive",
+      "evidence": [
+        {
+          "url": "https://www.fool.com/earnings/call-transcripts/2026/10/28/enphase-enph-q3-2026-earnings-call-transcript/",
+          "source_type": "official_issuer",
+          "published_at": "2026-10-28",
+          "excerpt": "We remain on track for customer pilots in 2027, followed by initial commercial shipments in 2028 … By 2030, we believe IQ SST has the potential to become a $1 billion annual revenue business"
+        },
+        {
+          "url": "https://pv-magazine-usa.com/2026/04/29/enphase-announces-distributed-solid-state-transformer-for-ai-data-centers-targets-2028-for-volume-deliveries/",
+          "source_type": "third_party_report",
+          "published_at": "2026-04-29",
+          "excerpt": "Modular 1.25 MW supercluster of 342 hot-swappable power modules, scalable to 5 MW per skid … 98.5% peak efficiency … customer pilots 2027, volume shipments 2028"
+        }
+      ],
+      "note": "IQ SST: 1.25MW 슈퍼클러스터(342 핫스왑 모듈)·98.5% 효율·13.8kV AC→800VDC 실증(2026-10), 34.5kV 는 4Q26 예정. 파이프라인 50+, 하이퍼스케일러 1곳·AI 컴퓨팅 리더 1곳과 전용 설계 중. 고객 파일럿 2027 하반기·초도 상업 출하 2028 — 2026 매출 0 (minor), 2030 $1B 잠재",
+      "exposure": "minor",
+      "position": "entrant",
+      "confidence": 0.825
+    },
+    {
+      "id": "i1031-003",
+      "from": "company:lwlg",
+      "to": "company:foxconn",
+      "relation": "qualifying_with",
+      "evidence_tier": "official_issuer",
+      "polarity": "positive",
+      "evidence": [
+        {
+          "url": "https://www.stocktitan.net/news/LWLG/lightwave-logic-inc-electro-optic-polymer-technology-integrated-into-p1cj9mceicfn.html",
+          "source_type": "official_issuer",
+          "published_at": "2026-10-29",
+          "excerpt": "optical transceiver built by Hon Hai using Lightwave Logic's electro-optic polymer technology … Silicon-Organic Hybrid (SOH) optical engine … targets 200G and 400G per lane"
+        }
+      ],
+      "note": "Foxconn Siphcomm 사업부가 LWLG 전기광학 폴리머(실리콘-유기 하이브리드 변조기)를 넣은 광트랜시버를 제작해 Hon Hai Tech Day 2026 에서 시연 — 200G·400G/lane 목표, 상용 설계 수주·발주는 아직 없음(시연·평가 단계)",
+      "about": "tech:eo_polymer_modulator",
+      "confidence": 0.8
+    },
+    {
+      "id": "i1031-004",
+      "from": "tech:3d_dram",
+      "to": "equipment:si_sige_epi_3d_dram",
+      "relation": "requires",
+      "evidence_tier": "third_party_report",
+      "polarity": "positive",
+      "evidence": [
+        {
+          "url": "https://www.thelec.kr/news/articleView.html?idxno=64606",
+          "source_type": "third_party_report",
+          "published_at": "2026-10-30",
+          "excerpt": "3D 수직적층 메모리용 Si/SiGe 증착과 웨이퍼의 계측/검사가 융합된 UPH 5매/hr 이상의 고생산성 에피택시 장비개발"
+        }
+      ],
+      "note": "3D 수직적층 DRAM 은 Si/SiGe 를 수십 층 반복 증착하는 에피 장비가 필요 — 증착과 두께·결함 계측을 한 장비에 융합",
+      "confidence": 0.6
+    },
+    {
+      "id": "i1031-005",
+      "from": "company:viatron",
+      "to": "equipment:si_sige_epi_3d_dram",
+      "relation": "develops",
+      "evidence_tier": "third_party_report",
+      "polarity": "positive",
+      "evidence": [
+        {
+          "url": "https://www.thelec.kr/news/articleView.html?idxno=64606",
+          "source_type": "third_party_report",
+          "published_at": "2026-10-30",
+          "excerpt": "비아트론이 SK하이닉스와 차세대 메모리 기술인 3차원(3D) D램 적층 장비를 개발한다 … 연구 기간은 올해부터 2029년까지다. 목표 생산 능력은 연간 20대 이상"
+        }
+      ],
+      "note": "산업통상부 소부장 으뜸기업 과제(120억원, 2026~2029) — 연간 20대 이상 생산 목표. 아직 제품·매출 없음(개발 단계)",
+      "confidence": 0.6
+    },
+    {
+      "id": "i1031-006",
+      "from": "company:viatron",
+      "to": "company:skhynix",
+      "relation": "qualifying_with",
+      "evidence_tier": "third_party_report",
+      "polarity": "positive",
+      "evidence": [
+        {
+          "url": "https://www.thelec.kr/news/articleView.html?idxno=64606",
+          "source_type": "third_party_report",
+          "published_at": "2026-10-30",
+          "excerpt": "비아트론은 이 과제에서 SK하이닉스와 협력해 실리콘(Si)과 실리콘게르마늄(SiGe) 적층 장비를 개발한다"
+        }
+      ],
+      "note": "SK하이닉스와 3D DRAM 용 Si/SiGe 적층 장비 공동개발(국책과제) — 납품 확정 아님, 공동개발 단계",
+      "about": "tech:3d_dram",
       "confidence": 0.6
     }
   ],
