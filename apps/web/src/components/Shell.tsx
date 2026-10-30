@@ -8,7 +8,7 @@ import { Icon } from "@/components/Icon";
 
 // 제품 (ADR-0023): 탭 둘 — 리서치(기업 리포트 피드) · 이슈(최근 이슈와 공급망에서의 의미). 나머지는 '더 보기'에 수납한다.
 const NAV = [
-  { href:"/", label:"리서치", icon:"lightbulb" },
+  { href:"/", label:"투자 아이디어", icon:"lightbulb" },
   { href:"/issues", label:"이슈", icon:"rss" },
 ] as const;
 const MORE_ROUTES = [
@@ -79,7 +79,7 @@ export function Shell({ children }: { children: React.ReactNode }) {
   const section = path === "/" ? "/" : [...NAV, ...MORE_ROUTES].find(item=>item.href!=="/" && path.startsWith(item.href.split("?")[0]))?.href.split("?")[0] ?? path;
   const currentLabel = LABELS[section] ?? (path.startsWith("/ideas")?"리서치 리포트":path.startsWith("/issues/")?"이슈":path.startsWith("/ecosystems/")?"기술 생태계":path.startsWith("/feed/")?"이슈 아카이브":"리서치");
   const moreOpen = MORE_ROUTES.some(i=>path.startsWith(i.href.split("?")[0]));
-  const researchPage = path === "/" || path.startsWith("/ideas") || path.startsWith("/companies/");  // 리서치 피드 · 리포트 · 기업 위키
+  const researchPage = path === "/" || path.startsWith("/opportunities");  // 투자 아이디어 (ADR-0028)
   const legacyOpen = !researchPage && ["/review","/history","/data","/candidates","/briefs","/signals","/companies","/filings","/finra","/fda","/trials","/awards","/entities","/insider","/ecosystems","/triggers"].some(p=>path.startsWith(p));
   return (
     <div className="workspace">

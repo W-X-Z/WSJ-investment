@@ -1,5 +1,5 @@
-# paths → discover (2026-10-31, ADR-0027)
+# paths → interpret.md (2026-10-31, ADR-0028)
 
-이 작업은 **discover** 로 바뀌었다. `docs/agents/daily/discover.md` 를 처음부터 끝까지 읽고 그 절차를 따른다 (실행 기록의 작업명은 `discover`).
-예약작업 프롬프트가 아직 옛 paths 것이면(경계가 `ideas.put_issue_hypotheses` 와 `ops.put_agent_run` 뿐, 저장소 수정 금지) discover.md 의 **A(이슈 경로)와 E(기록)만** 하고,
-note 와 counts.skipped 에 "프롬프트 미교체 — B·C·D 건너뜀 (docs/agents/daily/PROMPTS.md)" 을 적는다.
+이 작업은 바뀌었다: `docs/agents/daily/interpret.md` (06:17 해석) 를 처음부터 끝까지 읽고 그 절차를 따른다.
+예약작업 프롬프트가 아직 옛 것이면(경계에 `ideas.put_opportunities` 가 없으면) 아무것도 쓰지 말고 `ops.put_agent_run` 에 status `skipped`, note "프롬프트 교체 필요 — docs/agents/daily/PROMPTS.md" 를 남기고,
+알림 한 줄 "예약작업 프롬프트 교체 필요 (ADR-0028)" 을 보낸 뒤 끝낸다. 옛 절차는 `docs/agents/legacy/adr0027/paths.md` (쓰지 않는다).
