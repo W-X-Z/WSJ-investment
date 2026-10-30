@@ -1,0 +1,26 @@
+{
+  "prefix": "c1030",
+  "nodes": [
+    {"id": "company:mirae_corp", "kind": "company", "label": "Mirae Corp 미래산업 (KRX 025560, 비SEC)", "ecosystem": "hbm", "ticker": "025560", "exchange": "KRX", "size_band": "micro"},
+    {"id": "company:haesung_ds", "kind": "company", "label": "Haesung DS 해성디에스 (KRX 195870, 비SEC)", "ecosystem": "hbm", "ticker": "195870", "exchange": "KRX", "size_band": "small"},
+    {"id": "company:enph", "kind": "company", "label": "Enphase Energy (ENPH)", "ecosystem": "power", "ticker": "ENPH", "exchange": "Nasdaq", "size_band": "mid"}
+  ],
+  "edges": [
+    {"from": "equipment:hbm_prober_handler", "relation": "offered_by", "to": "company:mirae_corp", "tier": "third_party_report",
+     "note": "메모리 테스트 핸들러 제조사. SK하이닉스와 23.6억원 반도체 검사장비 수주(전년 매출의 10.8%). 2024년 이후 테스트 핸들러 특허 2→7건(techdocs).",
+     "evidence": [{"url": "https://view.asiae.co.kr/article/2024112815402492055", "source_type": "third_party_report", "published_at": "2024-11-28",
+                   "excerpt": "미래산업(대표이사 이창재)은 SK하이닉스와 23억6000만원 규모 반도체 검사장비 관련 수주계약을 체결했다고 28일 밝혔다."}]},
+    {"from": "component:package_substrate", "relation": "offered_by", "to": "company:haesung_ds", "tier": "third_party_report",
+     "note": "메모리용 DDR4·DDR5 패키지 기판과 차량용 리드프레임. DDR5 패키지 기판 신제품 시양산.",
+     "evidence": [{"url": "https://www.smarttoday.co.kr/ko-kr/articles/62821", "source_type": "third_party_report", "published_at": "2024-10-28",
+                   "excerpt": "패키지기판 DDR5 신제품 시양산"}]},
+    {"from": "company:enph", "relation": "develops", "to": "component:sst", "tier": "third_party_report",
+     "note": "IQ 고체변압기(중전압 AC → 800V DC) 개발 중. 고객 파일럿 2027, 양산 출하 2028. 인피니언 900V GaN 양방향 스위치 채택(2026-10).",
+     "evidence": [{"url": "https://electronicdesign.com/technologies/power/article/55393675/electronic-design-enphase-energy-announces-scalable-iq-solid-state-transformer-architecture-for-ai-data-centers",
+                   "source_type": "third_party_report", "published_at": "2026-07-27",
+                   "excerpt": "Enphase Energy has begun development of the IQ Solid-State Transformer (IQ SST)"}]}
+  ],
+  "aliases": {"company:mirae_corp": ["미래산업", "MIRAE CORP", "Mirae Corporation"], "company:haesung_ds": ["해성디에스", "Haesung DS", "HAESUNG DS"],
+              "company:enph": ["Enphase", "엔페이즈"]},
+  "native": {"company:mirae_corp": "미래산업", "company:haesung_ds": "해성디에스", "company:enph": "엔페이즈"}
+}

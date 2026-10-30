@@ -221,7 +221,7 @@ LLM_SYSTEM = """너는 AI 데이터센터 공급망 리서치의 단서 분류�
 출력은 JSON 하나: {"items": [{"i": 0, "keep": true, "companies": [{"name": "…", "ticker": "…", "exchange": "…"}], "note": "…"}, {"i": 1, "keep": false}]}"""
 
 
-def llm_screen(clues: list[Clue], api_key: str, model: str = "haiku", batch: int = 50, workers: int = 4) -> dict[str, Any]:
+def llm_screen(clues: list[Clue], api_key: str, model: str = "haiku", batch: int = 50, workers: int = 4, resolve: Any = None) -> dict[str, Any]:
     """Haiku 로 주제 밖 글을 거른다. 묶음(batch)마다 한 번 부르고, 묶음들은 workers 개씩 동시에 보낸다."""
     from concurrent.futures import ThreadPoolExecutor
 
@@ -246,12 +246,39 @@ def llm_screen(clues: list[Clue], api_key: str, model: str = "haiku", batch: int
         results = list(pool.map(screen, parts))
     for part, out, comps in results:
         comps_all += comps
-        apply_screen(part, out)
+        apply_screen(part, out, resolve)
     return sum_usage(comps_all) if comps_all else {}
 
 
-def apply_screen(part: list[Clue], out: dict[str, Any] | None) -> None:
-    """LLM 응답을 단서에 옮긴다. 응답이 없거나 빠진 글은 규칙(rule_keep)으로."""
+EXCHANGE_GROUP = {"NYSE": "US", "NASDAQ": "US", "NYSE AMERICAN": "US", "KRX": "KR", "KOSPI": "KR", "KOSDAQ": "KR",
+                  "TWSE": "TW", "TPEX": "TW", "TSE": "JP", "TYO": "JP"}
+
+
+def company_resolver(graph: dict[str, Any]):
+    """LLM 이 적은 기업(이름·티커·거래소) → 그래프 기업 id. 같은 시장의 티커가 먼저, 없으면 이름(그래프 어휘).
+    그래프 기업으로 이어져야 recall 의 '지난 단서'·해석 작업이 그 회사의 단서를 모아 본다."""
+    from wsj.ecosystems.issues import build_lexicon
+
+    by_ticker: dict[tuple[str, str], str] = {}
+    for n in graph["nodes"]:
+        lst = n.get("listing") or {}
+        grp = EXCHANGE_GROUP.get(str(lst.get("exchange") or "").upper())
+        if n.get("kind") == "company" and grp and lst.get("ticker"):
+            by_ticker[(grp, str(lst["ticker"]).upper().lstrip("0") or "0")] = n["id"]
+    _, comp_pats = build_lexicon(graph)
+
+    def resolve(name: str | None, ticker: str | None, exchange: str | None) -> str | None:
+        grp = EXCHANGE_GROUP.get(str(exchange or "").upper())
+        t = str(ticker or "").upper().split(":")[-1].lstrip("0")
+        if grp and t and (grp, t) in by_ticker:
+            return by_ticker[(grp, t)]
+        return next((cid for pat, cid in comp_pats if name and pat.search(name)), None)
+
+    return resolve
+
+
+def apply_screen(part: list[Clue], out: dict[str, Any] | None, resolve: Any = None) -> None:
+    """LLM 응답을 단서에 옮긴다. 응답이 없거나 빠진 글은 규칙(rule_keep)으로. resolve 가 있으면 LLM 이 적은 기업을 그래프 id 로 잇는다."""
     by_i = {int(x.get("i", -1)): x for x in (out or {}).get("items") or [] if isinstance(x, dict)}
     for i, c in enumerate(part):
         x = by_i.get(i)
@@ -263,10 +290,16 @@ def apply_screen(part: list[Clue], out: dict[str, Any] | None) -> None:
             continue
         c.note = (x.get("note") or "")[:120] or None
         have = {(y.get("name") or "").lower() for y in c.companies}
+        ids = {y.get("company") for y in c.companies if y.get("company")}
         for y in x.get("companies") or []:
             if isinstance(y, dict) and y.get("name") and y["name"].lower() not in have:
-                c.companies.append({"company": None, "name": y["name"], "ticker": y.get("ticker"), "exchange": y.get("exchange")})
+                cid = resolve(y["name"], y.get("ticker"), y.get("exchange")) if resolve else None
+                if cid and cid in ids:
+                    continue                                          # 본문 태깅으로 이미 붙은 같은 회사
+                c.companies.append({"company": cid, "name": y["name"], "ticker": y.get("ticker"), "exchange": y.get("exchange")})
                 have.add(y["name"].lower())
+                if cid:
+                    ids.add(cid)
 
 
 def rule_keep(c: Clue) -> bool:
@@ -390,7 +423,7 @@ def run(http: Any, store: Any | None, days: int, use_llm: bool, model: str, api_
     tag(new, graph)
     todo = [c for c in new if c.relevant]
     if use_llm and api_key and todo:
-        stats["llm_usage"] = llm_screen(todo, api_key, model)
+        stats["llm_usage"] = llm_screen(todo, api_key, model, resolve=company_resolver(graph))
     else:
         for c in todo:
             c.relevant = rule_keep(c)
