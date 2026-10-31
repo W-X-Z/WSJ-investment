@@ -34,3 +34,4 @@
 | [0026](0026-novelty-first-theses.md) | 생성과 보정의 분리 — 새로움에서 출발하는 테제 (약한 신호·잔차) | accepted | 2026-10-30 |
 | [0027](0027-daily-thesis-chain.md) | 매일 테제 사슬 — 큰 테제를 작은 테제(micro)로 쪼개고 소형주까지 매일 발굴 | accepted | 2026-10-30 |
 | [0028](0028-clues-interpretation-opportunities.md) | 작은 단서 → 해석 → 투자 아이디어(★1~5) — 판정·채점·목표주가를 걷어낸다 (0019·0020·0022·0023·0024·0027 대체) | accepted | 2026-10-30 |
+| [0029](0029-purpose-and-direction-over-procedure.md) | 절차가 아니라 목적과 방향 — 방법은 AI 가 그때그때 판단한다 (지침을 목적·방향·꼭 지킬 것·연결 방법으로) | accepted | 2026-10-31 |
