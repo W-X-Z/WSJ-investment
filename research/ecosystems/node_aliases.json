@@ -1356,6 +1356,24 @@
       "data center capex",
       "CSP 설비투자",
       "AI 설비투자"
+    ],
+    "company:ttm": [
+      "TTM Technologies",
+      "TTM"
+    ],
+    "company:shengyi_tech": [
+      "生益科技",
+      "Shengyi Technology",
+      "SYTECH"
+    ],
+    "company:taiflex": [
+      "台虹",
+      "Taiflex"
+    ],
+    "material:ptfe_ccl": [
+      "PTFE CCL",
+      "PTFE 적층판",
+      "鐵氟龍"
     ]
   }
 }
