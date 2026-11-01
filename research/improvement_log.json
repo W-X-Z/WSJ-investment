@@ -138,5 +138,33 @@
     "title": "메인 문턱 · 기업 위키 · 단계별 가중치 그래프 · 목표주가 의무 (ADR-0023 개정 2)",
     "detail": "홈에는 ★2 이상이거나 여력 +30% 이상인 리포트만, 나머지는 /ideas '검토 중'. 리포트를 고쳐 쓴 뒤 산출하지 않은 목표주가는 '재산출 대기'로 숨긴다. 이슈 상세를 머리 → 영향 경로 → 리포트 → 관련 기업으로 나누고, 관련 기업은 기업 위키(/companies/[slug]: 공급·개발, 푸는 병목, 동종, 고객, 시세·재무, 닿는 변화, 리포트, 소식, 이슈)로 보낸다. 그래프는 이웃 전부가 아니라 impact-index 신뢰도 상위 8 경로 + 가설 경로만, 열은 종류가 아니라 단계(변화 → 1차 → 2차 …). 색 띠·추세 태그 제거. 엔진은 가격·주식수가 있는데 valuation 이 빠진 행이 있으면 exit 2 (06:41 실행이 목표주가를 안 쓴 문제의 재발 방지).",
     "by": "claude-session"
+  },
+  {
+    "date": "2026-11-01",
+    "kind": "ontology",
+    "by": "claude-weekly",
+    "title": "AI 데이터센터 설비투자를 수요 동인 노드로",
+    "detail": "그래프에 AI 사슬 맨 위의 돈(9개 CSP 설비투자)이 없어 'AI 투자와 그 자금' 매크로가 병목과 이어지지 않았다. demand_driver:ai_dc_capex 를 더하고 광섬유 부족·광섬유 밀도(TrendForce 10-19 원문)와 CoWoS·HBM 비트·캠퍼스 전력(추론 등급)에 잇고, 관측치 obs:csp9_capex_2026e/2027e_usd_bn(957·1,500+ 십억 달러, TrendForce 10-14)과 obs:fiber_inventory_months(1개월)를 넣었다. 별칭은 'capex' 같은 넓은 말을 빼고 CSP·하이퍼스케일러·데이터센터 capex 로 좁혔다."
+  },
+  {
+    "date": "2026-11-01",
+    "kind": "data",
+    "by": "claude-weekly",
+    "title": "상장 정보 오류 2건 — Parade 는 TPEx, O-Net 은 2020년 상장폐지",
+    "detail": "가격·월매출이 비어 있던 원인이 그래프의 상장 정보였다. Parade Technologies(4966)는 TWSE 가 아니라 TPEx 上櫃(2011-09-13, histock) — 거래소를 고쳐 가격·월매출 수집이 TPEx 로 간다(tw:4966 빈 지표). O-Net Technologies(HKEX 0877)는 2020-10-05 마지막 거래일로 사유화(HKSCC 회람 2020-09-29) — private 로 바꿨다. 남은 1건: Sugon DataEnergy(BJSE 920808) 가격 출처 없음."
+  },
+  {
+    "date": "2026-11-01",
+    "kind": "ops",
+    "by": "claude-weekly",
+    "title": "점검 도구의 거짓 경보 2건 — 코드 PR(사람 승인)로",
+    "detail": "health 의 '수집기 ideas 2일 넘게 실패'는 ADR-0028 이후 아침 사슬이 agent:collect·interpret·enrich·report 로 기록하는데 옛 ideas 수집기를 매일 수집기로 보고 있어서다. scan 은 시가총액(v_company_facts)을 합치지 않아 모든 후보가 '시가총액 미확인'으로 나왔다(아이디어 엔진은 merge_facts 로 합친다). 둘 다 pipeline 코드라 별도 PR."
+  },
+  {
+    "date": "2026-11-01",
+    "kind": "judgment",
+    "by": "claude-weekly",
+    "title": "보류 — 이번 주 고치지 않은 것",
+    "detail": "Adeia–TCL 라이선스 갱신 이슈 노드 없음: 보류(목적과 무관 — 기존 라이선시 갱신). 미 재무부 대외투자 규정안: 보류(미국→중국 투자 제한, 소·중형 공급사 기회와 거리가 멂). 광섬유·FormFactor 이슈 노드 없음: 별칭은 이미 있고 10-28 안전망 이전 이슈라 새 이슈부터 태깅된다. 늦은 관측치(Veeco RPO·InP 수주, AAOI·MACOM·Coherent): 3분기 실적 발표 전 — Veeco 11-04 발표 예정, 그 뒤 갱신. ontology_sync(core.entities 없음)·facts(ref 스키마 비노출, 10-29 이후 성공)는 DB 설정 문제라 손대지 않았다."
   }
 ]

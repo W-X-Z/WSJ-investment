@@ -1348,6 +1348,14 @@
     "company:viatron": [
       "비아트론",
       "Viatron"
+    ],
+    "demand_driver:ai_dc_capex": [
+      "CSP CapEx",
+      "hyperscaler capex",
+      "cloud capex",
+      "data center capex",
+      "CSP 설비투자",
+      "AI 설비투자"
     ]
   }
 }
