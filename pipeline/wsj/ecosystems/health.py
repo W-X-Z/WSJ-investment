@@ -15,7 +15,9 @@ from datetime import UTC, date, datetime, timedelta
 from pathlib import Path
 from typing import Any
 
-DAILY = {"issues", "company_feed", "prices", "ideas"}           # 매일 돌아야 하는 수집기
+DAILY = {"issues", "company_feed", "prices",                   # 매일 돌아야 하는 수집기
+         "agent:collect", "agent:interpret", "agent:enrich", "agent:report"}  # 아침 사슬 (ADR-0028 — 옛 ideas 엔진은 더 돌지 않는다)
+AGENT_GRACE_DAYS = 3  # 아침 사슬은 일요일에 쉰다 — 토요일 실행이 월요일 점검에서 경보가 되지 않게
 STALE_DAYS = {"daily": 5, "weekly": 14, "monthly": 75, "irregular": 120}  # 월간은 기준월 1일 + 발표(~40일) + 여유
 
 
@@ -42,12 +44,14 @@ def report(graph: dict[str, Any], inputs: dict[str, list[dict[str, Any]]], now: 
     collectors = {}
     for name, rs in by.items():
         rs.sort(key=lambda r: str(r.get("started_at")), reverse=True)
-        ok = [r for r in rs if r.get("status") == "succeeded"]
+        agent = name.startswith("agent:")
+        ok = [r for r in rs if r.get("status") == "succeeded" or (agent and r.get("status") == "skipped")]  # 작업의 skipped 는 '돌았다'
         fails = [r for r in rs if r.get("status") == "failed" and str(r.get("started_at"))[:10] >= (today - timedelta(days=7)).isoformat()]
         last_ok = str(ok[0]["started_at"])[:10] if ok else None
         collectors[name] = {"last_ok": last_ok, "fails_7d": len(fails), "last_error": (fails[0].get("error") or "")[:160] if fails else None}
-        if name in DAILY and (not last_ok or _d(last_ok) < today - timedelta(days=2)):
-            problems.append({"area": "data", "severity": 3, "what": f"수집기 {name} 이 2일 넘게 성공하지 못함", "detail": collectors[name]})
+        grace = AGENT_GRACE_DAYS if agent else 2
+        if name in DAILY and (not last_ok or _d(last_ok) < today - timedelta(days=grace)):
+            problems.append({"area": "data", "severity": 3, "what": f"수집기 {name} 이 {grace}일 넘게 성공하지 못함", "detail": collectors[name]})
         elif fails and (not last_ok or str(fails[0]["started_at"]) > str(ok[0]["started_at"])):
             problems.append({"area": "data", "severity": 2, "what": f"수집기 {name} 최근 실행 실패", "detail": collectors[name]})
     for name in DAILY - set(by):
