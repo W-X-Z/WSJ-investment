@@ -238,12 +238,14 @@ def main(argv: list[str] | None = None) -> int:
     graph = load_graph()
     if args.snapshot:
         rd = lambda n: json.loads((args.snapshot / f"{n}.json").read_text(encoding="utf-8")) if (args.snapshot / f"{n}.json").exists() else []  # noqa: E731
-        inputs = {k: rd(k) for k in ("issues", "indicators", "existing", "events", "prices")}
+        inputs = {k: rd(k) for k in ("issues", "indicators", "existing", "events", "prices", "facts")}
     else:
         from wsj.ecosystems.ideas import load_public_inputs, public_credentials
 
         inputs = load_public_inputs(*public_credentials())
-    prices = {p["ticker"]: p for p in inputs.get("prices") or []}
+    from wsj.ecosystems.ideas import merge_facts
+
+    prices = merge_facts(inputs.get("prices"), inputs.get("facts"))  # 시가총액(v_company_facts)을 합친다 — 없으면 모든 후보가 '시가총액 미확인'
     res = leads(graph, inputs["issues"], inputs["indicators"], inputs["events"], inputs["existing"], prices, datetime.now(UTC))
     text = json.dumps(res, ensure_ascii=False, indent=1, default=str)
     if args.out:
