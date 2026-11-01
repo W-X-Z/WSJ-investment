@@ -2899,18 +2899,18 @@
     {
       "id": "company:o_net",
       "kind": "company",
-      "label": "O-Net Technologies (HKEX 0877, 비SEC)",
+      "label": "O-Net Technologies (비상장 — 2020-10 HKEX 0877 상장폐지·사유화)",
       "ecosystem": "optics",
       "role": "both",
       "listing": {
-        "ticker": "0877",
-        "exchange": "HKEX",
+        "ticker": null,
+        "exchange": null,
         "cik": null,
-        "filer_type": "non_sec_listed"
+        "filer_type": "private"
       },
-      "size_band": "small",
+      "size_band": "private",
       "in_universe": false,
-      "size_note": "추정치 — 최근 시가총액 수치를 직접 확인하지 못함"
+      "size_note": "2020-10-05 HKEX 마지막 거래일 (사유화 Scheme of Arrangement, HKSCC 회람 2020-09-29)"
     },
     {
       "id": "company:enablence",
@@ -6668,12 +6668,12 @@
     {
       "id": "company:parade",
       "kind": "company",
-      "label": "Parade Technologies (TWSE 4966, 비SEC)",
+      "label": "Parade Technologies 譜瑞-KY (TPEx 4966, 비SEC)",
       "ecosystem": "optics",
       "role": "supplier",
       "listing": {
         "ticker": "4966",
-        "exchange": "TWSE",
+        "exchange": "TPEx",
         "cik": null,
         "filer_type": "non_sec_listed"
       },
@@ -10490,6 +10490,12 @@
       "kind": "equipment",
       "label": "3D DRAM용 Si/SiGe 다층 에피택시 장비 (계측 융합, UPH 5매/hr 이상)",
       "ecosystem": "hbm"
+    },
+    {
+      "id": "demand_driver:ai_dc_capex",
+      "kind": "demand_driver",
+      "label": "AI 데이터센터 설비투자 (주요 9개 CSP, 2026 $957B → 2027 $1.5T+ 전망)",
+      "ecosystem": "power"
     }
   ],
   "edges": [
@@ -41572,6 +41578,96 @@
       "note": "SK하이닉스와 3D DRAM 용 Si/SiGe 적층 장비 공동개발(국책과제) — 납품 확정 아님, 공동개발 단계",
       "about": "tech:3d_dram",
       "confidence": 0.6
+    },
+    {
+      "id": "w1101-001",
+      "from": "demand_driver:ai_dc_capex",
+      "to": "bottleneck:fiber_supply",
+      "relation": "creates_bottleneck",
+      "evidence_tier": "third_party_report",
+      "polarity": "positive",
+      "evidence": [
+        {
+          "url": "https://www.trendforce.com/presscenter/news/20261019-13275.html",
+          "source_type": "third_party_report",
+          "published_at": "2026-10-19",
+          "excerpt": "substantial demand from AI data center-related applications has tightened global optical fiber supply since late 2025"
+        }
+      ],
+      "note": "AI 데이터센터 수요가 2025년 말부터 광섬유 공급을 조였다 — 2026 부족 1.8억 fkm, 가동률 92%, 재고 1개월, 2028년까지 부족 지속 전망 (TrendForce)",
+      "confidence": 0.6
+    },
+    {
+      "id": "w1101-002",
+      "from": "demand_driver:ai_dc_capex",
+      "to": "req:fiber_density",
+      "relation": "drives_requirement",
+      "evidence_tier": "third_party_report",
+      "polarity": "positive",
+      "evidence": [
+        {
+          "url": "https://www.trendforce.com/presscenter/news/20261019-13275.html",
+          "source_type": "third_party_report",
+          "published_at": "2026-10-19",
+          "excerpt": "driven primarily by data center construction, which accounts for roughly 18–20% of the total. That share is projected to rise to 30–35% in 2027."
+        }
+      ],
+      "note": "광섬유 수요 중 데이터센터 비중 2026 18~20% → 2027 30~35% (TrendForce)",
+      "confidence": 0.6
+    },
+    {
+      "id": "w1101-003",
+      "from": "demand_driver:ai_dc_capex",
+      "to": "bottleneck:cowos_capacity",
+      "relation": "creates_bottleneck",
+      "evidence_tier": "technical_inference",
+      "polarity": "positive",
+      "evidence": [
+        {
+          "url": "https://www.trendforce.com/presscenter/news/20261014-13269.html",
+          "source_type": "third_party_report",
+          "published_at": "2026-10-14",
+          "excerpt": "TrendForce now forecasts AI server shipments to grow 32.2% YoY in 2026 given the strong overall demand outlook."
+        }
+      ],
+      "note": "AI 서버 출하 2026 +32.2%, 2027 +36% 전망 → 가속기 패키징 수요 (추론 — 원문은 서버 출하·매출만 말한다)",
+      "confidence": 0.4
+    },
+    {
+      "id": "w1101-004",
+      "from": "demand_driver:ai_dc_capex",
+      "to": "bottleneck:hbm_bit_supply",
+      "relation": "creates_bottleneck",
+      "evidence_tier": "technical_inference",
+      "polarity": "positive",
+      "evidence": [
+        {
+          "url": "https://www.trendforce.com/presscenter/news/20261014-13269.html",
+          "source_type": "third_party_report",
+          "published_at": "2026-10-14",
+          "excerpt": "AI server revenue is projected to surge by more than 90% YoY to nearly $920 billion"
+        }
+      ],
+      "note": "AI 서버 매출 2027 +90% 이상(출하·가격 동반) → 가속기당 HBM 수요 (추론)",
+      "confidence": 0.4
+    },
+    {
+      "id": "w1101-005",
+      "from": "demand_driver:ai_dc_capex",
+      "to": "req:gw_campus_power",
+      "relation": "drives_requirement",
+      "evidence_tier": "technical_inference",
+      "polarity": "positive",
+      "evidence": [
+        {
+          "url": "https://www.trendforce.com/presscenter/news/20261014-13269.html",
+          "source_type": "third_party_report",
+          "published_at": "2026-10-14",
+          "excerpt": "In 2027, this figure is expected to surpass $1.5 trillion, representing a further 60% YoY increase."
+        }
+      ],
+      "note": "9개 CSP 설비투자 2027 $1.5T 상회(+60%) → 캠퍼스 전력 인입 수요 (추론 — 원문은 설비투자 금액만)",
+      "confidence": 0.4
     }
   ],
   "events": [
