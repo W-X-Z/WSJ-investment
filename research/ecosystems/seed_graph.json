@@ -10496,6 +10496,63 @@
       "kind": "demand_driver",
       "label": "AI 데이터센터 설비투자 (주요 9개 CSP, 2026 $957B → 2027 $1.5T+ 전망)",
       "ecosystem": "power"
+    },
+    {
+      "id": "material:ptfe_ccl",
+      "kind": "material",
+      "label": "PTFE 계 저손실 동박적층판 (PTFE CCL — RF·안테나용에서 AI 서버 고속 스위치 보드·미드플레인 후보로)",
+      "ecosystem": "hbm"
+    },
+    {
+      "id": "product:nvidia_rubin_gpu",
+      "kind": "product",
+      "label": "NVIDIA Rubin GPU (HBM4 288GB, 2026-09 사양 갱신: 메모리 9.375Gbps/pin·NVLink 3.0TB/s)",
+      "ecosystem": "hbm"
+    },
+    {
+      "id": "company:ttm",
+      "kind": "company",
+      "label": "TTM Technologies (Nasdaq TTMI)",
+      "ecosystem": "hbm",
+      "role": "supplier",
+      "listing": {
+        "ticker": "TTMI",
+        "exchange": "Nasdaq",
+        "cik": null,
+        "filer_type": "non_sec_listed"
+      },
+      "size_band": "large",
+      "in_universe": false
+    },
+    {
+      "id": "company:shengyi_tech",
+      "kind": "company",
+      "label": "Shengyi Technology 生益科技 (SSE 600183, 비SEC)",
+      "ecosystem": "hbm",
+      "role": "supplier",
+      "listing": {
+        "ticker": "600183",
+        "exchange": "SSE",
+        "cik": null,
+        "filer_type": "non_sec_listed"
+      },
+      "size_band": "large",
+      "in_universe": false
+    },
+    {
+      "id": "company:taiflex",
+      "kind": "company",
+      "label": "Taiflex Scientific 台虹科技 (TWSE 8039, 비SEC)",
+      "ecosystem": "hbm",
+      "role": "supplier",
+      "listing": {
+        "ticker": "8039",
+        "exchange": "TWSE",
+        "cik": null,
+        "filer_type": "non_sec_listed"
+      },
+      "size_band": "small",
+      "in_universe": false
     }
   ],
   "edges": [
@@ -41668,6 +41725,212 @@
       ],
       "note": "9개 CSP 설비투자 2027 $1.5T 상회(+60%) → 캠퍼스 전력 인입 수요 (추론 — 원문은 설비투자 금액만)",
       "confidence": 0.4
+    },
+    {
+      "id": "i1102-001",
+      "from": "component:mlb_pcb",
+      "to": "material:ptfe_ccl",
+      "relation": "requires",
+      "evidence_tier": "third_party_report",
+      "polarity": "conditional",
+      "evidence": [
+        {
+          "url": "https://technews.tw/2026/10/31/nvidia-love-ptfe/",
+          "source_type": "third_party_report",
+          "published_at": "2026-10-31",
+          "excerpt": "輝達在 10 月初 OCP 高峰會上展示新款 NVLink 交換板，考慮採用 PTFE … Rubin Ultra 平台的高速交換板與下一代 midplane（正交背板）"
+        },
+        {
+          "url": "https://www.tokenpost.com/news/technology/32404",
+          "source_type": "third_party_report",
+          "published_at": "2026-10-15",
+          "excerpt": "NVLink PTFE Board: Flexium, Kinwong, SCC, SYTECH, Taiflex, TTM, VGT … should be read as companies shown with the board rather than evidence that each one has begun producing it"
+        }
+      ],
+      "note": "NVIDIA 가 2026-10 OCP 서밋에 'NVLink PTFE Board' 를 전시 — 200G/채널 한계에서 유전손실이 낮은 PTFE 를 Rubin Ultra 고속 스위치 보드·차세대 미드플레인(직교 백플레인) 후보로 검토. PTFE 는 표면장력이 낮아 접착·드릴·도금이 어려워 수십 층 단독 적층은 불가 → 기존 수지와 하이브리드 적층 유력. 반대 의견: 台光電 회장 '고급 CCL 부족 때문에 대안을 찾는 것, 주류 되기 어렵다'. 전시 명단 7곳(Flexium·Kinwong·SCC·SYTECH·Taiflex·TTM·VGT)은 공급 점유·양산 상태를 뜻하지 않음",
+      "confidence": 0.5
+    },
+    {
+      "id": "i1102-002",
+      "from": "material:ptfe_ccl",
+      "to": "company:shengyi_tech",
+      "relation": "offered_by",
+      "evidence_tier": "third_party_report",
+      "polarity": "positive",
+      "evidence": [
+        {
+          "url": "https://technews.tw/2026/10/31/nvidia-love-ptfe/",
+          "source_type": "third_party_report",
+          "published_at": "2026-10-31",
+          "excerpt": "生益科技 … 進度最快"
+        },
+        {
+          "url": "https://www.tokenpost.com/news/technology/32404",
+          "source_type": "third_party_report",
+          "published_at": "2026-10-15",
+          "excerpt": "NVLink PTFE Board (7 companies): Flexium, Kinwong, SCC, SYTECH, Taiflex, TTM, VGT"
+        }
+      ],
+      "note": "NVIDIA OCP 전시 명단의 CCL 사(SYTECH) — 보도는 '가장 앞서 있다'고 평가. 양산·점유 미확인",
+      "confidence": 0.625
+    },
+    {
+      "id": "i1102-003",
+      "from": "material:ptfe_ccl",
+      "to": "company:taiflex",
+      "relation": "offered_by",
+      "evidence_tier": "third_party_report",
+      "polarity": "positive",
+      "evidence": [
+        {
+          "url": "https://technews.tw/2026/10/31/nvidia-love-ptfe/",
+          "source_type": "third_party_report",
+          "published_at": "2026-10-31",
+          "excerpt": "台虹 … 台郡 … 不是主流 AI PCB 概念股"
+        },
+        {
+          "url": "https://www.tokenpost.com/news/technology/32404",
+          "source_type": "third_party_report",
+          "published_at": "2026-10-15",
+          "excerpt": "NVLink PTFE Board (7 companies): Flexium, Kinwong, SCC, SYTECH, Taiflex, TTM, VGT"
+        }
+      ],
+      "note": "NVIDIA OCP 전시 명단의 대만 소재사 — 台郡(Flexium)과 함께 대만 2곳. 보도는 'AI PCB 주류 종목이 아니다'. 양산·점유 미확인",
+      "confidence": 0.625
+    },
+    {
+      "id": "i1102-004",
+      "from": "material:ptfe_ccl",
+      "to": "company:rog",
+      "relation": "offered_by",
+      "evidence_tier": "vendor_claim",
+      "polarity": "positive",
+      "evidence": [
+        {
+          "url": "https://www.rogerscorp.com/advanced-electronics-solutions/rt-duroid-laminates",
+          "source_type": "vendor_claim",
+          "excerpt": "filled PTFE (random glass or ceramic) composite laminates … aerospace and defense … Antenna Systems"
+        },
+        {
+          "url": "https://www.marketbeat.com/instant-alerts/transcript-rogers-q3-earnings-call-highlights-2026-10-27/",
+          "source_type": "official_issuer",
+          "published_at": "2026-10-27",
+          "excerpt": "laminate circuit materials are being sampled for high-speed digital applications"
+        }
+      ],
+      "note": "RT/duroid — 유리·세라믹 충전 PTFE 적층판(Dk 2.2~10.2, 5880 손실 0.0009@10GHz), 항공우주·안테나용. 3Q26 콜에서 '고속 디지털용 적층재 샘플링 중'이라 했으나 고객·일정 없음, NVIDIA 전시 명단에도 없음. AI 서버 보드용 공급은 미확인",
+      "exposure": "minor",
+      "confidence": 0.575
+    },
+    {
+      "id": "i1102-005",
+      "from": "company:rog",
+      "to": "component:microchannel_coldplate",
+      "relation": "develops",
+      "evidence_tier": "official_issuer",
+      "polarity": "positive",
+      "evidence": [
+        {
+          "url": "https://www.marketbeat.com/instant-alerts/transcript-rogers-q3-earnings-call-highlights-2026-10-27/",
+          "source_type": "official_issuer",
+          "published_at": "2026-10-27",
+          "excerpt": "multiple generations of microchannel-cooler prototypes have been developed and tested with lead customers … signal-integrity and chip-cooling products aimed at AI data centers"
+        },
+        {
+          "url": "https://www.earningswhispers.com/transcript/ROG",
+          "source_type": "official_issuer",
+          "published_at": "2026-07-28",
+          "excerpt": "microchannel cooler technology for high power AI and data center applications … with multiple customers"
+        }
+      ],
+      "note": "curamik 마이크로채널 쿨러 — 여러 세대 시제품을 리드 고객과 시험(3Q26 콜), 2Q26 콜 'AI·데이터센터 고전력용, 복수 고객과 진행'. 고객명·매출 시점 없음. 2030 매출 $1.5B 목표 중 AI DC·배터리·EMI 합산 $450M (2026-09-30 투자자데이)",
+      "confidence": 0.825
+    },
+    {
+      "id": "i1102-006",
+      "from": "component:mlb_pcb",
+      "to": "company:ttm",
+      "relation": "offered_by",
+      "evidence_tier": "official_issuer",
+      "polarity": "positive",
+      "evidence": [
+        {
+          "url": "https://www.aol.com/articles/ttm-technologies-ttmi-q3-2026-170333000.html",
+          "source_type": "official_issuer",
+          "published_at": "2026-10-22",
+          "excerpt": "This end market experienced 115% year on year growth in the third quarter … 41% of Q3 sales … net sales forecast to be in the range of approximately $6.5 billion to $6.75 billion"
+        },
+        {
+          "url": "https://www.tokenpost.com/news/technology/32404",
+          "source_type": "third_party_report",
+          "published_at": "2026-10-15",
+          "excerpt": "NVLink PTFE Board (7 companies): Flexium, Kinwong, SCC, SYTECH, Taiflex, TTM, VGT"
+        }
+      ],
+      "note": "미국 PCB 사 — 3Q26 매출 $1.2B(+60% YoY), 데이터센터·네트워킹이 매출 41%·+115% YoY, N+M 제품이 그 중 약 30%. 2027 매출 가이던스 $6.5~6.75B. 캐파 투자 $1.3B+ 추가 $4억(4Q26 시작). CCL·T-glass 리드타임 12~24주로 늘어남. NVIDIA OCP 'NVLink PTFE Board' 전시 명단의 유일한 미국 보드사",
+      "exposure": "major",
+      "confidence": 0.825
+    },
+    {
+      "id": "i1102-007",
+      "from": "company:ttm",
+      "to": "company:nvda",
+      "relation": "qualifying_with",
+      "evidence_tier": "third_party_report",
+      "polarity": "positive",
+      "evidence": [
+        {
+          "url": "https://www.tokenpost.com/news/technology/32404",
+          "source_type": "third_party_report",
+          "published_at": "2026-10-15",
+          "excerpt": "the exhibits did not establish supply shares or production status"
+        },
+        {
+          "url": "https://stockanalysis.com/stocks/ttmi/statistics",
+          "source_type": "third_party_report",
+          "published_at": "2026-10-30",
+          "excerpt": "Market cap: $8.74 billion … Shares outstanding: 105.38 million"
+        }
+      ],
+      "note": "NVIDIA OCP 2026 전시 'NVLink PTFE Board' 옆에 이름이 오른 7곳 중 하나 — 전시는 공급 점유·양산을 뜻하지 않음(보도 자체의 단서). 시총 $8.7B 로 소·중형 범위 밖",
+      "about": "material:ptfe_ccl",
+      "confidence": 0.625
+    },
+    {
+      "id": "i1102-008",
+      "from": "product:nvidia_rubin_gpu",
+      "to": "component:hbm_stack",
+      "relation": "implements",
+      "evidence_tier": "third_party_report",
+      "polarity": "positive",
+      "evidence": [
+        {
+          "url": "https://www.servethehome.com/nvidia-updates-rubin-gpu-specs-as-first-production-hardware-arrives/",
+          "source_type": "third_party_report",
+          "published_at": "2026-10-31",
+          "excerpt": "GPU memory bandwidth 22 TB/s (10.75 Gbps/pin) → 19.2 TB/s (9.375 Gbps/pin) … NVLink 3.6 TB/s → 3.0 TB/s … HGX Rubin NVL8 HBM4 capacity 2.3 TB → 2.0 TB"
+        }
+      ],
+      "note": "HBM4 8스택 288GB 는 유지, 핀 속도 10.75→9.375Gbps(대역폭 22→19.2TB/s, −11%), NVLink 3.6→3.0TB/s(−17%), 스케일아웃 0.4→0.45TB/s. HGX NVL8 은 2.3→2.0TB 로 GPU 당 8스택 중 7스택만 활성. NVIDIA 설명 없음 — STH 추정은 메모리 속도·수율. 2026-09 사양 갱신(IT Home 발견), 생산 하드웨어 출하 시작",
+      "confidence": 0.6
+    },
+    {
+      "id": "i1102-009",
+      "from": "product:nvidia_rubin_gpu",
+      "to": "company:nvda",
+      "relation": "offered_by",
+      "evidence_tier": "third_party_report",
+      "polarity": "positive",
+      "evidence": [
+        {
+          "url": "https://www.servethehome.com/nvidia-updates-rubin-gpu-specs-as-first-production-hardware-arrives/",
+          "source_type": "third_party_report",
+          "published_at": "2026-10-31",
+          "excerpt": "As production hardware starts shipping, NVIDIA has updated some of the specifications for its Rubin GPU platforms"
+        }
+      ],
+      "note": "Vera Rubin NVL72·HGX Rubin NVL8·DGX 등으로 출하 시작(2026-10 말)",
+      "confidence": 0.6
     }
   ],
   "events": [
