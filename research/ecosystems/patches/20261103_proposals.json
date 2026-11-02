@@ -1,0 +1,390 @@
+{
+ "prefix": "p1103",
+ "nodes": [
+  {
+   "id": "company:sandisk",
+   "kind": "company",
+   "label": "Sandisk (Nasdaq SNDK)",
+   "names": [
+    "Sandisk",
+    "SanDisk",
+    "샌디스크"
+   ],
+   "status": "candidate",
+   "ticker": "SNDK",
+   "exchange": "Nasdaq",
+   "ecosystem": "hbm",
+   "size_band": "large",
+   "first_seen": "2026-11-02",
+   "first_evidence": {
+    "url": "https://www.inews24.com/view/2020654",
+    "date": "2026-10-29",
+    "layer": "press"
+   }
+  },
+  {
+   "id": "company:twse_1503",
+   "kind": "company",
+   "label": "士電 Shihlin Electric (TWSE 1503)",
+   "names": [
+    "士電",
+    "士林電機",
+    "Shihlin Electric"
+   ],
+   "status": "candidate",
+   "ticker": "1503",
+   "exchange": "TWSE",
+   "ecosystem": "power",
+   "size_band": "unknown",
+   "first_seen": "2026-11-02",
+   "first_evidence": {
+    "url": "https://technews.tw/2026/11/02/north-america-ai-data-center-orders-up/",
+    "date": "2026-11-02",
+    "layer": "press"
+   }
+  },
+  {
+   "id": "company:kioxia",
+   "kind": "company",
+   "label": "Kioxia Holdings (TSE 285A)",
+   "names": [
+    "Kioxia Holdings",
+    "키옥시아",
+    "Kioxia"
+   ],
+   "status": "candidate",
+   "ticker": "285A",
+   "exchange": "TSE",
+   "ecosystem": "hbm",
+   "size_band": "large",
+   "first_seen": "2026-11-02",
+   "first_evidence": {
+    "url": "https://www.eenewseurope.com/en/kioxia-brings-e1-l-qlc-ssds-to-hyperscale-data-centres/",
+    "date": "2026-10-29",
+    "layer": "press"
+   }
+  },
+  {
+   "id": "company:auo",
+   "kind": "company",
+   "label": "AUO 友達 (TWSE 2409)",
+   "names": [
+    "AUO",
+    "友達"
+   ],
+   "status": "candidate",
+   "ticker": "2409",
+   "exchange": "TWSE",
+   "ecosystem": "hbm",
+   "size_band": "unknown",
+   "first_seen": "2026-11-02",
+   "first_evidence": {
+    "url": "https://www.digitimes.com/news/a20261029PD237/auo-tsmc-plant-infrastructure-development.html",
+    "date": "2026-10-29",
+    "layer": "press"
+   }
+  },
+  {
+   "id": "company:krx_373220",
+   "kind": "company",
+   "label": "LG에너지솔루션 (KRX 373220)",
+   "names": [
+    "LG에너지솔루션",
+    "LG Energy Solution"
+   ],
+   "status": "candidate",
+   "ticker": "373220",
+   "exchange": "KRX",
+   "ecosystem": "power",
+   "size_band": "large",
+   "first_seen": "2026-11-02",
+   "first_evidence": {
+    "url": "https://www.thelec.kr/news/articleView.html?idxno=64627",
+    "date": "2026-10-30",
+    "layer": "press"
+   }
+  },
+  {
+   "id": "company:qualcomm",
+   "kind": "company",
+   "label": "Qualcomm (Nasdaq QCOM)",
+   "names": [
+    "Qualcomm",
+    "퀄컴"
+   ],
+   "status": "candidate",
+   "ticker": "QCOM",
+   "exchange": "Nasdaq",
+   "ecosystem": "hbm",
+   "size_band": "mega",
+   "first_seen": "2026-11-02",
+   "first_evidence": {
+    "url": "https://www.digitimes.com/news/a20261028VL231/semicon-qualcomm-capacity-pmic-packaging.html",
+    "date": "2026-10-29",
+    "layer": "press"
+   }
+  },
+  {
+   "id": "company:twse_1513",
+   "kind": "company",
+   "label": "中興電 Chung-Hsin Electric (TWSE 1513)",
+   "names": [
+    "中興電",
+    "Chung-Hsin Electric"
+   ],
+   "status": "candidate",
+   "ticker": "1513",
+   "exchange": "TWSE",
+   "ecosystem": "power",
+   "size_band": "unknown",
+   "first_seen": "2026-11-02",
+   "first_evidence": {
+    "url": "https://technews.tw/2026/11/02/north-america-ai-data-center-orders-up/",
+    "date": "2026-11-02",
+    "layer": "press"
+   }
+  },
+  {
+   "id": "company:twse_1504",
+   "kind": "company",
+   "label": "東元 TECO (TWSE 1504)",
+   "names": [
+    "東元",
+    "TECO Electric & Machinery"
+   ],
+   "status": "candidate",
+   "ticker": "1504",
+   "exchange": "TWSE",
+   "ecosystem": "power",
+   "size_band": "unknown",
+   "first_seen": "2026-11-02",
+   "first_evidence": {
+    "url": "https://www.digitimes.com/news/a20261030PD224/teco-foxconn-data-center-infrastructure-2026.html",
+    "date": "2026-10-30",
+    "layer": "press"
+   }
+  },
+  {
+   "id": "company:macronix_international",
+   "kind": "company",
+   "label": "Macronix International 旺宏 (TWSE 2337)",
+   "names": [
+    "Macronix International",
+    "Macronix",
+    "旺宏"
+   ],
+   "status": "candidate",
+   "ticker": "2337",
+   "exchange": "TWSE",
+   "ecosystem": "hbm",
+   "size_band": "unknown",
+   "first_seen": "2026-11-02",
+   "first_evidence": {
+    "url": "https://finance.technews.tw/2026/11/01/macronix-q3-profit-hits-record-as-gross-margin-tops-70/",
+    "date": "2026-11-01",
+    "layer": "press"
+   }
+  },
+  {
+   "id": "company:tdk",
+   "kind": "company",
+   "label": "TDK (TSE 6762)",
+   "names": [
+    "TDK"
+   ],
+   "status": "candidate",
+   "ticker": "6762",
+   "exchange": "TSE",
+   "ecosystem": "power",
+   "size_band": "large",
+   "first_seen": "2026-11-02",
+   "first_evidence": {
+    "url": "https://finance.technews.tw/2026/11/02/tdk-posts-record-profit/",
+    "date": "2026-11-01",
+    "layer": "press"
+   }
+  },
+  {
+   "id": "company:twse_6176",
+   "kind": "company",
+   "label": "瑞儀 Radiant Opto-Electronics (TWSE 6176)",
+   "names": [
+    "瑞儀",
+    "Radiant Opto-Electronics"
+   ],
+   "status": "candidate",
+   "ticker": "6176",
+   "exchange": "TWSE",
+   "ecosystem": "optics",
+   "size_band": "unknown",
+   "first_seen": "2026-11-02",
+   "first_evidence": {
+    "url": "https://www.digitimes.com/news/a20261030PD236/radiant-cpo-production-2028-backlight.html",
+    "date": "2026-10-30",
+    "layer": "press"
+   }
+  },
+  {
+   "id": "company:tse_3436",
+   "kind": "company",
+   "label": "SUMCO 섬코 (TSE 3436)",
+   "names": [
+    "섬코",
+    "SUMCO"
+   ],
+   "status": "candidate",
+   "ticker": "3436",
+   "exchange": "TSE",
+   "ecosystem": "hbm",
+   "size_band": "unknown",
+   "first_seen": "2026-11-02",
+   "first_evidence": {
+    "url": "https://www.thelec.kr/news/articleView.html?idxno=64632",
+    "date": "2026-10-30",
+    "layer": "press"
+   }
+  },
+  {
+   "id": "company:catl",
+   "kind": "company",
+   "label": "CATL (SZSE 300750)",
+   "names": [
+    "CATL",
+    "宁德时代"
+   ],
+   "status": "candidate",
+   "ticker": "300750",
+   "exchange": "SZSE",
+   "ecosystem": "power",
+   "size_band": "mega",
+   "first_seen": "2026-11-02",
+   "first_evidence": {
+    "url": "https://www.kipost.net/news/articleView.html?idxno=342819",
+    "date": "2026-10-29",
+    "layer": "press"
+   }
+  },
+  {
+   "id": "company:twse_2449",
+   "kind": "company",
+   "label": "京元電 KYEC (TWSE 2449)",
+   "names": [
+    "京元電",
+    "京元電子",
+    "King Yuan Electronics",
+    "KYEC"
+   ],
+   "status": "candidate",
+   "ticker": "2449",
+   "exchange": "TWSE",
+   "ecosystem": "hbm",
+   "size_band": "unknown",
+   "first_seen": "2026-11-02",
+   "first_evidence": {
+    "url": "https://money.udn.com/money/story/5607/9845358",
+    "date": "2026-10-30",
+    "layer": "press"
+   }
+  },
+  {
+   "id": "company:atomera",
+   "kind": "company",
+   "label": "Atomera (Nasdaq ATOM)",
+   "names": [
+    "Atomera"
+   ],
+   "status": "candidate",
+   "ticker": "ATOM",
+   "exchange": "Nasdaq",
+   "ecosystem": "optics",
+   "size_band": "micro",
+   "first_seen": "2026-11-02",
+   "first_evidence": {
+    "url": "https://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&CIK=0001420520&type=8-K",
+    "date": "2026-10-30",
+    "layer": "filing"
+   }
+  },
+  {
+   "id": "company:nuscale_power",
+   "kind": "company",
+   "label": "NuScale Power (NYSE SMR)",
+   "names": [
+    "NuScale Power",
+    "NuScale"
+   ],
+   "status": "candidate",
+   "ticker": "SMR",
+   "exchange": "NYSE",
+   "ecosystem": "power",
+   "size_band": "mid",
+   "first_seen": "2026-11-02",
+   "first_evidence": {
+    "url": "https://www.e2news.com/news/articleView.html?idxno=335591",
+    "date": "2026-10-29",
+    "layer": "press"
+   }
+  },
+  {
+   "id": "company:krx_000500",
+   "kind": "company",
+   "label": "가온전선 (KRX 000500)",
+   "names": [
+    "가온전선",
+    "Gaon Cable"
+   ],
+   "status": "candidate",
+   "ticker": "000500",
+   "exchange": "KRX",
+   "ecosystem": "power",
+   "size_band": "unknown",
+   "first_seen": "2026-11-02",
+   "first_evidence": {
+    "url": "https://www.thelec.kr/news/articleView.html?idxno=64492",
+    "date": "2026-10-29",
+    "layer": "press"
+   }
+  },
+  {
+   "id": "company:axcelis",
+   "kind": "company",
+   "label": "Axcelis Technologies (Nasdaq ACLS)",
+   "names": [
+    "Axcelis Technologies",
+    "Axcelis"
+   ],
+   "status": "candidate",
+   "ticker": "ACLS",
+   "exchange": "Nasdaq",
+   "ecosystem": "hbm",
+   "size_band": "mid",
+   "size_note": "Veeco 와 합병 진행 중(2026-11-02 종결 예상시점 갱신 8-K)",
+   "first_seen": "2026-11-02",
+   "first_evidence": {
+    "url": "https://www.sec.gov/Archives/edgar/data/103145/000110465926120936/tm2628709d1_ex99-1.htm",
+    "date": "2026-11-02",
+    "layer": "filing"
+   }
+  }
+ ],
+ "proposal_ids": [
+  2,
+  3,
+  4,
+  6,
+  7,
+  8,
+  10,
+  12,
+  16,
+  18,
+  19,
+  21,
+  22,
+  23,
+  25,
+  28,
+  29,
+  30
+ ]
+}

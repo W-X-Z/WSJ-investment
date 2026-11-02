@@ -10714,6 +10714,402 @@
         "url": "https://www.jedec.org/standards-documents/docs/jesd328",
         "layer": "standard"
       }
+    },
+    {
+      "id": "company:sandisk",
+      "kind": "company",
+      "label": "Sandisk (Nasdaq SNDK)",
+      "ecosystem": "hbm",
+      "role": "supplier",
+      "listing": {
+        "ticker": "SNDK",
+        "exchange": "Nasdaq",
+        "cik": null,
+        "filer_type": "non_sec_listed"
+      },
+      "size_band": "large",
+      "in_universe": false,
+      "status": "candidate",
+      "first_seen": "2026-11-02",
+      "first_evidence": {
+        "url": "https://www.inews24.com/view/2020654",
+        "date": "2026-10-29",
+        "layer": "press"
+      }
+    },
+    {
+      "id": "company:twse_1503",
+      "kind": "company",
+      "label": "士電 Shihlin Electric (TWSE 1503)",
+      "ecosystem": "power",
+      "role": "supplier",
+      "listing": {
+        "ticker": "1503",
+        "exchange": "TWSE",
+        "cik": null,
+        "filer_type": "non_sec_listed"
+      },
+      "size_band": "unknown",
+      "in_universe": false,
+      "status": "candidate",
+      "first_seen": "2026-11-02",
+      "first_evidence": {
+        "url": "https://technews.tw/2026/11/02/north-america-ai-data-center-orders-up/",
+        "date": "2026-11-02",
+        "layer": "press"
+      }
+    },
+    {
+      "id": "company:kioxia",
+      "kind": "company",
+      "label": "Kioxia Holdings (TSE 285A)",
+      "ecosystem": "hbm",
+      "role": "supplier",
+      "listing": {
+        "ticker": "285A",
+        "exchange": "TSE",
+        "cik": null,
+        "filer_type": "non_sec_listed"
+      },
+      "size_band": "large",
+      "in_universe": false,
+      "status": "candidate",
+      "first_seen": "2026-11-02",
+      "first_evidence": {
+        "url": "https://www.eenewseurope.com/en/kioxia-brings-e1-l-qlc-ssds-to-hyperscale-data-centres/",
+        "date": "2026-10-29",
+        "layer": "press"
+      }
+    },
+    {
+      "id": "company:auo",
+      "kind": "company",
+      "label": "AUO 友達 (TWSE 2409)",
+      "ecosystem": "hbm",
+      "role": "supplier",
+      "listing": {
+        "ticker": "2409",
+        "exchange": "TWSE",
+        "cik": null,
+        "filer_type": "non_sec_listed"
+      },
+      "size_band": "unknown",
+      "in_universe": false,
+      "status": "candidate",
+      "first_seen": "2026-11-02",
+      "first_evidence": {
+        "url": "https://www.digitimes.com/news/a20261029PD237/auo-tsmc-plant-infrastructure-development.html",
+        "date": "2026-10-29",
+        "layer": "press"
+      }
+    },
+    {
+      "id": "company:krx_373220",
+      "kind": "company",
+      "label": "LG에너지솔루션 (KRX 373220)",
+      "ecosystem": "power",
+      "role": "supplier",
+      "listing": {
+        "ticker": "373220",
+        "exchange": "KRX",
+        "cik": null,
+        "filer_type": "non_sec_listed"
+      },
+      "size_band": "large",
+      "in_universe": false,
+      "status": "candidate",
+      "first_seen": "2026-11-02",
+      "first_evidence": {
+        "url": "https://www.thelec.kr/news/articleView.html?idxno=64627",
+        "date": "2026-10-30",
+        "layer": "press"
+      }
+    },
+    {
+      "id": "company:qualcomm",
+      "kind": "company",
+      "label": "Qualcomm (Nasdaq QCOM)",
+      "ecosystem": "hbm",
+      "role": "supplier",
+      "listing": {
+        "ticker": "QCOM",
+        "exchange": "Nasdaq",
+        "cik": null,
+        "filer_type": "non_sec_listed"
+      },
+      "size_band": "mega",
+      "in_universe": false,
+      "status": "candidate",
+      "first_seen": "2026-11-02",
+      "first_evidence": {
+        "url": "https://www.digitimes.com/news/a20261028VL231/semicon-qualcomm-capacity-pmic-packaging.html",
+        "date": "2026-10-29",
+        "layer": "press"
+      }
+    },
+    {
+      "id": "company:twse_1513",
+      "kind": "company",
+      "label": "中興電 Chung-Hsin Electric (TWSE 1513)",
+      "ecosystem": "power",
+      "role": "supplier",
+      "listing": {
+        "ticker": "1513",
+        "exchange": "TWSE",
+        "cik": null,
+        "filer_type": "non_sec_listed"
+      },
+      "size_band": "unknown",
+      "in_universe": false,
+      "status": "candidate",
+      "first_seen": "2026-11-02",
+      "first_evidence": {
+        "url": "https://technews.tw/2026/11/02/north-america-ai-data-center-orders-up/",
+        "date": "2026-11-02",
+        "layer": "press"
+      }
+    },
+    {
+      "id": "company:twse_1504",
+      "kind": "company",
+      "label": "東元 TECO (TWSE 1504)",
+      "ecosystem": "power",
+      "role": "supplier",
+      "listing": {
+        "ticker": "1504",
+        "exchange": "TWSE",
+        "cik": null,
+        "filer_type": "non_sec_listed"
+      },
+      "size_band": "unknown",
+      "in_universe": false,
+      "status": "candidate",
+      "first_seen": "2026-11-02",
+      "first_evidence": {
+        "url": "https://www.digitimes.com/news/a20261030PD224/teco-foxconn-data-center-infrastructure-2026.html",
+        "date": "2026-10-30",
+        "layer": "press"
+      }
+    },
+    {
+      "id": "company:macronix_international",
+      "kind": "company",
+      "label": "Macronix International 旺宏 (TWSE 2337)",
+      "ecosystem": "hbm",
+      "role": "supplier",
+      "listing": {
+        "ticker": "2337",
+        "exchange": "TWSE",
+        "cik": null,
+        "filer_type": "non_sec_listed"
+      },
+      "size_band": "unknown",
+      "in_universe": false,
+      "status": "candidate",
+      "first_seen": "2026-11-02",
+      "first_evidence": {
+        "url": "https://finance.technews.tw/2026/11/01/macronix-q3-profit-hits-record-as-gross-margin-tops-70/",
+        "date": "2026-11-01",
+        "layer": "press"
+      }
+    },
+    {
+      "id": "company:tdk",
+      "kind": "company",
+      "label": "TDK (TSE 6762)",
+      "ecosystem": "power",
+      "role": "supplier",
+      "listing": {
+        "ticker": "6762",
+        "exchange": "TSE",
+        "cik": null,
+        "filer_type": "non_sec_listed"
+      },
+      "size_band": "large",
+      "in_universe": false,
+      "status": "candidate",
+      "first_seen": "2026-11-02",
+      "first_evidence": {
+        "url": "https://finance.technews.tw/2026/11/02/tdk-posts-record-profit/",
+        "date": "2026-11-01",
+        "layer": "press"
+      }
+    },
+    {
+      "id": "company:twse_6176",
+      "kind": "company",
+      "label": "瑞儀 Radiant Opto-Electronics (TWSE 6176)",
+      "ecosystem": "optics",
+      "role": "supplier",
+      "listing": {
+        "ticker": "6176",
+        "exchange": "TWSE",
+        "cik": null,
+        "filer_type": "non_sec_listed"
+      },
+      "size_band": "unknown",
+      "in_universe": false,
+      "status": "candidate",
+      "first_seen": "2026-11-02",
+      "first_evidence": {
+        "url": "https://www.digitimes.com/news/a20261030PD236/radiant-cpo-production-2028-backlight.html",
+        "date": "2026-10-30",
+        "layer": "press"
+      }
+    },
+    {
+      "id": "company:tse_3436",
+      "kind": "company",
+      "label": "SUMCO 섬코 (TSE 3436)",
+      "ecosystem": "hbm",
+      "role": "supplier",
+      "listing": {
+        "ticker": "3436",
+        "exchange": "TSE",
+        "cik": null,
+        "filer_type": "non_sec_listed"
+      },
+      "size_band": "unknown",
+      "in_universe": false,
+      "status": "candidate",
+      "first_seen": "2026-11-02",
+      "first_evidence": {
+        "url": "https://www.thelec.kr/news/articleView.html?idxno=64632",
+        "date": "2026-10-30",
+        "layer": "press"
+      }
+    },
+    {
+      "id": "company:catl",
+      "kind": "company",
+      "label": "CATL (SZSE 300750)",
+      "ecosystem": "power",
+      "role": "supplier",
+      "listing": {
+        "ticker": "300750",
+        "exchange": "SZSE",
+        "cik": null,
+        "filer_type": "non_sec_listed"
+      },
+      "size_band": "mega",
+      "in_universe": false,
+      "status": "candidate",
+      "first_seen": "2026-11-02",
+      "first_evidence": {
+        "url": "https://www.kipost.net/news/articleView.html?idxno=342819",
+        "date": "2026-10-29",
+        "layer": "press"
+      }
+    },
+    {
+      "id": "company:twse_2449",
+      "kind": "company",
+      "label": "京元電 KYEC (TWSE 2449)",
+      "ecosystem": "hbm",
+      "role": "supplier",
+      "listing": {
+        "ticker": "2449",
+        "exchange": "TWSE",
+        "cik": null,
+        "filer_type": "non_sec_listed"
+      },
+      "size_band": "unknown",
+      "in_universe": false,
+      "status": "candidate",
+      "first_seen": "2026-11-02",
+      "first_evidence": {
+        "url": "https://money.udn.com/money/story/5607/9845358",
+        "date": "2026-10-30",
+        "layer": "press"
+      }
+    },
+    {
+      "id": "company:atomera",
+      "kind": "company",
+      "label": "Atomera (Nasdaq ATOM)",
+      "ecosystem": "optics",
+      "role": "supplier",
+      "listing": {
+        "ticker": "ATOM",
+        "exchange": "Nasdaq",
+        "cik": null,
+        "filer_type": "non_sec_listed"
+      },
+      "size_band": "micro",
+      "in_universe": false,
+      "status": "candidate",
+      "first_seen": "2026-11-02",
+      "first_evidence": {
+        "url": "https://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&CIK=0001420520&type=8-K",
+        "date": "2026-10-30",
+        "layer": "filing"
+      }
+    },
+    {
+      "id": "company:nuscale_power",
+      "kind": "company",
+      "label": "NuScale Power (NYSE SMR)",
+      "ecosystem": "power",
+      "role": "supplier",
+      "listing": {
+        "ticker": "SMR",
+        "exchange": "NYSE",
+        "cik": null,
+        "filer_type": "non_sec_listed"
+      },
+      "size_band": "mid",
+      "in_universe": false,
+      "status": "candidate",
+      "first_seen": "2026-11-02",
+      "first_evidence": {
+        "url": "https://www.e2news.com/news/articleView.html?idxno=335591",
+        "date": "2026-10-29",
+        "layer": "press"
+      }
+    },
+    {
+      "id": "company:krx_000500",
+      "kind": "company",
+      "label": "가온전선 (KRX 000500)",
+      "ecosystem": "power",
+      "role": "supplier",
+      "listing": {
+        "ticker": "000500",
+        "exchange": "KRX",
+        "cik": null,
+        "filer_type": "non_sec_listed"
+      },
+      "size_band": "unknown",
+      "in_universe": false,
+      "status": "candidate",
+      "first_seen": "2026-11-02",
+      "first_evidence": {
+        "url": "https://www.thelec.kr/news/articleView.html?idxno=64492",
+        "date": "2026-10-29",
+        "layer": "press"
+      }
+    },
+    {
+      "id": "company:axcelis",
+      "kind": "company",
+      "label": "Axcelis Technologies (Nasdaq ACLS)",
+      "ecosystem": "hbm",
+      "role": "supplier",
+      "listing": {
+        "ticker": "ACLS",
+        "exchange": "Nasdaq",
+        "cik": null,
+        "filer_type": "non_sec_listed"
+      },
+      "size_band": "mid",
+      "in_universe": false,
+      "status": "candidate",
+      "first_seen": "2026-11-02",
+      "first_evidence": {
+        "url": "https://www.sec.gov/Archives/edgar/data/103145/000110465926120936/tm2628709d1_ex99-1.htm",
+        "date": "2026-11-02",
+        "layer": "filing"
+      }
     }
   ],
   "edges": [
@@ -42288,6 +42684,60 @@
         }
       ],
       "confidence": 0.9
+    },
+    {
+      "id": "i1103-001",
+      "from": "company:mrvl",
+      "to": "company:lite",
+      "relation": "invests_in",
+      "evidence_tier": "official_issuer",
+      "polarity": "positive",
+      "evidence": [
+        {
+          "url": "https://investor.marvell.com/news-events/press-releases/detail/1040/marvell-and-lumentum-to-combine-creating-a-category-leader-in-ai-connectivity",
+          "source_type": "official_issuer",
+          "published_at": "2026-11-02",
+          "excerpt": "Lumentum stockholders will receive a fixed exchange ratio of 4.500 shares of Marvell common stock … implied enterprise value of $115 billion … expected to close in the first half of calendar year 2028 … indium phosphide (InP), as well as high-speed and high-power laser capabilities … strengthen strategic supply"
+        }
+      ],
+      "note": "인수 합의(전주식). Lumentum 1주당 Marvell 4.500주 고정 교환비율, 기업가치 1,150억 달러(주당 약 1,132달러, 10-28 종가 대비 23.9% 프리미엄). 합병 뒤 Marvell 주주 67%·Lumentum 주주 33%. 종결 예정 2028년 상반기(주주·규제 승인 조건). Marvell 은 Lumentum 의 InP·고출력 레이저 제조를 '전략적 공급 강화'로 명시 — 머천트 1위 EML·CW 레이저 공급사가 DSP·커스텀 XPU 경쟁사 소유가 되는 구조",
+      "confidence": 0.8
+    },
+    {
+      "id": "i1103-002",
+      "from": "company:aaoi",
+      "to": "component:cw_laser",
+      "relation": "develops",
+      "evidence_tier": "official_issuer",
+      "polarity": "positive",
+      "evidence": [
+        {
+          "url": "https://finance.yahoo.com/technology/ai/articles/applied-optoelectronics-bets-u-laser-160204361.html",
+          "source_type": "official_issuer",
+          "published_at": "2026-08-18",
+          "excerpt": "There is not enough capacity in the industry right now to even come close to meeting the demand from scale-up … ships small quantities of high-power lasers for customer evaluation … discussing co-packaged optics (CPO) with five companies … CPO laser-chip margins above 60%"
+        }
+      ],
+      "note": "CFO 발언(2026-08-18 Rosenblatt 서밋): 자체 InP 레이저 팹(텍사스 슈가랜드, 4인치 → 6인치 전환 가능 장비 확보), CPO 용 300~400mW 고출력 CW 레이저를 평가용 소량 출하, CPO 를 5개사와 논의, CPO 레이저 칩 마진 60% 이상. 레이저 생산능력 증설은 2027년 하반기. '업계 레이저 생산능력이 스케일업 수요에 크게 못 미친다'. 머천트 레이저 매출은 미공개",
+      "confidence": 0.8
+    },
+    {
+      "id": "i1103-003",
+      "from": "product:nvda_spectrum_x_photonics",
+      "to": "component:els",
+      "relation": "requires",
+      "evidence_tier": "official_issuer",
+      "polarity": "positive",
+      "evidence": [
+        {
+          "url": "https://github.com/sonic-net/sonic-platform-common/commit/97c3c9c8b37323fa41972fed7a71665bec8af6ed",
+          "source_type": "official_issuer",
+          "published_at": "2026-11-02",
+          "excerpt": "[CPO] Register the NVIDIA SPC6 optical engine and els (#755) … NvidiaCpoElsCmisApi … DavissonTh6ElsfpApi"
+        }
+      ],
+      "note": "SONiC sonic-platform-common 커밋(2026-11-02, NVIDIA 기여): Spectrum-6(SPC6) CPO 광엔진(OE)·외부 레이저 광원(ELS) 장치 클래스를 CPO API 에 등록 — Broadcom Tomahawk 6 'Davisson' ELSFP·OE 와 같은 틀. 오픈소스 NOS 에 두 벤더 CPO 스위치의 ELSFP 관리가 들어간 상태 = 하이퍼스케일러 배치 준비 단계",
+      "confidence": 0.8
     }
   ],
   "events": [
