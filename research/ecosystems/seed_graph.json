@@ -11024,28 +11024,6 @@
       }
     },
     {
-      "id": "company:twse_1514",
-      "kind": "company",
-      "label": "亞力 Allis Electric (TWSE 1514)",
-      "ecosystem": "power",
-      "role": "supplier",
-      "listing": {
-        "ticker": "1514",
-        "exchange": "TWSE",
-        "cik": null,
-        "filer_type": "non_sec_listed"
-      },
-      "size_band": "unknown",
-      "in_universe": false,
-      "status": "candidate",
-      "first_seen": "2026-11-02",
-      "first_evidence": {
-        "url": "https://technews.tw/2026/11/02/north-america-ai-data-center-orders-up/",
-        "date": "2026-11-02",
-        "layer": "press"
-      }
-    },
-    {
       "id": "company:atomera",
       "kind": "company",
       "label": "Atomera (Nasdaq ATOM)",
