@@ -77,6 +77,6 @@
 - 이웃: `select * from core.graph_neighbors('<노드 id>', 2);`
 - 아래로 내려가며 공급사: `select * from core.suppliers_below('<노드 id>', 2, null, '{micro,small,mid}');` — 매출 비중(exposure_pct·exposure)이 큰 순
 - 노드 한 장: `select core.node_signals('<노드 id>', 30);` — 노드 칸, 최근 단서, 층별 첫 등장, 걸린 아이디어·스레드
-- 확인한 것 남기기 (저장소를 못 바꾸는 작업도): `select ideas.put_graph_proposal($j$[{"by":"enrich","kind":"edge|node|node_update|alias","payload":{…그래프 패치 JSON 한 항목…},"reason":"어떤 조사에서"}]$j$::jsonb);`
+- 확인한 것 남기기 (저장소를 못 바꾸는 작업도): `select ideas.put_graph_proposal($j$[{"by":"enrich","kind":"edge|node|node_update|alias|term","payload":{…그래프 패치 JSON 한 항목, term 은 {"term":"…"}…},"reason":"어떤 조사에서"}]$j$::jsonb);`
   매출 비중·고객·자리(edge 에 `exposure_pct`·`exposure_year`·`exposure_source`·`position`), 표준 번호·특허 분류·규칙 번호(node_update 의 `codes`), 근거상 처음 나온 날(`first_evidence`), 단계 전환(`maturity`), 규칙·결정 주체(`rule`·`authority` 노드, `mandates`·`issued_by` 간선). 원문 숫자가 있을 때만, 간선마다 https 근거.
   형식은 `pipeline/wsj/ecosystems/graph_patches/from_json.py` 맨 위. 해석 작업이 다음 패치에 합친다.

@@ -56,11 +56,14 @@ def parse(doc: dict[str, Any]) -> tuple[list[Node], list[Edge], str, dict[str, l
             if not nid.startswith("company:"):
                 raise ValueError(f"nodes[{i}]: 기업 id 는 company: 로 시작")
             band = n.get("size_band")
-            if band not in SIZE_BANDS:
-                raise ValueError(f"nodes[{i}]: size_band 는 {sorted(SIZE_BANDS)}")
+            candidate = n.get("status") == "candidate"
+            if band not in SIZE_BANDS and not (candidate and band in (None, "unknown")):
+                raise ValueError(f"nodes[{i}]: size_band 는 {sorted(SIZE_BANDS)} (후보 status=candidate 만 unknown 허용)")
             if not (n.get("ticker") and n.get("exchange")):
                 raise ValueError(f"nodes[{i}]: 상장 기업만 — ticker·exchange 필수")
-            nodes.append(Node.company(nid, label, eco, str(n["ticker"]), str(n["exchange"]), band, cik=n.get("cik"), role=n.get("role") or "supplier"))
+            node = Node.company(nid, label, eco, str(n["ticker"]), str(n["exchange"]), band or "unknown", cik=n.get("cik"), role=n.get("role") or "supplier")
+            node.extra.update({k: n[k] for k in ("status", "first_seen", "first_evidence", "codes", "also_in") if n.get(k)})
+            nodes.append(node)
         else:
             nodes.append(Node(nid, kind, label, eco, {k: v for k, v in n.items() if k not in {"id", "kind", "label", "ecosystem"}}))
     edges: list[Edge] = []

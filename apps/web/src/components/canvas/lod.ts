@@ -23,7 +23,7 @@ export const DEPTHS = [
 export const MAX_LEVEL = 4;
 
 const KIND_LEVEL: Record<string, number> = {
-  ecosystem: 1, product_generation: 1, standard: 1, requirement: 1, bottleneck: 1,
+  ecosystem: 1, product_generation: 1, standard: 1, rule: 1, authority: 1, requirement: 1, bottleneck: 1,
   technology: 2, component: 2,
   process: 3, material: 3, equipment: 3, product: 3,
   company: 4,

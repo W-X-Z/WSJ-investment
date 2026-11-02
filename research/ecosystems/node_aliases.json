@@ -328,7 +328,11 @@
     ],
     "tech:sidecar": [
       "power sidecar",
-      "800v sidecar"
+      "800v sidecar",
+      "mt. diablo",
+      "mount diablo",
+      "diablo 400",
+      "disaggregated power rack"
     ],
     "tech:busbar": [
       "dc busbar",
@@ -506,7 +510,8 @@
       "pdn loss"
     ],
     "component:psu_power_shelf": [
-      "orv3"
+      "orv3",
+      "power shelf"
     ],
     "component:ibc_800v_50v": [
       "hv ibc"
@@ -622,7 +627,8 @@
     ],
     "tech:coherent_dci": [
       "400zr",
-      "800zr"
+      "800zr",
+      "1600zr"
     ],
     "tech:coherent_lite": [
       "coherent-lite"
@@ -1073,7 +1079,8 @@
       "hollow-core fiber"
     ],
     "tech:ocs": [
-      "optical circuit switch"
+      "optical circuit switch",
+      "optical circuit switching"
     ],
     "component:optical_fiber": [
       "optical fiber",
@@ -1178,7 +1185,9 @@
     "standard:uec": [
       "Ultra Ethernet",
       "UEC",
-      "UET"
+      "UET",
+      "ultra ethernet consortium",
+      "uec 1.1"
     ],
     "standard:ualink": [
       "UALink",
@@ -1202,7 +1211,12 @@
       "ride-through",
       "ride through",
       "ramp-rate limit",
-      "fault ride through"
+      "fault ride through",
+      "nogrr282",
+      "nogrr 282",
+      "large electronic load",
+      "large computational load",
+      "voltage ride-through"
     ],
     "component:grid_forming_inverter": [
       "grid-forming inverter",
@@ -1261,7 +1275,10 @@
       "400G/lane",
       "400G per lane",
       "448G",
-      "802.3dv"
+      "802.3dv",
+      "400 gb/s/lane",
+      "400g/lane signaling",
+      "cei-448g"
     ],
     "component:sst": [
       "SST",
@@ -1374,6 +1391,55 @@
       "PTFE CCL",
       "PTFE 적층판",
       "鐵氟龍"
+    ],
+    "component:server_dram_lpdram": [
+      "socamm2",
+      "socamm",
+      "lpddr6",
+      "lpddr5x server",
+      "서버용 lpddr"
+    ],
+    "req:cpu_memory_per_rack": [
+      "vera cpu memory",
+      "grace cpu memory"
+    ],
+    "gen:3p2t": [
+      "3.2t",
+      "3.2 tbps",
+      "3.2t optical"
+    ],
+    "std:ieee_802_3dj": [
+      "802.3dj"
+    ],
+    "req:gw_campus_power": [
+      "large load interconnection",
+      "large load additions",
+      "large load interconnect"
+    ],
+    "std:ocp_lvdc": [
+      "ocp lvdc",
+      "lvdc white paper"
+    ],
+    "company:tsmc": [
+      "tsmc",
+      "台積電",
+      "台积电",
+      "taiwan semiconductor"
+    ],
+    "company:umc": [
+      "umc",
+      "聯電",
+      "联电"
+    ],
+    "company:ase_technology": [
+      "日月光投控",
+      "日月光",
+      "ase technology",
+      "ase holdings"
+    ],
+    "company:himx": [
+      "himax",
+      "奇景光電"
     ]
   }
 }

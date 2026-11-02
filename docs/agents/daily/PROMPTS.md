@@ -48,7 +48,7 @@
 2. add_repo 로 W-X-Z/WSJ-investment 를 붙이고 `--depth 1` clone 한다. add_repo 가 없으면 이미 있는 clone 을 최신으로 당겨 쓰고, 저장소를 아예 못 쓰면 Supabase 만으로 진행한다. `docs/agents/daily-ideas.md`·`docs/agents/daily/report.md`·`docs/agents/writing.md` 를 읽는다.
 3. 꼭 지킬 것: Supabase(project_id dcatgfivsvbktylmtvgf) 쓰기는 `ideas.put_opportunities`, `ops.put_agent_run` 과 읽기용 select 뿐, publishable 키만. 저장소는 수정하지 않는다. 결론이 기대는 사실이 확인되지 않은 초안은 내지 않는다. 매수/매도 권유·목표가는 쓰지 않는다.
 4. 문서를 읽을 수 없으면 무엇이 실패했는지 보고하고 알림을 보낸 뒤 끝낸다.
-5. 알림은 매일: 첫 줄에 오늘 사슬 한 줄, 이어서 오늘 낸 아이디어(★ 높은 순, ★ + 제목 + 한 줄 요지), ★ 가 바뀌거나 닫힌 아이디어, 실패한 작업. 없으면 "오늘 새 아이디어 없음".
+5. 알림은 매일: 첫 줄에 오늘 사슬 한 줄, 수집 이상이 있으면 둘째 줄에 한 줄(`ops.v_collection_alerts` — report.md), 이어서 오늘 낸 아이디어(★ 높은 순, ★ + 제목 + 한 줄 요지), ★ 가 바뀌거나 닫힌 아이디어, 실패한 작업. 없으면 "오늘 새 아이디어 없음".
 ```
 
 ## 일요일 10:23 — 이름: `WSJ 시스템 개선 (주간)`

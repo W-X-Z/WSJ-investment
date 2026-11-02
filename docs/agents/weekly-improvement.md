@@ -13,6 +13,9 @@ Claude 예약작업 "WSJ 시스템 개선 (주간)"이 매주 일요일 10:23 KS
 - 그래프 상태 (ADR-0031, 채점 아님): `.venv/bin/python -m wsj.ecosystems.ontology --report` 의 exposure_filled/offered_by(노출도 채움), candidates(후보 노드), nodes_with_codes(식별자). 단서의 기술 노드 연결률: `select round(100.0 * count(*) filter (where exists (select 1 from unnest(nodes) n where n !~ '^(company|eco):')) / count(*), 1) from ideas.clues where relevant and seen_at > now() - interval '7 days';`. 대기 중인 그래프 제안(`ideas.graph_proposals`)이 묵었는지.
 - 별칭·식별자 정비(G-6)는 주간 개선이 하기 좋은 일이다 — `core.resolve_terms` 가 못 잇는 원본 단서의 용어를 노드에 `codes`·별칭으로.
 - 이어서 할 일은 `docs/BACKLOG.md` 맨 위 '지금 할 일'에 있다. 이번 주 목적에 가장 가까운 것을 고른다.
+- 매주 한 장: `research/macro/YYYY-Www.md` 주간 매크로 배경 (형식은 `research/macro/README.md`). 해석이 '시장이 이미 가격에 넣었나 · 소형주에 돈이 들어오는 환경인가'를 판단하는 배경이다. 직접 연 원문 숫자만, 날짜·링크와 함께. 예측은 쓰지 않는다. `research/` 안이라 다른 조건이 맞으면 스스로 병합해도 된다.
+- 수집 이상 (`select * from ops.v_collection_alerts;`) 이 한 주 내내 같은 줄을 내면 그 원인을 이번 주 고칠 것 후보로 본다.
+- 수집기가 올린 그래프 제안(`by = 'collect'`: 그래프 밖 상장사 후보·사전 밖 식별자)이 해석 작업에서 처리되지 않고 묵었으면 여기서 정리한다 — 기존 노드의 codes·별칭으로 붙이거나, 후보 노드로 넣거나, rejected.
 
 ## 쓸 수 있는 도구와 자료
 - 점검: `.venv/bin/python -m wsj.ecosystems.health --out ../.improve/health.json --md ../.improve/health.md`

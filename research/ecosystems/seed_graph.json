@@ -103,7 +103,12 @@
       "id": "tech:pluggable",
       "kind": "technology",
       "label": "1.6T Pluggable transceiver",
-      "ecosystem": "optics"
+      "ecosystem": "optics",
+      "codes": {
+        "oif_ia": [
+          "CMIS"
+        ]
+      }
     },
     {
       "id": "tech:cpo",
@@ -189,7 +194,14 @@
       "id": "tech:sidecar",
       "kind": "technology",
       "label": "480VAC에서 ±400/800VDC로 전환하는 Side Power Rack",
-      "ecosystem": "power"
+      "ecosystem": "power",
+      "codes": {
+        "ocp": [
+          "Mt. Diablo",
+          "Mount Diablo",
+          "Diablo 400"
+        ]
+      }
     },
     {
       "id": "tech:directmv",
@@ -913,7 +925,12 @@
         "io_count",
         "gbps_per_pin",
         "stack_height_um"
-      ]
+      ],
+      "codes": {
+        "jesd": [
+          "JESD270-4"
+        ]
+      }
     },
     {
       "id": "gen:hbm4e",
@@ -936,7 +953,12 @@
         "gbps_per_pin",
         "io_count",
         "stack_height_um"
-      ]
+      ],
+      "codes": {
+        "jesd": [
+          "JESD270-4"
+        ]
+      }
     },
     {
       "id": "equipment:hybrid_bonder",
@@ -1080,7 +1102,13 @@
       "measured_metrics": [
         "lane_rate_gbps",
         "reach_m"
-      ]
+      ],
+      "codes": {
+        "ieee": [
+          "802.3dj",
+          "P802.3dj"
+        ]
+      }
     },
     {
       "id": "product:credo_aec",
@@ -1148,7 +1176,12 @@
       "id": "std:ocp_lvdc",
       "kind": "standard",
       "label": "OCP LVDC/800VDC White Paper v1.1 (2026-09)",
-      "ecosystem": "power"
+      "ecosystem": "power",
+      "codes": {
+        "ocp": [
+          "LVDC"
+        ]
+      }
     },
     {
       "id": "company:nvts",
@@ -1805,7 +1838,12 @@
       "id": "std:oif_elsfp",
       "kind": "standard",
       "label": "OIF ELSFP 외부 레이저 플러거블 IA (2023-08)",
-      "ecosystem": "optics"
+      "ecosystem": "optics",
+      "codes": {
+        "oif_ia": [
+          "ELSFP"
+        ]
+      }
     },
     {
       "id": "std:cw_wdm_msa",
@@ -1952,7 +1990,16 @@
       "id": "req:400g_lane",
       "kind": "requirement",
       "label": "400G/lane 광 인터페이스 전환 (1.6T 8:4·3.2T)",
-      "ecosystem": "optics"
+      "ecosystem": "optics",
+      "codes": {
+        "ieee": [
+          "802.3dv",
+          "400 Gb/s/Lane Signaling"
+        ],
+        "oif_ia": [
+          "CEI-448G"
+        ]
+      }
     },
     {
       "id": "process:siph_foundry",
@@ -3165,7 +3212,13 @@
       "id": "component:psu_power_shelf",
       "kind": "component",
       "label": "AC/DC PSU·파워 셸프 (ORv3/HPR, 33~110kW)",
-      "ecosystem": "power"
+      "ecosystem": "power",
+      "codes": {
+        "ocp": [
+          "ORv3",
+          "ORv3 HPR"
+        ]
+      }
     },
     {
       "id": "component:ibc_800v_50v",
@@ -5800,6 +5853,13 @@
         "evidence_url": "https://www.sec.gov/Archives/edgar/data/924613/000162828026015034/nok-20251231.htm",
         "evidence_tier": "official_issuer",
         "note": "Nokia 800G ZR/ZR+ 출시, Cisco(Acacia)·Ciena 판매 중"
+      },
+      "codes": {
+        "oif_ia": [
+          "400ZR",
+          "800ZR",
+          "1600ZR"
+        ]
       }
     },
     {
@@ -10195,7 +10255,12 @@
       "id": "component:server_dram_lpdram",
       "kind": "component",
       "label": "서버 DRAM·LPDRAM 모듈 (RDIMM·SOCAMM2)",
-      "ecosystem": "hbm"
+      "ecosystem": "hbm",
+      "codes": {
+        "jesd": [
+          "JESD209-6"
+        ]
+      }
     },
     {
       "id": "component:kv_cache_ssd",
@@ -10261,7 +10326,13 @@
       "id": "standard:scaleup_ethernet",
       "kind": "standard",
       "label": "스케일업 이더넷 SUE-T 1.0 · ESUN 1.0 (OCP)",
-      "ecosystem": "optics"
+      "ecosystem": "optics",
+      "codes": {
+        "ocp": [
+          "SUE-T",
+          "ESUN"
+        ]
+      }
     },
     {
       "id": "req:open_scaleup_fabric",
@@ -10279,7 +10350,12 @@
       "id": "req:grid_disturbance_ridethrough",
       "kind": "requirement",
       "label": "계통 외란 라이드스루·램프레이트 요구 (sag 에 트립 금지 → 홀드업·평활을 랙·MV-UPS 로)",
-      "ecosystem": "power"
+      "ecosystem": "power",
+      "codes": {
+        "rule": [
+          "NOGRR282"
+        ]
+      }
     },
     {
       "id": "component:grid_forming_inverter",
@@ -10553,6 +10629,91 @@
       },
       "size_band": "small",
       "in_universe": false
+    },
+    {
+      "id": "authority:ercot",
+      "kind": "authority",
+      "label": "ERCOT (텍사스 계통 운영자, Electric Reliability Council of Texas)",
+      "ecosystem": "power",
+      "first_seen": "2026-11-02"
+    },
+    {
+      "id": "authority:jedec",
+      "kind": "authority",
+      "label": "JEDEC (메모리 표준기구)",
+      "ecosystem": "hbm",
+      "also_in": [
+        "optics"
+      ],
+      "first_seen": "2026-11-02"
+    },
+    {
+      "id": "authority:oif",
+      "kind": "authority",
+      "label": "OIF (Optical Internetworking Forum, 광·전기 인터페이스 IA)",
+      "ecosystem": "optics",
+      "first_seen": "2026-11-02"
+    },
+    {
+      "id": "authority:ieee_802_3",
+      "kind": "authority",
+      "label": "IEEE 802.3 이더넷 작업반 (Ethernet Working Group)",
+      "ecosystem": "optics",
+      "first_seen": "2026-11-02"
+    },
+    {
+      "id": "authority:ocp",
+      "kind": "authority",
+      "label": "OCP (Open Compute Project, 랙·전력·네트워크 사양)",
+      "ecosystem": "power",
+      "also_in": [
+        "optics"
+      ],
+      "first_seen": "2026-11-02"
+    },
+    {
+      "id": "authority:uec",
+      "kind": "authority",
+      "label": "Ultra Ethernet Consortium (UEC)",
+      "ecosystem": "optics",
+      "first_seen": "2026-11-02"
+    },
+    {
+      "id": "authority:ualink",
+      "kind": "authority",
+      "label": "UALink Consortium",
+      "ecosystem": "optics",
+      "first_seen": "2026-11-02"
+    },
+    {
+      "id": "rule:ercot_nogrr282",
+      "kind": "rule",
+      "label": "ERCOT NOGRR282 대형 연산 부하 라이드스루 요건 (Large Computational Load Ride-Through, PUCT 2026-07-09 승인·2026-08-01 시행)",
+      "ecosystem": "power",
+      "codes": {
+        "rule": [
+          "NOGRR282",
+          "NOGRR 282"
+        ]
+      },
+      "first_seen": "2026-11-02"
+    },
+    {
+      "id": "std:jesd328",
+      "kind": "standard",
+      "label": "JEDEC JESD328 SOCAMM2 (LPDDR5/5X 모듈 공통 표준, 2026-06 v1.00)",
+      "ecosystem": "hbm",
+      "codes": {
+        "jesd": [
+          "JESD328"
+        ]
+      },
+      "first_seen": "2026-11-02",
+      "first_evidence": {
+        "date": "2026-06-01",
+        "url": "https://www.jedec.org/standards-documents/docs/jesd328",
+        "layer": "standard"
+      }
     }
   ],
   "edges": [
@@ -41931,6 +42092,202 @@
       ],
       "note": "Vera Rubin NVL72·HGX Rubin NVL8·DGX 등으로 출하 시작(2026-10 말)",
       "confidence": 0.6
+    },
+    {
+      "id": "c1102-001",
+      "from": "rule:ercot_nogrr282",
+      "to": "req:grid_disturbance_ridethrough",
+      "relation": "mandates",
+      "evidence_tier": "official_issuer",
+      "polarity": "positive",
+      "evidence": [
+        {
+          "url": "https://www.ercot.com/mktrules/issues/NOGRR282",
+          "source_type": "official_issuer",
+          "published_at": "2026-07-09",
+          "excerpt": "Board Priority - Large Computational Load Ride-Through Requirements — Approved on 07/09/2026, Effective 08/01/2026"
+        }
+      ],
+      "note": "ERCOT 계통에 접속하는 대형 연산 부하(데이터센터)에 전압·주파수 외란 라이드스루를 요구. TAC 2026-04-29 · 이사회 2026-06-02 권고 · PUCT 2026-07-09 승인, 시행 2026-08-01",
+      "effective_date": "2026-08-01",
+      "confidence": 0.8
+    },
+    {
+      "id": "c1102-002",
+      "from": "rule:ercot_nogrr282",
+      "to": "authority:ercot",
+      "relation": "issued_by",
+      "evidence_tier": "official_issuer",
+      "polarity": "positive",
+      "evidence": [
+        {
+          "url": "https://www.ercot.com/mktrules/issues/NOGRR282",
+          "source_type": "official_issuer",
+          "published_at": "2026-07-09"
+        }
+      ],
+      "confidence": 0.8
+    },
+    {
+      "id": "c1102-003",
+      "from": "req:cpu_memory_per_rack",
+      "to": "std:jesd328",
+      "relation": "specified_by",
+      "evidence_tier": "standard_body",
+      "polarity": "positive",
+      "evidence": [
+        {
+          "url": "https://www.jedec.org/standards-documents/docs/jesd328",
+          "source_type": "standard_body",
+          "published_at": "2026-06-01",
+          "excerpt": "LPDDR5/5X Small Outline Compression Attached Memory Module (SOCAMM2) Common Standard — Published: Jun 2026, Version 1.00"
+        }
+      ],
+      "note": "랙당 CPU 메모리(Vera LPDDR5X)를 담는 SOCAMM2 모듈 규격 — NVIDIA 가 만든 SOCAMM1 을 JEDEC 공통 표준으로 바꾼 것",
+      "confidence": 0.9
+    },
+    {
+      "id": "c1102-004",
+      "from": "std:jesd328",
+      "to": "authority:jedec",
+      "relation": "issued_by",
+      "evidence_tier": "standard_body",
+      "polarity": "positive",
+      "evidence": [
+        {
+          "url": "https://www.jedec.org/standards-documents/docs/jesd328",
+          "source_type": "standard_body",
+          "published_at": "2026-06-01"
+        }
+      ],
+      "confidence": 0.9
+    },
+    {
+      "id": "c1102-005",
+      "from": "std:jesd270_4",
+      "to": "authority:jedec",
+      "relation": "issued_by",
+      "evidence_tier": "standard_body",
+      "polarity": "positive",
+      "evidence": [
+        {
+          "url": "https://www.storagenewsletter.com/2025/04/17/jedec-and-industry-leaders-collaborate-to-release-jesd270-4-hbm4-standard/",
+          "source_type": "standard_body_via_press",
+          "published_at": "2025-04-17"
+        }
+      ],
+      "confidence": 0.9
+    },
+    {
+      "id": "c1102-006",
+      "from": "std:ieee_802_3dj",
+      "to": "authority:ieee_802_3",
+      "relation": "issued_by",
+      "evidence_tier": "standard_body",
+      "polarity": "positive",
+      "evidence": [
+        {
+          "url": "https://standards.ieee.org/ieee/802.3dj/11115/",
+          "source_type": "standard_body"
+        }
+      ],
+      "confidence": 0.9
+    },
+    {
+      "id": "c1102-007",
+      "from": "std:oif_elsfp",
+      "to": "authority:oif",
+      "relation": "issued_by",
+      "evidence_tier": "standard_body",
+      "polarity": "positive",
+      "evidence": [
+        {
+          "url": "https://www.businesswire.com/news/home/20230808055417/en/OIF-Announces-External-Laser-Small-Form-Factor-Pluggable-ELSFP-Implementation-Agreement-Paving-the-Way-for-Advancements-in-Co-Packaged-Optics-Applications",
+          "source_type": "standard_body",
+          "published_at": "2023-08-08"
+        }
+      ],
+      "confidence": 0.9
+    },
+    {
+      "id": "c1102-008",
+      "from": "std:ocp_lvdc",
+      "to": "authority:ocp",
+      "relation": "issued_by",
+      "evidence_tier": "standard_body",
+      "polarity": "positive",
+      "evidence": [
+        {
+          "url": "https://www.opencompute.org/projects/data-center-facility/power-distribution/",
+          "source_type": "standard_body",
+          "published_at": "2026-09"
+        }
+      ],
+      "confidence": 0.9
+    },
+    {
+      "id": "c1102-009",
+      "from": "standard:ocp_grid_interface",
+      "to": "authority:ocp",
+      "relation": "issued_by",
+      "evidence_tier": "standard_body",
+      "polarity": "positive",
+      "evidence": [
+        {
+          "url": "https://www.opencompute.org/wp-content/uploads/2026/10/OCP-Base-Spec-Interface-Specification-Between-Hyperscalers-and-Utility-Grid-for-Disturbance-Performance.pdf",
+          "source_type": "standard",
+          "published_at": "2026-09-17"
+        }
+      ],
+      "confidence": 0.9
+    },
+    {
+      "id": "c1102-010",
+      "from": "standard:scaleup_ethernet",
+      "to": "authority:ocp",
+      "relation": "issued_by",
+      "evidence_tier": "standard_body",
+      "polarity": "positive",
+      "evidence": [
+        {
+          "url": "https://www.opencompute.org/wp-content/uploads/2026/10/Scale-Up-Ethernet-Transport-SUE-T-Base-Specification-v1.0.0.pdf",
+          "source_type": "standard",
+          "published_at": "2026-10-08"
+        }
+      ],
+      "confidence": 0.9
+    },
+    {
+      "id": "c1102-011",
+      "from": "standard:uec",
+      "to": "authority:uec",
+      "relation": "issued_by",
+      "evidence_tier": "standard_body",
+      "polarity": "positive",
+      "evidence": [
+        {
+          "url": "https://ultraethernet.org/specification-history/",
+          "source_type": "standard",
+          "published_at": "2026-10-12"
+        }
+      ],
+      "confidence": 0.9
+    },
+    {
+      "id": "c1102-012",
+      "from": "standard:ualink",
+      "to": "authority:ualink",
+      "relation": "issued_by",
+      "evidence_tier": "standard_body",
+      "polarity": "positive",
+      "evidence": [
+        {
+          "url": "https://ualinkconsortium.org/wp-content/uploads/2026/04/UALink-2.0-Specification-PR_FINAL.pdf",
+          "source_type": "standard",
+          "published_at": "2026-04-07"
+        }
+      ],
+      "confidence": 0.9
     }
   ],
   "events": [
