@@ -48,15 +48,30 @@ def _num(v: Any) -> float | None:
 
 
 # ---------------------------------------------------------------- 시장별 주식수
+# 주식수 태그 — 앞쪽이 표지(cover)의 시점 값, 뒤쪽은 대체값. 다중 클래스 회사(GOOGL·META)는 표지 값이 클래스별이라
+# companyfacts 에 안 나오고, 40-F 회사(TECK)는 IFRS 태그만 있다. 가장 최근 기준일을 쓰고, 같은 날이면 앞쪽 태그.
+SHARE_TAGS = [("dei", "EntityCommonStockSharesOutstanding"), ("us-gaap", "CommonStockSharesOutstanding"),
+              ("ifrs-full", "NumberOfSharesOutstanding"), ("us-gaap", "WeightedAverageNumberOfDilutedSharesOutstanding"),
+              ("us-gaap", "WeightedAverageNumberOfSharesOutstandingBasic")]
+MIN_SHARES = 100_000          # 상장 전 서류의 1,000주 같은 값은 버린다
+
+
 def sec_shares(facts: dict[str, Any]) -> tuple[float, str] | None:
-    """companyfacts → (주식수, 기준일). 같은 기준일에 여러 클래스가 있으면 합산."""
-    units = (((facts.get("facts") or {}).get("dei") or {}).get("EntityCommonStockSharesOutstanding") or {}).get("units") or {}
-    rows = units.get("shares") or []
-    if not rows:
-        return None
-    end = max(r["end"] for r in rows if r.get("end"))
-    same = {(r.get("frame"), r.get("accn"), r.get("val")) for r in rows if r.get("end") == end}
-    return float(sum(v for _, _, v in same if v)), end
+    """companyfacts → (주식수, 기준일). 같은 기준일에 여러 클래스·행이 있으면 합산 (같은 서류·같은 값은 한 번)."""
+    best: tuple[str, int, float] | None = None
+    for rank, (ns, tag) in enumerate(SHARE_TAGS):
+        units = (((facts.get("facts") or {}).get(ns) or {}).get(tag) or {}).get("units") or {}
+        rows = [r for r in units.get("shares") or [] if r.get("end") and r.get("val")]
+        if not rows:
+            continue
+        end = max(r["end"] for r in rows)
+        same = {(r.get("frame"), r.get("accn"), r.get("val")) for r in rows if r.get("end") == end}
+        val = float(sum(v for _, _, v in same if v)) if rank == 0 else float(max(v for _, _, v in same if v))
+        if val < MIN_SHARES:
+            continue
+        if best is None or end > best[0] or (end == best[0] and rank < best[1]):
+            best = (end, rank, val)
+    return (best[2], best[0]) if best else None
 
 
 def fetch_us(http: HttpClient, xs: list[Listing], graph_nodes: dict[str, Any]) -> list[dict[str, Any]]:
@@ -229,7 +244,9 @@ def run(http: HttpClient, store, graph: dict[str, Any], only: set[str] | None = 
         store.upsert("raw.company_facts", rows, ["company_id"])
     fx = fetch_fx(http)
     n_fx = save_fx(store, fx) if fx else 0
-    return {"rows": len(rows), "fx": n_fx, "by_market": stats}
+    # 시도했는데 하나도 못 받은 시장은 실패로 — 성공 표시 뒤에 조용히 비는 일을 막는다 (11/02 미국 0/6 이 며칠 숨어 있었다)
+    failed = sorted(m for m, v in stats.items() if v.get("tried") and not v.get("ok"))
+    return {"rows": len(rows), "fx": n_fx, "by_market": stats, "failed_markets": failed}
 
 
 def save_fx(store, fx: list[dict[str, Any]]) -> int:
@@ -285,7 +302,9 @@ def main(argv: list[str] | None = None) -> int:
             res = run(http, store, graph, set(args.only.split(",")) if args.only else None, args.max_us)
             lr["rows"] = res["rows"]
             lr["notes"] = json.dumps(res, ensure_ascii=False)[:1500]
-        print(json.dumps(res, ensure_ascii=False))
+            print(json.dumps(res, ensure_ascii=False))
+            if res["failed_markets"]:     # 받은 행은 이미 저장했다 — 기록만 실패로 남겨 알림·점검이 보게
+                raise RuntimeError(f"시도했지만 하나도 못 받은 시장: {', '.join(res['failed_markets'])} — {json.dumps(res['by_market'], ensure_ascii=False)[:600]}")
     finally:
         http.close()
         store.close()

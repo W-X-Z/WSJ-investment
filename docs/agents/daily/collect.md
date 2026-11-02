@@ -15,9 +15,10 @@
 ## 3. 완료 조건과 기록
 - 완료 조건: 1 의 쿼리에서 오늘 issues·company_feed 가 succeeded 이고 clues 행이 있다. clues·prices·facts·fundamentals 는 실패해도 완료로 치되 note 에 적는다.
 - 건수: `select (select count(*) from ideas.supply_chain_issues where first_seen > now() - interval '24 hours') as new_issues, (select count(*) from ideas.company_events where published_at > now() - interval '3 days') as recent_events, (select count(*) from ideas.clues where relevant and seen_at > now() - interval '12 hours') as new_clues;`
-- `select ops.put_agent_run('{"task":"collect","status":"succeeded","rows":<new_issues>,"counts":{"new_issues":…,"recent_events":…,"new_clues":…},"note":"…"}'::jsonb);`
+- 들어온 것의 구성 (0034 뒤): `select * from ops.v_input_quality limit 2;` — note 에 한 줄로: 남긴 단서 N · 원본 x% · 그래프 밖 회사 y% · 본문 z% · 분류기 탈락 N. 원본 0%·본문 0% 처럼 비면 그 사실도 적는다.
+- `select ops.put_agent_run('{"task":"collect","status":"succeeded","rows":<new_issues>,"counts":{"new_issues":…,"recent_events":…,"new_clues":…,"input":{…v_input_quality 오늘 행…}},"note":"…"}'::jsonb);`
   50분 안에 issues·company_feed 가 끝나지 않았으면 status `failed`, note 에 마지막 워크플로 상태.
 
 ## 4. 보고와 알림
-- 보고 2줄: 수집 상태(어느 수집기가 성공·실패) · 새 이슈 N · 최근 기업 소식 N · 새 단서 N.
+- 보고 2줄: 수집 상태(어느 수집기가 성공·실패) · 새 이슈 N · 최근 기업 소식 N · 새 단서 N · 들어온 것의 구성 한 줄.
 - 알림은 실패했을 때만(50분 안에 issues 가 succeeded 가 아닐 때): 첫 문장에 무엇이 안 됐는지.

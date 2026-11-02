@@ -9,6 +9,10 @@
   1) 시세·특징주·지분 변동·투자 권유 기사, 시세 집계 사이트 (규칙)
   2) 주제 밖 글 — AI 데이터센터 공급망(반도체·메모리·패키징·기판·광·전력·냉각)과 그 수요 변화가 아닌 것 (LLM, 없으면 전문 출처는 통과·종합 출처는 어휘에 걸린 것만)
 점수·등급은 붙이지 않는다. 기업 소식(ideas.company_events)과 공급망 이슈도 같은 단서 줄기에 넣어 해석 작업이 한 곳만 읽게 한다.
+
+출처마다 층(layer)을 단다 (ADR-0030): raw(표준·규칙·학회·논문·정책·릴리스 노트 — 원본) · press(업계지) · newsroom · company(기업 이름 검색 소식)
+· disclosure · issue. 원본 층의 전문 출처(broad 아님)는 출처 자체를 골라 둔 것이라 분류기가 '주제 밖'이라 해도 버리지 않는다 (하루 상한 안에서).
+남긴 단서는 원문 본문을 받아 ideas.clue_texts 에 둔다 — 해석·검토 작업이 주소를 다시 열지 않고 DB 에서 읽게.
 """
 
 from __future__ import annotations
@@ -27,6 +31,11 @@ from wsj.ecosystems.ontology import GRAPH_PATH, load_graph
 log = logging.getLogger("wsj.ecosystems.clues")
 REGISTRY_PATH = GRAPH_PATH.parents[1] / "sources" / "registry.json"
 SUPPORTED = {"rss", "atom"}
+RAW_KINDS = {"standards", "conference", "research", "policy", "release_notes", "code", "jobs", "regulation"}
+LAYERS = ("raw", "press", "newsroom", "company", "disclosure", "issue")
+RAW_EXEMPT_CAP = 120          # 한 번 실행에서 분류기를 건너뛰는 원본 단서 상한 (넘치면 나머지는 분류기를 거친다)
+BODY_MAX = 300                # 한 번 실행에서 본문을 받는 단서 상한
+BODY_SKIP = re.compile(r"news\.google\.com/|\.pdf(?:$|\?)|/Archives/edgar/|mops\.twse|dart\.fss|tdnet|cninfo\.com\.cn", re.I)
 
 PRICE_EXTRA = re.compile(
     r"\bstocks? to (?:buy|watch|sell)\b|\bwhy .{0,60} stock\b|\bis .{0,40} (?:a buy|a sell|undervalued|overvalued)\b|\btop \d+ .{0,40}stocks?\b|"
@@ -48,10 +57,19 @@ class Source:
     broad: bool = False          # 종합 매체 — 주제 밖 글이 많다 (LLM 이 없으면 어휘에 걸린 것만)
     enabled: bool = True
     title_filter: str | None = None
+    layer_override: str | None = None
 
     @property
     def kind(self) -> str:
         return self.kinds[0] if self.kinds else "trade_press"
+
+    @property
+    def layer(self) -> str:
+        if self.layer_override in LAYERS:
+            return self.layer_override
+        if self.kind in RAW_KINDS:
+            return "raw"
+        return {"company_newsroom": "newsroom", "disclosure": "disclosure"}.get(self.kind, "press")
 
 
 @dataclass
@@ -71,12 +89,15 @@ class Clue:
     note: str | None = None
     broad: bool = False
     extra: dict[str, Any] = field(default_factory=dict)
+    layer: str = "press"
+    screen: str | None = None          # noise | duplicate | topic_drop | kept | raw_exempt — In 점검(ops.v_input_quality)이 센다
 
     def row(self) -> dict[str, Any]:
+        extra = {**(self.extra or {}), "layer": self.layer} | ({"screen": self.screen} if self.screen else {})
         return {"url": self.url, "title": self.title[:400], "summary": (self.summary or "")[:500] or None,
                 "published_at": self.published_at.isoformat() if self.published_at else None,
                 "source_id": self.source_id, "source_name": self.source_name, "source_kind": self.source_kind, "lang": self.lang, "region": self.region,
-                "companies": self.companies, "nodes": sorted(self.nodes), "relevant": self.relevant, "note": self.note, "extra": self.extra or None}
+                "companies": self.companies, "nodes": sorted(self.nodes), "relevant": self.relevant, "note": self.note, "extra": extra}
 
 
 # ---------------------------------------------------------------- 출처 목록
@@ -87,7 +108,8 @@ def load_registry(path: Path = REGISTRY_PATH) -> list[Source]:
     for r in rows:
         out.append(Source(id=r["id"], name=r.get("name") or r["id"], type=r.get("type", "rss"), url=r["url"], lang=r.get("lang", "en"),
                           region=r.get("region", "global"), kinds=list(r.get("kinds") or []), ecosystems=list(r.get("ecosystems") or []),
-                          broad=bool(r.get("broad")), enabled=r.get("enabled", True) is not False, title_filter=r.get("title_filter")))
+                          broad=bool(r.get("broad")), enabled=r.get("enabled", True) is not False, title_filter=r.get("title_filter"),
+                          layer_override=r.get("layer")))
     return out
 
 
@@ -106,6 +128,8 @@ def check_registry(sources: list[Source]) -> list[str]:
             errs.append(f"{s.id}: url")
         if s.type not in SUPPORTED | {"html_list", "json_api"}:
             errs.append(f"{s.id}: type {s.type}")
+        if s.layer_override is not None and s.layer_override not in LAYERS:
+            errs.append(f"{s.id}: layer {s.layer_override}")
         seen_id.add(s.id)
         seen_url.add(s.url)
     return errs
@@ -143,7 +167,7 @@ def fetch_source(http: Any, s: Source, since: datetime) -> list[Clue]:
             continue
         if s.title_filter and not re.search(s.title_filter, f"{title} {summary}", re.I):
             continue
-        out.append(Clue(norm_url(link), title, summary, d, s.id, s.name, s.kind, s.lang, s.region, broad=s.broad))
+        out.append(Clue(norm_url(link), title, summary, d, s.id, s.name, s.kind, s.lang, s.region, broad=s.broad, layer=s.layer))
     return out
 
 
@@ -160,6 +184,7 @@ def db_clues(store: Any, since: datetime, graph: dict[str, Any]) -> list[Clue]:
                      "disclosure" if r.get("kind") in ("disclosure", "filing") else "company_feed", r.get("lang"), None,
                      [{"company": r["company_id"], "name": labels.get(r["company_id"], r["company_id"])}])
             c.extra = {"publisher": r.get("publisher"), "kind": r.get("kind")}
+            c.layer = "disclosure" if c.source_kind == "disclosure" else "company"
             out.append(c)
     except Exception as exc:  # noqa: BLE001
         log.warning("company_events 를 읽지 못함: %s", exc)
@@ -174,6 +199,7 @@ def db_clues(store: Any, since: datetime, graph: dict[str, Any]) -> list[Clue]:
                      [{"company": x.get("company_id"), "name": x.get("label") or x.get("company_id")} for x in r.get("companies") or [] if isinstance(x, dict)],
                      set(r.get("nodes") or []))
             c.extra = {"issue_key": r["issue_key"]}
+            c.layer = "issue"
             out.append(c)
     except Exception as exc:  # noqa: BLE001
         log.warning("supply_chain_issues 를 읽지 못함: %s", exc)
@@ -332,6 +358,7 @@ def collect(http: Any, store: Any | None, sources: list[Source], since: datetime
         if is_noise(c.title, (c.extra or {}).get("publisher") or c.source_name):
             c.relevant = False
             c.note = "시세·지분 기사"
+            c.screen = "noise"
             noise += 1
     stats.update({"fetched": len(clues), "noise": noise})
     return clues, stats
@@ -361,6 +388,7 @@ def mark_duplicates(clues: list[Clue], seen: set[str] | frozenset[str] = frozens
             if c is not keep and c.relevant and c.url not in seen:
                 c.relevant = False
                 c.note = "같은 제목 중복"
+                c.screen = "duplicate"
                 n += 1
     return n
 
@@ -397,7 +425,7 @@ def tech_signal_clues(store: Any, graph: dict[str, Any], cap: int = 6, seen: set
         out.append(Clue(sgl["url"], title, summary, now, "techdocs", "특허·논문 흐름", "tech_signal", lang="ko", region=sgl["country"] or None,
                         companies=companies, nodes={sgl["node"]}, relevant=True,
                         note=f"기술 흐름 신호 — {short}",
-                        extra={"n_2024": sgl["n24"], "n_2022_23": sgl["n22"], "first_year": sgl["first_year"], "ratio": sgl["ratio"]}))
+                        extra={"n_2024": sgl["n24"], "n_2022_23": sgl["n22"], "first_year": sgl["first_year"], "ratio": sgl["ratio"]}, layer="raw"))
         if len(out) >= cap:
             break
     return out
@@ -411,8 +439,82 @@ def already_seen(store: Any, urls: list[str]) -> set[str]:
         return set()
 
 
+def mark_exempt(todo: list[Clue], cap: int = RAW_EXEMPT_CAP) -> set[str]:
+    """원본 층의 전문 출처 단서 — 분류기가 버려도 남긴다. 최근 글부터 cap 개."""
+    raw = [c for c in todo if c.layer == "raw" and not c.broad]
+    raw.sort(key=lambda c: c.published_at or datetime.min.replace(tzinfo=UTC), reverse=True)
+    return {c.url for c in raw[:cap]}
+
+
+def screen(todo: list[Clue], use_llm: bool, api_key: str | None, model: str, graph: dict[str, Any]) -> dict[str, Any]:
+    """주제 밖 글을 거른다. 원본 층 전문 출처는 분류기의 메모·기업은 받되 버리지 않는다."""
+    exempt = mark_exempt(todo)
+    usage: dict[str, Any] = {}
+    if use_llm and api_key and todo:
+        usage = llm_screen(todo, api_key, model, resolve=company_resolver(graph))
+    else:
+        for c in todo:
+            c.relevant = rule_keep(c)
+    for c in todo:
+        if c.relevant:
+            c.screen = "kept"
+        elif c.url in exempt:
+            c.relevant, c.screen = True, "raw_exempt"
+        else:
+            c.screen = "topic_drop"
+            c.note = c.note or "주제 밖(분류기)"
+    return usage
+
+
+def body_targets(clues: list[Clue], cap: int = BODY_MAX) -> list[Clue]:
+    """본문을 받을 단서: 남긴 것 중 원본 → 업계지·뉴스룸 → 그 밖 순. 구글 뉴스 중계 주소·PDF·공시 사이트는 뺀다."""
+    order = {"raw": 0, "press": 1, "newsroom": 1, "issue": 2, "company": 3, "disclosure": 4}
+    xs = [c for c in clues if c.relevant and c.url.startswith("http") and not BODY_SKIP.search(c.url) and c.source_kind != "tech_signal"]
+    xs.sort(key=lambda c: order.get(c.layer, 3))
+    return xs[:cap]
+
+
+def fetch_bodies(clues: list[Clue], get: Any, workers: int = 8, max_chars: int = 20_000) -> list[dict[str, Any]]:
+    """get(url) -> (http_status, content_type, text). 받은 결과를 ideas.clue_texts 행으로. 실패도 상태로 남겨 다시 시도하지 않는다."""
+    from concurrent.futures import ThreadPoolExecutor
+
+    from wsj.ecosystems.textract import extract_text
+
+    def one(c: Clue) -> dict[str, Any]:
+        row: dict[str, Any] = {"url": c.url, "body": None, "chars": 0, "status": "error", "http_status": None,
+                               "fetched_at": datetime.now(UTC).isoformat()}
+        try:
+            code, ctype, text = get(c.url)
+        except Exception as exc:  # noqa: BLE001 - 한 곳이 죽어도 나머지는 계속
+            row["status"] = f"error:{type(exc).__name__}"[:40]
+            return row
+        row["http_status"] = code
+        if code >= 400:
+            row["status"] = f"http_{code}"
+            return row
+        if "html" not in (ctype or "").lower() and "xml" not in (ctype or "").lower():
+            row["status"] = "not_html"
+            return row
+        _, body = extract_text(text or "", max_chars)
+        row.update({"body": body or None, "chars": len(body), "status": "ok" if len(body) >= 300 else "short"})
+        return row
+
+    with ThreadPoolExecutor(max_workers=max(1, workers)) as pool:
+        return list(pool.map(one, clues))
+
+
+def save_bodies(store: Any, rows: list[dict[str, Any]]) -> int:
+    if not rows:
+        return 0
+    try:
+        return store.upsert("ideas.clue_texts", rows, ["url"])
+    except Exception as exc:  # noqa: BLE001 - 0034 적용 전
+        log.warning("ideas.clue_texts 에 쓸 수 없음 (0034 적용 전?): %s", exc)
+        return 0
+
+
 def run(http: Any, store: Any | None, days: int, use_llm: bool, model: str, api_key: str | None, registry: Path = REGISTRY_PATH,
-        tech_signals: bool | None = None) -> dict[str, Any]:
+        tech_signals: bool | None = None, body_get: Any = None) -> dict[str, Any]:
     graph = load_graph()
     sources = load_registry(registry)
     since = datetime.now(UTC) - timedelta(days=days)
@@ -422,25 +524,47 @@ def run(http: Any, store: Any | None, days: int, use_llm: bool, model: str, api_
     new = [c for c in clues if c.url not in seen]
     tag(new, graph)
     todo = [c for c in new if c.relevant]
-    if use_llm and api_key and todo:
-        stats["llm_usage"] = llm_screen(todo, api_key, model, resolve=company_resolver(graph))
-    else:
-        for c in todo:
-            c.relevant = rule_keep(c)
+    usage = screen(todo, use_llm, api_key, model, graph)
+    if usage:
+        stats["llm_usage"] = usage
     if store is not None and (tech_signals if tech_signals is not None else tech_signals_due()):
         sig = tech_signal_clues(store, graph)
         sig = [c for c in sig if c.url not in already_seen(store, [c.url for c in sig])]
         new += sig
         stats["tech_signals"] = len(sig)
-    stats.update({"new": len(new), "kept": sum(1 for c in new if c.relevant), "dropped": sum(1 for c in new if not c.relevant)})
+    kept = [c for c in new if c.relevant]
+    stats.update({"new": len(new), "kept": len(kept), "dropped": len(new) - len(kept),
+                  "raw_exempt": sum(1 for c in new if c.screen == "raw_exempt"),
+                  "by_layer": {ly: [sum(1 for c in new if c.layer == ly), sum(1 for c in kept if c.layer == ly)] for ly in LAYERS}})
     if store is not None and new:
         try:
             stats["saved"] = store.upsert("ideas.clues", [c.row() for c in new], ["url"])
         except Exception as exc:  # noqa: BLE001
             log.warning("ideas.clues 에 쓸 수 없음 (0032 적용 전?): %s", exc)
             stats["saved"] = 0
+    if body_get is not None and kept:
+        rows = fetch_bodies(body_targets(kept), body_get)
+        st: dict[str, int] = {}
+        for r in rows:
+            st[r["status"].split(":")[0]] = st.get(r["status"].split(":")[0], 0) + 1
+        stats["bodies"] = st | {"saved": save_bodies(store, rows) if store is not None and stats.get("saved") else 0}
     stats["clues"] = new
     return stats
+
+
+def body_getter(user_agent: str) -> tuple[Any, Any]:
+    """본문 받기용 HTTP — 피드 수집보다 짧게 기다리고 다시 시도하지 않는다. (get, close)"""
+    from wsj.ecosystems.sources import BROWSER_UA
+    from wsj.http import HttpClient
+
+    http = HttpClient(user_agent, timeout=12, max_retries=0)
+    headers = {**BROWSER_UA, "Accept": "text/html,application/xhtml+xml;q=0.9,*/*;q=0.5"}
+
+    def get(url: str) -> tuple[int, str, str]:
+        resp = http.request("GET", url, headers=headers)
+        return resp.status_code, resp.headers.get("content-type", ""), resp.text if resp.status_code < 400 else ""
+
+    return get, http.close
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -455,6 +579,7 @@ def main(argv: list[str] | None = None) -> int:
         p.add_argument("--dry-run", action="store_true", help="저장하지 않는다 (DB 도 읽지 않는다)")
         p.add_argument("--registry", type=Path, default=REGISTRY_PATH)
         p.add_argument("--tech-signals", action="store_true", default=None, help="기술 흐름 단서를 오늘 넣는다 (기본: 월요일 KST 만)")
+        p.add_argument("--no-bodies", action="store_true", help="남긴 단서의 원문 본문을 받지 않는다")
     s = sub.add_parser("sources")
     s.add_argument("--registry", type=Path, default=REGISTRY_PATH)
     args = ap.parse_args(argv)
@@ -479,12 +604,13 @@ def main(argv: list[str] | None = None) -> int:
 
         store = make_store(settings)
     http = HttpClient(settings.sec_user_agent, timeout=25, max_retries=1)
+    body_get, body_close = (None, None) if args.dry_run or args.no_bodies else body_getter(settings.sec_user_agent)
     run_id = None
     try:
         if store is not None:
             run_id = store.run_started("clues", {"days": args.days, "llm": not args.no_llm})
         stats = run(http, store, args.days, not args.no_llm, args.model, settings.anthropic_api_key or None, args.registry,
-                    tech_signals=getattr(args, "tech_signals", None))
+                    tech_signals=getattr(args, "tech_signals", None), body_get=body_get)
         if store is not None and run_id is not None:
             store.run_finished(run_id, "succeeded", int(stats.get("saved") or 0), json.loads(json.dumps({k: v for k, v in stats.items() if k != "clues"}, default=str)), None)
     except Exception as exc:
@@ -493,6 +619,8 @@ def main(argv: list[str] | None = None) -> int:
         raise
     finally:
         http.close()
+        if body_close:
+            body_close()
     clues = stats.pop("clues")
     if args.out:
         args.out.parent.mkdir(parents=True, exist_ok=True)

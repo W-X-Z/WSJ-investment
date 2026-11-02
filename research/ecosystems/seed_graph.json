@@ -10464,8 +10464,8 @@
       "listing": {
         "ticker": "ENPH",
         "exchange": "Nasdaq",
-        "cik": null,
-        "filer_type": "non_sec_listed"
+        "cik": 1463101,
+        "filer_type": "10-K"
       },
       "size_band": "mid",
       "in_universe": false
@@ -10518,8 +10518,8 @@
       "listing": {
         "ticker": "TTMI",
         "exchange": "Nasdaq",
-        "cik": null,
-        "filer_type": "non_sec_listed"
+        "cik": 1116942,
+        "filer_type": "10-K"
       },
       "size_band": "large",
       "in_universe": false
