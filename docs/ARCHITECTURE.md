@@ -27,7 +27,8 @@
 - 원본은 Git: `research/ecosystems/seed_graph.json`(노드·관계·근거), `ontology.json`(닫힌 어휘 v0.4), `node_aliases.json`·`native_names.json`, 패치 `research/ecosystems/patches/`.
 - 바꾸는 길: 패치 JSON → PR → CI(`ontology --check`·pytest·web build) → 병합. 웹 사본 `apps/web/src/data/ecosystem-seed.json` 은 `export_web` 이 만든다.
 - 쓰는 곳: 기업 소식 수집 범위(그래프 상장사), 단서 태깅(노드·기업), 해석의 `recall`(그래프 자리·같이 파는 회사·지난 단서), 가격·재무 대상.
-- 다음(백로그 G-1~G-8): v0.5 스키마(시간 축·층별 코드·규칙·결정 주체·숫자 노출도·후보 상태), Supabase 조회본과 조회 함수, 제안 테이블.
+- v0.5(ADR-0031): 규칙·결정 주체 노드, 시간 축(first_seen·first_evidence·maturity_history)·층별 식별자(codes)·후보 상태 노드 칸, 숫자 노출도·양 간선 칸.
+- 조회본: 병합될 때마다 `graph-sync` 워크플로가 `core.graph_nodes`·`graph_edges`·`graph_terms` 로 덮어쓴다. 예약 작업은 `core.resolve_terms`·`graph_neighbors`·`suppliers_below`·`node_signals` 로 묻고, 확인한 것은 `ideas.put_graph_proposal` 로 제안한다 — 해석 작업이 패치에 합친다.
 
 ## 4. 저장소 레이아웃
 | 경로 | 역할 |

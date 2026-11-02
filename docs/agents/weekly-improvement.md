@@ -10,6 +10,8 @@ Claude 예약작업 "WSJ 시스템 개선 (주간)"이 매주 일요일 10:23 KS
 판단을 채점하지 않는다 (ADR-0028·0030). 대신 **들어오는 것(In)** 을 매주 본다 — 해석이 무엇을 읽느냐가 무엇을 찾느냐를 정한다.
 - 매주 보고에 In 표를 붙인다: `select * from ops.v_input_quality limit 7;` · `select * from ops.v_source_use limit 30;` — 원본 비중, 그래프 밖 회사 비율, 본문 비율, 분류기 탈락 사유와 탈락 샘플(`select title, source_name from ideas.clues where extra->>'screen' = 'topic_drop' and seen_at > now() - interval '7 days' order by random() limit 20;`), 아이디어가 실제로 쓴 출처, DB 크기. 원본이 비거나 기업 이름 검색 소식이 대부분이면 그것이 이번 주 가장 큰 문제일 가능성이 높다.
 - 열린 스레드가 오래 묵었는지(`ideas.threads`), 해석이 남는 시간을 쓰는지도 본다.
+- 그래프 상태 (ADR-0031, 채점 아님): `.venv/bin/python -m wsj.ecosystems.ontology --report` 의 exposure_filled/offered_by(노출도 채움), candidates(후보 노드), nodes_with_codes(식별자). 단서의 기술 노드 연결률: `select round(100.0 * count(*) filter (where exists (select 1 from unnest(nodes) n where n !~ '^(company|eco):')) / count(*), 1) from ideas.clues where relevant and seen_at > now() - interval '7 days';`. 대기 중인 그래프 제안(`ideas.graph_proposals`)이 묵었는지.
+- 별칭·식별자 정비(G-6)는 주간 개선이 하기 좋은 일이다 — `core.resolve_terms` 가 못 잇는 원본 단서의 용어를 노드에 `codes`·별칭으로.
 - 이어서 할 일은 `docs/BACKLOG.md` 맨 위 '지금 할 일'에 있다. 이번 주 목적에 가장 가까운 것을 고른다.
 
 ## 쓸 수 있는 도구와 자료

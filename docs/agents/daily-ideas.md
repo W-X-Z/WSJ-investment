@@ -70,3 +70,13 @@
 - 쓰기: `select ideas.put_thread($j${"thread_key":"영문_소문자_6자이상","title":"무엇을 확인하려는가 (명사형)","question":"결론을 내려면 답해야 할 것","companies":[…],"nodes":[…],"clue_urls":[…],"opened_by":"interpret","entry":{"by":"interpret","kind":"note|finding|returned|concluded|dropped","body":"알아낸 것·다음에 볼 곳","sources":[{"title":"…","url":"…","date":"…"}]}}$j$::jsonb);`
   결론이 나면 `kind: concluded`(+`conclusion`·`weakest_link`), 투자 아이디어가 되면 `opportunity_key` 를 잇는다. 이어 볼 가치가 없으면 `dropped` 와 이유.
 - `ideas.put_thread` 가 아직 없으면(0034 전) 이어 볼 것을 `skipped` 에 '이어 볼 것: …' 으로 남긴다 — 다음 날 해석이 어제 기록에서 읽는다.
+
+## D. 그래프 — 조회하고, 확인한 것은 제안한다 (ADR-0031, 0035 뒤)
+그래프는 신호를 놓는 지도다. 고리를 확인할 때 먼저 그래프에 묻고, 조사로 확인한 것은 그래프에 남겨 다음 조사가 같은 것을 다시 찾지 않게 한다.
+- 글 → 노드: `select * from core.resolve_terms('<단서 제목과 본문 일부>');`
+- 이웃: `select * from core.graph_neighbors('<노드 id>', 2);`
+- 아래로 내려가며 공급사: `select * from core.suppliers_below('<노드 id>', 2, null, '{micro,small,mid}');` — 매출 비중(exposure_pct·exposure)이 큰 순
+- 노드 한 장: `select core.node_signals('<노드 id>', 30);` — 노드 칸, 최근 단서, 층별 첫 등장, 걸린 아이디어·스레드
+- 확인한 것 남기기 (저장소를 못 바꾸는 작업도): `select ideas.put_graph_proposal($j$[{"by":"enrich","kind":"edge|node|node_update|alias","payload":{…그래프 패치 JSON 한 항목…},"reason":"어떤 조사에서"}]$j$::jsonb);`
+  매출 비중·고객·자리(edge 에 `exposure_pct`·`exposure_year`·`exposure_source`·`position`), 표준 번호·특허 분류·규칙 번호(node_update 의 `codes`), 근거상 처음 나온 날(`first_evidence`), 단계 전환(`maturity`), 규칙·결정 주체(`rule`·`authority` 노드, `mandates`·`issued_by` 간선). 원문 숫자가 있을 때만, 간선마다 https 근거.
+  형식은 `pipeline/wsj/ecosystems/graph_patches/from_json.py` 맨 위. 해석 작업이 다음 패치에 합친다.

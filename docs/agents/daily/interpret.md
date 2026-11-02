@@ -16,6 +16,7 @@
   층(layer): raw(표준·규칙·학회·논문·정책·릴리스 노트 — 원본) · press(업계지) · newsroom · company(기업 이름으로 모은 소식) · disclosure · issue.
   원본 페이지(표준 위원회 문서 목록·규칙 개정·회의 자료·사양 페이지)는 바뀐 것만 들어온다 — 새 문서·새 항목은 그 링크가, 본문 변화는 '… 페이지 변경' 단서(주소 끝 `#changed-…`, 본문 = 새로 생긴 줄)가 된다.
 - 열린 스레드: `daily-ideas.md` §C
+- 그래프 조회(글 → 노드, 이웃, 아래로 내려가며 공급사, 노드 한 장): `daily-ideas.md` §D. 0035 전이면 아래 recall 을 쓴다.
 - 기업 소식·이슈: `public.v_company_events`, `public.v_supply_chain_issues`, 약한 신호 `public.v_weak_signals`
 - 논문·특허 흐름: `public.v_tech_rising`, `public.v_tech_orgs`, `public.v_tech_docs`
 - 가격: `select * from public.v_price_context where ticker = '…';` (미국 `RMBS`, 한국 `KRX:007660`·`KOSDAQ:…`)
@@ -43,7 +44,9 @@
 ## 그래프와 참고 자료에 쌓기 (알게 된 것이 있을 때)
 해석이 매번 같은 것을 다시 찾지 않도록, 확인한 사실은 그래프에 남긴다.
 - `research/ecosystems/patches/YYYYMMDD_interpret.json` (형식은 `pipeline/wsj/ecosystems/graph_patches/from_json.py` 맨 위). 기업은 상장사만(ticker·exchange·size_band), 간선마다 https 근거 1개 이상, 추론뿐인 고리는 tier `hypothesis`.
-  공급사의 매출 비중·자리를 확인했으면 `offered_by` 간선에 `exposure`(core·major·minor)·`position`(leader·second_source·entrant·captive), 누가 누구에게 납품하는지 확인했으면 `supplied_to` + `about`.
+  공급사의 매출 비중·자리를 확인했으면 `offered_by` 간선에 `exposure_pct`·`exposure_year`·`exposure_source`(원문 숫자가 있을 때) 또는 `exposure`(core·major·minor)와 `position`(leader·second_source·entrant·captive), 누가 누구에게 납품하는지 확인했으면 `supplied_to` + `about`.
+  이미 있는 노드에 표준 번호·특허 분류·규칙 번호(`codes`), 근거상 처음 나온 날(`first_evidence`), 단계 전환(`maturity`)을 더하려면 `node_updates`. 규칙과 그것을 정한 곳은 `rule`·`authority` 노드와 `mandates`(시행일 `effective_date`)·`issued_by` 간선 (온톨로지 v0.5, ADR-0031).
+- 다른 작업이 남긴 그래프 제안(pending)도 오늘 패치에 합친다 — 근거를 다시 열어 맞는 것만: `select proposal_id, kind, payload, reason, by from ideas.graph_proposals where status = 'pending' order by proposal_id;` 결과를 파일로 두고 `.venv/bin/python -m wsj.ecosystems.graph_patches.from_proposals <파일> --prefix p<MMDD> --out ../research/ecosystems/patches/YYYYMMDD_proposals.json`. 들이지 않을 제안은 `update ideas.graph_proposals set status = 'rejected', note = '…' where proposal_id = …;`. 병합되면 graph-sync 가 applied 로 바꾸고 DB 조회본을 맞춘다.
 - 패턴 카드(`research/playbook/patterns/`, 형식은 그 폴더 README)는 반복해서 보인 메커니즘을 적는 기억이다. 오늘 아이디어 하나가 근거의 전부인 새 카드는 맨 위에 `상태: 가설` 을 적는다.
 - `cd pipeline && .venv/bin/python -m wsj.ecosystems.graph_patches.from_json ../research/ecosystems/patches/YYYYMMDD_interpret.json && .venv/bin/python -m wsj.ecosystems.export_web && .venv/bin/python -m wsj.ecosystems.ontology --check`
 - 브랜치 `auto/interpret-YYYYMMDD` → 커밋(끝에 `Co-Authored-By: Claude <noreply@anthropic.com>`) → PR(`gh api repos/W-X-Z/WSJ-investment/pulls -f base=main -f head=… -f title=… -F body=@…`, 본문 끝 `🤖 Generated with [Claude Code](https://claude.com/claude-code)`).

@@ -75,7 +75,8 @@ def _dump(path: Path, data: Any, indent: int) -> None:
 
 
 def apply(nodes: list[Node], edges: list[Edge], prefix: str, native: dict[str, str] | None = None,
-          aliases: dict[str, list[str]] | None = None, node_terms: dict[str, list[str]] | None = None, dry_run: bool = False) -> int:
+          aliases: dict[str, list[str]] | None = None, node_terms: dict[str, list[str]] | None = None,
+          node_updates: list[dict[str, Any]] | None = None, dry_run: bool = False) -> int:
     graph = json.loads(GRAPH_PATH.read_text(encoding="utf-8"))
     onto = load_ontology()
     ids = {n["id"] for n in graph["nodes"]}
@@ -85,6 +86,7 @@ def apply(nodes: list[Node], edges: list[Edge], prefix: str, native: dict[str, s
             graph["nodes"].append(n.as_dict())
             ids.add(n.id)
             added_n += 1
+    updated_n = update_nodes(graph, node_updates or [])
     have = {(e["from"], e["relation"], e["to"]) for e in graph["edges"]}
     used = {e["id"] for e in graph["edges"]}
     seq = 1 + max([int(i.rsplit("-", 1)[1]) for i in used if i.startswith(prefix + "-") and i.rsplit("-", 1)[1].isdigit()] or [0])
@@ -120,9 +122,9 @@ def apply(nodes: list[Node], edges: list[Edge], prefix: str, native: dict[str, s
         print(f"FAIL: 패치 적용 후 검증 오류 {len(rep.errors)}개 — 파일을 쓰지 않는다", file=sys.stderr)
         return 1
     if dry_run:
-        print(json.dumps({"nodes_added": added_n, "edges_added": added_e, "edges_annotated": annotated, "dry_run": True}))
+        print(json.dumps({"nodes_added": added_n, "nodes_updated": updated_n, "edges_added": added_e, "edges_annotated": annotated, "dry_run": True}))
         return 0
-    if added_n or added_e or annotated:
+    if added_n or added_e or annotated or updated_n:
         _dump(GRAPH_PATH, graph, 2)
     if aliases:
         a = json.loads(ALIASES_PATH.read_text(encoding="utf-8"))
@@ -138,8 +140,43 @@ def apply(nodes: list[Node], edges: list[Edge], prefix: str, native: dict[str, s
             cur = nn["node_terms"].setdefault(nid, [])
             cur += [w for w in words if w not in cur]
         _dump(NATIVE_PATH, nn, 2)
-    print(json.dumps({"nodes_added": added_n, "edges_added": added_e, "edges_annotated": annotated, "nodes": len(graph["nodes"]), "edges": len(graph["edges"])}))
+    print(json.dumps({"nodes_added": added_n, "nodes_updated": updated_n, "edges_added": added_e, "edges_annotated": annotated,
+                      "nodes": len(graph["nodes"]), "edges": len(graph["edges"])}))
     return 0
+
+
+def update_nodes(graph: dict[str, Any], updates: list[dict[str, Any]]) -> int:
+    """이미 있는 노드의 v0.5 칸을 고친다 (ADR-0031). codes 는 합치고, maturity 가 바뀌면 이전 단계를 maturity_history 에 쌓는다.
+    first_seen·first_evidence 는 더 이른 날짜일 때만 바꾼다. 없는 노드는 건너뛴다 (새 노드는 nodes 로)."""
+    by_id = {n["id"]: n for n in graph["nodes"]}
+    changed = 0
+    for u in updates:
+        n = by_id.get(u["id"])
+        if n is None:
+            print(f"WARN node_updates: {u['id']} 없음 — 건너뜀", file=sys.stderr)
+            continue
+        before = json.dumps(n, sort_keys=True, ensure_ascii=False)
+        for k, words in (u.get("codes") or {}).items():
+            cur = n.setdefault("codes", {}).setdefault(k, [])
+            cur += [w for w in words if w not in cur]
+        for k in ("first_seen", "first_evidence"):
+            if k in u:
+                new_d = u[k]["date"] if k == "first_evidence" else u[k]
+                old = n.get(k)
+                old_d = (old or {}).get("date") if k == "first_evidence" else old
+                if not old_d or str(new_d) < str(old_d):
+                    n[k] = u[k]
+        if "maturity" in u:
+            old = n.get("maturity")
+            if old and old.get("stage") != u["maturity"].get("stage"):
+                hist = n.setdefault("maturity_history", [])
+                if old not in hist:
+                    hist.append(old)
+            n["maturity"] = u["maturity"]
+        if "status" in u:
+            n["status"] = u["status"]
+        changed += before != json.dumps(n, sort_keys=True, ensure_ascii=False)
+    return changed
 
 
 def all_patches() -> list[str]:
