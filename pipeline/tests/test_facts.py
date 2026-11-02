@@ -26,3 +26,18 @@ def test_falls_back_to_balance_sheet_ifrs_and_weighted_counts():
                        "WeightedAverageNumberOfDilutedSharesOutstanding": _tag(("2026-06-30", 396_562_288))})
     assert F.sec_shares(mair) == (396_562_288.0, "2026-06-30")
     assert F.sec_shares(_f()) is None
+
+
+def test_adr_listings_count_ads_not_ordinary_shares():
+    from wsj.ecosystems.prices import Listing
+
+    class _Http:
+        def get_json(self, url):
+            return _f(dei={"EntityCommonStockSharesOutstanding": _tag(("2025-12-31", 25_932_524_521))})
+
+    tsm = Listing("company:tsmc", "NYSE", "TSM", "TSM", "us")
+    mu = Listing("company:mu", "Nasdaq", "MU", "MU", "us")
+    nodes = {"company:tsmc": {"listing": {"cik": 1046179}}, "company:mu": {"listing": {"cik": 723125}}}
+    rows = {r["company_id"]: r for r in F.fetch_us(_Http(), [tsm, mu], nodes)}
+    assert rows["company:tsmc"]["shares_outstanding"] == round(25_932_524_521 / 5) and rows["company:tsmc"]["source"] == "sec_companyfacts_ads"
+    assert rows["company:mu"]["shares_outstanding"] == 25_932_524_521 and rows["company:mu"]["source"] == "sec_companyfacts"

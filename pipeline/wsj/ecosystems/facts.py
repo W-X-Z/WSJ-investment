@@ -54,6 +54,9 @@ SHARE_TAGS = [("dei", "EntityCommonStockSharesOutstanding"), ("us-gaap", "Common
               ("ifrs-full", "NumberOfSharesOutstanding"), ("us-gaap", "WeightedAverageNumberOfDilutedSharesOutstanding"),
               ("us-gaap", "WeightedAverageNumberOfSharesOutstandingBasic")]
 MIN_SHARES = 100_000          # 상장 전 서류의 1,000주 같은 값은 버린다
+# 미국 예탁증권(ADS) 1주가 대표하는 보통주 수 — 20-F 표지의 주식수는 보통주라 ADS 가격을 곱하려면 나눠야 한다.
+# 출처: 각 사 2025 회계연도 20-F ("each ADS represents five (5) common shares" 등, 2026-11-03 확인). 1:1 인 곳은 적지 않는다.
+SHARES_PER_ADS = {"TSM": 5.0, "UMC": 5.0, "ASX": 2.0, "HIMX": 2.0, "PKX": 0.25}
 
 
 def sec_shares(facts: dict[str, Any]) -> tuple[float, str] | None:
@@ -87,7 +90,8 @@ def fetch_us(http: HttpClient, xs: list[Listing], graph_nodes: dict[str, Any]) -
             log.warning("sec %s: %s", x.key, str(exc)[:100])
             continue
         if r:
-            out.append(_row(x, r[0], r[1], "sec_companyfacts"))
+            per_ads = SHARES_PER_ADS.get(x.ticker.upper())
+            out.append(_row(x, r[0] / per_ads, r[1], "sec_companyfacts_ads") if per_ads else _row(x, r[0], r[1], "sec_companyfacts"))
     return out
 
 

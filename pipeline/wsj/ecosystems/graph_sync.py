@@ -27,6 +27,7 @@ log = logging.getLogger("wsj.ecosystems.graph_sync")
 NATIVE_PATH = GRAPH_PATH.parent / "native_names.json"
 NODE_COLS = {"id", "kind", "label", "ecosystem", "also_in", "status", "maturity", "maturity_history", "first_seen", "first_evidence", "codes",
              "listing", "size_band", "role", "in_universe"}
+PROPOSAL_COLS = ["proposal_id", "created_at", "by", "kind", "payload", "reason", "status", "note", "applied_at"]
 EDGE_COLS = {"id", "from", "to", "relation", "evidence_tier", "polarity", "confidence", "exposure", "exposure_pct", "exposure_year",
              "exposure_source", "position", "about", "effective_date", "content_usd_per_system", "lead_time_weeks", "note", "evidence"}
 
@@ -35,18 +36,33 @@ def norm_term(s: str) -> str:
     return re.sub(r"\s+", " ", s.strip().lower())
 
 
-def node_rows(graph: dict[str, Any], sha: str | None) -> list[dict[str, Any]]:
+# 규모 구간 (시가총액 USD). 그래프 파일의 size_band 는 넣을 때의 표시라 주가가 움직이면 낡는다 — 조회본은 매일 시가총액으로 다시 매긴다.
+BANDS = [(3e8, "micro"), (2e9, "small"), (1e10, "mid"), (2e11, "large")]
+
+
+def band_of(cap_usd: float | None) -> str | None:
+    if not cap_usd or cap_usd <= 0:
+        return None
+    return next((b for lim, b in BANDS if cap_usd < lim), "mega")
+
+
+def node_rows(graph: dict[str, Any], sha: str | None, caps: dict[str, dict[str, Any]] | None = None) -> list[dict[str, Any]]:
+    """caps: 기업 id → {market_cap_usd, price_as_of} (public.v_company_facts). 있으면 size_band 를 시가총액으로 다시 매기고
+    그래프 파일의 값은 attrs.size_band_graph 에 남긴다. 비상장(private)은 그대로."""
     out = []
     for n in graph["nodes"]:
         lst = n.get("listing") or {}
+        cap = (caps or {}).get(n["id"]) or {}
+        live = band_of(cap.get("market_cap_usd")) if n.get("size_band") != "private" else None
+        extra = {"size_band_graph": n.get("size_band"), "market_cap_usd": cap.get("market_cap_usd"), "market_cap_as_of": cap.get("price_as_of")} if live else {}
         out.append({
             "id": n["id"], "kind": n["kind"], "label": n["label"], "name": clean_name(n["label"]),
             "ecosystem": n.get("ecosystem"), "also_in": list(n.get("also_in") or []), "status": n.get("status") or "active",
             "maturity": n.get("maturity"), "maturity_stage": (n.get("maturity") or {}).get("stage"),
             "maturity_history": n.get("maturity_history") or [], "first_seen": n.get("first_seen"), "first_evidence": n.get("first_evidence"),
             "codes": n.get("codes") or {}, "ticker": lst.get("ticker"), "exchange": lst.get("exchange"), "cik": lst.get("cik"),
-            "size_band": n.get("size_band"), "role": n.get("role"),
-            "attrs": {k: v for k, v in n.items() if k not in NODE_COLS}, "graph_sha": sha,
+            "size_band": live or n.get("size_band"), "role": n.get("role"),
+            "attrs": {k: v for k, v in n.items() if k not in NODE_COLS} | extra, "graph_sha": sha,
         })
     return out
 
@@ -132,8 +148,15 @@ def graph_sha() -> str | None:
 def sync(store: Any, graph: dict[str, Any], onto: dict[str, Any]) -> dict[str, Any]:
     now = datetime.now(UTC).isoformat()
     sha = graph_sha()
-    nodes, edges, terms = node_rows(graph, sha), edge_rows(graph, onto, sha), term_rows(graph)
-    stats = {}
+    caps: dict[str, dict[str, Any]] = {}
+    try:
+        caps = {r["company_id"]: r for r in store.select("public.v_company_facts", ["company_id", "market_cap_usd", "price_as_of"])
+                if r.get("company_id") and r.get("market_cap_usd")}
+    except Exception as exc:  # noqa: BLE001 - 시가총액이 없으면 그래프 파일의 규모를 그대로 쓴다
+        log.warning("v_company_facts 를 읽지 못함: %s", exc)
+    nodes, edges, terms = node_rows(graph, sha, caps), edge_rows(graph, onto, sha), term_rows(graph)
+    stats: dict[str, Any] = {"live_size_band": sum(1 for r in nodes if "size_band_graph" in r["attrs"]),
+                             "size_band_changed": sum(1 for r in nodes if "size_band_graph" in r["attrs"] and r["attrs"]["size_band_graph"] != r["size_band"])}
     for table, rows, key in (("core.graph_nodes", nodes, ["id"]), ("core.graph_edges", edges, ["id"]), ("core.graph_terms", terms, ["term", "node_id"])):
         for r in rows:
             r["synced_at"] = now
@@ -147,7 +170,7 @@ def sync(store: Any, graph: dict[str, Any], onto: dict[str, Any]) -> dict[str, A
 def reconcile_proposals(store: Any, graph: dict[str, Any]) -> int:
     """대기 중인 제안 중 그래프에 이미 들어간 것(간선 from·relation·to, 노드 id)을 applied 로."""
     try:
-        pend = store.select("ideas.graph_proposals", ["proposal_id", "kind", "payload"], {"status": "pending"})
+        pend = store.select("ideas.graph_proposals", PROPOSAL_COLS, {"status": "pending"})
     except Exception as exc:  # noqa: BLE001 - 0035 전
         log.warning("ideas.graph_proposals 를 읽지 못함: %s", exc)
         return 0
@@ -164,9 +187,10 @@ def reconcile_proposals(store: Any, graph: dict[str, Any]) -> int:
                 done.append(p["proposal_id"])
         elif p["kind"] == "node" and pl.get("id") in have_n:
             done.append(p["proposal_id"])
-    if done:
-        store.upsert("ideas.graph_proposals", [{"proposal_id": i, "status": "applied", "applied_at": datetime.now(UTC).isoformat()} for i in done],
-                     ["proposal_id"])
+    if done:   # 행 전체를 다시 쓴다 — 부분 행 upsert 는 NOT NULL 칸(by·kind·payload)에 막힌다 (11/03 graph-sync 실패)
+        now = datetime.now(UTC).isoformat()
+        ids = set(done)
+        store.upsert("ideas.graph_proposals", [{**p, "status": "applied", "applied_at": now} for p in pend if p["proposal_id"] in ids], ["proposal_id"])
     return len(done)
 
 

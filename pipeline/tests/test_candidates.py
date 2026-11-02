@@ -1,4 +1,6 @@
-"""후보 노드 통로 (ADR-0031 G-6·G-7·T-8) — 식별자 태깅, 본문 태깅, 다시 잇기, 그래프 밖 상장사·사전 밖 식별자 제안."""
+"""후보 노드 통로 — 기업 예시는 그래프에 들어올 일이 없는 가상의 회사(티커 99xx)로 쓴다 (실제 회사는 해석이 그래프에 넣으면 테스트가 깨진다).
+
+후보 노드 통로 (ADR-0031 G-6·G-7·T-8) — 식별자 태깅, 본문 태깅, 다시 잇기, 그래프 밖 상장사·사전 밖 식별자 제안."""
 
 import pytest
 
@@ -59,17 +61,17 @@ def _row(url, layer, companies, nodes=(), date="2026-11-01"):
 
 def test_outside_companies_threshold_ecosystem_and_skip():
     g = load_graph()
-    co = {"company": None, "name": "Holtek Semiconductor", "ticker": "6202", "exchange": "TWSE"}
+    co = {"company": None, "name": "Zyxtron Semiconductor", "ticker": "9998", "exchange": "TWSE"}
     one_press = [_row("a", "press", [co], ["component:optical_dsp"])]
     assert K.outside_companies(one_press, g, set(), "2026-11-02") == []                      # 업계지 1건은 아직
     two = one_press + [_row("b", "press", [co], ["component:optical_dsp"], "2026-10-30")]
     got = K.outside_companies(two, g, set(), "2026-11-02")
     p = got[0]["payload"]
     assert p["status"] == "candidate" and p["size_band"] == "unknown" and p["ecosystem"] == "optics"
-    assert p["id"] == "company:holtek_semiconductor" and p["first_evidence"]["date"] == "2026-10-30" and got[0]["n"] == 2
+    assert p["id"] == "company:zyxtron_semiconductor" and p["first_evidence"]["date"] == "2026-10-30" and got[0]["n"] == 2
     raw_one = [_row("c", "disclosure", [co], ["component:optical_dsp"])]
     assert K.outside_companies(raw_one, g, set(), "2026-11-02")                               # 공시·원본 층은 1건으로
-    assert K.outside_companies(two, g, {("TW", "6202")}, "2026-11-02") == []                  # 이미 제안됨
+    assert K.outside_companies(two, g, {("TW", "9998")}, "2026-11-02") == []                  # 이미 제안됨
     no_anchor = [_row("d", "disclosure", [co])]
     assert K.outside_companies(no_anchor, g, set(), "2026-11-02") == []                       # 걸린 노드·그래프 기업이 없으면 올리지 않는다
     bad = [_row("e", "disclosure", [{**co, "ticker": "Holtek"}], ["component:optical_dsp"])]
@@ -78,9 +80,9 @@ def test_outside_companies_threshold_ecosystem_and_skip():
 
 def test_cjk_name_gets_exchange_ticker_id():
     g = load_graph()
-    co = {"company": None, "name": "亞力電機", "ticker": "1514", "exchange": "TWSE"}
+    co = {"company": None, "name": "測試電機", "ticker": "9999", "exchange": "TWSE"}
     got = K.outside_companies([_row("a", "disclosure", [co], ["component:mv_switchgear"])], g, set(), "2026-11-02")
-    assert got[0]["payload"]["id"] == "company:twse_1514" and got[0]["payload"]["ecosystem"] == "power"
+    assert got[0]["payload"]["id"] == "company:twse_9999" and got[0]["payload"]["ecosystem"] == "power"
 
 
 def test_unmapped_terms_from_untagged_raw_clues():
@@ -98,8 +100,8 @@ def test_unmapped_terms_from_untagged_raw_clues():
 
 
 def test_candidate_company_patch_allows_unknown_band_and_keeps_v05_fields():
-    doc = {"prefix": "t1102", "nodes": [{"id": "company:twse_1514", "kind": "company", "label": "亞力 (TWSE 1514)", "ecosystem": "power",
-                                         "ticker": "1514", "exchange": "TWSE", "size_band": "unknown", "status": "candidate", "first_seen": "2026-11-02"}]}
+    doc = {"prefix": "t1102", "nodes": [{"id": "company:twse_9999", "kind": "company", "label": "測試電機 (TWSE 9999)", "ecosystem": "power",
+                                         "ticker": "9999", "exchange": "TWSE", "size_band": "unknown", "status": "candidate", "first_seen": "2026-11-02"}]}
     nodes, *_ = parse(doc)
     assert nodes[0].extra["status"] == "candidate" and nodes[0].extra["size_band"] == "unknown" and nodes[0].extra["first_seen"] == "2026-11-02"
     doc["nodes"][0]["status"] = "active"
@@ -133,7 +135,7 @@ class _Store:
 
 
 def test_run_writes_relinks_and_proposals_skipping_known():
-    co = {"company": None, "name": "亞力電機", "ticker": "1514", "exchange": "TWSE"}
+    co = {"company": None, "name": "測試電機", "ticker": "9999", "exchange": "TWSE"}
     rows = [_row("a", "disclosure", [co], ["component:mv_switchgear"]) | {"seen_at": "x", "relevant": True},
             _row("b", "raw", []) | {"title": "P802.3dk and PCIe 8.0"},
             _row("c", "press", [{"company": None, "name": "烽火通信", "ticker": "600498", "exchange": "SSE"}])]
@@ -141,5 +143,5 @@ def test_run_writes_relinks_and_proposals_skipping_known():
     stats = K.run(st, load_graph(), days=14)
     assert stats["relinked"] == 1 and st.upserted[0]["url"] == "c" and st.upserted[0]["companies"][0]["company"] == "company:fiberhome"
     kinds = [(p["kind"], p["payload"].get("term") or p["payload"].get("id")) for p in st.inserted]
-    assert ("node", "company:twse_1514") in kinds and ("term", "PCIe 8.0") in kinds and ("term", "P802.3dk") not in kinds
+    assert ("node", "company:twse_9999") in kinds and ("term", "PCIe 8.0") in kinds and ("term", "P802.3dk") not in kinds
     assert all(p["by"] == "collect" and p["reason"] for p in st.inserted)
