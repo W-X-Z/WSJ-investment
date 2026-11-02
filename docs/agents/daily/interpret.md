@@ -45,6 +45,7 @@
 ## 그래프와 참고 자료에 쌓기 (알게 된 것이 있을 때)
 해석이 매번 같은 것을 다시 찾지 않도록, 확인한 사실은 그래프에 남긴다.
 - `research/ecosystems/patches/YYYYMMDD_interpret.json` (형식은 `pipeline/wsj/ecosystems/graph_patches/from_json.py` 맨 위). 기업은 상장사만(ticker·exchange·size_band), 간선마다 https 근거 1개 이상, 추론뿐인 고리는 tier `hypothesis`.
+  미국 공시 기업의 매출 구성 숫자(차원별 매출 pct·고객 집중도·'매출의 N%' 문장)는 이미 `ideas.exposure_facts` 에 있다 — 조사하는 회사면 먼저 본다 (`select kind, label, pct, period_end, url from ideas.exposure_facts where company_id = '<id>' and kind <> 'none' order by kind, pct desc nulls last;`).
   공급사의 매출 비중·자리를 확인했으면 `offered_by` 간선에 `exposure_pct`·`exposure_year`·`exposure_source`(원문 숫자가 있을 때) 또는 `exposure`(core·major·minor)와 `position`(leader·second_source·entrant·captive), 누가 누구에게 납품하는지 확인했으면 `supplied_to` + `about`.
   이미 있는 노드에 표준 번호·특허 분류·규칙 번호(`codes`), 근거상 처음 나온 날(`first_evidence`), 단계 전환(`maturity`)을 더하려면 `node_updates`. 규칙과 그것을 정한 곳은 `rule`·`authority` 노드와 `mandates`(시행일 `effective_date`)·`issued_by` 간선 (온톨로지 v0.5, ADR-0031).
 - 다른 작업이 남긴 그래프 제안(pending)도 오늘 패치에 합친다 — 근거를 다시 열어 맞는 것만: `select proposal_id, kind, payload, reason, by from ideas.graph_proposals where status = 'pending' order by proposal_id;` 결과를 파일로 두고 `.venv/bin/python -m wsj.ecosystems.graph_patches.from_proposals <파일> --prefix p<MMDD> --out ../research/ecosystems/patches/YYYYMMDD_proposals.json`. 들이지 않을 제안은 `update ideas.graph_proposals set status = 'rejected', note = '…' where proposal_id = …;`. 병합되면 graph-sync 가 applied 로 바꾸고 DB 조회본을 맞춘다.

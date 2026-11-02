@@ -14,6 +14,9 @@ Claude 예약작업 "WSJ 시스템 개선 (주간)"이 매주 일요일 10:23 KS
 - 별칭·식별자 정비(G-6)는 주간 개선이 하기 좋은 일이다 — `core.resolve_terms` 가 못 잇는 원본 단서의 용어를 노드에 `codes`·별칭으로.
 - 이어서 할 일은 `docs/BACKLOG.md` 맨 위 '지금 할 일'에 있다. 이번 주 목적에 가장 가까운 것을 고른다.
 - 매주 한 장: `research/macro/YYYY-Www.md` 주간 매크로 배경 (형식은 `research/macro/README.md`). 해석이 '시장이 이미 가격에 넣었나 · 소형주에 돈이 들어오는 환경인가'를 판단하는 배경이다. 직접 연 원문 숫자만, 날짜·링크와 함께. 예측은 쓰지 않는다. `research/` 안이라 다른 조건이 맞으면 스스로 병합해도 된다.
+- 노출도 채우기 (G-8, 매주): 일요일 07:13 에 exposure-facts 워크플로가 미국 공시 소·중형사의 매출 구성 숫자를 `ideas.exposure_facts` 에 모아 둔다 (XBRL 차원별 매출과 총매출 대비 pct, 고객 집중도, '매출의 N%' 문장). 매주 10곳 안팎을 공급 관계(`offered_by`)로 옮긴다 — 아이디어·스레드·최근 단서에 나온 회사부터:
+  `select company_id, kind, label, pct, period_end, url from ideas.exposure_facts where kind in ('revenue','concentration','text') and company_id = '<id>' order by kind, pct desc nulls last;`
+  축의 멤버(제품·사업부·최종시장)가 그 관계의 부품·제품과 같은 것을 가리키면 `exposure_pct`(숫자 그대로)·`exposure_year`(회계연도)·`exposure_source`(보고서 url + 축=멤버). 멤버가 그 부품을 포함하는 더 넓은 범주(예: 최종시장 '데이터센터')뿐이면 숫자는 넣지 않고 범주 `exposure`(core ≥ 50%·major 20~50%·minor < 20% — 넓은 범주의 숫자가 상한)와 note 에 근거. 대응이 안 되면 비워 둔다. 해외 상장사는 신호가 온 회사만 조사하며 채운다(일괄 API 는 쓰지 않는다, 사용자 11/02).
 - 수집 이상 (`select * from ops.v_collection_alerts;`) 이 한 주 내내 같은 줄을 내면 그 원인을 이번 주 고칠 것 후보로 본다.
 - 수집기가 올린 그래프 제안(`by = 'collect'`: 그래프 밖 상장사 후보·사전 밖 식별자)이 해석 작업에서 처리되지 않고 묵었으면 여기서 정리한다 — 기존 노드의 codes·별칭으로 붙이거나, 후보 노드로 넣거나, rejected.
 

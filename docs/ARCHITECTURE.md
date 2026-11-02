@@ -36,7 +36,7 @@
 | 경로 | 역할 |
 |---|---|
 | `supabase/migrations/*.sql` | 스키마. 사용자가 SQL 편집기로 적용 |
-| `pipeline/wsj/ecosystems/` | 지금 쓰는 수집·도구 — `clues`·`pages`·`candidates`·`company_feed`·`issues`·`prices`·`facts`·`fundamentals`·`graph_sync`·`recall`·`textract`·`ontology`·`export_web` |
+| `pipeline/wsj/ecosystems/` | 지금 쓰는 수집·도구 — `clues`·`pages`·`candidates`·`exposure`·`company_feed`·`issues`·`prices`·`facts`·`fundamentals`·`graph_sync`·`recall`·`textract`·`ontology`·`export_web` |
 | `pipeline/wsj/collectors/`, `briefs/`, `signals/` | 옛 SEC·FINRA 수집기와 브리프 (토요일 `collect.yml`, 판단에는 안 쓴다) |
 | `research/sources/` | 출처 목록과 형식 |
 | `research/ecosystems/` | 그래프·어휘·패치 |
@@ -46,7 +46,7 @@
 | `apps/web/` | Next.js — 투자 아이디어·단서 화면 |
 
 ## 5. 운영
-- 워크플로: `issues.yml`(매일), `graph-sync.yml`(그래프 병합 때·매일 05:07), `pipeline-tests.yml`·`web-quality.yml`(CI), `source-probe.yml`·`clues-probe.yml`(출처 점검), `collect.yml`(토요일 옛 수집), `moat.yml`(수동 실행만 — 11/02 예약 끔).
+- 워크플로: `issues.yml`(매일), `graph-sync.yml`(그래프 병합 때·매일 05:07), `exposure-facts.yml`(일요일 07:13 — 공시 매출 구성 → `ideas.exposure_facts`), `pipeline-tests.yml`·`web-quality.yml`(CI), `source-probe.yml`·`clues-probe.yml`(출처 점검), `collect.yml`(토요일 옛 수집), `moat.yml`(수동 실행만 — 11/02 예약 끔).
 - 시크릿: `SUPABASE_URL`, `SUPABASE_SECRET_KEY`, `ANTHROPIC_API_KEY`(단서 분류 Haiku·이슈 선별), `OPENALEX_API_KEY`, `DART_API_KEY`(보류). 웹과 예약 작업은 publishable 키 + RLS.
 - 장애: 수집기 하나가 실패해도 다음 단계는 돈다. 시도했는데 하나도 못 받은 시장(facts)은 실패로 기록한다. 들어오는 것의 구성은 `ops.v_input_quality`, 이상은 `ops.v_collection_alerts` 로 매일 보고 리포트 알림 둘째 줄에 붙인다.
 - 할 일: `docs/BACKLOG.md` 맨 위 '지금 할 일' (노션 'WSJ 개발 백로그'와 같다).
