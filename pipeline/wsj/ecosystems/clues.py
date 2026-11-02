@@ -126,7 +126,7 @@ def check_registry(sources: list[Source]) -> list[str]:
             errs.append(f"{s.id}: url 중복")
         if not s.url.startswith("https://") and not s.url.startswith("http://"):
             errs.append(f"{s.id}: url")
-        if s.type not in SUPPORTED | {"html_list", "json_api"}:
+        if s.type not in SUPPORTED | {"html_list", "html_diff", "json_api"}:
             errs.append(f"{s.id}: type {s.type}")
         if s.layer_override is not None and s.layer_override not in LAYERS:
             errs.append(f"{s.id}: layer {s.layer_override}")
@@ -519,6 +519,11 @@ def run(http: Any, store: Any | None, days: int, use_llm: bool, model: str, api_
     sources = load_registry(registry)
     since = datetime.now(UTC) - timedelta(days=days)
     clues, stats = collect(http, store, sources, since, graph)
+    from wsj.ecosystems.pages import collect_pages, commit_states
+
+    page_clues, page_bodies, page_states, stats["pages"] = collect_pages(http, store, sources)
+    have = {c.url for c in clues}
+    clues += [c for c in page_clues if c.url not in have]
     seen = already_seen(store, [c.url for c in clues]) if store is not None else set()
     stats["duplicate"] = mark_duplicates(clues, seen)
     new = [c for c in clues if c.url not in seen]
@@ -542,8 +547,13 @@ def run(http: Any, store: Any | None, days: int, use_llm: bool, model: str, api_
         except Exception as exc:  # noqa: BLE001
             log.warning("ideas.clues 에 쓸 수 없음 (0032 적용 전?): %s", exc)
             stats["saved"] = 0
+    if store is not None and (not new or stats.get("saved")):
+        new_urls = {c.url for c in new}
+        stats["pages"]["bodies"] = save_bodies(store, [b for b in page_bodies if b["url"] in new_urls])
+        stats["pages"]["states"] = commit_states(store, page_states)   # 단서를 저장한 뒤에만 — 실패하면 다음 날 같은 변화를 다시 낸다
     if body_get is not None and kept:
-        rows = fetch_bodies(body_targets(kept), body_get)
+        page_made = {b["url"] for b in page_bodies}
+        rows = fetch_bodies([c for c in body_targets(kept) if c.url not in page_made], body_get)
         st: dict[str, int] = {}
         for r in rows:
             st[r["status"].split(":")[0]] = st.get(r["status"].split(":")[0], 0) + 1

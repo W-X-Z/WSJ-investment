@@ -11,7 +11,7 @@
 ```
 ① 출처        research/sources/registry.json (층: raw·press·newsroom·disclosure) + 그래프 기업 이름 검색 + 공시·월매출 + 가격·재무
 ② 수집        GitHub Actions 'issues' (18:47 예약 + 05:23 예약 작업이 한 번 더 실행)
-              issues → company_feed → clues(원본 층 전문 출처는 분류기 예외, 남긴 단서는 본문 저장) → prices → facts → fundamentals
+              issues → company_feed → clues(피드 + 원본 페이지 변화 감지, 원본 층 전문 출처는 분류기 예외, 남긴 단서는 본문 저장) → prices → facts → fundamentals
 ③ 저장        Supabase  ideas.clues · clue_texts(본문, 비공개) · company_events · supply_chain_issues · tech_* · opportunities · threads
               ops.collector_runs(수집기·예약 작업 실행 기록) · ops.v_input_quality · ops.v_source_use (In 점검)
 ④ 판단        Claude 예약 작업 (월~토)

@@ -16,15 +16,15 @@
 | D-3 | In 점검 `ops.v_input_quality`·`ops.v_source_use` | 1 | 0034 적용 대기 | |
 | I-2 | 미국 발행주식수 대체 태그, 하나도 못 받은 시장은 실패 기록 | 1 | 완료 11/02 | ENPH·TTM CIK 보정 |
 | D-4·J-2 | 조사 스레드 `ideas.threads`·`put_thread`, 검토자 → 다음 날 해석으로 되돌리기 | 2 | 0034 적용 대기 | 문서·지시문은 반영. 별도 리서처 작업은 만들지 않는다 (사용자) |
-| I-3 | 페이지 변화 감지 수집기 + 원문 버전 (1단계 페이지형 17곳: ERCOT·PJM·CAISO·OCP·NVIDIA 문서·IEEE 802.3·OIF·JEDEC·EPRI) — 별도 워크플로 | 2 | 대기 | A-12, A-5 일부 |
-| I-4 | 1단계 API·피드 출처 (arXiv eess.SY·physics.optics, Optica, OSTI, EIA-860M, SONiC, cninfo IR, 채용 API) | 2 | 대기 | A-12, C-13 |
-| I-6 | 출처 목록 하나로 (registry.json = 수집기의 목록, 노션 출처원 DB 122개는 보기용), 죽은 피드·중복 정리 | 2 | 대기 | |
-| G-1 | ADR-0031 온톨로지 v0.5 (시간 축·층별 코드와 한중일 별칭·규칙과 결정 주체·숫자 노출도·후보 상태) | 2 | 대기 | |
+| I-3 | 페이지 변화 감지 수집기 + 원문 버전 (1단계 페이지형 17곳: ERCOT·PJM·CAISO·OCP·NVIDIA 문서·IEEE 802.3·OIF·JEDEC·EPRI) | 2 | 완료 11/02 | A-12, A-5. `wsj.ecosystems.pages` — 단서 수집 단계 안에서 돈다(17곳 합쳐 1분 안팎). 상태는 ops.collector_state `page:<id>` |
+| I-4 | 1단계 API·피드 출처 — 11/02 arXiv eess.SY·physics.optics·EPRI Journal·SONiC 커밋 추가. 남은 것: OSTI, EIA-860M, cninfo IR 기록표, 채용 API(Greenhouse·Lever·Ashby 보드 매핑) | 2 | 일부 완료 | A-12, C-13 |
+| I-6 | 출처 목록 하나로 — registry.json 이 수집기의 유일한 목록(노션 출처원 DB 는 후보·근거). 8일 0건 피드 정리(ocp_news → 페이지 감지, newsfile 끔). 남은 것: issues.py FEEDS 와 겹치는 피드 정리 | 2 | 일부 완료 | |
+| G-1 | ADR-0031 온톨로지 v0.5 (시간 축·층별 코드와 한중일 별칭·규칙과 결정 주체·숫자 노출도·후보 상태) | 2 | 초안(승인 대기) | `docs/adr/0031-ontology-v05.md` |
 | M-2 | 멈춘 작업 정리 (약한 신호·paths·research·verify·토요일 옛 수집·moat) | 2 | 대기 | |
 | G-2~G-7 | 그래프 DB 조회본·조회 함수 4종·제안 테이블과 일일 패치 PR·사용 규칙·별칭·코드·그래프 밖 회사 편입 | 3 | 대기 | T-8, T-11 |
 | D-5 | 용어의 층별 첫 등장 기록 | 3 | 대기 | |
 | J-3 | 주간 매크로 배경 | 3 | 대기 | A-14 |
-| I-5·I-7·I-8 | 목록·API형 출처, 뉴스 분류기 개선(본문 기준), 원본 출처 이력 백필 | 3 | 대기 | A-5, A-8·O-16, A-6 |
+| I-5·I-7·I-8 | 목록형 출처는 페이지 감지로 바꿈(11/02). 남은 것: json_api 출처(鉅亨), 뉴스 분류기 개선(본문 기준), 원본 출처 이력 백필 | 3 | 일부 완료 | A-5, A-8·O-16, A-6 |
 | M-1·M-3 | 온톨로지 상태 지표, 수집 실패 알림 | 3 | 대기 | P-05 |
 | G-8 | 노출도 일괄 채우기 — 대상 수·비용을 먼저 알린다 | 비용 승인 후 | 대기 | K-5 |
 | X-2 | 한국·공시 수집 확대 (DART 키 포함) | — | 보류 | A-7·O-18·K-4·K-12 |
