@@ -1,0 +1,70 @@
+{
+ "prefix": "i1103",
+ "nodes": [],
+ "edges": [
+  {
+   "from": "company:mrvl",
+   "relation": "invests_in",
+   "to": "company:lite",
+   "tier": "official_issuer",
+   "polarity": "positive",
+   "note": "인수 합의(전주식). Lumentum 1주당 Marvell 4.500주 고정 교환비율, 기업가치 1,150억 달러(주당 약 1,132달러, 10-28 종가 대비 23.9% 프리미엄). 합병 뒤 Marvell 주주 67%·Lumentum 주주 33%. 종결 예정 2028년 상반기(주주·규제 승인 조건). Marvell 은 Lumentum 의 InP·고출력 레이저 제조를 '전략적 공급 강화'로 명시 — 머천트 1위 EML·CW 레이저 공급사가 DSP·커스텀 XPU 경쟁사 소유가 되는 구조",
+   "evidence": [
+    {
+     "url": "https://investor.marvell.com/news-events/press-releases/detail/1040/marvell-and-lumentum-to-combine-creating-a-category-leader-in-ai-connectivity",
+     "source_type": "official_issuer",
+     "published_at": "2026-11-02",
+     "excerpt": "Lumentum stockholders will receive a fixed exchange ratio of 4.500 shares of Marvell common stock … implied enterprise value of $115 billion … expected to close in the first half of calendar year 2028 … indium phosphide (InP), as well as high-speed and high-power laser capabilities … strengthen strategic supply"
+    }
+   ]
+  },
+  {
+   "from": "component:cw_laser",
+   "relation": "offered_by",
+   "to": "company:cohr",
+   "tier": "third_party_report",
+   "polarity": "positive",
+   "note": "Marvell–Lumentum 보도(10-28, 합의 전) 시점에 이미 '칩 회사가 소유하지 않은 독립 InP 공급사로서 Coherent 가 이긴다'는 해석이 나옴 — 시장이 고려한 변수. Lumentum 광부품 생산능력은 2029년 초까지 매진(Bloomberg 10-09 보도 인용), 일부 제품은 2027년까지 수요의 약 70% 를 못 맞춤(Lumentum CEO 발언 인용). Coherent 는 텍사스 셔먼 InP 증설",
+   "evidence": [
+    {
+     "url": "https://finance.yahoo.com/technology/ai/articles/marvell-wants-lumentum-why-coherent-234427778.html",
+     "source_type": "third_party_report",
+     "published_at": "2026-10-28",
+     "excerpt": "Lumentum's optical component capacity was effectively sold out through early 2029 … Could strengthen Coherent's position as an independent Nvidia supplier"
+    }
+   ]
+  },
+  {
+   "from": "company:aaoi",
+   "relation": "develops",
+   "to": "component:cw_laser",
+   "tier": "official_issuer",
+   "polarity": "positive",
+   "note": "CFO 발언(2026-08-18 Rosenblatt 서밋): 자체 InP 레이저 팹(텍사스 슈가랜드, 4인치 → 6인치 전환 가능 장비 확보), CPO 용 300~400mW 고출력 CW 레이저를 평가용 소량 출하, CPO 를 5개사와 논의, CPO 레이저 칩 마진 60% 이상. 레이저 생산능력 증설은 2027년 하반기. '업계 레이저 생산능력이 스케일업 수요에 크게 못 미친다'. 머천트 레이저 매출은 미공개",
+   "evidence": [
+    {
+     "url": "https://finance.yahoo.com/technology/ai/articles/applied-optoelectronics-bets-u-laser-160204361.html",
+     "source_type": "official_issuer",
+     "published_at": "2026-08-18",
+     "excerpt": "There is not enough capacity in the industry right now to even come close to meeting the demand from scale-up … ships small quantities of high-power lasers for customer evaluation … discussing co-packaged optics (CPO) with five companies … CPO laser-chip margins above 60%"
+    }
+   ]
+  },
+  {
+   "from": "product:nvda_spectrum_x_photonics",
+   "relation": "requires",
+   "to": "component:els",
+   "tier": "official_issuer",
+   "polarity": "positive",
+   "note": "SONiC sonic-platform-common 커밋(2026-11-02, NVIDIA 기여): Spectrum-6(SPC6) CPO 광엔진(OE)·외부 레이저 광원(ELS) 장치 클래스를 CPO API 에 등록 — Broadcom Tomahawk 6 'Davisson' ELSFP·OE 와 같은 틀. 오픈소스 NOS 에 두 벤더 CPO 스위치의 ELSFP 관리가 들어간 상태 = 하이퍼스케일러 배치 준비 단계",
+   "evidence": [
+    {
+     "url": "https://github.com/sonic-net/sonic-platform-common/commit/97c3c9c8b37323fa41972fed7a71665bec8af6ed",
+     "source_type": "official_issuer",
+     "published_at": "2026-11-02",
+     "excerpt": "[CPO] Register the NVIDIA SPC6 optical engine and els (#755) … NvidiaCpoElsCmisApi … DavissonTh6ElsfpApi"
+    }
+   ]
+  }
+ ]
+}
