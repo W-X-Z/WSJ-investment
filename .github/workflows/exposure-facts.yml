@@ -1,0 +1,51 @@
+# 노출도 재료 (ADR-0031, 백로그 G-8 무료 경로). 시크릿: SUPABASE_URL, SUPABASE_SECRET_KEY
+# 그래프의 미국 공시 기업(소·중형) 중 공급 관계에 매출 비중이 빈 곳의 최근 연차 보고서에서 매출 구성 숫자(XBRL 차원별 매출·집중도,
+# '매출의 N%' 문장)를 ideas.exposure_facts 로 모은다. LLM 없음, 비용 없음. 이미 읽은 보고서는 건너뛰므로 새 10-K 가 나올 때만 일이 생긴다.
+# 일요일 10:23 KST 주간 개선이 이 숫자를 공급 관계의 exposure_pct 로 옮긴다 — 그 전에 돈다.
+name: exposure-facts
+
+on:
+  schedule:
+    - cron: "13 22 * * 6"   # 토 22:13 UTC = 일 07:13 KST
+  workflow_dispatch:
+    inputs:
+      max:
+        description: "새로 읽을 보고서 수 상한"
+        required: false
+        default: "60"
+      bands:
+        description: "규모 (micro,small,mid,large,mega)"
+        required: false
+        default: "micro,small,mid"
+
+concurrency:
+  group: exposure-facts
+  cancel-in-progress: false
+
+jobs:
+  exposure:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env:
+      WSJ_STORE: postgrest
+      SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+      SUPABASE_SECRET_KEY: ${{ secrets.SUPABASE_SECRET_KEY }}
+      SEC_USER_AGENT: "WSJ-investment research dnltmdwhd@gmail.com"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: pipeline/pyproject.toml
+      - name: Install
+        working-directory: pipeline
+        run: pip install -e .
+      - name: Collect revenue mix from annual reports
+        working-directory: pipeline
+        env:
+          IN_MAX: ${{ inputs.max || '60' }}
+          IN_BANDS: ${{ inputs.bands || 'micro,small,mid' }}
+        run: |
+          set -euo pipefail
+          python -m wsj.ecosystems.exposure run --max "$IN_MAX" --bands "$IN_BANDS" | tee -a "$GITHUB_STEP_SUMMARY"
