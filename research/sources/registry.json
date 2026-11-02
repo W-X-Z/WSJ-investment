@@ -464,7 +464,8 @@
     "note": "Listed on trendforce.com/presscenter/rss.html, which also has Energy, Communication, Display, and other feeds. The Energy feed's latest item was 2026-08-12. The Taiwan site has /feed/Display.html (zh)."
    },
    "enabled": true,
-   "broad": false
+   "broad": false,
+   "layer": "press"
   },
   {
    "id": "technews_tw",
@@ -1045,7 +1046,8 @@
     "note": "Client error from the site. Partially paywalled."
    },
    "enabled": false,
-   "broad": false
+   "broad": false,
+   "layer": "press"
   },
   {
    "id": "lightwave",

@@ -169,3 +169,62 @@ def test_llm_companies_resolve_to_graph_ids():
     C.apply_screen([c], {"items": [{"i": 0, "keep": True, "note": "n", "companies": [
         {"name": "테크윙", "ticker": "089030", "exchange": "KOSDAQ"}, {"name": "마이크론", "ticker": "MU", "exchange": "NASDAQ"}]}]}, resolve)
     assert [x["company"] for x in c.companies] == ["company:techwing", "company:mu"]   # 같은 회사는 한 번, 다른 회사는 id 로
+
+
+def test_layers_from_kinds_and_override():
+    assert _src(kinds=["standards"]).layer == "raw"
+    assert _src(kinds=["release_notes"]).layer == "raw"
+    assert _src(kinds=["company_newsroom"]).layer == "newsroom"
+    assert _src(kinds=["trade_press"]).layer == "press"
+    assert _src(kinds=["research", "market_data"], layer_override="press").layer == "press"   # 리서치 회사 보도자료는 업계지로
+    got = C.fetch_source(FakeHttp(), _src(kinds=["standards"]), datetime(2026, 10, 28, tzinfo=UTC))
+    assert got[0].layer == "raw" and got[0].row()["extra"]["layer"] == "raw"
+
+
+def test_raw_specialist_sources_survive_the_topic_screen():
+    raw = C.Clue("https://jedec.test/jesd", "JC-45 ballot: SOCAMM2 rev", "", None, "jedec", "JEDEC", "standards", layer="raw")
+    raw_broad = C.Clue("https://arxiv.test/1", "A theorem on graphs", "", None, "arxiv", "arXiv", "research", broad=True, layer="raw")
+    press = C.Clue("https://p.test/1", "New gaming laptop", "", None, "toms", "Tom's", "trade_press", broad=True)
+    C.screen([raw, raw_broad, press], use_llm=False, api_key=None, model="haiku", graph={"nodes": []})
+    assert raw.relevant and raw.screen == "kept"
+    assert not raw_broad.relevant and raw_broad.screen == "topic_drop"        # 종합 원본(arXiv 분야 전체)은 분류기를 거친다
+    assert not press.relevant and press.note == "주제 밖(분류기)"
+
+
+def test_exempt_overrides_llm_drop(monkeypatch):
+    raw = C.Clue("https://ercot.test/nogrr", "NOGRR 282 comments", "", None, "ercot", "ERCOT", "policy", layer="raw")
+    monkeypatch.setattr(C, "llm_screen", lambda todo, *a, **k: [setattr(c, "relevant", False) for c in todo] and {})
+    monkeypatch.setattr(C, "company_resolver", lambda g: None)
+    C.screen([raw], use_llm=True, api_key="k", model="haiku", graph={"nodes": []})
+    assert raw.relevant and raw.screen == "raw_exempt"
+    many = [C.Clue(f"https://r.test/{i}", f"r{i}", "", None, "s", "S", "standards", layer="raw") for i in range(5)]
+    assert len(C.mark_exempt(many, cap=3)) == 3
+
+
+def test_body_targets_and_fetch_bodies():
+    kept = [C.Clue("https://news.google.com/rss/articles/X", "g", "", None, "company_feed", "x", "company_feed", layer="company"),
+            C.Clue("https://etnews.test/1", "p", "", None, "etnews", "전자신문", "trade_press", layer="press"),
+            C.Clue("https://jedec.test/a", "s", "", None, "jedec", "JEDEC", "standards", layer="raw"),
+            C.Clue("https://x.test/doc.pdf", "pdf", "", None, "s", "S", "standards", layer="raw")]
+    tg = C.body_targets(kept)
+    assert [c.url for c in tg] == ["https://jedec.test/a", "https://etnews.test/1"]      # 원본 먼저, 중계 주소·PDF 제외
+    para = "<p>" + "SOCAMM2 는 LPDDR5X 기반 모듈로, 서버 메모리 슬롯 구성을 바꾼다. " * 8 + "</p>"
+    pages = {"https://jedec.test/a": (200, "text/html; charset=utf-8", f"<html><nav>메뉴 메뉴</nav><article>{para}</article></html>"),
+             "https://etnews.test/1": (403, "text/html", "")}
+    rows = {r["url"]: r for r in C.fetch_bodies(tg, lambda u: pages[u], workers=2)}
+    assert rows["https://jedec.test/a"]["status"] == "ok" and "LPDDR5X" in rows["https://jedec.test/a"]["body"]
+    assert "메뉴" not in rows["https://jedec.test/a"]["body"]
+    assert rows["https://etnews.test/1"]["status"] == "http_403" and rows["https://etnews.test/1"]["body"] is None
+
+
+def test_extract_text_keeps_paragraphs_and_numeric_cells():
+    from wsj.ecosystems.textract import extract_text
+
+    html = ("<html><head><title>NOGRR 282</title><script>var a=1</script></head><body><header>Home | About</header>"
+            "<h1>Voltage ride-through for large loads</h1><p>" + "ERCOT staff proposes that large electronic loads remain connected during faults. " * 3 +
+            "</p><table><tr><th>Date</th><td>2026-10-28</td></tr><tr><td>Status</td><td>Pending PRS</td></tr></table>"
+            "<footer>Copyright</footer></body></html>")
+    title, body = extract_text(html)
+    assert title == "NOGRR 282"
+    assert "ride-through" in body and "2026-10-28" in body and "remain connected" in body
+    assert "Copyright" not in body and "var a" not in body and "Home | About" not in body

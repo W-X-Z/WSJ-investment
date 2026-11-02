@@ -1,4 +1,4 @@
-# 주간 개선 작업 — 시스템이 목적에 더 가까워지게 (ADR-0017, 2026-10-31 개정)
+# 주간 개선 작업 — 시스템이 목적에 더 가까워지게 (ADR-0017, 2026-10-31 개정 · ADR-0030)
 
 Claude 예약작업 "WSJ 시스템 개선 (주간)"이 매주 일요일 10:23 KST 에 이 문서를 따른다. 사용자는 자리에 없으니 질문하지 말고 진행한다.
 목적·방향은 `docs/agents/daily-ideas.md` 와 같다 — 미국 소·중형의 1년 2~3배 기회를 시장보다 먼저, 더 정확히 찾는 것.
@@ -7,6 +7,10 @@ Claude 예약작업 "WSJ 시스템 개선 (주간)"이 매주 일요일 10:23 KS
 이번 주에 무엇을 고치면 시스템이 그 목적에 가장 가까워지는지 판단해서 고친다.
 고를 때 묻는 것은 하나다: **이걸 고치면 기회를 더 많이 · 더 일찍 · 덜 틀리게 찾게 되나?** 문제가 사실이어도 목적과 무관하면 고치지 않고 `research/improvement_log.json` 에 '보류(목적과 무관)' 로 적는다.
 무엇을 볼지도 판단한다. 아래 도구와 자료는 쓸 수 있는 것의 목록이지 순서가 아니다.
+판단을 채점하지 않는다 (ADR-0028·0030). 대신 **들어오는 것(In)** 을 매주 본다 — 해석이 무엇을 읽느냐가 무엇을 찾느냐를 정한다.
+- 매주 보고에 In 표를 붙인다: `select * from ops.v_input_quality limit 7;` · `select * from ops.v_source_use limit 30;` — 원본 비중, 그래프 밖 회사 비율, 본문 비율, 분류기 탈락 사유와 탈락 샘플(`select title, source_name from ideas.clues where extra->>'screen' = 'topic_drop' and seen_at > now() - interval '7 days' order by random() limit 20;`), 아이디어가 실제로 쓴 출처, DB 크기. 원본이 비거나 기업 이름 검색 소식이 대부분이면 그것이 이번 주 가장 큰 문제일 가능성이 높다.
+- 열린 스레드가 오래 묵었는지(`ideas.threads`), 해석이 남는 시간을 쓰는지도 본다.
+- 이어서 할 일은 `docs/BACKLOG.md` 맨 위 '지금 할 일'에 있다. 이번 주 목적에 가장 가까운 것을 고른다.
 
 ## 쓸 수 있는 도구와 자료
 - 점검: `.venv/bin/python -m wsj.ecosystems.health --out ../.improve/health.json --md ../.improve/health.md`

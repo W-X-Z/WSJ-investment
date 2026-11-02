@@ -1,15 +1,20 @@
 # interpret (06:17, 월~토) — 단서를 읽고 해석해 투자 아이디어 초안을 쓴다 (ADR-0028)
 
 예약작업 "WSJ 2/4 해석 (06:17)" 이 따른다 (작업명 `interpret`). `docs/agents/daily-ideas.md` 의 목적·방향·꼭 지킬 것을 먼저 읽고, §0·§B 로 시작하고 끝낸다 (앞 작업 collect 를 기다린다).
-쓰는 함수: `ideas.put_opportunities`, `ops.put_agent_run`. 저장소는 아래 '그래프와 참고 자료'의 경로만. 시간은 60분 안팎.
+쓰는 함수: `ideas.put_opportunities`, `ideas.put_thread`, `ops.put_agent_run`. 저장소는 아래 '그래프와 참고 자료'의 경로만. 시간은 60분 안팎 — 다 쓴다.
 
 ## 맡은 일
 시장보다 먼저 볼 수 있는 단서를 골라, 그것이 어느 회사의 무엇을 얼마나 바꾸는지 해석하고, 시장의 믿음과 다르게 볼 근거가 서는 것만 초안으로 쓴다.
-무엇을 읽고, 몇 개를 고르고, 어떤 순서로 생각하고, 어디까지 조사할지는 그날의 단서를 보고 판단한다. 의미 있는 것이 없으면 아무것도 쓰지 않는다.
+무엇을 읽고, 몇 개를 고르고, 어떤 순서로 생각하고, 어디까지 조사할지는 그날의 단서를 보고 판단한다. 초안은 근거가 설 때만 쓴다.
+- 오늘 고른 단서 중 결론까지 못 간 것은 스레드로 연다 (`daily-ideas.md` §C).
+- 오늘 고를 것이 없거나 시간이 남으면 열린 스레드 하나를 골라 이어서 판다 — 검토자가 되돌린 것부터. 결론이 나면 닫고(초안이 되면 초안도 쓴다), 못 나면 오늘 알아낸 것과 다음에 볼 곳을 기록한다.
+- 건너뛴 단서는 하나씩 이유를 `skipped` 에 남긴다 — 검토자가 다시 본다. 내릴 때의 기준은 `daily-ideas.md` 방향의 '시장의 믿음과 우리 근거'.
 
 ## 쓸 수 있는 재료
 필요한 것을 골라 쓴다. 여기 없는 원본(federalregister.gov, JEDEC·OCP·OIF, arXiv, 회사 IR, 고객·경쟁사 발표)을 직접 찾아도 된다.
-- 단서: `select * from public.v_clues where seen_at > now() - interval '30 hours' order by seen_at desc;` (`source_kind` 로 연구·표준·정책·업계지·기업 소식·공시를 구분)
+- 단서와 본문: `select c.url, c.title, c.source_name, c.extra->>'layer' as layer, c.note, c.companies, c.nodes, c.published_at, left(t.body, 3000) as body from ideas.clues c left join ideas.clue_texts t on t.url = c.url where c.relevant and c.seen_at > now() - interval '30 hours' order by (c.extra->>'layer' = 'raw') desc, c.seen_at desc;`
+  층(layer): raw(표준·규칙·학회·논문·정책·릴리스 노트 — 원본) · press(업계지) · newsroom · company(기업 이름으로 모은 소식) · disclosure · issue. 0034 전이면 `ideas.clue_texts` 없이 `public.v_clues` 를 읽는다.
+- 열린 스레드: `daily-ideas.md` §C
 - 기업 소식·이슈: `public.v_company_events`, `public.v_supply_chain_issues`, 약한 신호 `public.v_weak_signals`
 - 논문·특허 흐름: `public.v_tech_rising`, `public.v_tech_orgs`, `public.v_tech_docs`
 - 가격: `select * from public.v_price_context where ticker = '…';` (미국 `RMBS`, 한국 `KRX:007660`·`KOSDAQ:…`)
@@ -44,5 +49,5 @@
   CI 를 최대 15분 기다리고(`gh api repos/W-X-Z/WSJ-investment/commits/<sha>/check-runs`), 모두 통과하고 바뀐 파일이 전부 `research/`·`apps/web/src/data/` 안이면 `gh api -X PUT repos/W-X-Z/WSJ-investment/pulls/<n>/merge -f merge_method=squash`. 그 밖이 바뀌었거나 CI 가 실패하면 병합하지 않고 note 에 PR 링크.
 
 ## 기록과 보고
-- `select ops.put_agent_run('{"task":"interpret","status":"succeeded|skipped","rows":<새 초안 + 갱신>,"counts":{"clues_read":…,"picked":…,"drafts_new":…,"drafts_updated":…,"graph_nodes":…,"graph_edges":…,"pr":"…","skipped":[…],"denied":[…],"unverified":[…]},"note":"…"}'::jsonb);`
-- 보고는 짧게: 무엇을 골랐고 왜, 새 초안·갱신(제목 · ★), 그래프에 더한 것, PR. 알림은 실패했을 때만.
+- `select ops.put_agent_run('{"task":"interpret","status":"succeeded|skipped","rows":<새 초안 + 갱신>,"counts":{"clues_read":…,"picked":…,"drafts_new":…,"drafts_updated":…,"threads_opened":…,"threads_continued":…,"threads_closed":…,"graph_nodes":…,"graph_edges":…,"pr":"…","skipped":[…],"denied":[…],"unverified":[…]},"note":"…"}'::jsonb);`
+- 보고는 짧게: 무엇을 골랐고 왜, 새 초안·갱신(제목 · ★), 이어 판 스레드와 결론, 그래프에 더한 것, PR. 알림은 실패했을 때만.
