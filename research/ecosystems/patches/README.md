@@ -5,5 +5,6 @@
 
 - 파일: `YYYYMMDD_discover.json` — 형식은 `pipeline/wsj/ecosystems/graph_patches/from_json.py` 맨 위 설명.
 - 적용: `cd pipeline && .venv/bin/python -m wsj.ecosystems.graph_patches.from_json ../research/ecosystems/patches/<file>.json && .venv/bin/python -m wsj.ecosystems.export_web`
+- v0.5(ADR-0031): 간선에 `exposure_pct`·`exposure_year`·`exposure_source`·`content_usd_per_system`·`lead_time_weeks`·`effective_date`, 이미 있는 노드는 `node_updates`(codes·first_evidence·maturity·status). 다른 작업의 제안은 `from_proposals` 로 패치가 된다.
 - 규칙: 기업은 상장사만(ticker·exchange), 간선마다 https 원문 근거 1개 이상, 원문에서 읽은 것만. 멱등이라 다시 적용해도 같다. 온톨로지 검증이 실패하면 그래프를 쓰지 않는다.
 - 병합: 바뀐 파일이 `research/` 와 `apps/web/src/data/` 안뿐이고 CI 가 모두 통과하면 발굴 작업이 스스로 병합한다 (그 밖이 바뀌면 병합하지 않는다).

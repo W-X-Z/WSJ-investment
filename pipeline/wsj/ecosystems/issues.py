@@ -196,6 +196,18 @@ def graph_company_names(nodes: list[dict[str, Any]]) -> dict[str, list[str]]:
 
 
 def build_lexicon(graph: dict[str, Any]) -> tuple[list[tuple[re.Pattern, str]], list[tuple[re.Pattern, str]]]:
+    phrases, company_names = lexicon_terms(graph)
+    node_pats = [(re.compile(r"(?<![a-z0-9])" + re.escape(p).replace(r"\ ", r"[\s-]") + r"(?![a-z])", re.I), nid) for p, nid in sorted(phrases.items(), key=lambda kv: -len(kv[0]))]
+    comp_pats: list[tuple[re.Pattern, str]] = []
+    for cid, names in company_names.items():
+        for nm in names:
+            flags = 0 if nm.isupper() or len(nm) <= 4 else re.I  # 'KLA', 'AXT', 'K&S' 는 대소문자 구분
+            comp_pats.append((re.compile(r"(?<![A-Za-z0-9])" + re.escape(nm) + r"(?![A-Za-z0-9])", flags), cid))
+    return node_pats, comp_pats
+
+
+def lexicon_terms(graph: dict[str, Any]) -> tuple[dict[str, str], dict[str, list[str]]]:
+    """태깅 어휘 — (구문 → 노드 id, 기업 id → 이름들). 단서 태깅과 그래프 조회본(graph_sync)이 같은 어휘를 쓴다."""
     ids = {n["id"] for n in graph["nodes"]}
     company_ids = ids | {n["id"] for n in extra_company_nodes()}
     phrases: dict[str, str] = {k: v for k, v in PHRASE_OVERRIDES.items() if v in ids}
@@ -219,15 +231,8 @@ def build_lexicon(graph: dict[str, Any]) -> tuple[list[tuple[re.Pattern, str]], 
             w = w.strip().lower()
             if len(w) >= 4 and w not in GENERIC:
                 phrases.setdefault(w, nid)
-    node_pats = [(re.compile(r"(?<![a-z0-9])" + re.escape(p).replace(r"\ ", r"[\s-]") + r"(?![a-z])", re.I), nid) for p, nid in sorted(phrases.items(), key=lambda kv: -len(kv[0]))]
-    comp_pats: list[tuple[re.Pattern, str]] = []
-    for cid, names in {**graph_company_names(graph["nodes"]), **COMPANY_NAMES}.items():
-        if cid not in company_ids:
-            continue
-        for nm in names:
-            flags = 0 if nm.isupper() or len(nm) <= 4 else re.I  # 'KLA', 'AXT', 'K&S' 는 대소문자 구분
-            comp_pats.append((re.compile(r"(?<![A-Za-z0-9])" + re.escape(nm) + r"(?![A-Za-z0-9])", flags), cid))
-    return node_pats, comp_pats
+    company_names = {cid: names for cid, names in {**graph_company_names(graph["nodes"]), **COMPANY_NAMES}.items() if cid in company_ids}
+    return phrases, company_names
 
 
 def tag(items: list[Item], node_pats, comp_pats) -> None:

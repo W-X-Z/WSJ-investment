@@ -1,7 +1,7 @@
 {
-  "schema_version": "0.4",
-  "as_of": "2026-10-27",
-  "purpose": "seed_graph.json 이 따라야 하는 닫힌 어휘(closed vocabulary). 노드 종류·관계 술어의 정의역/치역·근거 등급·전파 방향을 한 곳에 둔다. 검증: python -m wsj.ecosystems.ontology --check",
+  "schema_version": "0.5",
+  "as_of": "2026-11-02",
+  "purpose": "seed_graph.json 이 따라야 하는 닫힌 어휘(closed vocabulary). 노드 종류·관계 술어의 정의역/치역·근거 등급·전파 방향을 한 곳에 둔다. 검증: python -m wsj.ecosystems.ontology --check v0.5(ADR-0031): 규칙·결정 주체 노드, 시간 축·층별 식별자·후보 상태 노드 칸, 숫자 노출도·양 간선 칸. 새 칸은 모두 선택 칸이다.",
   "node_kinds": {
     "ecosystem": {
       "layer": 0,
@@ -67,6 +67,16 @@
       "layer": 0,
       "label_ko": "수요 동인",
       "description": "워크로드·사용 방식의 변화가 만드는 수요 (에이전트 추론, 긴 컨텍스트, KV 캐시 상주). 세대·표준보다 앞선 층 — 관측치(obs:*)로 크기를 재고 구조 가설(ADR-0025)의 출발점이 된다"
+    },
+    "rule": {
+      "layer": 0,
+      "label_ko": "규칙·규제",
+      "description": "계통 규칙·규제·수출통제 조항·플랫폼 의무 사양 (ERCOT NOGRR282, NERC 표준, PJM 매뉴얼, EAR 조항). 무엇을 언제부터 강제하는가"
+    },
+    "authority": {
+      "layer": 0,
+      "label_ko": "결정 주체",
+      "description": "규칙·표준을 정하는 곳 — 계통 운영자(ERCOT·PJM), 규제기관(FERC·BIS), 표준기구(JEDEC·OIF·IEEE·OCP). 상장 기업이 정하면(NVIDIA·하이퍼스케일러) 기업 노드를 쓴다"
     }
   },
   "company_fields": {
@@ -98,7 +108,8 @@
         "ecosystem",
         "product_generation",
         "standard",
-        "requirement"
+        "requirement",
+        "rule"
       ],
       "range": [
         "requirement"
@@ -132,7 +143,8 @@
         "demand_driver",
         "requirement",
         "technology",
-        "bottleneck"
+        "bottleneck",
+        "rule"
       ],
       "range": [
         "bottleneck"
@@ -350,6 +362,35 @@
       "direction": "demand_to_supply",
       "label_ko": "대당 함량을 늘린다 (층수·면적·개수·등급 — 매출 = 대수 × 대당 함량 × 점유율)",
       "polarity_default": "positive"
+    },
+    "mandates": {
+      "domain": [
+        "rule"
+      ],
+      "range": [
+        "requirement",
+        "technology",
+        "component",
+        "product_generation",
+        "standard",
+        "process",
+        "equipment"
+      ],
+      "direction": "demand_to_supply",
+      "label_ko": "강제한다",
+      "note": "effective_date(시행일)를 단다"
+    },
+    "issued_by": {
+      "domain": [
+        "rule",
+        "standard"
+      ],
+      "range": [
+        "authority",
+        "company"
+      ],
+      "direction": "none",
+      "label_ko": "정한 곳"
     }
   },
   "evidence_tiers": {
@@ -442,7 +483,9 @@
     "about (기업↔기업 관계가 관한 기술/세대 노드 id — 영향 전파는 about 노드를 지난 경로에서만 이 관계를 탄다)",
     "confidence (검증기가 계산)",
     "exposure (offered_by·supplied_to: 그 제품·거래가 공급사 매출에서 차지하는 비중 — core ≥50% · major 10~50% · minor <10% · unknown. 해석·보강 작업이 원문으로 확인할 때만 채운다)",
-    "position (offered_by: 그 제품에서 공급사의 자리 — leader 선두 · second_source 2순위 공급사 · entrant 진입·인증 중 · captive 자체 생산(외부 판매 없음))"
+    "position (offered_by: 그 제품에서 공급사의 자리 — leader 선두 · second_source 2순위 공급사 · entrant 진입·인증 중 · captive 자체 생산(외부 판매 없음))",
+    "exposure_pct · exposure_year · exposure_source (offered_by·supplied_to: 매출 비중 숫자와 기준 연도·출처 — 범주 exposure 와 함께 둘 수 있다)",
+    "content_usd_per_system (requires·raises_content) · lead_time_weeks (requires·offered_by) · effective_date (mandates)"
   ],
   "maturity_stages": {
     "early": "연구·시연·시제품",
@@ -491,6 +534,98 @@
         "entrant",
         "captive"
       ]
+    },
+    "exposure_pct": {
+      "applies_to": [
+        "offered_by",
+        "supplied_to"
+      ],
+      "type": "number",
+      "min": 0,
+      "max": 100,
+      "note": "그 제품·거래가 공급사 매출에서 차지하는 비중(%) — 원문 숫자가 있을 때만. exposure_year·exposure_source 와 함께"
+    },
+    "exposure_year": {
+      "applies_to": [
+        "offered_by",
+        "supplied_to"
+      ],
+      "type": "integer",
+      "min": 2000,
+      "max": 2100
+    },
+    "exposure_source": {
+      "applies_to": [
+        "offered_by",
+        "supplied_to"
+      ],
+      "type": "url"
+    },
+    "content_usd_per_system": {
+      "applies_to": [
+        "requires",
+        "raises_content"
+      ],
+      "type": "number",
+      "min": 0,
+      "note": "시스템(서버·랙·모듈) 하나에 들어가는 이 부품·소재의 금액(달러)"
+    },
+    "lead_time_weeks": {
+      "applies_to": [
+        "requires",
+        "offered_by"
+      ],
+      "type": "number",
+      "min": 0,
+      "max": 520
+    },
+    "effective_date": {
+      "applies_to": [
+        "mandates"
+      ],
+      "type": "date",
+      "note": "규칙이 강제되기 시작하는 날"
+    }
+  },
+  "node_fields": {
+    "status": {
+      "values": [
+        "active",
+        "candidate"
+      ],
+      "default": "active",
+      "rule": "candidate = 근거 1개로 먼저 들어온 노드(사전 밖 용어·그래프 밖 상장사). 두 층 이상에서 보이거나 매출 근거가 붙으면 active. 후보는 병목 연결 검사에서 뺀다"
+    },
+    "first_seen": {
+      "type": "date",
+      "rule": "우리가 처음 본 날 (패치·수집 날짜)"
+    },
+    "first_evidence": {
+      "shape": {
+        "date": "YYYY-MM-DD",
+        "url": "https://...",
+        "layer": "standard|conference|paper|patent|jobs|code|rule|filing|press|other"
+      },
+      "rule": "근거상 처음 나온 날과 그 층 — 위층(표준·학회)에서 아래층(채용·코드·공시)으로 내려오는 순서를 본다"
+    },
+    "maturity_history": {
+      "shape": "[maturity_field.shape …]",
+      "rule": "단계가 바뀔 때마다 한 줄 더한다. 현재 단계는 maturity"
+    },
+    "codes": {
+      "keys": [
+        "cpc",
+        "jesd",
+        "oif_ia",
+        "ieee",
+        "ocp",
+        "rule",
+        "nerc",
+        "hs",
+        "part"
+      ],
+      "shape": "{key: [string]}",
+      "rule": "층마다 같은 대상을 부르는 식별자 — 표준 문서 번호·특허 분류·규칙 번호·HS·부품번호 패턴. 단서를 노드에 잇는 데 쓴다"
     }
   }
 }

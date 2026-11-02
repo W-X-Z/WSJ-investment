@@ -19,10 +19,11 @@
 | I-3 | 페이지 변화 감지 수집기 + 원문 버전 (1단계 페이지형 17곳: ERCOT·PJM·CAISO·OCP·NVIDIA 문서·IEEE 802.3·OIF·JEDEC·EPRI) | 2 | 완료 11/02 | A-12, A-5. `wsj.ecosystems.pages` — 단서 수집 단계 안에서 돈다(17곳 합쳐 1분 안팎). 상태는 ops.collector_state `page:<id>` |
 | I-4 | 1단계 API·피드 출처 — 11/02 arXiv eess.SY·physics.optics·EPRI Journal·SONiC 커밋 추가. 남은 것: OSTI, EIA-860M, cninfo IR 기록표, 채용 API(Greenhouse·Lever·Ashby 보드 매핑) | 2 | 일부 완료 | A-12, C-13 |
 | I-6 | 출처 목록 하나로 — registry.json 이 수집기의 유일한 목록(노션 출처원 DB 는 후보·근거). 8일 0건 피드 정리(ocp_news → 페이지 감지, newsfile 끔). 남은 것: issues.py FEEDS 와 겹치는 피드 정리 | 2 | 일부 완료 | |
-| G-1 | ADR-0031 온톨로지 v0.5 (시간 축·층별 코드와 한중일 별칭·규칙과 결정 주체·숫자 노출도·후보 상태) | 2 | 초안(승인 대기) | `docs/adr/0031-ontology-v05.md` |
+| G-1 | ADR-0031 온톨로지 v0.5 (시간 축·층별 코드와 한중일 별칭·규칙과 결정 주체·숫자 노출도·후보 상태) | 2 | 완료 11/02 | 승인. `ontology.json` v0.5·검증기·패치 형식(node_updates·숫자 노출도) |
 | M-2 | 멈춘 작업 정리 (약한 신호·paths·research·verify·토요일 옛 수집·moat) | 2 | 대기 | |
-| G-2~G-7 | 그래프 DB 조회본·조회 함수 4종·제안 테이블과 일일 패치 PR·사용 규칙·별칭·코드·그래프 밖 회사 편입 | 3 | 대기 | T-8, T-11 |
-| D-5 | 용어의 층별 첫 등장 기록 | 3 | 대기 | |
+| G-2~G-5 | 그래프 DB 조회본(`graph_sync`, graph-sync 워크플로)·조회 함수 4종·제안 테이블(`put_graph_proposal` → 해석이 패치에 합침)·사용 규칙(문서 §D) | 3 | 0035 적용 대기 | 로컬 Postgres 에서 실제 그래프로 확인 (CPO 2단계: 회사 51·경유 노드 26) |
+| G-6·G-7 | 별칭·식별자 정비와 사전 밖 용어 통로, 그래프 밖 회사 편입 | 3 | 대기 | T-8, T-11 |
+| D-5 | 용어의 층별 첫 등장 기록 — `core.node_signals` 의 first_by_layer(단서 기준)로 1차. 노드 칸 first_evidence 는 조사하며 채운다 | 3 | 일부 완료 | 0035 |
 | J-3 | 주간 매크로 배경 | 3 | 대기 | A-14 |
 | I-5·I-7·I-8 | 목록형 출처는 페이지 감지로 바꿈(11/02). 남은 것: json_api 출처(鉅亨), 뉴스 분류기 개선(본문 기준), 원본 출처 이력 백필 | 3 | 일부 완료 | A-5, A-8·O-16, A-6 |
 | M-1·M-3 | 온톨로지 상태 지표, 수집 실패 알림 | 3 | 대기 | P-05 |

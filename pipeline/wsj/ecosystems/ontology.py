@@ -61,6 +61,59 @@ def edge_confidence(edge: dict[str, Any], onto: dict[str, Any]) -> float:
     return round(conf, 3)
 
 
+DATE_RE = r"^\d{4}-\d{2}(-\d{2})?$"
+
+
+def _is_date(v: Any) -> bool:
+    import re
+
+    return isinstance(v, str) and bool(re.match(DATE_RE, v))
+
+
+def check_typed(value: Any, spec: dict[str, Any]) -> str | None:
+    """온톨로지 v0.5 의 typed 칸(number·integer·date·url) 하나를 검사한다. 문제가 없으면 None."""
+    t = spec.get("type")
+    if t in ("number", "integer"):
+        if isinstance(value, bool) or not isinstance(value, int | float) or (t == "integer" and not float(value).is_integer()):
+            return f"{t} 이어야 한다"
+        if "min" in spec and value < spec["min"] or "max" in spec and value > spec["max"]:
+            return f"{spec.get('min')}~{spec.get('max')} 범위"
+    elif t == "date" and not _is_date(value):
+        return "YYYY-MM-DD"
+    elif t == "url" and not str(value).startswith("https://"):
+        return "https 주소"
+    return None
+
+
+def check_node_fields(n: dict[str, Any], onto: dict[str, Any]) -> list[str]:
+    """v0.5 노드 칸: status · first_seen · first_evidence · maturity_history · codes (모두 선택 칸)."""
+    nf = onto.get("node_fields") or {}
+    errs = []
+    if "status" in n and n["status"] not in (nf.get("status") or {}).get("values", ["active", "candidate"]):
+        errs.append(f"status {n['status']!r}")
+    if "first_seen" in n and not _is_date(n["first_seen"]):
+        errs.append("first_seen 는 YYYY-MM-DD")
+    fe = n.get("first_evidence")
+    if fe is not None and (not isinstance(fe, dict) or not _is_date(fe.get("date")) or not str(fe.get("url", "")).startswith("https://")):
+        errs.append("first_evidence 는 {date, url(https), layer}")
+    for i, m in enumerate(n.get("maturity_history") or []):
+        if not isinstance(m, dict) or m.get("stage") not in onto.get("maturity_stages", {}) or not _is_date(m.get("as_of")) \
+                or not str(m.get("evidence_url", "")).startswith("https://"):
+            errs.append(f"maturity_history[{i}] 는 {{stage, as_of, evidence_url(https)}}")
+    codes = n.get("codes")
+    if codes is not None:
+        keys = set((nf.get("codes") or {}).get("keys") or [])
+        if not isinstance(codes, dict):
+            errs.append("codes 는 {key: [string]}")
+        else:
+            for k, v in codes.items():
+                if keys and k not in keys:
+                    errs.append(f"codes 키 {k!r} (허용: {sorted(keys)})")
+                elif not isinstance(v, list) or not all(isinstance(x, str) and x for x in v):
+                    errs.append(f"codes.{k} 는 문자열 목록")
+    return errs
+
+
 def _host(url: str) -> str:
     return url.split("//", 1)[-1].split("/", 1)[0].lower().removeprefix("www.")
 
@@ -81,7 +134,7 @@ def dead_end_bottlenecks(graph: dict[str, Any], hops: int = 2) -> list[str]:
         return n.get("kind") == "company" and bool(lst.get("ticker")) and bool(lst.get("exchange"))
 
     out = []
-    for b in (n["id"] for n in graph["nodes"] if n.get("kind") == "bottleneck"):
+    for b in (n["id"] for n in graph["nodes"] if n.get("kind") == "bottleneck" and n.get("status") != "candidate"):
         frontier, seen, ok = [b], {b}, False
         for _ in range(hops):
             nf = []
@@ -123,6 +176,8 @@ def validate(graph: dict[str, Any], onto: dict[str, Any]) -> Report:
                 rep.errors.append(f"node {n['id']}: unknown maturity stage {mat.get('stage')!r}")
             elif not str(mat.get("evidence_url", "")).startswith("https://") or not mat.get("as_of"):
                 rep.errors.append(f"node {n['id']}: maturity needs as_of and https evidence_url")
+        for err in check_node_fields(n, onto):
+            rep.errors.append(f"node {n['id']}: {err}")
         if n.get("kind") == "company":
             if n.get("role") not in onto["company_fields"]["role"]:
                 rep.errors.append(f"company {n['id']}: role must be one of {onto['company_fields']['role']}")
@@ -160,8 +215,10 @@ def validate(graph: dict[str, Any], onto: dict[str, Any]) -> Report:
             if attr in e:
                 if e["relation"] not in spec["applies_to"]:
                     rep.errors.append(f"edge {e['id']}: {attr} not allowed on {e['relation']}")
-                elif e[attr] not in spec["values"]:
+                elif "values" in spec and e[attr] not in spec["values"]:
                     rep.errors.append(f"edge {e['id']}: {attr} must be one of {spec['values']}")
+                elif "type" in spec and (msg := check_typed(e[attr], spec)):
+                    rep.errors.append(f"edge {e['id']}: {attr} {msg}")
         evs = e.get("evidence") or []
         if not evs:
             rep.errors.append(f"edge {e['id']}: no evidence")
@@ -224,6 +281,10 @@ def validate(graph: dict[str, Any], onto: dict[str, Any]) -> Report:
         "polarity": dict(Counter(e.get("polarity") for e in graph["edges"])),
         "distinct_source_urls": len(url_edges),
         "events": len(graph.get("events", [])),
+        "candidates": sum(1 for n in graph["nodes"] if n.get("status") == "candidate"),
+        "exposure_filled": sum(1 for e in graph["edges"] if e.get("relation") == "offered_by" and ("exposure_pct" in e or e.get("exposure") not in (None, "unknown"))),
+        "offered_by": sum(1 for e in graph["edges"] if e.get("relation") == "offered_by"),
+        "nodes_with_codes": sum(1 for n in graph["nodes"] if n.get("codes")),
         "watches": len(graph.get("watches", [])),
         "companies": {
             n["id"]: {

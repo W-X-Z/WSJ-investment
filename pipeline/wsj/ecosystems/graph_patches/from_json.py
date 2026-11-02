@@ -15,7 +15,11 @@
      "edges": [{"from": "component:mlb_pcb", "relation": "offered_by", "to": "company:isu_petasys", "tier": "third_party_report", "note": "…",
                 "exposure": "core", "position": "leader",          # 선택: 매출 비중(core·major·minor·unknown)·자리(leader·second_source·entrant·captive)
                 "evidence": [{"url": "https://…", "source_type": "third_party_report", "published_at": "2025-10-31", "excerpt": "원문 한 줄"}]}],
-     "aliases": {"company:isu_petasys": ["이수페타시스"]}, "native": {"company:isu_petasys": "이수페타시스"}}
+     "aliases": {"company:isu_petasys": ["이수페타시스"]}, "native": {"company:isu_petasys": "이수페타시스"},
+     # v0.5 (ADR-0031) — 간선 칸: exposure_pct·exposure_year·exposure_source(매출 비중 숫자) · content_usd_per_system · lead_time_weeks · effective_date(mandates)
+     # 이미 있는 노드 고치기: codes 는 합치고, maturity 를 주면 이전 단계를 maturity_history 에 쌓는다
+     "node_updates": [{"id": "component:socamm2", "codes": {"jesd": ["JESD328"]}, "first_evidence": {"date": "2025-10-15", "url": "https://…", "layer": "standard"},
+                       "maturity": {"stage": "near", "as_of": "2026-06-01", "evidence_url": "https://…", "evidence_tier": "standard_body"}, "status": "active"}]}
 """
 
 from __future__ import annotations
@@ -32,6 +36,10 @@ from wsj.ecosystems.ontology import GRAPH_PATH
 
 PATCH_DIR = GRAPH_PATH.parent / "patches"
 SIZE_BANDS = {"micro", "small", "mid", "large", "mega"}  # 온톨로지 company_fields.size_band (상장사만 — private 제외)
+
+
+EDGE_ATTRS = ("exposure", "position", "about", "exposure_pct", "exposure_year", "exposure_source", "content_usd_per_system", "lead_time_weeks", "effective_date")
+NODE_UPDATE_KEYS = {"codes", "first_seen", "first_evidence", "maturity", "status"}
 
 
 def parse(doc: dict[str, Any]) -> tuple[list[Node], list[Edge], str, dict[str, list[str]], dict[str, str]]:
@@ -62,7 +70,7 @@ def parse(doc: dict[str, Any]) -> tuple[list[Node], list[Edge], str, dict[str, l
             raise ValueError(f"edges[{i}]: from·relation·to·tier 필수")
         if not evs or any(not str(v.get("url") or "").startswith("https://") or not v.get("source_type") for v in evs):
             raise ValueError(f"edges[{i}]: evidence 1개 이상, 각각 https url·source_type")
-        attrs = {k: e[k] for k in ("exposure", "position", "about") if e.get(k)}
+        attrs = {k: e[k] for k in EDGE_ATTRS if e.get(k) is not None and e.get(k) != ""}
         edges.append(Edge(e["from"], e["relation"], e["to"],
                           [(v["url"], v["source_type"], v.get("published_at"), v.get("excerpt")) for v in evs],
                           e["tier"], e.get("polarity") or "positive", e.get("note") or "", attrs or None))
@@ -71,13 +79,24 @@ def parse(doc: dict[str, Any]) -> tuple[list[Node], list[Edge], str, dict[str, l
     return nodes, edges, prefix, aliases, native
 
 
+def parse_node_updates(doc: dict[str, Any]) -> list[dict[str, Any]]:
+    out = []
+    for i, u in enumerate(doc.get("node_updates") or []):
+        if not isinstance(u, dict) or not u.get("id") or not (set(u) - {"id"}) or set(u) - {"id"} - NODE_UPDATE_KEYS:
+            raise ValueError(f"node_updates[{i}]: id 와 {sorted(NODE_UPDATE_KEYS)} 중 하나 이상만")
+        out.append(u)
+    return out
+
+
 def apply_file(path: Path, dry_run: bool = False) -> int:
     try:
-        nodes, edges, prefix, aliases, native = parse(json.loads(path.read_text(encoding="utf-8")))
+        doc = json.loads(path.read_text(encoding="utf-8"))
+        nodes, edges, prefix, aliases, native = parse(doc)
+        updates = parse_node_updates(doc)
     except (ValueError, json.JSONDecodeError) as exc:
         print(f"FAIL {path.name}: {exc}", file=sys.stderr)
         return 1
-    return apply(nodes, edges, prefix, native=native or None, aliases=aliases or None, dry_run=dry_run)
+    return apply(nodes, edges, prefix, native=native or None, aliases=aliases or None, node_updates=updates or None, dry_run=dry_run)
 
 
 def main(argv: list[str] | None = None) -> int:

@@ -16,8 +16,9 @@
    - '판단 보류'·'확인 필요'로 끝내지 않는다. 더 조사해 확인하거나 반증하고, 하루에 끝나지 않으면 스레드(ideas.put_thread)로 넘긴다.
    - 고를 것이 없거나 시간이 남으면 열린 스레드 하나를 이어서 판다. 초안은 근거가 설 때만 쓴다.
    - 단서 본문은 DB(ideas.clue_texts)에서 먼저 읽는다. 원문 주소는 WebSearch 로 같은 글을 찾아 결과의 주소로 연다.
+   - 고리를 확인할 때 그래프에 먼저 묻는다(core.resolve_terms·suppliers_below 등). 확인한 매출 비중·고객·식별자는 그래프에 쌓고, 다른 작업의 그래프 제안도 근거를 확인해 그날 패치에 합친다.
    - 건너뛴 단서는 하나씩 이유와 함께 기록한다 — 검토자가 다시 본다.
-4. 꼭 지킬 것: Supabase(project_id dcatgfivsvbktylmtvgf) 쓰기는 `ideas.put_opportunities`, `ideas.put_thread`, `ops.put_agent_run` 과 읽기용 select 뿐, publishable 키만. 저장소 변경은 `research/` 와 `apps/web/src/data/` 를 PR 로만 — CI 가 모두 통과하고 바뀐 파일이 그 두 경로 안이면 스스로 병합, main 직접 push·강제 push 금지. 직접 연 원문에 없는 숫자는 쓰지 않고, 확인 못 한 것을 확인한 것처럼 쓰지 않는다. 거부된 도구·URL 을 curl·미러·캐시로 우회하지 않는다. 매수/매도 권유·목표가는 쓰지 않는다.
+4. 꼭 지킬 것: Supabase(project_id dcatgfivsvbktylmtvgf) 쓰기는 `ideas.put_opportunities`, `ideas.put_thread`, `ops.put_agent_run`, 들이지 않을 그래프 제안을 rejected 로 바꾸는 `ideas.graph_proposals` update 와 읽기용 select 뿐, publishable 키만. 저장소 변경은 `research/` 와 `apps/web/src/data/` 를 PR 로만 — CI 가 모두 통과하고 바뀐 파일이 그 두 경로 안이면 스스로 병합, main 직접 push·강제 push 금지. 직접 연 원문에 없는 숫자는 쓰지 않고, 확인 못 한 것을 확인한 것처럼 쓰지 않는다. 거부된 도구·URL 을 curl·미러·캐시로 우회하지 않는다. 매수/매도 권유·목표가는 쓰지 않는다.
 5. 커밋 끝에 `Co-Authored-By: Claude <noreply@anthropic.com>`, PR 본문 끝에 `🤖 Generated with [Claude Code](https://claude.com/claude-code)`.
 6. 문서를 읽을 수 없으면 무엇이 실패했는지 보고하고 알림을 보낸 뒤 끝낸다. 그 밖의 알림은 실패일 때만 (하루 알림은 4/4 가 보낸다).
 ```
@@ -33,8 +34,8 @@
 
 1. `date` 로 KST(UTC+9) 오늘 날짜를 확인한다. 일요일이면 "일요일" 한 줄로 끝낸다.
 2. add_repo 로 W-X-Z/WSJ-investment 를 붙이고 `--depth 1` clone 한다. add_repo 가 없으면 이미 있는 clone 을 최신으로 당겨 쓰고, 저장소를 아예 못 쓰면 Supabase 만으로 진행한다. `docs/agents/daily-ideas.md`·`docs/agents/daily/enrich.md`·`docs/agents/writing.md` 를 읽는다.
-3. 단서 본문은 DB(ideas.clue_texts)에서 먼저 읽는다. 원문 주소는 WebSearch 로 같은 글을 찾아 결과의 주소로 연다.
-4. 꼭 지킬 것: Supabase(project_id dcatgfivsvbktylmtvgf) 쓰기는 `ideas.put_opportunities`, `ideas.put_company_events`, `ideas.put_thread`, `ops.put_agent_run` 과 읽기용 select 뿐, publishable 키만. 저장소는 수정하지 않는다. 직접 연 원문에 없는 숫자는 쓰지 않는다. 거부된 도구·URL 을 curl·미러·캐시로 우회하지 않는다. 판정 라벨·매수/매도 권유·목표가는 쓰지 않는다.
+3. 단서 본문은 DB(ideas.clue_texts)에서 먼저 읽는다. 원문 주소는 WebSearch 로 같은 글을 찾아 결과의 주소로 연다. 같은 부품을 파는 다른 회사와 매출 비중은 그래프에 먼저 묻고(core.suppliers_below 등), 검토하며 확인한 매출 비중·고객·식별자는 그래프 제안(ideas.put_graph_proposal)으로 남긴다.
+4. 꼭 지킬 것: Supabase(project_id dcatgfivsvbktylmtvgf) 쓰기는 `ideas.put_opportunities`, `ideas.put_company_events`, `ideas.put_thread`, `ideas.put_graph_proposal`, `ops.put_agent_run` 과 읽기용 select 뿐, publishable 키만. 저장소는 수정하지 않는다. 직접 연 원문에 없는 숫자는 쓰지 않는다. 거부된 도구·URL 을 curl·미러·캐시로 우회하지 않는다. 판정 라벨·매수/매도 권유·목표가는 쓰지 않는다.
 5. 문서를 읽을 수 없으면 무엇이 실패했는지 보고하고 알림을 보낸 뒤 끝낸다. 그 밖의 알림은 실패일 때만.
 ```
 
