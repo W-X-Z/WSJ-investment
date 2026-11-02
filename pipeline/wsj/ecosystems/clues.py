@@ -236,12 +236,44 @@ def tag(clues: list[Clue], graph: dict[str, Any]) -> None:
                 have.add(cid)
 
 
+def tag_bodies(clues: list[Clue], bodies: dict[str, str | None], graph: dict[str, Any], layers: tuple[str, ...] | None = ("raw", "newsroom"),
+               max_chars: int = 6000) -> list[Clue]:
+    """제목·요약에 기술 노드가 하나도 안 걸린 단서를 본문 앞부분으로 한 번 더 태깅한다 (기업은 건드리지 않는다).
+    원본·뉴스룸 글은 제목이 짧고('Meeting materials', 'Press release') 내용이 본문에 있어서다. 업계지 기사 본문은 이것저것 언급해 넣지 않는다.
+    더한 노드는 extra.nodes_from_body 에 남긴다. 바뀐 단서를 돌려준다."""
+    from wsj.ecosystems.issues import build_lexicon
+
+    todo = [c for c in clues if bodies.get(c.url) and (layers is None or c.layer in layers)
+            and not any(not n.startswith(("company:", "eco:")) for n in c.nodes)]
+    if not todo:
+        return []
+    node_pats, _ = build_lexicon(graph)
+    changed = []
+    for c in todo:
+        text = (bodies.get(c.url) or "")[:max_chars]
+        add = {nid for pat, nid in node_pats if not nid.startswith(("company:", "eco:")) and pat.search(text)} - c.nodes
+        if add:
+            c.nodes |= add
+            c.extra = {**(c.extra or {}), "nodes_from_body": sorted(add)}
+            changed.append(c)
+    return changed
+
+
 LLM_SYSTEM = """너는 AI 데이터센터 공급망 리서치의 단서 분류기다. 입력은 여러 출처의 새 글 목록(i, 제목, 요약, 출처)이다.
+목적: 1년 안에 공급망의 수요·병목·기술 세대를 바꿀 변화를 남기고, 값이 움직였다는 이야기는 버린다.
 각 글에 대해 판단한다:
-- keep: AI 데이터센터 공급망(반도체·메모리·HBM·패키징·기판·PCB·테스트·장비·소재·광통신·레이저·전력·변압기·배터리·커패시터·냉각·현장 발전·전력망 접속)이나
-  그 수요(모델·추론·클라우드 증설·하이퍼스케일러 투자)를 바꿀 수 있는 사실·계획·기술·정책이면 true.
-  주가·시세 해설, 투자 권유, 실적 일정 안내, 일반 거시·정치, 소비자 제품 리뷰, 광고·이벤트 홍보는 false.
-- companies: 글에 이름이 나온 상장 기업 (아는 경우 ticker, exchange: KRX|KOSDAQ|NYSE|Nasdaq|TWSE|TSE 등). 비상장·정부기관은 빼라. 모르면 빈 배열.
+- keep: true 인 것 —
+  · AI 데이터센터 공급망(반도체·메모리·HBM·패키징·기판·PCB·테스트·장비·소재·광통신·레이저·전력·변압기·배터리·커패시터·냉각·현장 발전·전력망 접속)의
+    제품·공정·용량·수주·고객·가격 결정·공급 부족에 관한 사실이나 계획.
+  · 기술 변화: 표준·사양·작업반 문서(JEDEC·IEEE·OIF·OCP·UEC·UALink 등), 학회·논문, 특허, 새 아키텍처, 시제품·양산 전환.
+  · 추론·학습 소프트웨어 릴리스와 클러스터 엔지니어링 글(vLLM·SGLang·LMCache·TensorRT-LLM·Dynamo·CUDA·ROCm·NCCL, 네트워크·스토리지·KV 캐시 설계) —
+    하드웨어 수요(메모리 계층·네트워크·전력)를 바꿀 수 있다.
+  · 수요: 모델 공개와 추론량, 클라우드·하이퍼스케일러 증설·투자, 데이터센터 부지·전력 계약, 전력망·대형 부하 규칙(ERCOT·PJM·FERC·NERC), 송전·발전 투자.
+  · 실적 발표·컨퍼런스콜이라도 주문·백로그·캐파·고객·제품 비중·가이던스 같은 사업 사실이 있으면 true.
+- keep: false 인 것 — 주가·시세 움직임 해설, 애널리스트 등급·목표주가, '사야 할 주식'류, 자금 흐름·ETF, 실적 발표 일정 안내, 인사 프로필·행사·수상·CSR,
+  소비자 제품·게임·자동차·로봇·드론(데이터센터 공급망과 직접 닿지 않으면), 일반 기업용 AI 앱·서비스 출시, 일반 거시·정치, 광고·홍보.
+- companies: 글에 이름이 나온 상장 기업. ticker 는 확실히 알 때만 쓰고 추측하지 마라(모르면 ticker 없이 name·exchange 만).
+  exchange 는 NYSE|Nasdaq|KRX|KOSDAQ|TWSE|TPEx|TSE|SSE|SZSE|HKEX|XETRA|Euronext 중에서. 비상장·정부기관·대학은 빼라. 없으면 빈 배열.
 - note: 무엇에 관한 글인지 한국어 한 줄(60자 안). 판단·전망은 쓰지 마라.
 - keep 이 false 인 글은 {"i": n, "keep": false} 만 쓴다 (companies·note 없이). 모든 i 를 빠짐없이 쓴다.
 출력은 JSON 하나: {"items": [{"i": 0, "keep": true, "companies": [{"name": "…", "ticker": "…", "exchange": "…"}], "note": "…"}, {"i": 1, "keep": false}]}"""
@@ -276,8 +308,30 @@ def llm_screen(clues: list[Clue], api_key: str, model: str = "haiku", batch: int
     return sum_usage(comps_all) if comps_all else {}
 
 
-EXCHANGE_GROUP = {"NYSE": "US", "NASDAQ": "US", "NYSE AMERICAN": "US", "KRX": "KR", "KOSPI": "KR", "KOSDAQ": "KR",
-                  "TWSE": "TW", "TPEX": "TW", "TSE": "JP", "TYO": "JP"}
+EXCHANGE_GROUP = {"NYSE": "US", "NASDAQ": "US", "NYSE AMERICAN": "US", "NYSE ARCA": "US", "AMEX": "US",
+                  "KRX": "KR", "KOSPI": "KR", "KOSDAQ": "KR", "KONEX": "KR",
+                  "TWSE": "TW", "TPEX": "TW", "TWO": "TW", "TSE": "JP", "TYO": "JP", "JPX": "JP",
+                  "SSE": "CN", "SZSE": "CN", "SHSE": "CN", "SHA": "CN", "SHE": "CN", "BJSE": "CN", "STAR": "CN",
+                  "HKEX": "HK", "SEHK": "HK", "HKG": "HK", "XETRA": "DE", "FWB": "DE", "FRA": "DE",
+                  "EURONEXT": "EU", "SIX": "CH", "LSE": "UK", "TSX": "CA", "TSXV": "CA", "SGX": "SG",
+                  "NASDAQ STOCKHOLM": "SE", "NASDAQ HELSINKI": "FI", "NSE": "IN", "BSE": "IN", "WIENER BÖRSE": "AT", "ASX": "AU"}
+
+
+def known_company_names(graph: dict[str, Any]) -> dict[str, str]:
+    """소문자 이름 → 그래프 기업 id: native_names.json 의 현지어 이름 + node_aliases.json 의 기업 별칭 (둘 다 사람이 적은 것)."""
+    ids = {n["id"] for n in graph["nodes"] if n.get("kind") == "company"}
+    out: dict[str, str] = {}
+    try:
+        for cid, nm in (json.loads((GRAPH_PATH.parent / "native_names.json").read_text(encoding="utf-8")).get("names") or {}).items():
+            if cid in ids and nm:
+                out.setdefault(re.sub(r"\s+", " ", str(nm).strip().lower()), cid)
+        for cid, words in (json.loads((GRAPH_PATH.parent / "node_aliases.json").read_text(encoding="utf-8")).get("aliases") or {}).items():
+            if cid in ids:
+                for w in words:
+                    out.setdefault(re.sub(r"\s+", " ", str(w).strip().lower()), cid)
+    except (OSError, ValueError) as exc:
+        log.warning("기업 이름 목록을 읽지 못함: %s", exc)
+    return out
 
 
 def company_resolver(graph: dict[str, Any]):
@@ -292,13 +346,16 @@ def company_resolver(graph: dict[str, Any]):
         if n.get("kind") == "company" and grp and lst.get("ticker"):
             by_ticker[(grp, str(lst["ticker"]).upper().lstrip("0") or "0")] = n["id"]
     _, comp_pats = build_lexicon(graph)
+    by_name = known_company_names(graph)
 
     def resolve(name: str | None, ticker: str | None, exchange: str | None) -> str | None:
         grp = EXCHANGE_GROUP.get(str(exchange or "").upper())
         t = str(ticker or "").upper().split(":")[-1].lstrip("0")
         if grp and t and (grp, t) in by_ticker:
             return by_ticker[(grp, t)]
-        return next((cid for pat, cid in comp_pats if name and pat.search(name)), None)
+        hit = next((cid for pat, cid in comp_pats if name and pat.search(name)), None)
+        # 다른 시장에 상장된 같은 회사('TSMC 2330 TWSE' ↔ 그래프 TSM NYSE) — 현지어 이름·기업 별칭이 정확히 같으면
+        return hit or by_name.get(re.sub(r"\s+", " ", (name or "").strip().lower()))
 
     return resolve
 
@@ -528,6 +585,7 @@ def run(http: Any, store: Any | None, days: int, use_llm: bool, model: str, api_
     stats["duplicate"] = mark_duplicates(clues, seen)
     new = [c for c in clues if c.url not in seen]
     tag(new, graph)
+    stats["pages"]["retagged"] = len(tag_bodies(new, {b["url"]: b.get("body") for b in page_bodies}, graph, layers=None))
     todo = [c for c in new if c.relevant]
     usage = screen(todo, use_llm, api_key, model, graph)
     if usage:
@@ -558,6 +616,13 @@ def run(http: Any, store: Any | None, days: int, use_llm: bool, model: str, api_
         for r in rows:
             st[r["status"].split(":")[0]] = st.get(r["status"].split(":")[0], 0) + 1
         stats["bodies"] = st | {"saved": save_bodies(store, rows) if store is not None and stats.get("saved") else 0}
+        retag = tag_bodies(kept, {r["url"]: r.get("body") for r in rows if r.get("status") == "ok"}, graph)
+        stats["bodies"]["retagged"] = len(retag)
+        if retag and store is not None and stats.get("saved"):
+            try:
+                store.upsert("ideas.clues", [c.row() for c in retag], ["url"])
+            except Exception as exc:  # noqa: BLE001 - 본문 태깅은 덤
+                log.warning("본문 태깅 결과를 쓰지 못함: %s", exc)
     stats["clues"] = new
     return stats
 

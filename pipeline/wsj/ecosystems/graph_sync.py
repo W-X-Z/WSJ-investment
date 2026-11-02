@@ -92,6 +92,10 @@ def term_rows(graph: dict[str, Any]) -> list[dict[str, Any]]:
     for cid, names in company_names.items():
         for nm in names:
             add(nm, cid, "company_name")
+    from wsj.ecosystems.clues import known_company_names
+
+    for nm, cid in known_company_names(graph).items():     # 현지어 이름·기업 별칭 (TSMC ↔ 台積電 ↔ TSM) — 소문자라 대소문자 무시
+        add(nm, cid, "native")
     for n in graph["nodes"]:
         if n["kind"] not in ("ecosystem",):
             name = clean_name(n["label"])

@@ -211,6 +211,15 @@ def lexicon_terms(graph: dict[str, Any]) -> tuple[dict[str, str], dict[str, list
     ids = {n["id"] for n in graph["nodes"]}
     company_ids = ids | {n["id"] for n in extra_company_nodes()}
     phrases: dict[str, str] = {k: v for k, v in PHRASE_OVERRIDES.items() if v in ids}
+    # 층별 식별자(v0.5 codes: JESD328 · 802.3dj · NOGRR282 · ORv3 …) — 원본 출처 글을 노드에 잇는 가장 정확한 말이라 별칭보다 먼저
+    for n in graph["nodes"]:
+        if n["kind"] in ("company", "ecosystem"):
+            continue
+        for words in (n.get("codes") or {}).values():
+            for w in words:
+                w = re.sub(r"\s+", " ", str(w).strip().lower())
+                if len(w) >= 4:
+                    phrases.setdefault(w, n["id"])
     # 발굴 구문(사람이 큐레이션)이 백필 별칭보다 우선 — 'hybrid bonding' 이 병목 노드로 가는 별칭 충돌 방지
     for nid, qs in DISCOVERY_QUERIES.items():
         for q in qs:

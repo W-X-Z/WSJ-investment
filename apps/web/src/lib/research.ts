@@ -76,9 +76,10 @@ export const GRAPH_TO_ECO: Record<string, EcoId> = {
 export const KINDS: Record<string, string> = {
   ecosystem: "산업 생태계", product_generation: "제품 세대", standard: "표준·사양", requirement: "기술 요구",
   bottleneck: "핵심 병목", technology: "해결 기술", process: "공정·검사", component: "부품·모듈", material: "소재",
-  equipment: "장비 유형", product: "제품", company: "기업",
+  equipment: "장비 유형", product: "제품", company: "기업", rule: "규칙·규제", authority: "결정 주체",
 };
 export const RELATIONS: Record<string, string> = {
+  mandates: "강제한다", issued_by: "정한 곳",
   drives_requirement: "요구를 만든다", specified_by: "규격으로 정의", succeeds: "다음 세대", creates_bottleneck: "병목을 만든다",
   mitigated_by: "완화 수단", requires: "필요로 한다", implements: "제품이 구현", offered_by: "공급 가능(판매 보유)",
   supplied_to: "확인된 납품", qualifying_with: "인증·협업 진행", adopts: "채택", defers: "채택 연기(부정)",

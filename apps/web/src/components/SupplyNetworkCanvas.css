@@ -51,7 +51,7 @@
 .sc-kind-dot{display:inline-block;flex:none;height:7px;width:7px;background:#a4b4ca;border-radius:2px}
 .sc-dot-ecosystem{background:#394e83}.sc-dot-requirement{background:#7c86d8}.sc-dot-bottleneck{background:#dd739e}.sc-dot-technology{background:#48a7a3}
 .sc-dot-process,.sc-dot-component,.sc-dot-material,.sc-dot-equipment{background:#719bc4}.sc-dot-company{background:#eab061}
-.sc-dot-product{background:#d26a9c}.sc-dot-standard,.sc-dot-product_generation{background:#6b7f99}
+.sc-dot-product{background:#d26a9c}.sc-dot-standard,.sc-dot-product_generation,.sc-dot-rule,.sc-dot-authority{background:#6b7f99}
 
 /* ---------- body / canvas ---------- */
 .sc-body{display:grid;grid-template-columns:minmax(0,1fr);background:#f7faff}

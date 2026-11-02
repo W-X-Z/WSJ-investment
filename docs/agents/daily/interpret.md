@@ -17,12 +17,13 @@
   원본 페이지(표준 위원회 문서 목록·규칙 개정·회의 자료·사양 페이지)는 바뀐 것만 들어온다 — 새 문서·새 항목은 그 링크가, 본문 변화는 '… 페이지 변경' 단서(주소 끝 `#changed-…`, 본문 = 새로 생긴 줄)가 된다.
 - 열린 스레드: `daily-ideas.md` §C
 - 그래프 조회(글 → 노드, 이웃, 아래로 내려가며 공급사, 노드 한 장): `daily-ideas.md` §D. 0035 전이면 아래 recall 을 쓴다.
-- 기업 소식·이슈: `public.v_company_events`, `public.v_supply_chain_issues`, 약한 신호 `public.v_weak_signals`
+- 기업 소식·이슈: `public.v_company_events`, `public.v_supply_chain_issues` (`v_weak_signals` 는 옛 작업이 쓰던 것으로 10-29 뒤 갱신이 없다 — 사전 밖 용어는 그래프 제안 term 으로 들어온다)
 - 논문·특허 흐름: `public.v_tech_rising`, `public.v_tech_orgs`, `public.v_tech_docs`
 - 가격: `select * from public.v_price_context where ticker = '…';` (미국 `RMBS`, 한국 `KRX:007660`·`KOSDAQ:…`)
 - 지금 아이디어와 내린 아이디어: `select opportunity_key, title, stars, companies, nodes, status, status_note, updated_at from ideas.opportunities order by updated_at desc limit 50;`
 - 그래프 한 장 보기: `cd pipeline && .venv/bin/python -m wsj.ecosystems.recall --company company:… --node <id> --name "<기업명>" --text "<단서 제목>"` — 그래프 자리, 같이 파는 회사, 관련 패턴 카드, 지난 단서·아이디어, 가격, 논문·특허가 나온다. 그래프 파일은 `research/ecosystems/seed_graph.json`·`node_aliases.json`.
 - 참고 자료: `research/playbook/` (렌즈·패턴 카드·사용자 지적 기록). 규칙이 아니라 기억이다.
+- 시장 배경: `research/macro/` 의 가장 최근 장 (주간 개선이 매주 쓴다 — 소형주 환경·금리·반도체 사이클·전력). '시장이 이미 가격에 넣었나'를 볼 때의 배경일 뿐, 아이디어의 근거는 회사 원문이다.
 
 ## 초안 쓰기
 `select ideas.put_opportunities($j$[{…}]$j$::jsonb);`
@@ -47,6 +48,10 @@
   공급사의 매출 비중·자리를 확인했으면 `offered_by` 간선에 `exposure_pct`·`exposure_year`·`exposure_source`(원문 숫자가 있을 때) 또는 `exposure`(core·major·minor)와 `position`(leader·second_source·entrant·captive), 누가 누구에게 납품하는지 확인했으면 `supplied_to` + `about`.
   이미 있는 노드에 표준 번호·특허 분류·규칙 번호(`codes`), 근거상 처음 나온 날(`first_evidence`), 단계 전환(`maturity`)을 더하려면 `node_updates`. 규칙과 그것을 정한 곳은 `rule`·`authority` 노드와 `mandates`(시행일 `effective_date`)·`issued_by` 간선 (온톨로지 v0.5, ADR-0031).
 - 다른 작업이 남긴 그래프 제안(pending)도 오늘 패치에 합친다 — 근거를 다시 열어 맞는 것만: `select proposal_id, kind, payload, reason, by from ideas.graph_proposals where status = 'pending' order by proposal_id;` 결과를 파일로 두고 `.venv/bin/python -m wsj.ecosystems.graph_patches.from_proposals <파일> --prefix p<MMDD> --out ../research/ecosystems/patches/YYYYMMDD_proposals.json`. 들이지 않을 제안은 `update ideas.graph_proposals set status = 'rejected', note = '…' where proposal_id = …;`. 병합되면 graph-sync 가 applied 로 바꾸고 DB 조회본을 맞춘다.
+  수집기가 올린 제안(`by = 'collect'`)은 판단 없이 찾기만 한 것이다 — 합치기 전에 확인한다:
+  · 그래프 밖 상장사 후보(kind `node`, status `candidate`): 분류기가 적은 티커·거래소가 맞는지, 그래프에 다른 시장 상장으로 이미 있는지(`select * from core.resolve_terms('<이름>', 5);`) 보고, 시가총액으로 `size_band`(micro·small·mid·large·mega, 모르면 unknown)를 채운다. 공급망과 무관하거나 이미 있으면 rejected. 들이면 기업 소식·가격·재무 수집 대상이 된다.
+  · 사전 밖 식별자(kind `term`): 기존 노드의 `codes`(node_updates)나 별칭(aliases)이면 그쪽으로 옮겨 적고, 새 개념이면 근거 1개로 후보 노드(`status: candidate`)를 만들고, 의미 없는 말이면 rejected. term 제안 자체는 패치가 되지 않으니 처리한 뒤 `status = 'applied'`(또는 rejected)와 note 를 직접 적는다.
+  시간이 모자라면 남겨 둔다 — 주간 개선이 묵은 것을 정리한다.
 - 패턴 카드(`research/playbook/patterns/`, 형식은 그 폴더 README)는 반복해서 보인 메커니즘을 적는 기억이다. 오늘 아이디어 하나가 근거의 전부인 새 카드는 맨 위에 `상태: 가설` 을 적는다.
 - `cd pipeline && .venv/bin/python -m wsj.ecosystems.graph_patches.from_json ../research/ecosystems/patches/YYYYMMDD_interpret.json && .venv/bin/python -m wsj.ecosystems.export_web && .venv/bin/python -m wsj.ecosystems.ontology --check`
 - 브랜치 `auto/interpret-YYYYMMDD` → 커밋(끝에 `Co-Authored-By: Claude <noreply@anthropic.com>`) → PR(`gh api repos/W-X-Z/WSJ-investment/pulls -f base=main -f head=… -f title=… -F body=@…`, 본문 끝 `🤖 Generated with [Claude Code](https://claude.com/claude-code)`).

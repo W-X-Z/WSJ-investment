@@ -17,5 +17,6 @@
 
 ## 하루 알림 (매일)
 - 첫 줄: 오늘 사슬 한 줄 — `select task, status, rows from public.v_agent_runs where run_date = (now() at time zone 'Asia/Seoul')::date order by started_at;` (예 "수집 ✓ · 해석 3 · 보강 3(내림 1) · 리포트 2").
+- 둘째 줄(이상이 있을 때만): 수집 이상 — `select level, what, detail from ops.v_collection_alerts order by level;` 의 error 는 모두, warn 은 세 개까지 한 줄로 (예 "⚠ 수집: facts 실패(미국 0/40) · 출처 jedec_jc42 3번 연속 실패"). 0036 전이면 건너뛴다. 비어 있으면 쓰지 않는다.
 - 이어서 오늘 낸 아이디어를 ★ 높은 순으로 `★★★★ 제목` + 한 줄 요지, 그다음 ★ 가 바뀌었거나 닫힌 아이디어, 실패한 작업의 note.
 - 새로 낸 것도 바뀐 것도 없으면 "오늘 새 아이디어 없음" 한 줄.

@@ -2,9 +2,9 @@
 # 1) 그래프 in_universe 기업을 core.companies 유니버스에 동기화  2) 해자 카드 생성 (Sonnet, 건당 ≈ $0.2~0.4)
 name: moat
 
+# 2026-11-02 예약 끔 (백로그 M-2): 지금 판단 사슬(해석·검토·리포트)은 해자 카드를 읽지 않고, 돌 때마다 API 비용(카드당 ≈ $0.2~0.4)이 든다.
+# 옛 카드는 DB 에 남고 웹 discovery·briefs 화면은 그대로 보인다. 필요하면 수동 실행(workflow_dispatch)으로 돌린다.
 on:
-  schedule:
-    - cron: "41 13 * * 2"   # 화 13:41 UTC = 서울 22:41 — 주 1회 전체 (같은 기준일 카드가 있으면 건너뜀)
   workflow_dispatch:
     inputs:
       tickers:

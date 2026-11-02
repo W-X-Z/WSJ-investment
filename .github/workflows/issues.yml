@@ -97,6 +97,14 @@ jobs:
           args=(run --days 2 --out data/issues/clues.json)
           [[ "$IN_NO_LLM" == "true" ]] && args+=(--no-llm)
           python -m wsj.ecosystems.clues "${args[@]}" | tee -a "$GITHUB_STEP_SUMMARY"
+      # 후보 노드 통로 (ADR-0031): 지난 14일 단서의 그래프 밖 상장사·사전 밖 식별자 → ideas.graph_proposals(by=collect). 판단은 해석 작업이 한다.
+      # 거래소 묶음이 늘면 지난 단서의 기업도 그래프에 다시 잇는다. LLM 을 쓰지 않는다. 실패해도 다음 단계는 돈다.
+      - name: Propose candidate nodes
+        continue-on-error: true
+        working-directory: pipeline
+        run: |
+          set -euo pipefail
+          python -m wsj.ecosystems.candidates run --days 14 | tee -a "$GITHUB_STEP_SUMMARY"
       # 그래프 상장사 일봉 → raw.px_daily (ADR-0017). 가격은 '이미 움직인 폭'과 설명 안 된 급변 탐지에만 쓴다.
       # 증분은 매번 전부, 1년 이력 백필은 남은 시간(아침 10분·저녁 15분)만큼 나눠서. 실패해도 다음 단계는 돈다.
       - name: Collect prices

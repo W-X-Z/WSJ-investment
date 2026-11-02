@@ -1,0 +1,455 @@
+{
+ "prefix": "c1102",
+ "note": "G-6 (ADR-0031): 원본 출처(표준기구·계통 운영자·OCP) 단서가 노드에 붙도록 식별자(codes)·별칭을 달고, 규칙·결정 주체 노드를 처음 넣는다.",
+ "nodes": [
+  {
+   "id": "authority:ercot",
+   "kind": "authority",
+   "label": "ERCOT (텍사스 계통 운영자, Electric Reliability Council of Texas)",
+   "ecosystem": "power",
+   "first_seen": "2026-11-02"
+  },
+  {
+   "id": "authority:jedec",
+   "kind": "authority",
+   "label": "JEDEC (메모리 표준기구)",
+   "ecosystem": "hbm",
+   "also_in": [
+    "optics"
+   ],
+   "first_seen": "2026-11-02"
+  },
+  {
+   "id": "authority:oif",
+   "kind": "authority",
+   "label": "OIF (Optical Internetworking Forum, 광·전기 인터페이스 IA)",
+   "ecosystem": "optics",
+   "first_seen": "2026-11-02"
+  },
+  {
+   "id": "authority:ieee_802_3",
+   "kind": "authority",
+   "label": "IEEE 802.3 이더넷 작업반 (Ethernet Working Group)",
+   "ecosystem": "optics",
+   "first_seen": "2026-11-02"
+  },
+  {
+   "id": "authority:ocp",
+   "kind": "authority",
+   "label": "OCP (Open Compute Project, 랙·전력·네트워크 사양)",
+   "ecosystem": "power",
+   "also_in": [
+    "optics"
+   ],
+   "first_seen": "2026-11-02"
+  },
+  {
+   "id": "authority:uec",
+   "kind": "authority",
+   "label": "Ultra Ethernet Consortium (UEC)",
+   "ecosystem": "optics",
+   "first_seen": "2026-11-02"
+  },
+  {
+   "id": "authority:ualink",
+   "kind": "authority",
+   "label": "UALink Consortium",
+   "ecosystem": "optics",
+   "first_seen": "2026-11-02"
+  },
+  {
+   "id": "rule:ercot_nogrr282",
+   "kind": "rule",
+   "label": "ERCOT NOGRR282 대형 연산 부하 라이드스루 요건 (Large Computational Load Ride-Through, PUCT 2026-07-09 승인·2026-08-01 시행)",
+   "ecosystem": "power",
+   "codes": {
+    "rule": [
+     "NOGRR282",
+     "NOGRR 282"
+    ]
+   },
+   "first_seen": "2026-11-02"
+  },
+  {
+   "id": "std:jesd328",
+   "kind": "standard",
+   "label": "JEDEC JESD328 SOCAMM2 (LPDDR5/5X 모듈 공통 표준, 2026-06 v1.00)",
+   "ecosystem": "hbm",
+   "codes": {
+    "jesd": [
+     "JESD328"
+    ]
+   },
+   "first_seen": "2026-11-02",
+   "first_evidence": {
+    "date": "2026-06-01",
+    "url": "https://www.jedec.org/standards-documents/docs/jesd328",
+    "layer": "standard"
+   }
+  }
+ ],
+ "edges": [
+  {
+   "from": "rule:ercot_nogrr282",
+   "relation": "mandates",
+   "to": "req:grid_disturbance_ridethrough",
+   "tier": "official_issuer",
+   "effective_date": "2026-08-01",
+   "note": "ERCOT 계통에 접속하는 대형 연산 부하(데이터센터)에 전압·주파수 외란 라이드스루를 요구. TAC 2026-04-29 · 이사회 2026-06-02 권고 · PUCT 2026-07-09 승인, 시행 2026-08-01",
+   "evidence": [
+    {
+     "url": "https://www.ercot.com/mktrules/issues/NOGRR282",
+     "source_type": "official_issuer",
+     "published_at": "2026-07-09",
+     "excerpt": "Board Priority - Large Computational Load Ride-Through Requirements — Approved on 07/09/2026, Effective 08/01/2026"
+    }
+   ]
+  },
+  {
+   "from": "rule:ercot_nogrr282",
+   "relation": "issued_by",
+   "to": "authority:ercot",
+   "tier": "official_issuer",
+   "evidence": [
+    {
+     "url": "https://www.ercot.com/mktrules/issues/NOGRR282",
+     "source_type": "official_issuer",
+     "published_at": "2026-07-09"
+    }
+   ]
+  },
+  {
+   "from": "req:cpu_memory_per_rack",
+   "relation": "specified_by",
+   "to": "std:jesd328",
+   "tier": "standard_body",
+   "note": "랙당 CPU 메모리(Vera LPDDR5X)를 담는 SOCAMM2 모듈 규격 — NVIDIA 가 만든 SOCAMM1 을 JEDEC 공통 표준으로 바꾼 것",
+   "evidence": [
+    {
+     "url": "https://www.jedec.org/standards-documents/docs/jesd328",
+     "source_type": "standard_body",
+     "published_at": "2026-06-01",
+     "excerpt": "LPDDR5/5X Small Outline Compression Attached Memory Module (SOCAMM2) Common Standard — Published: Jun 2026, Version 1.00"
+    }
+   ]
+  },
+  {
+   "from": "std:jesd328",
+   "relation": "issued_by",
+   "to": "authority:jedec",
+   "tier": "standard_body",
+   "evidence": [
+    {
+     "url": "https://www.jedec.org/standards-documents/docs/jesd328",
+     "source_type": "standard_body",
+     "published_at": "2026-06-01"
+    }
+   ]
+  },
+  {
+   "from": "std:jesd270_4",
+   "relation": "issued_by",
+   "to": "authority:jedec",
+   "tier": "standard_body",
+   "evidence": [
+    {
+     "url": "https://www.storagenewsletter.com/2025/04/17/jedec-and-industry-leaders-collaborate-to-release-jesd270-4-hbm4-standard/",
+     "source_type": "standard_body_via_press",
+     "published_at": "2025-04-17"
+    }
+   ]
+  },
+  {
+   "from": "std:ieee_802_3dj",
+   "relation": "issued_by",
+   "to": "authority:ieee_802_3",
+   "tier": "standard_body",
+   "evidence": [
+    {
+     "url": "https://standards.ieee.org/ieee/802.3dj/11115/",
+     "source_type": "standard_body"
+    }
+   ]
+  },
+  {
+   "from": "std:oif_elsfp",
+   "relation": "issued_by",
+   "to": "authority:oif",
+   "tier": "standard_body",
+   "evidence": [
+    {
+     "url": "https://www.businesswire.com/news/home/20230808055417/en/OIF-Announces-External-Laser-Small-Form-Factor-Pluggable-ELSFP-Implementation-Agreement-Paving-the-Way-for-Advancements-in-Co-Packaged-Optics-Applications",
+     "source_type": "standard_body",
+     "published_at": "2023-08-08"
+    }
+   ]
+  },
+  {
+   "from": "std:ocp_lvdc",
+   "relation": "issued_by",
+   "to": "authority:ocp",
+   "tier": "standard_body",
+   "evidence": [
+    {
+     "url": "https://www.opencompute.org/projects/data-center-facility/power-distribution/",
+     "source_type": "standard_body",
+     "published_at": "2026-09"
+    }
+   ]
+  },
+  {
+   "from": "standard:ocp_grid_interface",
+   "relation": "issued_by",
+   "to": "authority:ocp",
+   "tier": "standard_body",
+   "evidence": [
+    {
+     "url": "https://www.opencompute.org/wp-content/uploads/2026/10/OCP-Base-Spec-Interface-Specification-Between-Hyperscalers-and-Utility-Grid-for-Disturbance-Performance.pdf",
+     "source_type": "standard",
+     "published_at": "2026-09-17"
+    }
+   ]
+  },
+  {
+   "from": "standard:scaleup_ethernet",
+   "relation": "issued_by",
+   "to": "authority:ocp",
+   "tier": "standard_body",
+   "evidence": [
+    {
+     "url": "https://www.opencompute.org/wp-content/uploads/2026/10/Scale-Up-Ethernet-Transport-SUE-T-Base-Specification-v1.0.0.pdf",
+     "source_type": "standard",
+     "published_at": "2026-10-08"
+    }
+   ]
+  },
+  {
+   "from": "standard:uec",
+   "relation": "issued_by",
+   "to": "authority:uec",
+   "tier": "standard_body",
+   "evidence": [
+    {
+     "url": "https://ultraethernet.org/specification-history/",
+     "source_type": "standard",
+     "published_at": "2026-10-12"
+    }
+   ]
+  },
+  {
+   "from": "standard:ualink",
+   "relation": "issued_by",
+   "to": "authority:ualink",
+   "tier": "standard_body",
+   "evidence": [
+    {
+     "url": "https://ualinkconsortium.org/wp-content/uploads/2026/04/UALink-2.0-Specification-PR_FINAL.pdf",
+     "source_type": "standard",
+     "published_at": "2026-04-07"
+    }
+   ]
+  }
+ ],
+ "node_updates": [
+  {
+   "id": "std:jesd270_4",
+   "codes": {
+    "jesd": [
+     "JESD270-4"
+    ]
+   }
+  },
+  {
+   "id": "gen:hbm4",
+   "codes": {
+    "jesd": [
+     "JESD270-4"
+    ]
+   }
+  },
+  {
+   "id": "component:server_dram_lpdram",
+   "codes": {
+    "jesd": [
+     "JESD209-6"
+    ]
+   }
+  },
+  {
+   "id": "std:ieee_802_3dj",
+   "codes": {
+    "ieee": [
+     "802.3dj",
+     "P802.3dj"
+    ]
+   }
+  },
+  {
+   "id": "req:400g_lane",
+   "codes": {
+    "ieee": [
+     "802.3dv",
+     "400 Gb/s/Lane Signaling"
+    ],
+    "oif_ia": [
+     "CEI-448G"
+    ]
+   }
+  },
+  {
+   "id": "std:oif_elsfp",
+   "codes": {
+    "oif_ia": [
+     "ELSFP"
+    ]
+   }
+  },
+  {
+   "id": "tech:pluggable",
+   "codes": {
+    "oif_ia": [
+     "CMIS"
+    ]
+   }
+  },
+  {
+   "id": "tech:coherent_dci",
+   "codes": {
+    "oif_ia": [
+     "400ZR",
+     "800ZR",
+     "1600ZR"
+    ]
+   }
+  },
+  {
+   "id": "std:ocp_lvdc",
+   "codes": {
+    "ocp": [
+     "LVDC"
+    ]
+   }
+  },
+  {
+   "id": "tech:sidecar",
+   "codes": {
+    "ocp": [
+     "Mt. Diablo",
+     "Mount Diablo",
+     "Diablo 400"
+    ]
+   }
+  },
+  {
+   "id": "component:psu_power_shelf",
+   "codes": {
+    "ocp": [
+     "ORv3",
+     "ORv3 HPR"
+    ]
+   }
+  },
+  {
+   "id": "standard:scaleup_ethernet",
+   "codes": {
+    "ocp": [
+     "SUE-T",
+     "ESUN"
+    ]
+   }
+  },
+  {
+   "id": "req:grid_disturbance_ridethrough",
+   "codes": {
+    "rule": [
+     "NOGRR282"
+    ]
+   }
+  }
+ ],
+ "aliases": {
+  "component:server_dram_lpdram": [
+   "socamm2",
+   "socamm",
+   "lpddr6",
+   "lpddr5x server",
+   "서버용 lpddr"
+  ],
+  "req:cpu_memory_per_rack": [
+   "vera cpu memory",
+   "grace cpu memory"
+  ],
+  "gen:3p2t": [
+   "3.2t",
+   "3.2 tbps",
+   "3.2t optical"
+  ],
+  "std:ieee_802_3dj": [
+   "802.3dj"
+  ],
+  "req:400g_lane": [
+   "400 gb/s/lane",
+   "400g/lane signaling",
+   "cei-448g"
+  ],
+  "tech:coherent_dci": [
+   "400zr",
+   "800zr",
+   "1600zr"
+  ],
+  "tech:sidecar": [
+   "mt. diablo",
+   "mount diablo",
+   "diablo 400",
+   "disaggregated power rack"
+  ],
+  "component:psu_power_shelf": [
+   "orv3",
+   "power shelf"
+  ],
+  "req:grid_disturbance_ridethrough": [
+   "nogrr282",
+   "nogrr 282",
+   "large electronic load",
+   "large computational load",
+   "voltage ride-through"
+  ],
+  "req:gw_campus_power": [
+   "large load interconnection",
+   "large load additions",
+   "large load interconnect"
+  ],
+  "tech:ocs": [
+   "optical circuit switching"
+  ],
+  "standard:uec": [
+   "ultra ethernet consortium",
+   "uec 1.1"
+  ],
+  "std:ocp_lvdc": [
+   "ocp lvdc",
+   "lvdc white paper"
+  ],
+  "company:tsmc": [
+   "tsmc",
+   "台積電",
+   "台积电",
+   "taiwan semiconductor"
+  ],
+  "company:umc": [
+   "umc",
+   "聯電",
+   "联电"
+  ],
+  "company:ase_technology": [
+   "日月光投控",
+   "日月光",
+   "ase technology",
+   "ase holdings"
+  ],
+  "company:himx": [
+   "himax",
+   "奇景光電"
+  ]
+ }
+}

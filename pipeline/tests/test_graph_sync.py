@@ -61,12 +61,12 @@ def test_rule_nodes_and_mandates():
     g, o = load_graph(), load_ontology()
     g = {**g, "nodes": list(g["nodes"]), "edges": list(g["edges"])}
     req = next(x for x in g["nodes"] if x["kind"] == "requirement")
-    g["nodes"] += [{"id": "rule:ercot_nogrr282", "kind": "rule", "label": "ERCOT NOGRR282", "ecosystem": "power"},
-                   {"id": "authority:ercot", "kind": "authority", "label": "ERCOT", "ecosystem": "power"}]
+    g["nodes"] += [{"id": "rule:test_nogrr999", "kind": "rule", "label": "ERCOT NOGRR999", "ecosystem": "power"},
+                   {"id": "authority:test_iso", "kind": "authority", "label": "Test ISO", "ecosystem": "power"}]
     ev = [{"url": "https://www.ercot.com/mktrules/issues/NOGRR282", "source_type": "standard_body"}]
-    g["edges"] += [{"id": "t-1", "from": "rule:ercot_nogrr282", "to": req["id"], "relation": "mandates", "evidence_tier": "standard_body",
+    g["edges"] += [{"id": "t-1", "from": "rule:test_nogrr999", "to": req["id"], "relation": "mandates", "evidence_tier": "standard_body",
                     "polarity": "positive", "evidence": ev, "effective_date": "2026-12-01"},
-                   {"id": "t-2", "from": "rule:ercot_nogrr282", "to": "authority:ercot", "relation": "issued_by", "evidence_tier": "standard_body",
+                   {"id": "t-2", "from": "rule:test_nogrr999", "to": "authority:test_iso", "relation": "issued_by", "evidence_tier": "standard_body",
                     "polarity": "positive", "evidence": ev}]
     assert validate(g, o).ok
 

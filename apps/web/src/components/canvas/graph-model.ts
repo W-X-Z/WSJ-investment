@@ -24,7 +24,7 @@ export const ECO_NAME: Record<string, string> = Object.fromEntries(ECOS.map((e) 
 
 /** Ontology layer = column, left → right. */
 export const LAYER: Record<string, number> = {
-  ecosystem: 0, product_generation: 0, standard: 0,
+  ecosystem: 0, product_generation: 0, standard: 0, rule: 0, authority: 0,
   requirement: 1, bottleneck: 2, technology: 3,
   process: 4, component: 4, material: 4, equipment: 4,
   product: 5, company: 6,
