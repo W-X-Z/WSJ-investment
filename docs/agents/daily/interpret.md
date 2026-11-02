@@ -13,7 +13,8 @@
 ## 쓸 수 있는 재료
 필요한 것을 골라 쓴다. 여기 없는 원본(federalregister.gov, JEDEC·OCP·OIF, arXiv, 회사 IR, 고객·경쟁사 발표)을 직접 찾아도 된다.
 - 단서와 본문: `select c.url, c.title, c.source_name, c.extra->>'layer' as layer, c.note, c.companies, c.nodes, c.published_at, left(t.body, 3000) as body from ideas.clues c left join ideas.clue_texts t on t.url = c.url where c.relevant and c.seen_at > now() - interval '30 hours' order by (c.extra->>'layer' = 'raw') desc, c.seen_at desc;`
-  층(layer): raw(표준·규칙·학회·논문·정책·릴리스 노트 — 원본) · press(업계지) · newsroom · company(기업 이름으로 모은 소식) · disclosure · issue. 0034 전이면 `ideas.clue_texts` 없이 `public.v_clues` 를 읽는다.
+  층(layer): raw(표준·규칙·학회·논문·정책·릴리스 노트 — 원본) · press(업계지) · newsroom · company(기업 이름으로 모은 소식) · disclosure · issue.
+  원본 페이지(표준 위원회 문서 목록·규칙 개정·회의 자료·사양 페이지)는 바뀐 것만 들어온다 — 새 문서·새 항목은 그 링크가, 본문 변화는 '… 페이지 변경' 단서(주소 끝 `#changed-…`, 본문 = 새로 생긴 줄)가 된다.
 - 열린 스레드: `daily-ideas.md` §C
 - 기업 소식·이슈: `public.v_company_events`, `public.v_supply_chain_issues`, 약한 신호 `public.v_weak_signals`
 - 논문·특허 흐름: `public.v_tech_rising`, `public.v_tech_orgs`, `public.v_tech_docs`

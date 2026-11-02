@@ -133,7 +133,7 @@
   {
    "id": "theguru_kr",
    "name": "더구루",
-   "type": "html_list",
+   "type": "html_diff",
    "url": "https://www.theguru.co.kr/news/article_list_all.html",
    "home": "https://www.theguru.co.kr",
    "lang": "ko",
@@ -389,7 +389,7 @@
   {
    "id": "motir_press_kr",
    "name": "산업통상부 보도·참고자료",
-   "type": "html_list",
+   "type": "html_diff",
    "url": "https://www.motir.go.kr/kor/article/ATCL3f49a5a8c",
    "home": "https://www.motir.go.kr",
    "lang": "ko",
@@ -497,7 +497,7 @@
   {
    "id": "moneydj_industry",
    "name": "MoneyDJ 產業情報",
-   "type": "html_list",
+   "type": "html_diff",
    "url": "https://www.moneydj.com/kmdj/news/newsreallist.aspx?a=mb07",
    "home": "https://www.moneydj.com",
    "lang": "zh",
@@ -1221,9 +1221,9 @@
     "ok": true,
     "checked": "2026-10-30",
     "latest_item_date": "2026-10-20",
-    "note": "RSS 2.0, low volume. GlobeNewswire and PR Newswire semiconductor lists were found only as HTML tag pages; their RSS was not verified."
+    "note": "RSS 2.0, low volume. GlobeNewswire and PR Newswire semiconductor lists were found only as HTML tag pages; their RSS was not verified. 2026-11-02: 8일간 0건 — 끔."
    },
-   "enabled": true,
+   "enabled": false,
    "broad": false
   },
   {
@@ -1282,7 +1282,7 @@
   {
    "id": "lumentum_news",
    "name": "Lumentum News Releases",
-   "type": "html_list",
+   "type": "html_diff",
    "url": "https://www.lumentum.com/en/media-room/news-releases?page=1",
    "home": "https://www.lumentum.com",
    "lang": "en",
@@ -1441,8 +1441,8 @@
   {
    "id": "ocp_news",
    "name": "Open Compute Project – News",
-   "type": "rss",
-   "url": "http://www.opencompute.org/news/feed/",
+   "type": "html_diff",
+   "url": "https://www.opencompute.org/news",
    "home": "https://www.opencompute.org/news",
    "lang": "en",
    "region": "global",
@@ -1461,7 +1461,7 @@
     "ok": true,
     "checked": "2026-10-30",
     "latest_item_date": "2026-10-20",
-    "note": "The footer link opencompute.org/blog/rss redirects (302) here. Verified over http; https is likely the same."
+    "note": "The footer link opencompute.org/blog/rss redirects (302) here. Verified over http; https is likely the same. 2026-11-02: RSS 8일간 0건 → 뉴스 페이지 변화 감지로."
    },
    "enabled": true,
    "broad": false
@@ -1469,7 +1469,7 @@
   {
    "id": "jedec_news",
    "name": "JEDEC News",
-   "type": "html_list",
+   "type": "html_diff",
    "url": "https://www.jedec.org/news",
    "home": "https://www.jedec.org",
    "lang": "en",
@@ -1494,7 +1494,7 @@
   {
    "id": "uec_press",
    "name": "Ultra Ethernet Consortium – Press Releases",
-   "type": "html_list",
+   "type": "html_diff",
    "url": "https://ultraethernet.org/press-releases/",
    "home": "https://ultraethernet.org",
    "lang": "en",
@@ -1519,7 +1519,7 @@
   {
    "id": "ualink_news",
    "name": "UALink Consortium – News",
-   "type": "html_list",
+   "type": "html_diff",
    "url": "https://ualinkconsortium.org/news/",
    "home": "https://ualinkconsortium.org",
    "lang": "en",
@@ -1545,7 +1545,7 @@
   {
    "id": "cxl_news",
    "name": "CXL Consortium – News",
-   "type": "html_list",
+   "type": "html_diff",
    "url": "https://computeexpresslink.org/news/",
    "home": "https://computeexpresslink.org",
    "lang": "en",
@@ -1570,7 +1570,7 @@
   {
    "id": "oif_press",
    "name": "OIF Press Room",
-   "type": "html_list",
+   "type": "html_diff",
    "url": "https://www.oiforum.com/press-room/",
    "home": "https://www.oiforum.com",
    "lang": "en",
@@ -1648,7 +1648,7 @@
   {
    "id": "ercot_news",
    "name": "ERCOT News Releases",
-   "type": "html_list",
+   "type": "html_diff",
    "url": "https://www.ercot.com/news/releases",
    "home": "https://www.ercot.com",
    "lang": "en",
@@ -2179,6 +2179,471 @@
     "note": "이슈 수집기 운영 중"
    },
    "broad": false
+  },
+  {
+   "lang": "en",
+   "region": "US",
+   "verified": {
+    "ok": true,
+    "checked": "2026-11-02",
+    "note": "pages.py snapshot 확인"
+   },
+   "enabled": true,
+   "broad": false,
+   "paywall": false,
+   "id": "ercot_nogrr282",
+   "name": "ERCOT NOGRR282 (대형 전자부하 ride-through)",
+   "type": "html_diff",
+   "url": "https://www.ercot.com/mktrules/issues/NOGRR282",
+   "home": "https://www.ercot.com",
+   "kinds": [
+    "regulation",
+    "policy"
+   ],
+   "ecosystems": [
+    "power"
+   ],
+   "why": "데이터센터 대형부하 ride-through 규칙 개정의 조치 이력·의견서·첨부. 번호 붙은 개정 본문이 뉴스보다 먼저 바뀐다."
+  },
+  {
+   "lang": "en",
+   "region": "US",
+   "verified": {
+    "ok": true,
+    "checked": "2026-11-02",
+    "note": "pages.py snapshot 확인"
+   },
+   "enabled": true,
+   "broad": false,
+   "paywall": false,
+   "id": "ercot_llwg",
+   "name": "ERCOT 대형부하 작업반(LLWG)",
+   "type": "html_diff",
+   "url": "https://www.ercot.com/committees/tac/llwg",
+   "home": "https://www.ercot.com",
+   "kinds": [
+    "regulation",
+    "policy"
+   ],
+   "ecosystems": [
+    "power"
+   ],
+   "why": "번호 붙기 전 대형부하 기준 초안, 배치 연구·대기열, NERC·유틸 발표 재게시"
+  },
+  {
+   "lang": "en",
+   "region": "US",
+   "verified": {
+    "ok": true,
+    "checked": "2026-11-02",
+    "note": "pages.py snapshot 확인"
+   },
+   "enabled": true,
+   "broad": false,
+   "paywall": false,
+   "id": "ercot_board",
+   "name": "ERCOT 이사회 회의자료",
+   "type": "html_diff",
+   "url": "https://www.ercot.com/committees/board",
+   "home": "https://www.ercot.com",
+   "kinds": [
+    "regulation",
+    "policy"
+   ],
+   "ecosystems": [
+    "power"
+   ],
+   "why": "대형부하·계통 접속 결정과 이사회 승인 자료"
+  },
+  {
+   "lang": "en",
+   "region": "US",
+   "verified": {
+    "ok": true,
+    "checked": "2026-11-02",
+    "note": "pages.py snapshot 확인"
+   },
+   "enabled": true,
+   "broad": false,
+   "paywall": false,
+   "id": "pjm_pc",
+   "name": "PJM 계획위원회(PC)",
+   "type": "html_diff",
+   "url": "https://www.pjm.com/committees-and-groups/committees/pc",
+   "home": "https://www.pjm.com",
+   "kinds": [
+    "regulation",
+    "policy"
+   ],
+   "ecosystems": [
+    "power"
+   ],
+   "why": "매뉴얼 개정 초안(red-line), 대형부하 ride-through, 계획 기준 변경 자료"
+  },
+  {
+   "lang": "en",
+   "region": "US",
+   "verified": {
+    "ok": true,
+    "checked": "2026-11-02",
+    "note": "pages.py snapshot 확인"
+   },
+   "enabled": true,
+   "broad": false,
+   "paywall": false,
+   "id": "pjm_las",
+   "name": "PJM 부하분석소위(LAS)",
+   "type": "html_diff",
+   "url": "https://www.pjm.com/committees-and-groups/subcommittees/las",
+   "home": "https://www.pjm.com",
+   "kinds": [
+    "regulation",
+    "market_data"
+   ],
+   "ecosystems": [
+    "power"
+   ],
+   "why": "유틸별 대형부하(데이터센터) 예측 MW·산정 방법 변경 자료"
+  },
+  {
+   "lang": "en",
+   "region": "US",
+   "verified": {
+    "ok": true,
+    "checked": "2026-11-02",
+    "note": "pages.py snapshot 확인"
+   },
+   "enabled": true,
+   "broad": false,
+   "paywall": false,
+   "id": "caiso_large_loads",
+   "name": "CAISO 대형부하 이니셔티브",
+   "type": "html_diff",
+   "url": "https://stakeholdercenter.caiso.com/StakeholderInitiatives/Large-loads",
+   "home": "https://www.caiso.com",
+   "kinds": [
+    "regulation",
+    "policy"
+   ],
+   "ecosystems": [
+    "power"
+   ],
+   "why": "캘리포니아 대형부하 tariff 초안·기술 데이터 요청"
+  },
+  {
+   "lang": "en",
+   "region": "US",
+   "verified": {
+    "ok": true,
+    "checked": "2026-11-02",
+    "note": "pages.py snapshot 확인"
+   },
+   "enabled": true,
+   "broad": false,
+   "paywall": false,
+   "id": "ocp_contributions",
+   "name": "OCP 기여 문서",
+   "type": "html_diff",
+   "url": "https://www.opencompute.org/contributions/",
+   "home": "https://www.opencompute.org",
+   "kinds": [
+    "standards"
+   ],
+   "ecosystems": [
+    "power",
+    "optics",
+    "semis"
+   ],
+   "why": "랙 전력·BBU·CDU·광 OCS·칩렛·CXL 새 사양과 백서 버전"
+  },
+  {
+   "lang": "en",
+   "region": "US",
+   "verified": {
+    "ok": true,
+    "checked": "2026-11-02",
+    "note": "pages.py snapshot 확인"
+   },
+   "enabled": true,
+   "broad": false,
+   "paywall": false,
+   "id": "ocp_dcf_power",
+   "name": "OCP 데이터센터 설비 · 전력 분배",
+   "type": "html_diff",
+   "url": "https://www.opencompute.org/projects/data-center-facility/power-distribution/",
+   "home": "https://www.opencompute.org",
+   "kinds": [
+    "standards"
+   ],
+   "ecosystems": [
+    "power"
+   ],
+   "why": "SST·직류 배전·접지·보호 워크스트림 진척과 문서"
+  },
+  {
+   "lang": "en",
+   "region": "US",
+   "verified": {
+    "ok": true,
+    "checked": "2026-11-02",
+    "note": "pages.py snapshot 확인"
+   },
+   "enabled": true,
+   "broad": false,
+   "paywall": false,
+   "id": "nvidia_800vdc",
+   "name": "NVIDIA 800VDC 아키텍처",
+   "type": "html_diff",
+   "url": "https://www.nvidia.com/en-us/data-center/technologies/800-vdc-architecture/",
+   "home": "https://www.nvidia.com",
+   "kinds": [
+    "standards",
+    "company_newsroom"
+   ],
+   "ecosystems": [
+    "power"
+   ],
+   "why": "800VDC 생태계 파트너·요구사항·백서 변화"
+  },
+  {
+   "lang": "en",
+   "region": "US",
+   "verified": {
+    "ok": true,
+    "checked": "2026-11-02",
+    "note": "pages.py snapshot 확인"
+   },
+   "enabled": true,
+   "broad": false,
+   "paywall": false,
+   "id": "nvidia_x800_docs",
+   "name": "NVIDIA Quantum-X800 클러스터 문서",
+   "type": "html_diff",
+   "url": "https://networking-docs.nvidia.com/nvidia-quantum-x800-xdr-clusters",
+   "home": "https://networking-docs.nvidia.com",
+   "kinds": [
+    "standards"
+   ],
+   "ecosystems": [
+    "optics"
+   ],
+   "why": "검증 구성·호환 부품번호 첫 등재 — 양산 채택의 흔적"
+  },
+  {
+   "lang": "en",
+   "region": "US",
+   "verified": {
+    "ok": true,
+    "checked": "2026-11-02",
+    "note": "pages.py snapshot 확인"
+   },
+   "enabled": true,
+   "broad": false,
+   "paywall": false,
+   "id": "ieee8023_e4ai",
+   "name": "IEEE 802.3 E4AI 애드혹",
+   "type": "html_diff",
+   "url": "https://www.ieee802.org/3/ad_hoc/E4AI/public/index.html",
+   "home": "https://www.ieee802.org/3/",
+   "kinds": [
+    "standards"
+   ],
+   "ecosystems": [
+    "optics"
+   ],
+   "why": "AI 이더넷 다음 표준 착수 제안(CFI) 초안과 발표자·지지 기업"
+  },
+  {
+   "lang": "en",
+   "region": "US",
+   "verified": {
+    "ok": true,
+    "checked": "2026-11-02",
+    "note": "pages.py snapshot 확인"
+   },
+   "enabled": true,
+   "broad": false,
+   "paywall": false,
+   "id": "ieee8023_400gpl",
+   "name": "IEEE 802.3 레인당 400G 스터디그룹",
+   "type": "html_diff",
+   "url": "https://www.ieee802.org/3/400GPL/public/index.html",
+   "home": "https://www.ieee802.org/3/",
+   "kinds": [
+    "standards"
+   ],
+   "ecosystems": [
+    "optics"
+   ],
+   "why": "기여 문서 저자·소속(NPO·CPO 진영), 목표안"
+  },
+  {
+   "lang": "en",
+   "region": "US",
+   "verified": {
+    "ok": true,
+    "checked": "2026-11-02",
+    "note": "pages.py snapshot 확인"
+   },
+   "enabled": true,
+   "broad": false,
+   "paywall": false,
+   "id": "oif_ias",
+   "name": "OIF 구현협약(IA) 목록",
+   "type": "html_diff",
+   "url": "https://www.oiforum.com/technical-work/implementation-agreements-ias/",
+   "home": "https://www.oiforum.com",
+   "kinds": [
+    "standards"
+   ],
+   "ecosystems": [
+    "optics"
+   ],
+   "why": "새 IA 번호·개정(CMIS·1600ZR·CPO·ELSFP)"
+  },
+  {
+   "lang": "en",
+   "region": "US",
+   "verified": {
+    "ok": true,
+    "checked": "2026-11-02",
+    "note": "pages.py snapshot 확인"
+   },
+   "enabled": true,
+   "broad": false,
+   "paywall": false,
+   "id": "jedec_jc42",
+   "name": "JEDEC JC-42(메모리) 최근 문서",
+   "type": "html_diff",
+   "url": "https://www.jedec.org/committees/jc-42",
+   "home": "https://www.jedec.org",
+   "kinds": [
+    "standards"
+   ],
+   "ecosystems": [
+    "semis"
+   ],
+   "why": "새 문서 번호·개정, 제조사 ID 신규 진입"
+  },
+  {
+   "lang": "en",
+   "region": "US",
+   "verified": {
+    "ok": true,
+    "checked": "2026-11-02",
+    "note": "pages.py snapshot 확인"
+   },
+   "enabled": true,
+   "broad": false,
+   "paywall": false,
+   "id": "jedec_jc45",
+   "name": "JEDEC JC-45(모듈) 최근 문서",
+   "type": "html_diff",
+   "url": "https://www.jedec.org/committees/jc-45",
+   "home": "https://www.jedec.org",
+   "kinds": [
+    "standards"
+   ],
+   "ecosystems": [
+    "semis"
+   ],
+   "why": "새 모듈 계열·Raw Card(SOCAMM2·CXL 메모리 모듈)"
+  },
+  {
+   "lang": "en",
+   "region": "US",
+   "verified": {
+    "ok": true,
+    "checked": "2026-11-02",
+    "note": "pages.py snapshot 확인"
+   },
+   "enabled": true,
+   "broad": true,
+   "paywall": false,
+   "id": "epri_journal",
+   "name": "EPRI Journal",
+   "type": "rss",
+   "url": "https://eprijournal.com/feed/",
+   "home": "https://eprijournal.com",
+   "kinds": [
+    "research"
+   ],
+   "ecosystems": [
+    "power"
+   ],
+   "why": "대형부하 ride-through·전력망 운영 현장 연구 (분야가 넓어 분류기를 거친다)"
+  },
+  {
+   "lang": "en",
+   "region": "global",
+   "verified": {
+    "ok": true,
+    "checked": "2026-11-02",
+    "note": "pages.py snapshot 확인"
+   },
+   "enabled": true,
+   "broad": true,
+   "paywall": false,
+   "id": "arxiv_eess_sy_new",
+   "name": "arXiv eess.SY 신규",
+   "type": "rss",
+   "url": "https://rss.arxiv.org/rss/eess.SY",
+   "home": "https://arxiv.org/list/eess.SY/new",
+   "kinds": [
+    "research"
+   ],
+   "ecosystems": [
+    "power"
+   ],
+   "why": "AI 학습 전력 평활·대형부하 제어 연구 (분야 전체라 분류기를 거친다)"
+  },
+  {
+   "lang": "en",
+   "region": "global",
+   "verified": {
+    "ok": true,
+    "checked": "2026-11-02",
+    "note": "pages.py snapshot 확인"
+   },
+   "enabled": true,
+   "broad": true,
+   "paywall": false,
+   "id": "arxiv_physics_optics_new",
+   "name": "arXiv physics.optics 신규",
+   "type": "rss",
+   "url": "https://rss.arxiv.org/rss/physics.optics",
+   "home": "https://arxiv.org/list/physics.optics/new",
+   "kinds": [
+    "research"
+   ],
+   "ecosystems": [
+    "optics"
+   ],
+   "why": "광소자·실리콘 포토닉스 연구 (분야 전체라 분류기를 거친다)"
+  },
+  {
+   "lang": "en",
+   "region": "global",
+   "verified": {
+    "ok": true,
+    "checked": "2026-11-02",
+    "note": "pages.py snapshot 확인"
+   },
+   "enabled": true,
+   "broad": true,
+   "paywall": false,
+   "id": "gh_sonic_platform_common",
+   "name": "SONiC sonic-platform-common 커밋",
+   "type": "atom",
+   "url": "https://github.com/sonic-net/sonic-platform-common/commits/master.atom",
+   "home": "https://github.com/sonic-net/sonic-platform-common",
+   "kinds": [
+    "code"
+   ],
+   "ecosystems": [
+    "optics"
+   ],
+   "why": "CPO·ELSFP·새 트랜시버 제어 코드가 제품 출하 전에 들어온다 (커밋이 잡다해 분류기를 거친다)"
   }
  ]
 }
