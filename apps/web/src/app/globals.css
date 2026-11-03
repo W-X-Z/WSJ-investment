@@ -1022,6 +1022,10 @@ tr:hover td{background:#f8faff}
 .op-card p{margin:0;font-size:13.5px;line-height:1.7;color:#4a5a70}
 .op-card-top{display:flex;align-items:center;gap:10px;flex-wrap:wrap;font-size:12.5px;color:#6b788b}
 .op-card-top time{margin-left:auto;color:#8a96a8;font-size:12px}
+.op-card-top time.op-changed{color:#3f5f96;font-weight:600}
+.op-note{margin:10px 0 0;font-size:13px;line-height:1.65;color:#4a5a70}
+.op-note b{font-weight:650;color:#3f5f96;margin-right:4px}
+.op-note span{color:#8a96a8}
 .op-stars{color:#d49a12;letter-spacing:1.5px;font-size:13px;line-height:1;white-space:nowrap}
 .op-stars i{font-style:normal;color:#dde2ea}
 .op-stars-lg{font-size:17px}
@@ -1053,7 +1057,7 @@ tr:hover td{background:#f8faff}
 .cl-list{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:2px;background:#fff;border:1px solid #e3e8ef;border-radius:12px}
 .cl-list li{padding:11px 16px;border-bottom:1px solid #eef1f5}
 .cl-list li:last-child{border-bottom:0}
-.cl-list a{font-size:14px;line-height:1.55;color:#14243b;font-weight:600;word-break:keep-all}
+.cl-list a{font-size:14px;line-height:1.55;color:#14243b;font-weight:600;word-break:keep-all;overflow-wrap:anywhere}
 .cl-list a:hover{text-decoration:underline}
 .cl-list p{margin:3px 0 0;font-size:12.5px;color:#4a5a70;line-height:1.6}
 .cl-meta{display:flex;flex-wrap:wrap;gap:6px 10px;margin-top:4px;font-size:11.5px;color:#8a96a8}

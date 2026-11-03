@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { CompanyLine, EvidenceList, Stars5 } from "@/components/opps/Opps";
-import { loadOpportunities, loadOpportunity, marketKo, relatedTo } from "@/lib/opportunities";
+import { CompanyLine, EvidenceList, OppTime, Stars5 } from "@/components/opps/Opps";
+import { changeNote, loadOpportunities, loadOpportunity, marketKo, relatedTo } from "@/lib/opportunities";
 import { rel } from "@/lib/feed";
 
 export const dynamic = "force-dynamic";
@@ -17,11 +17,13 @@ export default async function OpportunityPage({ params }: { params: Promise<{ ke
   if (!o) notFound();
   const related = relatedTo(o, await loadOpportunities());
   const others = o.companies.filter((c) => c.role !== "primary");
+  const note = changeNote(o);
   return <article className="fd op op-detail">
     <p className="op-back"><Link href="/">← 투자 아이디어</Link></p>
     <header className="op-dhead">
-      <div className="op-card-top"><Stars5 n={o.stars} large/><CompanyLine o={o}/><time>{rel(o.published_at ?? o.updated_at)}</time></div>
+      <div className="op-card-top"><Stars5 n={o.stars} large/><CompanyLine o={o}/><OppTime o={o}/></div>
       <h1>{o.title}</h1>
+      {note ? <p className="op-note"><b>고친 점</b> {note}{o.published_at ? <span> · 처음 낸 날 {rel(o.published_at)}</span> : null}</p> : null}
     </header>
     <section className="op-sec"><h2>투자 아이디어</h2><p className="op-text">{o.idea}</p></section>
     {o.interpretation ? <section className="op-sec"><h2>해석</h2><p className="op-text">{o.interpretation}</p></section> : null}

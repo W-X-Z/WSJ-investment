@@ -161,6 +161,9 @@ export function shortName(c: { id: string; name: string; ticker?: string | null 
 /** '오늘', '어제', '3일 전', 그보다 오래면 10/21. */
 export function rel(d?: string | null): string {
   if (!d) return "없음";
+  // 시각이 붙은 값(UTC 타임스탬프)은 KST 날짜로 — 앞 10자만 자르면 KST 아침 9시 전 것이 '어제'가 된다
+  const ms = d.length > 10 ? Date.parse(d) : NaN;
+  if (!Number.isNaN(ms)) d = new Date(ms + 9 * 36e5).toISOString().slice(0, 10);
   const t = new Date(`${d.slice(0, 10)}T00:00:00+09:00`).getTime();
   const today = new Date(new Date().toLocaleString("en-US", { timeZone: "Asia/Seoul" }));
   today.setHours(0, 0, 0, 0);

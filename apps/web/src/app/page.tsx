@@ -1,5 +1,5 @@
 import { OppCard } from "@/components/opps/Opps";
-import { loadOpportunities } from "@/lib/opportunities";
+import { loadOpportunities, touchedAt } from "@/lib/opportunities";
 import { rel } from "@/lib/feed";
 
 export const dynamic = "force-dynamic";
@@ -8,7 +8,7 @@ export const metadata = { title: "투자 아이디어" };
 /** 홈 = 투자 아이디어 (ADR-0028): ★ 높은 순. 카드에는 ★ · 기업 · 제목 · 한 줄 요지만. */
 export default async function Home() {
   const items = await loadOpportunities();
-  const latest = items.map((x) => x.published_at ?? x.updated_at).sort().at(-1);
+  const latest = items.map(touchedAt).sort().at(-1);
   return <div className="fd op">
     <header className="fd-head">
       <h1>투자 아이디어</h1>
