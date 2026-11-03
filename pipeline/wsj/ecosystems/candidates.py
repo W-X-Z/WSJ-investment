@@ -29,6 +29,7 @@ log = logging.getLogger("wsj.ecosystems.candidates")
 
 STRONG_LAYERS = {"raw", "disclosure", "newsroom"}
 COMPANY_CAP = 15
+FRONTIER = "frontier"         # 그래프 밖 산업 후보가 들어오는 자리 (eco:frontier) — 뭉치면 주간 개선이 생태계로 승격한다
 TERM_CAP = 15
 TICKER_OK = {
     "US": r"[A-Z][A-Z.\-]{0,5}", "KR": r"\d{6}", "TW": r"\d{4,6}[A-Z]?", "JP": r"\d{3}[0-9A-Z]", "CN": r"\d{6}", "HK": r"\d{1,5}",
@@ -91,6 +92,7 @@ def outside_companies(rows: list[dict[str, Any]], graph: dict[str, Any], skip_ke
     names_to_keys: dict[str, set[tuple[str, str]]] = {}
     for r in rows:
         layer = (r.get("extra") or {}).get("layer") or "press"
+        frontier = (r.get("extra") or {}).get("scope") == FRONTIER
         tech = [n for n in r.get("nodes") or [] if n in ids and not n.startswith(("company:", "eco:"))]
         in_graph = [c["company"] for c in r.get("companies") or [] if c.get("company") in ids]
         for c in r.get("companies") or []:
@@ -107,8 +109,9 @@ def outside_companies(rows: list[dict[str, Any]], graph: dict[str, Any], skip_ke
             if key in skip_keys:
                 continue
             g = groups.setdefault(key, {"names": Counter(), "exchanges": Counter(), "tickers": Counter(), "urls": [], "layers": set(),
-                                        "nodes": Counter(), "co_companies": Counter(), "first": None})
+                                        "nodes": Counter(), "co_companies": Counter(), "first": None, "frontier": 0})
             g["names"][c["name"]] += 1
+            g["frontier"] += frontier
             g["exchanges"][ex] += 1
             g["tickers"][tk] += 1
             if r["url"] not in g["urls"]:
@@ -131,8 +134,9 @@ def outside_companies(rows: list[dict[str, Any]], graph: dict[str, Any], skip_ke
         for cid, k in g["co_companies"].items():
             ecos[nodes[cid].get("ecosystem")] += k
         ecos.pop(None, None)
-        if not ecos:
-            continue
+        if not ecos and not g["frontier"]:
+            continue                                   # 그래프에 걸린 것도, 그래프 밖 산업 표시도 없으면 올리지 않는다
+        eco = ecos.most_common(1)[0][0] if ecos else FRONTIER
         name = g["names"].most_common(1)[0][0]
         ex = g["exchanges"].most_common(1)[0][0]
         tk = g["tickers"].most_common(1)[0][0]
@@ -142,10 +146,11 @@ def outside_companies(rows: list[dict[str, Any]], graph: dict[str, Any], skip_ke
         conflict = any(len(names_to_keys.get(nm.strip().lower(), set())) > 1 for nm in g["names"])
         out.append({
             "n": n,
-            "payload": {"id": cid, "kind": "company", "label": f"{name} ({ex} {tk})", "ecosystem": ecos.most_common(1)[0][0],
+            "payload": {"id": cid, "kind": "company", "label": f"{name} ({ex} {tk})", "ecosystem": eco,
                         "ticker": tk, "exchange": ex, "size_band": "unknown", "status": "candidate", "first_seen": today,
                         "first_evidence": g["first"], "names": list(g["names"])},
-            "reason": (f"그래프 밖 상장사 — 최근 단서 {n}건 (층: {', '.join(sorted(g['layers']))}). 같이 걸린 노드: "
+            "reason": ((f"그래프 밖 산업(frontier) 상장사 — 단서 {g['frontier']}건이 그래프 밖 산업으로 분류됨. " if eco == FRONTIER else "")
+                       + f"그래프 밖 상장사 — 최근 단서 {n}건 (층: {', '.join(sorted(g['layers']))}). 같이 걸린 노드: "
                        f"{', '.join(k for k, _ in g['nodes'].most_common(4)) or '없음'}; 같이 나온 그래프 기업: "
                        f"{', '.join(k for k, _ in g['co_companies'].most_common(3)) or '없음'}. 단서: {' · '.join(g['urls'][:3])}. "
                        "티커·거래소(분류기가 적은 값)와 시가총액을 확인해 size_band 를 채우고, 공급 관계가 원문에 있으면 간선도 같이"

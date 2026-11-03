@@ -138,6 +138,17 @@ def test_apply_screen_minimal_drop_items_and_rule_fallback():
     assert not gone.relevant
 
 
+def test_apply_screen_records_scope():
+    core = C.Clue("https://a", "HBM4 ramp", "", None, "s", "S", "trade_press")
+    far = C.Clue("https://b", "Humanoid actuator supply", "", None, "s", "S", "trade_press")
+    none = C.Clue("https://c", "Old style item", "", None, "s", "S", "trade_press")
+    C.apply_screen([core, far, none], {"items": [{"i": 0, "keep": True, "scope": "core", "note": "n"},
+                                                 {"i": 1, "keep": True, "scope": "frontier", "note": "n"},
+                                                 {"i": 2, "keep": True, "note": "n"}]})
+    assert core.extra["scope"] == "core" and far.extra["scope"] == "frontier" and none.extra["scope"] == "core"
+    assert far.row()["extra"]["scope"] == "frontier"
+
+
 def test_llm_screen_runs_batches_concurrently_and_keeps_order(monkeypatch):
     import wsj.briefs.llm as L
 

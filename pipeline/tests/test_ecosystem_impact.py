@@ -32,7 +32,8 @@ def test_seed_conforms_to_closed_vocabulary():
     rep = validate(g, load_ontology())
     assert rep.ok, rep.errors
     assert g["schema_version"] == "0.3"
-    assert sum(x["kind"] == "ecosystem" for x in g["nodes"]) == 3
+    ecos = {x["id"] for x in g["nodes"] if x["kind"] == "ecosystem"}
+    assert {"eco:hbm", "eco:optics", "eco:power", "eco:frontier"} <= ecos        # frontier = 그래프 밖 산업이 들어오는 자리 (ADR-0033)
     assert {x["kind"] for x in g["nodes"]} >= {
         "product_generation",
         "standard",

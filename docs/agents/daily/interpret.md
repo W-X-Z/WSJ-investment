@@ -12,8 +12,9 @@
 
 ## 쓸 수 있는 재료
 필요한 것을 골라 쓴다. 여기 없는 원본(federalregister.gov, JEDEC·OCP·OIF, arXiv, 회사 IR, 고객·경쟁사 발표)을 직접 찾아도 된다.
-- 단서와 본문: `select c.url, c.title, c.source_name, c.extra->>'layer' as layer, c.note, c.companies, c.nodes, c.published_at, left(t.body, 3000) as body from ideas.clues c left join ideas.clue_texts t on t.url = c.url where c.relevant and c.seen_at > now() - interval '30 hours' order by (c.extra->>'layer' = 'raw') desc, c.seen_at desc;`
+- 단서와 본문: `select c.url, c.title, c.source_name, c.extra->>'layer' as layer, c.extra->>'scope' as scope, c.note, c.companies, c.nodes, c.published_at, left(t.body, 3000) as body from ideas.clues c left join ideas.clue_texts t on t.url = c.url where c.relevant and c.seen_at > now() - interval '30 hours' order by (c.extra->>'layer' = 'raw') desc, c.seen_at desc;`
   층(layer): raw(표준·규칙·학회·논문·정책·릴리스 노트 — 원본) · press(업계지) · newsroom · company(기업 이름으로 모은 소식) · disclosure · issue.
+  범위(scope): core(AI 데이터센터 공급망과 그것에 닿는 수요) · frontier(그래프 밖 산업 — 로봇·피지컬 AI·우주·전력기기 등). frontier 도 같은 기준으로 판단한다 — 그래프에 자리가 없다는 것은 내릴 이유가 아니다 (`daily-ideas.md` 방향 '산업을 정하지 않는다').
   원본 페이지(표준 위원회 문서 목록·규칙 개정·회의 자료·사양 페이지)는 바뀐 것만 들어온다 — 새 문서·새 항목은 그 링크가, 본문 변화는 '… 페이지 변경' 단서(주소 끝 `#changed-…`, 본문 = 새로 생긴 줄)가 된다.
 - 열린 스레드: `daily-ideas.md` §C
 - 그래프 조회(글 → 노드, 이웃, 아래로 내려가며 공급사, 노드 한 장): `daily-ideas.md` §D. 0035 전이면 아래 recall 을 쓴다.

@@ -259,24 +259,28 @@ def tag_bodies(clues: list[Clue], bodies: dict[str, str | None], graph: dict[str
     return changed
 
 
-LLM_SYSTEM = """너는 AI 데이터센터 공급망 리서치의 단서 분류기다. 입력은 여러 출처의 새 글 목록(i, 제목, 요약, 출처)이다.
-목적: 1년 안에 공급망의 수요·병목·기술 세대를 바꿀 변화를 남기고, 값이 움직였다는 이야기는 버린다.
+LLM_SYSTEM = """너는 기술·산업 공급망 리서치의 단서 분류기다. 입력은 여러 출처의 새 글 목록(i, 제목, 요약, 출처)이다.
+목적: 기술·규칙·수요의 변화가 **특정 부품·소재·공정·장비·기판의 수요나 공급 제약을 바꾸는** 이야기를 남기고, 값이 움직였다는 이야기는 버린다.
+산업은 정해져 있지 않다 — AI 데이터센터 공급망이 중심이지만, 다른 산업(로봇·피지컬 AI·우주·전력기기·바이오 장비 등)이라도 위 메커니즘이면 남긴다.
 각 글에 대해 판단한다:
 - keep: true 인 것 —
-  · AI 데이터센터 공급망(반도체·메모리·HBM·패키징·기판·PCB·테스트·장비·소재·광통신·레이저·전력·변압기·배터리·커패시터·냉각·현장 발전·전력망 접속)의
-    제품·공정·용량·수주·고객·가격 결정·공급 부족에 관한 사실이나 계획.
-  · 기술 변화: 표준·사양·작업반 문서(JEDEC·IEEE·OIF·OCP·UEC·UALink 등), 학회·논문, 특허, 새 아키텍처, 시제품·양산 전환.
+  · 어떤 산업이든 부품·소재·공정·장비·기판의 제품·공정·용량·수주·고객·가격 결정·공급 부족·대당 탑재량(content per unit)·내재화/외주 전환에 관한 사실이나 계획.
+  · 기술 변화: 표준·사양·작업반 문서(JEDEC·IEEE·OIF·OCP·UEC·UALink·ISO 등), 학회·논문, 특허, 새 아키텍처, 시제품·양산 전환.
   · 추론·학습 소프트웨어 릴리스와 클러스터 엔지니어링 글(vLLM·SGLang·LMCache·TensorRT-LLM·Dynamo·CUDA·ROCm·NCCL, 네트워크·스토리지·KV 캐시 설계) —
     하드웨어 수요(메모리 계층·네트워크·전력)를 바꿀 수 있다.
-  · 수요: 모델 공개와 추론량, 클라우드·하이퍼스케일러 증설·투자, 데이터센터 부지·전력 계약, 전력망·대형 부하 규칙(ERCOT·PJM·FERC·NERC), 송전·발전 투자.
+  · 수요: 모델 공개와 추론량, 클라우드·하이퍼스케일러 증설·투자, 데이터센터 부지·전력 계약, 전력망·대형 부하 규칙(ERCOT·PJM·FERC·NERC), 송전·발전 투자,
+    새 기기(휴머노이드·로봇·드론·위성)의 양산 계획과 그 부품 구성.
   · 실적 발표·컨퍼런스콜이라도 주문·백로그·캐파·고객·제품 비중·가이던스 같은 사업 사실이 있으면 true.
 - keep: false 인 것 — 주가·시세 움직임 해설, 애널리스트 등급·목표주가, '사야 할 주식'류, 자금 흐름·ETF, 실적 발표 일정 안내, 인사 프로필·행사·수상·CSR,
-  소비자 제품·게임·자동차·로봇·드론(데이터센터 공급망과 직접 닿지 않으면), 일반 기업용 AI 앱·서비스 출시, 일반 거시·정치, 광고·홍보.
+  소비자 제품 출시·게임·앱 리뷰, 일반 기업용 AI 앱·서비스·결제·보안 인증 출시, 일반 거시·정치, 광고·홍보,
+  로봇·자동차·드론 글이라도 부품·소재·공정의 수요·공급을 바꾸는 내용이 없는 것(시연·협약·비전 발표만).
+- scope: keep 이 true 인 글이 어디에 닿는가 — "core"(AI 데이터센터 공급망: 반도체·메모리·HBM·패키징·기판·PCB·테스트·장비·소재·광통신·레이저·전력·변압기·배터리·커패시터·냉각·현장 발전·전력망 접속,
+  또는 그것에 직접 닿는 수요) | "frontier"(그 밖의 산업 — 로봇·피지컬 AI·우주·의료 장비·산업 전력기기 등).
 - companies: 글에 이름이 나온 상장 기업. ticker 는 확실히 알 때만 쓰고 추측하지 마라(모르면 ticker 없이 name·exchange 만).
   exchange 는 NYSE|Nasdaq|KRX|KOSDAQ|TWSE|TPEx|TSE|SSE|SZSE|HKEX|XETRA|Euronext 중에서. 비상장·정부기관·대학은 빼라. 없으면 빈 배열.
 - note: 무엇에 관한 글인지 한국어 한 줄(60자 안). 판단·전망은 쓰지 마라.
-- keep 이 false 인 글은 {"i": n, "keep": false} 만 쓴다 (companies·note 없이). 모든 i 를 빠짐없이 쓴다.
-출력은 JSON 하나: {"items": [{"i": 0, "keep": true, "companies": [{"name": "…", "ticker": "…", "exchange": "…"}], "note": "…"}, {"i": 1, "keep": false}]}"""
+- keep 이 false 인 글은 {"i": n, "keep": false} 만 쓴다 (companies·note·scope 없이). 모든 i 를 빠짐없이 쓴다.
+출력은 JSON 하나: {"items": [{"i": 0, "keep": true, "scope": "core", "companies": [{"name": "…", "ticker": "…", "exchange": "…"}], "note": "…"}, {"i": 1, "keep": false}]}"""
 
 
 def llm_screen(clues: list[Clue], api_key: str, model: str = "haiku", batch: int = 50, workers: int = 4, resolve: Any = None) -> dict[str, Any]:
@@ -372,6 +376,7 @@ def apply_screen(part: list[Clue], out: dict[str, Any] | None, resolve: Any = No
         if not c.relevant:
             continue
         c.note = (x.get("note") or "")[:120] or None
+        c.extra["scope"] = "frontier" if x.get("scope") == "frontier" else "core"      # 그래프 밖 산업 — 후보 통로·해석이 가려 본다
         have = {(y.get("name") or "").lower() for y in c.companies}
         ids = {y.get("company") for y in c.companies if y.get("company")}
         for y in x.get("companies") or []:
