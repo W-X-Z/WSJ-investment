@@ -36,11 +36,13 @@ class _Store:
 def test_reconcile_marks_proposals_already_in_graph():
     g = load_graph()
     e = next(x for x in g["edges"] if x["relation"] == "offered_by")
-    pend = [{"proposal_id": 1, "kind": "edge", "payload": {"from": e["from"], "relation": "offered_by", "to": e["to"]}},
+    pend = [{"proposal_id": 1, "by": "enrich", "kind": "edge", "payload": {"from": e["from"], "relation": "offered_by", "to": e["to"]}, "status": "pending"},
             {"proposal_id": 2, "kind": "edge", "payload": {"from": e["from"], "relation": "offered_by", "to": e["to"], "exposure_pct": 99}},
             {"proposal_id": 3, "kind": "node", "payload": {"id": "component:not_there"}}]
     st = _Store(pend)
     assert G.reconcile_proposals(st, g) == 1 and st.up[0]["proposal_id"] == 1     # 숫자가 아직 안 들어간 제안은 대기
+    # 행 전체를 다시 쓴다 — NOT NULL 칸(by·kind·payload)이 빠진 부분 행은 PostgREST upsert 에서 400 (11/03)
+    assert st.up[0]["by"] == "enrich" and st.up[0]["payload"] and st.up[0]["status"] == "applied" and st.up[0]["applied_at"]
 
 
 def test_v05_fields_are_checked():
@@ -100,3 +102,13 @@ def test_node_updates_merge_codes_and_keep_maturity_history():
     assert n == 1 and x["codes"] == {"cpc": ["A", "B"], "jesd": ["JESD1"]}
     assert x["maturity"]["stage"] == "near" and x["maturity_history"][0]["stage"] == "early"
     assert x["first_evidence"]["url"] == "https://old.test"          # 더 이른 날짜만 바꾼다
+
+
+def test_size_band_follows_live_market_cap():
+    g = load_graph()
+    axti = next(n for n in g["nodes"] if n["id"] == "company:axti")
+    rows = {r["id"]: r for r in G.node_rows(g, "abc", {"company:axti": {"market_cap_usd": 3.6e9, "price_as_of": "2026-11-02"}})}
+    assert rows["company:axti"]["size_band"] == "mid" and rows["company:axti"]["attrs"]["size_band_graph"] == axti["size_band"]
+    assert rows["company:axti"]["attrs"]["market_cap_usd"] == 3.6e9
+    assert "size_band_graph" not in rows["company:mu"]["attrs"]                     # 시가총액이 없으면 그래프 값 그대로
+    assert [G.band_of(x) for x in (1e8, 5e8, 5e9, 5e10, 5e11, None)] == ["micro", "small", "mid", "large", "mega", None]
