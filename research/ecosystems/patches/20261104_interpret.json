@@ -1,0 +1,36 @@
+{
+ "prefix": "i1104",
+ "nodes": [
+  {"id": "company:gcs_holdings", "kind": "company", "label": "GCS Holdings 環宇-KY (TWSE 4991, 비SEC)", "ecosystem": "optics",
+   "ticker": "4991", "exchange": "TWSE", "size_band": "unknown", "status": "candidate", "first_seen": "2026-11-04",
+   "first_evidence": {"url": "https://technews.tw/2026/11/03/gcs-2026-q3-financial-report/", "date": "2026-11-03", "layer": "press"}}
+ ],
+ "edges": [
+  {"from": "material:inp", "relation": "offered_by", "to": "company:axti", "tier": "official_issuer",
+   "exposure": "core", "position": "leader", "exposure_pct": 74, "exposure_year": 2026,
+   "exposure_source": "https://www.fool.com/earnings/call-transcripts/2026/10/30/axt-axti-q3-2026-earnings-call-transcript/",
+   "note": "3Q26 매출 $73.4M 중 InP $54.3M(74%). 수주잔고 $5억+, 전 고객 할당·리드타임 9개월+, 생산능력 2026년 말 2025년 말 대비 2.75~3배·2027년 다시 2배 목표, 6인치 라인 양산 전환 중",
+   "evidence": [{"url": "https://www.fool.com/earnings/call-transcripts/2026/10/30/axt-axti-q3-2026-earnings-call-transcript/", "source_type": "official_issuer", "published_at": "2026-10-30",
+                 "excerpt": "Revenue for the third quarter of 2026 was $73.4 million … indium phosphide was $54.3 million … backlog now above $500 million … every customer is on allocation right now … our goal is to double again in 2027"}]},
+  {"from": "company:axti", "relation": "supplied_to", "to": "company:lite", "tier": "official_issuer", "exposure": "unknown",
+   "about": "material:inp",
+   "note": "2031-12-31 까지 InP 기판 공급·생산능력 예약 계약. 선급금 $43.5M(서명 30영업일 내) + $43.5M(2028년 중), 출하 크레딧으로 소진. 최소 연간 물량 예약(수치 미공개)",
+   "evidence": [{"url": "https://www.businesswire.com/news/home/20260729446850/en/", "source_type": "official_issuer", "published_at": "2026-07-29",
+                 "excerpt": "definitive agreement with Lumentum Operations, LLC for the supply and capacity reservation of indium phosphide (InP) wafer substrates … through December 31, 2031 … initial deposit of $43.5 million"}]},
+  {"from": "company:axti", "relation": "supplied_to", "to": "company:cohr", "tier": "official_issuer", "exposure": "unknown",
+   "about": "material:inp",
+   "note": "6인치 InP 기판 3년 공급계약(2026-06-25 발효). 선급금 $22,288,500, 베이징 생산능력 2026~2028 증설 약정, Coherent 최소 주문량(수치 미공개), 가격 고정",
+   "evidence": [{"url": "https://www.sec.gov/Archives/edgar/data/0001051627/000143774926022557/axti20260630_8k.htm", "source_type": "official_issuer", "published_at": "2026-07-02",
+                 "excerpt": "6-inch indium phosphide (InP) wafer substrates … initial three years … prepayment of US$22,288,500 … AXT will increase capacity at its Beijing, China facility during 2026 through 2028"}]},
+  {"from": "company:gcs_holdings", "relation": "adopts", "to": "material:inp", "tier": "third_party_report",
+   "note": "레이저·PD 파운드리 GCS 3Q26 설명회: InP 기판·에피 공급 매우 빠듯·가격 계속 상승, 2027년 필요 물량 확보, 중국 밖 공급원은 2028년 이후 의미 있는 비중, 가동률 100% 초과, 100mW CW 레이저 양산 목표 2027 3Q",
+   "evidence": [{"url": "https://technews.tw/2026/11/03/gcs-2026-q3-financial-report/", "source_type": "third_party_report", "published_at": "2026-11-03",
+                 "excerpt": "磷化銦（InP）磊晶片的供應及價格變化 … 目前市場供應相當吃緊，價格也持續走高 … 2027 年所需的基板供應量基本上都已經鎖定 … 料到 2028 年後，非中國供應來源才會達到較具意義的供應占比"}]},
+  {"from": "component:cw_laser", "relation": "offered_by", "to": "company:gcs_holdings", "tier": "third_party_report", "position": "entrant", "exposure": "minor",
+   "note": "100mW CW 레이저 개발 지연 — 2027년 3분기 양산 목표, 그 전까지 신뢰성 검증·고객 샘플. 3Q26 매출 $26.4M 중 AOC 71%",
+   "evidence": [{"url": "https://technews.tw/2026/11/03/gcs-2026-q3-financial-report/", "source_type": "third_party_report", "published_at": "2026-11-03",
+                 "excerpt": "CW Laser 100 毫瓦產品進度 … 目前開發進度略延遲，公司現階段目標是明年第三季量產並逐步放量"}]}
+ ],
+ "aliases": {"company:gcs_holdings": ["環宇-KY", "環宇", "GCS", "Global Communication Semiconductors"]},
+ "native": {"company:gcs_holdings": "環宇-KY"}
+}
