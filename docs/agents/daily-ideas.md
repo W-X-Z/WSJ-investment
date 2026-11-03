@@ -1,4 +1,4 @@
-# 아침 작업 — 목적과 방향 (ADR-0028, 2026-10-31 개정 · ADR-0030 2026-11-02)
+# 아침 작업 — 목적과 방향 (ADR-0028, 2026-10-31 개정 · ADR-0030 2026-11-02 · ADR-0032 2026-11-03)
 
 이 문서와 작업 문서(`docs/agents/daily/<task>.md`)는 **목적 · 방향 · 꼭 지킬 것 · 연결 방법**만 정한다. 어떻게 생각하고 무엇을 먼저 볼지는 매번 판단한다.
 시장은 변수가 많고 늘 변해서, 한 사례에서 세운 절차가 다른 사례에 맞지 않는 일이 많다 (사용자, 2026-10-31). 이 문서의 예시와 `research/playbook/` 의 렌즈·패턴 카드·사용자 지적 기록은 참고 자료이지 규칙이 아니다.
@@ -20,7 +20,7 @@
 - **결론까지 간다.** "더 살펴봐야 한다"·"확인이 필요하다"·"확인되면 다시 본다"에서 멈추지 않는다. 확인되지 않은 고리가 있으면 더 조사해서 확인하거나 반증한다 — 원문·규정 조문·제품 사양·업계 자료로 확인 가능한지 먼저 해 본다. 조사해도 남는 것은 지금의 증거와 추론으로 판단하고, 그 판단의 가장 약한 고리를 적는다.
 - **다시 검토한다.** 아이디어는 쓴 사람이 아닌 눈으로 다시 본다 (아침 사슬에서는 enrich 가 이 역할). 결론을 고리로 나눠 각 고리가 원문 사실인지, 추론인지, 과장인지 가른다. 인용한 증거가 그 주장을 실제로 뒷받침하는지 원문을 다시 열어 본다 — 같은 원문 안의 반대 내용, "아무도 모른다"가 사실은 "검색에서 못 찾았다"인지까지. 결론의 확신은 가장 약한 고리에 맞춘다.
 - **바깥 조건도 본다.** 매크로·시장 환경(AI 투자와 그 자금, 금리·신용, 원자재 가격)이 그 아이디어에 어떻게 작용하는지.
-- **없으면 쓰지 않는다.** 개수가 목표가 아니다. 그래도 조사는 멈추지 않는다 — 하루에 결론이 안 나는 조사는 스레드로 이어서 판다 (§C).
+- **없으면 쓰지 않는다.** 개수가 목표가 아니다. 그래도 조사는 멈추지 않는다 — 고른 단서와 찾은 약한 고리는 그 자리에서 판단까지 간다. 스레드(§C)는 그 판단을 다음 세션이 이어받는 기억이지, 판단을 미루는 출구가 아니다.
 
 ## 꼭 지킬 것
 판단의 영역이 아닌 것들이다.
@@ -35,10 +35,12 @@
 ## 아침 사슬
 | 작업 | 시각 | 맡은 일 | 쓰는 함수 |
 |---|---|---|---|
-| collect | 05:23 | 오늘 수집이 돌았는지 확인하고, 안 됐으면 실행시킨다 | (없음) |
-| interpret | 06:17 | 단서를 읽고 해석해 투자 아이디어 초안을 쓰고, 남는 시간에 열린 스레드 하나를 이어서 판다. 알게 된 것은 그래프에 쌓는다 | put_opportunities · put_thread (+ 그래프 패치 PR) |
-| enrich | 06:49 | 검토자 — 초안을 고리별로 다시 검토하고 확인 안 된 고리는 더 조사해 확인·반증한다. 초안이 없어도 해석이 건너뛴 결정을 다시 본다. 하루에 안 끝나는 약한 고리는 스레드로 되돌린다 | put_opportunities · put_company_events · put_thread |
-| report | 07:37 | 낼 만한 것만 내고, 기존 아이디어를 고치고, 하루를 알린다 | put_opportunities |
+| collect | 04:23 | 오늘 수집이 돌았는지 확인하고, 안 됐으면 실행시킨다 | (없음) |
+| interpret | 05:17 | 단서를 읽고 해석해 판단까지 간다 — 근거가 서면 투자 아이디어 초안을 쓴다. 열린 스레드도 이어서 본다. 알게 된 것은 그래프에 쌓는다 | put_opportunities · put_thread (+ 그래프 패치 PR) |
+| enrich | 06:19 | 검토자 — 초안과 건너뛴 결정을 고리별로 다시 검토한다. 약한 고리를 찾으면 그 자리에서 직접 조사해 판단까지 간다 (초안을 고치거나, 새로 쓰거나, 내린다) | put_opportunities · put_company_events · put_thread |
+| report | 07:37 | 낼 만한 것만 내고(검토자가 직접 쓴 결론은 고리를 한 번 더 본다), 기존 아이디어를 고치고, 하루를 알린다 | put_opportunities |
+
+시각은 시작 순서일 뿐 마감이 아니다. 각 작업은 앞 작업이 끝나기를 기다리고, 판단이 설 때까지 일한다 (ADR-0032).
 
 판정·채점 작업은 없다 (ADR-0028). 확인은 사용자가 한다.
 
@@ -48,9 +50,9 @@
 - add_repo 로 W-X-Z/WSJ-investment 를 붙이고 clone (interpret 은 access=push, `--depth 20`; 나머지는 `--depth 1`). 파이썬 도구가 필요하면 `cd pipeline && python3 -m venv .venv && .venv/bin/pip install -q -e .`
 - Supabase MCP get_project_url · get_publishable_keys 로 `SUPABASE_URL`, `SUPABASE_PUBLISHABLE_KEY`(sb_publishable_…)를 export 한다.
 - Supabase MCP execute_sql (project_id: dcatgfivsvbktylmtvgf): `select to_regprocedure('ideas.put_opportunities(jsonb)') is not null as p31;` — false 면 "0031 미적용" 한 줄 보고 후 `skipped` 로 끝낸다.
-- **앞 작업을 기다린다** (interpret 부터): 앞 작업(collect → interpret → enrich → report)의 오늘 행이 `running` 이면 최대 30분 기다린다 —
-  `timeout 590 bash -c 'until curl -s "$SUPABASE_URL/rest/v1/v_agent_runs?select=status&task=eq.<앞 작업>&run_date=eq.$(TZ=Asia/Seoul date +%F)" -H "apikey: $SUPABASE_PUBLISHABLE_KEY" -H "Authorization: Bearer $SUPABASE_PUBLISHABLE_KEY" | grep -qv running; do sleep 30; done'` 를 세 번까지.
-  그래도 running 이면 쌓인 것으로 진행하고 note 에 "앞 작업 미완료". 앞 작업 행이 아예 없으면 기다리지 않는다.
+- **앞 작업을 기다린다** (interpret 부터): 앞 작업(collect → interpret → enrich → report)의 오늘 행이 `running` 이면 끝날 때까지 기다린다 —
+  `timeout 590 bash -c 'until curl -s "$SUPABASE_URL/rest/v1/v_agent_runs?select=status&task=eq.<앞 작업>&run_date=eq.$(TZ=Asia/Seoul date +%F)" -H "apikey: $SUPABASE_PUBLISHABLE_KEY" -H "Authorization: Bearer $SUPABASE_PUBLISHABLE_KEY" | grep -qv running; do sleep 30; done'` 를 되풀이한다.
+  앞 작업이 시작한 지 3시간이 넘도록 running 이면 멈춘 것으로 보고 쌓인 것으로 진행하며 note 에 "앞 작업 미완료". 앞 작업 행이 아예 없으면 기다리지 않는다.
 - `select ops.put_agent_run('{"task":"<작업>","status":"running"}'::jsonb);`
 
 끝:
@@ -64,12 +66,13 @@
 - 같은 소식이 여러 매체에 반복돼도 증거는 하나다 — 원본을 찾아 인용한다.
 - 그래프에 있는 기업의 확인한 사실은 기업 소식으로 남길 수 있다: `select ideas.put_company_events($j$[{"company_id":"company:…","kind":"news|disclosure|filing|revenue","published_at":"YYYY-MM-DD","title":"…","url":"https://…","text":"한국어 1~3문장, 날짜·숫자·상대방","importance":2}]$j$::jsonb);` (45일 안 날짜).
 
-## C. 이어받기 — 하루에 끝나지 않는 조사 (ADR-0030, 0034 뒤)
-- 결론(산다·안 산다·가장 약한 고리)까지 못 간 조사는 스레드로 연다. 다음 날 해석이 남는 시간에 이어서 파고, 검토자가 약한 고리를 되돌리면 다시 연다.
+## C. 이어받기 — 스레드는 기억이다 (ADR-0030·0032)
+- 판단은 미루지 않는다. 조사해도 남는 것은 지금의 증거와 추론으로 판단하고 가장 약한 고리를 적는다 (방향 '결론까지 간다'). 스레드는 그 판단과 근거, 무엇을 어디까지 봤는지를 남겨 다음 세션이 같은 질문을 처음부터 다시 찾지 않게 하는 기억이다.
+- 약한 고리를 찾은 쪽이 그 자리에서 판다 — 질문을 다시 세운 사람이 가장 잘 판다. 다음 작업이나 다음 날로 넘기지 않는다.
+- 새 단서가 열린 스레드의 약한 고리에 닿으면 이어서 판단을 고친다.
 - 열린 스레드: `select thread_key, title, question, returns, updated_at, (select json_agg(e order by e.at) from ideas.thread_entries e where e.thread_key = t.thread_key) as log from ideas.threads t where status = 'open' order by returns desc, updated_at;`
 - 쓰기: `select ideas.put_thread($j${"thread_key":"영문_소문자_6자이상","title":"무엇을 확인하려는가 (명사형)","question":"결론을 내려면 답해야 할 것","companies":[…],"nodes":[…],"clue_urls":[…],"opened_by":"interpret","entry":{"by":"interpret","kind":"note|finding|returned|concluded|dropped","body":"알아낸 것·다음에 볼 곳","sources":[{"title":"…","url":"…","date":"…"}]}}$j$::jsonb);`
   결론이 나면 `kind: concluded`(+`conclusion`·`weakest_link`), 투자 아이디어가 되면 `opportunity_key` 를 잇는다. 이어 볼 가치가 없으면 `dropped` 와 이유.
-- `ideas.put_thread` 가 아직 없으면(0034 전) 이어 볼 것을 `skipped` 에 '이어 볼 것: …' 으로 남긴다 — 다음 날 해석이 어제 기록에서 읽는다.
 
 ## D. 그래프 — 조회하고, 확인한 것은 제안한다 (ADR-0031, 0035 뒤)
 그래프는 신호를 놓는 지도다. 고리를 확인할 때 먼저 그래프에 묻고, 조사로 확인한 것은 그래프에 남겨 다음 조사가 같은 것을 다시 찾지 않게 한다.
