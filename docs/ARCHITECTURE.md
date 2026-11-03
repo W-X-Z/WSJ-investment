@@ -10,19 +10,20 @@
 ## 2. 흐름
 ```
 ① 출처        research/sources/registry.json (층: raw·press·newsroom·disclosure) + 그래프 기업 이름 검색 + 공시·월매출 + 가격·재무
-② 수집        GitHub Actions 'issues' (18:47 예약 + 05:23 예약 작업이 한 번 더 실행)
+② 수집        GitHub Actions 'issues' (18:47 예약 + 04:23 예약 작업이 한 번 더 실행)
               issues → company_feed → clues(피드 + 원본 페이지 변화 감지, 원본 층 전문 출처는 분류기 예외, 남긴 단서는 본문 저장·본문 태깅)
               → candidates(그래프 밖 상장사·사전 밖 식별자 → 그래프 제안) → prices → facts → fundamentals
 ③ 저장        Supabase  ideas.clues · clue_texts(본문, 비공개) · company_events · supply_chain_issues · tech_* · opportunities · threads
               ops.collector_runs(수집기·예약 작업 실행 기록) · ops.v_input_quality · ops.v_source_use (In 점검) · ops.v_collection_alerts(수집 이상 → 리포트 알림)
 ④ 판단        Claude 예약 작업 (월~토)
-              05:23 collect → 06:17 interpret(해석 + 열린 스레드 이어 조사 + 그래프 패치 PR) → 06:49 enrich(검토자) → 07:37 report(공개·알림)
+              04:23 collect → 05:17 interpret(판단까지 + 열린 스레드 + 그래프 패치 PR) → 06:19 enrich(검토자 — 약한 고리는 그 자리에서 판다) → 07:37 report(공개·알림)
+              시각은 순서일 뿐 마감이 아니다 — 각 작업은 앞 작업이 끝나기를 기다린다 (ADR-0032)
               일요일 10:23 주간 개선 (In 점검, 출처·그래프·도구 개선, 주간 매크로 배경 research/macro/)
 ⑤ 산출        ideas.opportunities(active) → 웹 https://wsj-investment.vercel.app · 하루 알림
 ```
 - 수집은 코드(Actions, secret 키), 판단은 예약 작업(Supabase MCP + publishable 키 + 저장소 문서)이 맡는다 (ADR-0024·0028).
 - 작업 문서는 목적·방향·꼭 지킬 것·연결 방법만 정한다 (ADR-0029): `docs/agents/daily-ideas.md`, `docs/agents/daily/*.md`, `docs/agents/weekly-improvement.md`.
-- 하루에 끝나지 않는 조사는 `ideas.threads` 로 이어받는다 — 해석이 남는 시간에 이어서 판다 (ADR-0030).
+- 판단은 그 자리에서 낸다. `ideas.threads` 는 판단과 근거를 다음 세션이 이어받는 기억이다 (ADR-0030·0032).
 
 ## 3. 온톨로지
 - 원본은 Git: `research/ecosystems/seed_graph.json`(노드·관계·근거), `ontology.json`(닫힌 어휘 v0.5), `node_aliases.json`·`native_names.json`, 패치 `research/ecosystems/patches/`.

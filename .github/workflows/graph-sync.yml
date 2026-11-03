@@ -1,7 +1,7 @@
 # 그래프 조회본 (ADR-0031, 백로그 G-2). 시크릿: SUPABASE_URL, SUPABASE_SECRET_KEY
 # Git 의 그래프(research/ecosystems/seed_graph.json)가 바뀌어 main 에 병합될 때마다 Supabase core.graph_nodes·graph_edges·graph_terms 를 덮어쓴다.
 # 예약 작업은 core.resolve_terms · graph_neighbors · suppliers_below · node_signals 로 그래프를 조회한다 (0035). LLM 없음, 비용 없음.
-# 놓친 병합이 있어도 아침 해석(06:17) 전에 맞도록 매일 05:07 KST 에도 한 번 돈다.
+# 놓친 병합이 있어도 아침 해석(05:17) 전에 맞도록 매일 05:07 KST 에도 한 번 돈다.
 name: graph-sync
 
 on:
