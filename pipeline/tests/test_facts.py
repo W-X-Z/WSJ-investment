@@ -38,7 +38,7 @@ def test_adr_listings_count_ads_not_ordinary_shares():
     tsm = Listing("company:tsmc", "NYSE", "TSM", "TSM", "us")
     mu = Listing("company:mu", "Nasdaq", "MU", "MU", "us")
     nodes = {"company:tsmc": {"listing": {"cik": 1046179}}, "company:mu": {"listing": {"cik": 723125}}}
-    rows = {r["company_id"]: r for r in F.fetch_us(_Http(), [tsm, mu], nodes)}
+    rows = {r["company_id"]: r for r in F.fetch_us(_Http(), [tsm, mu], nodes, use_cover=False)}
     assert rows["company:tsmc"]["shares_outstanding"] == round(25_932_524_521 / 5) and rows["company:tsmc"]["source"] == "sec_companyfacts_ads"
     assert rows["company:mu"]["shares_outstanding"] == 25_932_524_521 and rows["company:mu"]["source"] == "sec_companyfacts"
 
@@ -60,7 +60,41 @@ def test_us_candidate_without_cik_is_resolved_by_ticker():
     http = _Http()
     axti = Listing("company:axt", "Nasdaq", "AXTI", "AXTI", "us")
     nobody = Listing("company:nobody", "Nasdaq", "ZZZZ", "ZZZZ", "us")
-    rows = F.fetch_us(http, [axti, nobody], {"company:axt": {"listing": {"ticker": "AXTI", "exchange": "Nasdaq"}}, "company:nobody": {}})
+    rows = F.fetch_us(http, [axti, nobody], {"company:axt": {"listing": {"ticker": "AXTI", "exchange": "Nasdaq"}}, "company:nobody": {}}, use_cover=False)
     assert [r["company_id"] for r in rows] == ["company:axt"] and rows[0]["shares_outstanding"] == 65_000_000
     assert http.urls.count(F.SEC_TICKERS_URL) == 1 and any("CIK0001051627" in u for u in http.urls)
     assert F.sec_cik_by_ticker(http)["BRK-B"] == 1067983
+
+
+INSTANCE = """<xbrl><dei:EntityCommonStockSharesOutstanding contextRef="c-3" decimals="INF" id="f-30" unitRef="shares">274,527,094</dei:EntityCommonStockSharesOutstanding>
+<dei:EntityCommonStockSharesOutstanding contextRef="c-4" decimals="INF" id="f-31" unitRef="shares">29901795</dei:EntityCommonStockSharesOutstanding></xbrl>"""
+
+
+def test_cover_shares_sums_share_classes_and_wins_over_companyfacts():
+    """다중 클래스 회사(Forgent: Class A + Class B, Vicor: 보통주 + Class B)는 표지의 클래스별 주식수를 합산한다 — companyfacts 는 한 클래스만 준다."""
+    from wsj.ecosystems.prices import Listing
+
+    assert F.cover_shares(INSTANCE) == 274_527_094 + 29_901_795
+    assert F.cover_shares("<xbrl/>") is None
+
+    class _Http:
+        def __init__(self):
+            self.urls = []
+
+        def get_json(self, url, headers=None):
+            self.urls.append(url)
+            if "submissions" in url:
+                return {"filings": {"recent": {"form": ["8-K", "10-K"], "accessionNumber": ["0002080126-26-000040", "0002080126-26-000035"],
+                                               "primaryDocument": ["d1.htm", "fps-20260630.htm"], "reportDate": ["2026-10-22", "2026-06-30"]}}}
+            return _f(dei={"EntityCommonStockSharesOutstanding": _tag(("2026-06-30", 243_802_000))})
+
+        def get_text(self, url, headers=None):
+            self.urls.append(url)
+            assert url.endswith("/000208012626000035/fps-20260630_htm.xml")
+            return INSTANCE
+
+    http = _Http()
+    fps = Listing("company:fps", "NYSE", "FPS", "FPS", "us")
+    rows = F.fetch_us(http, [fps], {"company:fps": {"listing": {"cik": 2080126}}})
+    assert rows[0]["shares_outstanding"] == 304_428_889 and rows[0]["source"] == "sec_cover"
+    assert not any("companyfacts" in u for u in http.urls)                     # 표지에서 구했으면 companyfacts 는 부르지 않는다
