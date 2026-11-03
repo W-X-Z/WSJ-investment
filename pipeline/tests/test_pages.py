@@ -73,3 +73,36 @@ def test_collect_pages_commits_state_only_when_asked():
     assert len(clues) == 2 and stats["pages"]["jedec_jc45"]["new_links"] == 1
     clues_again, *_ = P.collect_pages(_Http(V2), store, [_src()])
     assert len(clues_again) == 2          # 상태를 쓰지 않았으면 다음 실행이 같은 변화를 다시 낸다
+
+
+CARDS = """<html><body><h2>News releases</h2><div class="list">
+<a href="/news/q1-fy27"><div class="cat">Financial</div><div class="t">Lumentum Announces First Quarter of Fiscal Year 2027 Financial Results</div><span class="d">November 02, 2026</span><span>Read More</span></a>
+<a href="/news/ocp-demo"><div class="cat">Financial</div><div class="t">Lumentum, Astera Labs, and Corning to Demonstrate 1060 nm VCSEL-Based PCIe over Optics</div><span class="d">October 12, 2026</span><span>Read More</span></a>
+<a href="/news/hbm"><span>HBM4</span> memory update</a>
+<a href="/news?page=2">next ›</a><a href="/news?page=20">last »</a><a href="/news?page=0">« first</a>
+</div></body></html>"""
+
+
+def test_card_links_split_title_date_and_skip_pagination():
+    s = P.snapshot(CARDS, "https://www.lumentum.com/news")
+    links = dict(s.links)
+    assert links["https://www.lumentum.com/news/q1-fy27"] == "Lumentum Announces First Quarter of Fiscal Year 2027 Financial Results"
+    assert links["https://www.lumentum.com/news/hbm"] == "HBM4 memory update"         # 제목 안 강조는 잇는다
+    assert not any("page=" in u for u in links)                                          # next › · last » · « first
+    assert s.dates["https://www.lumentum.com/news/ocp-demo"].date().isoformat() == "2026-10-12"
+
+
+def test_old_dated_link_is_not_a_new_item():
+    from datetime import UTC, datetime
+
+    base = "https://www.lumentum.com/news"
+    cur = P.snapshot(CARDS, base)
+    clues, _ = P.to_clues(_src(), base, cur, [], [(u, t) for u, t in cur.links if "page=" not in u], now=datetime(2026, 11, 3, tzinfo=UTC))
+    got = {c.url: c for c in clues}
+    assert base + "/q1-fy27" in got and base + "/ocp-demo" not in got                    # 3주 전 글은 목록이 밀려 다시 보인 것
+    assert got[base + "/q1-fy27"].published_at.date().isoformat() == "2026-11-02"
+
+
+def test_parse_date_text_formats():
+    assert P.parse_date_text("Oct. 7, 2026").day == 7 and P.parse_date_text("7 Oct 2026").month == 10
+    assert P.parse_date_text("2026.10.06").day == 6 and P.parse_date_text("Lumentum results 2026") is None

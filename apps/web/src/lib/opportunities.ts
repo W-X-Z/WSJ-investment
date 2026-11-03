@@ -30,7 +30,7 @@ export async function loadOpportunities(): Promise<Opportunity[]> {
     const { data, error } = await db("public").from("v_opportunities").select("*").eq("status", "active").limit(500);
     if (error || !data) return [];
     return (data as Record<string, unknown>[]).map(normalize)
-      .sort((a, b) => b.stars - a.stars || (b.published_at ?? b.updated_at).localeCompare(a.published_at ?? a.updated_at));
+      .sort((a, b) => b.stars - a.stars || touchedAt(b).localeCompare(touchedAt(a)));
   } catch {
     return [];
   }
@@ -51,6 +51,21 @@ export function relatedTo(o: Opportunity, all: Opportunity[]): Opportunity[] {
   const mine = new Set(o.nodes);
   if (!mine.size) return [];
   return all.filter((x) => x.opportunity_key !== o.opportunity_key && x.nodes.some((n) => mine.has(n)));
+}
+
+/** 낸 뒤에 고쳤나 (리포트·검토가 근거·★ 를 바꾸면 updated_at 만 움직인다). 한 시간 안의 차이는 내는 과정의 일부로 본다. */
+export function changedAfterPublish(o: Opportunity): boolean {
+  if (!o.published_at) return false;
+  return Date.parse(o.updated_at) - Date.parse(o.published_at) > 36e5;
+}
+
+/** 목록 정렬·'갱신' 표시에 쓰는 시각: 고쳤으면 고친 때, 아니면 낸 때. */
+export const touchedAt = (o: Opportunity) => (changedAfterPublish(o) ? o.updated_at : o.published_at ?? o.updated_at);
+
+/** 고친 점 — status_note 의 '2026-11-03 report:' 같은 머리를 떼고 본문만. 낸 뒤에 고친 아이디어에만. */
+export function changeNote(o: Opportunity): string | null {
+  if (!changedAfterPublish(o) || !o.status_note) return null;
+  return o.status_note.replace(/^\s*\d{4}-\d{2}-\d{2}\s+[\w가-힣]+\s*:\s*/, "").trim() || null;
 }
 
 export const primaryOf = (o: Opportunity) => o.companies.find((c) => c.role === "primary") ?? o.companies[0];

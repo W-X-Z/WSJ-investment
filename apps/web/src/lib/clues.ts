@@ -8,7 +8,9 @@ export type Clue = {
   source_name?: string | null; source_kind?: string | null; region?: string | null; companies: ClueCompany[]; note?: string | null;
 };
 
-export async function loadClues(days = 7, limit = 300): Promise<Clue[]> {
+export const CLUE_LIMIT = 300;
+
+export async function loadClues(days = 7, limit = CLUE_LIMIT): Promise<Clue[]> {
   if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.NEXT_PUBLIC_SUPABASE_KEY) return [];
   try {
     const since = new Date(Date.now() - days * 864e5).toISOString();
@@ -49,7 +51,15 @@ export function tidyCompanies(list: ClueCompany[]): ClueCompany[] {
 
 export const KIND_KO: Record<string, string> = {
   trade_press: "업계지", company_newsroom: "기업 발표", disclosure: "공시", standards: "표준", conference: "학회", research: "논문",
-  release_notes: "릴리스", market_data: "시장 자료", policy: "정책", company_feed: "기업 소식", issue: "공급망 이슈", tech_signal: "기술 흐름",
+  release_notes: "릴리스", market_data: "시장 자료", policy: "정책", company_feed: "기업 소식", issue: "공급망 이슈", tech_signal: "기술 흐름", regulation: "규칙", code: "코드",
+};
+
+/** 하루 안 순서: 원본(표준·규칙·학회·논문·릴리스·공시·기업 발표)이 먼저, 기사·기업 이름 검색 소식이 뒤. */
+const KIND_ORDER = ["standards", "regulation", "policy", "conference", "research", "release_notes", "code", "disclosure", "company_newsroom", "market_data",
+  "tech_signal", "issue", "trade_press", "company_feed"];
+export const kindRank = (k?: string | null) => {
+  const i = KIND_ORDER.indexOf(k ?? "");
+  return i < 0 ? KIND_ORDER.length : i;
 };
 
 /** KST 날짜 (YYYY-MM-DD) — 묶음 제목용. */

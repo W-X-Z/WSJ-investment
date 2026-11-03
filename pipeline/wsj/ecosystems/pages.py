@@ -18,7 +18,7 @@ import json
 import logging
 import re
 from dataclasses import dataclass, field
-from datetime import UTC, datetime
+from datetime import UTC, datetime, timedelta
 from html.parser import HTMLParser
 from typing import Any
 from urllib.parse import urljoin, urlsplit, urlunsplit
@@ -27,9 +27,47 @@ log = logging.getLogger("wsj.ecosystems.pages")
 PAGE_TYPES = {"html_diff", "html_list"}
 MAX_NEW_LINKS = 30            # 페이지 하나에서 링크 단서로 내는 상한 — 넘으면 개편으로 보고 페이지 변경 하나로
 MIN_LINK_TEXT = 6
+OLD_ITEM_DAYS = 14            # 링크 글자에 적힌 날짜가 이보다 오래면 '새 항목'이 아니다 (목록이 밀려 다시 보인 옛 글)
 SKIP_LINK = re.compile(r"^(?:mailto:|javascript:|tel:|#)|/(?:login|signin|register|cart|search|tag|category|author|page/\d+)(?:/|$)|\?(?:share|replytocom)=", re.I)
-NAV_TEXT = re.compile(r"^(?:home|about|contact|privacy|terms|cookie|login|sign in|subscribe|read more|more|next|previous|back|menu|search|"
-                      r"english|español|한국어|日本語|中文|facebook|twitter|linkedin|youtube|rss|share|print|download)$", re.I)
+NAV_TEXT = re.compile(r"^(?:home|about|contact|privacy|terms|cookie|login|sign in|subscribe|read more|learn more|more|view all|see all|"
+                      r"next|previous|prev|first|last|older|newer|older posts|newer posts|back|menu|search|"
+                      r"english|español|한국어|日本語|中文|facebook|twitter|linkedin|youtube|rss|share|print|download|더 ?보기|다음|이전)$", re.I)
+ARROWS = re.compile(r"[«»‹›<>→←↑↓…|]+")
+# 링크 안 블록 요소 경계 — 카드형 목록(<a><div>분류</div><div>제목</div><div>날짜</div><span>Read More</span></a>)을 조각으로 나눈다
+BLOCK_IN_LINK = {"div", "p", "span", "time", "small", "li", "br", "h1", "h2", "h3", "h4", "h5", "h6"}
+MONTHS = {m: i + 1 for i, m in enumerate(["jan", "feb", "mar", "apr", "may", "jun", "jul", "aug", "sep", "oct", "nov", "dec"])}
+DATE_TEXT = re.compile(r"^(?:(?P<mon>[A-Za-z]{3,9})\.? (?P<d>\d{1,2}),? (?P<y>\d{4})|(?P<d2>\d{1,2}) (?P<mon2>[A-Za-z]{3,9})\.? (?P<y2>\d{4})|"
+                       r"(?P<y3>\d{4})[-./](?P<m3>\d{1,2})[-./](?P<d3>\d{1,2})\.?)$")
+
+
+def nav_text(text: str) -> bool:
+    return bool(NAV_TEXT.match(" ".join(ARROWS.sub(" ", text or "").split())))
+
+
+def parse_date_text(text: str) -> datetime | None:
+    m = DATE_TEXT.match(" ".join((text or "").split()))
+    if not m:
+        return None
+    try:
+        if m["y3"]:
+            return datetime(int(m["y3"]), int(m["m3"]), int(m["d3"]), tzinfo=UTC)
+        mon = MONTHS.get((m["mon"] or m["mon2"] or "")[:3].lower())
+        return datetime(int(m["y"] or m["y2"]), mon, int(m["d"] or m["d2"]), tzinfo=UTC) if mon else None
+    except ValueError:
+        return None
+
+
+def link_parts(parts: list[str]) -> tuple[str, datetime | None]:
+    """링크 안 조각들 → (제목, 날짜). 날짜·'Read More' 같은 조각을 떼고, 여러 조각이 남으면 네 단어 이상인 가장 긴 조각이 제목
+    (카드의 분류 꼬리표 'Financial' 같은 것이 빠진다). 그런 조각이 없으면 제목 안의 강조(<span>HBM4</span> update)로 보고 잇는다."""
+    segs = [" ".join(x.split()) for x in parts]
+    segs = [x for x in segs if x]
+    date = next((d for d in map(parse_date_text, segs) if d), None)
+    rest = [x for x in segs if not parse_date_text(x) and not nav_text(x)]
+    if not rest:
+        return (" ".join(segs) if not date else ""), date
+    longest = max(rest, key=len)
+    return (longest if len(rest) == 1 or len(longest.split()) >= 4 else " ".join(rest)), date
 
 
 @dataclass
@@ -37,15 +75,16 @@ class Snapshot:
     title: str = ""
     lines: list[str] = field(default_factory=list)
     links: list[tuple[str, str]] = field(default_factory=list)
+    dates: dict[str, datetime] = field(default_factory=dict)      # 링크 글자에 적혀 있던 날짜 (있을 때만)
 
 
 class _Links(HTMLParser):
     def __init__(self, base: str) -> None:
         super().__init__(convert_charrefs=True)
         self.base = base
-        self.out: list[tuple[str, str]] = []
+        self.out: list[tuple[str, list[str]]] = []
         self._href: str | None = None
-        self._text: list[str] = []
+        self._parts: list[str] = []
         self.skip = 0
 
     def handle_starttag(self, tag: str, attrs: list[tuple[str, str | None]]) -> None:
@@ -53,19 +92,22 @@ class _Links(HTMLParser):
             self.skip += 1
         if tag == "a":
             href = dict(attrs).get("href")
-            self._href, self._text = (href, []) if href and not self.skip else (None, [])
+            self._href, self._parts = (href, [""]) if href and not self.skip else (None, [])
+        elif self._href is not None and tag in BLOCK_IN_LINK:
+            self._parts.append("")
 
     def handle_endtag(self, tag: str) -> None:
         if tag in ("nav", "header", "footer", "script", "style", "noscript"):
             self.skip = max(0, self.skip - 1)
         if tag == "a" and self._href:
-            text = " ".join("".join(self._text).split())
-            self.out.append((self._href, text))
+            self.out.append((self._href, self._parts))
             self._href = None
+        elif self._href is not None and tag in BLOCK_IN_LINK:
+            self._parts.append("")
 
     def handle_data(self, data: str) -> None:
         if self._href is not None:
-            self._text.append(data)
+            self._parts[-1] += data
 
 
 def norm_link(href: str, base: str) -> str | None:
@@ -89,18 +131,22 @@ def snapshot(html: str, base: str) -> Snapshot:
     except Exception:  # noqa: BLE001 - 깨진 HTML 이라도 모은 데까지
         pass
     links: dict[str, str] = {}
-    for href, text in p.out:
+    dates: dict[str, datetime] = {}
+    for href, parts in p.out:
         u = norm_link(href, base)
         if not u or u.rstrip("/") == base.rstrip("/"):
             continue
+        text, d = link_parts(parts)
         if len(text) < MIN_LINK_TEXT and not re.search(r"\.(?:pdf|docx?|xlsx?|zip|pptx?)$", u, re.I):
             continue
-        if NAV_TEXT.match(text or ""):
+        if nav_text(text):
             continue
         if u not in links or len(text) > len(links[u]):
             links[u] = text
+        if d:
+            dates[u] = d
     lines = [ln.strip() for ln in body.split("\n\n") if ln.strip()]
-    return Snapshot(title, lines, sorted(links.items()))
+    return Snapshot(title, lines, sorted(links.items()), dates)
 
 
 def _h(s: str) -> str:
@@ -132,9 +178,12 @@ def to_clues(src: Any, page_url: str, cur: Snapshot, new_lines: list[str], new_l
     redesign = len(new_links) > MAX_NEW_LINKS
     if not redesign:
         for u, t in new_links:
-            c = Clue(u, (t or u)[:400], f"{src.name} — 새 항목", now, src.id, src.name, src.kind, src.lang, src.region,
+            d = cur.dates.get(u)
+            if d and d < now - timedelta(days=OLD_ITEM_DAYS):
+                continue                      # 목록이 밀려 다시 보인 옛 글 — 새 소식이 아니다
+            c = Clue(u, (t or u)[:400], f"{src.name} — 새 항목", d or now, src.id, src.name, src.kind, src.lang, src.region,
                      broad=src.broad, layer=src.layer)
-            c.extra = {"page": page_url, "change": "new_link"}
+            c.extra = {"page": page_url, "change": "new_link"} | ({"date_in_link": d.date().isoformat()} if d else {})
             clues.append(c)
     text = [x for x in new_lines if len(x) >= 20]
     if redesign:
