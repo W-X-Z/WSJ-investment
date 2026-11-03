@@ -1,0 +1,460 @@
+{
+  "prefix": "c1103b",
+  "note": "11-03 대화 조사 입구(a): Himax CPO WLO 관계, Rogers 사슬 반증(버스바 공급사는 BizLink·Methode), 피지컬 AI 첫 frontier 후보 노드 (ADR-0033 첫 적용)",
+  "nodes": [
+    {
+      "id": "product:tesla_optimus",
+      "kind": "product",
+      "label": "Tesla Optimus 휴머노이드 (Fremont 고볼륨 라인 생산 개시 2026-10)",
+      "ecosystem": "frontier",
+      "status": "candidate",
+      "first_evidence": {
+        "date": "2026-10-21",
+        "url": "https://www.sec.gov/Archives/edgar/data/1318605/000162828026066738/exhibit9914.htm",
+        "layer": "filing"
+      }
+    },
+    {
+      "id": "component:planetary_roller_screw",
+      "kind": "component",
+      "label": "행성 롤러 스크류 (휴머노이드 선형 액추에이터, 대당 40개+)",
+      "ecosystem": "frontier",
+      "status": "candidate",
+      "first_evidence": {
+        "date": "2026-04-17",
+        "url": "https://www.mckinsey.com/industries/industrials-and-electronics/our-insights/turning-humanoid-supply-chain-constraints-into-billion-dollar-wins",
+        "layer": "press"
+      }
+    },
+    {
+      "id": "component:harmonic_reducer",
+      "kind": "component",
+      "label": "하모닉 감속기 (회전 관절, HDS 과점 → 중국 캐파 급증)",
+      "ecosystem": "frontier",
+      "status": "candidate",
+      "first_evidence": {
+        "date": "2026-07-02",
+        "url": "https://www.inderes.fi/en/releases/skf-and-leaderdrive-form-a-venture-for-precision-components-in-humanoids",
+        "layer": "press"
+      }
+    },
+    {
+      "id": "material:ndfeb_magnet_hre",
+      "kind": "material",
+      "label": "중희토(Dy/Tb) 함유 NdFeB 영구자석 — 중국 수출허가제(MOFCOM 2025 No.18)",
+      "ecosystem": "frontier",
+      "status": "candidate",
+      "first_evidence": {
+        "date": "2025-04-23",
+        "url": "https://www.theregister.com/2025/04/23/tesla_optimus_china/",
+        "layer": "press"
+      }
+    },
+    {
+      "id": "component:force_torque_sensor",
+      "kind": "component",
+      "label": "힘·토크·촉각 센서 (관절·손, 로봇당 20~30개)",
+      "ecosystem": "frontier",
+      "status": "candidate",
+      "first_evidence": {
+        "date": "2026-08-05",
+        "url": "https://earningswhispers.com/transcript/VPG/Q22026",
+        "layer": "press"
+      }
+    },
+    {
+      "id": "component:humanoid_hand_drive",
+      "kind": "component",
+      "label": "휴머노이드 손 구동계 (미니 스크류·코어리스 모터·초소형 베어링 — OEM 설계 병목)",
+      "ecosystem": "frontier",
+      "status": "candidate",
+      "first_evidence": {
+        "date": "2026-10-21",
+        "url": "https://evwire.com/p/tesla-tsla-q3-2026-earnings-call-full-transcript",
+        "layer": "press"
+      }
+    },
+    {
+      "id": "company:vpg",
+      "kind": "company",
+      "label": "Vishay Precision Group (VPG)",
+      "ecosystem": "frontier",
+      "ticker": "VPG",
+      "exchange": "NYSE",
+      "size_band": "small",
+      "status": "candidate",
+      "first_seen": "2026-11-03",
+      "first_evidence": {
+        "date": "2026-08-05",
+        "url": "https://earningswhispers.com/transcript/VPG/Q22026",
+        "layer": "press"
+      }
+    },
+    {
+      "id": "company:usar",
+      "kind": "company",
+      "label": "USA Rare Earth (USAR)",
+      "ecosystem": "frontier",
+      "ticker": "USAR",
+      "exchange": "Nasdaq",
+      "size_band": "mid",
+      "status": "candidate",
+      "first_seen": "2026-11-03",
+      "first_evidence": {
+        "date": "2026-09-04",
+        "url": "https://www.sec.gov/Archives/edgar/data/1970622/000121390026097399/ea030400101ex99-1.htm",
+        "layer": "filing"
+      }
+    },
+    {
+      "id": "company:mp",
+      "kind": "company",
+      "label": "MP Materials (MP)",
+      "ecosystem": "frontier",
+      "ticker": "MP",
+      "exchange": "NYSE",
+      "size_band": "mid",
+      "status": "candidate",
+      "first_seen": "2026-11-03",
+      "first_evidence": {
+        "date": "2026-08-06",
+        "url": "https://www.sec.gov/Archives/edgar/data/1801368/000180136826000047/mpmcq22026er.htm",
+        "layer": "filing"
+      }
+    },
+    {
+      "id": "company:hds",
+      "kind": "company",
+      "label": "Harmonic Drive Systems (TSE 6324, 비SEC)",
+      "ecosystem": "frontier",
+      "ticker": "6324",
+      "exchange": "TSE",
+      "size_band": "unknown",
+      "status": "candidate",
+      "first_seen": "2026-11-03"
+    },
+    {
+      "id": "company:leaderdrive",
+      "kind": "company",
+      "label": "Leaderdrive 綠的諧波 (SSE 688017, 비SEC)",
+      "ecosystem": "frontier",
+      "ticker": "688017",
+      "exchange": "SSE",
+      "size_band": "unknown",
+      "status": "candidate",
+      "first_seen": "2026-11-03"
+    },
+    {
+      "id": "company:schaeffler",
+      "kind": "company",
+      "label": "Schaeffler (XETRA SHA0, 비SEC)",
+      "ecosystem": "frontier",
+      "ticker": "SHA0",
+      "exchange": "XETRA",
+      "size_band": "unknown",
+      "status": "candidate",
+      "first_seen": "2026-11-03"
+    },
+    {
+      "id": "company:skf",
+      "kind": "company",
+      "label": "SKF (Nasdaq Stockholm SKF B, 비SEC)",
+      "ecosystem": "frontier",
+      "ticker": "SKF B",
+      "exchange": "NASDAQ STOCKHOLM",
+      "size_band": "unknown",
+      "status": "candidate",
+      "first_seen": "2026-11-03"
+    }
+  ],
+  "edges": [
+    {
+      "from": "product:tesla_optimus",
+      "relation": "requires",
+      "to": "component:planetary_roller_screw",
+      "tier": "third_party_report",
+      "evidence": [
+        {
+          "url": "https://humanoid.guide/humanoid-actuator-supplier-landscape/",
+          "source_type": "third_party_report",
+          "published_at": "2026-09-01",
+          "excerpt": "Optimus linear actuators use planetary roller screws; Tesla outsources actuator assembly (2차 자료)"
+        }
+      ]
+    },
+    {
+      "from": "product:tesla_optimus",
+      "relation": "requires",
+      "to": "component:harmonic_reducer",
+      "tier": "third_party_report",
+      "evidence": [
+        {
+          "url": "https://humanoid.guide/humanoid-actuator-supplier-landscape/",
+          "source_type": "third_party_report",
+          "published_at": "2026-09-01",
+          "excerpt": "rotary joints use harmonic reducers (HDS + Green Harmonic dual-sourced, 2차)"
+        }
+      ]
+    },
+    {
+      "from": "product:tesla_optimus",
+      "relation": "requires",
+      "to": "material:ndfeb_magnet_hre",
+      "tier": "third_party_report",
+      "evidence": [
+        {
+          "url": "https://www.theregister.com/2025/04/23/tesla_optimus_china/",
+          "source_type": "third_party_report",
+          "published_at": "2025-04-23",
+          "excerpt": "Musk: rare-earth magnets for Optimus arm actuators affected by China export licensing"
+        }
+      ]
+    },
+    {
+      "from": "product:tesla_optimus",
+      "relation": "requires",
+      "to": "component:force_torque_sensor",
+      "tier": "vendor_claim",
+      "evidence": [
+        {
+          "url": "https://earningswhispers.com/transcript/VPG/Q22026",
+          "source_type": "vendor_claim",
+          "published_at": "2026-08-05",
+          "excerpt": "VPG: official vendor nomination letter from initial humanoid robotics customer; 20-30 sensors per robot"
+        }
+      ]
+    },
+    {
+      "from": "product:tesla_optimus",
+      "relation": "requires",
+      "to": "component:humanoid_hand_drive",
+      "tier": "official_issuer",
+      "evidence": [
+        {
+          "url": "https://evwire.com/p/tesla-tsla-q3-2026-earnings-call-full-transcript",
+          "source_type": "official_issuer",
+          "published_at": "2026-10-21",
+          "excerpt": "Musk Q3 2026 call: it's mostly the hand, the fingers especially; bespoke gears"
+        }
+      ]
+    },
+    {
+      "from": "component:planetary_roller_screw",
+      "relation": "offered_by",
+      "to": "company:schaeffler",
+      "tier": "official_issuer",
+      "position": "leader",
+      "evidence": [
+        {
+          "url": "https://www.schaeffler.com/remotemedien/media/_shared_media_rwd/08_investor_relations/presentations/20260112_schaeffler_powering_humanoid_motion.pdf",
+          "source_type": "official_issuer",
+          "published_at": "2026-01-12",
+          "excerpt": "Schaeffler: Powering humanoid motion — planetary roller screws, hand = ~20% of BOM"
+        }
+      ]
+    },
+    {
+      "from": "component:planetary_roller_screw",
+      "relation": "offered_by",
+      "to": "company:skf",
+      "tier": "official_issuer",
+      "evidence": [
+        {
+          "url": "https://www.post-journal.com/news/top-stories/2026/08/skf-officials-explain-entry-into-humanoid-robot-bearings/",
+          "source_type": "third_party_report",
+          "published_at": "2026-08-03",
+          "excerpt": "SKF on humanoid components: 120+ bearings per robot, roller screws"
+        }
+      ]
+    },
+    {
+      "from": "component:harmonic_reducer",
+      "relation": "offered_by",
+      "to": "company:hds",
+      "tier": "third_party_report",
+      "position": "leader",
+      "evidence": [
+        {
+          "url": "https://www.investing.com/news/stock-market-news/this-japanese-stock-is-surging-on-positive-outlook-for-humanoid-robot-orders-4367329",
+          "source_type": "third_party_report",
+          "published_at": "2025-11-19",
+          "excerpt": "Harmonic Drive Systems humanoid orders FY3/26 ¥2.5bn"
+        }
+      ]
+    },
+    {
+      "from": "component:harmonic_reducer",
+      "relation": "offered_by",
+      "to": "company:leaderdrive",
+      "tier": "official_issuer",
+      "position": "entrant",
+      "evidence": [
+        {
+          "url": "https://www.inderes.fi/en/releases/skf-and-leaderdrive-form-a-venture-for-precision-components-in-humanoids",
+          "source_type": "official_issuer",
+          "published_at": "2026-07-02",
+          "excerpt": "SKF and Leaderdrive form a 60:40 venture for precision components in humanoids"
+        }
+      ]
+    },
+    {
+      "from": "material:ndfeb_magnet_hre",
+      "relation": "offered_by",
+      "to": "company:mp",
+      "tier": "official_issuer",
+      "position": "entrant",
+      "note": "10X 산출은 DoD 가 100% 인수 — 로봇용 비할당 캐파 아님",
+      "evidence": [
+        {
+          "url": "https://www.sec.gov/Archives/edgar/data/0001801368/000180136826000048/mp-20260630.htm",
+          "source_type": "official_issuer",
+          "published_at": "2026-08-06",
+          "excerpt": "MP Materials 10-Q Q2 2026: Magnetics segment; DoD offtake of 10X facility output"
+        }
+      ]
+    },
+    {
+      "from": "material:ndfeb_magnet_hre",
+      "relation": "offered_by",
+      "to": "company:usar",
+      "tier": "official_issuer",
+      "position": "entrant",
+      "note": "Serra Verde 인수 완료 — 아시아 밖 유일 스케일 중희토 광산",
+      "evidence": [
+        {
+          "url": "https://www.sec.gov/Archives/edgar/data/1970622/000121390026097399/ea030400101ex99-1.htm",
+          "source_type": "official_issuer",
+          "published_at": "2026-09-04",
+          "excerpt": "USA Rare Earth completes Serra Verde acquisition"
+        }
+      ]
+    },
+    {
+      "from": "component:force_torque_sensor",
+      "relation": "offered_by",
+      "to": "company:vpg",
+      "tier": "vendor_claim",
+      "exposure": "minor",
+      "position": "entrant",
+      "note": "휴머노이드 매출 Q2 FY26 $0.32M, 2026 수주 목표 $6M (시총 ≈$0.7B)",
+      "evidence": [
+        {
+          "url": "https://earningswhispers.com/transcript/VPG/Q22026",
+          "source_type": "vendor_claim",
+          "published_at": "2026-08-05",
+          "excerpt": "VPG Q2 FY2026 call: vendor nomination; $400-500 per robot at low volume, $150-250 at scale"
+        }
+      ]
+    },
+    {
+      "from": "component:dc_busbar",
+      "relation": "offered_by",
+      "to": "company:rog",
+      "exposure": "minor",
+      "note": "ROLINX 응용 목록에 데이터센터 없음(EV·산업·12kV DC). 800VDC 는 랙 버스바 구리를 줄인다(NVIDIA: 45% 절감). Rogers 의 AI DC 경로는 curamik 마이크로채널 쿨러(디자인윈 0, 매출 2H27 예정)",
+      "evidence": [
+        {
+          "url": "https://www.rogerscorp.com/advanced-electronics-solutions/rolinx-busbars/rolinx-performance",
+          "source_type": "vendor_claim",
+          "published_at": "2026-11-03",
+          "excerpt": "ROLINX Performance busbars: applications list (EV/HEV, industrial drives, renewables)"
+        }
+      ],
+      "tier": "vendor_claim"
+    },
+    {
+      "from": "component:dc_busbar",
+      "relation": "offered_by",
+      "to": "company:mei",
+      "tier": "official_issuer",
+      "exposure": "major",
+      "position": "leader",
+      "note": "'오늘 주로 AI 데이터센터에 버스바 공급', Power Solutions FY25 $252M",
+      "evidence": [
+        {
+          "url": "https://s1.q4cdn.com/553277915/files/doc_earnings/2026/q2/presentation/MEI-FY26-Q2-Earnings-Release-Presentation-FINAL.pdf",
+          "source_type": "official_issuer",
+          "published_at": "2026-06-01",
+          "excerpt": "Methode FY26 Q2: busbars primarily to AI data centers via contract manufacturers; 800V busbar growth expected"
+        }
+      ]
+    },
+    {
+      "from": "component:dc_busbar",
+      "relation": "offered_by",
+      "to": "company:bizlink",
+      "tier": "customer_statement",
+      "position": "leader",
+      "evidence": [
+        {
+          "url": "https://blogs.nvidia.com/?p=85537",
+          "source_type": "customer_statement",
+          "published_at": "2025-10-13",
+          "excerpt": "NVIDIA 800 VDC power component partners: BizLink, Delta, Flex, GE Vernova, Lead Wealth, LITEON, Megmeet"
+        }
+      ]
+    },
+    {
+      "from": "company:himx",
+      "relation": "supplied_to",
+      "to": "company:foci",
+      "tier": "official_issuer",
+      "about": "CPO 용 WLO 마이크로렌즈 블록 → FOCI FAU(ReLFACon)",
+      "evidence": [
+        {
+          "url": "https://qnow.quantisnow.com/insight/himax-confirm-cpo-collaboration-and-strategic-partnership-with-foci-remain-6332871",
+          "source_type": "official_issuer",
+          "published_at": "2026-01-05",
+          "excerpt": "Himax: CPO collaboration and strategic partnership with FOCI remain"
+        }
+      ]
+    },
+    {
+      "from": "component:micro_optics",
+      "relation": "offered_by",
+      "to": "company:himx",
+      "exposure": "minor",
+      "position": "leader",
+      "note": "비드라이버 매출 20% 안 WLO. Gen1 1.6T/3.2T·Gen2 6.4T, Q3'26 엔지니어링 양산, 양산 2027/28 고객 의존. 1차 출처에 NVIDIA/TSMC 명시 없음",
+      "evidence": [
+        {
+          "url": "https://www.sec.gov/Archives/edgar/data/0001342338/000117184326005288/exh_991.htm",
+          "source_type": "official_issuer",
+          "published_at": "2026-08-06",
+          "excerpt": "Himax Q2 2026 6-K: CPO engineering production ramp on schedule for Q3; 2027 shipments significantly higher than 2026"
+        }
+      ],
+      "tier": "official_issuer"
+    },
+    {
+      "from": "component:micro_optics",
+      "relation": "offered_by",
+      "to": "company:largan",
+      "tier": "third_party_report",
+      "position": "entrant",
+      "evidence": [
+        {
+          "url": "https://statementdog.com/news/17090",
+          "source_type": "third_party_report",
+          "published_at": "2026-07-13",
+          "excerpt": "Largan: CPO customer FA mass-production spec secured, samples July, mass production as early as mid-2027; PMLA solution"
+        }
+      ]
+    },
+    {
+      "from": "component:micro_optics",
+      "relation": "offered_by",
+      "to": "company:visera",
+      "tier": "third_party_report",
+      "position": "entrant",
+      "evidence": [
+        {
+          "url": "https://apps.digitimes.com/news/a20260810PD234.html",
+          "source_type": "third_party_report",
+          "published_at": "2026-08-10",
+          "excerpt": "VisEra micro-lens in production for 800G pluggables, extending to 1.6T silicon photonics"
+        }
+      ]
+    }
+  ]
+}
