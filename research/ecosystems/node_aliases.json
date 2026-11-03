@@ -1440,6 +1440,12 @@
     "company:himx": [
       "himax",
       "奇景光電"
+    ],
+    "company:gcs_holdings": [
+      "環宇-KY",
+      "環宇",
+      "GCS",
+      "Global Communication Semiconductors"
     ]
   }
 }

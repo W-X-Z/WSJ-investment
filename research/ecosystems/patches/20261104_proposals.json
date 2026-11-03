@@ -1,0 +1,181 @@
+{
+ "prefix": "p1104",
+ "nodes": [
+  {
+   "id": "company:krx_003670",
+   "kind": "company",
+   "label": "포스코퓨처엠 (KRX 003670)",
+   "names": [
+    "포스코퓨처엠",
+    "POSCO Future M"
+   ],
+   "status": "candidate",
+   "ticker": "003670",
+   "exchange": "KRX",
+   "ecosystem": "power",
+   "size_band": "unknown",
+   "first_seen": "2026-11-02",
+   "first_evidence": {
+    "url": "https://www.electimes.com/news/articleView.html?idxno=374119",
+    "date": "2026-10-29",
+    "layer": "press"
+   }
+  },
+  {
+   "id": "company:twse_1514",
+   "kind": "company",
+   "label": "亞力 Allis Electric (TWSE 1514)",
+   "names": [
+    "亞力",
+    "亞力電機",
+    "Allis Electric"
+   ],
+   "status": "candidate",
+   "ticker": "1514",
+   "exchange": "TWSE",
+   "ecosystem": "power",
+   "size_band": "unknown",
+   "first_seen": "2026-11-02",
+   "first_evidence": {
+    "url": "https://news.google.com/rss/articles/CBMie0FVX3lxTE9DOW9NSy1VaWMwWjY5R1RKUm9EWERWQlcyLVU3ellWemh5bUNFT185X2VhZ2JzYXZYdDIzRG1KSjBpbXRPd3E0bWNqS1luNzhkWXZyUDdHLUJIWmJLNGZvaE9kYmZKNk4wVHVtcUI2dUJjczhuc1VKbGxmSQ?oc=5",
+    "date": "2026-10-30",
+    "layer": "press"
+   }
+  },
+  {
+   "id": "company:peng",
+   "kind": "company",
+   "label": "Penguin Solutions (PENG)",
+   "names": [
+    "Penguin Solutions",
+    "SMART Modular",
+    "Penguin"
+   ],
+   "status": "candidate",
+   "ticker": "PENG",
+   "exchange": "Nasdaq",
+   "ecosystem": "hbm",
+   "size_band": "small",
+   "first_seen": "2026-11-03",
+   "first_evidence": {
+    "url": "https://www.sec.gov/Archives/edgar/data/0001616533/000161653326000046/pengq4-26form8xkxex991.htm",
+    "date": "2026-10-06",
+    "layer": "disclosure"
+   }
+  },
+  {
+   "id": "company:twse_1605",
+   "kind": "company",
+   "label": "華新麗華 Walsin Lihwa (TWSE 1605)",
+   "names": [
+    "華新麗華",
+    "Walsin Lihwa"
+   ],
+   "status": "candidate",
+   "ticker": "1605",
+   "exchange": "TWSE",
+   "ecosystem": "power",
+   "size_band": "unknown",
+   "first_seen": "2026-11-03",
+   "first_evidence": {
+    "url": "https://finance.technews.tw/2026/11/03/smr-mmr/",
+    "date": "2026-11-03",
+    "layer": "press"
+   }
+  },
+  {
+   "id": "company:ceva",
+   "kind": "company",
+   "label": "Ceva (Nasdaq CEVA)",
+   "names": [
+    "Ceva",
+    "세바"
+   ],
+   "status": "candidate",
+   "ticker": "CEVA",
+   "exchange": "Nasdaq",
+   "ecosystem": "hbm",
+   "size_band": "unknown",
+   "first_seen": "2026-11-03",
+   "first_evidence": {
+    "url": "https://www.digitimes.com/news/a20261103PD217/data-npu-ip-efficiency-nvidia.html",
+    "date": "2026-11-03",
+    "layer": "press"
+   }
+  },
+  {
+   "id": "company:nuvoton",
+   "kind": "company",
+   "label": "Nuvoton Technology 新唐科技 (TWSE 4919)",
+   "names": [
+    "Nuvoton Technology",
+    "Nuvoton",
+    "新唐",
+    "新唐科技"
+   ],
+   "status": "candidate",
+   "ticker": "4919",
+   "exchange": "TWSE",
+   "ecosystem": "hbm",
+   "size_band": "unknown",
+   "first_seen": "2026-11-03",
+   "first_evidence": {
+    "url": "https://money.udn.com/money/story/5607/9845355",
+    "date": "2026-10-30",
+    "layer": "press"
+   }
+  },
+  {
+   "id": "company:twse_2383",
+   "kind": "company",
+   "label": "台光電 Elite Material (TWSE 2383)",
+   "names": [
+    "台光電",
+    "台光電子",
+    "Elite Material",
+    "EMC"
+   ],
+   "status": "candidate",
+   "ticker": "2383",
+   "exchange": "TWSE",
+   "ecosystem": "hbm",
+   "size_band": "unknown",
+   "first_seen": "2026-11-03",
+   "first_evidence": {
+    "url": "https://news.google.com/rss/articles/CBMia0FVX3lxTFA4NnBWSnZJX1lwbWJRRHJVeElvUGZqSjZjeElBdmZHZmxBdXNGeC1WYUlEckFRWmtRTlFlak5YMlp0VkFSRXdqZDZKbEY4dmhIX1dLRlVwNGNOUlJicEJfXzhFcFNLY09faENF?oc=5",
+    "date": "2026-11-02",
+    "layer": "press"
+   }
+  },
+  {
+   "id": "company:kosdaq_060370",
+   "kind": "company",
+   "label": "LS마린솔루션 (KOSDAQ 060370)",
+   "names": [
+    "LS마린솔루션",
+    "LS Marine Solution"
+   ],
+   "status": "candidate",
+   "ticker": "060370",
+   "exchange": "KOSDAQ",
+   "ecosystem": "power",
+   "size_band": "unknown",
+   "first_seen": "2026-11-03",
+   "first_evidence": {
+    "url": "https://www.kipost.net/news/articleView.html?idxno=342912",
+    "date": "2026-11-02",
+    "layer": "press"
+   }
+  }
+ ],
+ "proposal_ids": [
+  9,
+  24,
+  33,
+  34,
+  36,
+  38,
+  39,
+  43
+ ]
+}
