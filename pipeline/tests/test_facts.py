@@ -41,3 +41,26 @@ def test_adr_listings_count_ads_not_ordinary_shares():
     rows = {r["company_id"]: r for r in F.fetch_us(_Http(), [tsm, mu], nodes)}
     assert rows["company:tsmc"]["shares_outstanding"] == round(25_932_524_521 / 5) and rows["company:tsmc"]["source"] == "sec_companyfacts_ads"
     assert rows["company:mu"]["shares_outstanding"] == 25_932_524_521 and rows["company:mu"]["source"] == "sec_companyfacts"
+
+
+def test_us_candidate_without_cik_is_resolved_by_ticker():
+    """후보 노드는 티커·거래소만 있다 — SEC 티커 목록으로 CIK 를 이어 시총·규모를 채운다 (ADR-0033 뒤 frontier 후보도 같은 길)."""
+    from wsj.ecosystems.prices import Listing
+
+    class _Http:
+        def __init__(self):
+            self.urls = []
+
+        def get_json(self, url, headers=None):
+            self.urls.append(url)
+            if url == F.SEC_TICKERS_URL:
+                return {"0": {"cik_str": 1051627, "ticker": "AXTI", "title": "AXT INC"}, "1": {"cik_str": 1067983, "ticker": "BRK-B", "title": "BERKSHIRE"}}
+            return _f(dei={"EntityCommonStockSharesOutstanding": _tag(("2026-09-30", 65_000_000))})
+
+    http = _Http()
+    axti = Listing("company:axt", "Nasdaq", "AXTI", "AXTI", "us")
+    nobody = Listing("company:nobody", "Nasdaq", "ZZZZ", "ZZZZ", "us")
+    rows = F.fetch_us(http, [axti, nobody], {"company:axt": {"listing": {"ticker": "AXTI", "exchange": "Nasdaq"}}, "company:nobody": {}})
+    assert [r["company_id"] for r in rows] == ["company:axt"] and rows[0]["shares_outstanding"] == 65_000_000
+    assert http.urls.count(F.SEC_TICKERS_URL) == 1 and any("CIK0001051627" in u for u in http.urls)
+    assert F.sec_cik_by_ticker(http)["BRK-B"] == 1067983

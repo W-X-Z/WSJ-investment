@@ -77,10 +77,34 @@ def sec_shares(facts: dict[str, Any]) -> tuple[float, str] | None:
     return (best[2], best[0]) if best else None
 
 
-def fetch_us(http: HttpClient, xs: list[Listing], graph_nodes: dict[str, Any]) -> list[dict[str, Any]]:
+SEC_TICKERS_URL = "https://www.sec.gov/files/company_tickers.json"
+
+
+def sec_cik_by_ticker(http: HttpClient) -> dict[str, int]:
+    """SEC 전체 상장 티커 → CIK. 후보 노드(candidates.py 가 올린 그래프 밖 상장사)는 티커·거래소만 있고 CIK 가 없어서 여기서 잇는다."""
+    data = http.get_json(SEC_TICKERS_URL)
+    rows = data.values() if isinstance(data, dict) else data
+    out: dict[str, int] = {}
+    for r in rows:
+        tk, cik = str(r.get("ticker") or "").upper().replace(".", "-"), r.get("cik_str")
+        if tk and cik:
+            out[tk] = int(cik)
+    return out
+
+
+def fetch_us(http: HttpClient, xs: list[Listing], graph_nodes: dict[str, Any], cik_lookup: dict[str, int] | None = None) -> list[dict[str, Any]]:
     out = []
+    lookup = cik_lookup
     for x in xs:
         cik = ((graph_nodes.get(x.company_id) or {}).get("listing") or {}).get("cik")
+        if not cik:
+            if lookup is None:
+                try:
+                    lookup = sec_cik_by_ticker(http)          # 필요할 때 한 번만
+                except Exception as exc:  # noqa: BLE001
+                    log.warning("sec company_tickers: %s", str(exc)[:100])
+                    lookup = {}
+            cik = lookup.get(x.ticker.upper().replace(".", "-"))
         if not cik:
             continue
         try:
