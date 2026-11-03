@@ -19,6 +19,7 @@ Claude 예약작업 "WSJ 시스템 개선 (주간)"이 매주 일요일 10:23 KS
   축의 멤버(제품·사업부·최종시장)가 그 관계의 부품·제품과 같은 것을 가리키면 `exposure_pct`(숫자 그대로)·`exposure_year`(회계연도)·`exposure_source`(보고서 url + 축=멤버). 멤버가 그 부품을 포함하는 더 넓은 범주(예: 최종시장 '데이터센터')뿐이면 숫자는 넣지 않고 범주 `exposure`(core ≥ 50%·major 20~50%·minor < 20% — 넓은 범주의 숫자가 상한)와 note 에 근거. 대응이 안 되면 비워 둔다. 해외 상장사는 신호가 온 회사만 조사하며 채운다(일괄 API 는 쓰지 않는다, 사용자 11/02).
 - 수집 이상 (`select * from ops.v_collection_alerts;`) 이 한 주 내내 같은 줄을 내면 그 원인을 이번 주 고칠 것 후보로 본다.
 - 수집기가 올린 그래프 제안(`by = 'collect'`: 그래프 밖 상장사 후보·사전 밖 식별자)이 해석 작업에서 처리되지 않고 묵었으면 여기서 정리한다 — 기존 노드의 codes·별칭으로 붙이거나, 후보 노드로 넣거나, rejected.
+- 그래프 밖 산업(ADR-0033): `eco:frontier` 에 쌓인 후보 노드·회사와 `scope = frontier` 단서(`select count(*), count(*) filter (where extra->>'scope' = 'frontier') from ideas.clues where relevant and seen_at > now() - interval '7 days';`)를 본다. 한 산업의 부품·회사·간선이 뭉쳐 공급망 모양이 보이면 그때 생태계 노드(`eco:<이름>`)를 만들어 옮기고, 그 산업의 원본 출처(학회·표준·특허)를 `registry.json` 에 붙인다. 미리 만들지 않는다 — 증거가 정한다.
 
 ## 쓸 수 있는 도구와 자료
 - 점검: `.venv/bin/python -m wsj.ecosystems.health --out ../.improve/health.json --md ../.improve/health.md`

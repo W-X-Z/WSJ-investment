@@ -157,6 +157,11 @@
       "label": "AI 데이터센터 고밀도 전력"
     },
     {
+      "id": "eco:frontier",
+      "kind": "ecosystem",
+      "label": "그래프 밖 — 아직 생태계로 자라지 않은 것"
+    },
+    {
       "id": "req:800v",
       "kind": "requirement",
       "label": "차세대 800VDC 배전 아키텍처",

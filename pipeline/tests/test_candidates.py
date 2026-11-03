@@ -78,6 +78,20 @@ def test_outside_companies_threshold_ecosystem_and_skip():
     assert K.outside_companies(bad, g, set(), "2026-11-02") == []                             # 대만 티커 꼴이 아니면
 
 
+def test_frontier_clues_propose_without_graph_anchor():
+    """그래프 밖 산업(scope=frontier)으로 분류된 단서는 걸린 노드가 없어도 후보가 된다 — eco:frontier 로."""
+    g = load_graph()
+    co = {"company": None, "name": "Zyxtron Actuators", "ticker": "ZYXT", "exchange": "Nasdaq"}
+    rows = [_row("f1", "press", [co]) | {"extra": {"layer": "press", "scope": "frontier"}},
+            _row("f2", "press", [co], date="2026-10-30") | {"extra": {"layer": "press", "scope": "frontier"}}]
+    got = K.outside_companies(rows, g, set(), "2026-11-02")
+    assert got and got[0]["payload"]["ecosystem"] == "frontier" and got[0]["payload"]["status"] == "candidate"
+    assert "그래프 밖 산업" in got[0]["reason"]
+    plain = [_row("p1", "press", [co]), _row("p2", "press", [co], date="2026-10-30")]
+    assert K.outside_companies(plain, g, set(), "2026-11-02") == []                     # 표시도 앵커도 없으면 그대로 올리지 않는다
+    assert any(n["id"] == "eco:frontier" for n in g["nodes"])
+
+
 def test_cjk_name_gets_exchange_ticker_id():
     g = load_graph()
     co = {"company": None, "name": "測試電機", "ticker": "9999", "exchange": "TWSE"}

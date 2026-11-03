@@ -24,6 +24,7 @@
 - 수집은 코드(Actions, secret 키), 판단은 예약 작업(Supabase MCP + publishable 키 + 저장소 문서)이 맡는다 (ADR-0024·0028).
 - 작업 문서는 목적·방향·꼭 지킬 것·연결 방법만 정한다 (ADR-0029): `docs/agents/daily-ideas.md`, `docs/agents/daily/*.md`, `docs/agents/weekly-improvement.md`.
 - 판단은 그 자리에서 낸다. `ideas.threads` 는 판단과 근거를 다음 세션이 이어받는 기억이다 (ADR-0030·0032).
+- 산업은 정하지 않는다. 분류기는 "기술 변화 → 부품·소재의 새 병목" 메커니즘으로 남기고 `scope`(core·frontier)를 적는다. 그래프 밖 산업의 후보는 `eco:frontier` 에 쌓이고, 뭉치면 주간 개선이 생태계로 승격한다 (ADR-0033).
 
 ## 3. 온톨로지
 - 원본은 Git: `research/ecosystems/seed_graph.json`(노드·관계·근거), `ontology.json`(닫힌 어휘 v0.5), `node_aliases.json`·`native_names.json`, 패치 `research/ecosystems/patches/`.
