@@ -36,6 +36,7 @@ from typing import Any
 from urllib.parse import quote_plus
 from xml.etree import ElementTree as ET
 
+from wsj.ecosystems.clues import POLICY_CAUSE
 from wsj.ecosystems.ontology import RESEARCH_DIR, clean_name, load_graph
 
 log = logging.getLogger("wsj.ecosystems.company_feed")
@@ -600,7 +601,7 @@ def news_events(http, cos: list[dict[str, Any]], days: int, focus: set[str], per
                 if not title or key in seen or not mentions(title, c):
                     continue
                 up = NEWS_UP.search(title)
-                if HOLDINGS_NOISE.search(title) or (PRICE_CHATTER.search(title) and not up):
+                if HOLDINGS_NOISE.search(title) or (PRICE_CHATTER.search(title) and not up and not POLICY_CAUSE.search(title)):
                     continue
                 if publisher.strip().lower() in NOISE_PUBLISHERS:  # 시세 집계 사이트 (ADR-0028: 시세 기사는 버린다)
                     continue

@@ -12,8 +12,9 @@
 
 ## 쓸 수 있는 재료
 필요한 것을 골라 쓴다. 여기 없는 원본(federalregister.gov, JEDEC·OCP·OIF, arXiv, 회사 IR, 고객·경쟁사 발표)을 직접 찾아도 된다.
-- 단서와 본문: `select c.url, c.title, c.source_name, c.extra->>'layer' as layer, c.extra->>'scope' as scope, c.note, c.companies, c.nodes, c.published_at, left(t.body, 3000) as body from ideas.clues c left join ideas.clue_texts t on t.url = c.url where c.relevant and c.seen_at > now() - interval '30 hours' order by (c.extra->>'layer' = 'raw') desc, c.seen_at desc;`
+- 단서와 본문: `select c.url, c.title, c.source_name, c.extra->>'layer' as layer, c.extra->>'scope' as scope, c.extra->'themes' as themes, c.note, c.companies, c.nodes, c.published_at, left(t.body, 3000) as body from ideas.clues c left join ideas.clue_texts t on t.url = c.url where c.relevant and c.seen_at > now() - interval '30 hours' order by (c.extra->>'layer' = 'raw') desc, c.seen_at desc;`
   층(layer): raw(표준·규칙·학회·논문·정책·릴리스 노트 — 원본) · press(업계지) · newsroom · company(기업 이름으로 모은 소식) · disclosure · issue.
+  themes: 분류기가 붙인 정책 테마(writing.md `brief.exposures` 와 같은 키). 기업 이름이 없어도 활성 아이디어의 바깥 조건을 바꾸는 단서다 — 아이디어 대상만이 아니라 기존 아이디어의 리스크로도 읽는다.
   범위(scope): core(AI 데이터센터 공급망과 그것에 닿는 수요) · frontier(그래프 밖 산업 — 로봇·피지컬 AI·우주·전력기기 등). frontier 도 같은 기준으로 판단한다 — 그래프에 자리가 없다는 것은 내릴 이유가 아니다 (`daily-ideas.md` 방향 '산업을 정하지 않는다').
   원본 페이지(표준 위원회 문서 목록·규칙 개정·회의 자료·사양 페이지)는 바뀐 것만 들어온다 — 새 문서·새 항목은 그 링크가, 본문 변화는 '… 페이지 변경' 단서(주소 끝 `#changed-…`, 본문 = 새로 생긴 줄)가 된다.
 - 열린 스레드: `daily-ideas.md` §C
@@ -39,7 +40,7 @@
  "companies": [{"company": "company:isu_petasys", "name": "이수페타시스", "ticker": "007660", "exchange": "KRX", "role": "primary"}],
  "evidence": [{"title": "…", "url": "https://…", "date": "YYYY-MM-DD", "publisher": "…"}],
  "history": [{"date": "YYYY-MM-DD", "kind": "earnings|deal|filing|flow|external|ours", "title": "일어난 일 한 줄", "body": "자세히 (선택)", "url": "https://… (선택)"}],   // writing.md 히스토리 — 차트의 점
- "brief": {"idea": "…", "outlook": "…", "risk": "…", "chips": {"idea": [{"label": "…", "src": "…", "url": "…"}], "outlook": […], "risk": […]}},   // writing.md 상세 화면 — 요약 3칸(투자 아이디어·주가 전망·리스크) + 근거 칩
+ "brief": {"idea": "…", "outlook": "…", "risk": "…", "chips": {"idea": [{"label": "…", "src": "…", "url": "…"}], "outlook": […], "risk": […]}, "exposures": ["…"]},   // writing.md 상세 화면 — 요약 3칸(투자 아이디어·주가 전망·리스크) + 근거 칩
  "nodes": ["product:google_tpu_system", "component:mlb_pcb"],
  "clue_refs": [{"title": "…", "url": "https://…", "date": "YYYY-MM-DD"}],
  "status": "draft", "model": "claude-…"}
