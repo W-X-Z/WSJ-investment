@@ -36,7 +36,7 @@ CURRENCY = {"us": "USD", "twse": "TWD", "tpex": "TWD", "kr": "KRW", "cn": "CNY",
 FX_SERIES = {"TWD": ("DEXTAUS", True), "KRW": ("DEXKOUS", True), "CNY": ("DEXCHUS", True), "JPY": ("DEXJPUS", True), "HKD": ("DEXHKUS", True),
              "EUR": ("DEXUSEU", False), "GBP": ("DEXUSUK", False), "INR": ("DEXINUS", True), "CAD": ("DEXCAUS", True)}
 FRED_UA = "WSJ-investment research (github.com/W-X-Z/WSJ-investment)"
-US_REFRESH_DAYS = 30
+US_REFRESH_DAYS = 10          # 다중 클래스 회사의 묵은 값(VICR 2015년 주식수)이 한 달씩 남지 않게
 
 
 def _num(v: Any) -> float | None:
@@ -92,7 +92,41 @@ def sec_cik_by_ticker(http: HttpClient) -> dict[str, int]:
     return out
 
 
-def fetch_us(http: HttpClient, xs: list[Listing], graph_nodes: dict[str, Any], cik_lookup: dict[str, int] | None = None) -> list[dict[str, Any]]:
+COVER_RE = re.compile(r"<dei:EntityCommonStockSharesOutstanding\b([^>]*)>\s*([\d,]+)\s*<")
+CTX_RE = re.compile(r'contextRef="([^"]+)"')
+
+
+def cover_shares(text: str) -> float | None:
+    """10-Q/10-K 인라인 XBRL 인스턴스의 표지 주식수 — 클래스별 사실을 합산한다 (Forgent: Class A 274.5M + Class B 29.9M).
+    companyfacts API 는 차원(클래스)이 붙은 사실을 빼고 주기 때문에 다중 클래스 회사는 거기서 한 클래스만 보이거나(FPS) 2015년 값이 남는다(VICR)."""
+    by_ctx: dict[str, float] = {}
+    for attrs, val in COVER_RE.findall(text):
+        m = CTX_RE.search(attrs)
+        by_ctx[m.group(1) if m else f"_{len(by_ctx)}"] = float(val.replace(",", ""))
+    total = sum(by_ctx.values())
+    return total if total >= MIN_SHARES else None
+
+
+def sec_cover(http: HttpClient, cik: int) -> tuple[float, str] | None:
+    """가장 최근 10-Q/10-K 의 표지 주식수 (주식수, 보고 기준일). 인스턴스 파일이 없으면 None → companyfacts 로."""
+    sub = http.get_json(f"https://data.sec.gov/submissions/CIK{int(cik):010d}.json")
+    rec = (sub.get("filings") or {}).get("recent") or {}
+    forms, accs, docs, dates = rec.get("form") or [], rec.get("accessionNumber") or [], rec.get("primaryDocument") or [], rec.get("reportDate") or []
+    for i, form in enumerate(forms):
+        if form not in ("10-Q", "10-K") or i >= len(accs) or not docs[i].endswith(".htm"):
+            continue
+        url = f"https://www.sec.gov/Archives/edgar/data/{int(cik)}/{accs[i].replace('-', '')}/{docs[i][:-4]}_htm.xml"
+        try:
+            n = cover_shares(http.get_text(url))
+        except Exception as exc:  # noqa: BLE001 - 인스턴스 이름이 관행과 다르면 companyfacts 로
+            log.info("sec cover %s: %s", cik, str(exc)[:80])
+            return None
+        return (n, dates[i] if i < len(dates) else "") if n else None
+    return None
+
+
+def fetch_us(http: HttpClient, xs: list[Listing], graph_nodes: dict[str, Any], cik_lookup: dict[str, int] | None = None,
+             use_cover: bool = True) -> list[dict[str, Any]]:
     out = []
     lookup = cik_lookup
     for x in xs:
@@ -107,15 +141,23 @@ def fetch_us(http: HttpClient, xs: list[Listing], graph_nodes: dict[str, Any], c
             cik = lookup.get(x.ticker.upper().replace(".", "-"))
         if not cik:
             continue
-        try:
-            facts = http.get_json(f"https://data.sec.gov/api/xbrl/companyfacts/CIK{int(cik):010d}.json")
-            r = sec_shares(facts)
-        except Exception as exc:  # noqa: BLE001
-            log.warning("sec %s: %s", x.key, str(exc)[:100])
-            continue
+        r, src = None, "sec_cover"
+        if use_cover:
+            try:
+                r = sec_cover(http, cik)                       # 표지 주식수가 우선 — 클래스를 전부 센다
+            except Exception as exc:  # noqa: BLE001
+                log.info("sec cover %s: %s", x.key, str(exc)[:80])
+        if not r:
+            src = "sec_companyfacts"
+            try:
+                facts = http.get_json(f"https://data.sec.gov/api/xbrl/companyfacts/CIK{int(cik):010d}.json")
+                r = sec_shares(facts)
+            except Exception as exc:  # noqa: BLE001
+                log.warning("sec %s: %s", x.key, str(exc)[:100])
+                continue
         if r:
             per_ads = SHARES_PER_ADS.get(x.ticker.upper())
-            out.append(_row(x, r[0] / per_ads, r[1], "sec_companyfacts_ads") if per_ads else _row(x, r[0], r[1], "sec_companyfacts"))
+            out.append(_row(x, r[0] / per_ads, r[1], src + "_ads") if per_ads else _row(x, r[0], r[1], src))
     return out
 
 

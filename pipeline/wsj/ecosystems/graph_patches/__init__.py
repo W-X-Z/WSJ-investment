@@ -102,6 +102,7 @@ def apply(nodes: list[Node], edges: list[Edge], prefix: str, native: dict[str, s
                 row.update(e.attrs)
                 urls = {ev.get("url") for ev in row.get("evidence") or []}
                 row["evidence"] = (row.get("evidence") or []) + [ev for ev in e.evidence_rows() if ev["url"] not in urls]
+                row["confidence"] = edge_confidence(row, onto)   # 근거가 늘면 신뢰도도 — 웹 번들(export_web)과 같은 값이어야 CI 두 검사가 일치한다
                 annotated += changed
             continue
         row: dict[str, Any] = {"id": f"{prefix}-{seq:03d}", "from": e.frm, "to": e.to, "relation": e.relation, "evidence_tier": e.tier,

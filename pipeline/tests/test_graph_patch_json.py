@@ -84,3 +84,22 @@ def test_recall_shows_exposure_tags():
             e.update({"exposure": "core", "position": "leader"})
     out = R.recall(g, ["company:isu_petasys"], [], [])
     assert "매출 핵심·선두" in out
+
+def test_annotation_recomputes_confidence(tmp_path, monkeypatch):
+    """근거를 더하면 신뢰도도 다시 센다 — 아니면 seed_graph 와 export_web 번들이 어긋나 CI 두 검사가 갈린다 (2026-11-04)."""
+    import json
+    import shutil
+
+    from wsj.ecosystems import graph_patches
+    from wsj.ecosystems.ontology import GRAPH_PATH, edge_confidence, load_ontology
+
+    g = tmp_path / "graph.json"
+    shutil.copy(GRAPH_PATH, g)
+    monkeypatch.setattr(graph_patches, "GRAPH_PATH", g)
+    p = tmp_path / "a.json"
+    p.write_text(json.dumps(_annotate({"exposure": "core", "position": "leader"})), encoding="utf-8")
+    assert from_json.apply_file(p) == 0
+    row = next(e for e in json.loads(g.read_text(encoding="utf-8"))["edges"]
+               if (e["from"], e["relation"], e["to"]) == ("component:mlb_pcb", "offered_by", "company:isu_petasys"))
+    assert any(ev["url"] == "https://example.com/exposure" for ev in row["evidence"])
+    assert row["confidence"] == edge_confidence(row, load_ontology())
