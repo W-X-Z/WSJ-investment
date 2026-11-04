@@ -11557,6 +11557,166 @@
       "in_universe": false,
       "status": "candidate",
       "first_seen": "2026-11-03"
+    },
+    {
+      "id": "company:twse_8058",
+      "kind": "company",
+      "label": "耐特科技材料 Nite (TWSE 8058, 비SEC)",
+      "ecosystem": "hbm",
+      "role": "supplier",
+      "listing": {
+        "ticker": "8058",
+        "exchange": "TWSE",
+        "cik": null,
+        "filer_type": "non_sec_listed"
+      },
+      "size_band": "unknown",
+      "in_universe": false,
+      "status": "candidate",
+      "first_seen": "2026-11-02",
+      "first_evidence": {
+        "url": "https://www.bnext.com.tw/article/92837/nite-8058-ipo-semiconductor-bbu",
+        "date": "2026-10-29",
+        "layer": "press"
+      }
+    },
+    {
+      "id": "company:krx_001440",
+      "kind": "company",
+      "label": "대한전선 (KRX 001440, 비SEC)",
+      "ecosystem": "power",
+      "role": "supplier",
+      "listing": {
+        "ticker": "001440",
+        "exchange": "KRX",
+        "cik": null,
+        "filer_type": "non_sec_listed"
+      },
+      "size_band": "unknown",
+      "in_universe": false,
+      "status": "candidate",
+      "first_seen": "2026-11-04",
+      "first_evidence": {
+        "url": "https://www.thelec.kr/news/articleView.html?idxno=64544",
+        "date": "2026-10-29",
+        "layer": "press"
+      }
+    },
+    {
+      "id": "company:advantech",
+      "kind": "company",
+      "label": "Advantech 研華 (TWSE 2395, 비SEC)",
+      "ecosystem": "frontier",
+      "role": "supplier",
+      "listing": {
+        "ticker": "2395",
+        "exchange": "TWSE",
+        "cik": null,
+        "filer_type": "non_sec_listed"
+      },
+      "size_band": "unknown",
+      "in_universe": false,
+      "status": "candidate",
+      "first_seen": "2026-11-04",
+      "first_evidence": {
+        "url": "https://www.moneydj.com/kmdj/news/newsviewer.aspx?a=6cf33a6c-d0ad-4c06-aee5-1be8555b735f&c=MB07",
+        "date": "2026-11-04",
+        "layer": "press"
+      }
+    },
+    {
+      "id": "company:rainbow_robotics",
+      "kind": "company",
+      "label": "Rainbow Robotics 레인보우로보틱스 (KOSDAQ 277810, 비SEC)",
+      "ecosystem": "frontier",
+      "role": "supplier",
+      "listing": {
+        "ticker": "277810",
+        "exchange": "KOSDAQ",
+        "cik": null,
+        "filer_type": "non_sec_listed"
+      },
+      "size_band": "unknown",
+      "in_universe": false,
+      "status": "candidate",
+      "first_seen": "2026-11-04",
+      "first_evidence": {
+        "url": "https://www.theguru.co.kr/news/article.html?no=109209",
+        "date": "2026-11-04",
+        "layer": "press"
+      }
+    },
+    {
+      "id": "company:kosdaq_036930",
+      "kind": "company",
+      "label": "주성엔지니어링 (KOSDAQ 036930, 비SEC)",
+      "ecosystem": "hbm",
+      "role": "supplier",
+      "listing": {
+        "ticker": "036930",
+        "exchange": "KOSDAQ",
+        "cik": null,
+        "filer_type": "non_sec_listed"
+      },
+      "size_band": "unknown",
+      "in_universe": false,
+      "status": "candidate",
+      "first_seen": "2026-11-04",
+      "first_evidence": {
+        "url": "https://www.inews24.com/view/2022644",
+        "date": "2026-11-04",
+        "layer": "press"
+      }
+    },
+    {
+      "id": "company:twse_2344",
+      "kind": "company",
+      "label": "Winbond 華邦電 (TWSE 2344, 비SEC)",
+      "ecosystem": "hbm",
+      "role": "supplier",
+      "listing": {
+        "ticker": "2344",
+        "exchange": "TWSE",
+        "cik": null,
+        "filer_type": "non_sec_listed"
+      },
+      "size_band": "unknown",
+      "in_universe": false,
+      "status": "candidate",
+      "first_seen": "2026-11-04",
+      "first_evidence": {
+        "url": "https://money.udn.com/money/story/5607/9845360",
+        "date": "2026-10-30",
+        "layer": "press"
+      }
+    },
+    {
+      "id": "company:american_electric_power",
+      "kind": "company",
+      "label": "American Electric Power (AEP)",
+      "ecosystem": "power",
+      "role": "supplier",
+      "listing": {
+        "ticker": "AEP",
+        "exchange": "Nasdaq",
+        "cik": null,
+        "filer_type": "non_sec_listed"
+      },
+      "size_band": "unknown",
+      "in_universe": false,
+      "status": "candidate",
+      "first_seen": "2026-11-04",
+      "first_evidence": {
+        "url": "https://www.utilitydive.com/news/aep-transmission-data-center-earnings/873189/",
+        "date": "2026-10-29",
+        "layer": "press"
+      }
+    },
+    {
+      "id": "component:gas_delivery_subsystem",
+      "kind": "component",
+      "label": "반도체 장비용 가스·화학물 공급 서브시스템 (가스 패널·용접 부품)",
+      "ecosystem": "hbm"
     }
   ],
   "edges": [
@@ -43819,6 +43979,84 @@
       ],
       "position": "entrant",
       "confidence": 0.6
+    },
+    {
+      "id": "i1105-001",
+      "from": "component:gas_delivery_subsystem",
+      "to": "company:ichr",
+      "relation": "offered_by",
+      "evidence_tier": "official_issuer",
+      "polarity": "positive",
+      "evidence": [
+        {
+          "url": "https://www.sec.gov/Archives/edgar/data/1652535/000165253526000012/ichr-20251226.htm",
+          "source_type": "official_issuer",
+          "published_at": "2026-02-24",
+          "excerpt": "In 2025, we derived over 90% of our sales from the semiconductor capital equipment industry"
+        },
+        {
+          "url": "https://www.fool.com/earnings/call-transcripts/2026/11/02/ichor-ichr-q3-2026-earnings-call-transcript/",
+          "source_type": "official_issuer",
+          "published_at": "2026-11-02",
+          "excerpt": "We remain on track for about 35% proprietary content exiting the fourth quarter … Both machining and welding in Malaysia are qualified by both of our largest customers"
+        }
+      ],
+      "note": "2025년 매출의 90% 이상이 반도체 장비 산업. 설치 생산능력 연 $20억(클린룸·가공 투자 시 $30억), 자체 부품 비중 4Q26 말 35% 목표·단기 40% (3Q26 콜)",
+      "exposure": "core",
+      "position": "leader",
+      "confidence": 0.825
+    },
+    {
+      "id": "i1105-002",
+      "from": "company:ichr",
+      "to": "company:lrcx",
+      "relation": "supplied_to",
+      "evidence_tier": "official_issuer",
+      "polarity": "positive",
+      "evidence": [
+        {
+          "url": "https://www.sec.gov/Archives/edgar/data/1652535/000165253526000012/ichr-20251226.htm",
+          "source_type": "official_issuer",
+          "published_at": "2026-02-24",
+          "excerpt": "For 2025, two customers with individual sales over 10%, Lam Research and Applied Materials, accounted for a combined 76% of total sales"
+        },
+        {
+          "url": "https://bullfincher.io/companies/lam-research-corporation/earnings-call/fy2027-q1",
+          "source_type": "official_issuer",
+          "published_at": "2026-10-21",
+          "excerpt": "more than $200 billion of spending … clean room space availability and supply chain constraints for certain components"
+        }
+      ],
+      "note": "2025년 매출의 37% (10-K). Lam 10/21 FY27 1Q 콜: 2027 WFE $2,000억 초과(DRAM 주도), 12월 분기 가이던스 $86억은 '특정 부품 공급 제약'으로 일부 3월 분기 이월",
+      "exposure": "core",
+      "about": "component:gas_delivery_subsystem",
+      "exposure_pct": 37,
+      "exposure_year": 2025,
+      "exposure_source": "https://www.sec.gov/Archives/edgar/data/1652535/000165253526000012/ichr-20251226.htm",
+      "confidence": 0.825
+    },
+    {
+      "id": "i1105-003",
+      "from": "company:ichr",
+      "to": "company:amat",
+      "relation": "supplied_to",
+      "evidence_tier": "official_issuer",
+      "polarity": "positive",
+      "evidence": [
+        {
+          "url": "https://www.sec.gov/Archives/edgar/data/1652535/000165253526000012/ichr-20251226.htm",
+          "source_type": "official_issuer",
+          "published_at": "2026-02-24",
+          "excerpt": "For 2025, two customers with individual sales over 10%, Lam Research and Applied Materials, accounted for a combined 76% of total sales"
+        }
+      ],
+      "note": "2025년 매출의 39% (10-K)",
+      "exposure": "core",
+      "about": "component:gas_delivery_subsystem",
+      "exposure_pct": 39,
+      "exposure_year": 2025,
+      "exposure_source": "https://www.sec.gov/Archives/edgar/data/1652535/000165253526000012/ichr-20251226.htm",
+      "confidence": 0.8
     }
   ],
   "events": [
