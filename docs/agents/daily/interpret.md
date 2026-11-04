@@ -21,7 +21,7 @@
 - 기업 소식·이슈: `public.v_company_events`, `public.v_supply_chain_issues` (`v_weak_signals` 는 옛 작업이 쓰던 것으로 10-29 뒤 갱신이 없다 — 사전 밖 용어는 그래프 제안 term 으로 들어온다)
 - 논문·특허 흐름: `public.v_tech_rising`, `public.v_tech_orgs`, `public.v_tech_docs`
 - 가격: `select * from public.v_price_context where ticker = '…';` (미국 `RMBS`, 한국 `KRX:007660`·`KOSDAQ:…`)
-- 입구는 둘이다 — (a) 단서 우선: 오늘 원본 단서 → 메커니즘 → 회사. (b) 가격 우선: 낙폭·병목·노출도에서 출발해 "시장이 틀렸나"를 묻는다. 주는 (a)이고, (b)는 시장의 믿음과 우리 근거를 견주는 데 쓴다. 초안·스레드에 어느 입구인지 적는다 (11-03 대화: (b)만으로는 목적의 '시장보다 먼저'가 되지 않았다).
+- 입구는 둘이다 — (a) 단서 우선: 오늘 원본 단서 → 메커니즘 → 회사. (b) 가격 우선: 낙폭·병목·노출도에서 출발해 "시장이 틀렸나"를 묻는다. 주는 (a)이고, (b)는 최근 주가 이슈와 우리 근거를 견주는 데 쓴다. 초안·스레드에 어느 입구인지 적는다 (11-03 대화: (b)만으로는 목적의 '시장보다 먼저'가 되지 않았다).
   (b) 의 재료 한 줄: `select n.id, n.ecosystem, round(cf.market_cap_usd/1e6) mcap, p.r3m, p.r12m, p.from_high, (select string_agg(distinct e.src, ', ') from core.graph_edges e where e.dst = n.id and e.relation = 'offered_by') sells from core.graph_nodes n join public.v_company_facts cf on cf.company_id = n.id left join public.v_price_context p on p.ticker = n.ticker where n.kind = 'company' and n.exchange in ('NYSE','Nasdaq','NYSE American') and cf.market_cap_usd between 1e8 and 1.5e10 order by p.from_high asc nulls last limit 40;` — 여기에 `ideas.exposure_facts` 의 매출 구성을 겹친다.
 - 지금 아이디어와 내린 아이디어: `select opportunity_key, title, stars, companies, nodes, status, status_note, updated_at from ideas.opportunities order by updated_at desc limit 50;`
 - 그래프 한 장 보기: `cd pipeline && .venv/bin/python -m wsj.ecosystems.recall --company company:… --node <id> --name "<기업명>" --text "<단서 제목>"` — 그래프 자리, 같이 파는 회사, 관련 패턴 카드, 지난 단서·아이디어, 가격, 논문·특허가 나온다. 그래프 파일은 `research/ecosystems/seed_graph.json`·`node_aliases.json`.
