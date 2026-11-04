@@ -2,7 +2,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { CompanyLine, Prose, Stars5 } from "@/components/opps/Opps";
 import { IdeaTimeline } from "@/components/opps/IdeaTimeline";
-import { loadOpportunities, loadOpportunity, loadPrices, marketKo, primaryOf, chipsOf, relatedTo, touchedAt, type OppChip, type OppEvidence, type OppFact, type PricePoint } from "@/lib/opportunities";
+import { loadOpportunities, loadOpportunity, loadPrices, marketKo, primaryOf, chipsOf, relatedTo, touchedAt, type OppChip, type OppEvidence } from "@/lib/opportunities";
 
 export const dynamic = "force-dynamic";
 
@@ -42,17 +42,7 @@ function splitTitle(t: string): [string, string | null] {
   return i > 0 ? [t.slice(0, i), t.slice(i + 3)] : [t, null];
 }
 
-function priceFacts(px: PricePoint[]): OppFact[] {
-  if (px.length < 2) return [];
-  const last = px[px.length - 1], hi = px.reduce((a, b) => (b.c > a.c ? b : a));
-  const f = (v: number) => (v >= 1000 ? Math.round(v).toLocaleString("en-US") : v.toFixed(2));
-  return [
-    { label: "현재가", value: f(last.c), note: `${Number(last.d.slice(5, 7))}/${Number(last.d.slice(8, 10))} 종가` },
-    { label: "고점 대비", value: `${Math.round((last.c / hi.c - 1) * 100)}%`, note: `고점 ${f(hi.c)} (${Number(hi.d.slice(5, 7))}/${Number(hi.d.slice(8, 10))})` },
-  ];
-}
-
-/** 투자 아이디어 상세 v2 (사용자 2026-11-04): 판단 스트립 → 요약 3칸(투자 아이디어·주가 전망·리스크) → 차트·히스토리(연동) → 관련 자료. */
+/** 투자 아이디어 상세 v2 (사용자 2026-11-04): 요약 3칸(투자 아이디어·주가 전망·리스크, 근거는 접힘) → 차트·히스토리(연동) → 관련 자료. 숫자 스트립은 걷었다. */
 export default async function OpportunityPage({ params }: { params: Promise<{ key: string }> }) {
   const o = await loadOpportunity((await params).key);
   if (!o) notFound();
@@ -61,7 +51,6 @@ export default async function OpportunityPage({ params }: { params: Promise<{ ke
   const related = relatedTo(o, all);
   const others = o.companies.filter((c) => c.role !== "primary");
   const b = o.brief;
-  const facts = [...priceFacts(prices), ...(b.facts ?? [])];
   // 투자 아이디어 → 주가 전망 → 리스크 (사용자 2026-11-04). 옛 칸(change·position·price)만 있으면 합쳐 보인다.
   const join = (...xs: (string | undefined)[]) => xs.filter(Boolean).join("\n") || undefined;
   const ch = b.chips ?? {};
@@ -78,14 +67,10 @@ export default async function OpportunityPage({ params }: { params: Promise<{ ke
     <header className="od-head">
       <div className="od-top"><Stars5 n={o.stars} large/><CompanyLine o={o}/><span className="od-upd">갱신 {Number(touched.slice(5, 7))}/{Number(touched.slice(8, 10))}</span></div>
       <h1>{o.title}</h1>
-      {facts.length || b.next ? <dl className="od-strip">
-        {facts.map((f, i) => <div key={i} className={[f.label === "고점 대비" && f.value.startsWith("-") ? "dn" : "", i === facts.length - 1 && facts.length % 2 ? "od-wide" : ""].join(" ").trim() || undefined}><dt>{f.label}</dt><dd>{f.value}</dd>{f.note ? <span>{f.note}</span> : null}</div>)}
-        {b.next ? <div className="od-next"><dt>다음 확인</dt><dd>{b.next}</dd></div> : null}
-      </dl> : null}
     </header>
 
     {cells.length ? <section className="od-three" aria-label="투자 아이디어 요약">
-      {cells.map(([h, v, cs, c]) => <div key={h} className={`od-cell ${c}`}><h2>{h}</h2><Prose text={v}/>{cs.length ? <Chips items={cs}/> : null}</div>)}
+      {cells.map(([h, v, cs, c]) => <div key={h} className={`od-cell ${c}`}><h2>{h}</h2><Prose text={v}/>{cs.length ? <details className="od-acc"><summary>근거 {cs.length}</summary><Chips items={cs}/></details> : null}</div>)}
     </section> : o.interpretation ? <section className="od-three"><div className="od-cell od-idea"><h2>핵심</h2><Prose text={o.interpretation}/></div></section> : null}
 
     <div className="od-main">
