@@ -6,13 +6,27 @@ import { FormEvent, useEffect, useRef, useState } from "react";
 import { HelpButton } from "@/components/Help";
 import { Icon } from "@/components/Icon";
 
-// 제품 (ADR-0028): 탭 둘 — 투자 아이디어(★·제목·아이디어·해석·근거) · 단서(출처에서 들어온 작은 소식). 결론과 결과만 — 방법론 화면은 메뉴에 두지 않는다
-// (이전 화면들은 주소로는 그대로 열린다).
-const NAV = [
-  { href:"/", label:"투자 아이디어", icon:"lightbulb" },
-  { href:"/clues", label:"단서", icon:"rss" },
-] as const;
-const LABELS: Record<string,string> = { "/":"투자 아이디어", "/clues":"단서", "/search":"통합 검색" };
+// 제품 (ADR-0028): 결론과 결과만 메뉴에 둔다 — 방법론·운영 화면(시스템 점검, 유니버스 표, 후보 점수…)은 주소로만 연다.
+// 읽기: 투자 아이디어(★·제목·아이디어·해석·근거) · 단서(출처에서 들어온 작은 소식).
+// 탐색: 병목(어디가 조여지고 누가 길목에 있나) · 생태계(세 공급망의 기술 지도) · 공급망 지도(전체 그래프 캔버스). 2026-11-04 사용자 요청으로 진입 동선 추가.
+type NavItem = { href: string; label: string; icon: "lightbulb" | "rss" | "filter" | "layers" | "network"; match: (p: string) => boolean };
+const NAV: { title: string; items: NavItem[] }[] = [
+  { title: "읽기", items: [
+    { href: "/", label: "투자 아이디어", icon: "lightbulb", match: (p) => p === "/" || p.startsWith("/opportunities") },
+    { href: "/clues", label: "단서", icon: "rss", match: (p) => p.startsWith("/clues") },
+  ] },
+  { title: "탐색", items: [
+    { href: "/bottlenecks", label: "병목", icon: "filter", match: (p) => p.startsWith("/bottlenecks") },
+    { href: "/ecosystems", label: "생태계", icon: "layers", match: (p) => p.startsWith("/ecosystems") || p.startsWith("/companies") },
+    { href: "/map", label: "공급망 지도", icon: "network", match: (p) => p.startsWith("/map") },
+  ] },
+];
+const EXTRA_LABELS: Record<string, string> = { "/search": "통합 검색", "/system": "시스템 점검", "/ideas": "리포트", "/companies": "기업" };
+function current(path: string): { group: string; label: string } {
+  for (const g of NAV) for (const it of g.items) if (it.match(path)) return { group: g.title, label: it.label };
+  const k = Object.keys(EXTRA_LABELS).find((p) => path.startsWith(p));
+  return { group: "", label: k ? EXTRA_LABELS[k] : "" };
+}
 function Brand() {
   return (
     <Link href="/" className="brand" aria-label="Signal Atlas 홈">
@@ -47,22 +61,22 @@ export function Shell({ children }: { children: React.ReactNode }) {
     setSearchOpen(false);
     router.push(term ? `/search?q=${encodeURIComponent(term)}` : "/search");
   }
-  const section = path === "/" || path.startsWith("/opportunities") ? "/" : path.startsWith("/clues") ? "/clues" : path;
-  const currentLabel = LABELS[section] ?? "투자 아이디어";
-  const researchPage = path === "/" || path.startsWith("/opportunities");  // 투자 아이디어 (ADR-0028)
+  const here = current(path);
   return (
     <div className="workspace">
       {mobileOpen && <button className="mobile-scrim" onClick={()=>setMobileOpen(false)} aria-label="메뉴 닫기"/>}
       <aside className={`sidebar ${mobileOpen?"sidebar-open":""}`}>
         <Brand/>
-        <div className="sidebar-section-title">WORKSPACE <span>01</span></div>
         <nav className="primary-nav" aria-label="주요 화면">
-          {NAV.map(item=>{
-            const active = item.href==="/" ? researchPage : path.startsWith(item.href);
-            return <Link key={item.href} href={item.href} className={`nav-link ${active?"nav-link-active":""}`} aria-current={active?"page":undefined}>
-              <Icon name={item.icon} size={17}/><span>{item.label}</span>{active && <i className="active-dot"/>}
-            </Link>;
-          })}
+          {NAV.map((g) => <div key={g.title} className="nav-group">
+            <div className="nav-group-title">{g.title}</div>
+            {g.items.map((item) => {
+              const active = item.match(path);
+              return <Link key={item.href} href={item.href} className={`nav-link ${active ? "nav-link-active" : ""}`} aria-current={active ? "page" : undefined}>
+                <Icon name={item.icon} size={18}/><span>{item.label}</span>
+              </Link>;
+            })}
+          </div>)}
         </nav>
         <div className="sidebar-spacer"/>
       </aside>
@@ -70,7 +84,8 @@ export function Shell({ children }: { children: React.ReactNode }) {
         <header className="topbar">
           <div className="topbar-left">
             <button className="mobile-menu" onClick={()=>setMobileOpen(v=>!v)} aria-label="메뉴 열기"><Icon name="menu" size={20}/></button>
-            <span className="topbar-parent">WORKSPACE</span><Icon name="chevron-right" size={13} className="topbar-slash"/><span className="topbar-current">{currentLabel}</span>
+            {here.group ? <><span className="topbar-parent">{here.group}</span><Icon name="chevron-right" size={13} className="topbar-slash"/></> : null}
+            <span className="topbar-current">{here.label}</span>
           </div>
           <div className="topbar-right">
             <button className="search-shortcut" onClick={()=>setSearchOpen(true)}><Icon name="search" size={17}/><span>기술, 기업, 이슈 검색</span><kbd>⌘ K</kbd></button>
