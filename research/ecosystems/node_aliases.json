@@ -1397,7 +1397,8 @@
       "socamm",
       "lpddr6",
       "lpddr5x server",
-      "서버용 lpddr"
+      "서버용 lpddr",
+      "LPDDR5"
     ],
     "req:cpu_memory_per_rack": [
       "vera cpu memory",
@@ -1446,6 +1447,10 @@
       "環宇",
       "GCS",
       "Global Communication Semiconductors"
+    ],
+    "company:ichr": [
+      "Ichor",
+      "아이커"
     ]
   }
 }

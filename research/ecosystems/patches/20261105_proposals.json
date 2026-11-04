@@ -1,0 +1,157 @@
+{
+ "prefix": "p1105",
+ "nodes": [
+  {
+   "id": "company:twse_8058",
+   "kind": "company",
+   "label": "耐特科技材料 Nite (TWSE 8058, 비SEC)",
+   "names": [
+    "耐特",
+    "耐特科技",
+    "Nite"
+   ],
+   "status": "candidate",
+   "ticker": "8058",
+   "exchange": "TWSE",
+   "ecosystem": "hbm",
+   "size_band": "unknown",
+   "first_seen": "2026-11-02",
+   "first_evidence": {
+    "url": "https://www.bnext.com.tw/article/92837/nite-8058-ipo-semiconductor-bbu",
+    "date": "2026-10-29",
+    "layer": "press"
+   }
+  },
+  {
+   "id": "company:krx_001440",
+   "kind": "company",
+   "label": "대한전선 (KRX 001440, 비SEC)",
+   "names": [
+    "대한전선",
+    "Taihan Cable"
+   ],
+   "status": "candidate",
+   "ticker": "001440",
+   "exchange": "KRX",
+   "ecosystem": "power",
+   "size_band": "unknown",
+   "first_seen": "2026-11-04",
+   "first_evidence": {
+    "url": "https://www.thelec.kr/news/articleView.html?idxno=64544",
+    "date": "2026-10-29",
+    "layer": "press"
+   }
+  },
+  {
+   "id": "company:advantech",
+   "kind": "company",
+   "label": "Advantech 研華 (TWSE 2395, 비SEC)",
+   "names": [
+    "Advantech",
+    "研華"
+   ],
+   "status": "candidate",
+   "ticker": "2395",
+   "exchange": "TWSE",
+   "ecosystem": "frontier",
+   "size_band": "unknown",
+   "first_seen": "2026-11-04",
+   "first_evidence": {
+    "url": "https://www.moneydj.com/kmdj/news/newsviewer.aspx?a=6cf33a6c-d0ad-4c06-aee5-1be8555b735f&c=MB07",
+    "date": "2026-11-04",
+    "layer": "press"
+   }
+  },
+  {
+   "id": "company:rainbow_robotics",
+   "kind": "company",
+   "label": "Rainbow Robotics 레인보우로보틱스 (KOSDAQ 277810, 비SEC)",
+   "names": [
+    "Rainbow Robotics",
+    "레인보우로보틱스"
+   ],
+   "status": "candidate",
+   "ticker": "277810",
+   "exchange": "KOSDAQ",
+   "ecosystem": "frontier",
+   "size_band": "unknown",
+   "first_seen": "2026-11-04",
+   "first_evidence": {
+    "url": "https://www.theguru.co.kr/news/article.html?no=109209",
+    "date": "2026-11-04",
+    "layer": "press"
+   }
+  },
+  {
+   "id": "company:kosdaq_036930",
+   "kind": "company",
+   "label": "주성엔지니어링 (KOSDAQ 036930, 비SEC)",
+   "names": [
+    "주성엔지니어링",
+    "Jusung Engineering"
+   ],
+   "status": "candidate",
+   "ticker": "036930",
+   "exchange": "KOSDAQ",
+   "ecosystem": "hbm",
+   "size_band": "unknown",
+   "first_seen": "2026-11-04",
+   "first_evidence": {
+    "url": "https://www.inews24.com/view/2022644",
+    "date": "2026-11-04",
+    "layer": "press"
+   }
+  },
+  {
+   "id": "company:twse_2344",
+   "kind": "company",
+   "label": "Winbond 華邦電 (TWSE 2344, 비SEC)",
+   "names": [
+    "Winbond",
+    "Winbond Electronics",
+    "華邦電子",
+    "華邦電"
+   ],
+   "status": "candidate",
+   "ticker": "2344",
+   "exchange": "TWSE",
+   "ecosystem": "hbm",
+   "size_band": "unknown",
+   "first_seen": "2026-11-04",
+   "first_evidence": {
+    "url": "https://money.udn.com/money/story/5607/9845360",
+    "date": "2026-10-30",
+    "layer": "press"
+   }
+  },
+  {
+   "id": "company:american_electric_power",
+   "kind": "company",
+   "label": "American Electric Power (AEP)",
+   "names": [
+    "American Electric Power",
+    "AEP"
+   ],
+   "status": "candidate",
+   "ticker": "AEP",
+   "exchange": "Nasdaq",
+   "ecosystem": "power",
+   "size_band": "unknown",
+   "first_seen": "2026-11-04",
+   "first_evidence": {
+    "url": "https://www.utilitydive.com/news/aep-transmission-data-center-earnings/873189/",
+    "date": "2026-10-29",
+    "layer": "press"
+   }
+  }
+ ],
+ "proposal_ids": [
+  17,
+  48,
+  49,
+  50,
+  51,
+  53,
+  54
+ ]
+}

@@ -1,0 +1,91 @@
+{
+ "prefix": "i1105",
+ "nodes": [
+  {
+   "id": "component:gas_delivery_subsystem",
+   "kind": "component",
+   "label": "반도체 장비용 가스·화학물 공급 서브시스템 (가스 패널·용접 부품)",
+   "ecosystem": "hbm"
+  }
+ ],
+ "edges": [
+  {
+   "from": "component:gas_delivery_subsystem",
+   "relation": "offered_by",
+   "to": "company:ichr",
+   "tier": "official_issuer",
+   "exposure": "core",
+   "position": "leader",
+   "note": "2025년 매출의 90% 이상이 반도체 장비 산업. 설치 생산능력 연 $20억(클린룸·가공 투자 시 $30억), 자체 부품 비중 4Q26 말 35% 목표·단기 40% (3Q26 콜)",
+   "evidence": [
+    {
+     "url": "https://www.sec.gov/Archives/edgar/data/1652535/000165253526000012/ichr-20251226.htm",
+     "source_type": "official_issuer",
+     "published_at": "2026-02-24",
+     "excerpt": "In 2025, we derived over 90% of our sales from the semiconductor capital equipment industry"
+    },
+    {
+     "url": "https://www.fool.com/earnings/call-transcripts/2026/11/02/ichor-ichr-q3-2026-earnings-call-transcript/",
+     "source_type": "official_issuer",
+     "published_at": "2026-11-02",
+     "excerpt": "We remain on track for about 35% proprietary content exiting the fourth quarter … Both machining and welding in Malaysia are qualified by both of our largest customers"
+    }
+   ]
+  },
+  {
+   "from": "company:ichr",
+   "relation": "supplied_to",
+   "to": "company:lrcx",
+   "tier": "official_issuer",
+   "exposure": "core",
+   "exposure_pct": 37,
+   "exposure_year": 2025,
+   "exposure_source": "https://www.sec.gov/Archives/edgar/data/1652535/000165253526000012/ichr-20251226.htm",
+   "about": "component:gas_delivery_subsystem",
+   "note": "2025년 매출의 37% (10-K). Lam 10/21 FY27 1Q 콜: 2027 WFE $2,000억 초과(DRAM 주도), 12월 분기 가이던스 $86억은 '특정 부품 공급 제약'으로 일부 3월 분기 이월",
+   "evidence": [
+    {
+     "url": "https://www.sec.gov/Archives/edgar/data/1652535/000165253526000012/ichr-20251226.htm",
+     "source_type": "official_issuer",
+     "published_at": "2026-02-24",
+     "excerpt": "For 2025, two customers with individual sales over 10%, Lam Research and Applied Materials, accounted for a combined 76% of total sales"
+    },
+    {
+     "url": "https://bullfincher.io/companies/lam-research-corporation/earnings-call/fy2027-q1",
+     "source_type": "official_issuer",
+     "published_at": "2026-10-21",
+     "excerpt": "more than $200 billion of spending … clean room space availability and supply chain constraints for certain components"
+    }
+   ]
+  },
+  {
+   "from": "company:ichr",
+   "relation": "supplied_to",
+   "to": "company:amat",
+   "tier": "official_issuer",
+   "exposure": "core",
+   "exposure_pct": 39,
+   "exposure_year": 2025,
+   "exposure_source": "https://www.sec.gov/Archives/edgar/data/1652535/000165253526000012/ichr-20251226.htm",
+   "about": "component:gas_delivery_subsystem",
+   "note": "2025년 매출의 39% (10-K)",
+   "evidence": [
+    {
+     "url": "https://www.sec.gov/Archives/edgar/data/1652535/000165253526000012/ichr-20251226.htm",
+     "source_type": "official_issuer",
+     "published_at": "2026-02-24",
+     "excerpt": "For 2025, two customers with individual sales over 10%, Lam Research and Applied Materials, accounted for a combined 76% of total sales"
+    }
+   ]
+  }
+ ],
+ "aliases": {
+  "component:server_dram_lpdram": [
+   "LPDDR5"
+  ],
+  "company:ichr": [
+   "Ichor",
+   "아이커"
+  ]
+ }
+}
