@@ -1087,6 +1087,10 @@ tr:hover td{background:#f8faff}
 .od-cell{background:#fff;border:1px solid #e3e8ef;border-radius:12px;padding:14px 16px}
 .od-cell h2{margin:0 0 6px;font-size:12px;font-weight:800;color:#3f5f96;letter-spacing:.2px}
 .od-cell p,.od-cell .op-prose p{margin:0;font-size:14.5px;line-height:1.7;color:#1f2e45;word-break:keep-all}
+.od-cell .op-prose p+p{margin-top:8px}
+.od-idea{background:#f3f6fc;border-color:#d9e2f1}
+.od-idea h2{font-size:13px}
+.od-idea .op-prose p{font-size:15px;color:#14243b}
 .od-risk{background:#fbf5f2;border-color:#f0d9cf}
 .od-risk h2{color:#a4502a}
 .od-cos{background:#fff;border:1px solid #e3e8ef;border-radius:12px;padding:14px 16px}
@@ -1163,6 +1167,28 @@ tr:hover td{background:#f8faff}
 .od-evg p{margin:2px 0 0;font-size:12.5px;line-height:1.5;color:#55657c}
 .od-evg span{display:block;margin-top:2px;font-size:11.5px;color:#8a96a8}
 
-@media(max-width:1100px){.od-grid{grid-template-columns:1fr}.od-side{grid-column:1;grid-row:1;position:static}.od-main{grid-row:2}.od-cells{display:grid;grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:1100px){.od-grid{grid-template-columns:1fr}.od-side{grid-column:1;grid-row:1;position:static}.od-main{grid-row:2}.od-cells{display:grid;grid-template-columns:repeat(2,minmax(0,1fr))}.od-idea{grid-column:1/-1}}
 @media(max-width:760px){.od-head h1{font-size:22px}.od-strip{grid-template-columns:repeat(2,minmax(0,1fr))}.od-strip>div{border-left:0;border-top:1px solid #eef1f5;padding:11px 14px}.od-strip>div:nth-child(-n+2){border-top:0}.od-strip>div:nth-child(even){border-left:1px solid #eef1f5}.od-strip dd{font-size:18px}.od-strip .od-next,.od-strip .od-wide{grid-column:1/-1;border-left:0!important}.od-cells{grid-template-columns:1fr}.od-evg ul{grid-template-columns:1fr}.tl-chart{top:58px;padding:10px 10px 6px}.tl-chart .tick{font-size:10.5px}.tl-now-hint{font-size:12px}.tl-legend{margin-left:0}.tl-list li{grid-template-columns:24px minmax(0,1fr);gap:10px;padding:14px 6px;scroll-margin:320px}.tl-n{width:22px;height:22px;font-size:11px}}
 @media(max-height:760px){.tl-chart{position:static}}
+
+/* 요약 3단 — 투자 아이디어 · 주가 전망 · 리스크 (사용자 2026-11-04) */
+.od-three{display:grid;grid-template-columns:1.25fr 1fr 1fr;gap:14px;margin:0 0 30px}
+.od-three .od-cell{padding:18px 20px}
+.od-three .od-cell h2{font-size:13px;margin:0 0 10px}
+.od-h2{font-size:17px;font-weight:800;color:#14243b;margin:0 0 12px}
+ul.od-cos{list-style:none;margin:0;padding:0;display:flex;flex-wrap:wrap;gap:10px}
+ul.od-cos li{display:flex;gap:7px;align-items:baseline;background:#fff;border:1px solid #e3e8ef;border-radius:10px;padding:9px 13px;font-size:14px;color:#14243b}
+ul.od-cos li span{font-size:12px;color:#7f8da1}
+ul.od-cos li em{font-style:normal;font-size:11.5px;font-weight:700;color:#55657c;background:#eef2f8;border-radius:5px;padding:1px 7px}
+@media(max-width:1100px){.od-three{grid-template-columns:1fr 1fr}.od-three .od-idea{grid-column:1/-1}}
+@media(max-width:760px){.od-three{grid-template-columns:1fr}.od-three .od-cell{padding:15px 16px}}
+
+/* 요약 칸의 근거 칩 (사용자 2026-11-04: 본문은 짧게, 숫자·출처는 칩으로) */
+.od-chips{list-style:none;margin:12px 0 0;padding:0;display:flex;flex-wrap:wrap;gap:6px}
+.od-chips a,.od-chips span{display:inline-block;padding:4px 9px;border:1px solid #dfe5ee;border-radius:14px;background:#fff;font-size:12.5px;line-height:1.45;color:#22324a;text-decoration:none;word-break:keep-all}
+.od-chips small{font-size:11px;color:#7a879a;font-weight:500;white-space:nowrap;margin-left:5px}
+.od-chips i{font-style:normal;font-size:10.5px;color:#9aa6b6;margin-left:4px}
+.od-chips a:hover{border-color:#9fb4d6;background:#f6f9fe}
+.od-chips a:hover i{color:#3f5f96}
+.od-idea .od-chips a,.od-idea .od-chips span{border-color:#d3ddef}
+.od-risk .od-chips a,.od-risk .od-chips span{border-color:#ecd6cb}

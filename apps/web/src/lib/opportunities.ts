@@ -9,7 +9,15 @@ export type OppHistoryKind = "earnings" | "deal" | "filing" | "flow" | "external
 export type OppHistory = { date: string; title: string; body?: string | null; url?: string | null; kind?: OppHistoryKind | null };
 /** 상세 화면 상단 — 핵심 4칸과 판단 스트립 (사용자 2026-11-04). 비어 있으면 interpretation 을 그대로 보인다. */
 export type OppFact = { label: string; value: string; note?: string | null };
-export type OppBrief = { change?: string; position?: string; price?: string; risk?: string; facts?: OppFact[]; next?: string };
+/** 근거 칩 — 짧은 사실 한 토막과 그 출처. url 이 있으면 누르면 원문으로. */
+export type OppChip = { label: string; src?: string | null; url?: string | null };
+/** idea(투자 아이디어: 무엇이 바뀌나 + 이 회사의 자리) · outlook(주가 전망: 자리 + 가격) · risk(가장 약한 고리) — 각 1~2문장.
+ *  숫자·출처는 본문에 넣지 않고 chips 로 뺀다. change·position·price 는 첫 판의 칸 — 남아 있으면 합쳐 보인다. */
+export type OppBrief = { idea?: string; outlook?: string; risk?: string; chips?: { idea?: OppChip[]; outlook?: OppChip[]; risk?: OppChip[] };
+  change?: string; position?: string; price?: string; facts?: OppFact[]; next?: string };
+export function chipsOf(v: unknown): OppChip[] {
+  return Array.isArray(v) ? v.filter((c): c is OppChip => !!c && typeof c.label === "string" && !!c.label) : [];
+}
 export type PricePoint = { d: string; c: number };
 export type Opportunity = {
   opportunity_key: string; title: string; stars: number; idea: string; interpretation?: string | null;
