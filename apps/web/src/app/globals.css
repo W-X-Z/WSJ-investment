@@ -1182,3 +1182,13 @@ ul.od-cos li span{font-size:12px;color:#7f8da1}
 ul.od-cos li em{font-style:normal;font-size:11.5px;font-weight:700;color:#55657c;background:#eef2f8;border-radius:5px;padding:1px 7px}
 @media(max-width:1100px){.od-three{grid-template-columns:1fr 1fr}.od-three .od-idea{grid-column:1/-1}}
 @media(max-width:760px){.od-three{grid-template-columns:1fr}.od-three .od-cell{padding:15px 16px}}
+
+/* 요약 칸의 근거 칩 (사용자 2026-11-04: 본문은 짧게, 숫자·출처는 칩으로) */
+.od-chips{list-style:none;margin:12px 0 0;padding:0;display:flex;flex-wrap:wrap;gap:6px}
+.od-chips a,.od-chips span{display:inline-block;padding:4px 9px;border:1px solid #dfe5ee;border-radius:14px;background:#fff;font-size:12.5px;line-height:1.45;color:#22324a;text-decoration:none;word-break:keep-all}
+.od-chips small{font-size:11px;color:#7a879a;font-weight:500;white-space:nowrap;margin-left:5px}
+.od-chips i{font-style:normal;font-size:10.5px;color:#9aa6b6;margin-left:4px}
+.od-chips a:hover{border-color:#9fb4d6;background:#f6f9fe}
+.od-chips a:hover i{color:#3f5f96}
+.od-idea .od-chips a,.od-idea .od-chips span{border-color:#d3ddef}
+.od-risk .od-chips a,.od-risk .od-chips span{border-color:#ecd6cb}

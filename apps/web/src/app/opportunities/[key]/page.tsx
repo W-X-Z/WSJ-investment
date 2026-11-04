@@ -2,7 +2,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { CompanyLine, Prose, Stars5 } from "@/components/opps/Opps";
 import { IdeaTimeline } from "@/components/opps/IdeaTimeline";
-import { loadOpportunities, loadOpportunity, loadPrices, marketKo, primaryOf, relatedTo, touchedAt, type OppEvidence, type OppFact, type PricePoint } from "@/lib/opportunities";
+import { loadOpportunities, loadOpportunity, loadPrices, marketKo, primaryOf, chipsOf, relatedTo, touchedAt, type OppChip, type OppEvidence, type OppFact, type PricePoint } from "@/lib/opportunities";
 
 export const dynamic = "force-dynamic";
 
@@ -27,6 +27,14 @@ function groupEvidence(items: OppEvidence[]) {
   const g = new Map<string, OppEvidence[]>();
   for (const e of items) (g.get(kind(e)) ?? g.set(kind(e), []).get(kind(e))!).push(e);
   return order.filter((k) => g.has(k)).map((k) => ({ k, items: g.get(k)!.sort((a, b) => (b.date ?? "").localeCompare(a.date ?? "")) }));
+}
+
+/** 근거 칩: 사실 한 토막 + 출처. 링크가 있으면 원문으로. */
+function Chips({ items }: { items: OppChip[] }) {
+  return <ul className="od-chips">{items.map((c, i) => {
+    const body = <>{c.label}{c.src ? <small>{c.src}</small> : null}</>;
+    return <li key={i}>{c.url ? <a href={c.url} target="_blank" rel="noreferrer" title={c.src ?? undefined}>{body}<i aria-hidden="true">↗</i></a> : <span>{body}</span>}</li>;
+  })}</ul>;
 }
 
 function splitTitle(t: string): [string, string | null] {
@@ -56,11 +64,12 @@ export default async function OpportunityPage({ params }: { params: Promise<{ ke
   const facts = [...priceFacts(prices), ...(b.facts ?? [])];
   // 투자 아이디어 → 주가 전망 → 리스크 (사용자 2026-11-04). 옛 칸(change·position·price)만 있으면 합쳐 보인다.
   const join = (...xs: (string | undefined)[]) => xs.filter(Boolean).join("\n") || undefined;
+  const ch = b.chips ?? {};
   const cells = ([
-    ["투자 아이디어", b.idea ?? join(b.change, b.position), "od-idea"],
-    ["주가 전망", b.outlook ?? b.price, "od-outlook"],
-    ["리스크", b.risk, "od-risk"],
-  ] as [string, string | undefined, string][]).filter(([, v]) => v) as [string, string, string][];
+    ["투자 아이디어", b.idea ?? join(b.change, b.position), chipsOf(ch.idea), "od-idea"],
+    ["주가 전망", b.outlook ?? b.price, chipsOf(ch.outlook), "od-outlook"],
+    ["리스크", b.risk, chipsOf(ch.risk), "od-risk"],
+  ] as [string, string | undefined, OppChip[], string][]).filter(([, v]) => v) as [string, string, OppChip[], string][];
   const touched = touchedAt(o);
   const groups = groupEvidence(o.evidence);
   return <article className="od">
@@ -76,7 +85,7 @@ export default async function OpportunityPage({ params }: { params: Promise<{ ke
     </header>
 
     {cells.length ? <section className="od-three" aria-label="투자 아이디어 요약">
-      {cells.map(([h, v, c]) => <div key={h} className={`od-cell ${c}`}><h2>{h}</h2><Prose text={v}/></div>)}
+      {cells.map(([h, v, cs, c]) => <div key={h} className={`od-cell ${c}`}><h2>{h}</h2><Prose text={v}/>{cs.length ? <Chips items={cs}/> : null}</div>)}
     </section> : o.interpretation ? <section className="od-three"><div className="od-cell od-idea"><h2>핵심</h2><Prose text={o.interpretation}/></div></section> : null}
 
     <div className="od-main">

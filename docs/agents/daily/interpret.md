@@ -39,7 +39,7 @@
  "companies": [{"company": "company:isu_petasys", "name": "이수페타시스", "ticker": "007660", "exchange": "KRX", "role": "primary"}],
  "evidence": [{"title": "…", "url": "https://…", "date": "YYYY-MM-DD", "publisher": "…"}],
  "history": [{"date": "YYYY-MM-DD", "kind": "earnings|deal|filing|flow|external|ours", "title": "일어난 일 한 줄", "body": "자세히 (선택)", "url": "https://… (선택)"}],   // writing.md 히스토리 — 차트의 점
- "brief": {"idea": "…", "outlook": "…", "risk": "…", "facts": [{"label": "…", "value": "…", "note": "…"}], "next": "…"},   // writing.md 상세 화면 — 요약 3칸(투자 아이디어·주가 전망·리스크)·판단 스트립
+ "brief": {"idea": "…", "outlook": "…", "risk": "…", "chips": {"idea": [{"label": "…", "src": "…", "url": "…"}], "outlook": […], "risk": […]}, "facts": [{"label": "…", "value": "…", "note": "…"}], "next": "…"},   // writing.md 상세 화면 — 요약 3칸(투자 아이디어·주가 전망·리스크)·판단 스트립
  "nodes": ["product:google_tpu_system", "component:mlb_pcb"],
  "clue_refs": [{"title": "…", "url": "https://…", "date": "YYYY-MM-DD"}],
  "status": "draft", "model": "claude-…"}
