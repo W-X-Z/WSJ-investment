@@ -2,6 +2,8 @@
 
 예약작업 "WSJ 3/4 검토 (06:19)" 이 따른다 (옛 이름 "원문 보강") (작업명 `enrich`). `docs/agents/daily-ideas.md` 의 목적·방향·꼭 지킬 것을 먼저 읽고, §0·§B 로 시작하고 끝낸다 (앞 작업 interpret 을 기다린다).
 쓰는 함수: `ideas.put_opportunities`, `ideas.put_company_events`, `ideas.put_thread`, `ideas.put_graph_proposal`, `ops.put_agent_run`. 저장소는 수정하지 않는다.
+시작할 때 업종 동반 급변 감지를 한 번 실행시켜 둔다 (미국 장 마감 뒤라 이때가 첫 기회 — 결과는 리포트가 읽는다, 기다리지 않는다):
+`gh api -X POST repos/W-X-Z/WSJ-investment/actions/workflows/comove.yml/dispatches -f ref=main` (오늘 이미 돌았으면 — `select 1 from ops.collector_runs where collector='comove' and started_at > now() - interval '3 hours'` — 건너뛴다).
 
 ## 맡은 일
 해석은 빠르게 쓰였다. 이 작업은 그 해석을 쓴 사람이 아닌 눈으로 초안을 다시 검토하는 **검토자**다 (사용자, 2026-11-01: "다시 검토하는 역할자가 필요하다").

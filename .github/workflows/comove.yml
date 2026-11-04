@@ -1,0 +1,38 @@
+# 업종 동반 급변 (사용자 2026-11-04): 미국 장 마감 뒤 그래프 미국 상장사를 생태계별로 묶어 S&P500 과 비교하고,
+# 크게 벌어지면 그 사실과 원인 기사를 ideas.clues 에 남긴다 (source_kind=market_move). LLM 없음, 1회 ≈ 2분.
+# 아침 보강 작업(06:19 KST, enrich.md)이 시작할 때 Run workflow 로 시킨다 — GitHub 예약은 늦을 수 있어 06:50 KST 예약은 대비용.
+# 주말·미국 휴일이면 '마지막 거래일 ≠ 오늘'로 건너뛴다.
+name: comove
+
+on:
+  schedule:
+    - cron: "50 21 * * 1-5"
+  workflow_dispatch:
+
+concurrency:
+  group: comove
+  cancel-in-progress: false
+
+jobs:
+  comove:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      WSJ_STORE: postgrest
+      SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+      SUPABASE_SECRET_KEY: ${{ secrets.SUPABASE_SECRET_KEY }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: pipeline/pyproject.toml
+      - name: Install
+        working-directory: pipeline
+        run: pip install -e .
+      - name: Detect sector co-moves
+        working-directory: pipeline
+        run: |
+          set -euo pipefail
+          python -m wsj.ecosystems.comove run | tee -a "$GITHUB_STEP_SUMMARY"

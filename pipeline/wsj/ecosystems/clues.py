@@ -43,6 +43,26 @@ PRICE_EXTRA = re.compile(
     r"관련주|테마주|수혜주 \d|증시 브리핑|마감 시황|장중 시황|코스피 지수|코스닥 지수|외국인 순매수|기관 순매수",
     re.I)
 
+# 정책·정치 테마 (사용자 2026-11-04: 중간선거 뒤 AI 전력주 급락을 놓침 — 선거·의회·주 정부 이슈도 단서로 남기고, 아이디어의 brief.exposures 와 잇는다)
+THEMES = {
+    "dc_permitting": "데이터센터 인허가·유예·용도지역·세제 혜택(연방·주·지방)",
+    "power_prices": "전기요금·요금 전가·대형 부하 요금제·요금 규제",
+    "grid_interconnection": "계통 접속·대형 부하 규칙(FERC·PJM·ERCOT·CAISO·NERC·주 PUC)",
+    "ai_capex_financing": "하이퍼스케일러·네오클라우드 투자 계획·자금조달·신용",
+    "export_controls": "수출통제·엔티티 리스트·수출허가(미국·중국·동맹국)",
+    "tariffs": "관세·섹션 232·301·무역 협상",
+    "subsidies": "보조금·세액공제·CHIPS·에너지 지원 정책",
+    "politics": "선거·의회 구성·행정부 교체처럼 위 정책들의 방향을 바꾸는 정치 사건",
+}
+# 시세 기사라도 정책·정치가 원인으로 적혀 있으면 남긴다 ("Vertiv Sinks 9% … as Democrats Win Congress")
+POLICY_CAUSE = re.compile(
+    r"\b(?:as|after|amid|on|over|following|despite)\b.{0,90}\b(?:election|midterm|congress|senate|house (?:vote|bill|passes)|democrat|republican|"
+    r"governor|white house|administration|trump|biden|tariff|export (?:control|curb|ban|rule|license)|sanction|entity list|"
+    r"moratorium|bill\b|law\b|legislat|regulat|rule\b|ruling|ban\b|FERC|PJM|ERCOT|CAISO|NERC|utility commission|PUC\b|"
+    r"executive order|subsid|tax credit|court|antitrust|probe|policy|ratepayer)"
+    r"|선거|의회|관세|수출 ?통제|수출 ?규제|규제|정책|행정명령|보조금|세액공제|모라토리엄",
+    re.I)
+
 
 @dataclass
 class Source:
@@ -139,6 +159,8 @@ def check_registry(sources: list[Source]) -> list[str]:
 def is_noise(title: str, publisher: str | None = None) -> bool:
     from wsj.ecosystems.company_feed import HOLDINGS_NOISE, NEWS_UP, NOISE_PUBLISHERS, PRICE_CHATTER
 
+    if POLICY_CAUSE.search(title):
+        return False                                  # 정책·정치가 원인으로 적힌 시세 기사는 남긴다 (분류기가 다시 본다)
     if (publisher or "").strip().lower() in NOISE_PUBLISHERS:
         return True
     if HOLDINGS_NOISE.search(title) or PRICE_EXTRA.search(title):
@@ -271,16 +293,22 @@ LLM_SYSTEM = """너는 기술·산업 공급망 리서치의 단서 분류기다
   · 수요: 모델 공개와 추론량, 클라우드·하이퍼스케일러 증설·투자, 데이터센터 부지·전력 계약, 전력망·대형 부하 규칙(ERCOT·PJM·FERC·NERC), 송전·발전 투자,
     새 기기(휴머노이드·로봇·드론·위성)의 양산 계획과 그 부품 구성.
   · 실적 발표·컨퍼런스콜이라도 주문·백로그·캐파·고객·제품 비중·가이던스 같은 사업 사실이 있으면 true.
+  · 정책·정치: 데이터센터 건설 속도(인허가·유예·용도지역·세제), 전기요금·대형 부하 요금제, 계통 접속 규칙, 수출통제·관세, 보조금·세액공제를 바꾸거나
+    바꿀 수 있는 법안·규칙·행정명령·판결·주 정부/규제기관 결정, 그리고 그 방향을 바꾸는 선거·의회 구성 변화. 주가 기사라도 이런 정책·정치를 원인으로 다루면 true.
 - keep: false 인 것 — 주가·시세 움직임 해설, 애널리스트 등급·목표주가, '사야 할 주식'류, 자금 흐름·ETF, 실적 발표 일정 안내, 인사 프로필·행사·수상·CSR,
-  소비자 제품 출시·게임·앱 리뷰, 일반 기업용 AI 앱·서비스·결제·보안 인증 출시, 일반 거시·정치, 광고·홍보,
+  소비자 제품 출시·게임·앱 리뷰, 일반 기업용 AI 앱·서비스·결제·보안 인증 출시, 위 정책 테마에 닿지 않는 거시·정치(금리·고용·외교 일반), 광고·홍보,
   로봇·자동차·드론 글이라도 부품·소재·공정의 수요·공급을 바꾸는 내용이 없는 것(시연·협약·비전 발표만).
 - scope: keep 이 true 인 글이 어디에 닿는가 — "core"(AI 데이터센터 공급망: 반도체·메모리·HBM·패키징·기판·PCB·테스트·장비·소재·광통신·레이저·전력·변압기·배터리·커패시터·냉각·현장 발전·전력망 접속,
   또는 그것에 직접 닿는 수요) | "frontier"(그 밖의 산업 — 로봇·피지컬 AI·우주·의료 장비·산업 전력기기 등).
 - companies: 글에 이름이 나온 상장 기업. ticker 는 확실히 알 때만 쓰고 추측하지 마라(모르면 ticker 없이 name·exchange 만).
   exchange 는 NYSE|Nasdaq|KRX|KOSDAQ|TWSE|TPEx|TSE|SSE|SZSE|HKEX|XETRA|Euronext 중에서. 비상장·정부기관·대학은 빼라. 없으면 빈 배열.
+- themes: keep 이 true 이고 아래 정책 테마에 닿으면 그 키들(없으면 빈 배열):
+  dc_permitting(데이터센터 인허가·유예·용도지역·세제) · power_prices(전기요금·대형 부하 요금제) · grid_interconnection(계통 접속·대형 부하 규칙) ·
+  ai_capex_financing(하이퍼스케일러·네오클라우드 투자·자금조달) · export_controls(수출통제·수출허가) · tariffs(관세) · subsidies(보조금·세액공제) ·
+  politics(선거·의회 구성·행정부 교체처럼 정책 방향을 바꾸는 정치 사건).
 - note: 무엇에 관한 글인지 한국어 한 줄(60자 안). 판단·전망은 쓰지 마라.
 - keep 이 false 인 글은 {"i": n, "keep": false} 만 쓴다 (companies·note·scope 없이). 모든 i 를 빠짐없이 쓴다.
-출력은 JSON 하나: {"items": [{"i": 0, "keep": true, "scope": "core", "companies": [{"name": "…", "ticker": "…", "exchange": "…"}], "note": "…"}, {"i": 1, "keep": false}]}"""
+출력은 JSON 하나: {"items": [{"i": 0, "keep": true, "scope": "core", "themes": [], "companies": [{"name": "…", "ticker": "…", "exchange": "…"}], "note": "…"}, {"i": 1, "keep": false}]}"""
 
 
 def llm_screen(clues: list[Clue], api_key: str, model: str = "haiku", batch: int = 50, workers: int = 4, resolve: Any = None) -> dict[str, Any]:
@@ -377,6 +405,9 @@ def apply_screen(part: list[Clue], out: dict[str, Any] | None, resolve: Any = No
             continue
         c.note = (x.get("note") or "")[:120] or None
         c.extra["scope"] = "frontier" if x.get("scope") == "frontier" else "core"      # 그래프 밖 산업 — 후보 통로·해석이 가려 본다
+        th = sorted({t for t in x.get("themes") or [] if t in THEMES})
+        if th:
+            c.extra["themes"] = th                                                    # 정책 테마 — 아이디어 brief.exposures 와 잇는다
         have = {(y.get("name") or "").lower() for y in c.companies}
         ids = {y.get("company") for y in c.companies if y.get("company")}
         for y in x.get("companies") or []:
