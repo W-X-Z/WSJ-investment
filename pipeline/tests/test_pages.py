@@ -106,3 +106,13 @@ def test_old_dated_link_is_not_a_new_item():
 def test_parse_date_text_formats():
     assert P.parse_date_text("Oct. 7, 2026").day == 7 and P.parse_date_text("7 Oct 2026").month == 10
     assert P.parse_date_text("2026.10.06").day == 6 and P.parse_date_text("Lumentum results 2026") is None
+
+
+def test_korean_pagination_links_are_not_clues():
+    """산업통상부 보도자료 목록의 '마지막페이지' 같은 쪽수 이동 링크가 단서로 올라왔다 (2026-11-04)."""
+    html = ('<html><body><ul><li><a href="/bbs/view?id=1">해외 생산제품과 달라도 기술·기능 유사하면 국내복귀 인정</a></li></ul>'
+            '<div class="paging"><a href="?page=1">처음</a><a href="?page=1">첫페이지</a><a href="?page=2">다음페이지</a>'
+            '<a href="?page=99">마지막페이지</a><a href="/bbs/list">목록</a></div></body></html>')
+    s = P.snapshot(html, "https://www.motie.go.kr/kor/article/ATCL_list")
+    texts = [t for _, t in s.links]
+    assert texts == ["해외 생산제품과 달라도 기술·기능 유사하면 국내복귀 인정"]

@@ -4,7 +4,7 @@ export const dynamic = "force-dynamic";
 export const metadata = { title: "단서" };
 
 /** 단서 (ADR-0028): 최근 7일 동안 출처에서 들어온 작은 소식, 날짜별. 해석·판단은 투자 아이디어 쪽에 있다.
- *  하루 안에서는 원본(표준·규칙·학회·논문·공시·기업 발표)이 먼저, 기사·기업 이름 검색 소식이 뒤. */
+ *  하루 안에서는 선별된 것이 먼저, 그 안에서 원본(표준·규칙·학회·논문·공시·기업 발표)이 먼저, 기사·기업 이름 검색 소식이 뒤. */
 export default async function CluesPage() {
   const clues = await loadClues();
   const days = new Map<string, typeof clues>();
@@ -12,7 +12,8 @@ export default async function CluesPage() {
     const d = kstDay(c.seen_at);
     (days.get(d) ?? days.set(d, []).get(d)!).push(c);
   }
-  for (const list of days.values()) list.sort((a, b) => kindRank(a.source_kind) - kindRank(b.source_kind) || b.seen_at.localeCompare(a.seen_at));
+  // 선별을 거친 것(한 줄 요지가 있다)이 먼저, 감시 페이지에서 그대로 들어온 링크는 뒤 — 그 안에서 원본 종류 순.
+  for (const list of days.values()) list.sort((a, b) => Number(!!b.note) - Number(!!a.note) || kindRank(a.source_kind) - kindRank(b.source_kind) || b.seen_at.localeCompare(a.seen_at));
   const capped = clues.length >= CLUE_LIMIT;
   const oldest = [...days.keys()].at(-1);
   return <div className="fd op">

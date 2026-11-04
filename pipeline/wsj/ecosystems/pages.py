@@ -31,7 +31,8 @@ OLD_ITEM_DAYS = 14            # 링크 글자에 적힌 날짜가 이보다 오�
 SKIP_LINK = re.compile(r"^(?:mailto:|javascript:|tel:|#)|/(?:login|signin|register|cart|search|tag|category|author|page/\d+)(?:/|$)|\?(?:share|replytocom)=", re.I)
 NAV_TEXT = re.compile(r"^(?:home|about|contact|privacy|terms|cookie|login|sign in|subscribe|read more|learn more|more|view all|see all|"
                       r"next|previous|prev|first|last|older|newer|older posts|newer posts|back|menu|search|"
-                      r"english|español|한국어|日本語|中文|facebook|twitter|linkedin|youtube|rss|share|print|download|더 ?보기|다음|이전)$", re.I)
+                      r"english|español|한국어|日本語|中文|facebook|twitter|linkedin|youtube|rss|share|print|download|더 ?보기|다음|이전|"
+                      r"첫 ?페이지|마지막 ?페이지|이전 ?페이지|다음 ?페이지|처음|맨 ?앞|맨 ?뒤|목록|전체 ?보기|상세 ?보기)$", re.I)
 ARROWS = re.compile(r"[«»‹›<>→←↑↓…|]+")
 # 링크 안 블록 요소 경계 — 카드형 목록(<a><div>분류</div><div>제목</div><div>날짜</div><span>Read More</span></a>)을 조각으로 나눈다
 BLOCK_IN_LINK = {"div", "p", "span", "time", "small", "li", "br", "h1", "h2", "h3", "h4", "h5", "h6"}

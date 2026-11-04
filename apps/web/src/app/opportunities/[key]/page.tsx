@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { CompanyLine, EvidenceList, OppTime, Stars5 } from "@/components/opps/Opps";
+import { CompanyLine, EvidenceList, OppTime, Prose, Stars5 } from "@/components/opps/Opps";
 import { changeNote, loadOpportunities, loadOpportunity, marketKo, relatedTo } from "@/lib/opportunities";
 import { rel } from "@/lib/feed";
 
@@ -25,8 +25,8 @@ export default async function OpportunityPage({ params }: { params: Promise<{ ke
       <h1>{o.title}</h1>
       {note ? <p className="op-note"><b>고친 점</b> {note}{o.published_at ? <span> · 처음 낸 날 {rel(o.published_at)}</span> : null}</p> : null}
     </header>
-    <section className="op-sec"><h2>투자 아이디어</h2><p className="op-text">{o.idea}</p></section>
-    {o.interpretation ? <section className="op-sec"><h2>해석</h2><p className="op-text">{o.interpretation}</p></section> : null}
+    <section className="op-sec"><h2>투자 아이디어</h2><Prose text={o.idea}/></section>
+    {o.interpretation ? <section className="op-sec"><h2>해석</h2><Prose text={o.interpretation}/></section> : null}
     {others.length ? <section className="op-sec"><h2>관련 기업</h2>
       <ul className="op-cos">{others.map((c, i) => <li key={`${c.name}-${i}`}><b>{c.name}</b>{c.ticker ? <span>{[c.ticker, marketKo(c.exchange)].filter(Boolean).join(" · ")}</span> : null}</li>)}</ul>
     </section> : null}
