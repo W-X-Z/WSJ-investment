@@ -38,7 +38,8 @@
  "interpretation": "결론 문장 몇 개",
  "companies": [{"company": "company:isu_petasys", "name": "이수페타시스", "ticker": "007660", "exchange": "KRX", "role": "primary"}],
  "evidence": [{"title": "…", "url": "https://…", "date": "YYYY-MM-DD", "publisher": "…"}],
- "history": [{"date": "YYYY-MM-DD", "title": "일어난 일 한 줄", "body": "자세히 (선택)", "url": "https://… (선택)"}],   // writing.md 히스토리 — 차트의 점
+ "history": [{"date": "YYYY-MM-DD", "kind": "earnings|deal|filing|flow|external|ours", "title": "일어난 일 한 줄", "body": "자세히 (선택)", "url": "https://… (선택)"}],   // writing.md 히스토리 — 차트의 점
+ "brief": {"change": "…", "position": "…", "price": "…", "risk": "…", "facts": [{"label": "…", "value": "…", "note": "…"}], "next": "…"},   // writing.md 상세 화면 — 핵심 4칸·판단 스트립
  "nodes": ["product:google_tpu_system", "component:mlb_pcb"],
  "clue_refs": [{"title": "…", "url": "https://…", "date": "YYYY-MM-DD"}],
  "status": "draft", "model": "claude-…"}

@@ -5,11 +5,15 @@ import { db } from "@/lib/supabase";
 export type OppCompany = { company?: string | null; name: string; ticker?: string | null; exchange?: string | null; role?: string | null };
 export type OppEvidence = { title: string; url: string; date?: string | null; publisher?: string | null };
 /** 날짜별 이슈 — 차트의 점 하나. body 는 자세히 써도 된다(사용자 2026-11-04: 구조가 보이면 디테일은 괜찮다). */
-export type OppHistory = { date: string; title: string; body?: string | null; url?: string | null };
+export type OppHistoryKind = "earnings" | "deal" | "filing" | "flow" | "external" | "ours";
+export type OppHistory = { date: string; title: string; body?: string | null; url?: string | null; kind?: OppHistoryKind | null };
+/** 상세 화면 상단 — 핵심 4칸과 판단 스트립 (사용자 2026-11-04). 비어 있으면 interpretation 을 그대로 보인다. */
+export type OppFact = { label: string; value: string; note?: string | null };
+export type OppBrief = { change?: string; position?: string; price?: string; risk?: string; facts?: OppFact[]; next?: string };
 export type PricePoint = { d: string; c: number };
 export type Opportunity = {
   opportunity_key: string; title: string; stars: number; idea: string; interpretation?: string | null;
-  companies: OppCompany[]; evidence: OppEvidence[]; nodes: string[]; clue_refs: OppEvidence[]; history: OppHistory[];
+  companies: OppCompany[]; evidence: OppEvidence[]; nodes: string[]; clue_refs: OppEvidence[]; history: OppHistory[]; brief: OppBrief;
   status: string; status_note?: string | null; created_at: string; updated_at: string; published_at?: string | null;
 };
 
@@ -25,6 +29,7 @@ function normalize(r: Record<string, unknown>): Opportunity {
     nodes: arr<string>(r.nodes), clue_refs: arr<OppEvidence>(r.clue_refs), stars: Number(r.stars) || 1,
     history: arr<OppHistory>(r.history).filter((h) => h && typeof h.date === "string" && typeof h.title === "string")
       .sort((a, b) => a.date.localeCompare(b.date)),
+    brief: r.brief && typeof r.brief === "object" && !Array.isArray(r.brief) ? (r.brief as OppBrief) : {},
   };
 }
 
