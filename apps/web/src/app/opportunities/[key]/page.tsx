@@ -44,7 +44,7 @@ function priceFacts(px: PricePoint[]): OppFact[] {
   ];
 }
 
-/** 투자 아이디어 상세 v2 (사용자 2026-11-04): 판단 스트립 → 핵심 4칸 → 차트·히스토리(연동) → 관련 자료. 데스크톱은 2단. */
+/** 투자 아이디어 상세 v2 (사용자 2026-11-04): 판단 스트립 → 요약 3칸(투자 아이디어·주가 전망·리스크) → 차트·히스토리(연동) → 관련 자료. */
 export default async function OpportunityPage({ params }: { params: Promise<{ key: string }> }) {
   const o = await loadOpportunity((await params).key);
   if (!o) notFound();
@@ -54,7 +54,13 @@ export default async function OpportunityPage({ params }: { params: Promise<{ ke
   const others = o.companies.filter((c) => c.role !== "primary");
   const b = o.brief;
   const facts = [...priceFacts(prices), ...(b.facts ?? [])];
-  const cells = [["무엇이 바뀌나", b.change], ["이 회사의 자리", b.position], ["가격", b.price], ["가장 약한 고리", b.risk]].filter(([, v]) => v) as [string, string][];
+  // 투자 아이디어 → 주가 전망 → 리스크 (사용자 2026-11-04). 옛 칸(change·position·price)만 있으면 합쳐 보인다.
+  const join = (...xs: (string | undefined)[]) => xs.filter(Boolean).join("\n") || undefined;
+  const cells = ([
+    ["투자 아이디어", b.idea ?? join(b.change, b.position), "od-idea"],
+    ["주가 전망", b.outlook ?? b.price, "od-outlook"],
+    ["리스크", b.risk, "od-risk"],
+  ] as [string, string | undefined, string][]).filter(([, v]) => v) as [string, string, string][];
   const touched = touchedAt(o);
   const groups = groupEvidence(o.evidence);
   return <article className="od">
@@ -69,20 +75,18 @@ export default async function OpportunityPage({ params }: { params: Promise<{ ke
       </dl> : null}
     </header>
 
-    <div className="od-grid">
-      <aside className="od-side">
-        {cells.length ? <section className="od-cells" aria-label="핵심">
-          {cells.map(([h, v]) => <div key={h} className={`od-cell ${h === "가장 약한 고리" ? "od-risk" : ""}`}><h2>{h}</h2><p>{v}</p></div>)}
-        </section> : o.interpretation ? <section className="od-cells"><div className="od-cell"><h2>핵심</h2><Prose text={o.interpretation}/></div></section> : null}
-        {others.length ? <section className="od-cos"><h2>함께 볼 기업</h2>
-          <ul>{others.map((c, i) => <li key={`${c.name}-${i}`}><b>{c.name}</b><span>{[c.ticker, marketKo(c.exchange)].filter(Boolean).join(" · ")}</span>{c.role && ROLE_KO[c.role] ? <em>{ROLE_KO[c.role]}</em> : null}</li>)}</ul>
-        </section> : null}
-      </aside>
+    {cells.length ? <section className="od-three" aria-label="투자 아이디어 요약">
+      {cells.map(([h, v, c]) => <div key={h} className={`od-cell ${c}`}><h2>{h}</h2><Prose text={v}/></div>)}
+    </section> : o.interpretation ? <section className="od-three"><div className="od-cell od-idea"><h2>핵심</h2><Prose text={o.interpretation}/></div></section> : null}
 
-      <div className="od-main">
-        {o.history.length ? <IdeaTimeline prices={prices} history={o.history} name={primary?.name ?? o.title}/>
+    <div className="od-main">
+        {o.history.length ? <><h2 className="od-h2">주가와 히스토리</h2><IdeaTimeline prices={prices} history={o.history} name={primary?.name ?? o.title}/></>
           : <section className="op-sec"><h2>투자 아이디어</h2><Prose text={o.idea}/></section>}
         {o.history.length ? <details className="op-more"><summary>아이디어 전문</summary><Prose text={o.idea}/></details> : null}
+
+        {others.length ? <section className="od-sec"><h2>함께 볼 기업</h2>
+          <ul className="od-cos">{others.map((c, i) => <li key={`${c.name}-${i}`}><b>{c.name}</b><span>{[c.ticker, marketKo(c.exchange)].filter(Boolean).join(" · ")}</span>{c.role && ROLE_KO[c.role] ? <em>{ROLE_KO[c.role]}</em> : null}</li>)}</ul>
+        </section> : null}
 
         {related.length ? <section className="od-sec"><h2>같은 흐름의 아이디어</h2>
           <ul className="op-rel">{related.map((r) => <li key={r.opportunity_key}><Link href={`/opportunities/${r.opportunity_key}`}>{r.title}</Link></li>)}</ul>
@@ -97,7 +101,6 @@ export default async function OpportunityPage({ params }: { params: Promise<{ ke
             </li>; })}</ul>
           </div>)}</div>
         </section>
-      </div>
     </div>
   </article>;
 }

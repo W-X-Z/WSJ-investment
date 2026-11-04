@@ -9,7 +9,9 @@ export type OppHistoryKind = "earnings" | "deal" | "filing" | "flow" | "external
 export type OppHistory = { date: string; title: string; body?: string | null; url?: string | null; kind?: OppHistoryKind | null };
 /** 상세 화면 상단 — 핵심 4칸과 판단 스트립 (사용자 2026-11-04). 비어 있으면 interpretation 을 그대로 보인다. */
 export type OppFact = { label: string; value: string; note?: string | null };
-export type OppBrief = { change?: string; position?: string; price?: string; risk?: string; facts?: OppFact[]; next?: string };
+/** idea(투자 아이디어: 무엇이 바뀌고 왜 이 회사인가) · outlook(주가 전망: 이 회사의 몫과 지금 가격, 2배에 필요한 것) · risk(리스크).
+ *  change·position·price 는 첫 판의 칸 — 남아 있으면 셋으로 합쳐 보인다. */
+export type OppBrief = { idea?: string; outlook?: string; risk?: string; change?: string; position?: string; price?: string; facts?: OppFact[]; next?: string };
 export type PricePoint = { d: string; c: number };
 export type Opportunity = {
   opportunity_key: string; title: string; stars: number; idea: string; interpretation?: string | null;
