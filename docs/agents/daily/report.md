@@ -9,7 +9,7 @@
   writing.md 의 형태로 다듬어 같은 key 로 `"status": "active"` 를 보내 낸다. 같은 회사·같은 이야기의 active 아이디어가 있으면 그쪽에 합치고 초안은 `dropped`(status_note "→ <기존 key> 에 합침").
   결론이 기대는 사실이 확인되지 않았으면(status_note 의 `미확인 핵심 전제`, 보강 기록의 `unverified`) 내지 않는다.
 - 검토자가 직접 쓰거나 결론을 바꾼 초안(status_note 가 `검토자 작성:` 으로 시작)은 쓴 사람이 아닌 눈으로 한 번 더 본다 — 결론을 고리로 나눠, 결론이 기대는 원문을 다시 열어 그 주장을 실제로 뒷받침하는지. 무너지는 고리가 있으면 내지 않고 이유를 status_note 에 적는다.
-- 기존 아이디어: 오늘 들어온 그 회사의 소식이 이야기를 바꿨으면 고친다(★ 포함). 참고 쿼리:
+- 기존 아이디어: 오늘 들어온 그 회사의 소식이 이야기를 바꿨으면 고친다(★ 포함) — 그 소식은 `history` 에 날짜 항목으로 더한다(writing.md). 히스토리가 아직 비어 있는 활성 아이디어는 하루 한둘씩 채운다(근거·스레드의 날짜 있는 사실로). 참고 쿼리:
   `select o.opportunity_key, o.title, o.stars, e.title as news, e.url, e.published_at from ideas.opportunities o cross join lateral jsonb_array_elements(o.companies) c join public.v_company_events e on e.company_id = c->>'company' where o.status = 'active' and e.published_at > now() - interval '30 hours' and e.importance >= 2;`
   이야기가 끝났으면(계약 해지, 사업 철수, 상장폐지) `status: closed` 와 이유.
 

@@ -4,9 +4,12 @@ import { db } from "@/lib/supabase";
 /** 투자 아이디어 (ADR-0028): ★1~5 · 제목 · 투자 아이디어 · 해석 · 기업 · 근거. 화면에는 결론만 — 방법론·노드 id 는 보이지 않는다. */
 export type OppCompany = { company?: string | null; name: string; ticker?: string | null; exchange?: string | null; role?: string | null };
 export type OppEvidence = { title: string; url: string; date?: string | null; publisher?: string | null };
+/** 날짜별 이슈 — 차트의 점 하나. body 는 자세히 써도 된다(사용자 2026-11-04: 구조가 보이면 디테일은 괜찮다). */
+export type OppHistory = { date: string; title: string; body?: string | null; url?: string | null };
+export type PricePoint = { d: string; c: number };
 export type Opportunity = {
   opportunity_key: string; title: string; stars: number; idea: string; interpretation?: string | null;
-  companies: OppCompany[]; evidence: OppEvidence[]; nodes: string[]; clue_refs: OppEvidence[];
+  companies: OppCompany[]; evidence: OppEvidence[]; nodes: string[]; clue_refs: OppEvidence[]; history: OppHistory[];
   status: string; status_note?: string | null; created_at: string; updated_at: string; published_at?: string | null;
 };
 
@@ -20,6 +23,8 @@ function normalize(r: Record<string, unknown>): Opportunity {
     ...(r as unknown as Opportunity),
     companies: arr<OppCompany>(r.companies), evidence: arr<OppEvidence>(r.evidence),
     nodes: arr<string>(r.nodes), clue_refs: arr<OppEvidence>(r.clue_refs), stars: Number(r.stars) || 1,
+    history: arr<OppHistory>(r.history).filter((h) => h && typeof h.date === "string" && typeof h.title === "string")
+      .sort((a, b) => a.date.localeCompare(b.date)),
   };
 }
 
@@ -43,6 +48,23 @@ export async function loadOpportunity(key: string): Promise<Opportunity | null> 
     return error || !data ? null : normalize(data as Record<string, unknown>);
   } catch {
     return null;
+  }
+}
+
+/** 주 기업의 일봉(최근 400일). px_daily 의 티커 표기가 시장마다 달라(미국 "FPS", 한국 "KRX:007660") 후보를 함께 묻는다. */
+export async function loadPrices(c?: OppCompany | null): Promise<PricePoint[]> {
+  const t = (c?.ticker ?? "").trim();
+  if (!t || !process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.NEXT_PUBLIC_SUPABASE_KEY) return [];
+  const ex = (c?.exchange ?? "").trim();
+  const cands = [...new Set([t, `KRX:${t}`, ex ? `${ex}:${t}` : "", `${ex.toUpperCase()}:${t}`].filter(Boolean))];
+  try {
+    const { data, error } = await db("public").from("v_px_daily").select("ticker,trade_date,close").in("ticker", cands).order("trade_date").limit(1000);
+    if (error || !data?.length) return [];
+    const rows = data as { ticker: string; trade_date: string; close: number }[];
+    const best = cands.find((k) => rows.some((r) => r.ticker === k)) ?? rows[0].ticker;
+    return rows.filter((r) => r.ticker === best).map((r) => ({ d: r.trade_date, c: Number(r.close) }));
+  } catch {
+    return [];
   }
 }
 
