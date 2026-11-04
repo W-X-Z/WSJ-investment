@@ -21,6 +21,7 @@ from __future__ import annotations
 import argparse
 import json
 import logging
+import os
 import re
 from datetime import UTC, date, datetime, timedelta
 from typing import Any
@@ -29,7 +30,9 @@ from wsj.ecosystems.prices import UA, Listing, listings
 from wsj.http import HOST_RPS, HttpClient
 
 log = logging.getLogger(__name__)
-HOST_RPS.update({"data.sec.gov": 4.0, "qt.gtimg.cn": 0.5, "finance.yahoo.co.jp": 0.5, "m.stock.naver.com": 1.0})
+HOST_RPS.update({"data.sec.gov": 4.0, "www.sec.gov": 4.0, "qt.gtimg.cn": 0.5, "finance.yahoo.co.jp": 0.5, "m.stock.naver.com": 1.0})
+# SEC 는 연락처가 든 UA 를 요구한다 — 브라우저 UA(네이버·텐센트용)로는 www.sec.gov/Archives 가 403. data.sec.gov 는 통과해서 표지 경로만 조용히 죽는다 (2026-11-04).
+SEC_UA = {"User-Agent": os.environ.get("SEC_USER_AGENT") or "WSJ-investment research (github.com/W-X-Z/WSJ-investment)"}
 
 CURRENCY = {"us": "USD", "twse": "TWD", "tpex": "TWD", "kr": "KRW", "cn": "CNY", "hk": "HKD", "jp": "JPY"}
 # FRED 환율 계열: (계열, 'USD 당 외화' 인지)
@@ -82,7 +85,7 @@ SEC_TICKERS_URL = "https://www.sec.gov/files/company_tickers.json"
 
 def sec_cik_by_ticker(http: HttpClient) -> dict[str, int]:
     """SEC 전체 상장 티커 → CIK. 후보 노드(candidates.py 가 올린 그래프 밖 상장사)는 티커·거래소만 있고 CIK 가 없어서 여기서 잇는다."""
-    data = http.get_json(SEC_TICKERS_URL)
+    data = http.get_json(SEC_TICKERS_URL, headers=SEC_UA)
     rows = data.values() if isinstance(data, dict) else data
     out: dict[str, int] = {}
     for r in rows:
@@ -109,7 +112,7 @@ def cover_shares(text: str) -> float | None:
 
 def sec_cover(http: HttpClient, cik: int) -> tuple[float, str] | None:
     """가장 최근 10-Q/10-K 의 표지 주식수 (주식수, 보고 기준일). 인스턴스 파일이 없으면 None → companyfacts 로."""
-    sub = http.get_json(f"https://data.sec.gov/submissions/CIK{int(cik):010d}.json")
+    sub = http.get_json(f"https://data.sec.gov/submissions/CIK{int(cik):010d}.json", headers=SEC_UA)
     rec = (sub.get("filings") or {}).get("recent") or {}
     forms, accs, docs, dates = rec.get("form") or [], rec.get("accessionNumber") or [], rec.get("primaryDocument") or [], rec.get("reportDate") or []
     for i, form in enumerate(forms):
@@ -117,7 +120,7 @@ def sec_cover(http: HttpClient, cik: int) -> tuple[float, str] | None:
             continue
         url = f"https://www.sec.gov/Archives/edgar/data/{int(cik)}/{accs[i].replace('-', '')}/{docs[i][:-4]}_htm.xml"
         try:
-            n = cover_shares(http.get_text(url))
+            n = cover_shares(http.get_text(url, headers=SEC_UA))
         except Exception as exc:  # noqa: BLE001 - 인스턴스 이름이 관행과 다르면 companyfacts 로
             log.info("sec cover %s: %s", cik, str(exc)[:80])
             return None
@@ -150,7 +153,7 @@ def fetch_us(http: HttpClient, xs: list[Listing], graph_nodes: dict[str, Any], c
         if not r:
             src = "sec_companyfacts"
             try:
-                facts = http.get_json(f"https://data.sec.gov/api/xbrl/companyfacts/CIK{int(cik):010d}.json")
+                facts = http.get_json(f"https://data.sec.gov/api/xbrl/companyfacts/CIK{int(cik):010d}.json", headers=SEC_UA)
                 r = sec_shares(facts)
             except Exception as exc:  # noqa: BLE001
                 log.warning("sec %s: %s", x.key, str(exc)[:100])

@@ -32,7 +32,8 @@ def test_adr_listings_count_ads_not_ordinary_shares():
     from wsj.ecosystems.prices import Listing
 
     class _Http:
-        def get_json(self, url):
+        def get_json(self, url, headers=None):
+            assert headers and "research" in headers["User-Agent"]      # SEC 는 연락처 든 UA 가 아니면 403
             return _f(dei={"EntityCommonStockSharesOutstanding": _tag(("2025-12-31", 25_932_524_521))})
 
     tsm = Listing("company:tsmc", "NYSE", "TSM", "TSM", "us")
