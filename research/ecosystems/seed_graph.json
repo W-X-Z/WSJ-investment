@@ -11717,6 +11717,84 @@
       "kind": "component",
       "label": "반도체 장비용 가스·화학물 공급 서브시스템 (가스 패널·용접 부품)",
       "ecosystem": "hbm"
+    },
+    {
+      "id": "authority:tceq",
+      "kind": "authority",
+      "label": "텍사스 환경품질위원회 (TCEQ) — 대기·수질 허가",
+      "ecosystem": "power"
+    },
+    {
+      "id": "authority:tx_governor",
+      "kind": "authority",
+      "label": "텍사스 주지사실 — PUCT·ERCOT·TCEQ 지시",
+      "ecosystem": "power"
+    },
+    {
+      "id": "rule:tx_dc_permit_pause_2026",
+      "kind": "rule",
+      "label": "텍사스 데이터센터 허가 중단 (주지사 서한 2026-08-03 ERCOT 접속 감사 · 2026-09-21 TCEQ 허가 발급 중단, 자체 발전 예외 없음)",
+      "ecosystem": "power"
+    },
+    {
+      "id": "rule:grid_savings_act_2026",
+      "kind": "rule",
+      "label": "GRID Savings Act (하인리히, 2026-08-03 발의) — 150MW 이상 부하 접속을 FERC 관할, 접속·망 보강 비용 부하 부담, ERCOT 제외 (법안)",
+      "ecosystem": "power"
+    },
+    {
+      "id": "rule:caa_major_source_nox",
+      "kind": "rule",
+      "label": "청정대기법 주요 배출원 문턱 — NOx 연 250톤(달성 지역), 비달성 지역 25~100톤 (DFW·휴스턴 25, 시카고 50, 피닉스·북버지니아 100)",
+      "ecosystem": "power"
+    },
+    {
+      "id": "bottleneck:btm_air_permit",
+      "kind": "bottleneck",
+      "label": "자체 발전 대기 허가 — NOx 배출 상한이 부지당 MW 상한이 됨 (0.10g/kWh 연속운전 시 ≈259MW에서 250톤)",
+      "ecosystem": "power"
+    },
+    {
+      "id": "bottleneck:island_stability",
+      "kind": "bottleneck",
+      "label": "섬 운전 계통 안정 — 관성·고장전류(인버터 1.2~2배 vs 회전기 5~10배)·초당 10~20MW 부하 급변을 자체 감당",
+      "ecosystem": "power"
+    },
+    {
+      "id": "tech:synchronous_condenser",
+      "kind": "technology",
+      "label": "동기조상기·플라이휠 (섬 운전 관성·고장전류 공급)",
+      "ecosystem": "power"
+    },
+    {
+      "id": "company:voltagrid",
+      "kind": "company",
+      "label": "VoltaGrid (비상장, 휴스턴) — 데이터센터 자체 발전 EaaS",
+      "ecosystem": "power",
+      "role": "customer",
+      "listing": {
+        "ticker": null,
+        "exchange": null,
+        "cik": null,
+        "filer_type": "private"
+      },
+      "size_band": "private",
+      "in_universe": false
+    },
+    {
+      "id": "company:sanm",
+      "kind": "company",
+      "label": "Sanmina (SANM)",
+      "ecosystem": "power",
+      "role": "customer",
+      "listing": {
+        "ticker": "SANM",
+        "exchange": "Nasdaq",
+        "cik": null,
+        "filer_type": "non_sec_listed"
+      },
+      "size_band": "mid",
+      "in_universe": false
     }
   ],
   "edges": [
@@ -22811,10 +22889,17 @@
           "source_type": "third_party_report",
           "published_at": "2024-12-19",
           "excerpt": "LS UltraGrid supercapacitor system supplies megawatt-level power, response under 0.1 seconds"
+        },
+        {
+          "url": "https://dart.fss.or.kr",
+          "source_type": "official_issuer",
+          "published_at": "2026-10-13",
+          "excerpt": "688.8억 … 미국 수소연료전지 회사"
         }
       ],
       "note": "AI DC 울트라캡 첫 대형 수주",
-      "confidence": 0.625
+      "confidence": 0.65,
+      "exposure": "major"
     },
     {
       "id": "x-pwrA-190",
@@ -44057,6 +44142,361 @@
       "exposure_year": 2025,
       "exposure_source": "https://www.sec.gov/Archives/edgar/data/1652535/000165253526000012/ichr-20251226.htm",
       "confidence": 0.8
+    },
+    {
+      "id": "p1105-001",
+      "from": "rule:tx_dc_permit_pause_2026",
+      "to": "authority:tx_governor",
+      "relation": "issued_by",
+      "evidence_tier": "official_issuer",
+      "polarity": "positive",
+      "evidence": [
+        {
+          "url": "https://gov.texas.gov/uploads/files/press/TCEQ_Data_Center.pdf",
+          "source_type": "official_issuer",
+          "published_at": "2026-09-21",
+          "excerpt": "pause the issuance of all permits related to data center projects until ERCOT completes its review"
+        },
+        {
+          "url": "https://www.tceq.texas.gov/downloads/response/tceq-response-gov-abbott-dc-directive.pdf",
+          "source_type": "official_issuer",
+          "published_at": "2026-10-19",
+          "excerpt": "paused the issuance of all permits related to the construction or development of infrastructure directly supporting data centers"
+        },
+        {
+          "url": "https://www.bracewell.com/resources/governor-abbott-orders-tceq-to-pause-all-permit-issuance-for-data-center-projects/",
+          "source_type": "third_party_report",
+          "published_at": "2026-09-23",
+          "excerpt": "no carve-out for on-site or off-grid generation"
+        }
+      ],
+      "note": "8/3 서한: ERCOT 접속 심사 중인 모든 데이터센터 검증·감사 전까지 추가 승인 중단. 9/21 서한: TCEQ 는 데이터센터 관련 모든 허가 발급을 ERCOT 검토 완료까지 중단 — 정의·MW 문턱·자체 발전 예외 없음. TCEQ 10/19 회신: 발급 중단·심사 중 건은 선별. 12/10 ERCOT 보고.",
+      "confidence": 0.85
+    },
+    {
+      "id": "p1105-002",
+      "from": "rule:tx_dc_permit_pause_2026",
+      "to": "bottleneck:btm_air_permit",
+      "relation": "creates_bottleneck",
+      "evidence_tier": "official_issuer",
+      "polarity": "positive",
+      "evidence": [
+        {
+          "url": "https://www2.tceq.texas.gov/airperm/index.cfm?fuseaction=airpermits.project_report&proj_id=402091&addn_num_txt=182467",
+          "source_type": "official_issuer",
+          "published_at": "2026-11-04",
+          "excerpt": "MAILED 09/22/2026 … Comment Period END 10/23/2026 … No Protestant information exist"
+        },
+        {
+          "url": "https://www.citizen.org/wp-content/uploads/Summary_-Data-Center-Permits-Issued-by-TCEQ-After-9_21_2026.pdf",
+          "source_type": "third_party_report",
+          "published_at": "2026-10-20",
+          "excerpt": "permits issued by TCEQ after 9/21/2026"
+        }
+      ],
+      "note": "VoltaGrid Frontier 확장(182467, 엔진 620대 2,581MW): 예비결정 9/22 발송, 의견 마감 10/23, 반대 0건, 이후 조치 없음. 기존 180842(210대 709MW)는 유효. 중단 뒤 발급된 자체 발전 대기 허가 없음.",
+      "confidence": 0.825
+    },
+    {
+      "id": "p1105-003",
+      "from": "rule:caa_major_source_nox",
+      "to": "bottleneck:btm_air_permit",
+      "relation": "creates_bottleneck",
+      "evidence_tier": "technical_inference",
+      "polarity": "positive",
+      "evidence": [
+        {
+          "url": "https://newsletter.semianalysis.com/p/what-is-so-hard-about-behind-the",
+          "source_type": "third_party_report",
+          "published_at": "2026-10-20",
+          "excerpt": "The 250-ton line is crossed at roughly 259 MW"
+        }
+      ],
+      "note": "PSD 문턱 250톤/년(미지정 업종). 0.10g/kWh × 8,760h 에서 ≈259MW 가 선. 비달성 지역은 25~100톤 + 상쇄 1.1~1.5배. Jupiter 는 245톤 캡이 '집행 불가' 판정 뒤 연료전지로 재설계.",
+      "confidence": 0.4
+    },
+    {
+      "id": "p1105-004",
+      "from": "req:gw_campus_power",
+      "to": "bottleneck:island_stability",
+      "relation": "creates_bottleneck",
+      "evidence_tier": "third_party_report",
+      "polarity": "positive",
+      "evidence": [
+        {
+          "url": "https://newsletter.semianalysis.com/p/what-is-so-hard-about-behind-the",
+          "source_type": "third_party_report",
+          "published_at": "2026-10-20",
+          "excerpt": "swings of 10–20 MW several times a second excited torsional modes"
+        }
+      ],
+      "note": "xAI Colossus 1: 초당 수 회 10~20MW 급변이 터빈 축 비틀림 모드를 자극 → 150MW 배터리로 대응. 터빈은 부하 50% 아래에서 배출 제어 상실.",
+      "confidence": 0.6
+    },
+    {
+      "id": "p1105-005",
+      "from": "bottleneck:btm_air_permit",
+      "to": "component:fuel_cell",
+      "relation": "mitigated_by",
+      "evidence_tier": "official_issuer",
+      "polarity": "positive",
+      "evidence": [
+        {
+          "url": "https://www.abqjournal.com/business/hearing-officer-rejects-bid-to-toss-revised-project-jupiter-air-permit/3150570",
+          "source_type": "third_party_report",
+          "published_at": "2026-10-28",
+          "excerpt": "revised Project Jupiter air permit"
+        }
+      ],
+      "note": "무연소 → 표준 허가. Jupiter 10/15 수정안: 연료전지 출력 2,462MW 중 1,600MW 상한, 공청회 12/7, 가스관 2027-02-01.",
+      "confidence": 0.8
+    },
+    {
+      "id": "p1105-006",
+      "from": "bottleneck:btm_air_permit",
+      "to": "component:recip_gas_engine",
+      "relation": "mitigated_by",
+      "evidence_tier": "official_issuer",
+      "polarity": "positive",
+      "evidence": [
+        {
+          "url": "https://www.epd.georgia.gov",
+          "source_type": "official_issuer",
+          "published_at": "2026-09-18",
+          "excerpt": "VoltaGrid Covington 33 Jenbacher J620, 90 MW prime, SCR+oxcat, synthetic minor"
+        }
+      ],
+      "note": "대당 2~20MW 라 문턱 아래로 쪼개기 쉬움. 조지아 Covington 90MW(J620 33대, SCR+산화촉매, 합성 소규모 배출원, NOx 99톤 공유): 신청 2025-11-12 → 발급 2026-09-18. 250MW 기준 추정 NOx 엔진 66~87톤 vs 터빈 5ppm ≈190톤.",
+      "confidence": 0.8
+    },
+    {
+      "id": "p1105-007",
+      "from": "bottleneck:island_stability",
+      "to": "component:supercapacitor",
+      "relation": "mitigated_by",
+      "evidence_tier": "official_issuer",
+      "polarity": "positive",
+      "evidence": [
+        {
+          "url": "https://www.bloomenergy.com/wp-content/uploads/load-following-solid-oxide-fuel-cell.pdf",
+          "source_type": "official_issuer",
+          "published_at": "2024-02-01",
+          "excerpt": "paired with an inverter and supercapacitors"
+        },
+        {
+          "url": "https://www.goveda.com/patent/US-20260129787-A1",
+          "source_type": "official_issuer",
+          "published_at": "2026-05-07",
+          "excerpt": "step load module comprising supercapacitors"
+        }
+      ],
+      "note": "Bloom: 섬 운전 SOFC 에 스텝 부하 모듈(슈퍼커패시터) 필수 — 3.25MW 스탬프당 0.3~3.3MW. MW당 kWh·공급사 미공개.",
+      "confidence": 0.825
+    },
+    {
+      "id": "p1105-008",
+      "from": "bottleneck:island_stability",
+      "to": "component:facility_bess",
+      "relation": "mitigated_by",
+      "evidence_tier": "third_party_report",
+      "polarity": "positive",
+      "evidence": [
+        {
+          "url": "https://newsletter.semianalysis.com/p/what-is-so-hard-about-behind-the",
+          "source_type": "third_party_report",
+          "published_at": "2026-10-20",
+          "excerpt": "xAI's response was 150 MW of batteries"
+        }
+      ],
+      "note": "xAI Megapack 150MW.",
+      "confidence": 0.6
+    },
+    {
+      "id": "p1105-009",
+      "from": "bottleneck:island_stability",
+      "to": "tech:synchronous_condenser",
+      "relation": "mitigated_by",
+      "evidence_tier": "third_party_report",
+      "polarity": "positive",
+      "evidence": [
+        {
+          "url": "https://voltagrid.com/voltagrid-orders1-5-gw-for-behind-the-meter-power-generation-from-innio",
+          "source_type": "official_issuer",
+          "published_at": "2026-02-12",
+          "excerpt": "zero reliance on battery storage"
+        }
+      ],
+      "note": "VoltaGrid Frontier: 엔진 + ABB 동기조상기·플라이휠 35대, '배터리 의존 0'.",
+      "confidence": 0.6
+    },
+    {
+      "id": "p1105-010",
+      "from": "tech:synchronous_condenser",
+      "to": "company:abb",
+      "relation": "offered_by",
+      "evidence_tier": "third_party_report",
+      "polarity": "positive",
+      "evidence": [
+        {
+          "url": "https://voltagrid.com/voltagrid-orders1-5-gw-for-behind-the-meter-power-generation-from-innio",
+          "source_type": "official_issuer",
+          "published_at": "2026-02-12",
+          "excerpt": "ABB synchronous condensers"
+        }
+      ],
+      "exposure": "minor",
+      "confidence": 0.6
+    },
+    {
+      "id": "p1105-011",
+      "from": "company:inio",
+      "to": "company:voltagrid",
+      "relation": "supplied_to",
+      "evidence_tier": "official_issuer",
+      "polarity": "positive",
+      "evidence": [
+        {
+          "url": "https://www.sec.gov/Archives/edgar/data/0002109150/000119312526237848/ck0002109150-20260526.htm",
+          "source_type": "official_issuer",
+          "published_at": "2026-05-26",
+          "excerpt": "accounting for approximately 41%, 14% and 10% of Equipment Order Intake"
+        },
+        {
+          "url": "https://www.sec.gov/Archives/edgar/data/2109150/000162828026067448/inio-20260930.htm",
+          "source_type": "official_issuer",
+          "published_at": "2026-10-27",
+          "excerpt": "backlog $7,963M … most equipment orders are take or pay"
+        }
+      ],
+      "note": "VoltaGrid = 2025/24/23 장비 수주의 41%/14%/10%. 2.3GW(2025-10, 25MW 팩 92개) + 1.5GW(2026-02, J624/J620 300대, 2028까지). 3Q26 10-Q 위험요인에 텍사스 감사·TCEQ 중단 명시. 락업 만료 2026-11-30.",
+      "exposure": "major",
+      "about": "component:recip_gas_engine",
+      "exposure_pct": 41,
+      "exposure_year": 2025,
+      "exposure_source": "https://www.sec.gov/Archives/edgar/data/0002109150/000119312526237848/ck0002109150-20260526.htm",
+      "confidence": 0.8
+    },
+    {
+      "id": "p1105-012",
+      "from": "company:voltagrid",
+      "to": "company:orcl",
+      "relation": "supplied_to",
+      "evidence_tier": "official_issuer",
+      "polarity": "positive",
+      "evidence": [
+        {
+          "url": "https://www.oracle.com/news/announcement/oracle-and-voltagrid-2025-10-15/",
+          "source_type": "official_issuer",
+          "published_at": "2025-10-15",
+          "excerpt": "2.3 gigawatts"
+        }
+      ],
+      "note": "Oracle-VoltaGrid 2,300MW OCI 협력(2025-10-15). Shackelford: 6월 115MW 가동, 10/28 부하 시뮬레이터 시험, 고객 인도 2027 상반기. Energy Transfer 확정 가스 ≈900MMcf/d.",
+      "exposure": "major",
+      "about": "tech:btm_generation",
+      "confidence": 0.8
+    },
+    {
+      "id": "p1105-013",
+      "from": "company:be",
+      "to": "component:supercapacitor",
+      "relation": "adopts",
+      "evidence_tier": "official_issuer",
+      "polarity": "positive",
+      "evidence": [
+        {
+          "url": "https://ewh.ieee.org/r3/nashville/events/2026/OnSitePowerwithFuelCells.pdf",
+          "source_type": "official_issuer",
+          "published_at": "2026-03-01",
+          "excerpt": "Step-Load Module (Supercap) … SUPERCAPACITORS 0.3MW...3.3MW"
+        }
+      ],
+      "note": "Bloom 데이터센터 에너지 서버의 '스텝 부하 모듈(슈퍼커패시터)'. 공급사 미공개.",
+      "confidence": 0.8
+    },
+    {
+      "id": "p1105-014",
+      "from": "company:vinatech",
+      "to": "company:be",
+      "relation": "supplied_to",
+      "evidence_tier": "official_issuer",
+      "polarity": "positive",
+      "evidence": [
+        {
+          "url": "https://bullstory.io/blog/비나텍-슈퍼커패시터-블룸에너지-412억-계약과-2026년-영업이익-489-시나리오",
+          "source_type": "third_party_report",
+          "published_at": "2026-07-01",
+          "excerpt": "412억"
+        }
+      ],
+      "note": "Bloom 셀 독점(2025-05), Bloom 시스템 412억 원(2026-06-30, 2년, 비독점).",
+      "exposure": "major",
+      "about": "component:supercapacitor",
+      "confidence": 0.8
+    },
+    {
+      "id": "p1105-015",
+      "from": "company:vinatech",
+      "to": "company:sanm",
+      "relation": "supplied_to",
+      "evidence_tier": "official_issuer",
+      "polarity": "positive",
+      "evidence": [
+        {
+          "url": "https://dart.fss.or.kr",
+          "source_type": "official_issuer",
+          "published_at": "2026-10-21",
+          "excerpt": "데이터센터용 슈퍼커패시터 … 1,195억"
+        }
+      ],
+      "note": "데이터센터용 슈퍼커패시터 1,195억 원(USD 8,997만), 2026-10-21~2027-12-23, 공급지 인도, 2025 매출의 145%. 최종 용도 미공개 — Sanmina 는 랙(ZT Systems) 제조사라 랙·PSU 층 추정.",
+      "exposure": "major",
+      "about": "component:supercapacitor",
+      "confidence": 0.8
+    },
+    {
+      "id": "p1105-016",
+      "from": "company:vinatech",
+      "to": "company:acbel",
+      "relation": "supplied_to",
+      "evidence_tier": "official_issuer",
+      "polarity": "positive",
+      "evidence": [
+        {
+          "url": "https://dart.fss.or.kr",
+          "source_type": "official_issuer",
+          "published_at": "2026-10-16",
+          "excerpt": "1,230억"
+        }
+      ],
+      "note": "1,230억 원(USD 9,160만), 2026-10-16~2028-02-01, 대만. 앞서 107억(2025-10)·384억(2026-07). AcBel 은 Bloom 컨버터 조립과 서버 PSU 양쪽.",
+      "exposure": "major",
+      "about": "component:supercapacitor",
+      "confidence": 0.8
+    },
+    {
+      "id": "p1105-017",
+      "from": "rule:grid_savings_act_2026",
+      "to": "req:gw_campus_power",
+      "relation": "drives_requirement",
+      "evidence_tier": "official_issuer",
+      "polarity": "positive",
+      "evidence": [
+        {
+          "url": "https://www.energy.senate.gov/2026/8/heinrich-introduces-legislation-to-ensure-large-users-of-electricity-pay-for-grid-upgrades-protect-customers-from-costs-of-data-center-expansion",
+          "source_type": "official_issuer",
+          "published_at": "2026-08-03",
+          "excerpt": "ensure large users of electricity pay for grid upgrades"
+        },
+        {
+          "url": "https://www.abqjournal.com/business/new-heinrich-bill-would-shift-grid-upgrade-costs-to-big-electricity-users/3096327",
+          "source_type": "third_party_report",
+          "published_at": "2026-08-04",
+          "excerpt": "not a fan of the moratorium approach, because that will simply push (data centers) to the places with the lowest standards"
+        }
+      ],
+      "note": "법안(미통과). 150MW 이상 부하 접속을 FERC 관할로, 접속·직접 할당 설비 100% 부하 부담, 망 보강 선납 후 환급, ERCOT 제외. 하인리히: 모라토리엄 반대('기준이 가장 낮은 곳으로 밀어낸다'). FERC 는 6/18 쇼코즈 6건(50MW 문턱), PJM 답변 11/16.",
+      "confidence": 0.825
     }
   ],
   "events": [

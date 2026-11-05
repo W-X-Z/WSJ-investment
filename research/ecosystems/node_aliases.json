@@ -1451,6 +1451,17 @@
     "company:ichr": [
       "Ichor",
       "아이커"
+    ],
+    "company:voltagrid": [
+      "VoltaGrid",
+      "볼타그리드"
+    ],
+    "company:sanm": [
+      "Sanmina",
+      "샌미나"
+    ],
+    "authority:tceq": [
+      "TCEQ"
     ]
   }
 }
