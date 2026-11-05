@@ -103,3 +103,13 @@ def test_annotation_recomputes_confidence(tmp_path, monkeypatch):
                if (e["from"], e["relation"], e["to"]) == ("component:mlb_pcb", "offered_by", "company:isu_petasys"))
     assert any(ev["url"] == "https://example.com/exposure" for ev in row["evidence"])
     assert row["confidence"] == edge_confidence(row, load_ontology())
+
+
+def test_private_company_node():
+    nodes, *_ = from_json.parse(_doc(nodes=[{"id": "company:zz_private", "kind": "company", "label": "Private Co (비상장)", "ecosystem": "power",
+                                              "private": True, "role": "customer"}]))
+    n = nodes[0]
+    assert n.extra["listing"] == {"ticker": None, "exchange": None, "cik": None, "filer_type": "private"}
+    assert n.extra["size_band"] == "private" and n.extra["role"] == "customer"
+    with pytest.raises(ValueError):
+        from_json.parse(_doc(nodes=[{"id": "company:zz_p2", "kind": "company", "label": "X", "ecosystem": "power", "private": True, "ticker": "1", "exchange": "KRX"}]))

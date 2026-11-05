@@ -57,11 +57,16 @@ def parse(doc: dict[str, Any]) -> tuple[list[Node], list[Edge], str, dict[str, l
                 raise ValueError(f"nodes[{i}]: 기업 id 는 company: 로 시작")
             band = n.get("size_band")
             candidate = n.get("status") == "candidate"
-            if band not in SIZE_BANDS and not (candidate and band in (None, "unknown")):
+            if band not in SIZE_BANDS and not ((candidate or n.get("private")) and band in (None, "unknown")):
                 raise ValueError(f"nodes[{i}]: size_band 는 {sorted(SIZE_BANDS)} (후보 status=candidate 만 unknown 허용)")
-            if not (n.get("ticker") and n.get("exchange")):
-                raise ValueError(f"nodes[{i}]: 상장 기업만 — ticker·exchange 필수")
-            node = Node.company(nid, label, eco, str(n["ticker"]), str(n["exchange"]), band or "unknown", cik=n.get("cik"), role=n.get("role") or "supplier")
+            if n.get("private"):                          # 비상장 (VoltaGrid 처럼 공급망의 핵심 고객·수요처) — size_band private, 상장 정보 없음
+                if n.get("ticker") or n.get("exchange"):
+                    raise ValueError(f"nodes[{i}]: private 기업에 ticker·exchange 를 주지 않는다")
+                node = Node.company(nid, label, eco, None, None, "private", role=n.get("role") or "supplier")
+            else:
+                if not (n.get("ticker") and n.get("exchange")):
+                    raise ValueError(f"nodes[{i}]: 상장 기업만 — ticker·exchange 필수 (비상장은 private: true)")
+                node = Node.company(nid, label, eco, str(n["ticker"]), str(n["exchange"]), band or "unknown", cik=n.get("cik"), role=n.get("role") or "supplier")
             node.extra.update({k: n[k] for k in ("status", "first_seen", "first_evidence", "codes", "also_in") if n.get(k)})
             nodes.append(node)
         else:
