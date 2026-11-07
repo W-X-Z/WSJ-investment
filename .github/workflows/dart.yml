@@ -1,0 +1,63 @@
+# OpenDART — 그래프의 한국 상장사(KRX·KOSDAQ) 재무와 최근 공시. 시크릿: SUPABASE_URL, SUPABASE_SECRET_KEY, DART_API_KEY
+# 재무: 최신 정기보고서 + 직전 사업보고서 → raw.company_fundamentals (TTM·FY: 매출·영업이익·순이익·영업현금흐름·capex·현금·총차입·유통주식수, 원)
+# 공시: 최근 N일 공시 목록 → ideas.clues (source_kind disclosure, 지분·주총 같은 정형 공시 제외). LLM 없음, 비용 없음.
+# 수동 실행만 (예약 없음). DART_API_KEY 가 없으면 아무것도 쓰지 않고 성공으로 끝난다. 새 재무 칸은 마이그레이션 0040 뒤에 저장된다 (전에는 손익 칸만).
+name: dart
+
+on:
+  workflow_dispatch:
+    inputs:
+      days:
+        description: "공시 목록을 볼 최근 일수"
+        required: false
+        default: "14"
+      only:
+        description: "기업 id 쉼표 목록 (비우면 그래프의 한국 상장사 전부)"
+        required: false
+        default: ""
+      financials:
+        description: "재무 수집"
+        type: boolean
+        default: true
+      disclosures:
+        description: "공시 목록 수집"
+        type: boolean
+        default: true
+
+concurrency:
+  group: dart
+  cancel-in-progress: false
+
+jobs:
+  dart:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env:
+      WSJ_STORE: postgrest
+      SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+      SUPABASE_SECRET_KEY: ${{ secrets.SUPABASE_SECRET_KEY }}
+      DART_API_KEY: ${{ secrets.DART_API_KEY }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: pipeline/pyproject.toml
+      - name: Install
+        working-directory: pipeline
+        run: pip install -e .
+      - name: Collect OpenDART financials and disclosures
+        working-directory: pipeline
+        env:
+          IN_DAYS: ${{ inputs.days || '14' }}
+          IN_ONLY: ${{ inputs.only }}
+          IN_FIN: ${{ inputs.financials }}
+          IN_DISC: ${{ inputs.disclosures }}
+        run: |
+          set -euo pipefail
+          args=(run --days "$IN_DAYS")
+          if [ -n "$IN_ONLY" ]; then args+=(--only "$IN_ONLY"); fi
+          if [ "$IN_FIN" = "false" ]; then args+=(--no-financials); fi
+          if [ "$IN_DISC" = "false" ]; then args+=(--no-disclosures); fi
+          python -m wsj.ecosystems.dart "${args[@]}" | tee -a "$GITHUB_STEP_SUMMARY"

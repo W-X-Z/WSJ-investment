@@ -1,0 +1,43 @@
+{
+ "status": "000",
+ "message": "정상",
+ "page_no": 1,
+ "page_count": 100,
+ "total_count": 3,
+ "total_page": 1,
+ "list": [
+  {
+   "corp_code": "00123456",
+   "corp_name": "지지테스트",
+   "stock_code": "123456",
+   "corp_cls": "K",
+   "report_nm": "단일판매ㆍ공급계약체결",
+   "rcept_no": "20261118000111",
+   "flr_nm": "지지테스트",
+   "rcept_dt": "20261118",
+   "rm": "코"
+  },
+  {
+   "corp_code": "00123456",
+   "corp_name": "지지테스트",
+   "stock_code": "123456",
+   "corp_cls": "K",
+   "report_nm": "임원ㆍ주요주주특정증권등소유상황보고서",
+   "rcept_no": "20261117000222",
+   "flr_nm": "홍길동",
+   "rcept_dt": "20261117",
+   "rm": ""
+  },
+  {
+   "corp_code": "00123456",
+   "corp_name": "지지테스트",
+   "stock_code": "123456",
+   "corp_cls": "K",
+   "report_nm": "분기보고서 (2026.09)",
+   "rcept_no": "20261113000123",
+   "flr_nm": "지지테스트",
+   "rcept_dt": "20261113",
+   "rm": ""
+  }
+ ]
+}
