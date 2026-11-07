@@ -176,6 +176,13 @@ class PostgrestStore:
             offset += page
         return out[:limit] if limit else out
 
+    def rpc(self, fn: str, args: dict[str, Any]) -> Any:
+        """'schema.function' 호출 — POST /rest/v1/rpc/<function> + Content-Profile: <schema>. 예:
+        store.rpc("research.put_reports", {"rows": [...]}) · store.rpc("ideas.put_research_sources", {"rows": [...]}) (0040).
+        스키마가 PostgREST 노출 목록(pgrst.db_schemas)에 있어야 한다."""
+        schema, name = split_table(fn)
+        return self._req("POST", f"{schema}.rpc/{name}", body=args).json()
+
     def delete(self, table: str, filters: Filters) -> None:
         if not filters:
             raise ValueError("refusing to delete without filters")
