@@ -181,6 +181,13 @@ def test_single_batch_report_shape_and_prompt_caching():
     assert json.loads(call["user"])["task"] == "A" and "body" in next(c for c in json.loads(call["user"])["clues"] if c["id"] == 2)
 
 
+def test_load_clues_skips_own_research_rows():
+    own = [dict(clue(10, "Centrus 10-Q facts"), source_id="agent_research"), dict(clue(11, "chat note"), source_id="chat_research")]
+    n_all, rows = S.load_clues(FakeStore(clues=CLUES + own), NOW)
+    assert n_all == len(CLUES) + 2
+    assert [r["clue_id"] for r in rows] == [1, 2, 3, 4]
+
+
 def test_no_relevant_clues_makes_empty_report_without_llm():
     p = prep(FakeStore(clues=[clue(5, "noise", relevant=False)]))
     row = S.empty_report(p, cfg())

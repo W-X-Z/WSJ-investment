@@ -243,6 +243,7 @@ def clue_item(row: dict[str, Any], body: str | None, body_chars: int) -> dict[st
 
 CLUE_COLUMNS = ["clue_id", "url", "title", "summary", "published_at", "seen_at", "source_id", "source_name", "source_kind",
                 "companies", "nodes", "note", "extra"]
+OWN_RESEARCH_SOURCES = frozenset({"agent_research", "chat_research"})  # ideas.put_research_sources · 대화 조사가 쓰는 source_id
 
 
 def load_clues(store: Any, since: datetime) -> tuple[int, list[dict[str, Any]]]:
@@ -254,6 +255,8 @@ def load_clues(store: Any, since: datetime) -> tuple[int, list[dict[str, Any]]]:
         log.warning("단서 수를 세지 못함: %s", exc)
         n_all = -1
     rows = store.select("ideas.clues", CLUE_COLUMNS, {"relevant": True, "seen_at": ("gte", iso)})
+    # 리서치 에이전트·대화 조사가 원천에 남긴 행은 우리 조사 결과다 — 새 단서로 다시 선별하면 제 조사를 되먹인다.
+    rows = [r for r in rows if r.get("source_id") not in OWN_RESEARCH_SOURCES]
     return (n_all if n_all >= 0 else len(rows)), rows
 
 
