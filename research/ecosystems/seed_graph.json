@@ -11717,6 +11717,84 @@
       "kind": "component",
       "label": "반도체 장비용 가스·화학물 공급 서브시스템 (가스 패널·용접 부품)",
       "ecosystem": "hbm"
+    },
+    {
+      "id": "segment:large_power_transformer",
+      "kind": "segment",
+      "label": "대형 전력·승압 변압기",
+      "ecosystem": "power",
+      "first_seen": "2026-11-08"
+    },
+    {
+      "id": "segment:distribution_transformer",
+      "kind": "segment",
+      "label": "배전·건식 변압기",
+      "ecosystem": "power",
+      "first_seen": "2026-11-08"
+    },
+    {
+      "id": "segment:goes",
+      "kind": "segment",
+      "label": "방향성 전기강판(GOES)",
+      "ecosystem": "power",
+      "first_seen": "2026-11-08"
+    },
+    {
+      "id": "segment:subsea_hvdc_cable",
+      "kind": "segment",
+      "label": "해저·HVDC 케이블",
+      "ecosystem": "power",
+      "first_seen": "2026-11-08"
+    },
+    {
+      "id": "segment:recip_gas_engine",
+      "kind": "segment",
+      "label": "왕복동 가스엔진 발전",
+      "ecosystem": "power",
+      "first_seen": "2026-11-08"
+    },
+    {
+      "id": "segment:gas_turbine",
+      "kind": "segment",
+      "label": "가스터빈 발전",
+      "ecosystem": "power",
+      "first_seen": "2026-11-08"
+    },
+    {
+      "id": "segment:scr_emissions",
+      "kind": "segment",
+      "label": "배출 저감(SCR)",
+      "ecosystem": "power",
+      "first_seen": "2026-11-08"
+    },
+    {
+      "id": "segment:sofc",
+      "kind": "segment",
+      "label": "고정형 연료전지(SOFC)",
+      "ecosystem": "power",
+      "first_seen": "2026-11-08"
+    },
+    {
+      "id": "segment:uranium_enrichment",
+      "kind": "segment",
+      "label": "우라늄 농축",
+      "ecosystem": "power",
+      "first_seen": "2026-11-08"
+    },
+    {
+      "id": "segment:solar_cell_polysilicon",
+      "kind": "segment",
+      "label": "태양광 셀·폴리실리콘",
+      "ecosystem": "power",
+      "first_seen": "2026-11-08"
+    },
+    {
+      "id": "end_demand:ai_dc_power",
+      "kind": "end_demand",
+      "label": "AI 데이터센터 전력(GW)",
+      "ecosystem": "power",
+      "unit": "GW",
+      "first_seen": "2026-11-08"
     }
   ],
   "edges": [
@@ -44057,6 +44135,821 @@
       "exposure_year": 2025,
       "exposure_source": "https://www.sec.gov/Archives/edgar/data/1652535/000165253526000012/ichr-20251226.htm",
       "confidence": 0.8
+    },
+    {
+      "id": "seg1108-001",
+      "from": "component:lpt",
+      "to": "segment:large_power_transformer",
+      "relation": "part_of",
+      "evidence_tier": "third_party_report",
+      "polarity": "positive",
+      "evidence": [
+        {
+          "url": "https://www.woodmac.com/press-releases/power-transformers-and-distribution-transformers-will-face-supply-deficits-of-30-and-10-in-2025/",
+          "source_type": "third_party_report",
+          "published_at": "2025-08-14",
+          "excerpt": "Power transformers face a 30% supply shortfall in 2025; imports ~80% of US power transformer supply"
+        }
+      ],
+      "note": "구간 분류 — 근거는 기존 간선 x-pwrB-003 (bottleneck:transformer_leadtime mitigated_by component:lpt) 의 근거를 그대로 쓴다",
+      "confidence": 0.6
+    },
+    {
+      "id": "seg1108-002",
+      "from": "component:distribution_transformer",
+      "to": "segment:distribution_transformer",
+      "relation": "part_of",
+      "evidence_tier": "third_party_report",
+      "polarity": "positive",
+      "evidence": [
+        {
+          "url": "https://www.woodmac.com/press-releases/power-transformers-and-distribution-transformers-will-face-supply-deficits-of-30-and-10-in-2025/",
+          "source_type": "third_party_report",
+          "published_at": "2025-08-14",
+          "excerpt": "distribution transformers face a 10% shortfall in 2025; imports ~50% of distribution transformer supply"
+        }
+      ],
+      "note": "구간 분류 — 근거는 기존 간선 x-pwrB-004 (bottleneck:transformer_leadtime mitigated_by component:distribution_transformer) 의 근거를 그대로 쓴다",
+      "confidence": 0.6
+    },
+    {
+      "id": "seg1108-003",
+      "from": "material:goes",
+      "to": "segment:goes",
+      "relation": "part_of",
+      "evidence_tier": "third_party_report",
+      "polarity": "positive",
+      "evidence": [
+        {
+          "url": "https://thebreakthrough.org/issues/energy/america-makes-the-wrong-steel-for-its-transformer-supply-chain",
+          "source_type": "third_party_report",
+          "published_at": "2026-08-14",
+          "excerpt": "Butler Works is America's only domestic source of GOES; US imports of GOES cores rose from $126M (2018) to $524M (2025)"
+        }
+      ],
+      "note": "구간 분류 — 근거는 기존 간선 x-pwrB-009 (bottleneck:goes_supply mitigated_by material:goes) 의 근거를 그대로 쓴다",
+      "confidence": 0.6
+    },
+    {
+      "id": "seg1108-004",
+      "from": "component:recip_gas_engine",
+      "to": "segment:recip_gas_engine",
+      "relation": "part_of",
+      "evidence_tier": "official_issuer",
+      "polarity": "positive",
+      "evidence": [
+        {
+          "url": "https://stockanalysis.com/stocks/cat/transcripts/740999-investor-update/",
+          "source_type": "official_issuer",
+          "published_at": "2026-09-10",
+          "excerpt": "Caterpillar increased capacity investment in large engines to 3x 2024 levels; offerings from 38 MW turbines to 10 MW recips"
+        }
+      ],
+      "note": "구간 분류 — 근거는 기존 간선 x-pwrB-053 (bottleneck:gas_turbine_slots mitigated_by component:recip_gas_engine) 의 근거를 그대로 쓴다",
+      "confidence": 0.8
+    },
+    {
+      "id": "seg1108-005",
+      "from": "component:gas_turbine",
+      "to": "segment:gas_turbine",
+      "relation": "part_of",
+      "evidence_tier": "third_party_report",
+      "polarity": "positive",
+      "evidence": [
+        {
+          "url": "https://www.spglobal.com/energy/en/news-research/latest-news/electric-power/052025-us-gas-fired-turbine-wait-times-as-much-as-seven-years-costs-up-sharply",
+          "source_type": "third_party_report",
+          "published_at": "2025-05-20",
+          "excerpt": "Siemens Energy planned 8 GW of US gas turbines for data centers incl. 2 GW booked and 6 GW firm reservations"
+        }
+      ],
+      "note": "구간 분류 — 근거는 기존 간선 x-pwrB-052 (bottleneck:gas_turbine_slots mitigated_by component:gas_turbine) 의 근거를 그대로 쓴다",
+      "confidence": 0.6
+    },
+    {
+      "id": "seg1108-006",
+      "from": "component:fuel_cell",
+      "to": "segment:sofc",
+      "relation": "part_of",
+      "evidence_tier": "third_party_report",
+      "polarity": "positive",
+      "evidence": [
+        {
+          "url": "https://www.reuters.com/business/energy/why-ai-data-centers-are-powering-boom-fuel-cell-demand-2026-10-23/",
+          "source_type": "third_party_report",
+          "published_at": "2026-10-23",
+          "excerpt": "Why AI data centers are powering a boom in fuel-cell demand (Reuters)"
+        }
+      ],
+      "note": "구간 분류 — 근거는 기존 간선 x-pwrB-054 (bottleneck:gas_turbine_slots mitigated_by component:fuel_cell) 의 근거를 그대로 쓴다",
+      "confidence": 0.6
+    },
+    {
+      "id": "seg1108-007",
+      "from": "component:sofc_hot_box",
+      "to": "segment:sofc",
+      "relation": "part_of",
+      "evidence_tier": "third_party_report",
+      "polarity": "positive",
+      "evidence": [
+        {
+          "url": "https://uanalyze.com.tw/articles/5201834596",
+          "source_type": "third_party_report",
+          "published_at": "2025-10-13",
+          "excerpt": "高力為 Bloom Energy 的 Hot Box 供應商 (Kaori is Bloom's SOFC Hot Box supplier)"
+        }
+      ],
+      "note": "구간 분류 — 근거는 기존 간선 x-pwrB-073 (component:fuel_cell requires component:sofc_hot_box) 의 근거를 그대로 쓴다",
+      "confidence": 0.6
+    },
+    {
+      "id": "seg1108-008",
+      "from": "segment:goes",
+      "to": "segment:large_power_transformer",
+      "relation": "feeds",
+      "evidence_tier": "third_party_report",
+      "polarity": "positive",
+      "evidence": [
+        {
+          "url": "https://thebreakthrough.org/issues/energy/america-makes-the-wrong-steel-for-its-transformer-supply-chain",
+          "source_type": "third_party_report",
+          "published_at": "2026-08-14",
+          "excerpt": "GOES accounting for about 20 percent of a transformer's total cost; GOES prices doubled 2020-2024"
+        }
+      ],
+      "note": "가치사슬 — 근거는 기존 간선 x-pwrB-006 (component:lpt requires material:goes) 의 근거를 그대로 쓴다 (계수 coef 는 원문 숫자가 생기면)",
+      "confidence": 0.6
+    },
+    {
+      "id": "seg1108-009",
+      "from": "segment:goes",
+      "to": "segment:distribution_transformer",
+      "relation": "feeds",
+      "evidence_tier": "third_party_report",
+      "polarity": "positive",
+      "evidence": [
+        {
+          "url": "https://thebreakthrough.org/issues/energy/america-makes-the-wrong-steel-for-its-transformer-supply-chain",
+          "source_type": "third_party_report",
+          "published_at": "2026-08-14",
+          "excerpt": "Butler Works distribution cores lose up to 39% more energy than GOES from Japanese steelmakers Nippon and JFE"
+        }
+      ],
+      "note": "가치사슬 — 근거는 기존 간선 x-pwrB-007 (component:distribution_transformer requires material:goes) 의 근거를 그대로 쓴다 (계수 coef 는 원문 숫자가 생기면)",
+      "confidence": 0.6
+    },
+    {
+      "id": "seg1108-010",
+      "from": "segment:large_power_transformer",
+      "to": "end_demand:ai_dc_power",
+      "relation": "feeds",
+      "evidence_tier": "third_party_report",
+      "polarity": "positive",
+      "evidence": [
+        {
+          "url": "https://www.ajot.com/news/us-power-companies-scramble-to-secure-equipment-as-surging-data-center-demand-strains-supplies",
+          "source_type": "third_party_report",
+          "published_at": "2026-07-09",
+          "excerpt": "Generator step-up transformer lead times passed 160 weeks by Q1 2026, up from an average of 143 weeks in 2024"
+        }
+      ],
+      "note": "가치사슬 — 근거는 기존 간선 x-pwrB-005 (req:gw_campus_power requires component:lpt) 의 근거를 그대로 쓴다 (계수 coef 는 원문 숫자가 생기면)",
+      "confidence": 0.6
+    },
+    {
+      "id": "seg1108-011",
+      "from": "segment:recip_gas_engine",
+      "to": "end_demand:ai_dc_power",
+      "relation": "feeds",
+      "evidence_tier": "official_issuer",
+      "polarity": "positive",
+      "evidence": [
+        {
+          "url": "https://stockanalysis.com/stocks/cat/transcripts/740999-investor-update/",
+          "source_type": "official_issuer",
+          "published_at": "2026-09-10",
+          "excerpt": "Caterpillar CEO: 'we're seeing a lot more interest in natural gas prime power behind the meter'"
+        }
+      ],
+      "note": "가치사슬 — 근거는 기존 간선 x-pwrB-044 (tech:btm_generation requires component:recip_gas_engine) 의 근거를 그대로 쓴다 (계수 coef 는 원문 숫자가 생기면)",
+      "confidence": 0.8
+    },
+    {
+      "id": "seg1108-012",
+      "from": "segment:gas_turbine",
+      "to": "end_demand:ai_dc_power",
+      "relation": "feeds",
+      "evidence_tier": "third_party_report",
+      "polarity": "positive",
+      "evidence": [
+        {
+          "url": "https://www.spglobal.com/energy/en/news-research/latest-news/electric-power/052025-us-gas-fired-turbine-wait-times-as-much-as-seven-years-costs-up-sharply",
+          "source_type": "third_party_report",
+          "published_at": "2025-05-20",
+          "excerpt": "Siemens Energy planned 8 GW of US gas turbines for data centers incl. 2 GW booked and 6 GW firm reservations"
+        },
+        {
+          "url": "https://newsletter.semianalysis.com/p/us-grid-constraints-towards-40gw",
+          "source_type": "third_party_report",
+          "published_at": "2026-06-25",
+          "excerpt": "Gas turbine and GSU lead times have reached three to four years, versus roughly 18 months historically"
+        }
+      ],
+      "note": "가치사슬 — 근거는 기존 간선 x-pwrB-052 (bottleneck:gas_turbine_slots mitigated_by component:gas_turbine), x-pwrB-043 (tech:btm_generation requires component:gas_turbine) 의 근거를 그대로 쓴다 (계수 coef 는 원문 숫자가 생기면)",
+      "confidence": 0.625
+    },
+    {
+      "id": "seg1108-013",
+      "from": "segment:sofc",
+      "to": "end_demand:ai_dc_power",
+      "relation": "feeds",
+      "evidence_tier": "third_party_report",
+      "polarity": "positive",
+      "evidence": [
+        {
+          "url": "https://www.reuters.com/business/energy/why-ai-data-centers-are-powering-boom-fuel-cell-demand-2026-10-23/",
+          "source_type": "third_party_report",
+          "published_at": "2026-10-23",
+          "excerpt": "Why AI data centers are powering a boom in fuel-cell demand (Reuters)"
+        },
+        {
+          "url": "https://enkiai.com/data-centers/ai-data-center-energy-2026-the-grid-bypass-revolution",
+          "source_type": "third_party_report",
+          "excerpt": "Oracle + Bloom Energy (Jul 2025): on-site solid oxide fuel cells at select data centers"
+        }
+      ],
+      "note": "가치사슬 — 근거는 기존 간선 x-pwrB-054 (bottleneck:gas_turbine_slots mitigated_by component:fuel_cell), x-pwrB-045 (tech:btm_generation requires component:fuel_cell) 의 근거를 그대로 쓴다 (계수 coef 는 원문 숫자가 생기면)",
+      "confidence": 0.625
+    },
+    {
+      "id": "seg1108-014",
+      "from": "company:clf",
+      "to": "segment:goes",
+      "relation": "participates_in",
+      "evidence_tier": "third_party_report",
+      "polarity": "positive",
+      "evidence": [
+        {
+          "url": "https://www.steelorbis.com/steel-news/latest-news/cleveland-cliffswins-us-defense-contractworth400-million-1462295.htm",
+          "source_type": "third_party_report",
+          "published_at": "2026-07-03",
+          "excerpt": "US DoW awarded up to $400M sole-source GOES contract (53,000 net tons) to Cleveland-Cliffs, the only domestic producer (Butler, PA)"
+        },
+        {
+          "url": "https://thebreakthrough.org/issues/energy/america-makes-the-wrong-steel-for-its-transformer-supply-chain",
+          "source_type": "third_party_report",
+          "published_at": "2026-08-14",
+          "excerpt": "Cleveland-Cliffs' Butler Works ... America's only domestic source of grain-oriented electrical steel"
+        }
+      ],
+      "note": "material:goes 공급사 — 근거는 기존 간선 x-pwrB-010 (offered_by) 의 근거·등급을 그대로 쓴다",
+      "confidence": 0.625
+    },
+    {
+      "id": "seg1108-015",
+      "from": "company:nippon_steel",
+      "to": "segment:goes",
+      "relation": "participates_in",
+      "evidence_tier": "third_party_report",
+      "polarity": "positive",
+      "evidence": [
+        {
+          "url": "https://thebreakthrough.org/issues/energy/america-makes-the-wrong-steel-for-its-transformer-supply-chain",
+          "source_type": "third_party_report",
+          "published_at": "2026-08-14",
+          "excerpt": "Nippon Steel, JFE and POSCO are the only producers using the advanced etching-and-annealing GOES technique"
+        }
+      ],
+      "note": "material:goes 공급사 — 근거는 기존 간선 x-pwrB-011 (offered_by) 의 근거·등급을 그대로 쓴다",
+      "confidence": 0.6
+    },
+    {
+      "id": "seg1108-016",
+      "from": "company:jfe",
+      "to": "segment:goes",
+      "relation": "participates_in",
+      "evidence_tier": "third_party_report",
+      "polarity": "positive",
+      "evidence": [
+        {
+          "url": "https://thebreakthrough.org/issues/energy/america-makes-the-wrong-steel-for-its-transformer-supply-chain",
+          "source_type": "third_party_report",
+          "published_at": "2026-08-14",
+          "excerpt": "JFE named among three mills (Nippon, JFE, POSCO) using advanced GOES process; Butler cores lose up to 39% more energy"
+        }
+      ],
+      "note": "material:goes 공급사 — 근거는 기존 간선 x-pwrB-012 (offered_by) 의 근거·등급을 그대로 쓴다",
+      "confidence": 0.6
+    },
+    {
+      "id": "seg1108-017",
+      "from": "company:pkx",
+      "to": "segment:goes",
+      "relation": "participates_in",
+      "evidence_tier": "third_party_report",
+      "polarity": "positive",
+      "evidence": [
+        {
+          "url": "https://thebreakthrough.org/issues/energy/america-makes-the-wrong-steel-for-its-transformer-supply-chain",
+          "source_type": "third_party_report",
+          "published_at": "2026-08-14",
+          "excerpt": "POSCO (Korea) named with Nippon Steel and JFE as the only users of the advanced GOES technique"
+        }
+      ],
+      "note": "material:goes 공급사 — 근거는 기존 간선 x-pwrB-013 (offered_by) 의 근거·등급을 그대로 쓴다",
+      "confidence": 0.6
+    },
+    {
+      "id": "seg1108-018",
+      "from": "company:hitachi",
+      "to": "segment:large_power_transformer",
+      "relation": "participates_in",
+      "evidence_tier": "official_issuer",
+      "polarity": "positive",
+      "evidence": [
+        {
+          "url": "https://www.prnewswire.com/news-releases/hitachi-energy-invests-479-million-cad-to-bring-critical-transformer-manufacturing-capability-to-canada-302911216.html",
+          "source_type": "official_issuer",
+          "published_at": "2026-10-16",
+          "excerpt": "Hitachi Energy invests CAD 479 million to bring critical transformer manufacturing capability to Canada (London, Ontario)"
+        },
+        {
+          "url": "https://www.plantservices.com/industry-news/news/55314760/hitachi-energy-invests-457-million-to-build-large-power-transformer-manufacturing-facility-in-virginia",
+          "source_type": "third_party_report",
+          "excerpt": "Hitachi Energy invests $457 million to build large power transformer manufacturing facility in Virginia"
+        },
+        {
+          "url": "https://pv-magazine-usa.com/2026/05/11/u-s-transformer-market-faces-severe-supply-constraints-as-lead-times-extend-to-four-years/",
+          "source_type": "third_party_report",
+          "published_at": "2026-05-11",
+          "excerpt": "Hitachi Energy: over $1 billion in investment, including a new South Boston plant due online in 2028"
+        }
+      ],
+      "note": "component:lpt 공급사 — 근거는 기존 간선 x-pwrB-015 (offered_by) 의 근거·등급을 그대로 쓴다",
+      "confidence": 0.85
+    },
+    {
+      "id": "seg1108-019",
+      "from": "company:siemens_energy",
+      "to": "segment:large_power_transformer",
+      "relation": "participates_in",
+      "evidence_tier": "third_party_report",
+      "polarity": "positive",
+      "evidence": [
+        {
+          "url": "https://pv-magazine-usa.com/2026/05/11/u-s-transformer-market-faces-severe-supply-constraints-as-lead-times-extend-to-four-years/",
+          "source_type": "third_party_report",
+          "published_at": "2026-05-11",
+          "excerpt": "Siemens: a $421 million commitment, including a transformer factory in Charlotte, North Carolina"
+        }
+      ],
+      "note": "component:lpt 공급사 — 근거는 기존 간선 x-pwrB-016 (offered_by) 의 근거·등급을 그대로 쓴다",
+      "confidence": 0.6
+    },
+    {
+      "id": "seg1108-020",
+      "from": "company:gev",
+      "to": "segment:large_power_transformer",
+      "relation": "participates_in",
+      "evidence_tier": "official_issuer",
+      "polarity": "positive",
+      "evidence": [
+        {
+          "url": "https://www.sec.gov/Archives/edgar/data/0001996810/000199681026000064/gev1q2026form10-q.pdf",
+          "source_type": "official_issuer",
+          "published_at": "2026-04-22",
+          "excerpt": "completed the acquisition of the remaining 50% stake of Prolec GE (Feb 2, 2026, $5.25B); RPO growth from demand for switchgear and transformers"
+        },
+        {
+          "url": "https://www.gevernova.com/news/press-releases/ge-vernova-completes-prolec-ge-acquisition",
+          "source_type": "official_issuer",
+          "published_at": "2026-02-02",
+          "excerpt": "GE Vernova completes Prolec GE acquisition"
+        }
+      ],
+      "note": "component:lpt 공급사 — 근거는 기존 간선 x-pwrB-017 (offered_by) 의 근거·등급을 그대로 쓴다",
+      "confidence": 0.825
+    },
+    {
+      "id": "seg1108-021",
+      "from": "company:hd_hyundai_electric",
+      "to": "segment:large_power_transformer",
+      "relation": "participates_in",
+      "evidence_tier": "third_party_report",
+      "polarity": "positive",
+      "evidence": [
+        {
+          "url": "https://www.tdworld.com/substations/news/55362928/hd-hyundai-electric-expands-us-manufacturing-with-new-alabama-facility",
+          "source_type": "third_party_report",
+          "excerpt": "HD Hyundai Electric Expands U.S. Manufacturing with New Alabama Facility (second US transformer plant)"
+        }
+      ],
+      "note": "component:lpt 공급사 — 근거는 기존 간선 x-pwrB-018 (offered_by) 의 근거·등급을 그대로 쓴다",
+      "confidence": 0.6
+    },
+    {
+      "id": "seg1108-022",
+      "from": "company:hyosung_hi",
+      "to": "segment:large_power_transformer",
+      "relation": "participates_in",
+      "evidence_tier": "third_party_report",
+      "polarity": "positive",
+      "evidence": [
+        {
+          "url": "https://view.asiae.co.kr/en/article/2026091509364051456",
+          "source_type": "third_party_report",
+          "published_at": "2026-09-15",
+          "excerpt": "Hyosung HI won 386.5B won of 765kV/345kV UHV transformer orders from two U.S. big tech firms for new AI data centers"
+        }
+      ],
+      "note": "component:lpt 공급사 — 근거는 기존 간선 x-pwrB-019 (offered_by) 의 근거·등급을 그대로 쓴다",
+      "confidence": 0.6
+    },
+    {
+      "id": "seg1108-023",
+      "from": "company:ls_electric",
+      "to": "segment:large_power_transformer",
+      "relation": "participates_in",
+      "evidence_tier": "third_party_report",
+      "polarity": "positive",
+      "evidence": [
+        {
+          "url": "https://www.koreajoongangdaily.com/business/ls-electric-secures-132-million-transformer-deal-for-us-data-center/12900654",
+          "source_type": "third_party_report",
+          "excerpt": "LS Electric secures $132 million transformer deal for U.S. data center"
+        }
+      ],
+      "note": "component:lpt 공급사 — 근거는 기존 간선 x-pwrB-020 (offered_by) 의 근거·등급을 그대로 쓴다",
+      "confidence": 0.6
+    },
+    {
+      "id": "seg1108-024",
+      "from": "company:iljin_electric",
+      "to": "segment:large_power_transformer",
+      "relation": "participates_in",
+      "evidence_tier": "third_party_report",
+      "polarity": "positive",
+      "evidence": [
+        {
+          "url": "https://stockanalysis.com/quote/krx/103590/",
+          "source_type": "third_party_report",
+          "excerpt": "Iljin Electric produces power T&D equipment: transformers, HV and MV GIS, switches, protection relays, cables"
+        }
+      ],
+      "note": "component:lpt 공급사 — 근거는 기존 간선 x-pwrB-021 (offered_by) 의 근거·등급을 그대로 쓴다",
+      "confidence": 0.6
+    },
+    {
+      "id": "seg1108-025",
+      "from": "company:fortune_electric",
+      "to": "segment:large_power_transformer",
+      "relation": "participates_in",
+      "evidence_tier": "third_party_report",
+      "polarity": "positive",
+      "evidence": [
+        {
+          "url": "https://stockanalysis.com/quote/tpe/1519/",
+          "source_type": "third_party_report",
+          "excerpt": "Fortune Electric makes power, distribution, cast resin and amorphous metal core transformers, metal-clad switchgear, GIS"
+        }
+      ],
+      "note": "component:lpt 공급사 — 근거는 기존 간선 x-pwrB-022 (offered_by) 의 근거·등급을 그대로 쓴다",
+      "confidence": 0.6
+    },
+    {
+      "id": "seg1108-026",
+      "from": "company:ls_electric",
+      "to": "segment:distribution_transformer",
+      "relation": "participates_in",
+      "evidence_tier": "third_party_report",
+      "polarity": "positive",
+      "evidence": [
+        {
+          "url": "https://evertiq.com/news/2026-10-13-ls-electric-signs-138-million-contract-with-bloom-energy",
+          "source_type": "third_party_report",
+          "published_at": "2026-10-13",
+          "excerpt": "LS Electric will supply 38 kV-class high-voltage switchgear and distribution transformers (Apr-Jul 2027), USD 138.46M"
+        }
+      ],
+      "note": "component:distribution_transformer 공급사 — 근거는 기존 간선 x-pwrB-023 (offered_by) 의 근거·등급을 그대로 쓴다",
+      "confidence": 0.6
+    },
+    {
+      "id": "seg1108-027",
+      "from": "company:cheryong_electric",
+      "to": "segment:distribution_transformer",
+      "relation": "participates_in",
+      "evidence_tier": "third_party_report",
+      "polarity": "positive",
+      "evidence": [
+        {
+          "url": "https://stockanalysis.com/quote/kosdaq/033100/",
+          "source_type": "third_party_report",
+          "excerpt": "Cheryong Electric makes transformers of several types, gas-insulated switchgear, polymer lightning arresters"
+        }
+      ],
+      "note": "component:distribution_transformer 공급사 — 근거는 기존 간선 x-pwrB-024 (offered_by) 의 근거·등급을 그대로 쓴다",
+      "confidence": 0.6
+    },
+    {
+      "id": "seg1108-028",
+      "from": "company:sanil_electric",
+      "to": "segment:distribution_transformer",
+      "relation": "participates_in",
+      "evidence_tier": "third_party_report",
+      "polarity": "positive",
+      "evidence": [
+        {
+          "url": "https://stockanalysis.com/quote/krx/062040/",
+          "source_type": "third_party_report",
+          "excerpt": "Sanil Electric manufactures transformers and reactors for power grid, renewable energy and industrial markets, Korea and abroad"
+        }
+      ],
+      "note": "component:distribution_transformer 공급사 — 근거는 기존 간선 x-pwrB-025 (offered_by) 의 근거·등급을 그대로 쓴다",
+      "confidence": 0.6
+    },
+    {
+      "id": "seg1108-029",
+      "from": "company:hammond",
+      "to": "segment:distribution_transformer",
+      "relation": "participates_in",
+      "evidence_tier": "third_party_report",
+      "polarity": "positive",
+      "evidence": [
+        {
+          "url": "https://stockanalysis.com/quote/tsx/HPS.A/",
+          "source_type": "third_party_report",
+          "published_at": "2026-07-31",
+          "excerpt": "Hammond: dry-type and distribution transformers; Q2 2026 sales +44.7% YoY led by U.S. and Mexico data center demand"
+        }
+      ],
+      "note": "component:distribution_transformer 공급사 — 근거는 기존 간선 x-pwrB-026 (offered_by) 의 근거·등급을 그대로 쓴다",
+      "confidence": 0.6
+    },
+    {
+      "id": "seg1108-030",
+      "from": "company:fps",
+      "to": "segment:distribution_transformer",
+      "relation": "participates_in",
+      "evidence_tier": "third_party_report",
+      "polarity": "positive",
+      "evidence": [
+        {
+          "url": "https://stockanalysis.com/stocks/fps/",
+          "source_type": "third_party_report",
+          "excerpt": "Forgent designs electrical distribution equipment for data centers: dry-type and liquid-filled transformers, switchgear, ATS, PDUs"
+        }
+      ],
+      "note": "component:distribution_transformer 공급사 — 근거는 기존 간선 x-pwrB-027 (offered_by) 의 근거·등급을 그대로 쓴다",
+      "confidence": 0.6
+    },
+    {
+      "id": "seg1108-031",
+      "from": "company:gev",
+      "to": "segment:gas_turbine",
+      "relation": "participates_in",
+      "evidence_tier": "official_issuer",
+      "polarity": "positive",
+      "evidence": [
+        {
+          "url": "https://www.sec.gov/Archives/edgar/data/0001996810/000199681026000064/gev1q2026form10-q.pdf",
+          "source_type": "official_issuer",
+          "published_at": "2026-04-22",
+          "excerpt": "Q1 2026 gas turbine orders 37 units / 8.1 GW (vs 7.1 GW); Power RPO $99.7B driven by Gas Power"
+        }
+      ],
+      "note": "component:gas_turbine 공급사 — 근거는 기존 간선 x-pwrB-055 (offered_by) 의 근거·등급을 그대로 쓴다",
+      "confidence": 0.8
+    },
+    {
+      "id": "seg1108-032",
+      "from": "company:siemens_energy",
+      "to": "segment:gas_turbine",
+      "relation": "participates_in",
+      "evidence_tier": "third_party_report",
+      "polarity": "positive",
+      "evidence": [
+        {
+          "url": "https://www.spglobal.com/energy/en/news-research/latest-news/electric-power/052025-us-gas-fired-turbine-wait-times-as-much-as-seven-years-costs-up-sharply",
+          "source_type": "third_party_report",
+          "published_at": "2025-05-20",
+          "excerpt": "Siemens Energy order backlog record EUR133B; 8 GW of US gas turbines for data centers in H1"
+        },
+        {
+          "url": "https://www.reuters.com/business/energy/siemens-energy-posts-forecast-beating-results-ai-data-centre-boom-middle-east-2026-08-05/",
+          "source_type": "third_party_report",
+          "published_at": "2026-08-05",
+          "excerpt": "Siemens Energy beats Q3 forecasts on AI data centre boom, Middle East demand"
+        }
+      ],
+      "note": "component:gas_turbine 공급사 — 근거는 기존 간선 x-pwrB-056 (offered_by) 의 근거·등급을 그대로 쓴다",
+      "confidence": 0.625
+    },
+    {
+      "id": "seg1108-033",
+      "from": "company:mhi",
+      "to": "segment:gas_turbine",
+      "relation": "participates_in",
+      "evidence_tier": "third_party_report",
+      "polarity": "positive",
+      "evidence": [
+        {
+          "url": "https://enkiai.com/sustainability-initiatives/data-center/grid-power-infrastructure-2026-mitsubishi-14-gw-surge/",
+          "source_type": "third_party_report",
+          "excerpt": "Mitsubishi Heavy gas turbine production slots booked through 2027-2028"
+        }
+      ],
+      "note": "component:gas_turbine 공급사 — 근거는 기존 간선 x-pwrB-057 (offered_by) 의 근거·등급을 그대로 쓴다",
+      "confidence": 0.6
+    },
+    {
+      "id": "seg1108-034",
+      "from": "company:doosan_enerbility",
+      "to": "segment:gas_turbine",
+      "relation": "participates_in",
+      "evidence_tier": "third_party_report",
+      "polarity": "positive",
+      "evidence": [
+        {
+          "url": "https://stockanalysis.com/quote/krx/034020/",
+          "source_type": "third_party_report",
+          "excerpt": "Doosan Enerbility company description lists gas turbines and small modular reactors among its businesses"
+        }
+      ],
+      "note": "component:gas_turbine 공급사 — 근거는 기존 간선 x-pwrB-058 (offered_by) 의 근거·등급을 그대로 쓴다",
+      "confidence": 0.6
+    },
+    {
+      "id": "seg1108-035",
+      "from": "company:cat",
+      "to": "segment:gas_turbine",
+      "relation": "participates_in",
+      "evidence_tier": "official_issuer",
+      "polarity": "positive",
+      "evidence": [
+        {
+          "url": "https://stockanalysis.com/stocks/cat/transcripts/740999-investor-update/",
+          "source_type": "official_issuer",
+          "published_at": "2026-09-10",
+          "excerpt": "'Between turbines up to 38 MW all the way down through our recip offerings now as big as 10 MW' (Solar Turbines)"
+        }
+      ],
+      "note": "component:gas_turbine 공급사 — 근거는 기존 간선 x-pwrB-059 (offered_by) 의 근거·등급을 그대로 쓴다",
+      "confidence": 0.8
+    },
+    {
+      "id": "seg1108-036",
+      "from": "company:cat",
+      "to": "segment:recip_gas_engine",
+      "relation": "participates_in",
+      "evidence_tier": "official_issuer",
+      "polarity": "positive",
+      "evidence": [
+        {
+          "url": "https://stockanalysis.com/stocks/cat/transcripts/740999-investor-update/",
+          "source_type": "official_issuer",
+          "published_at": "2026-09-10",
+          "excerpt": "'A great majority of the sites that we are talking to, the plan is they are the prime power'"
+        }
+      ],
+      "note": "component:recip_gas_engine 공급사 — 근거는 기존 간선 x-pwrB-060 (offered_by) 의 근거·등급을 그대로 쓴다",
+      "confidence": 0.8
+    },
+    {
+      "id": "seg1108-037",
+      "from": "company:inio",
+      "to": "segment:recip_gas_engine",
+      "relation": "participates_in",
+      "evidence_tier": "official_issuer",
+      "polarity": "positive",
+      "evidence": [
+        {
+          "url": "https://www.businesswire.com/news/home/20261022191376/en/Follow-on-Order-Brings-Orders-from-INNIO-Data-Center-Customer-to-1.72-GW-Further-Strengthening-INNIO%E2%80%99s-Data-Center-Backlog-and-Revenue-Visibility/",
+          "source_type": "official_issuer",
+          "published_at": "2026-10-22",
+          "excerpt": "620 MW follow-on order of containerized Jenbacher J624 brings orders from a US data center customer to ~1.72 GW"
+        },
+        {
+          "url": "https://www.businesswire.com/news/home/20260917646026/en/INNIO-Secures-450-MW-Order-to-Power-Next-Generation-Data-Centers/",
+          "source_type": "official_issuer",
+          "published_at": "2026-09-17",
+          "excerpt": "INNIO Secures 450 MW Order to Power Next-Generation Data Centers"
+        }
+      ],
+      "note": "component:recip_gas_engine 공급사 — 근거는 기존 간선 x-pwrB-061 (offered_by) 의 근거·등급을 그대로 쓴다",
+      "confidence": 0.8
+    },
+    {
+      "id": "seg1108-038",
+      "from": "company:wartsila",
+      "to": "segment:recip_gas_engine",
+      "relation": "participates_in",
+      "evidence_tier": "official_issuer",
+      "polarity": "positive",
+      "evidence": [
+        {
+          "url": "https://stockanalysis.com/quote/hel/WRT1V/transcripts/738534-strategy-update/",
+          "source_type": "official_issuer",
+          "published_at": "2026-09-23",
+          "excerpt": "CEO Agnevall: 'we are sold out for 2028, and we are selling 2029'; data center demand is holding up"
+        }
+      ],
+      "note": "component:recip_gas_engine 공급사 — 근거는 기존 간선 x-pwrB-062 (offered_by) 의 근거·등급을 그대로 쓴다",
+      "confidence": 0.8
+    },
+    {
+      "id": "seg1108-039",
+      "from": "company:cmi",
+      "to": "segment:recip_gas_engine",
+      "relation": "participates_in",
+      "evidence_tier": "official_issuer",
+      "polarity": "positive",
+      "evidence": [
+        {
+          "url": "https://www.businesswire.com/news/home/20260818513062/en/Cummins-selected-to-supply-battery-energy-storage-systems-for-large-U.S.-data-center-project/",
+          "source_type": "official_issuer",
+          "published_at": "2026-08-18",
+          "excerpt": "Cummins portfolio includes diesel standby and natural gas prime power, designed for integration with BESS at data centers"
+        }
+      ],
+      "note": "component:recip_gas_engine 공급사 — 근거는 기존 간선 x-pwrB-063 (offered_by) 의 근거·등급을 그대로 쓴다",
+      "confidence": 0.8
+    },
+    {
+      "id": "seg1108-040",
+      "from": "company:be",
+      "to": "segment:sofc",
+      "relation": "participates_in",
+      "evidence_tier": "third_party_report",
+      "polarity": "positive",
+      "evidence": [
+        {
+          "url": "https://evertiq.com/news/2026-10-13-ls-electric-signs-138-million-contract-with-bloom-energy",
+          "source_type": "third_party_report",
+          "published_at": "2026-10-13",
+          "excerpt": "Fuel cell-based on-site power generation project for a big-tech data center under construction in Pennsylvania (Bloom)"
+        },
+        {
+          "url": "https://enkiai.com/data-centers/ai-data-center-energy-2026-the-grid-bypass-revolution",
+          "source_type": "third_party_report",
+          "excerpt": "Oracle + Bloom Energy (Jul 2025): on-site solid oxide fuel cells at select data centers"
+        }
+      ],
+      "note": "component:fuel_cell 공급사 — 근거는 기존 간선 x-pwrB-070 (offered_by) 의 근거·등급을 그대로 쓴다",
+      "confidence": 0.625
+    },
+    {
+      "id": "seg1108-041",
+      "from": "company:fcel",
+      "to": "segment:sofc",
+      "relation": "participates_in",
+      "evidence_tier": "official_issuer",
+      "polarity": "positive",
+      "evidence": [
+        {
+          "url": "https://www.globenewswire.com/news-release/2026/10/21/3385536/8041/en/fuelcell-energy-block-system-receives-99-873-pjm-capacity-rating-as-demand-grows-for-on-site-power.html",
+          "source_type": "official_issuer",
+          "published_at": "2026-10-21",
+          "excerpt": "FuelCell Energy Block System receives 99.873% PJM capacity rating as demand grows for on-site power"
+        }
+      ],
+      "note": "component:fuel_cell 공급사 — 근거는 기존 간선 x-pwrB-071 (offered_by) 의 근거·등급을 그대로 쓴다",
+      "confidence": 0.8
+    },
+    {
+      "id": "seg1108-042",
+      "from": "company:doosan_fuel_cell",
+      "to": "segment:sofc",
+      "relation": "participates_in",
+      "evidence_tier": "third_party_report",
+      "polarity": "positive",
+      "evidence": [
+        {
+          "url": "https://stockanalysis.com/quote/krx/336260/",
+          "source_type": "third_party_report",
+          "excerpt": "Doosan Fuel Cell develops and distributes power generation fuel cells (400 NG, M400 hydrogen)"
+        }
+      ],
+      "note": "component:fuel_cell 공급사 — 근거는 기존 간선 x-pwrB-072 (offered_by) 의 근거·등급을 그대로 쓴다",
+      "confidence": 0.6
+    },
+    {
+      "id": "seg1108-043",
+      "from": "company:kaori",
+      "to": "segment:sofc",
+      "relation": "participates_in",
+      "evidence_tier": "third_party_report",
+      "polarity": "positive",
+      "evidence": [
+        {
+          "url": "https://uanalyze.com.tw/articles/5201834596",
+          "source_type": "third_party_report",
+          "published_at": "2025-10-13",
+          "excerpt": "Bloom 對高力供應比估由約30%升至40-50%; Hot Box 年產量 3,500-4,000 → 7,000+ 顆"
+        }
+      ],
+      "note": "component:sofc_hot_box 공급사 — 근거는 기존 간선 x-pwrB-074 (offered_by) 의 근거·등급을 그대로 쓴다",
+      "confidence": 0.6
     }
   ],
   "events": [

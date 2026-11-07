@@ -82,13 +82,20 @@ def check_typed(value: Any, spec: dict[str, Any]) -> str | None:
         return "YYYY-MM-DD"
     elif t == "url" and not str(value).startswith("https://"):
         return "https 주소"
+    elif t == "string" and not (isinstance(value, str) and value.strip()):
+        return "빈 칸이 아닌 문자열"
     return None
 
 
 def check_node_fields(n: dict[str, Any], onto: dict[str, Any]) -> list[str]:
-    """v0.5 노드 칸: status · first_seen · first_evidence · maturity_history · codes (모두 선택 칸)."""
+    """v0.5 노드 칸: status · first_seen · first_evidence · maturity_history · codes, v0.6: unit (모두 선택 칸)."""
     nf = onto.get("node_fields") or {}
     errs = []
+    if "unit" in n and (spec := nf.get("unit")):
+        if n.get("kind") not in spec.get("applies_to", []):
+            errs.append(f"unit 은 {spec.get('applies_to')} 노드에만")
+        elif msg := check_typed(n["unit"], spec):
+            errs.append(f"unit {msg}")
     if "status" in n and n["status"] not in (nf.get("status") or {}).get("values", ["active", "candidate"]):
         errs.append(f"status {n['status']!r}")
     if "first_seen" in n and not _is_date(n["first_seen"]):

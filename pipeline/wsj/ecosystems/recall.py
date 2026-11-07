@@ -33,7 +33,7 @@ DEVELOPS = {"develops", "holds_ip"}                        # C —develops→ Y
 REL_KO = {"requires": "필요로 한다", "implements": "구현한다", "mitigated_by": "로 완화된다", "offered_by": "공급사", "develops": "개발 중",
           "holds_ip": "특허 보유", "creates_bottleneck": "병목을 만든다", "drives_requirement": "요구를 만든다", "displaces": "수요를 잠식",
           "substitutes_for": "대체 가능", "competes_with": "경쟁", "supplied_to": "납품", "qualifying_with": "인증 진행", "adopts": "채택",
-          "raises_content": "대당 함량을 늘린다"}
+          "raises_content": "대당 함량을 늘린다", "part_of": "구간에 속한다", "participates_in": "구간 참여", "feeds": "에 공급한다"}
 
 
 EXPOSURE_KO = {"core": "매출 핵심", "major": "매출 주요", "minor": "매출 작음"}

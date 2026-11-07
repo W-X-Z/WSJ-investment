@@ -20,6 +20,12 @@
      # 이미 있는 노드 고치기: codes 는 합치고, maturity 를 주면 이전 단계를 maturity_history 에 쌓는다
      "node_updates": [{"id": "component:socamm2", "codes": {"jesd": ["JESD328"]}, "first_evidence": {"date": "2025-10-15", "url": "https://…", "layer": "standard"},
                        "maturity": {"stage": "near", "as_of": "2026-06-01", "evidence_url": "https://…", "evidence_tier": "standard_body"}, "status": "active"}]}
+
+v0.6 — 산업 구간(segment)·최종 수요(end_demand). id 는 segment:<slug> · end_demand:<slug>, end_demand 는 unit(GW 등)을 단다.
+    부품·소재·장비·제품 —part_of→ segment · 기업 —participates_in→ segment (근거는 그 부품의 offered_by 근거·등급을 그대로)
+    segment —feeds→ segment|end_demand (선택: coef · coef_unit · coef_source = 다음 칸 1단위당 물량·금액, 원문 숫자가 있을 때만)
+    {"id": "segment:goes", "kind": "segment", "label": "방향성 전기강판(GOES)", "ecosystem": "power"}
+    {"from": "segment:goes", "relation": "feeds", "to": "segment:large_power_transformer", "tier": "third_party_report", "evidence": [...]}
 """
 
 from __future__ import annotations
@@ -38,7 +44,9 @@ PATCH_DIR = GRAPH_PATH.parent / "patches"
 SIZE_BANDS = {"micro", "small", "mid", "large", "mega"}  # 온톨로지 company_fields.size_band (상장사만 — private 제외)
 
 
-EDGE_ATTRS = ("exposure", "position", "about", "exposure_pct", "exposure_year", "exposure_source", "content_usd_per_system", "lead_time_weeks", "effective_date")
+EDGE_ATTRS = ("exposure", "position", "about", "exposure_pct", "exposure_year", "exposure_source", "content_usd_per_system", "lead_time_weeks", "effective_date",
+              "coef", "coef_unit", "coef_source")
+SLUG_KINDS = ("segment", "end_demand")  # v0.6 — id 접두사가 kind 와 같아야 한다 (segment:goes)
 NODE_UPDATE_KEYS = {"codes", "first_seen", "first_evidence", "maturity", "status"}
 
 
@@ -65,6 +73,8 @@ def parse(doc: dict[str, Any]) -> tuple[list[Node], list[Edge], str, dict[str, l
             node.extra.update({k: n[k] for k in ("status", "first_seen", "first_evidence", "codes", "also_in") if n.get(k)})
             nodes.append(node)
         else:
+            if kind in SLUG_KINDS and not nid.startswith(f"{kind}:"):
+                raise ValueError(f"nodes[{i}]: {kind} id 는 {kind}: 로 시작")
             nodes.append(Node(nid, kind, label, eco, {k: v for k, v in n.items() if k not in {"id", "kind", "label", "ecosystem"}}))
     edges: list[Edge] = []
     for i, e in enumerate(doc.get("edges") or []):
