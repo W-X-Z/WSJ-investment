@@ -6,9 +6,12 @@
 가치평가(시나리오별 내재 시총 = 매출 × 마진 × 배수)에는 '지금 이 회사가 얼마나 버는가'가 있어야 한다. 시장별 공식·공개 출처:
 
   미국     data.sec.gov companyfacts (wsj.briefs.xbrl 가 분기 표를 만든다) → 최근 4분기 합 = TTM, 회계연도 = FY. 하루 --max-us 개, 30일 지난 것부터.
+           현금흐름·재무상태(0040): 영업현금흐름·capex(유형자산 취득, 양수)는 기간 합, 현금·총차입(단기+장기)·유통주식수는 기말,
+           희석 주식수는 그 기간의 희석 가중평균.
   대만     TTM 매출 = ideas.indicator_points 의 월매출(tw:<code>, NT$ 천) 최근 12개월 합.
            마진 = TWSE openapi t187ap06_L_ci(상장) · TPEx mopsfin_t187ap14_O(상계) 의 YTD 손익 비율 → TTM 매출에 곱한다 (note 에 남김).
-  한국     m.stock.naver.com finance/quarter (억원, 컨센서스 열 제외) 최근 4분기 합.
+  한국     m.stock.naver.com finance/quarter (억원, 컨센서스 열 제외) 최근 4분기 합. OpenDART(wsj.ecosystems.dart)가 같은 기간의 TTM 을
+           이미 넣었으면 그 행을 덮지 않는다 (공식 공시가 우선).
   일본·중국 아직 없음 — LLM 이 근거(IR·공시)에서 읽은 숫자를 가정으로 쓴다.
 """
 
@@ -34,6 +37,8 @@ TPEX_PL = "https://www.tpex.org.tw/openapi/v1/mopsfin_t187ap14_O"
 TWSE_REV = "https://openapi.twse.com.tw/v1/opendata/t187ap05_L"
 TPEX_REV = "https://www.tpex.org.tw/openapi/v1/mopsfin_t187ap05_O"
 NAVER_Q = "https://m.stock.naver.com/api/stock/{code}/finance/quarter"
+# 0040 에서 더한 칸 — 마이그레이션 전 DB 에는 없어서, 쓰기가 막히면 이 칸을 빼고 다시 쓴다
+NEW_COLS = ("operating_cash_flow", "capex", "cash", "total_debt", "diluted_shares", "shares_outstanding")
 
 
 def _num(v: Any) -> float | None:
@@ -50,9 +55,21 @@ def _row(x: Listing, period: str, end: str, source: str, **kw: Any) -> dict[str,
 
 
 # ---------------------------------------------------------------- 미국 (SEC companyfacts)
+def _debt(r: dict[str, Any]) -> float | None:
+    """총차입 = 단기(유동성 장기부채·단기차입) + 장기. 둘 다 없으면 None."""
+    st, lt = r.get("debt_st"), r.get("debt_lt")
+    return None if st is None and lt is None else float((st or 0.0) + (lt or 0.0))
+
+
+def _abs(v: Any) -> float | None:
+    return abs(float(v)) if v is not None else None
+
+
 def us_rows(x: Listing, fin: dict[str, Any], cik: int | None = None) -> list[dict[str, Any]]:
-    """xbrl.build_financials 결과 → TTM(최근 4분기 모두 매출이 있을 때) + 최근 FY."""
+    """xbrl.build_financials 결과 → TTM(최근 4분기 모두 매출이 있을 때) + 최근 FY.
+    손익·현금흐름(영업현금흐름·capex)은 기간 합, 현금·총차입·유통주식수는 기말 값, 희석 주식수는 그 기간의 희석 가중평균."""
     out = []
+    annual = fin.get("annual") or []
     q = [r for r in fin.get("quarters") or [] if r.get("revenue") is not None]
     if len(q) >= 4:
         last4 = q[-4:]
@@ -61,13 +78,24 @@ def us_rows(x: Listing, fin: dict[str, Any], cik: int | None = None) -> list[dic
             def tot(k: str) -> float | None:
                 vs = [r.get(k) for r in last4]
                 return float(sum(vs)) if all(v is not None for v in vs) else None
-            out.append(_row(x, "ttm", last4[-1]["period_end"], "sec_companyfacts", revenue=tot("revenue"), gross_profit=tot("gross_profit"),
+            end = last4[-1]["period_end"]
+            # 4분기의 희석 주식수는 10-K 가 연간 값만 내는 회사가 많다 → 같은 날 끝나는 연간 값, 없으면 가장 최근 분기 값
+            diluted = last4[-1].get("diluted_shares")
+            if diluted is None:
+                diluted = next((a.get("diluted_shares") for a in annual if a.get("fiscal_year_end") == end), None)
+            if diluted is None:
+                diluted = next((r.get("diluted_shares") for r in reversed(last4) if r.get("diluted_shares") is not None), None)
+            out.append(_row(x, "ttm", end, "sec_companyfacts", revenue=tot("revenue"), gross_profit=tot("gross_profit"),
                             operating_income=tot("op_income"), net_income=tot("net_income"),
+                            operating_cash_flow=tot("ocf"), capex=_abs(tot("capex")), cash=last4[-1].get("cash"), total_debt=_debt(last4[-1]),
+                            diluted_shares=diluted, shares_outstanding=last4[-1].get("shares_out"),
                             source_url=f"https://data.sec.gov/api/xbrl/companyfacts/CIK{cik:010d}.json" if cik else None))
-    for a in (fin.get("annual") or [])[-2:]:
+    for a in annual[-2:]:
         if a.get("revenue") is not None:
             out.append(_row(x, "fy", a["fiscal_year_end"], "sec_companyfacts", revenue=a.get("revenue"), gross_profit=a.get("gross_profit"),
-                            operating_income=a.get("op_income"), net_income=a.get("net_income")))
+                            operating_income=a.get("op_income"), net_income=a.get("net_income"),
+                            operating_cash_flow=a.get("ocf"), capex=_abs(a.get("capex")), cash=a.get("cash"), total_debt=_debt(a),
+                            diluted_shares=a.get("diluted_shares"), shares_outstanding=a.get("shares_out")))
     return out
 
 
@@ -226,9 +254,12 @@ def run(http: HttpClient, store, graph: dict[str, Any], only: set[str] | None = 
     for x in items:
         by_m.setdefault(x.market, []).append(x)
     have: dict[str, str] = {}
+    dart_keys: set[tuple[str, str]] = set()   # OpenDART 가 넣은 TTM (기업, 기말) — 네이버 값으로 덮지 않는다
     try:
-        for r in store.select("raw.company_fundamentals", ["company_id", "fetched_at"], {"period": "ttm"}):
+        for r in store.select("raw.company_fundamentals", ["company_id", "fetched_at", "source", "period_end"], {"period": "ttm"}):
             have[r["company_id"]] = max(have.get(r["company_id"], ""), str(r.get("fetched_at") or "")[:10])
+            if str(r.get("source") or "").startswith("opendart"):
+                dart_keys.add((r["company_id"], str(r.get("period_end") or "")[:10]))
     except Exception as exc:  # noqa: BLE001
         log.warning("company_fundamentals unavailable: %s", exc)
     stats: dict[str, Any] = {}
@@ -245,7 +276,7 @@ def run(http: HttpClient, store, graph: dict[str, Any], only: set[str] | None = 
                     monthly = load_history(store, [f"tw:{x.ticker}" for x in by_m.get("twse", []) + by_m.get("tpex", [])], date.today() - timedelta(days=420))
                 got = fetch_tw(http, xs, monthly, m)
             elif m == "kr":
-                got = fetch_kr(http, xs)
+                got = [r for r in fetch_kr(http, xs) if (r["company_id"], r["period_end"]) not in dart_keys]
             else:
                 continue
             rows += got
@@ -253,8 +284,22 @@ def run(http: HttpClient, store, graph: dict[str, Any], only: set[str] | None = 
         except Exception as exc:  # noqa: BLE001
             stats[m] = {"tried": len(xs), "ok": 0, "error": str(exc)[:120]}
     if rows:
-        store.upsert("raw.company_fundamentals", rows, ["company_id", "period", "period_end"])
+        save_rows(store, rows)
     return {"rows": len(rows), "by_market": stats}
+
+
+def save_rows(store, rows: list[dict[str, Any]]) -> int:
+    """raw.company_fundamentals upsert. 0040 전 DB 는 새 칸(현금흐름·재무상태·주식수)을 모른다 → 그 칸을 빼고 다시 쓴다."""
+    if not rows:
+        return 0
+    try:
+        return store.upsert("raw.company_fundamentals", rows, ["company_id", "period", "period_end"])
+    except Exception as exc:  # noqa: BLE001
+        if not any(c in str(exc) for c in NEW_COLS):
+            raise
+        log.warning("company_fundamentals 새 칸 없음 (0040 전?) — 손익 칸만 쓴다: %s", str(exc)[:160])
+        return store.upsert("raw.company_fundamentals", [{k: v for k, v in r.items() if k not in NEW_COLS} for r in rows],
+                            ["company_id", "period", "period_end"])
 
 
 def main(argv: list[str] | None = None) -> int:
