@@ -33,6 +33,16 @@ def _json_default(o: Any) -> Any:
     raise TypeError(f"not serializable: {type(o)}")
 
 
+class PostgrestError(RuntimeError):
+    """PostgREST 4xx/5xx. status·code(PGRST202 등)를 들고 있어 호출하는 쪽이 '함수 없음'과 다른 실패를 가를 수 있다.
+    RuntimeError 를 이어받아 예전 except RuntimeError 경로는 그대로 동작한다."""
+
+    def __init__(self, message: str, status: int, code: str | None = None) -> None:
+        super().__init__(message)
+        self.status = status
+        self.code = code
+
+
 def _encode_filter_value(v: Any) -> str:
     if isinstance(v, bool):
         return "true" if v else "false"
@@ -76,8 +86,18 @@ class PostgrestStore:
             method, f"{self.base}/{name}", params=params, content=content, headers=headers
         )
         if resp.status_code >= 400:
-            raise RuntimeError(f"PostgREST {method} {table} -> {resp.status_code}: {resp.text[:500]}")
+            code = None
+            try:
+                code = (resp.json() or {}).get("code")
+            except ValueError:
+                pass
+            raise PostgrestError(f"PostgREST {method} {table} -> {resp.status_code}: {resp.text[:500]}", resp.status_code, code)
         return resp
+
+    def rpc(self, fn: str, args: dict[str, Any], schema: str = "public") -> Any:
+        """POST /rest/v1/rpc/<fn> (Content-Profile: schema). 함수가 없으면 404(PGRST202), 스키마가 노출되지 않았으면 406(PGRST106)."""
+        resp = self._req("POST", f"{schema}.rpc/{fn}", body=args)
+        return resp.json() if resp.content else None
 
     @staticmethod
     def _filter_params(filters: Filters | None) -> list[tuple[str, str]]:

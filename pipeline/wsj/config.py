@@ -34,6 +34,15 @@ class Settings(BaseSettings):
     anthropic_api_key: str = ""
     wsj_brief_model: str = "haiku"  # 기본 저비용 분석; 중요한 후보만 sonnet
 
+    # 선별 에이전트 (python -m wsj screen) — 실행당 상한을 넘을 것 같으면 묶음을 더 보내지 않는다
+    screen_model: str = "claude-sonnet-5-5"
+    screen_max_input_tokens: int = 400_000
+    screen_max_usd: float = 2.0
+    screen_report_rpc: str = "put_reports"   # 'put_reports' 또는 'schema.put_reports'. 없으면 research → ideas → public 순으로 찾는다
+    screen_body_chars: int = 4000            # 단서 본문은 앞부분만
+    screen_batch_tokens: int = 60_000        # 묶음 하나의 입력(추정) 상한
+    screen_effort: str = "medium"            # 빈 값이면 effort 를 보내지 않는다
+
     # misc
     wsj_log_level: str = "INFO"
     wsj_data_dir: Path = PIPELINE_DIR / "data"
