@@ -6,6 +6,7 @@
   python -m wsj entities resolve
   python -m wsj signals build [--as-of 2026-10-26] [--window 120]
   python -m wsj briefs build [--cik 2012593 ...] [--top 5] [--dry-run] [--model opus] [--force]
+  python -m wsj tools <quote|history|lookup|fx|rates|event|exposure|reverse-dcf|peers|incremental> ...  (wsj/tools/README.md)
 
 러너가 하는 일: 워터마크 읽기 → run() → ops.collector_runs 기록 → 워터마크 갱신.
 수집기 예외는 잡아서 failed 로 남기고 다음으로 넘어간다 (ADR-0003 §7).
@@ -335,6 +336,10 @@ def build_parser() -> argparse.ArgumentParser:
     mb.add_argument("--out")
     mb.add_argument("--force", action="store_true")
     mb.add_argument("--store", choices=["postgrest", "sqlite"])
+
+    from wsj.tools.cli import add_tools_parser
+
+    add_tools_parser(sub)
     return p
 
 
@@ -352,6 +357,10 @@ def main(argv: list[str] | None = None) -> int:
         return cmd_briefs(args)
     if args.cmd == "moat":
         return cmd_moat(args)
+    if args.cmd == "tools":
+        from wsj.tools.cli import run_tools
+
+        return run_tools(args)
     return 2
 
 

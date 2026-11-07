@@ -1,0 +1,27 @@
+{
+ "stockEndType": "stock",
+ "itemCode": "001440",
+ "stockName": "대한전선",
+ "closePrice": "17,040",
+ "compareToPreviousClosePrice": "-1,010",
+ "fluctuationsRatio": "-5.60",
+ "marketStatus": "CLOSE",
+ "localTradedAt": "2026-11-06T20:20:25+09:00",
+ "stockExchangeType": {
+  "code": "KS",
+  "zoneId": "Asia/Seoul",
+  "nationType": "KOR",
+  "delayTime": 0,
+  "startTime": "0900",
+  "endTime": "1530",
+  "closePriceSendTime": "1630",
+  "nameKor": "코스피",
+  "nameEng": "KOSPI",
+  "stockType": "domestic",
+  "nationCode": "KOR",
+  "nationName": "대한민국",
+  "name": "KOSPI"
+ },
+ "stockExchangeName": "KOSPI",
+ "nationType": "KOR"
+}

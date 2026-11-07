@@ -1,0 +1,77 @@
+{
+ "query": "효성",
+ "items": [
+  {
+   "code": "004800",
+   "name": "효성",
+   "typeCode": "KOSPI",
+   "typeName": "코스피",
+   "url": "/domestic/stock/004800/total",
+   "reutersCode": "004800",
+   "nationCode": "KOR",
+   "nationName": "대한민국",
+   "category": "stock",
+   "hasDiscussion": true
+  },
+  {
+   "code": "298040",
+   "name": "효성중공업",
+   "typeCode": "KOSPI",
+   "typeName": "코스피",
+   "url": "/domestic/stock/298040/total",
+   "reutersCode": "298040",
+   "nationCode": "KOR",
+   "nationName": "대한민국",
+   "category": "stock",
+   "hasDiscussion": true
+  },
+  {
+   "code": "298020",
+   "name": "효성티앤씨",
+   "typeCode": "KOSPI",
+   "typeName": "코스피",
+   "url": "/domestic/stock/298020/total",
+   "reutersCode": "298020",
+   "nationCode": "KOR",
+   "nationName": "대한민국",
+   "category": "stock",
+   "hasDiscussion": true
+  },
+  {
+   "code": "094280",
+   "name": "효성ITX",
+   "typeCode": "KOSPI",
+   "typeName": "코스피",
+   "url": "/domestic/stock/094280/total",
+   "reutersCode": "094280",
+   "nationCode": "KOR",
+   "nationName": "대한민국",
+   "category": "stock",
+   "hasDiscussion": true
+  },
+  {
+   "code": "298000",
+   "name": "효성화학",
+   "typeCode": "KOSPI",
+   "typeName": "코스피",
+   "url": "/domestic/stock/298000/total",
+   "reutersCode": "298000",
+   "nationCode": "KOR",
+   "nationName": "대한민국",
+   "category": "stock",
+   "hasDiscussion": true
+  },
+  {
+   "code": "097870",
+   "name": "효성오앤비",
+   "typeCode": "KOSDAQ",
+   "typeName": "코스닥",
+   "url": "/domestic/stock/097870/total",
+   "reutersCode": "097870",
+   "nationCode": "KOR",
+   "nationName": "대한민국",
+   "category": "stock",
+   "hasDiscussion": true
+  }
+ ]
+}

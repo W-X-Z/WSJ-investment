@@ -1,0 +1,24 @@
+{
+ "data": [
+  {
+   "symbol": "FPS",
+   "name": "Forgent Power Solutions, Inc. Class A Common Stock",
+   "mrktCategory": "",
+   "exchange": "NYSE",
+   "subCategory": "Class A Common Stock",
+   "nasdaq100": null,
+   "region": "North America",
+   "asset": "STOCKS",
+   "industry": "energy Products",
+   "count": "",
+   "flag": "",
+   "score": null
+  }
+ ],
+ "message": null,
+ "status": {
+  "rCode": 200,
+  "bCodeMessage": null,
+  "developerMessage": null
+ }
+}

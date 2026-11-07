@@ -1,0 +1,641 @@
+{
+ "title": "Election relocation: 11 GW Texas build vs 8 GW relocated + 3 GW lost + 4 GW new terms (2027-2030)",
+ "units": "USD bn cumulative 2027-2030; unit costs in USD bn per GW of IT load; mcap in USD bn",
+ "source": "research scratch deep4/model.py (bom.md, relocation.md); mcap = 2026-11-05 close, KRW at 1,400/USD; margins and shares are research assumptions",
+ "scenarios": {
+  "base": {
+   "TX": 11.0
+  },
+  "event": {
+   "DEST": 8.0,
+   "NEW_TERMS": 4.0
+  }
+ },
+ "mixes": {
+  "TX": {
+   "bldg": 1.0,
+   "cool_evap": 0.3,
+   "cool_dry": 0.4,
+   "cool_hybrid": 0.3,
+   "pwr_grid": 0.45,
+   "pwr_recip": 0.1,
+   "pwr_turb": 0.35,
+   "pwr_fc": 0.05,
+   "pwr_solar": 0.05
+  },
+  "OK": {
+   "bldg": 1.0,
+   "cool_evap": 0.2,
+   "cool_dry": 0.5,
+   "cool_hybrid": 0.3,
+   "pwr_grid": 0.55,
+   "pwr_recip": 0.15,
+   "pwr_turb": 0.25,
+   "pwr_fc": 0,
+   "pwr_solar": 0.05
+  },
+  "LA": {
+   "bldg": 1.0,
+   "cool_evap": 0.4,
+   "cool_dry": 0.2,
+   "cool_hybrid": 0.4,
+   "pwr_grid": 0.7,
+   "pwr_recip": 0,
+   "pwr_turb": 0.3,
+   "pwr_fc": 0,
+   "pwr_solar": 0
+  },
+  "MW": {
+   "bldg": 1.0,
+   "cool_evap": 0.3,
+   "cool_dry": 0.35,
+   "cool_hybrid": 0.35,
+   "pwr_grid": 0.7,
+   "pwr_recip": 0.1,
+   "pwr_turb": 0.15,
+   "pwr_fc": 0,
+   "pwr_solar": 0.05
+  },
+  "WY": {
+   "bldg": 1.0,
+   "cool_evap": 0.05,
+   "cool_dry": 0.8,
+   "cool_hybrid": 0.15,
+   "pwr_grid": 0.3,
+   "pwr_recip": 0.2,
+   "pwr_turb": 0.45,
+   "pwr_fc": 0.05,
+   "pwr_solar": 0
+  },
+  "WEST": {
+   "bldg": 1.0,
+   "cool_evap": 0.05,
+   "cool_dry": 0.75,
+   "cool_hybrid": 0.2,
+   "pwr_grid": 0.4,
+   "pwr_recip": 0.15,
+   "pwr_turb": 0.15,
+   "pwr_fc": 0.15,
+   "pwr_solar": 0.15
+  },
+  "PJM": {
+   "bldg": 1.0,
+   "cool_evap": 0.35,
+   "cool_dry": 0.3,
+   "cool_hybrid": 0.35,
+   "pwr_grid": 0.3,
+   "pwr_recip": 0.1,
+   "pwr_turb": 0.55,
+   "pwr_fc": 0.05,
+   "pwr_solar": 0
+  },
+  "DEST": {
+   "OK": 0.25,
+   "LA": 0.15,
+   "MW": 0.275,
+   "WY": 0.075,
+   "WEST": 0.125,
+   "PJM": 0.1
+  },
+  "evap_to_dry": {
+   "cool_dry": 1.0,
+   "cool_evap": -1.0
+  },
+  "NEW_TERMS": {
+   "customer_paid_upgrade": 0.5,
+   "evap_to_dry": 0.15
+  }
+ },
+ "unit_costs": {
+  "mv_swgr": {
+   "bldg": 0.6
+  },
+  "dist_xfmr": {
+   "bldg": 0.65
+  },
+  "lv_swbd": {
+   "bldg": 0.75
+  },
+  "ups": {
+   "bldg": 1.1
+  },
+  "pdu_busway": {
+   "bldg": 0.5
+  },
+  "backup_diesel": {
+   "bldg": 1.0,
+   "pwr_recip": -0.5,
+   "pwr_turb": -0.5,
+   "pwr_fc": -0.5
+  },
+  "elec_install": {
+   "bldg": 1.0
+  },
+  "cdu": {
+   "bldg": 0.75
+  },
+  "crah_fans": {
+   "bldg": 0.3
+  },
+  "pumps": {
+   "bldg": 0.6
+  },
+  "shell_gc": {
+   "bldg": 4.1
+  },
+  "fire_controls": {
+   "bldg": 0.5
+  },
+  "towers": {
+   "cool_evap": 0.35
+  },
+  "wc_chiller": {
+   "cool_evap": 0.65
+  },
+  "dry_cooler": {
+   "cool_dry": 0.75,
+   "cool_hybrid": 0.55
+  },
+  "ac_chiller": {
+   "cool_dry": 0.8,
+   "cool_hybrid": 0.75
+  },
+  "hv_sub": {
+   "pwr_grid": 0.15,
+   "pwr_solar": 0.15
+  },
+  "hv_xfmr": {
+   "pwr_grid": 0.09,
+   "pwr_solar": 0.09
+  },
+  "net_upgrade": {
+   "pwr_grid": 0.3,
+   "pwr_solar": 0.3,
+   "customer_paid_upgrade": 0.3
+  },
+  "recip_genset": {
+   "pwr_recip": 1.6
+  },
+  "recip_bop": {
+   "pwr_recip": 0.5
+  },
+  "par_swgr": {
+   "pwr_recip": 0.22,
+   "pwr_turb": 0.15
+  },
+  "gsu": {
+   "pwr_recip": 0.17,
+   "pwr_turb": 0.15
+  },
+  "scr": {
+   "pwr_recip": 0.33,
+   "pwr_turb": 0.27
+  },
+  "onsite_epc": {
+   "pwr_recip": 1.25,
+   "pwr_turb": 1.0
+  },
+  "gas_lat": {
+   "pwr_recip": 0.15,
+   "pwr_turb": 0.15,
+   "pwr_fc": 0.15
+  },
+  "stability": {
+   "pwr_recip": 0.25,
+   "pwr_turb": 0.3
+  },
+  "turbine": {
+   "pwr_turb": 1.6
+  },
+  "turb_bop": {
+   "pwr_turb": 0.4
+  },
+  "compression": {
+   "pwr_turb": 0.1
+  },
+  "fc_module": {
+   "pwr_fc": 2.6
+  },
+  "fc_pe": {
+   "pwr_fc": 0.65
+  },
+  "supercap": {
+   "pwr_fc": 0.15
+  },
+  "fc_swgr": {
+   "pwr_fc": 0.13
+  },
+  "fc_install": {
+   "pwr_fc": 1.1
+  },
+  "pv": {
+   "pwr_solar": 3.4
+  },
+  "bess": {
+   "pwr_solar": 1.2
+  }
+ },
+ "suppliers": {
+  "mv_swgr": {
+   "ETN": 0.25,
+   "POWL": 0.08,
+   "FPS": 0.08,
+   "VRT": 0.05,
+   "LSE": 0.05,
+   "HYO": 0.02
+  },
+  "par_swgr": {
+   "ETN": 0.25,
+   "POWL": 0.1,
+   "FPS": 0.08,
+   "LSE": 0.05
+  },
+  "dist_xfmr": {
+   "ETN": 0.1,
+   "FPS": 0.08,
+   "GEV": 0.1,
+   "HDE": 0.08,
+   "HYO": 0.06,
+   "LSE": 0.05,
+   "SANIL": 0.04,
+   "HUBB": 0.05
+  },
+  "gsu": {
+   "HDE": 0.15,
+   "HYO": 0.12,
+   "LSE": 0.05,
+   "GEV": 0.12,
+   "SANIL": 0.05
+  },
+  "lv_swbd": {
+   "ETN": 0.3,
+   "VRT": 0.05,
+   "LSE": 0.03
+  },
+  "ups": {
+   "VRT": 0.35,
+   "ETN": 0.2
+  },
+  "pdu_busway": {
+   "VRT": 0.2,
+   "ETN": 0.2
+  },
+  "backup_diesel": {
+   "CAT": 0.4,
+   "CMI": 0.25,
+   "GNRC": 0.05
+  },
+  "elec_install": {
+   "IESC": 0.04,
+   "WCC": 0.1,
+   "PRIM": 0.02
+  },
+  "cdu": {
+   "VRT": 0.35,
+   "NVT": 0.1,
+   "MOD": 0.05
+  },
+  "crah_fans": {
+   "VRT": 0.3,
+   "RRX": 0.1,
+   "AAON": 0.05
+  },
+  "pumps": {
+   "XYL": 0.15
+  },
+  "towers": {
+   "SPXC": 0.35
+  },
+  "wc_chiller": {
+   "TT": 0.3,
+   "JCI": 0.2,
+   "CARR": 0.2,
+   "VRT": 0.05
+  },
+  "dry_cooler": {
+   "MOD": 0.2,
+   "SPXC": 0.05,
+   "AAON": 0.05,
+   "RRX": 0.05
+  },
+  "ac_chiller": {
+   "TT": 0.3,
+   "JCI": 0.2,
+   "CARR": 0.2,
+   "VRT": 0.15,
+   "MOD": 0.05
+  },
+  "hv_sub": {
+   "GEV": 0.15,
+   "HYO": 0.1,
+   "HDE": 0.1,
+   "LSE": 0.03,
+   "HUBB": 0.1
+  },
+  "hv_xfmr": {
+   "HDE": 0.2,
+   "HYO": 0.15,
+   "GEV": 0.15,
+   "LSE": 0.05,
+   "ILJIN": 0.05
+  },
+  "net_upgrade": {
+   "PWR": 0.3,
+   "MYRG": 0.08,
+   "TAIHAN": 0.03,
+   "HUBB": 0.03
+  },
+  "recip_genset": {
+   "INIO": 0.4,
+   "CAT": 0.35,
+   "CMI": 0.1
+  },
+  "recip_bop": {
+   "INIO": 0.35,
+   "CAT": 0.3,
+   "CMI": 0.08,
+   "MOD": 0.07
+  },
+  "turbine": {
+   "GEV": 0.45,
+   "CAT": 0.15,
+   "BKR": 0.05,
+   "DHE": 0.03
+  },
+  "turb_bop": {
+   "GEV": 0.4,
+   "CAT": 0.15,
+   "BKR": 0.05
+  },
+  "scr": {
+   "CECO": 0.25,
+   "FTEK": 0.02
+  },
+  "onsite_epc": {
+   "SEI": 0.05,
+   "LBRT": 0.03,
+   "PRIM": 0.03
+  },
+  "compression": {
+   "EFXT": 0.1,
+   "BKR": 0.15
+  },
+  "stability": {
+   "FLNC": 0.15,
+   "GEV": 0.15,
+   "LGES": 0.1,
+   "SDI": 0.05
+  },
+  "fc_module": {
+   "BE": 1.0
+  },
+  "fc_pe": {
+   "BE": 1.0
+  },
+  "fc_install": {
+   "BE": 0.5
+  },
+  "supercap": {
+   "VINA": 0.7,
+   "LSMT": 0.3
+  },
+  "fc_swgr": {
+   "LSE": 0.6
+  },
+  "pv": {
+   "FSLR": 0.35,
+   "NXT": 0.1,
+   "HANWHA": 0.1
+  },
+  "bess": {
+   "FLNC": 0.15,
+   "LGES": 0.1,
+   "SDI": 0.05
+  }
+ },
+ "companies": {
+  "ETN": {
+   "margin": 0.25,
+   "mcap": 129.9
+  },
+  "POWL": {
+   "margin": 0.2,
+   "mcap": 4.62
+  },
+  "FPS": {
+   "margin": 0.2,
+   "mcap": 5.92
+  },
+  "VRT": {
+   "margin": 0.22,
+   "mcap": 69.4
+  },
+  "GEV": {
+   "margin": 0.15,
+   "mcap": 207.6
+  },
+  "HUBB": {
+   "margin": 0.22,
+   "mcap": 22.5
+  },
+  "CAT": {
+   "margin": 0.22,
+   "mcap": 259.8
+  },
+  "CMI": {
+   "margin": 0.2,
+   "mcap": 64.4
+  },
+  "GNRC": {
+   "margin": 0.15,
+   "mcap": 10.4
+  },
+  "IESC": {
+   "margin": 0.1,
+   "mcap": 6.13
+  },
+  "WCC": {
+   "margin": 0.07,
+   "mcap": 14.4
+  },
+  "PRIM": {
+   "margin": 0.07,
+   "mcap": 3.29
+  },
+  "NVT": {
+   "margin": 0.2,
+   "mcap": 16.2
+  },
+  "MOD": {
+   "margin": 0.18,
+   "mcap": 4.85
+  },
+  "RRX": {
+   "margin": 0.15,
+   "mcap": 10.65
+  },
+  "AAON": {
+   "margin": 0.18,
+   "mcap": 4.48
+  },
+  "XYL": {
+   "margin": 0.18,
+   "mcap": 23.3
+  },
+  "SPXC": {
+   "margin": 0.25,
+   "mcap": 7.35
+  },
+  "TT": {
+   "margin": 0.2,
+   "mcap": 89.1
+  },
+  "JCI": {
+   "margin": 0.15,
+   "mcap": 82.5
+  },
+  "CARR": {
+   "margin": 0.15,
+   "mcap": 44.6
+  },
+  "PWR": {
+   "margin": 0.1,
+   "mcap": 77.3
+  },
+  "MYRG": {
+   "margin": 0.07,
+   "mcap": 3.87
+  },
+  "INIO": {
+   "margin": 0.18,
+   "mcap": 10.2
+  },
+  "BKR": {
+   "margin": 0.15,
+   "mcap": 48.1
+  },
+  "CECO": {
+   "margin": 0.15,
+   "mcap": 2.35
+  },
+  "FTEK": {
+   "margin": 0.1,
+   "mcap": 0.041
+  },
+  "SEI": {
+   "margin": 0.3,
+   "mcap": 4.04
+  },
+  "LBRT": {
+   "margin": 0.2,
+   "mcap": 1.95
+  },
+  "EFXT": {
+   "margin": 0.15,
+   "mcap": 2.32
+  },
+  "FLNC": {
+   "margin": 0.08,
+   "mcap": 0.96
+  },
+  "BE": {
+   "margin": 0.15,
+   "mcap": 48.7
+  },
+  "FSLR": {
+   "margin": 0.3,
+   "mcap": 20.2
+  },
+  "NXT": {
+   "margin": 0.25,
+   "mcap": 14.4
+  },
+  "LSE": {
+   "margin": 0.12,
+   "mcap": 13.928571428571429
+  },
+  "HDE": {
+   "margin": 0.25,
+   "mcap": 10.271428571428572
+  },
+  "HYO": {
+   "margin": 0.15,
+   "mcap": 11.928571428571429
+  },
+  "ILJIN": {
+   "margin": 0.1,
+   "mcap": 1.6785714285714286
+  },
+  "SANIL": {
+   "margin": 0.3,
+   "mcap": 2.8214285714285716
+  },
+  "DHE": {
+   "margin": 0.08,
+   "mcap": 22.428571428571427
+  },
+  "TAIHAN": {
+   "margin": 0.06,
+   "mcap": 2.5428571428571427
+  },
+  "LGES": {
+   "margin": 0.05,
+   "mcap": 58.07142857142857
+  },
+  "SDI": {
+   "margin": 0.05,
+   "mcap": 29.357142857142858
+  },
+  "HANWHA": {
+   "margin": 0.05,
+   "mcap": 4.35
+  },
+  "VINA": {
+   "margin": 0.15,
+   "mcap": 0.4005714285714286
+  },
+  "LSMT": {
+   "margin": 0.1,
+   "mcap": 0.461
+  }
+ },
+ "tax": 0.22,
+ "sensitivities": {
+  "tx_btm_heavy": {
+   "mixes.TX": {
+    "bldg": 1.0,
+    "cool_evap": 0.3,
+    "cool_dry": 0.4,
+    "cool_hybrid": 0.3,
+    "pwr_grid": 0.3,
+    "pwr_recip": 0.15,
+    "pwr_turb": 0.45,
+    "pwr_fc": 0.05,
+    "pwr_solar": 0.05
+   }
+  },
+  "dest_grid": {
+   "mixes.DEST": {
+    "OK": 0.25,
+    "LA": 0.25,
+    "MW": 0.35,
+    "WY": 0.05,
+    "WEST": 0.05,
+    "PJM": 0.05
+   }
+  },
+  "dest_selfsupply": {
+   "mixes.DEST": {
+    "OK": 0.2,
+    "LA": 0.1,
+    "MW": 0.15,
+    "WY": 0.15,
+    "WEST": 0.2,
+    "PJM": 0.2
+   }
+  },
+  "low_reloc": {
+   "scenarios.event.DEST": 5.0
+  }
+ }
+}
