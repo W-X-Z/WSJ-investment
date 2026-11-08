@@ -59,14 +59,15 @@ class FakeStore:
             return self.opportunities
         raise AssertionError(table)
 
-    def rpc(self, fn, args, schema="public"):
+    def rpc(self, fn, args):
+        schema, fn = fn.split(".", 1)                      # PostgrestStore.rpc 와 같은 'schema.function' 모양만 받는다
         self.rpcs.append((schema, fn, args))
         if fn == "put_agent_run":
             if not self.agent_run:
                 raise PostgrestError("PostgREST POST ops.rpc/put_agent_run -> 404", 404, "PGRST202")
             return {"id": 1}
         if schema in self.rpc_schemas:
-            return {"upserted": len(args["rows"]), "rejected": []}
+            return {"ok": len(args["rows"]), "rejected": []}
         raise PostgrestError(f"PostgREST POST {schema}.rpc/{fn} -> 404: not found", 404, "PGRST202")
 
     def close(self):
@@ -363,15 +364,13 @@ def test_memory_reads_v_reports_and_recent_screens_but_not_today():
 
 
 # ---------------------------------------------------------------- 저장
-def test_save_report_falls_back_across_schemas():
+def test_save_report_calls_research_put_reports_with_dotted_name():
     row = {"report_id": "screen:2026-11-08"}
-    store = FakeStore(rpc_schemas=("ideas",))
+    store = FakeStore()
     res = S.save_report(store, row)
-    assert res["rpc"] == "ideas.put_reports" and [s for s, _, _ in store.rpcs] == ["research", "ideas"]
-    assert store.rpcs[-1][2] == {"rows": [row]}
-    store = FakeStore(rpc_schemas=("public",))
-    assert S.save_report(store, row, "public.put_reports")["rpc"] == "public.put_reports" and len(store.rpcs) == 1
-    assert S.rpc_targets("ideas.put_reports") == [("ideas", "put_reports"), ("research", "put_reports"), ("public", "put_reports")]
+    assert res["rpc"] == "research.put_reports" and store.rpcs == [("research", "put_reports", {"rows": [row]})]
+    with pytest.raises(ValueError, match="schema.function"):
+        S.save_report(FakeStore(), row, "put_reports")
 
 
 def test_save_report_missing_rpc_is_a_clear_error():
@@ -379,14 +378,14 @@ def test_save_report_missing_rpc_is_a_clear_error():
         S.save_report(FakeStore(rpc_schemas=()), {"report_id": "x"})
 
     class Rejecting(FakeStore):
-        def rpc(self, fn, args, schema="public"):
-            return {"upserted": 0, "rejected": [{"i": 1, "reason": "kind"}]}
+        def rpc(self, fn, args):
+            return {"ok": 0, "rejected": [{"i": 1, "reason": "kind"}]}
 
     with pytest.raises(RuntimeError, match="거부"):
         S.save_report(Rejecting(), {"report_id": "x"})
 
     class Broken(FakeStore):
-        def rpc(self, fn, args, schema="public"):
+        def rpc(self, fn, args):
             raise PostgrestError("PostgREST POST -> 500: boom", 500)
 
     with pytest.raises(PostgrestError):
