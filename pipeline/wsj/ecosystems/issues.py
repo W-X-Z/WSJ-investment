@@ -36,6 +36,7 @@ from pathlib import Path
 from typing import Any
 from urllib.parse import quote_plus
 
+from wsj.ecosystems.clues import POLICY_CAUSE
 from wsj.ecosystems.discover import QUERIES as DISCOVERY_QUERIES
 from wsj.ecosystems.ontology import GRAPH_PATH, load_graph
 from wsj.http import HttpClient
@@ -763,7 +764,7 @@ def run(http: HttpClient, store, days: int = 14, use_llm: bool = True, model: st
     # 관련성: 노드·기업 태그가 있거나, 1차 출처(sec/regulator)는 질의 자체가 주제어
     relevant = [
         i for i in items
-        if not NOISE.search(i.title)
+        if (not NOISE.search(i.title) or POLICY_CAUSE.search(i.title))
         and (i.nodes or i.companies or i.source_type in ALWAYS_RELEVANT)  # 관보·정책·리서치 기관·지표는 출처 단계 필터를 이미 통과
         and not ADMIN_NOISE.search(i.title)
         and (i.source_type != "research" or phrase_in(i))  # 학술 검색은 느슨하다 — 구문이 제목·초록에 실제로 있어야
