@@ -1,0 +1,30 @@
+{
+ "status": "000",
+ "message": "정상",
+ "list": [
+  {
+   "rcept_no": "20261113000123",
+   "corp_code": "00123456",
+   "se": "보통주",
+   "istc_totqy": "10,000,000",
+   "tesstk_co": "500,000",
+   "distb_stock_co": "9,500,000"
+  },
+  {
+   "rcept_no": "20261113000123",
+   "corp_code": "00123456",
+   "se": "우선주",
+   "istc_totqy": "1,000,000",
+   "tesstk_co": "0",
+   "distb_stock_co": "1,000,000"
+  },
+  {
+   "rcept_no": "20261113000123",
+   "corp_code": "00123456",
+   "se": "합계",
+   "istc_totqy": "11,000,000",
+   "tesstk_co": "500,000",
+   "distb_stock_co": "10,500,000"
+  }
+ ]
+}

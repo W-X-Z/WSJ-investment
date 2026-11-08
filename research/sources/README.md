@@ -22,3 +22,11 @@
 - 더하기·빼기는 이 파일만 고치면 된다 (`research/` 안이라 주간 개선 작업이 스스로 병합할 수 있다).
 - 점검: `cd pipeline && .venv/bin/python -m wsj.ecosystems.clues sources` (형식·중복), 페이지형은 `python -m wsj.ecosystems.pages probe [--id …]`, 수집 결과는 `ops.collector_runs` 의 `clues` 행(watermark.failed·kept·noise).
 - 3번 넘게 실패한 출처는 `"enabled": false`. 시세 기사만 내는 출처는 뺀다.
+
+## 조사 시드 (`seeds/`, 마이그레이션 0040)
+리서치 에이전트와 대화 조사가 확인한 **출처의 사실**을 원천(`ideas.clues.facts`)에 넣는 입력이다. 수집기가 읽는 목록이 아니다.
+- 행 하나 = 출처 주소 하나: `{"url", "title", "published_at"?, "source_name", "summary"?, "facts": [{"text", "entity"?, "value"?, "unit"?, "as_of"?, "loc"?}]}`.
+- 사실은 출처가 말한 것만 담는다. 우리 계산·추정·판단은 리서치 리포트(`research.reports`)에 둔다. `entity` 는 그래프에 있는 노드 id 만 쓴다.
+- 넣기: `select ideas.put_research_sources('<파일 내용>'::jsonb);` (service_role). 같은 주소는 사실만 합치고 같은 문장은 건너뛰므로 다시 넣어도 결과가 같다.
+- 넣은 행은 `source_id = 'agent_research'` 로 남고, 선별 에이전트는 이 행을 새 단서로 다시 읽지 않는다.
+- `20261108_research_notes.json`: 11/5~6 에너지·데이터센터 전력 조사 노트에서 뽑은 118개 출처·사실 249개 (로컬 Postgres 16 에서 두 번 넣어 거부 0·중복 0 확인).

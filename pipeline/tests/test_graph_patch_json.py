@@ -113,3 +113,97 @@ def test_private_company_node():
     assert n.extra["size_band"] == "private" and n.extra["role"] == "customer"
     with pytest.raises(ValueError):
         from_json.parse(_doc(nodes=[{"id": "company:zz_p2", "kind": "company", "label": "X", "ecosystem": "power", "private": True, "ticker": "1", "exchange": "KRX"}]))
+
+
+# ------------------------------------------------------------------ v0.6: 산업 구간(segment)·최종 수요(end_demand)
+def _seg_doc(**over):
+    doc = {
+        "prefix": "dseg",
+        "nodes": [{"id": "segment:zz_test_segment", "kind": "segment", "label": "ZZ 시험 구간", "ecosystem": "power"},
+                  {"id": "end_demand:zz_test_demand", "kind": "end_demand", "label": "ZZ 시험 수요(GW)", "ecosystem": "power", "unit": "GW"}],
+        "edges": [
+            {"from": "component:lpt", "relation": "part_of", "to": "segment:zz_test_segment", "tier": "third_party_report",
+             "evidence": [{"url": "https://example.com/seg", "source_type": "third_party_report"}]},
+            {"from": "company:gev", "relation": "participates_in", "to": "segment:zz_test_segment", "tier": "official_issuer",
+             "evidence": [{"url": "https://example.com/seg", "source_type": "official_issuer"}]},
+            {"from": "segment:zz_test_segment", "relation": "feeds", "to": "end_demand:zz_test_demand", "tier": "third_party_report",
+             "coef": 25000, "coef_unit": "USD/MW", "coef_source": "https://example.com/coef",
+             "evidence": [{"url": "https://example.com/seg", "source_type": "third_party_report"}]},
+        ],
+    }
+    doc.update(over)
+    return doc
+
+
+def _dry(tmp_path, doc):
+    import json
+
+    p = tmp_path / "seg.json"
+    p.write_text(json.dumps(doc), encoding="utf-8")
+    return from_json.apply_file(p, dry_run=True)
+
+
+def test_segment_kinds_and_relations_validate(tmp_path, capsys):
+    nodes, edges, *_ = from_json.parse(_seg_doc())
+    assert {n.kind for n in nodes} == {"segment", "end_demand"}
+    feeds = next(e for e in edges if e.relation == "feeds")
+    assert feeds.attrs == {"coef": 25000, "coef_unit": "USD/MW", "coef_source": "https://example.com/coef"}
+    assert _dry(tmp_path, _seg_doc()) == 0
+    assert '"nodes_added": 2' in capsys.readouterr().out
+
+
+def _edge(frm, rel, to, **kw):
+    return dict({"from": frm, "relation": rel, "to": to, "tier": "third_party_report",
+                 "evidence": [{"url": "https://example.com/seg", "source_type": "third_party_report"}]}, **kw)
+
+
+@pytest.mark.parametrize("edges", [
+    [_edge("company:gev", "part_of", "segment:zz_test_segment")],                         # part_of 는 부품·소재·장비·제품만
+    [_edge("component:lpt", "participates_in", "segment:zz_test_segment")],               # participates_in 은 기업만
+    [_edge("segment:zz_test_segment", "feeds", "component:lpt")],                         # feeds 는 구간·최종 수요로만
+    [_edge("end_demand:zz_test_demand", "feeds", "segment:zz_test_segment")],             # 최종 수요는 끝 칸
+    [_edge("segment:zz_test_segment", "feeds", "end_demand:zz_test_demand", coef=-1)],    # 계수는 0 이상
+    [_edge("segment:zz_test_segment", "feeds", "end_demand:zz_test_demand", coef_unit=5)],     # 단위는 문자열
+    [_edge("component:lpt", "requires", "material:goes", coef=3)],                        # coef 는 feeds 에만
+])
+def test_segment_relations_reject_wrong_domain_or_attrs(tmp_path, edges):
+    assert _dry(tmp_path, _seg_doc(edges=edges)) == 1
+
+
+def test_segment_ids_and_unit_checked(tmp_path):
+    with pytest.raises(ValueError):
+        from_json.parse(_seg_doc(nodes=[{"id": "component:zz_wrong", "kind": "segment", "label": "x", "ecosystem": "power"}]))
+    bad_unit = _seg_doc(nodes=[{"id": "segment:zz_test_segment", "kind": "segment", "label": "x", "ecosystem": "power"},
+                               {"id": "end_demand:zz_test_demand", "kind": "end_demand", "label": "y", "ecosystem": "power", "unit": ""}])
+    assert _dry(tmp_path, bad_unit) == 1
+
+
+def test_segment_seed_patch_is_applied_and_reuses_existing_evidence():
+    """20261108 구간 패치: 모든 간선이 그래프에 있던 간선의 근거 URL 만 쓴다 (새 사실 없음), participates_in 은 offered_by 공급사와 같다."""
+    import json
+
+    from wsj.ecosystems.ontology import load_graph
+
+    g = load_graph()
+    doc = json.loads((from_json.PATCH_DIR / "20261108_segments.json").read_text(encoding="utf-8"))
+    have_edges = {(e["from"], e["relation"], e["to"]) for e in g["edges"]}
+    ids = {n["id"] for n in g["nodes"]}
+    assert all(n["id"] in ids for n in doc["nodes"]) and all((e["from"], e["relation"], e["to"]) in have_edges for e in doc["edges"])
+    old_urls = {ev["url"] for e in g["edges"] if not e["id"].startswith("seg1108-") for ev in e["evidence"]}
+    assert all(ev["url"] in old_urls for e in doc["edges"] for ev in e["evidence"])
+    members = {e["from"]: e["to"] for e in doc["edges"] if e["relation"] == "part_of"}
+    suppliers = {(e["to"], members[e["from"]]) for e in g["edges"] if e["relation"] == "offered_by" and e["from"] in members}
+    assert {(e["from"], e["to"]) for e in doc["edges"] if e["relation"] == "participates_in"} == suppliers
+
+
+def test_impact_reaches_segment_participants_from_end_demand():
+    """최종 수요의 변화는 feeds 를 거꾸로 타고 구간 → 참여 기업에 닿는다 (기존 노드의 영향 경로는 바뀌지 않는다)."""
+    from wsj.ecosystems.impact import influence_paths
+    from wsj.ecosystems.ontology import load_graph
+
+    g = load_graph()
+    paths = influence_paths(g, "end_demand:ai_dc_power")
+    reached = {p["company_id"] for p in paths}
+    assert {"company:clf", "company:cat", "company:be", "company:hitachi"} <= reached
+    goes = next(p for p in paths if p["company_id"] == "company:clf")
+    assert [x["node_id"] for x in goes["path"]][:3] == ["end_demand:ai_dc_power", "segment:large_power_transformer", "segment:goes"]

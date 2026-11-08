@@ -1,0 +1,125 @@
+{
+ "status": "000",
+ "message": "정상",
+ "list": [
+  {
+   "rcept_no": "20260310000456",
+   "corp_code": "00123456",
+   "sj_div": "BS",
+   "sj_nm": "재무상태표",
+   "account_id": "ifrs-full_CashAndCashEquivalents",
+   "account_nm": "현금및현금성자산",
+   "account_detail": "-",
+   "currency": "KRW",
+   "thstrm_amount": "100,000,000",
+   "frmtrm_amount": "90,000,000"
+  },
+  {
+   "rcept_no": "20260310000456",
+   "corp_code": "00123456",
+   "sj_div": "BS",
+   "sj_nm": "재무상태표",
+   "account_id": "ifrs-full_ShortTermBorrowings",
+   "account_nm": "단기차입금",
+   "account_detail": "-",
+   "currency": "KRW",
+   "thstrm_amount": "40,000,000"
+  },
+  {
+   "rcept_no": "20260310000456",
+   "corp_code": "00123456",
+   "sj_div": "BS",
+   "sj_nm": "재무상태표",
+   "account_id": "ifrs-full_LongtermBorrowings",
+   "account_nm": "장기차입금",
+   "account_detail": "-",
+   "currency": "KRW",
+   "thstrm_amount": "90,000,000"
+  },
+  {
+   "rcept_no": "20260310000456",
+   "corp_code": "00123456",
+   "sj_div": "IS",
+   "sj_nm": "손익계산서",
+   "account_id": "ifrs-full_Revenue",
+   "account_nm": "매출액",
+   "account_detail": "-",
+   "currency": "KRW",
+   "thstrm_amount": "1,000,000,000",
+   "frmtrm_amount": "900,000,000",
+   "bfefrmtrm_amount": "800,000,000"
+  },
+  {
+   "rcept_no": "20260310000456",
+   "corp_code": "00123456",
+   "sj_div": "IS",
+   "sj_nm": "손익계산서",
+   "account_id": "ifrs-full_GrossProfit",
+   "account_nm": "매출총이익",
+   "account_detail": "-",
+   "currency": "KRW",
+   "thstrm_amount": "190,000,000",
+   "frmtrm_amount": "170,000,000"
+  },
+  {
+   "rcept_no": "20260310000456",
+   "corp_code": "00123456",
+   "sj_div": "IS",
+   "sj_nm": "손익계산서",
+   "account_id": "dart_OperatingIncomeLoss",
+   "account_nm": "영업이익(손실)",
+   "account_detail": "-",
+   "currency": "KRW",
+   "thstrm_amount": "80,000,000",
+   "frmtrm_amount": "60,000,000"
+  },
+  {
+   "rcept_no": "20260310000456",
+   "corp_code": "00123456",
+   "sj_div": "IS",
+   "sj_nm": "손익계산서",
+   "account_id": "ifrs-full_ProfitLoss",
+   "account_nm": "당기순이익(손실)",
+   "account_detail": "-",
+   "currency": "KRW",
+   "thstrm_amount": "65,000,000",
+   "frmtrm_amount": "50,000,000"
+  },
+  {
+   "rcept_no": "20260310000456",
+   "corp_code": "00123456",
+   "sj_div": "IS",
+   "sj_nm": "손익계산서",
+   "account_id": "ifrs-full_ProfitLossAttributableToOwnersOfParent",
+   "account_nm": "지배기업의 소유주에게 귀속되는 당기순이익(손실)",
+   "account_detail": "-",
+   "currency": "KRW",
+   "thstrm_amount": "62,000,000",
+   "frmtrm_amount": "48,000,000"
+  },
+  {
+   "rcept_no": "20260310000456",
+   "corp_code": "00123456",
+   "sj_div": "CF",
+   "sj_nm": "현금흐름표",
+   "account_id": "ifrs-full_CashFlowsFromUsedInOperatingActivities",
+   "account_nm": "영업활동현금흐름",
+   "account_detail": "-",
+   "currency": "KRW",
+   "thstrm_amount": "120,000,000",
+   "frmtrm_amount": "100,000,000"
+  },
+  {
+   "rcept_no": "20260310000456",
+   "corp_code": "00123456",
+   "sj_div": "CF",
+   "sj_nm": "현금흐름표",
+   "account_id": "ifrs-full_PurchaseOfPropertyPlantAndEquipment",
+   "account_nm": "유형자산의 취득",
+   "account_detail": "-",
+   "currency": "KRW",
+   "thstrm_amount": "-50,000,000",
+   "frmtrm_amount": "-45,000,000"
+  }
+ ]
+}
