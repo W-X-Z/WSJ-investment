@@ -1,198 +1,198 @@
 [
- {
-  "date": "2026-10-28",
-  "kind": "data",
-  "by": "claude-session",
-  "title": "그래프 상장사 313곳 일봉 수집 시작 (미국·대만·한국·중국·홍콩·일본)",
-  "detail": "가격은 근거가 아니라 '이미 움직인 폭'과 설명 안 된 급변 탐지에 쓴다. 유럽·인도 거래소는 아직 출처가 없다."
- },
- {
-  "date": "2026-10-28",
-  "kind": "data",
-  "by": "claude-session",
-  "title": "FRED 구리·알루미늄 0건 수리",
-  "detail": "FRED(Akamai)가 브라우저 User-Agent 를 봇으로 보고 응답 없이 끊었다. 평범한 UA 로 바꿨다."
- },
- {
-  "date": "2026-10-28",
-  "kind": "data",
-  "by": "claude-session",
-  "title": "대만 월매출 지표 17곳 → 63곳, 가속(당월 YoY − 누적 YoY) 신호 추가",
-  "detail": "그래프의 대만 상장사 전부를 이력용으로 저장한다."
- },
- {
-  "date": "2026-10-28",
-  "kind": "data",
-  "by": "claude-session",
-  "title": "미국 기업 내부자 장내 매수(Form 4, $10만 이상)를 기업 소식으로",
-  "detail": "매도는 보상·세금 목적이 많아 쓰지 않는다."
- },
- {
-  "date": "2026-10-28",
-  "kind": "ontology",
-  "by": "claude-session",
-  "title": "상장사로 이어지지 않던 병목 11곳 보수 + 검증 규칙",
-  "detail": "기판 생산능력·ABF·프로브카드·메모리 테스터·TC 본더·MLCC 등. 이제 병목은 2단계 안에 상장사가 있어야 검증을 통과한다."
- },
- {
-  "date": "2026-10-28",
-  "kind": "ontology",
-  "by": "claude-session",
-  "title": "광섬유·게르마늄 사슬, 기판 공정장비, 현장 발전 노드 추가",
-  "detail": "광섬유·광케이블(Corning·YOFC·Fujikura·Furukawa·대한광통신·Sterlite), 게르마늄(Umicore·Teck), 기판 공정장비(志聖·群翊), 계통연계 대기열 → 가스엔진·연료전지."
- },
- {
-  "date": "2026-10-28",
-  "kind": "ontology",
-  "by": "claude-session",
-  "title": "이슈 태깅 안전망",
-  "detail": "선별 모델이 노드를 비우면 기사 어휘 태그를 쓴다 (10/19 광섬유 현물가 급등 이슈가 노드 없이 버려졌다)."
- },
- {
-  "date": "2026-10-28",
-  "kind": "judgment",
-  "by": "claude-session",
-  "title": "10점 근거 점수·노출 순도·날짜 있는 확인 일정과 채점",
-  "detail": "★3 은 7점 이상, 2점 이하는 ★1. 확인 일정은 다음 실행이 적중·빗나감을 채점한다."
- },
- {
-  "date": "2026-10-28",
-  "kind": "ops",
-  "by": "claude-session",
-  "title": "주간 개선 예약작업 시작",
-  "detail": "점검 보고서에서 고칠 일을 골라 그래프 패치·출처·별칭을 PR 로 올리고, 데이터 변경은 CI 통과 시 스스로 병합한다."
- },
- {
-  "date": "2026-10-28",
-  "kind": "judgment",
-  "by": "claude-session",
-  "title": "★ 규칙을 매일 다시 적용",
-  "detail": "손대지 않은 아이디어도 그날의 근거 점수로 ★ 를 다시 본다(2점 이하 ★2 → ★1). ★3 점검으로 ★만 내린 아이디어의 점수가 비던 문제도 고쳤다."
- },
- {
-  "date": "2026-10-28",
-  "kind": "ui",
-  "by": "claude-session",
-  "title": "피드를 카드로 간소화 — 제목·관련 기업·생성일·관련 이슈",
-  "detail": "논지·왜 지금·점수·가격·타임라인은 피드에서 빼고 상세로. 제목은 30자 안팎, 기업명·숫자·줄표 없이 쓰도록 작성 규칙과 검증을 바꿨다."
- },
- {
-  "date": "2026-10-28",
-  "kind": "data",
-  "by": "claude-session",
-  "title": "시가총액·발행주식수 수집과 텐배거 출발 조건",
-  "detail": "SEC dei·TWSE/TPEx 공시·Tencent·Naver·Yahoo JP 에서 주식수, FRED 환율로 USD 시총(v_company_facts). 시총 $3B 이하·저점 대비 3배 미만을 후보로 표시. 가격 백필은 소식이 생긴 기업 먼저."
- },
- {
-  "date": "2026-10-28",
-  "kind": "judgment",
-  "by": "claude-session",
-  "title": "심층 분석 메모 층 추가",
-  "detail": "★3·텐배거 후보마다 기술·시장·공급·대체·노출·밸류에이션·반대·연관 데이터·확인 일정 9문단, 문단마다 날짜 있는 출처 (ideas.idea_notes)."
- },
- {
-  "date": "2026-10-28",
-  "kind": "judgment",
-  "by": "claude-session",
-  "title": "선행 추론 — 변화의 다음 고리를 시장보다 먼저",
-  "detail": "근거 점수(확신)와 별개로 선행 점수(경로·미반영·룸·발현). LLM 이 아이디어마다 변화→경로→기업과 발현 시점·규모를 쓰고 검증기가 그래프 간선으로 확인. scan.second_order 가 2단계 이상 떨어진 조용한 소형주를 단서로 올린다."
- },
- {
-  "date": "2026-10-28",
-  "kind": "judgment",
-  "by": "claude-session",
-  "title": "결과는 가치평가, 점수는 계산기 (ADR-0019)",
-  "detail": "LLM 이 아이디어마다 이슈 → 영향 경로 → 매출·마진 → 시나리오별 내재 시총·주가 → 확률 가중 기댓값을 쓰고, 검증기가 산수를 다시 한다. 근거·선행 점수는 ★ 규칙·알림·계산기로만 남고 화면에서 뺐다. 재무(SEC·대만 월매출+손익 비율·네이버) 수집기 추가. 0024."
- },
- {
-  "date": "2026-10-29",
-  "kind": "judgment",
-  "title": "시장 범위 — 주 기업은 미국·한국 상장사 (ADR-0021)",
-  "detail": "첫 수동 실행에서 활성 12건 중 6건의 주 기업이 대만·독일·프랑스·일본 상장사였고 절반은 가격·재무가 없어 가치평가도 못 했다. 주 기업은 NYSE·Nasdaq·KRX·KOSDAQ 상장사만(검증기 거부·후보·단서 필터), 다른 시장 기업은 신호·근거·관련 기업으로만. 범위 밖 6건 종료.",
-  "by": "claude-session"
- },
- {
-  "date": "2026-10-29",
-  "kind": "judgment",
-  "title": "가설 검증 루프 — 2단계 생성과 예측 채점이 움직이는 ★ (ADR-0022)",
-  "detail": "아이디어 전에 가설 후보 8~15개를 넓게 열고 엔진이 채점(구체·대담·반증 가능·설명력 12점)해 고른 뒤, 고른 후보의 조사 계획대로 원문을 확인하고 그것만 아이디어로 쓴다. 예측 채점이 ★ 를 자동으로 움직인다: 적중 1 → ★2, 2 → ★3, 반증 성립 → 종료, 빗나감 2 → ★1.",
-  "by": "claude-session"
- },
- {
-  "date": "2026-10-29",
-  "kind": "ui",
-  "title": "리서치 리포트 피드 · 이슈 탭 · 수납 (ADR-0023)",
-  "detail": "홈 = 기업 리서치 리포트 요약 카드(기업·목표주가(12개월 확률가중, 약세~강세 범위)·투자 아이디어·데이터 근거 2개·예측 상태), 상세는 리포트 라벨(투자 아이디어·목표주가와 시나리오·추론 요약·데이터 근거·예측과 검증). /issues 탭 = 최근 이슈 · 공급망에서의 의미 · 영향 경로 ≤3(0026) · 연결된 리포트. 사이드바는 리서치·이슈 두 탭, 나머지는 '더 보기'에 수납.",
-  "by": "claude-session"
- },
- {
-  "date": "2026-10-29",
-  "kind": "ui",
-  "title": "말을 걷어낸 화면 — 값·제목·경로만, 설명은 ? 로, 이슈에 온톨로지 그래프",
-  "detail": "카드에서 확신·12개월·각주·예측 수·근거 수·관련 기업·첫 리포트 날짜·힌트 문구를 모두 뺐다. 목표주가는 숫자와 약세~강세 막대(로그 눈금, 현재·목표 점)로. 카드 전체가 링크, › 로 상세 표시. 생태계는 색 띠(보라·청록·호박)로, 여력은 초록·빨강으로만. 사이드바 안내문 삭제, 설명은 상단 ? 패널에. 이슈 상세에 변화 → 병목·기술 → 부품·공정·장비 → 기업 4열 그래프(가설 경로 굵게, 리포트 있는 기업 찬 색).",
-  "by": "claude-session"
- },
- {
-  "date": "2026-10-29",
-  "kind": "product",
-  "title": "메인 문턱 · 기업 위키 · 단계별 가중치 그래프 · 목표주가 의무 (ADR-0023 개정 2)",
-  "detail": "홈에는 ★2 이상이거나 여력 +30% 이상인 리포트만, 나머지는 /ideas '검토 중'. 리포트를 고쳐 쓴 뒤 산출하지 않은 목표주가는 '재산출 대기'로 숨긴다. 이슈 상세를 머리 → 영향 경로 → 리포트 → 관련 기업으로 나누고, 관련 기업은 기업 위키(/companies/[slug]: 공급·개발, 푸는 병목, 동종, 고객, 시세·재무, 닿는 변화, 리포트, 소식, 이슈)로 보낸다. 그래프는 이웃 전부가 아니라 impact-index 신뢰도 상위 8 경로 + 가설 경로만, 열은 종류가 아니라 단계(변화 → 1차 → 2차 …). 색 띠·추세 태그 제거. 엔진은 가격·주식수가 있는데 valuation 이 빠진 행이 있으면 exit 2 (06:41 실행이 목표주가를 안 쓴 문제의 재발 방지).",
-  "by": "claude-session"
- },
- {
-  "date": "2026-11-01",
-  "kind": "ontology",
-  "by": "claude-weekly",
-  "title": "AI 데이터센터 설비투자를 수요 동인 노드로",
-  "detail": "그래프에 AI 사슬 맨 위의 돈(9개 CSP 설비투자)이 없어 'AI 투자와 그 자금' 매크로가 병목과 이어지지 않았다. demand_driver:ai_dc_capex 를 더하고 광섬유 부족·광섬유 밀도(TrendForce 10-19 원문)와 CoWoS·HBM 비트·캠퍼스 전력(추론 등급)에 잇고, 관측치 obs:csp9_capex_2026e/2027e_usd_bn(957·1,500+ 십억 달러, TrendForce 10-14)과 obs:fiber_inventory_months(1개월)를 넣었다. 별칭은 'capex' 같은 넓은 말을 빼고 CSP·하이퍼스케일러·데이터센터 capex 로 좁혔다."
- },
- {
-  "date": "2026-11-01",
-  "kind": "data",
-  "by": "claude-weekly",
-  "title": "상장 정보 오류 2건 — Parade 는 TPEx, O-Net 은 2020년 상장폐지",
-  "detail": "가격·월매출이 비어 있던 원인이 그래프의 상장 정보였다. Parade Technologies(4966)는 TWSE 가 아니라 TPEx 上櫃(2011-09-13, histock) — 거래소를 고쳐 가격·월매출 수집이 TPEx 로 간다(tw:4966 빈 지표). O-Net Technologies(HKEX 0877)는 2020-10-05 마지막 거래일로 사유화(HKSCC 회람 2020-09-29) — private 로 바꿨다. 남은 1건: Sugon DataEnergy(BJSE 920808) 가격 출처 없음."
- },
- {
-  "date": "2026-11-01",
-  "kind": "ops",
-  "by": "claude-weekly",
-  "title": "점검 도구의 거짓 경보 2건 — 코드 PR(사람 승인)로",
-  "detail": "health 의 '수집기 ideas 2일 넘게 실패'는 ADR-0028 이후 아침 사슬이 agent:collect·interpret·enrich·report 로 기록하는데 옛 ideas 수집기를 매일 수집기로 보고 있어서다. scan 은 시가총액(v_company_facts)을 합치지 않아 모든 후보가 '시가총액 미확인'으로 나왔다(아이디어 엔진은 merge_facts 로 합친다). 둘 다 pipeline 코드라 별도 PR."
- },
- {
-  "date": "2026-11-01",
-  "kind": "judgment",
-  "by": "claude-weekly",
-  "title": "보류 — 이번 주 고치지 않은 것",
-  "detail": "Adeia–TCL 라이선스 갱신 이슈 노드 없음: 보류(목적과 무관 — 기존 라이선시 갱신). 미 재무부 대외투자 규정안: 보류(미국→중국 투자 제한, 소·중형 공급사 기회와 거리가 멂). 광섬유·FormFactor 이슈 노드 없음: 별칭은 이미 있고 10-28 안전망 이전 이슈라 새 이슈부터 태깅된다. 늦은 관측치(Veeco RPO·InP 수주, AAOI·MACOM·Coherent): 3분기 실적 발표 전 — Veeco 11-04 발표 예정, 그 뒤 갱신. ontology_sync(core.entities 없음)·facts(ref 스키마 비노출, 10-29 이후 성공)는 DB 설정 문제라 손대지 않았다."
- },
- {
-  "date": "2026-11-08",
-  "kind": "ontology",
-  "by": "claude-weekly",
-  "title": "노출도 채우기 1주차 — 10곳 15간선 (G-8)",
-  "detail": "exposure_facts(미국 10-K XBRL·본문)에서 최근 단서에 자주 나온 10곳을 공급 관계로 옮김: 숫자 그대로(exposure_pct) 4간선 — WOLF SiC 웨이퍼 45.35%(FY25), FORM DRAM 프로브카드 31.52%·SK hynix 22.9%(원문 표 직접 확인), AAOI→Microsoft 28.8%(새 간선). 멤버가 더 넓은 범주뿐인 11간선은 범주(exposure)만, note 에 상한 숫자와 축=멤버 — AAOI 플러거블, ACMR ECP 2, AEHR FOX-XP, AEIS 파워셸프·IBC, ALGM 전류센서, WOLF SiC MOSFET, VECO MOCVD, SPXC 냉각탑, LFUS DC 퓨즈. exposure_filled 12 → 25 / offered_by 683. CC(2상 유체)는 상업화 전이라 넓은 범주 숫자가 오해를 줘서, FCEL·NVTS 는 제품 축이 없어 비움."
- },
- {
-  "date": "2026-11-08",
-  "kind": "data",
-  "by": "claude-weekly",
-  "title": "주간 매크로 배경 첫 장 (J-3)",
-  "detail": "research/macro/2026-W45.md — 러셀2000·S&P500 주간, 10년물, VIX, 9월 고용, 한국 10월 수출(반도체 +259.4%). 직접 연 원문 숫자만, 못 찾은 칸은 '확인 못 함'으로 남김. 다음 장부터 같은 출처로 차이를 적는다."
- },
- {
-  "date": "2026-11-08",
-  "kind": "ops",
-  "by": "claude-weekly",
-  "title": "아침 사슬 4작업이 11/05 부터 꺼져 있음 — 보고만",
-  "detail": "WSJ 1/4 수집·2/4 해석·3/4 검토·4/4 리포트 예약작업이 11/05 14:59 UTC 에 사용자 정지(enabled=false, suspension 없음). 그래서 issues 단계(아침 dispatch 전용)가 11/05 뒤 안 돌고 v_collection_alerts 에 'issues 마지막 실행 11-05' 가 뜬다. 저녁 GitHub 예약(clues·candidates)은 계속 돌아 단서는 쌓이지만 아무도 해석하지 않는다. 사용자가 끈 것이라 이 작업은 다시 켜지 않는다."
- },
- {
-  "date": "2026-11-08",
-  "kind": "judgment",
-  "by": "claude-weekly",
-  "title": "보류 — 이번 주 고치지 않은 것",
-  "detail": "(1) 그래프 제안 40건이 pending — 대부분 collect 가 올린 대형·비대상 상장사(Sony·Nintendo·Stellantis·한전·BAM·HPE 등). 이 작업은 graph_proposals 를 쓸 권한이 없어 처리하지 못함; 해석 재개 시 rejected 정리 필요. Seagate(55)는 11/05 커밋 메시지에 rejected 로 적혔으나 DB 는 pending, LPDDR5(52)도 패치엔 반영됐으나 pending. (2) 수집 이상의 'raw·press·disclosure 층 감소' 경고는 토요일 단서(arXiv 주말 미발행)와 issues 단계 정지 때문 — 주말 기준선 보정은 코드 변경이라 다음 주 후보. (3) company_feed(기업 이름 검색)가 30일 단서 1,407건이지만 아이디어 인용 2건 — 원본 비중(평일 9~25%)을 올리는 I-4(OSTI·EIA-860M·채용 API)가 다음 차례."
- }
+  {
+    "date": "2026-10-28",
+    "kind": "data",
+    "by": "claude-session",
+    "title": "그래프 상장사 313곳 일봉 수집 시작 (미국·대만·한국·중국·홍콩·일본)",
+    "detail": "가격은 근거가 아니라 '이미 움직인 폭'과 설명 안 된 급변 탐지에 쓴다. 유럽·인도 거래소는 아직 출처가 없다."
+  },
+  {
+    "date": "2026-10-28",
+    "kind": "data",
+    "by": "claude-session",
+    "title": "FRED 구리·알루미늄 0건 수리",
+    "detail": "FRED(Akamai)가 브라우저 User-Agent 를 봇으로 보고 응답 없이 끊었다. 평범한 UA 로 바꿨다."
+  },
+  {
+    "date": "2026-10-28",
+    "kind": "data",
+    "by": "claude-session",
+    "title": "대만 월매출 지표 17곳 → 63곳, 가속(당월 YoY − 누적 YoY) 신호 추가",
+    "detail": "그래프의 대만 상장사 전부를 이력용으로 저장한다."
+  },
+  {
+    "date": "2026-10-28",
+    "kind": "data",
+    "by": "claude-session",
+    "title": "미국 기업 내부자 장내 매수(Form 4, $10만 이상)를 기업 소식으로",
+    "detail": "매도는 보상·세금 목적이 많아 쓰지 않는다."
+  },
+  {
+    "date": "2026-10-28",
+    "kind": "ontology",
+    "by": "claude-session",
+    "title": "상장사로 이어지지 않던 병목 11곳 보수 + 검증 규칙",
+    "detail": "기판 생산능력·ABF·프로브카드·메모리 테스터·TC 본더·MLCC 등. 이제 병목은 2단계 안에 상장사가 있어야 검증을 통과한다."
+  },
+  {
+    "date": "2026-10-28",
+    "kind": "ontology",
+    "by": "claude-session",
+    "title": "광섬유·게르마늄 사슬, 기판 공정장비, 현장 발전 노드 추가",
+    "detail": "광섬유·광케이블(Corning·YOFC·Fujikura·Furukawa·대한광통신·Sterlite), 게르마늄(Umicore·Teck), 기판 공정장비(志聖·群翊), 계통연계 대기열 → 가스엔진·연료전지."
+  },
+  {
+    "date": "2026-10-28",
+    "kind": "ontology",
+    "by": "claude-session",
+    "title": "이슈 태깅 안전망",
+    "detail": "선별 모델이 노드를 비우면 기사 어휘 태그를 쓴다 (10/19 광섬유 현물가 급등 이슈가 노드 없이 버려졌다)."
+  },
+  {
+    "date": "2026-10-28",
+    "kind": "judgment",
+    "by": "claude-session",
+    "title": "10점 근거 점수·노출 순도·날짜 있는 확인 일정과 채점",
+    "detail": "★3 은 7점 이상, 2점 이하는 ★1. 확인 일정은 다음 실행이 적중·빗나감을 채점한다."
+  },
+  {
+    "date": "2026-10-28",
+    "kind": "ops",
+    "by": "claude-session",
+    "title": "주간 개선 예약작업 시작",
+    "detail": "점검 보고서에서 고칠 일을 골라 그래프 패치·출처·별칭을 PR 로 올리고, 데이터 변경은 CI 통과 시 스스로 병합한다."
+  },
+  {
+    "date": "2026-10-28",
+    "kind": "judgment",
+    "by": "claude-session",
+    "title": "★ 규칙을 매일 다시 적용",
+    "detail": "손대지 않은 아이디어도 그날의 근거 점수로 ★ 를 다시 본다(2점 이하 ★2 → ★1). ★3 점검으로 ★만 내린 아이디어의 점수가 비던 문제도 고쳤다."
+  },
+  {
+    "date": "2026-10-28",
+    "kind": "ui",
+    "by": "claude-session",
+    "title": "피드를 카드로 간소화 — 제목·관련 기업·생성일·관련 이슈",
+    "detail": "논지·왜 지금·점수·가격·타임라인은 피드에서 빼고 상세로. 제목은 30자 안팎, 기업명·숫자·줄표 없이 쓰도록 작성 규칙과 검증을 바꿨다."
+  },
+  {
+    "date": "2026-10-28",
+    "kind": "data",
+    "by": "claude-session",
+    "title": "시가총액·발행주식수 수집과 텐배거 출발 조건",
+    "detail": "SEC dei·TWSE/TPEx 공시·Tencent·Naver·Yahoo JP 에서 주식수, FRED 환율로 USD 시총(v_company_facts). 시총 $3B 이하·저점 대비 3배 미만을 후보로 표시. 가격 백필은 소식이 생긴 기업 먼저."
+  },
+  {
+    "date": "2026-10-28",
+    "kind": "judgment",
+    "by": "claude-session",
+    "title": "심층 분석 메모 층 추가",
+    "detail": "★3·텐배거 후보마다 기술·시장·공급·대체·노출·밸류에이션·반대·연관 데이터·확인 일정 9문단, 문단마다 날짜 있는 출처 (ideas.idea_notes)."
+  },
+  {
+    "date": "2026-10-28",
+    "kind": "judgment",
+    "by": "claude-session",
+    "title": "선행 추론 — 변화의 다음 고리를 시장보다 먼저",
+    "detail": "근거 점수(확신)와 별개로 선행 점수(경로·미반영·룸·발현). LLM 이 아이디어마다 변화→경로→기업과 발현 시점·규모를 쓰고 검증기가 그래프 간선으로 확인. scan.second_order 가 2단계 이상 떨어진 조용한 소형주를 단서로 올린다."
+  },
+  {
+    "date": "2026-10-28",
+    "kind": "judgment",
+    "by": "claude-session",
+    "title": "결과는 가치평가, 점수는 계산기 (ADR-0019)",
+    "detail": "LLM 이 아이디어마다 이슈 → 영향 경로 → 매출·마진 → 시나리오별 내재 시총·주가 → 확률 가중 기댓값을 쓰고, 검증기가 산수를 다시 한다. 근거·선행 점수는 ★ 규칙·알림·계산기로만 남고 화면에서 뺐다. 재무(SEC·대만 월매출+손익 비율·네이버) 수집기 추가. 0024."
+  },
+  {
+    "date": "2026-10-29",
+    "kind": "judgment",
+    "title": "시장 범위 — 주 기업은 미국·한국 상장사 (ADR-0021)",
+    "detail": "첫 수동 실행에서 활성 12건 중 6건의 주 기업이 대만·독일·프랑스·일본 상장사였고 절반은 가격·재무가 없어 가치평가도 못 했다. 주 기업은 NYSE·Nasdaq·KRX·KOSDAQ 상장사만(검증기 거부·후보·단서 필터), 다른 시장 기업은 신호·근거·관련 기업으로만. 범위 밖 6건 종료.",
+    "by": "claude-session"
+  },
+  {
+    "date": "2026-10-29",
+    "kind": "judgment",
+    "title": "가설 검증 루프 — 2단계 생성과 예측 채점이 움직이는 ★ (ADR-0022)",
+    "detail": "아이디어 전에 가설 후보 8~15개를 넓게 열고 엔진이 채점(구체·대담·반증 가능·설명력 12점)해 고른 뒤, 고른 후보의 조사 계획대로 원문을 확인하고 그것만 아이디어로 쓴다. 예측 채점이 ★ 를 자동으로 움직인다: 적중 1 → ★2, 2 → ★3, 반증 성립 → 종료, 빗나감 2 → ★1.",
+    "by": "claude-session"
+  },
+  {
+    "date": "2026-10-29",
+    "kind": "ui",
+    "title": "리서치 리포트 피드 · 이슈 탭 · 수납 (ADR-0023)",
+    "detail": "홈 = 기업 리서치 리포트 요약 카드(기업·목표주가(12개월 확률가중, 약세~강세 범위)·투자 아이디어·데이터 근거 2개·예측 상태), 상세는 리포트 라벨(투자 아이디어·목표주가와 시나리오·추론 요약·데이터 근거·예측과 검증). /issues 탭 = 최근 이슈 · 공급망에서의 의미 · 영향 경로 ≤3(0026) · 연결된 리포트. 사이드바는 리서치·이슈 두 탭, 나머지는 '더 보기'에 수납.",
+    "by": "claude-session"
+  },
+  {
+    "date": "2026-10-29",
+    "kind": "ui",
+    "title": "말을 걷어낸 화면 — 값·제목·경로만, 설명은 ? 로, 이슈에 온톨로지 그래프",
+    "detail": "카드에서 확신·12개월·각주·예측 수·근거 수·관련 기업·첫 리포트 날짜·힌트 문구를 모두 뺐다. 목표주가는 숫자와 약세~강세 막대(로그 눈금, 현재·목표 점)로. 카드 전체가 링크, › 로 상세 표시. 생태계는 색 띠(보라·청록·호박)로, 여력은 초록·빨강으로만. 사이드바 안내문 삭제, 설명은 상단 ? 패널에. 이슈 상세에 변화 → 병목·기술 → 부품·공정·장비 → 기업 4열 그래프(가설 경로 굵게, 리포트 있는 기업 찬 색).",
+    "by": "claude-session"
+  },
+  {
+    "date": "2026-10-29",
+    "kind": "product",
+    "title": "메인 문턱 · 기업 위키 · 단계별 가중치 그래프 · 목표주가 의무 (ADR-0023 개정 2)",
+    "detail": "홈에는 ★2 이상이거나 여력 +30% 이상인 리포트만, 나머지는 /ideas '검토 중'. 리포트를 고쳐 쓴 뒤 산출하지 않은 목표주가는 '재산출 대기'로 숨긴다. 이슈 상세를 머리 → 영향 경로 → 리포트 → 관련 기업으로 나누고, 관련 기업은 기업 위키(/companies/[slug]: 공급·개발, 푸는 병목, 동종, 고객, 시세·재무, 닿는 변화, 리포트, 소식, 이슈)로 보낸다. 그래프는 이웃 전부가 아니라 impact-index 신뢰도 상위 8 경로 + 가설 경로만, 열은 종류가 아니라 단계(변화 → 1차 → 2차 …). 색 띠·추세 태그 제거. 엔진은 가격·주식수가 있는데 valuation 이 빠진 행이 있으면 exit 2 (06:41 실행이 목표주가를 안 쓴 문제의 재발 방지).",
+    "by": "claude-session"
+  },
+  {
+    "date": "2026-11-01",
+    "kind": "ontology",
+    "by": "claude-weekly",
+    "title": "AI 데이터센터 설비투자를 수요 동인 노드로",
+    "detail": "그래프에 AI 사슬 맨 위의 돈(9개 CSP 설비투자)이 없어 'AI 투자와 그 자금' 매크로가 병목과 이어지지 않았다. demand_driver:ai_dc_capex 를 더하고 광섬유 부족·광섬유 밀도(TrendForce 10-19 원문)와 CoWoS·HBM 비트·캠퍼스 전력(추론 등급)에 잇고, 관측치 obs:csp9_capex_2026e/2027e_usd_bn(957·1,500+ 십억 달러, TrendForce 10-14)과 obs:fiber_inventory_months(1개월)를 넣었다. 별칭은 'capex' 같은 넓은 말을 빼고 CSP·하이퍼스케일러·데이터센터 capex 로 좁혔다."
+  },
+  {
+    "date": "2026-11-01",
+    "kind": "data",
+    "by": "claude-weekly",
+    "title": "상장 정보 오류 2건 — Parade 는 TPEx, O-Net 은 2020년 상장폐지",
+    "detail": "가격·월매출이 비어 있던 원인이 그래프의 상장 정보였다. Parade Technologies(4966)는 TWSE 가 아니라 TPEx 上櫃(2011-09-13, histock) — 거래소를 고쳐 가격·월매출 수집이 TPEx 로 간다(tw:4966 빈 지표). O-Net Technologies(HKEX 0877)는 2020-10-05 마지막 거래일로 사유화(HKSCC 회람 2020-09-29) — private 로 바꿨다. 남은 1건: Sugon DataEnergy(BJSE 920808) 가격 출처 없음."
+  },
+  {
+    "date": "2026-11-01",
+    "kind": "ops",
+    "by": "claude-weekly",
+    "title": "점검 도구의 거짓 경보 2건 — 코드 PR(사람 승인)로",
+    "detail": "health 의 '수집기 ideas 2일 넘게 실패'는 ADR-0028 이후 아침 사슬이 agent:collect·interpret·enrich·report 로 기록하는데 옛 ideas 수집기를 매일 수집기로 보고 있어서다. scan 은 시가총액(v_company_facts)을 합치지 않아 모든 후보가 '시가총액 미확인'으로 나왔다(아이디어 엔진은 merge_facts 로 합친다). 둘 다 pipeline 코드라 별도 PR."
+  },
+  {
+    "date": "2026-11-01",
+    "kind": "judgment",
+    "by": "claude-weekly",
+    "title": "보류 — 이번 주 고치지 않은 것",
+    "detail": "Adeia–TCL 라이선스 갱신 이슈 노드 없음: 보류(목적과 무관 — 기존 라이선시 갱신). 미 재무부 대외투자 규정안: 보류(미국→중국 투자 제한, 소·중형 공급사 기회와 거리가 멂). 광섬유·FormFactor 이슈 노드 없음: 별칭은 이미 있고 10-28 안전망 이전 이슈라 새 이슈부터 태깅된다. 늦은 관측치(Veeco RPO·InP 수주, AAOI·MACOM·Coherent): 3분기 실적 발표 전 — Veeco 11-04 발표 예정, 그 뒤 갱신. ontology_sync(core.entities 없음)·facts(ref 스키마 비노출, 10-29 이후 성공)는 DB 설정 문제라 손대지 않았다."
+  },
+  {
+    "date": "2026-11-08",
+    "kind": "ontology",
+    "by": "claude-weekly",
+    "title": "노출도 채우기 1주차 — 10곳 15간선 (G-8)",
+    "detail": "exposure_facts(미국 10-K XBRL·본문)에서 최근 단서에 자주 나온 10곳을 공급 관계로 옮김: 숫자 그대로(exposure_pct) 4간선 — WOLF SiC 웨이퍼 45.35%(FY25), FORM DRAM 프로브카드 31.52%·SK hynix 22.9%(원문 표 직접 확인), AAOI→Microsoft 28.8%(새 간선). 멤버가 더 넓은 범주뿐인 11간선은 범주(exposure)만, note 에 상한 숫자와 축=멤버 — AAOI 플러거블, ACMR ECP 2, AEHR FOX-XP, AEIS 파워셸프·IBC, ALGM 전류센서, WOLF SiC MOSFET, VECO MOCVD, SPXC 냉각탑, LFUS DC 퓨즈. exposure_filled 12 → 25 / offered_by 683. CC(2상 유체)는 상업화 전이라 넓은 범주 숫자가 오해를 줘서, FCEL·NVTS 는 제품 축이 없어 비움."
+  },
+  {
+    "date": "2026-11-08",
+    "kind": "data",
+    "by": "claude-weekly",
+    "title": "주간 매크로 배경 첫 장 (J-3)",
+    "detail": "research/macro/2026-W45.md — 러셀2000·S&P500 주간, 10년물, VIX, 9월 고용, 한국 10월 수출(반도체 +259.4%). 직접 연 원문 숫자만, 못 찾은 칸은 '확인 못 함'으로 남김. 다음 장부터 같은 출처로 차이를 적는다."
+  },
+  {
+    "date": "2026-11-08",
+    "kind": "ops",
+    "by": "claude-weekly",
+    "title": "아침 사슬 4작업이 11/05 부터 꺼져 있음 — 보고만",
+    "detail": "WSJ 1/4 수집·2/4 해석·3/4 검토·4/4 리포트 예약작업이 11/05 14:59 UTC 에 사용자 정지(enabled=false, suspension 없음). 그래서 issues 단계(아침 dispatch 전용)가 11/05 뒤 안 돌고 v_collection_alerts 에 'issues 마지막 실행 11-05' 가 뜬다. 저녁 GitHub 예약(clues·candidates)은 계속 돌아 단서는 쌓이지만 아무도 해석하지 않는다. 사용자가 끈 것이라 이 작업은 다시 켜지 않는다."
+  },
+  {
+    "date": "2026-11-08",
+    "kind": "judgment",
+    "by": "claude-weekly",
+    "title": "보류 — 이번 주 고치지 않은 것",
+    "detail": "(1) 그래프 제안 40건이 pending — 대부분 collect 가 올린 대형·비대상 상장사(Sony·Nintendo·Stellantis·한전·BAM·HPE 등). 이 작업은 graph_proposals 를 쓸 권한이 없어 처리하지 못함; 해석 재개 시 rejected 정리 필요. Seagate(55)는 11/05 커밋 메시지에 rejected 로 적혔으나 DB 는 pending, LPDDR5(52)도 패치엔 반영됐으나 pending. (2) 수집 이상의 'raw·press·disclosure 층 감소' 경고는 토요일 단서(arXiv 주말 미발행)와 issues 단계 정지 때문 — 주말 기준선 보정은 코드 변경이라 다음 주 후보. (3) company_feed(기업 이름 검색)가 30일 단서 1,407건이지만 아이디어 인용 2건 — 원본 비중(평일 9~25%)을 올리는 I-4(OSTI·EIA-860M·채용 API)가 다음 차례."
+  }
 ]
