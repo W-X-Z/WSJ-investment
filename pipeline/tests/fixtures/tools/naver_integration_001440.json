@@ -1,0 +1,116 @@
+{
+ "stockEndType": "stock",
+ "itemCode": "001440",
+ "stockName": "대한전선",
+ "totalInfos": [
+  {
+   "code": "lastClosePrice",
+   "key": "전일",
+   "value": "18,050"
+  },
+  {
+   "code": "openPrice",
+   "key": "시가",
+   "value": "16,450",
+   "compareToPreviousPrice": {
+    "code": "5",
+    "text": "하락",
+    "name": "FALLING"
+   }
+  },
+  {
+   "code": "highPrice",
+   "key": "고가",
+   "value": "17,340",
+   "compareToPreviousPrice": {
+    "code": "5",
+    "text": "하락",
+    "name": "FALLING"
+   }
+  },
+  {
+   "code": "lowPrice",
+   "key": "저가",
+   "value": "16,220",
+   "compareToPreviousPrice": {
+    "code": "5",
+    "text": "하락",
+    "name": "FALLING"
+   }
+  },
+  {
+   "code": "accumulatedTradingVolume",
+   "key": "거래량",
+   "value": "2,306,140"
+  },
+  {
+   "code": "accumulatedTradingValue",
+   "key": "대금",
+   "value": "387억"
+  },
+  {
+   "code": "marketValue",
+   "key": "시총",
+   "value": "3조 3,397억"
+  },
+  {
+   "code": "foreignRate",
+   "key": "외인소진율",
+   "value": "8.97%"
+  },
+  {
+   "code": "highPriceOf52Weeks",
+   "key": "52주 최고",
+   "value": "75,900"
+  },
+  {
+   "code": "lowPriceOf52Weeks",
+   "key": "52주 최저",
+   "value": "16,220"
+  },
+  {
+   "code": "per",
+   "key": "PER",
+   "value": "N/A",
+   "valueDesc": "2026.06."
+  },
+  {
+   "code": "eps",
+   "key": "EPS",
+   "value": "-82원",
+   "valueDesc": "2026.06."
+  },
+  {
+   "code": "cnsPer",
+   "key": "추정PER",
+   "value": "-436.92배"
+  },
+  {
+   "code": "cnsEps",
+   "key": "추정EPS",
+   "value": "-39원"
+  },
+  {
+   "code": "pbr",
+   "key": "PBR",
+   "value": "1.77배",
+   "valueDesc": "2026.06."
+  },
+  {
+   "code": "bps",
+   "key": "BPS",
+   "value": "9,632원",
+   "valueDesc": "2026.06."
+  },
+  {
+   "code": "dividendYieldRatio",
+   "key": "배당수익률",
+   "value": "N/A"
+  },
+  {
+   "code": "dividend",
+   "key": "주당배당금",
+   "value": "N/A"
+  }
+ ]
+}

@@ -1,7 +1,7 @@
 {
-  "schema_version": "0.5",
-  "as_of": "2026-11-02",
-  "purpose": "seed_graph.json 이 따라야 하는 닫힌 어휘(closed vocabulary). 노드 종류·관계 술어의 정의역/치역·근거 등급·전파 방향을 한 곳에 둔다. 검증: python -m wsj.ecosystems.ontology --check v0.5(ADR-0031): 규칙·결정 주체 노드, 시간 축·층별 식별자·후보 상태 노드 칸, 숫자 노출도·양 간선 칸. 새 칸은 모두 선택 칸이다.",
+  "schema_version": "0.6",
+  "as_of": "2026-11-08",
+  "purpose": "seed_graph.json 이 따라야 하는 닫힌 어휘(closed vocabulary). 노드 종류·관계 술어의 정의역/치역·근거 등급·전파 방향을 한 곳에 둔다. 검증: python -m wsj.ecosystems.ontology --check v0.5(ADR-0031): 규칙·결정 주체 노드, 시간 축·층별 식별자·후보 상태 노드 칸, 숫자 노출도·양 간선 칸. 새 칸은 모두 선택 칸이다. v0.6: 산업 구간(segment)·최종 수요(end_demand) 노드와 part_of·participates_in·feeds 술어 — 부품·기업을 시장 단위로 묶고 구간 사이 가치사슬(계수 coef)을 잇는다.",
   "node_kinds": {
     "ecosystem": {
       "layer": 0,
@@ -77,6 +77,16 @@
       "layer": 0,
       "label_ko": "결정 주체",
       "description": "규칙·표준을 정하는 곳 — 계통 운영자(ERCOT·PJM), 규제기관(FERC·BIS), 표준기구(JEDEC·OIF·IEEE·OCP). 상장 기업이 정하면(NVIDIA·하이퍼스케일러) 기업 노드를 쓴다"
+    },
+    "segment": {
+      "layer": 4,
+      "label_ko": "산업 구간",
+      "description": "같은 제품군을 만들어 파는 시장 단위 (대형 변압기·GOES·가스터빈). 부품·소재·장비·제품 노드가 part_of 로 들어오고, 기업이 participates_in 으로 참여하며, feeds 로 다음 구간·최종 수요에 이어진다. 구간 크기·점유율·계수 계산은 리서치 리포트(research.reports)가 한다"
+    },
+    "end_demand": {
+      "layer": 0,
+      "label_ko": "최종 수요",
+      "description": "가치사슬 끝에서 물량을 정하는 수요 (AI 데이터센터 전력 GW). unit 칸에 단위를 단다. feeds 의 마지막 칸이고, 이 수요의 변화가 feeds 를 거꾸로 타고 앞 구간으로 전파된다"
     }
   },
   "company_fields": {
@@ -391,6 +401,43 @@
       ],
       "direction": "none",
       "label_ko": "정한 곳"
+    },
+    "part_of": {
+      "domain": [
+        "product",
+        "component",
+        "material",
+        "equipment"
+      ],
+      "range": [
+        "segment"
+      ],
+      "direction": "supply_to_demand",
+      "label_ko": "구간에 속한다",
+      "note": "부품·소재·장비·제품이 어느 산업 구간의 물건인가. 구간의 변화가 이 노드로 내려가 offered_by 로 공급사에 닿는다"
+    },
+    "participates_in": {
+      "domain": [
+        "company"
+      ],
+      "range": [
+        "segment"
+      ],
+      "direction": "supply_to_demand",
+      "label_ko": "구간에 참여 (판매 보유)",
+      "note": "기업이 그 구간의 물건을 판다. 근거는 그 구간 부품의 offered_by 근거·등급을 그대로 쓴다 (새 사실을 만들지 않는다). 노출도·자리는 offered_by 에 둔다"
+    },
+    "feeds": {
+      "domain": [
+        "segment"
+      ],
+      "range": [
+        "segment",
+        "end_demand"
+      ],
+      "direction": "supply_to_demand",
+      "label_ko": "다음 구간·최종 수요에 공급",
+      "note": "가치사슬 순서 (GOES → 대형 변압기 → AI 데이터센터 전력). coef·coef_unit·coef_source 에 다음 칸 1단위당 이 구간의 물량·금액(USD/MW 등)을 단다 — 원문 숫자가 있을 때만"
     }
   },
   "evidence_tiers": {
@@ -485,7 +532,8 @@
     "exposure (offered_by·supplied_to: 그 제품·거래가 공급사 매출에서 차지하는 비중 — core ≥50% · major 10~50% · minor <10% · unknown. 해석·보강 작업이 원문으로 확인할 때만 채운다)",
     "position (offered_by: 그 제품에서 공급사의 자리 — leader 선두 · second_source 2순위 공급사 · entrant 진입·인증 중 · captive 자체 생산(외부 판매 없음))",
     "exposure_pct · exposure_year · exposure_source (offered_by·supplied_to: 매출 비중 숫자와 기준 연도·출처 — 범주 exposure 와 함께 둘 수 있다)",
-    "content_usd_per_system (requires·raises_content) · lead_time_weeks (requires·offered_by) · effective_date (mandates)"
+    "content_usd_per_system (requires·raises_content) · lead_time_weeks (requires·offered_by) · effective_date (mandates)",
+    "coef · coef_unit · coef_source (feeds: 다음 구간·최종 수요 1단위당 이 구간의 물량·금액, 단위, 출처 — 원문 숫자가 있을 때만)"
   ],
   "maturity_stages": {
     "early": "연구·시연·시제품",
@@ -585,6 +633,27 @@
       ],
       "type": "date",
       "note": "규칙이 강제되기 시작하는 날"
+    },
+    "coef": {
+      "applies_to": [
+        "feeds"
+      ],
+      "type": "number",
+      "min": 0,
+      "note": "다음 구간·최종 수요 1단위당 이 구간의 물량·금액 (예: 데이터센터 1MW 당 변압기 USD). coef_unit·coef_source 와 함께"
+    },
+    "coef_unit": {
+      "applies_to": [
+        "feeds"
+      ],
+      "type": "string",
+      "note": "coef 의 단위 (USD/MW · t/GW · MVA/MW …)"
+    },
+    "coef_source": {
+      "applies_to": [
+        "feeds"
+      ],
+      "type": "url"
     }
   },
   "node_fields": {
@@ -626,6 +695,14 @@
       ],
       "shape": "{key: [string]}",
       "rule": "층마다 같은 대상을 부르는 식별자 — 표준 문서 번호·특허 분류·규칙 번호·HS·부품번호 패턴. 단서를 노드에 잇는 데 쓴다"
+    },
+    "unit": {
+      "applies_to": [
+        "end_demand",
+        "segment"
+      ],
+      "type": "string",
+      "rule": "최종 수요·구간의 물량 단위 (GW · MVA · t). 숫자 자체는 리서치 리포트에"
     }
   }
 }

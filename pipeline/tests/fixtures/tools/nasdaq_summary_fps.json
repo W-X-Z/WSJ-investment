@@ -1,0 +1,77 @@
+{
+ "data": {
+  "symbol": "FPS",
+  "summaryData": {
+   "Exchange": {
+    "label": "Exchange",
+    "value": "NYSE"
+   },
+   "Sector": {
+    "label": "Sector",
+    "value": "Energy"
+   },
+   "Industry": {
+    "label": "Industry",
+    "value": "Industrial Machinery/Components"
+   },
+   "OneYrTarget": {
+    "label": "1 Year Target",
+    "value": "$55.00"
+   },
+   "TodayHighLow": {
+    "label": "Today's High/Low",
+    "value": "N/A"
+   },
+   "ShareVolume": {
+    "label": "Share Volume",
+    "value": "14,829,485"
+   },
+   "AverageVolume": {
+    "label": "Average Volume",
+    "value": "N/A"
+   },
+   "PreviousClose": {
+    "label": "Previous Close",
+    "value": "$18.21"
+   },
+   "FiftTwoWeekHighLow": {
+    "label": "52 Week High/Low",
+    "value": "$66/$17.98"
+   },
+   "MarketCap": {
+    "label": "Market Cap",
+    "value": "5,927,230,469"
+   },
+   "SpecialDividendDate": {
+    "label": "Special Dividend Date",
+    "value": "N/A"
+   },
+   "SpecialDividendAmount": {
+    "label": "Special Dividend",
+    "value": "N/A"
+   },
+   "SpecialDividendPaymentDate": {
+    "label": "Special Dividend Pay Date",
+    "value": "N/A"
+   }
+  },
+  "assetClass": "STOCKS",
+  "additionalData": null,
+  "bidAsk": {
+   "Bid * Size": {
+    "label": "Bid * Size",
+    "value": "N/A"
+   },
+   "Ask * Size": {
+    "label": "Ask * Size",
+    "value": "N/A"
+   }
+  }
+ },
+ "message": null,
+ "status": {
+  "rCode": 200,
+  "bCodeMessage": null,
+  "developerMessage": null
+ }
+}
