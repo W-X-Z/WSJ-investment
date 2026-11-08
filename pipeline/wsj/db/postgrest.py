@@ -33,6 +33,16 @@ def _json_default(o: Any) -> Any:
     raise TypeError(f"not serializable: {type(o)}")
 
 
+class PostgrestError(RuntimeError):
+    """PostgREST 4xx/5xx. status·code(PGRST202 등)를 들고 있어 호출하는 쪽이 '함수 없음'과 다른 실패를 가를 수 있다.
+    RuntimeError 를 이어받아 예전 except RuntimeError 경로는 그대로 동작한다."""
+
+    def __init__(self, message: str, status: int, code: str | None = None) -> None:
+        super().__init__(message)
+        self.status = status
+        self.code = code
+
+
 def _encode_filter_value(v: Any) -> str:
     if isinstance(v, bool):
         return "true" if v else "false"
@@ -76,8 +86,22 @@ class PostgrestStore:
             method, f"{self.base}/{name}", params=params, content=content, headers=headers
         )
         if resp.status_code >= 400:
-            raise RuntimeError(f"PostgREST {method} {table} -> {resp.status_code}: {resp.text[:500]}")
+            code = None
+            try:
+                code = (resp.json() or {}).get("code")
+            except ValueError:
+                pass
+            raise PostgrestError(f"PostgREST {method} {table} -> {resp.status_code}: {resp.text[:500]}", resp.status_code, code)
         return resp
+
+    def rpc(self, fn: str, args: dict[str, Any], schema: str | None = None) -> Any:
+        """POST /rest/v1/rpc/<function> + Content-Profile: <schema>. 두 호출 모양을 다 받는다:
+        store.rpc("research.put_reports", {"rows": [...]}) · store.rpc("put_reports", {"rows": [...]}, schema="research").
+        스키마를 안 주고 점도 없으면 public. 함수가 없으면 404(PGRST202), 스키마가 노출 목록(pgrst.db_schemas)에 없으면 406(PGRST106)."""
+        if schema is None:
+            schema, fn = split_table(fn) if "." in fn else ("public", fn)
+        resp = self._req("POST", f"{schema}.rpc/{fn}", body=args)
+        return resp.json() if resp.content else None
 
     @staticmethod
     def _filter_params(filters: Filters | None) -> list[tuple[str, str]]:
@@ -175,13 +199,6 @@ class PostgrestStore:
                 break
             offset += page
         return out[:limit] if limit else out
-
-    def rpc(self, fn: str, args: dict[str, Any]) -> Any:
-        """'schema.function' 호출 — POST /rest/v1/rpc/<function> + Content-Profile: <schema>. 예:
-        store.rpc("research.put_reports", {"rows": [...]}) · store.rpc("ideas.put_research_sources", {"rows": [...]}) (0040).
-        스키마가 PostgREST 노출 목록(pgrst.db_schemas)에 있어야 한다."""
-        schema, name = split_table(fn)
-        return self._req("POST", f"{schema}.rpc/{name}", body=args).json()
 
     def delete(self, table: str, filters: Filters) -> None:
         if not filters:

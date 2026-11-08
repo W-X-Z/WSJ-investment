@@ -7,6 +7,7 @@
   python -m wsj signals build [--as-of 2026-10-26] [--window 120]
   python -m wsj briefs build [--cik 2012593 ...] [--top 5] [--dry-run] [--model opus] [--force]
   python -m wsj tools <quote|history|lookup|fx|rates|event|exposure|reverse-dcf|peers|incremental> ...  (wsj/tools/README.md)
+  python -m wsj screen --hours 24 [--dry-run] [--plan] [--model sonnet]     # 선별 에이전트 (wsj.agents.screen)
 
 러너가 하는 일: 워터마크 읽기 → run() → ops.collector_runs 기록 → 워터마크 갱신.
 수집기 예외는 잡아서 failed 로 남기고 다음으로 넘어간다 (ADR-0003 §7).
@@ -274,6 +275,14 @@ def cmd_moat(args: argparse.Namespace) -> int:
         store.close()
 
 
+def cmd_screen(args: argparse.Namespace) -> int:
+    settings = load_settings()
+    _setup_logging(settings.wsj_log_level)
+    from wsj.agents.screen import cli
+
+    return cli(args)
+
+
 def build_parser() -> argparse.ArgumentParser:
     p = argparse.ArgumentParser(prog="wsj", description="WSJ-investment 데이터 수집 파이프라인")
     sub = p.add_subparsers(dest="cmd", required=True)
@@ -340,6 +349,14 @@ def build_parser() -> argparse.ArgumentParser:
     from wsj.tools.cli import add_tools_parser
 
     add_tools_parser(sub)
+
+    sc = sub.add_parser("screen", help="선별 에이전트: 지난 창의 관련 단서 → 변화 사건 → 진행 여부, 하루 보고서 한 건")
+    sc.add_argument("--hours", type=int, default=24, help="창(시간, seen_at 기준). 기본 24")
+    sc.add_argument("--model", help="SCREEN_MODEL 덮어쓰기: sonnet | haiku | opus | 모델 ID (기본 claude-sonnet-5-5)")
+    sc.add_argument("--dry-run", action="store_true", help="LLM 은 부르되 DB 에 쓰지 않고 보고서 JSON 을 출력")
+    sc.add_argument("--plan", action="store_true", help="LLM 도 부르지 않고 묶음·어림 비용만 출력")
+    sc.add_argument("--out", help="보고서 JSON 을 이 파일에도 쓴다")
+    sc.add_argument("--store", choices=["postgrest", "sqlite"])
     return p
 
 
@@ -361,6 +378,8 @@ def main(argv: list[str] | None = None) -> int:
         from wsj.tools.cli import run_tools
 
         return run_tools(args)
+    if args.cmd == "screen":
+        return cmd_screen(args)
     return 2
 
 
