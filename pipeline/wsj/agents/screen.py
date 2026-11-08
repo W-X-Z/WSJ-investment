@@ -10,7 +10,7 @@
         시스템 프롬프트 + 기존 아이디어 목록은 모든 호출에서 같다 → 프롬프트 캐시 (첫 호출만 쓰기 값).
   병합  묶음이 둘 이상이면 마지막에 한 번 더 불러 묶음 사이의 같은 사건을 합친다 (출력은 출처 사건 id 만 — 단서 id 는 코드가 합친다).
   규칙  dup → 진행 안 함 · 기존 아이디어(기각 포함)와 겹치는데 update 가 아니면 진행 안 함 · 그래프 id 로 겹치는 기존 아이디어를 overlaps 에 더한다.
-  저장  research.put_reports (SCREEN_REPORT_RPC; 404/406 이면 ideas → public 순) — report_id 'screen:YYYY-MM-DD'(KST).
+  저장  store.rpc('research.put_reports') (SCREEN_REPORT_RPC 로 바꿀 수 있다, 'schema.function') — report_id 'screen:YYYY-MM-DD'(KST).
         실행 기록 ops.put_agent_run(task=screen) — 없으면 건너뛴다.
 예산  실행당 SCREEN_MAX_INPUT_TOKENS(기본 40만, 캐시 포함 입력 전부)·SCREEN_MAX_USD(기본 $2).
       다음 묶음(+병합 몫)이 상한을 넘을 것 같으면 더 보내지 않고 처리한 만큼 보고서를 쓴다 (stats.truncated).
@@ -36,7 +36,6 @@ log = logging.getLogger("wsj.agents.screen")
 
 TASK = "screen"
 CREATED_BY = "screen-agent"
-RPC_SCHEMAS = ("research", "ideas", "public")
 NOVELTY = ("new", "update", "dup")
 REJECTED = {"dropped", "rejected", "reject", "rejection", "no", "pass", "skip", "skipped"}
 ENTITY_RE = re.compile(r"^[a-z][a-z_]*:[A-Za-z0-9_.\-]+$")
@@ -105,7 +104,7 @@ class ScreenConfig:
     batch_tokens: int = 60_000
     batch_max_items: int = 160
     effort: str | None = "medium"
-    report_rpc: str = "put_reports"
+    report_rpc: str = "research.put_reports"
     recent_days: int = 3
     max_ideas: int = 200
 
@@ -116,7 +115,7 @@ class ScreenConfig:
         cfg = cls(model=resolve_model(settings.screen_model), max_input_tokens=int(settings.screen_max_input_tokens),
                   max_usd=float(settings.screen_max_usd), body_chars=int(settings.screen_body_chars),
                   batch_tokens=int(settings.screen_batch_tokens), effort=(settings.screen_effort or None),
-                  report_rpc=settings.screen_report_rpc or "put_reports")
+                  report_rpc=settings.screen_report_rpc or "research.put_reports")
         for k, v in override.items():
             if v is not None:
                 setattr(cfg, k, resolve_model(v) if k == "model" else v)
@@ -928,35 +927,25 @@ def _status(exc: Exception) -> int | None:
     return int(m.group(1)) if m else None
 
 
-def rpc_targets(spec: str) -> list[tuple[str, str]]:
-    """'put_reports' → research, ideas, public 순. 'ideas.put_reports' → ideas 먼저, 그다음 나머지."""
-    spec = (spec or "put_reports").strip()
-    schema, fn = spec.split(".", 1) if "." in spec else (None, spec)
-    order = ([schema] if schema else []) + [s for s in RPC_SCHEMAS if s != schema]
-    return [(s, fn) for s in order]
-
-
-def save_report(store: Any, row: dict[str, Any], rpc: str = "put_reports") -> dict[str, Any]:
-    """research.put_reports(rows) 로 보고서 한 행. 404(함수 없음)·406(스키마 미노출)이면 다음 스키마.
-    어디에도 없으면 ReportRpcMissing, 함수가 행을 거부하면 RuntimeError."""
+def save_report(store: Any, row: dict[str, Any], rpc: str = "research.put_reports") -> dict[str, Any]:
+    """store.rpc('research.put_reports', {'rows': [row]}) 로 보고서 한 행.
+    함수가 없거나(404) 스키마가 노출되지 않았으면(406) ReportRpcMissing, 함수가 행을 거부하면 RuntimeError."""
     if not hasattr(store, "rpc"):
         raise ReportRpcMissing(f"이 저장소({type(store).__name__})는 RPC 를 부를 수 없다 — WSJ_STORE=postgrest 로 실행")
-    tried = []
-    for schema, fn in rpc_targets(rpc):
-        try:
-            res = store.rpc(fn, {"rows": [row]}, schema=schema)
-        except Exception as exc:  # noqa: BLE001
-            st = _status(exc)
-            if st in (404, 406):
-                tried.append(f"{schema}.{fn} ({st})")
-                continue
-            raise
-        rejected = (res or {}).get("rejected") if isinstance(res, dict) else None
-        if rejected:
-            raise RuntimeError(f"{schema}.{fn} 가 보고서를 거부: {json.dumps(rejected, ensure_ascii=False)[:400]}")
-        return {"rpc": f"{schema}.{fn}", "result": res}
-    raise ReportRpcMissing("보고서 저장 함수를 찾지 못했다: " + ", ".join(tried)
-                           + " — 마이그레이션 0040(research.put_reports) 적용 전이거나 이름이 다르다 (SCREEN_REPORT_RPC 로 바꿀 수 있다)")
+    rpc = (rpc or "research.put_reports").strip()
+    if "." not in rpc:
+        raise ValueError(f"SCREEN_REPORT_RPC 는 'schema.function' 이어야 한다: {rpc!r}")
+    try:
+        res = store.rpc(rpc, {"rows": [row]})
+    except Exception as exc:  # noqa: BLE001
+        st = _status(exc)
+        if st in (404, 406):
+            raise ReportRpcMissing(f"보고서 저장 함수 {rpc} 를 부를 수 없다 ({st}) — 마이그레이션 0040 적용·PostgREST 노출 스키마를 확인") from exc
+        raise
+    rejected = (res or {}).get("rejected") if isinstance(res, dict) else None
+    if rejected:
+        raise RuntimeError(f"{rpc} 가 보고서를 거부: {json.dumps(rejected, ensure_ascii=False)[:400]}")
+    return {"rpc": rpc, "result": res}
 
 
 class AgentRunLog:
@@ -976,7 +965,7 @@ class AgentRunLog:
         if note:
             payload["note"] = note[:600]
         try:
-            self.store.rpc("put_agent_run", {"row_in": payload}, schema="ops")
+            self.store.rpc("ops.put_agent_run", {"row_in": payload})
         except Exception as exc:  # noqa: BLE001
             if _status(exc) in (404, 406):
                 log.info("ops.put_agent_run 없음 — 실행 기록을 건너뛴다")
