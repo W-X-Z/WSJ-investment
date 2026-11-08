@@ -166,5 +166,33 @@
     "by": "claude-weekly",
     "title": "보류 — 이번 주 고치지 않은 것",
     "detail": "Adeia–TCL 라이선스 갱신 이슈 노드 없음: 보류(목적과 무관 — 기존 라이선시 갱신). 미 재무부 대외투자 규정안: 보류(미국→중국 투자 제한, 소·중형 공급사 기회와 거리가 멂). 광섬유·FormFactor 이슈 노드 없음: 별칭은 이미 있고 10-28 안전망 이전 이슈라 새 이슈부터 태깅된다. 늦은 관측치(Veeco RPO·InP 수주, AAOI·MACOM·Coherent): 3분기 실적 발표 전 — Veeco 11-04 발표 예정, 그 뒤 갱신. ontology_sync(core.entities 없음)·facts(ref 스키마 비노출, 10-29 이후 성공)는 DB 설정 문제라 손대지 않았다."
+  },
+  {
+    "date": "2026-11-08",
+    "kind": "ontology",
+    "by": "claude-weekly",
+    "title": "노출도 채우기 1주차 — 10곳 15간선 (G-8)",
+    "detail": "exposure_facts(미국 10-K XBRL·본문)에서 최근 단서에 자주 나온 10곳을 공급 관계로 옮김: 숫자 그대로(exposure_pct) 4간선 — WOLF SiC 웨이퍼 45.35%(FY25), FORM DRAM 프로브카드 31.52%·SK hynix 22.9%(원문 표 직접 확인), AAOI→Microsoft 28.8%(새 간선). 멤버가 더 넓은 범주뿐인 11간선은 범주(exposure)만, note 에 상한 숫자와 축=멤버 — AAOI 플러거블, ACMR ECP 2, AEHR FOX-XP, AEIS 파워셸프·IBC, ALGM 전류센서, WOLF SiC MOSFET, VECO MOCVD, SPXC 냉각탑, LFUS DC 퓨즈. exposure_filled 12 → 25 / offered_by 683. CC(2상 유체)는 상업화 전이라 넓은 범주 숫자가 오해를 줘서, FCEL·NVTS 는 제품 축이 없어 비움."
+  },
+  {
+    "date": "2026-11-08",
+    "kind": "data",
+    "by": "claude-weekly",
+    "title": "주간 매크로 배경 첫 장 (J-3)",
+    "detail": "research/macro/2026-W45.md — 러셀2000·S&P500 주간, 10년물, VIX, 9월 고용, 한국 10월 수출(반도체 +259.4%). 직접 연 원문 숫자만, 못 찾은 칸은 '확인 못 함'으로 남김. 다음 장부터 같은 출처로 차이를 적는다."
+  },
+  {
+    "date": "2026-11-08",
+    "kind": "ops",
+    "by": "claude-weekly",
+    "title": "아침 사슬 4작업이 11/05 부터 꺼져 있음 — 보고만",
+    "detail": "WSJ 1/4 수집·2/4 해석·3/4 검토·4/4 리포트 예약작업이 11/05 14:59 UTC 에 사용자 정지(enabled=false, suspension 없음). 그래서 issues 단계(아침 dispatch 전용)가 11/05 뒤 안 돌고 v_collection_alerts 에 'issues 마지막 실행 11-05' 가 뜬다. 저녁 GitHub 예약(clues·candidates)은 계속 돌아 단서는 쌓이지만 아무도 해석하지 않는다. 사용자가 끈 것이라 이 작업은 다시 켜지 않는다."
+  },
+  {
+    "date": "2026-11-08",
+    "kind": "judgment",
+    "by": "claude-weekly",
+    "title": "보류 — 이번 주 고치지 않은 것",
+    "detail": "(1) 그래프 제안 40건이 pending — 대부분 collect 가 올린 대형·비대상 상장사(Sony·Nintendo·Stellantis·한전·BAM·HPE 등). 이 작업은 graph_proposals 를 쓸 권한이 없어 처리하지 못함; 해석 재개 시 rejected 정리 필요. Seagate(55)는 11/05 커밋 메시지에 rejected 로 적혔으나 DB 는 pending, LPDDR5(52)도 패치엔 반영됐으나 pending. (2) 수집 이상의 'raw·press·disclosure 층 감소' 경고는 토요일 단서(arXiv 주말 미발행)와 issues 단계 정지 때문 — 주말 기준선 보정은 코드 변경이라 다음 주 후보. (3) company_feed(기업 이름 검색)가 30일 단서 1,407건이지만 아이디어 인용 2건 — 원본 비중(평일 9~25%)을 올리는 I-4(OSTI·EIA-860M·채용 API)가 다음 차례."
   }
 ]

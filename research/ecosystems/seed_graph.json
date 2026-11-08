@@ -12226,11 +12226,17 @@
         {
           "url": "https://ir.aehr.com/",
           "source_type": "official_issuer"
+        },
+        {
+          "url": "https://www.sec.gov/Archives/edgar/data/1040470/000165495426006919/aehr_10k.htm",
+          "source_type": "official_issuer",
+          "published_at": "2026-07-27"
         }
       ],
       "note": "",
       "evidence_tier": "official_issuer",
-      "confidence": 0.8
+      "confidence": 0.825,
+      "exposure": "core"
     },
     {
       "id": "e035",
@@ -14650,10 +14656,17 @@
           "published_at": "2026-02-26",
           "date_precision": "day",
           "note": "10-K 본문에 노드 구문 등장 (발굴 2026-10-27). 공급 여부는 해자 카드에서 검증"
+        },
+        {
+          "url": "https://www.sec.gov/Archives/edgar/data/1158114/000143774926005875/aaoi20251231_10k.htm",
+          "source_type": "official_issuer",
+          "published_at": "2026-02-26",
+          "excerpt": "In 2025 , we earned 53.8% of our total revenue from the CATV market and 42.9% of our total revenue from the internet data center market"
         }
       ],
       "note": "800G/1.6T 트랜시버 조립",
-      "confidence": 0.4
+      "confidence": 0.4,
+      "exposure": "major"
     },
     {
       "id": "d017",
@@ -14802,10 +14815,20 @@
           "published_at": "2026-08-20",
           "date_precision": "day",
           "note": "10-K 본문에 노드 구문 등장 (발굴 2026-10-27). 공급 여부는 해자 카드에서 검증"
+        },
+        {
+          "url": "https://www.sec.gov/Archives/edgar/data/895419/000089541926000054/wolf-20260628.htm",
+          "source_type": "official_issuer",
+          "published_at": "2026-08-20",
+          "excerpt": "For the fiscal year ended June 29, 2025, two customers represented 19 % and 18 % of revenue, respectively"
         }
       ],
       "note": "SiC 웨이퍼·소자 (구조조정 후 소형)",
-      "confidence": 0.4
+      "confidence": 0.4,
+      "exposure": "major",
+      "exposure_pct": 45.35,
+      "exposure_year": 2025,
+      "exposure_source": "https://www.sec.gov/Archives/edgar/data/895419/000089541926000054/wolf-20260628.htm"
     },
     {
       "id": "d025",
@@ -14821,10 +14844,16 @@
           "published_at": "2026-08-20",
           "date_precision": "day",
           "note": "10-K 본문에 노드 구문 등장 (발굴 2026-10-27). 공급 여부는 해자 카드에서 검증"
+        },
+        {
+          "url": "https://www.sec.gov/Archives/edgar/data/895419/000089541926000054/wolf-20260628.htm",
+          "source_type": "official_issuer",
+          "published_at": "2026-08-20"
         }
       ],
       "note": "SiC 웨이퍼·소자 (구조조정 후 소형)",
-      "confidence": 0.4
+      "confidence": 0.4,
+      "exposure": "core"
     },
     {
       "id": "d026",
@@ -15597,10 +15626,16 @@
           "source_type": "third_party_report",
           "published_at": "2026-03-03",
           "excerpt": "orders for multiple Lumina MOCVD systems for InP lasers for datacom"
+        },
+        {
+          "url": "https://www.sec.gov/Archives/edgar/data/103145/000110465926019711/veco-20251231x10k.htm",
+          "source_type": "official_issuer",
+          "published_at": "2026-02-25"
         }
       ],
       "note": "",
-      "confidence": 0.6
+      "confidence": 0.625,
+      "exposure": "minor"
     },
     {
       "id": "x-optA-041",
@@ -20160,10 +20195,17 @@
           "source_type": "official_issuer",
           "published_at": "2026-06-03",
           "excerpt": "The separate NDQ series handles 50 V to 12 V conversion"
+        },
+        {
+          "url": "https://www.sec.gov/Archives/edgar/data/927003/000110465926014731/aeis-20251231x10k.htm",
+          "source_type": "official_issuer",
+          "published_at": "2026-02-13",
+          "excerpt": "During the year ended December 31, 2025, three customers accounted for 23%, 19%, and 12% of our total revenue, respectively"
         }
       ],
       "note": "NDQ 50V→12V",
-      "confidence": 0.8
+      "confidence": 0.825,
+      "exposure": "major"
     },
     {
       "id": "x-pwrA-046",
@@ -20179,10 +20221,17 @@
           "published_at": "2025-11-01",
           "excerpt": "Advanced Energy 100-kW 48-V ORv3 HPR power shelf; 72-kW shelves closer to commercial deployment",
           "date_precision": "month"
+        },
+        {
+          "url": "https://www.sec.gov/Archives/edgar/data/927003/000110465926014731/aeis-20251231x10k.htm",
+          "source_type": "official_issuer",
+          "published_at": "2026-02-13",
+          "excerpt": "During the year ended December 31, 2025, three customers accounted for 23%, 19%, and 12% of our total revenue, respectively"
         }
       ],
       "note": "ORv3 HPR 셸프",
-      "confidence": 0.6
+      "confidence": 0.625,
+      "exposure": "major"
     },
     {
       "id": "x-pwrA-047",
@@ -23225,10 +23274,16 @@
           "source_type": "third_party_report",
           "published_at": null,
           "excerpt": "Littelfuse NANO² SMD 708 Series compact surface-mount fuse for 48 VDC AI data center protection"
+        },
+        {
+          "url": "https://www.sec.gov/Archives/edgar/data/889331/000162828026009585/lfus-20251227.htm",
+          "source_type": "official_issuer",
+          "published_at": "2026-02-19"
         }
       ],
       "note": "48V 서버 퓨즈",
-      "confidence": 0.6
+      "confidence": 0.625,
+      "exposure": "major"
     },
     {
       "id": "x-pwrA-212",
@@ -23528,10 +23583,17 @@
           "source_type": "official_issuer",
           "published_at": null,
           "excerpt": "Linear Vertical Hall-Effect Current Sensor; reinforced isolation; 800V AI power delivery"
+        },
+        {
+          "url": "https://www.sec.gov/Archives/edgar/data/866291/000119312526233537/algm-20260327.htm",
+          "source_type": "official_issuer",
+          "published_at": "2026-05-21",
+          "excerpt": "Our customers that supply various systems and components to automotive OEMs accounted for 70.6%, 73.8%, and 72.4% of our total net sales in fiscal years 2026, 2025, and 2024, respectively"
         }
       ],
       "note": "800V AI용 전류센서",
-      "confidence": 0.8
+      "confidence": 0.825,
+      "exposure": "core"
     },
     {
       "id": "x-pwrA-228",
@@ -26918,10 +26980,17 @@
           "source_type": "official_issuer",
           "published_at": null,
           "excerpt": "Ultra ECP 3d deposits copper on via structures of 3D TSVs and 2.5D interposers; aspect ratios 10:1 and beyond"
+        },
+        {
+          "url": "https://www.sec.gov/Archives/edgar/data/1680062/000162828026013231/acmr-20251231.htm",
+          "source_type": "official_issuer",
+          "published_at": "2026-03-02",
+          "excerpt": "Revenue from ECP (front-end packaging), furnace and other technologies totaled $199.6 million, or 22.1% of total revenue in 2025"
         }
       ],
       "note": "",
-      "confidence": 0.8
+      "confidence": 0.825,
+      "exposure": "major"
     },
     {
       "id": "x-hbmA-169",
@@ -27560,10 +27629,20 @@
           "source_type": "official_issuer",
           "published_at": "2026-04-29",
           "excerpt": "we've grown our HBM probe card business by more than 50%"
+        },
+        {
+          "url": "https://www.sec.gov/Archives/edgar/data/1039399/000103939926000009/form-20251227.htm",
+          "source_type": "official_issuer",
+          "published_at": "2026-02-20",
+          "excerpt": "DRAM | 247,397 | 31.6"
         }
       ],
       "note": "",
-      "confidence": 0.8
+      "confidence": 0.825,
+      "exposure": "major",
+      "exposure_pct": 31.52,
+      "exposure_year": 2025,
+      "exposure_source": "https://www.sec.gov/Archives/edgar/data/1039399/000103939926000009/form-20251227.htm"
     },
     {
       "id": "x-hbmA-204",
@@ -35546,10 +35625,16 @@
           "source_type": "official_issuer",
           "published_at": "2026-09-15",
           "excerpt": "FIS Water complementary to SPX's cooling-tower offerings; shares customers incl. data centers"
+        },
+        {
+          "url": "https://www.sec.gov/Archives/edgar/data/88205/000008820526000008/spxc-20251231.htm",
+          "source_type": "official_issuer",
+          "published_at": "2026-02-25"
         }
       ],
       "note": "",
-      "confidence": 0.8
+      "confidence": 0.825,
+      "exposure": "major"
     },
     {
       "id": "x-pwrB-182",
@@ -39758,10 +39843,17 @@
           "source_type": "official_issuer",
           "published_at": null,
           "excerpt": "The Ultra ECP ap-p can support up to 16 plating chambers for copper, nickel, tin-silver, gold, and other plating materials."
+        },
+        {
+          "url": "https://www.sec.gov/Archives/edgar/data/1680062/000162828026013231/acmr-20251231.htm",
+          "source_type": "official_issuer",
+          "published_at": "2026-03-02",
+          "excerpt": "Revenue from ECP (front-end packaging), furnace and other technologies totaled $199.6 million, or 22.1% of total revenue in 2025"
         }
       ],
       "note": "",
-      "confidence": 0.8
+      "confidence": 0.825,
+      "exposure": "major"
     },
     {
       "id": "x-hbmB-217",
@@ -44056,6 +44148,52 @@
       "exposure_pct": 39,
       "exposure_year": 2025,
       "exposure_source": "https://www.sec.gov/Archives/edgar/data/1652535/000165253526000012/ichr-20251226.htm",
+      "confidence": 0.8
+    },
+    {
+      "id": "w1108-001",
+      "from": "company:aaoi",
+      "to": "company:msft",
+      "relation": "supplied_to",
+      "evidence_tier": "official_issuer",
+      "polarity": "positive",
+      "evidence": [
+        {
+          "url": "https://www.sec.gov/Archives/edgar/data/1158114/000143774926005875/aaoi20251231_10k.htm",
+          "source_type": "official_issuer",
+          "published_at": "2026-02-26",
+          "excerpt": "In 2025 , Digicomm represented 53.1% of our revenue and Microsoft represented 28.8% of our revenue"
+        }
+      ],
+      "note": "2025 매출의 28.8% (2024 43.7%·2023 46.6%, 10-K). 나머지 최대 고객 Digicomm(CATV, 비상장) 53.1%",
+      "exposure": "major",
+      "about": "tech:pluggable",
+      "exposure_pct": 28.8,
+      "exposure_year": 2025,
+      "exposure_source": "https://www.sec.gov/Archives/edgar/data/1158114/000143774926005875/aaoi20251231_10k.htm",
+      "confidence": 0.8
+    },
+    {
+      "id": "w1108-002",
+      "from": "company:form",
+      "to": "company:skhynix",
+      "relation": "supplied_to",
+      "evidence_tier": "official_issuer",
+      "polarity": "positive",
+      "evidence": [
+        {
+          "url": "https://www.sec.gov/Archives/edgar/data/1039399/000103939926000009/form-20251227.htm",
+          "source_type": "official_issuer",
+          "published_at": "2026-02-20",
+          "excerpt": "The following customers represented 10% or more of our quarterly revenues for the quarters indicated:"
+        }
+      ],
+      "note": "2025 매출의 22.9% (10-K XBRL 고객 집중도). 분기별 19.2%·24.5%·25.0%·23.3%",
+      "exposure": "major",
+      "about": "component:dram_probe_card",
+      "exposure_pct": 22.9,
+      "exposure_year": 2025,
+      "exposure_source": "https://www.sec.gov/Archives/edgar/data/1039399/000103939926000009/form-20251227.htm",
       "confidence": 0.8
     }
   ],
