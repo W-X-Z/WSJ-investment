@@ -36,3 +36,4 @@
 | [0028](0028-clues-interpretation-opportunities.md) | 작은 단서 → 해석 → 투자 아이디어(★1~5) — 판정·채점·목표주가를 걷어낸다 (0019·0020·0022·0023·0024·0027 대체) | accepted | 2026-10-30 |
 | [0029](0029-purpose-and-direction-over-procedure.md) | 절차가 아니라 목적과 방향 — 방법은 AI 가 그때그때 판단한다 (지침을 목적·방향·꼭 지킬 것·연결 방법으로) | accepted | 2026-10-31 |
 | [0033](0033-frontier-scope.md) | 산업을 정하지 않는다 — 분류 기준을 메커니즘으로, 그래프 밖 산업의 단서(scope=frontier)·후보가 들어오는 자리 `eco:frontier` | accepted | 2026-11-03 |
+| [0034](0034-multi-agent-research.md) | 멀티 에이전트 리서치 — 선별(API)·오케스트레이터(구독)·역할 에이전트, 저장은 원천(facts)·산업 그래프·리서치 리포트 셋, 아이디어는 스냅샷·항상 결론, 1년 내외 엑시트 | accepted | 2026-11-08 |
