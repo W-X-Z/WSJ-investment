@@ -38,7 +38,7 @@ class Settings(BaseSettings):
     screen_model: str = "claude-sonnet-5-5"
     screen_max_input_tokens: int = 400_000
     screen_max_usd: float = 2.0
-    screen_report_rpc: str = "put_reports"   # 'put_reports' 또는 'schema.put_reports'. 없으면 research → ideas → public 순으로 찾는다
+    screen_report_rpc: str = "research.put_reports"   # 'schema.function' (store.rpc 와 같은 모양)
     screen_body_chars: int = 4000            # 단서 본문은 앞부분만
     screen_batch_tokens: int = 60_000        # 묶음 하나의 입력(추정) 상한
     screen_effort: str = "medium"            # 빈 값이면 effort 를 보내지 않는다

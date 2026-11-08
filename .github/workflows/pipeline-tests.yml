@@ -6,6 +6,7 @@ on:
       - "pipeline/**"
       - "research/**"
       - "apps/web/src/data/**"
+      - "supabase/migrations/**"
       - ".github/workflows/pipeline-tests.yml"
 
 concurrency:
@@ -15,6 +16,18 @@ concurrency:
 jobs:
   pytest:
     runs-on: ubuntu-latest
+    # 통합 검증(tests/integration): 선별 → PostgrestStore → PostgREST 대역 → 이 Postgres 의 0040 함수
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_HOST_AUTH_METHOD: trust
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U postgres" --health-interval 5s --health-timeout 5s --health-retries 10
+    env:
+      WSJ_IT_PG_DSN: postgresql://postgres@localhost:5432/postgres
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5

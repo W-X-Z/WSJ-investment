@@ -31,6 +31,7 @@
 
 ## 3. 리서치 리포트 — AI가 계산·해석·판단한 모든 것
 - 테이블: `research.reports`, 읽기 `public.v_reports`. 쓰기 `select research.put_reports('[ ... ]'::jsonb);` (report_id 로 덮어쓰기).
+- 코드(GitHub Actions·API 작업)에서 부를 때는 한 가지 모양만 쓴다: `store.rpc("research.put_reports", {"rows": [...]})` · `store.rpc("ideas.put_research_sources", {"rows": [...]})` — `select("schema.table")` 과 같은 'schema.function'. 점 없는 이름은 오류다. 이 경로는 `pipeline/tests/integration` 이 실제 Postgres 의 0040 함수까지 이어서 검증한다.
 - 공통 칸: `report_id`, `kind`(screen | industry | company | idea | verification), `title`, `subjects`(노드 id 배열), `as_of`(기준일), `body`(객체), `cites`(원천 clue_id 배열), `notion_url`, `created_by`. `kind = idea` 는 `stars`(1~5)와 `verdict`(한 줄 판단)가 필수.
 - 리포트의 숫자에는 출처 clue_id 를 붙이고, 직접 계산한 숫자는 `"label": "계산값"` 과 입력값의 출처를 단다.
 

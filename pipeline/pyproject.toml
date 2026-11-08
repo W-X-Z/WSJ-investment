@@ -12,7 +12,7 @@ dependencies = [
 ]
 
 [project.optional-dependencies]
-dev = ["pytest>=8", "ruff>=0.5"]
+dev = ["pytest>=8", "ruff>=0.5", "psycopg[binary]>=3.2"]  # psycopg: tests/integration (실제 Postgres)
 # 논문·특허 백필 (사용자 PC 에서만): python -m wsj.ecosystems.techdocs
 techdocs = ["google-cloud-bigquery>=3.11"]
 
