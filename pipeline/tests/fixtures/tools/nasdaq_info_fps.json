@@ -1,0 +1,45 @@
+{
+ "data": {
+  "symbol": "FPS",
+  "companyName": "Forgent Power Solutions, Inc. Class A Common Stock",
+  "stockType": "Class A Common Stock",
+  "exchange": "NYSE",
+  "isNasdaqListed": false,
+  "isNasdaq100": false,
+  "isHeld": false,
+  "primaryData": {
+   "lastSalePrice": "$19.47",
+   "netChange": "+1.26",
+   "percentageChange": "+6.92%",
+   "deltaIndicator": "up",
+   "lastTradeTimestamp": "Nov 6, 2026",
+   "isRealTime": false,
+   "bidPrice": "N/A",
+   "askPrice": "N/A",
+   "bidSize": "N/A",
+   "askSize": "N/A",
+   "volume": "14,829,485",
+   "currency": null
+  },
+  "secondaryData": null,
+  "marketStatus": "Closed",
+  "assetClass": "STOCKS",
+  "keyStats": {
+   "fiftyTwoWeekHighLow": {
+    "label": "52 Week Range:",
+    "value": "17.98 - 66.00"
+   },
+   "dayrange": {
+    "label": "High/Low:",
+    "value": "NA"
+   }
+  },
+  "notifications": []
+ },
+ "message": null,
+ "status": {
+  "rCode": 200,
+  "bCodeMessage": null,
+  "developerMessage": null
+ }
+}
