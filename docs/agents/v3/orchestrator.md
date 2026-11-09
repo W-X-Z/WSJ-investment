@@ -13,7 +13,8 @@
    - 검증이 결론을 뒤집을 빈 곳을 내면 그 빈 곳을 맡을 하위 에이전트에게만 한 번 더 보낸다(건당 최대 2회).
 4. **N22 결론·작성**: report-template.md 대로. ★는 오케스트레이터가 정한다.
 5. **N23 저장**: 리포트 JSON 을 파일로 쓰고 `python -m wsj deep save --file …` (먼저 `--check`). 그다음 `python -m wsj monitor mark <후보 ID> --status done --idea <report_id>`.
-6. **N24 게시**: `python -m wsj deep chart <종목> --out …png` 를 만들고, 노션 '리서치 리포트'에 페이지를 만든다(notion.md). 후보 페이지의 '리포트' 관계·상태 '완료'를 채운다.
+6. **N24 게시**: `python -m wsj deep chart <종목> --out …png` 를 만들어 노션 file upload 로 올리고, `python -m wsj deep notion --file report.json --image file-upload://… --candidate-page <후보 페이지> --out page.md` 가 만든 속성·본문으로 '리서치 리포트'에 페이지를 만든다(notion.md). 후보 페이지 상태 '완료'를 채우고, 페이지 URL 을 `research.reports.notion_url` 에 다시 쓴다.
+   - Supabase 키가 없는 세션이면 저장(N23)·후보 상태·notion_url 은 Supabase 커넥터로 같은 함수(`ideas.put_research_sources` → `research.put_reports`)를 부른다. 2026-11-09 AXTI 파일럿이 이 경로였다.
 7. **N25 알림**: 오늘 낸 결론을 한 줄씩(★ · 헤드라인 · 노션 링크). 대기열이 비었으면 "오늘 심층 대상 없음".
 
 ## 반드시

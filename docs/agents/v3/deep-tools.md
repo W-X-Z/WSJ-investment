@@ -14,6 +14,7 @@
 | N19 | `deep valuation FPS` | 현재 배수(P/S·P/E·EV/EBIT·FCF 수익률), 과거 회계연도 말 배수, 역DCF 내재 성장률 |
 | N20 | `deep scenario --file s.json` | Bear/Base/Bull 가정 → 이익·지분가치·주당가치·지금 대비 배수, Base 배수에서 2·3배에 필요한 이익·매출 |
 | N24 | `deep chart FPS --out fps.png` | 주가 PNG (story 번호 표시) |
+| N24 | `deep notion --file report.json --image file-upload://… --market-cap … --candidate-page … --out page.md` | 노션 '리서치 리포트' 속성 + 본문 마크다운(`$`·`~` 이스케이프, 출처 접기, 사용자 메모) |
 | N23 | `deep save --file report.json [--check]` | 직접 연 출처 → `ideas.clues`, 리포트 → `research.reports` kind=idea |
 
 그 밖 조회: `python -m wsj tools quote|history|lookup|fx|rates|event|exposure|reverse-dcf|peers`.

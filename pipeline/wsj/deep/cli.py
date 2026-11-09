@@ -21,9 +21,10 @@ from __future__ import annotations
 import argparse
 import logging
 import sys
+from pathlib import Path
 from typing import Any
 
-COMMANDS = ("target", "filings", "cards", "profile", "story", "fin", "peers", "valuation", "scenario", "chart", "save")
+COMMANDS = ("target", "filings", "cards", "profile", "story", "fin", "peers", "valuation", "scenario", "chart", "save", "notion")
 
 
 def add_deep_parser(sub: Any) -> argparse.ArgumentParser:
@@ -69,6 +70,12 @@ def add_deep_parser(sub: Any) -> argparse.ArgumentParser:
     sv = ds.add_parser("save", parents=[nc], help="N23 리포트 저장")
     sv.add_argument("--file", required=True, help="리포트 JSON (deep.store 형식)")
     sv.add_argument("--check", action="store_true", help="검사만 하고 저장하지 않는다")
+    nt = ds.add_parser("notion", parents=[nc], help="N24 노션 페이지 본문·속성 만들기")
+    nt.add_argument("--file", required=True, help="리포트 JSON (deep.store 형식)")
+    nt.add_argument("--image", help="차트 이미지 주소 (file-upload://… 또는 https)")
+    nt.add_argument("--market-cap", type=float, help="시총(USD)")
+    nt.add_argument("--candidate-page", help="아이디어 후보 페이지 URL")
+    nt.add_argument("--out", help="본문 마크다운을 이 파일에 쓴다")
     return d
 
 
@@ -144,6 +151,17 @@ def run_deep(args: argparse.Namespace) -> int:
             from wsj.deep.scenario import load_spec, run
 
             emit({"tool": "deep.scenario", **run(load_spec(args.file))}, args.compact)
+            return 0
+        if cmd == "notion":
+            from wsj.deep.notion_page import page
+            from wsj.deep.scenario import load_spec
+
+            pg = page(load_spec(args.file), image=args.image, market_cap_usd=args.market_cap,
+                      candidate_page=args.candidate_page)
+            if args.out:
+                Path(args.out).write_text(pg["content"], encoding="utf-8")
+                pg["content"] = f"(written to {args.out}, {len(pg['content'])} chars)"
+            emit({"tool": "deep.notion", **pg}, args.compact)
             return 0
         if cmd == "save":
             from wsj.deep.scenario import load_spec
