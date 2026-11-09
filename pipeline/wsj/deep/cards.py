@@ -47,7 +47,8 @@ CARD_SYSTEM = """너는 미국 상장사의 연차보고서(10-K Item 1 사업 �
 2. 근거 문단 번호를 댈 수 없는 항목은 쓰지 않는다. summary 도 items 근거 안에서만.
 3. label 은 짧고 일반적으로: 예) "단일 공급처", "관세 노출", "10% 고객", "고객 집중", "장기공급계약", "백로그 공시",
    "선수금", "과점", "진입장벽(설비·인증)", "원재료 가격 연동", "입찰 단가", "전방 사이클", "규제·인허가", "기술 대체", "대주주 매각".
-   한 칸 안에서 같은 label 을 두 번 쓰지 않는다.
+   한 칸 안에서 같은 label 을 두 번 쓰지 않는다. [이전 해 라벨]이 주어지면 같은 뜻의 항목에는 그 라벨을 글자 그대로 다시 쓴다
+   (해마다 비교하기 위해서다). 새로 생긴 내용만 새 라벨을 붙인다.
 4. 공시에 해당 내용이 없으면 그 칸은 empty=true, summary 는 "", items 는 []. 억지로 채우지 않는다.
 5. 수치는 원문 표기 그대로(숫자·단위·기준일). 환산하지 않는다. 회사가 주장한 점유율은 "(회사 주장)"을 붙인다.
 6. customers 칸에는 숫자 필드를 더 쓴다: top_customers([{name, share_pct, industry}]), top2_pct(상위 2사 합산 %),
@@ -73,10 +74,21 @@ def report_id(market: str, code: str, doc: Document) -> str:
     return f"card:{market}:{code.lower()}:{tag}"[:80]
 
 
-def build_user(company: str, ticker: str, doc: Document) -> tuple[str, dict[int, str]]:
+def prior_labels(card: dict[str, Any] | None) -> str:
+    if not card:
+        return ""
+    lines = []
+    for s in SLOTS:
+        labels = [i["label"] for i in (card.get(s) or {}).get("items") or [] if i.get("label")]
+        if labels:
+            lines.append(f"- {s}: {', '.join(labels)}")
+    return "[이전 해 라벨]\n" + "\n".join(lines) + "\n\n" if lines else ""
+
+
+def build_user(company: str, ticker: str, doc: Document, prior: dict[str, Any] | None = None) -> tuple[str, dict[int, str]]:
     body, where, _ = numbered(doc)
     head = f"[회사] {company} ({ticker})\n[문서] {doc.key} · 접수 {doc.file_date.isoformat()} · {doc.url}\n\n"
-    return head + body, where
+    return head + prior_labels(prior) + body, where
 
 
 def _int_list(v: Any, valid: set[int]) -> list[int]:
@@ -166,9 +178,10 @@ def filled(card: dict[str, Any]) -> int:
     return sum(1 for s in SLOTS if not card.get(s, {}).get("empty", True))
 
 
-def extract(llm: Any, company: str, ticker: str, doc: Document, model: str = CARD_MODEL) -> dict[str, Any]:
-    """카드 한 장. 끝내 빠진 칸이 둘 이상이면 한 번 더 부르고 채운 칸이 많은 쪽을 쓴다."""
-    user, where = build_user(company, ticker, doc)
+def extract(llm: Any, company: str, ticker: str, doc: Document, model: str = CARD_MODEL,
+            prior: dict[str, Any] | None = None) -> dict[str, Any]:
+    """카드 한 장. 끝내 빠진 칸이 둘 이상이면 한 번 더 부르고 채운 칸이 많은 쪽을 쓴다. prior = 앞 해 카드(라벨 맞추기)."""
+    user, where = build_user(company, ticker, doc, prior)
     best: tuple[dict[str, Any], list[str]] | None = None
     comps: list[Any] = []
     for attempt in range(2):
@@ -222,25 +235,30 @@ def save(store: Any, rows: list[dict[str, Any]]) -> dict[str, Any]:
 
 
 def us_cards(llm: Any | None, store: Any | None, ticker: str, company: str, docs: list[Document],
-             write: bool = True, model: str = CARD_MODEL) -> dict[str, Any]:
-    """문서마다 카드: 캐시 → 없으면 추출(llm 이 None 이면 건너뛰고 plan 만). write 면 research.reports 에 저장."""
+             write: bool = True, model: str = CARD_MODEL, force: bool = False) -> dict[str, Any]:
+    """문서마다 카드: 캐시 → 없으면 추출(llm 이 None 이면 건너뛰고 plan 만). write 면 research.reports 에 저장.
+    오래된 문서부터 뽑아 앞 해 카드의 라벨을 다음 해에 넘긴다(해마다 같은 라벨 → diff 가 정확해진다). 결과는 최신 → 과거."""
     out: dict[str, Any] = {"ticker": ticker, "cards": [], "skipped": [], "usage_usd": 0.0}
     rows = []
-    for d in docs:
+    prior: dict[str, Any] | None = None
+    for d in sorted(docs, key=lambda x: x.file_date):
         rid = report_id("us", ticker, d)
-        hit = cached(store, rid, d.accession_no)
+        hit = None if force else cached(store, rid, d.accession_no)
         if hit:
             out["cards"].append({"report_id": rid, "doc": d.meta(), "card": hit["card"], "missing": hit.get("missing", []),
                                  "source": "cache"})
+            prior = hit["card"]
             continue
         if llm is None:
             out["skipped"].append({"report_id": rid, "doc": d.key, "chars": sum(len(t) for t in d.sections.values())})
             continue
-        res = extract(llm, company, ticker, d, model=model)
+        res = extract(llm, company, ticker, d, model=model, prior=prior)
         out["usage_usd"] += res["usage"].get("cost_usd") or 0.0
         rows.append(report_row("us", ticker, company, d, res))
         out["cards"].append({"report_id": rid, "doc": d.meta(), "card": res["card"], "missing": res["missing"],
                              "source": "llm"})
+        prior = res["card"]
+    out["cards"].reverse()
     if write and rows and store is not None:
         out["saved"] = save(store, rows)
     out["usage_usd"] = round(out["usage_usd"], 4)

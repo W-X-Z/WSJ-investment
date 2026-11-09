@@ -4,6 +4,13 @@
   filings  SYMBOL [--years 3]             N11 받을 문서 목록과 섹션 길이 (본문은 --text 로)
   cards    SYMBOL [--years 3] [--plan]    N12 구조 카드 (미국: 캐시 → 소형 모델 추출 → research.reports, 한국: 공급망 지도)
   profile  SYMBOL [--years 3]             N13 최신 카드 + 연도별 변화 + 빈 칸 + 시세 (카드가 없으면 cards 를 먼저)
+  story    SYMBOL [--days 365] [--top 8]  N14 크게 움직인 날 + 그날 공시 (번호 = 차트 표시)
+  fin      SYMBOL [--years 5]             N15 연도별·TTM 재무 지표 + 크게 튄 값
+  peers    SYMBOL PEER [PEER …]           N18 피어 비교표 (배수·성장·이익률, 피어 중앙값)
+  valuation SYMBOL                        N19 현재·과거 배수, 역DCF 내재 성장률
+  scenario --file spec.json               N20 Bear/Base/Bull 가정 → 주당가치·배수, 2배·3배 필요 이익
+  chart    SYMBOL --out f.png             N24 주가 차트 PNG (story 번호 표시)
+  save     --file report.json             N23 원천·리포트 저장 (research.reports kind='idea')
 
 공통: --no-db (Supabase 를 쓰지 않음: 캐시·저장 없음), --dry (추출은 하되 저장 안 함), --compact.
 비용: cards 는 미국 문서 1건당 소형 모델 1~2회 (약 $0.01). --plan 은 모델을 부르지 않고 대상만 보여 준다.
@@ -16,7 +23,7 @@ import logging
 import sys
 from typing import Any
 
-COMMANDS = ("target", "filings", "cards", "profile")
+COMMANDS = ("target", "filings", "cards", "profile", "story", "fin", "peers", "valuation", "scenario", "chart", "save")
 
 
 def add_deep_parser(sub: Any) -> argparse.ArgumentParser:
@@ -37,9 +44,31 @@ def add_deep_parser(sub: Any) -> argparse.ArgumentParser:
     k.add_argument("--plan", action="store_true", help="모델을 부르지 않고 대상 문서·크기만")
     k.add_argument("--dry", action="store_true", help="추출은 하되 DB 에 저장하지 않는다")
     k.add_argument("--model", default=None, help="기본 claude-haiku-5-5")
+    k.add_argument("--force", action="store_true", help="캐시를 무시하고 다시 뽑는다")
     p = ds.add_parser("profile", parents=[c], help="N13 종목 프로필")
     p.add_argument("--years", type=int, default=3)
     p.add_argument("--dry", action="store_true")
+    st = ds.add_parser("story", parents=[c], help="N14 주가 이슈")
+    st.add_argument("--days", type=int, default=365)
+    st.add_argument("--top", type=int, default=8)
+    st.add_argument("--series", action="store_true", help="일봉 종가 목록도 출력")
+    fn = ds.add_parser("fin", parents=[c], help="N15 펀더멘탈 계산")
+    fn.add_argument("--years", type=int, default=5)
+    pr = ds.add_parser("peers", parents=[c], help="N18 피어 비교표")
+    pr.add_argument("peers", nargs="+", help="피어 티커·코드")
+    ds.add_parser("valuation", parents=[c], help="N19 현재·과거 배수, 역DCF")
+    nc = argparse.ArgumentParser(add_help=False)
+    nc.add_argument("--compact", action="store_true")
+    nc.add_argument("-v", "--verbose", action="store_true")
+    sc = ds.add_parser("scenario", parents=[nc], help="N20 향후 밸류 계산")
+    sc.add_argument("--file", required=True, help="가정 JSON 파일 경로 또는 JSON 문자열")
+    ch = ds.add_parser("chart", parents=[c], help="N24 주가 차트 PNG")
+    ch.add_argument("--out", required=True)
+    ch.add_argument("--days", type=int, default=365)
+    ch.add_argument("--top", type=int, default=8)
+    sv = ds.add_parser("save", parents=[nc], help="N23 리포트 저장")
+    sv.add_argument("--file", required=True, help="리포트 JSON (deep.store 형식)")
+    sv.add_argument("--check", action="store_true", help="검사만 하고 저장하지 않는다")
     return d
 
 
@@ -78,7 +107,7 @@ def us_docs(ctx: Any, tgt: dict[str, Any], store: Any | None, years: int) -> dic
 
 
 def card_set(ctx: Any, tgt: dict[str, Any], store: Any | None, years: int, plan: bool = False, dry: bool = False,
-             model: str | None = None) -> dict[str, Any]:
+             model: str | None = None, force: bool = False) -> dict[str, Any]:
     if tgt["market"] == "kr":
         from wsj.deep.kr_cards import SupplyMapUnavailable, kr_cards
 
@@ -93,7 +122,7 @@ def card_set(ctx: Any, tgt: dict[str, Any], store: Any | None, years: int, plan:
     docs = us_docs(ctx, tgt, store, years)
     llm = None if plan else _llm()
     res = us_cards(llm, store, tgt["symbol"], tgt.get("name") or tgt["symbol"], docs["annual"], write=not dry,
-                   model=model or CARD_MODEL)
+                   model=model or CARD_MODEL, force=force)
     res["errors"] = docs["errors"] + ([] if llm or plan else ["ANTHROPIC_API_KEY 없음 — 캐시에 없는 문서는 건너뜀"])
     res["recent"] = [d.meta() for d in docs["quarterly"] + docs["eightks"]]
     res["exhibit10"] = docs["exhibit10"]
@@ -111,8 +140,65 @@ def run_deep(args: argparse.Namespace) -> int:
     cmd = args.deep_cmd
     store = None
     try:
+        if cmd == "scenario":
+            from wsj.deep.scenario import load_spec, run
+
+            emit({"tool": "deep.scenario", **run(load_spec(args.file))}, args.compact)
+            return 0
+        if cmd == "save":
+            from wsj.deep.scenario import load_spec
+            from wsj.deep.store import ReportError, save, validate
+
+            spec = load_spec(args.file)
+            errs = validate(spec)
+            if args.check or errs:
+                emit({"tool": "deep.save", "ok": not errs, "errors": errs}, args.compact)
+                return 1 if errs else 0
+            store = _store(False)
+            if store is None:
+                raise ToolError("Supabase 연결 정보가 없다 (SUPABASE_URL·SUPABASE_SECRET_KEY)")
+            try:
+                emit({"tool": "deep.save", **save(store, spec)}, args.compact)
+            except ReportError as exc:
+                emit({"tool": "deep.save", "error": str(exc)}, args.compact)
+                return 1
+            return 0
         store = _store(args.no_db) if cmd in ("filings", "cards", "profile") else None
         with open_context(db=not args.no_db) as ctx:
+            if cmd in ("story", "chart"):
+                from wsj.deep.story import story
+
+                filings = None
+                if args.symbol and not args.symbol[:1].isdigit():
+                    filings = target(args.symbol, ctx=ctx).get("filings")
+                st = story(args.symbol, days=args.days, top=args.top, filings=filings, ctx=ctx)
+                if cmd == "chart":
+                    from wsj.deep.chart import render
+
+                    path = render(st, args.out)
+                    emit({"tool": "deep.chart", "symbol": st["symbol"], "path": str(path),
+                          "moves": [{k: m.get(k) for k in ("n", "date", "return_pct")} for m in st["moves"]]}, args.compact)
+                    return 0
+                if not args.series:
+                    st.pop("series", None)
+                emit({"tool": "deep.story", **st}, args.compact)
+                return 0
+            if cmd == "fin":
+                from wsj.deep.fin import fin
+
+                res = fin(args.symbol, years=args.years, ctx=ctx)
+                emit({"tool": "deep.fin", **res}, args.compact)
+                return 1 if "error" in res else 0
+            if cmd == "peers":
+                from wsj.deep.peers_table import peers_table
+
+                emit({"tool": "deep.peers", **peers_table(args.symbol, args.peers, ctx=ctx)}, args.compact)
+                return 0
+            if cmd == "valuation":
+                from wsj.deep.valuation import valuation
+
+                emit({"tool": "deep.valuation", **valuation(args.symbol, ctx=ctx)}, args.compact)
+                return 0
             tgt = target(args.symbol, ctx=ctx)
             if cmd == "target":
                 emit({"tool": "deep.target", **tgt}, args.compact)
@@ -132,7 +218,7 @@ def run_deep(args: argparse.Namespace) -> int:
                 emit(out, args.compact)
                 return 0
             cs = card_set(ctx, tgt, store, args.years, plan=getattr(args, "plan", False), dry=args.dry,
-                          model=getattr(args, "model", None))
+                          model=getattr(args, "model", None), force=getattr(args, "force", False))
             if cmd == "cards":
                 emit({"tool": "deep.cards", **cs}, args.compact)
                 return 0 if cs.get("cards") or getattr(args, "plan", False) else 1
