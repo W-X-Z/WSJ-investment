@@ -4,6 +4,7 @@
   연간  매출·매출총이익·영업이익·순이익·영업현금흐름·capex·FCF·SBC·현금(+단기투자)·차입(장+단)·자본·선수금·희석주식수·EPS
   파생  성장률, 매출총이익률·영업이익률·FCF 마진, ROIC(영업이익×(1−21%) ÷ (자본+차입) — 순현금 회사가 튀지 않게 현금을 빼지 않는다), 순차입, 희석주식 증가율
   이상치 성장률·이익률 변화가 크게 튄 값(성장률 |Δ| ≥ 30%p, 이익률 |Δ| ≥ 5%p, 희석 ≥ 5%) — 원인은 3단계 에이전트가 카드·8-K 에서 찾는다.
+주의: TTM 은 마지막으로 제출된 10-Q 까지다. 그 뒤 나온 실적 보도자료(8-K EX-99)는 3단계 에이전트가 직접 반영한다.
 한국: 공급망 지도 재무(매출·영업이익·순이익·자산) 또는 Naver 분기(TTM) — 깊이는 미국보다 얕다.
 """
 
@@ -17,9 +18,17 @@ from wsj.tools.context import ToolContext, ensure_context
 from wsj.tools.prices import parse_symbol
 
 TAX = 0.21
+# briefs.xbrl 에 없는 유동성 태그 — 장기 투자증권·제한 현금도 순차입 계산에 넣는다(현금을 장기 채권에 넣어 둔 회사가 많다)
+EXTRA_INSTANTS: dict[str, tuple[str, ...]] = {
+    "lt_investments": ("us-gaap:LongTermInvestments", "us-gaap:MarketableSecuritiesNoncurrent",
+                       "us-gaap:AvailableForSaleSecuritiesDebtSecuritiesNoncurrent", "us-gaap:HeldToMaturitySecuritiesNoncurrent"),
+    "restricted_cash": ("us-gaap:RestrictedCashCurrent", "us-gaap:RestrictedCashAndCashEquivalentsAtCarryingValue",
+                        "us-gaap:RestrictedCash"),
+}
 FLOWS = ("revenue", "gross_profit", "op_income", "net_income", "ocf", "capex", "sbc", "rnd", "sga", "diluted_shares",
          "eps_diluted")
-STOCKS = ("cash", "st_investments", "debt_lt", "debt_st", "equity", "total_assets", "deferred_revenue", "shares_out")
+STOCKS = ("cash", "st_investments", "lt_investments", "restricted_cash", "debt_lt", "debt_st", "equity", "total_assets",
+          "deferred_revenue", "shares_out")
 
 
 def _r(x: float | None, nd: int = 1) -> float | None:
@@ -48,6 +57,8 @@ def series(cf: dict[str, Any]) -> dict[str, dict[str, dict[date, float]]]:
             out["quarter"][k] = quarterly_series(fs, additive=k not in ("eps_diluted", "diluted_shares"))
         else:
             out["instant"][k] = instant_series(fs)
+    for k, tags in EXTRA_INSTANTS.items():
+        out["instant"][k] = instant_series(_facts(cf, tags, "USD"))
     return out
 
 
@@ -56,7 +67,8 @@ def _row(get_flow, get_stock) -> dict[str, Any]:
     if r["capex"] is not None:
         r["capex"] = abs(r["capex"])
     r["fcf"] = r["ocf"] - r["capex"] if r["ocf"] is not None and r["capex"] is not None else None
-    cash = (r["cash"] or 0) + (r["st_investments"] or 0) if r["cash"] is not None else None
+    cash = (r["cash"] or 0) + (r["st_investments"] or 0) + (r["lt_investments"] or 0) + (r["restricted_cash"] or 0) \
+        if r["cash"] is not None else None
     debt = (r["debt_lt"] or 0) + (r["debt_st"] or 0) if (r["debt_lt"] is not None or r["debt_st"] is not None) else None
     r["cash_total"], r["debt_total"] = cash, debt
     r["net_debt"] = debt - cash if debt is not None and cash is not None else None

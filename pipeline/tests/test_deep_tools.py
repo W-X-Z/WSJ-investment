@@ -153,3 +153,12 @@ def test_store_validate_rejects_missing_conclusion_and_bad_stars():
     assert any("stars" in e for e in errs) and any("conclusion" in e for e in errs)
     with pytest.raises(ST.ReportError):
         ST.save(FakeStore(), bad)
+
+
+def test_liquidity_includes_long_term_investments_and_restricted_cash():
+    cf = _cf()
+    g = cf["facts"]["us-gaap"]
+    g["LongTermInvestments"] = {"units": {"USD": [{"end": "2026-06-30", "val": 300, "filed": "2026-09-15", "form": "10-K"}]}}
+    g["RestrictedCashCurrent"] = {"units": {"USD": [{"end": "2026-06-30", "val": 30, "filed": "2026-09-15", "form": "10-K"}]}}
+    last = FN.us_financials(cf)["annual"][-1]
+    assert last["cash_total"] == 100 + 300 + 30 and last["net_debt"] == 580 - 430

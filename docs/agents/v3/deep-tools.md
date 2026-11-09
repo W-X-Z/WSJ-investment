@@ -19,6 +19,7 @@
 그 밖 조회: `python -m wsj tools quote|history|lookup|fx|rates|event|exposure|reverse-dcf|peers`.
 
 ## 주의
+- `fin`·`valuation` 의 TTM 은 마지막으로 제출된 10-Q 까지다. 그 뒤 나온 실적 보도자료(8-K EX-99)·가이던스는 직접 열어 반영한다.
 - Nasdaq 시총은 상장 주식 종류만 센다(Up-C·복수 주식 종류면 과소). 시나리오에는 전 종류 희석 주식 수를 쓴다.
 - 카드 항목의 `loc` 은 근거 문단의 문서·절이다. 리포트 숫자는 카드가 아니라 원문을 다시 열어 확인하고 출처로 남긴다.
 - 카드에 빈 칸이 있으면 그게 조사할 질문이다.
