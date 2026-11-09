@@ -350,6 +350,10 @@ def build_parser() -> argparse.ArgumentParser:
 
     add_tools_parser(sub)
 
+    from wsj.deep.cli import add_deep_parser
+
+    add_deep_parser(sub)
+
     sc = sub.add_parser("screen", help="선별 에이전트: 지난 창의 관련 단서 → 변화 사건 → 진행 여부, 하루 보고서 한 건")
     sc.add_argument("--hours", type=int, default=24, help="창(시간, seen_at 기준). 기본 24")
     sc.add_argument("--model", help="SCREEN_MODEL 덮어쓰기: sonnet | haiku | opus | 모델 ID (기본 claude-sonnet-5-5)")
@@ -380,6 +384,10 @@ def main(argv: list[str] | None = None) -> int:
         return run_tools(args)
     if args.cmd == "screen":
         return cmd_screen(args)
+    if args.cmd == "deep":
+        from wsj.deep.cli import run_deep
+
+        return run_deep(args)
     return 2
 
 

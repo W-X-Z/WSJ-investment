@@ -27,6 +27,7 @@ class Settings(BaseSettings):
     sec_user_agent: str = "WSJ-investment research contact@example.com"
     openfda_api_key: str = ""
     dart_api_key: str = ""  # 한국 DART OpenAPI (선택) — 없으면 한국 기업은 뉴스로만 본다
+    supplymap_db_url: str = ""  # 공급망 지도(W-X-Z/supply-map) Postgres — 한국 구조 카드 조회(읽기 전용)
     openalex_api_key: str = ""  # 논문 백필 (wsj.ecosystems.techdocs papers)
     openalex_mailto: str = ""
 
