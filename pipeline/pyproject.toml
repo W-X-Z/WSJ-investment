@@ -12,7 +12,11 @@ dependencies = [
 ]
 
 [project.optional-dependencies]
-dev = ["pytest>=8", "ruff>=0.5"]
+dev = ["pytest>=8", "ruff>=0.5", "psycopg[binary]>=3.2"]  # psycopg: tests/integration (실제 Postgres)
+# 공급망 지도(W-X-Z/supply-map) DB 조회 — 한국 종목 구조 카드 (wsj.deep.kr_cards)
+supplymap = ["psycopg[binary]>=3.2"]
+# 주가 차트 PNG (wsj.deep.chart)
+chart = ["matplotlib>=3.8"]
 # 논문·특허 백필 (사용자 PC 에서만): python -m wsj.ecosystems.techdocs
 techdocs = ["google-cloud-bigquery>=3.11"]
 

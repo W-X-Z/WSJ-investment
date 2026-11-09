@@ -94,13 +94,12 @@ class PostgrestStore:
             raise PostgrestError(f"PostgREST {method} {table} -> {resp.status_code}: {resp.text[:500]}", resp.status_code, code)
         return resp
 
-    def rpc(self, fn: str, args: dict[str, Any], schema: str | None = None) -> Any:
-        """POST /rest/v1/rpc/<function> + Content-Profile: <schema>. 두 호출 모양을 다 받는다:
-        store.rpc("research.put_reports", {"rows": [...]}) · store.rpc("put_reports", {"rows": [...]}, schema="research").
-        스키마를 안 주고 점도 없으면 public. 함수가 없으면 404(PGRST202), 스키마가 노출 목록(pgrst.db_schemas)에 없으면 406(PGRST106)."""
-        if schema is None:
-            schema, fn = split_table(fn) if "." in fn else ("public", fn)
-        resp = self._req("POST", f"{schema}.rpc/{fn}", body=args)
+    def rpc(self, fn: str, args: dict[str, Any]) -> Any:
+        """'schema.function' 호출 — select('schema.table') 과 같은 모양. POST /rest/v1/rpc/<function> + Content-Profile: <schema>.
+        예: store.rpc("research.put_reports", {"rows": [...]}) · store.rpc("ideas.put_research_sources", {"rows": [...]}) (0040).
+        점 없는 이름은 ValueError. 함수가 없으면 404(PGRST202), 스키마가 노출 목록(pgrst.db_schemas)에 없으면 406(PGRST106)."""
+        schema, name = split_table(fn)
+        resp = self._req("POST", f"{schema}.rpc/{name}", body=args)
         return resp.json() if resp.content else None
 
     @staticmethod

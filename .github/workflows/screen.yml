@@ -44,7 +44,7 @@ jobs:
       ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
       # SCREEN_MAX_USD: "2.0"
       # SCREEN_MAX_INPUT_TOKENS: "400000"
-      # SCREEN_REPORT_RPC: "put_reports"      # 'ideas.put_reports' 처럼 스키마를 앞에 붙이면 그 스키마부터 찾는다
+      # SCREEN_REPORT_RPC: "research.put_reports"   # 'schema.function'
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5

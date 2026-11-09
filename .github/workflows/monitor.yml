@@ -1,0 +1,88 @@
+# 1·2단계 + 3단계 사전 계산 (설계 v3): 선별(screen) → 경로·후보·반응·선택(monitor) → 대기열 종목의 구조 카드(deep cards).
+#   N3  python -m wsj screen          → research.reports 'screen:YYYY-MM-DD'
+#   N4~N7 python -m wsj monitor run   → 'candidates:YYYY-MM-DD' (후보마다 status: open·selected·requested·done)
+#   사전  python -m wsj deep cards     → 대기열(selected·requested) 종목의 구조 카드 'card:…' (API 가 드는 3단계 일만 여기서)
+# 해석·판단(3단계 나머지)은 Claude 구독 예약 작업(docs/agents/v3/orchestrator.md)이 이 결과를 읽어서 한다.
+#
+# 비용(추정): 선별 ≈ $0.5~1.5 + 경로 탐색(진행 사건당 ≈ $0.05~0.1, 상한 MONITOR_MAX_USD) + 카드(종목당 ≈ $0.03) → 하루 ≈ $1~3.
+# 지금은 수동 실행만. 매일 돌리려면 schedule 주석을 푼다 (05:40 KST 월~토, 수집 뒤).
+# ⚠ 주석을 푸는 순간부터 매일 API 비용이 나간다.
+name: monitor
+
+on:
+  # schedule:
+  # - cron: '40 20 * * 0-5'
+  workflow_dispatch:
+    inputs:
+      skip_screen:
+        description: "true 면 선별(screen)을 건너뛰고 이미 있는 screen 보고서로 monitor 만"
+        type: boolean
+        required: false
+        default: false
+      max_events:
+        description: "경로를 탐색할 진행 사건 수 상한"
+        required: false
+        default: "10"
+      max_usd:
+        description: "monitor 실행당 비용 상한(USD)"
+        required: false
+        default: "2.0"
+
+concurrency:
+  group: monitor
+  cancel-in-progress: false
+
+jobs:
+  monitor:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    env:
+      WSJ_STORE: postgrest
+      SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+      SUPABASE_SECRET_KEY: ${{ secrets.SUPABASE_SECRET_KEY }}
+      ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+      DART_API_KEY: ${{ secrets.DART_API_KEY }}
+      SUPPLYMAP_DB_URL: ${{ secrets.SUPPLYMAP_DB_URL }}
+      SEC_USER_AGENT: "WSJ-investment research dnltmdwhd@gmail.com"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: pipeline/pyproject.toml
+      - name: Install
+        working-directory: pipeline
+        run: pip install -e ".[supplymap]"
+      - name: N3 screen
+        if: ${{ !inputs.skip_screen }}
+        working-directory: pipeline
+        run: |
+          mkdir -p data/monitor
+          python -m wsj screen --hours 24 --out data/monitor/screen.json > data/monitor/screen-stdout.json
+      - name: N4~N7 monitor
+        working-directory: pipeline
+        env:
+          IN_MAX_EVENTS: ${{ inputs.max_events || '10' }}
+          IN_MAX_USD: ${{ inputs.max_usd || '2.0' }}
+        run: |
+          mkdir -p data/monitor
+          python -m wsj monitor run --max-events "$IN_MAX_EVENTS" --max-usd "$IN_MAX_USD" --out data/monitor/candidates.json \
+            | tee data/monitor/monitor-stdout.json
+      - name: Precompute structure cards for the queue
+        working-directory: pipeline
+        run: |
+          set -uo pipefail
+          python -m wsj monitor queue > data/monitor/queue.json
+          for s in $(python -c "import json;q=json.load(open('data/monitor/queue.json'))['queue'];print(' '.join(sorted({c['symbol'] for c in q})))"); do
+            python -m wsj deep cards "$s" --compact > "data/monitor/cards-$s.json" || echo "cards $s failed"
+            python -c "import json,sys;d=json.load(open(sys.argv[1]));print(sys.argv[1],'usage',d.get('usage_usd'),'errors',d.get('errors'))" "data/monitor/cards-$s.json" || true
+          done
+      - name: Upload
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: monitor-${{ github.run_id }}
+          path: pipeline/data/monitor
+          if-no-files-found: ignore
+          retention-days: 14
