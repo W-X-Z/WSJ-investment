@@ -8,6 +8,8 @@
 from __future__ import annotations
 
 import logging
+import re
+from difflib import SequenceMatcher
 from typing import Any
 
 from wsj.tools.context import ToolContext, ToolError
@@ -15,35 +17,73 @@ from wsj.tools.context import ToolContext, ToolError
 log = logging.getLogger("wsj.monitor")
 
 
-def resolve_symbol(ctx: ToolContext, company: dict[str, Any]) -> dict[str, Any] | None:
-    from wsj.tools.lookup import lookup
+def _norm(name: str | None) -> str:
+    n = re.sub(r"\b(inc|corp|corporation|co|ltd|plc|holdings?|group|company|the|class [a-z]|common stock|ordinary shares)\b\.?",
+               "", (name or "").lower())
+    return re.sub(r"[^0-9a-z가-힣]+", "", n)
+
+
+def same_company(a: str | None, b: str | None) -> bool:
+    """이름이 같은 회사로 보이는지 — 한쪽이 다른 쪽을 포함하거나 충분히 비슷하면. 한글·영문이 섞이면 판단하지 않는다(True)."""
+    x, y = _norm(a), _norm(b)
+    if not x or not y:
+        return True
+    if bool(re.search(r"[가-힣]", x)) != bool(re.search(r"[가-힣]", y)):
+        return True
+    return x in y or y in x or SequenceMatcher(None, x, y).ratio() >= 0.6
+
+
+def _quote_row(ctx: ToolContext, ticker: str, market: str) -> dict[str, Any] | None:
+    from wsj.deep.target import clean_name
     from wsj.tools.quote import quote
 
-    key = f"resolve:{company['market']}:{company.get('ticker') or company['name']}"
+    try:
+        q = quote(ticker, ctx=ctx)
+    except ToolError:
+        return None
+    if q.get("market") != market:
+        return None
+    mc = q.get("market_cap") or {}
+    return {"symbol": q["symbol"], "market": q["market"], "name": clean_name(q.get("name")), "exchange": q.get("exchange"),
+            "market_cap_usd": mc.get("usd"), "close": (q.get("price") or {}).get("close"), "changes": q.get("changes")}
+
+
+def _by_name(ctx: ToolContext, company: dict[str, Any]) -> str | None:
+    from wsj.tools.lookup import lookup
+
+    try:
+        res = lookup(company["name"], market=company["market"], limit=3, ctx=ctx)
+    except ToolError:
+        return None
+    hits = [r for r in res.get("results", []) if r.get("market") == company["market"]]
+    good = [r for r in hits if same_company(company["name"], r.get("name"))]
+    return (good or hits[:1] or [{}])[0].get("ticker")
+
+
+def resolve_symbol(ctx: ToolContext, company: dict[str, Any]) -> dict[str, Any] | None:
+    """모델이 준 티커 → 시세. 티커가 없거나, 시세의 회사 이름이 모델이 말한 이름과 다르면 이름으로 다시 찾는다."""
+    key = f"resolve:{company['market']}:{company.get('ticker') or company['name']}:{company['name']}"
     if key in ctx.memo:
         return ctx.memo[key]
-    tried = []
-    if company.get("ticker"):
-        tried.append(company["ticker"])
-    else:
-        try:
-            res = lookup(company["name"], market=company["market"], limit=3, ctx=ctx)
-            tried += [r["ticker"] for r in res.get("results", []) if r.get("market") == company["market"]][:1]
-        except ToolError:
-            pass
-    out = None
-    for t in tried:
-        try:
-            q = quote(t, ctx=ctx)
-        except ToolError:
-            continue
-        if q.get("market") != company["market"]:
-            continue
-        mc = q.get("market_cap") or {}
-        out = {"symbol": q["symbol"], "market": q["market"], "name": q.get("name") or company["name"],
-               "exchange": q.get("exchange"), "market_cap_usd": mc.get("usd"),
-               "close": (q.get("price") or {}).get("close"), "changes": q.get("changes")}
-        break
+    out = _quote_row(ctx, company["ticker"], company["market"]) if company.get("ticker") else None
+    if out and not same_company(company["name"], out["name"]):
+        log.info("ticker %s is %r, not %r — looking up by name", company["ticker"], out["name"], company["name"])
+        alt = _by_name(ctx, company)
+        alt_row = _quote_row(ctx, alt, company["market"]) if alt and alt != out["symbol"] else None
+        out = alt_row if alt_row and same_company(company["name"], alt_row["name"]) else None
+    elif out and company["market"] == "kr" and re.search(r"[가-힣]", company["name"]) \
+            and _norm(company["name"]) != _norm(out["name"]):
+        # 한국 종목은 모델이 코드를 틀리는 일이 잦다 → 한글 이름으로 찾은 종목의 이름이 정확히 같으면 그쪽을 쓴다
+        alt = _by_name(ctx, company)
+        alt_row = _quote_row(ctx, alt, "kr") if alt and alt != out["symbol"] else None
+        if alt_row and _norm(alt_row["name"]) == _norm(company["name"]):
+            out = alt_row
+        elif not same_company(company["name"], out["name"]) or alt is None:
+            log.info("kr %s: code %s is %r and the name finds nothing — dropped", company["name"], out["symbol"], out["name"])
+            out = None
+    if out is None and not company.get("ticker"):
+        t = _by_name(ctx, company)
+        out = _quote_row(ctx, t, company["market"]) if t else None
     ctx.memo[key] = out
     return out
 

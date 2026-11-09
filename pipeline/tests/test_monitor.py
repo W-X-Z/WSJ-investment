@@ -125,3 +125,18 @@ def test_run_plan_mode_calls_no_model():
     row = R.run(store, None, object(), "2026-11-10")
     assert row["body"]["events"] == [{"event_id": "e1", "title": "DOE 고밀도 데이터센터 전력 기준", "planned": True}]
     assert row["body"]["candidates"] == []
+
+
+def test_same_company_and_reaction_from_bars():
+    assert CA.same_company("AXT Inc", "AXT Inc Common Stock")
+    assert CA.same_company("Energy Fuels", "Energy Fuels Inc")
+    assert not CA.same_company("Vertiv", "Cleveland-Cliffs Inc.")
+    assert CA.same_company("성림첨단산업", "SJM")            # 한글·영문이 섞이면 이름만으로 판단하지 않는다
+    bars = [{"date": f"2026-11-0{i}", "close": c, "volume": v} for i, c, v in
+            [(2, 100, 10), (3, 100, 10), (4, 100, 10), (5, 100, 10), (6, 110, 40)]]
+    bench = [{"date": b["date"], "close": 100 + (i == 4)} for i, b in enumerate(bars)]
+    r = PK.reaction_from_bars(bars, bench, "2026-11-07")       # 토요일 사건 — 뒤 거래일이 없어도 값이 나온다
+    assert r["pre_close"] == 110 and r["since_pct"] == 0.0 and r["last"] == "2026-11-06"
+    r2 = PK.reaction_from_bars(bars, bench, "2026-11-06")
+    assert r2["pre_close"] == 100 and r2["since_pct"] == 10.0 and r2["volume_ratio"] == 4.0
+    assert r2["excess_since_pct"] == 9.0
