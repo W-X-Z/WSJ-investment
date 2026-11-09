@@ -59,7 +59,9 @@ def implied(mcap: float | None, ttm: dict[str, Any] | None, discount: float = DI
     base, basis = t.get("fcf"), "ttm_fcf"
     if base is None or base <= 0:
         op = t.get("op_income")
-        if op is None or op <= 0:
+        if op is None:
+            return {"note": "FCF·영업이익 자료 없음 — 역DCF 생략"}
+        if op <= 0:
             return {"note": "FCF·영업이익이 모두 음수 — 역DCF 를 풀 수 없다 (매출 배수로 본다)"}
         base, basis = op * (1 - TAX), "nopat_proxy"
     try:

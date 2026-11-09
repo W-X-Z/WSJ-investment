@@ -357,6 +357,9 @@ def build_parser() -> argparse.ArgumentParser:
     from wsj.monitor.run import add_parser as add_monitor_parser
 
     add_monitor_parser(sub)
+    from wsj.ideate.cli import add_parser as add_ideate_parser
+
+    add_ideate_parser(sub)
 
     sc = sub.add_parser("screen", help="선별 에이전트: 지난 창의 관련 단서 → 변화 사건 → 진행 여부, 하루 보고서 한 건")
     sc.add_argument("--hours", type=int, default=24, help="창(시간, seen_at 기준). 기본 24")
@@ -392,6 +395,10 @@ def main(argv: list[str] | None = None) -> int:
         from wsj.deep.cli import run_deep
 
         return run_deep(args)
+    if args.cmd == "ideate":
+        from wsj.ideate.cli import cli as ideate_cli
+
+        return ideate_cli(args)
     if args.cmd == "monitor":
         from wsj.monitor.run import cli as monitor_cli
 

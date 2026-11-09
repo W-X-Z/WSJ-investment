@@ -2644,6 +2644,103 @@
     "optics"
    ],
    "why": "CPO·ELSFP·새 트랜시버 제어 코드가 제품 출하 전에 들어온다 (커밋이 잡다해 분류기를 거친다)"
+  },
+  {
+   "id": "federal_register_tech",
+   "name": "Federal Register · 반도체·AI·수출통제",
+   "type": "rss",
+   "url": "https://www.federalregister.gov/api/v1/documents.rss?conditions%5Bterm%5D=semiconductor%20%7C%20%22artificial%20intelligence%22%20%7C%20%22Entity%20List%22%20%7C%20%22export%20administration%22&order=newest&per_page=40",
+   "home": "https://www.federalregister.gov",
+   "lang": "en",
+   "region": "US",
+   "kinds": [
+    "policy"
+   ],
+   "ecosystems": [
+    "semis"
+   ],
+   "why": "원본 정책 문서: 수출통제·Entity List·AI·반도체 규칙과 공고. 뉴스보다 먼저, 원문으로.",
+   "paywall": false,
+   "verified": {
+    "ok": true,
+    "checked": "2026-11-09",
+    "note": "RSS 2.0, 40건/페이지, 불리언 검색어"
+   },
+   "enabled": true,
+   "broad": true
+  },
+  {
+   "id": "federal_register_energy_minerals",
+   "name": "Federal Register · 전력망·원전·핵심광물",
+   "type": "rss",
+   "url": "https://www.federalregister.gov/api/v1/documents.rss?conditions%5Bterm%5D=%22critical%20mineral%22%20%7C%20%22large%20load%22%20%7C%20interconnection%20%7C%20%22nuclear%20reactor%22%20%7C%20transformer%20%7C%20%22rare%20earth%22&order=newest&per_page=40",
+   "home": "https://www.federalregister.gov",
+   "lang": "en",
+   "region": "US",
+   "kinds": [
+    "policy"
+   ],
+   "ecosystems": [
+    "power"
+   ],
+   "why": "전력망 연계·대형 부하·원전 인허가·핵심광물·변압기 관련 규칙과 공고.",
+   "paywall": false,
+   "verified": {
+    "ok": true,
+    "checked": "2026-11-09",
+    "note": "RSS 2.0, 40건/페이지"
+   },
+   "enabled": true,
+   "broad": true
+  },
+  {
+   "id": "arxiv_cs_et_new",
+   "name": "arXiv cs.ET 신규 (신흥 기술)",
+   "type": "rss",
+   "url": "https://rss.arxiv.org/rss/cs.ET",
+   "home": "https://arxiv.org/list/cs.ET",
+   "lang": "en",
+   "region": "global",
+   "kinds": [
+    "research"
+   ],
+   "ecosystems": [
+    "semis"
+   ],
+   "why": "신소자·광·양자·뉴로모픽 등 상용화 전 단계 연구 — 패러다임 변화의 초기 신호.",
+   "paywall": false,
+   "verified": {
+    "ok": true,
+    "checked": "2026-11-09",
+    "note": "arXiv RSS 공통 형식"
+   },
+   "enabled": true,
+   "broad": true
+  },
+  {
+   "id": "arxiv_physics_app_ph_new",
+   "name": "arXiv physics.app-ph 신규 (응용물리)",
+   "type": "rss",
+   "url": "https://rss.arxiv.org/rss/physics.app-ph",
+   "home": "https://arxiv.org/list/physics.app-ph",
+   "lang": "en",
+   "region": "global",
+   "kinds": [
+    "research"
+   ],
+   "ecosystems": [
+    "semis",
+    "power"
+   ],
+   "why": "소재·소자·전력전자·열관리 응용 연구 — 새 병목·대체 기술의 초기 신호.",
+   "paywall": false,
+   "verified": {
+    "ok": true,
+    "checked": "2026-11-09",
+    "note": "arXiv RSS 공통 형식"
+   },
+   "enabled": true,
+   "broad": true
   }
  ]
 }

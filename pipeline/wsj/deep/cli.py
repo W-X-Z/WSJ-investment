@@ -24,7 +24,7 @@ import sys
 from pathlib import Path
 from typing import Any
 
-COMMANDS = ("target", "filings", "cards", "profile", "story", "fin", "peers", "valuation", "scenario", "chart", "save", "notion")
+COMMANDS = ("target", "filings", "cards", "profile", "story", "fin", "peers", "valuation", "scenario", "chart", "save", "notion", "search")
 
 
 def add_deep_parser(sub: Any) -> argparse.ArgumentParser:
@@ -70,6 +70,11 @@ def add_deep_parser(sub: Any) -> argparse.ArgumentParser:
     sv = ds.add_parser("save", parents=[nc], help="N23 리포트 저장")
     sv.add_argument("--file", required=True, help="리포트 JSON (deep.store 형식)")
     sv.add_argument("--check", action="store_true", help="검사만 하고 저장하지 않는다")
+    se = ds.add_parser("search", parents=[nc], help="공시 전문검색 (EDGAR full-text search)")
+    se.add_argument("q", help='검색어. 정확한 구절은 큰따옴표: \'"indium phosphide"\'')
+    se.add_argument("--forms", default="10-K,10-Q,8-K,S-1,424B4")
+    se.add_argument("--days", type=int, default=365)
+    se.add_argument("--pages", type=int, default=3)
     nt = ds.add_parser("notion", parents=[nc], help="N24 노션 페이지 본문·속성 만들기")
     nt.add_argument("--file", required=True, help="리포트 JSON (deep.store 형식)")
     nt.add_argument("--image", help="차트 이미지 주소 (file-upload://… 또는 https)")
@@ -151,6 +156,18 @@ def run_deep(args: argparse.Namespace) -> int:
             from wsj.deep.scenario import load_spec, run
 
             emit({"tool": "deep.scenario", **run(load_spec(args.file))}, args.compact)
+            return 0
+        if cmd == "search":
+            from datetime import date, timedelta
+
+            from wsj.deep.search import search
+            from wsj.deep.target import sec_http
+
+            with open_context(db=False) as ctx:
+                end = ctx.today if isinstance(ctx.today, date) else date.today()
+                emit({"tool": "deep.search", **search(sec_http(ctx), args.q, forms=args.forms,
+                                                      start=end - timedelta(days=args.days), end=end, max_pages=args.pages)},
+                     args.compact)
             return 0
         if cmd == "notion":
             from wsj.deep.notion_page import page
