@@ -1,0 +1,33 @@
+{
+  "as_of": "2026-11-12T12:00:00+00:00",
+  "evidence": [
+    {
+      "id": "demo-paper",
+      "title": "Synthetic inspection process improvement",
+      "url": "https://research.example.org/synthetic-inspection",
+      "text": "SYNTHETIC CASE: In a controlled lab simulation a new inspection method reduces the required measurement passes by half, but the system is not proven in volume manufacturing.",
+      "published_at": "2026-11-11T10:00:00+00:00",
+      "observed_at": "2026-11-12T08:00:00+00:00",
+      "source_kind": "research"
+    },
+    {
+      "id": "demo-customer",
+      "title": "Synthetic customer trial",
+      "url": "https://testing.example.net/synthetic-trial",
+      "text": "SYNTHETIC CASE: A hypothetical customer trial reported improvement in one production step, but no recurring purchase orders, pricing or binding contracts were established.",
+      "published_at": "2026-11-11T14:00:00+00:00",
+      "observed_at": "2026-11-12T08:00:00+00:00",
+      "source_kind": "customer"
+    }
+  ],
+  "companies": [
+    {
+      "ticker": "DEMO",
+      "name": "Synthetic Listed Manufacturer",
+      "exchange": "NASDAQ",
+      "market_cap_usd": 200000000,
+      "price_usd": 10,
+      "as_of": "2026-11-11T20:00:00+00:00"
+    }
+  ]
+}
