@@ -11,6 +11,7 @@ from wsj.frontier.contracts import (
 )
 from wsj.frontier.economics import screen
 from wsj.frontier.storage import SQLiteRunStore
+from wsj.frontier.monitor import create_monitoring_plan
 
 T = TypeVar("T", bound=BaseModel)
 VERSION = "f1-2026-11-v1"
@@ -44,7 +45,8 @@ class FrontierPipeline:
     def run(self, pack: InputPack) -> dict[str, Any]:
         data = pack.model_dump(mode="json")
         spec = {"version": VERSION, "input": data, "model": getattr(self.llm, "model", "test"),
-                "max_research": self.max_research, "min_impact_pct": self.min_impact_pct}
+                "max_research": self.max_research, "min_impact_pct": self.min_impact_pct,
+                "prompt_hash": hashlib.sha256((DISCOVERY + OPPORTUNITY + RESEARCH + INVESTMENT).encode()).hexdigest()}
         fingerprint = hashlib.sha256(json.dumps(spec, sort_keys=True, ensure_ascii=False).encode()).hexdigest()
         run_id = "frontier:" + fingerprint[:24]
         self.store.begin(run_id, pack.as_of.isoformat(), fingerprint)
@@ -147,6 +149,7 @@ class FrontierPipeline:
                 "theses": theses.model_dump(mode="json")["theses"],
                 "triage": triage, "research": [r.model_dump(mode="json") for r in research],
                 "investment": final_views,
+                "monitoring": create_monitoring_plan(theses.theses, triage, research, final_views),
                 "limitations": [
                     "No autonomous external research in F1; only supplied evidence is examined.",
                     "Economic estimates are hypothetical sensitivities, NOT investment forecasts.",
