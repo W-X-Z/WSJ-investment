@@ -5,15 +5,17 @@ from wsj.frontier.contracts import Thesis, ResearchResult
 
 def create_monitoring_plan(theses: list[Thesis], triage: list[dict[str, Any]],
                            research: list[ResearchResult], views: list[dict[str, Any]]) -> list[dict[str, Any]]:
-    by_triage = {x["thesis_id"]: x for x in triage}
     by_research = {x.thesis_id: x for x in research}
     plans = []
     for thesis in theses:
         verdicts = [v for v in views if v["thesis_id"] == thesis.thesis_id]
-        status = ("candidate" if any(v["stance"] == "candidate" for v in verdicts)
-                  else "watch" if by_triage[thesis.thesis_id]["status"] == "watch"
-                  or any(v["stance"] == "watch" for v in verdicts) else "rejected")
         r = by_research.get(thesis.thesis_id)
+        if any(v["stance"] == "candidate" for v in verdicts):
+            status = "candidate"
+        elif (r and r.conclusion == "rejected") or any(v["stance"] == "reject" for v in verdicts):
+            status = "rejected"
+        else:
+            status = "watch"
         triggers = []
         for issue in thesis.critical_assumptions:
             triggers.append({"type": "assumption", "question": issue})
