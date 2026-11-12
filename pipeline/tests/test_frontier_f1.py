@@ -73,6 +73,8 @@ def test_e2e_and_idempotent_resume(tmp_path):
         result = pipe.run(InputPack.model_validate(pack()))
         assert agent.calls == ["discovery", "opportunity", "research:t1", "investment"]
         assert result["investment"][0]["stance"] == "candidate"
+        assert result["monitoring"][0]["status"] == "candidate"
+        assert any(t["type"] == "invalidation" for t in result["monitoring"][0]["triggers"])
         assert result["triage"][0]["status"] == "research"
         assert round(result["triage"][0]["company_impacts"][0]["delta_value_to_market_cap_pct"]) == 60
         assert db.status(result["run_id"]) == "completed"
@@ -90,6 +92,8 @@ def test_missing_numeric_data_means_watch_not_zero(tmp_path):
     assert result["triage"][0]["status"] == "watch"
     assert result["triage"][0]["company_impacts"][0]["missing"] == ["usd_per_unit"]
     assert result["investment"] == []
+    assert result["monitoring"][0]["status"] == "watch"
+    assert any(t["type"] == "assumption" for t in result["monitoring"][0]["triggers"])
     assert len(agent.calls) == 2
 
 def test_future_evidence_rejected():
