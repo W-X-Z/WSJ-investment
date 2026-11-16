@@ -239,3 +239,21 @@ def test_extract_text_keeps_paragraphs_and_numeric_cells():
     assert title == "NOGRR 282"
     assert "ride-through" in body and "2026-10-28" in body and "remain connected" in body
     assert "Copyright" not in body and "var a" not in body and "Home | About" not in body
+
+
+def test_drop_long_urls_keeps_short_ones():
+    short = C.Clue(url="https://x.test/a", title="a", summary="", published_at=None, source_id="s", source_name="s", source_kind="trade_press")
+    long = C.Clue(url="https://news.google.com/rss/articles/" + "A" * 3400, title="b", summary="", published_at=None,
+                  source_id="s", source_name="s", source_kind="trade_press")
+    keep, n = C.drop_long_urls([short, long])
+    assert [c.url for c in keep] == [short.url] and n == 1
+
+
+def test_in_filter_split_by_length():
+    from wsj.db.postgrest import IN_MAX_CHARS, _in_parts
+
+    urls = ["https://news.google.com/rss/articles/" + str(i) * 300 for i in range(10)] + [f"https://x.test/{i}" for i in range(400)]
+    parts = _in_parts(urls)
+    assert sum(len(p) for p in parts) == len(urls)
+    assert all(sum(len(u) + 3 for u in p) <= IN_MAX_CHARS or len(p) == 1 for p in parts)
+    assert all(len(p) <= 150 for p in parts)

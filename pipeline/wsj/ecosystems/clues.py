@@ -524,6 +524,14 @@ def tech_signal_clues(store: Any, graph: dict[str, Any], cap: int = 6, seen: set
     return out
 
 
+MAX_URL_BYTES = 2000  # ideas.clues.url 의 고유 색인(btree)은 약 2.7KB 를 넘는 값을 받지 못하고, 한 행 때문에 묶음 전체가 실패한다 (54000)
+
+
+def drop_long_urls(clues: list[Clue]) -> tuple[list[Clue], int]:
+    keep = [c for c in clues if len(c.url.encode()) <= MAX_URL_BYTES]
+    return keep, len(clues) - len(keep)
+
+
 def already_seen(store: Any, urls: list[str]) -> set[str]:
     try:
         return {r["url"] for r in store.select("ideas.clues", ["url"], {"url": urls})}
@@ -617,6 +625,7 @@ def run(http: Any, store: Any | None, days: int, use_llm: bool, model: str, api_
     page_clues, page_bodies, page_states, stats["pages"] = collect_pages(http, store, sources)
     have = {c.url for c in clues}
     clues += [c for c in page_clues if c.url not in have]
+    clues, stats["long_url"] = drop_long_urls(clues)
     seen = already_seen(store, [c.url for c in clues]) if store is not None else set()
     stats["duplicate"] = mark_duplicates(clues, seen)
     new = [c for c in clues if c.url not in seen]
@@ -723,7 +732,12 @@ def main(argv: list[str] | None = None) -> int:
         stats = run(http, store, args.days, not args.no_llm, args.model, settings.anthropic_api_key or None, args.registry,
                     tech_signals=getattr(args, "tech_signals", None), body_get=body_get)
         if store is not None and run_id is not None:
-            store.run_finished(run_id, "succeeded", int(stats.get("saved") or 0), json.loads(json.dumps({k: v for k, v in stats.items() if k != "clues"}, default=str)), None)
+            lost = bool(stats.get("new")) and not stats.get("saved")   # 새 단서가 있는데 하나도 못 썼다
+            store.run_finished(run_id, "failed" if lost else "succeeded", int(stats.get("saved") or 0),
+                               json.loads(json.dumps({k: v for k, v in stats.items() if k != "clues"}, default=str)),
+                               "ideas.clues 저장 실패" if lost else None)
+            if lost:
+                print(f"::error::ideas.clues 저장 실패 — 새 단서 {len(stats.get('clues') or [])}건을 쓰지 못함")
     except Exception as exc:
         if store is not None and run_id is not None:
             store.run_finished(run_id, "failed", 0, {}, str(exc)[:500])

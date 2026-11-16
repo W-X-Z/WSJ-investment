@@ -23,6 +23,7 @@ log = logging.getLogger(__name__)
 
 UPSERT_CHUNK = 500
 IN_CHUNK = 150  # URL 길이 보호
+IN_MAX_CHARS = 6000  # IN 목록 한 번의 글자 수 상한. 긴 URL 150개면 요청 주소가 수십 KB 가 되어 400 이 난다
 
 
 def _json_default(o: Any) -> Any:
@@ -49,6 +50,20 @@ def _encode_filter_value(v: Any) -> str:
     if v is None:
         return "null"
     return str(v)
+
+
+def _in_parts(vals: list[Any]) -> list[list[Any]]:
+    """IN 목록을 개수(IN_CHUNK)와 글자 수(IN_MAX_CHARS) 둘 다 넘지 않게 나눈다."""
+    parts: list[list[Any]] = [[]]
+    size = 0
+    for v in vals:
+        n = len(_encode_filter_value(v)) + 3
+        if parts[-1] and (len(parts[-1]) >= IN_CHUNK or size + n > IN_MAX_CHARS):
+            parts.append([])
+            size = 0
+        parts[-1].append(v)
+        size += n
+    return parts
 
 
 class PostgrestStore:
@@ -170,12 +185,15 @@ class PostgrestStore:
     ) -> list[dict[str, Any]]:
         # IN 필터가 크면 쪼개서 여러 번 호출
         big_in = [
-            (c, v) for c, v in (filters or {}).items() if isinstance(v, (list, set)) and len(v) > IN_CHUNK
+            (c, v)
+            for c, v in (filters or {}).items()
+            if isinstance(v, (list, set))
+            and (len(v) > IN_CHUNK or sum(len(_encode_filter_value(x)) + 3 for x in v) > IN_MAX_CHARS)
         ]
         if big_in:
             col, vals = big_in[0]
             out: list[dict[str, Any]] = []
-            for part in chunked(list(vals), IN_CHUNK):
+            for part in _in_parts(list(vals)):
                 f = dict(filters or {})
                 f[col] = part
                 out.extend(self.select(table, columns, f, limit, order))
