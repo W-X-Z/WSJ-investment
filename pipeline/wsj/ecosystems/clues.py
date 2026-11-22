@@ -532,6 +532,18 @@ def drop_long_urls(clues: list[Clue]) -> tuple[list[Clue], int]:
     return keep, len(clues) - len(keep)
 
 
+def unique_by_url(clues: list[Clue]) -> list[Clue]:
+    """같은 url 은 먼저 온 것만 남긴다. 한 upsert 묶음에 같은 url 이 둘이면 Postgres 가 묶음 전체를 거부한다
+    (21000: ON CONFLICT DO UPDATE command cannot affect row a second time). 페이지 둘이 같은 새 링크를 낼 때 생긴다."""
+    seen: set[str] = set()
+    out: list[Clue] = []
+    for c in clues:
+        if c.url not in seen:
+            seen.add(c.url)
+            out.append(c)
+    return out
+
+
 def already_seen(store: Any, urls: list[str]) -> set[str]:
     try:
         return {r["url"] for r in store.select("ideas.clues", ["url"], {"url": urls})}
@@ -623,8 +635,7 @@ def run(http: Any, store: Any | None, days: int, use_llm: bool, model: str, api_
     from wsj.ecosystems.pages import collect_pages, commit_states
 
     page_clues, page_bodies, page_states, stats["pages"] = collect_pages(http, store, sources)
-    have = {c.url for c in clues}
-    clues += [c for c in page_clues if c.url not in have]
+    clues = unique_by_url(clues + page_clues)
     clues, stats["long_url"] = drop_long_urls(clues)
     seen = already_seen(store, [c.url for c in clues]) if store is not None else set()
     stats["duplicate"] = mark_duplicates(clues, seen)
@@ -638,7 +649,7 @@ def run(http: Any, store: Any | None, days: int, use_llm: bool, model: str, api_
     if store is not None and (tech_signals if tech_signals is not None else tech_signals_due()):
         sig = tech_signal_clues(store, graph)
         sig = [c for c in sig if c.url not in already_seen(store, [c.url for c in sig])]
-        new += sig
+        new = unique_by_url(new + sig)
         stats["tech_signals"] = len(sig)
     kept = [c for c in new if c.relevant]
     stats.update({"new": len(new), "kept": len(kept), "dropped": len(new) - len(kept),

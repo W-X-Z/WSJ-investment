@@ -257,3 +257,12 @@ def test_in_filter_split_by_length():
     assert sum(len(p) for p in parts) == len(urls)
     assert all(sum(len(u) + 3 for u in p) <= IN_MAX_CHARS or len(p) == 1 for p in parts)
     assert all(len(p) <= 150 for p in parts)
+
+
+def test_unique_by_url_keeps_first_copy():
+    # 페이지 둘(JEDEC JC-42·JC-45)이 같은 새 링크를 내면 같은 url 이 한 묶음에 두 번 들어간다 — upsert 가 21000 으로 통째 실패했다
+    a = _clue("https://www.jedec.org/doc/1", "from jc42")
+    b = _clue("https://www.jedec.org/doc/1", "from jc45")
+    c = _clue("https://www.jedec.org/doc/2", "other")
+    out = C.unique_by_url([a, b, c])
+    assert [x.title for x in out] == ["from jc42", "other"]
